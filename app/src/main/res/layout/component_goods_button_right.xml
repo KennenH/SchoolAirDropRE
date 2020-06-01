@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.lihang.ShadowLayout
+        android:id="@+id/shadow_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:hl_cornerRadius="@dimen/general_round_rect"
+        app:hl_isShowShadow="true"
+        app:hl_shadowLimit="10dp"
+        app:hl_shadowBackColor="@color/colorAccent"
+        app:hl_shadowColor="@color/colorAccentShadow"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center">
+
+            <ImageView
+                android:id="@+id/button_one"
+                android:layout_width="@dimen/icon_normal_with_general_padding"
+                android:layout_height="@dimen/icon_normal_with_general_padding"
+                android:background="@drawable/half_round_rect_bottom_left"
+                android:paddingTop="@dimen/general_padding_bit_larger"
+                android:paddingBottom="@dimen/general_padding_bit_larger"
+                android:src="@drawable/outline_favorite_white_48" />
+
+            <View
+                android:layout_width="@dimen/line"
+                android:layout_height="@dimen/general_padding_larger"
+                android:background="@color/colorLine" />
+
+            <ImageView
+                android:id="@+id/button_two"
+                android:layout_width="@dimen/icon_normal_with_general_padding"
+                android:layout_height="@dimen/icon_normal_with_general_padding"
+                android:background="@drawable/half_round_rect_bottom_right"
+                android:paddingTop="@dimen/general_padding_bit_larger"
+                android:paddingBottom="@dimen/general_padding_bit_larger"
+                android:src="@drawable/outline_favorite_white_24" />
+
+        </LinearLayout>
+    </com.lihang.ShadowLayout>
+</merge>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <com.lihang.ShadowLayout
+        android:id="@+id/shadow_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:hl_cornerRadius="@dimen/general_round_rect"
+        app:hl_isShowShadow="true"
+        app:hl_shadowBackColor="@color/colorAccent"
+        app:hl_shadowColor="@color/colorAccentShadow"
+        app:hl_shadowLimit="10dp">
+
+        <ImageView
+            android:id="@+id/button_one"
+            android:layout_width="@dimen/toolbar_icon_even_larger"
+            android:layout_height="@dimen/toolbar_icon_even_larger"
+            android:background="@drawable/round_rect_button"
+            android:src="@drawable/floating_button" />
+
+    </com.lihang.ShadowLayout>
+</merge>

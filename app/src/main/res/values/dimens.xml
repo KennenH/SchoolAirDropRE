@@ -1,0 +1,33 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="general_round_rect">50dp</dimen>
+
+    <dimen name="toolbar_icon">24dp</dimen>
+    <dimen name="toolbar_icon_bit_large">28dp</dimen>
+    <dimen name="toolbar_icon_large">35dp</dimen>
+    <dimen name="toolbar_icon_larger">36dp</dimen>
+    <dimen name="toolbar_icon_bit_larger">40dp</dimen>
+    <dimen name="icon_normal">46dp</dimen>
+    <dimen name="toolbar_icon_even_larger">55dp</dimen>
+    <dimen name="icon_normal_with_general_padding">56dp</dimen>
+
+    <dimen name="general_padding_tiny">3dp</dimen>
+    <dimen name="general_padding_small">5dp</dimen>
+    <dimen name="general_padding">8dp</dimen>
+    <dimen name="general_padding_large">10dp</dimen>
+    <dimen name="general_padding_bit_larger">15dp</dimen>
+    <dimen name="general_padding_larger">20dp</dimen>
+    <dimen name="general_padding_even_larger">25dp</dimen>
+
+    <dimen name="general_rounded_rect">5dp</dimen>
+    <dimen name="general_rounded_rect_large">15dp</dimen>
+
+    <dimen name="home_item_image">85dp</dimen>
+    <dimen name="app_bar_height">180dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
+    <dimen name="line">0.8dp</dimen>
+    <dimen name="toolbar_center_margin">75dp</dimen>
+</resources>

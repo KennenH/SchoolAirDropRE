@@ -1,0 +1,87 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 29
+    buildToolsVersion "29.0.2"
+
+    defaultConfig {
+        applicationId "com.example.schoolairdroprefactoredition"
+        minSdkVersion 21
+        targetSdkVersion 29
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    allprojects {
+        repositories {
+            google()
+            jcenter()
+            maven { url 'https://jitpack.io' }
+        }
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
+}
+
+dependencies {
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'com.google.android.material:material:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
+    implementation 'androidx.navigation:navigation-fragment:2.2.2'
+    implementation 'androidx.navigation:navigation-ui:2.2.2'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation 'androidx.legacy:legacy-support-v4:1.0.0'
+    implementation 'androidx.preference:preference:1.1.0-rc01'
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    //smart refresh layout
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.2'
+    //base recycler view
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.2'
+    //swipe layout
+    implementation 'com.daimajia.swipelayout:library:1.2.0@aar'
+    //utils
+    implementation 'com.blankj:utilcodex:1.27.6'
+    //dagger
+    implementation 'com.google.dagger:dagger-android:2.27'
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.27'
+    //retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.8.1'
+    //glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    //flex box
+    implementation 'com.google.android:flexbox:2.0.1'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    //smart refresh layout
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.2'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHorizontal:1.0.0-andx'
+    //nice image view
+    implementation 'com.github.SheHuan:NiceImageView:1.0.5'
+    //lite pal
+    implementation 'org.litepal.android:java:3.0.0'
+    //shadow layout
+    implementation 'com.github.lihangleo2:ShadowLayout:2.1.8'
+    //like button
+    implementation 'com.github.jd-alexander:LikeButton:0.2.3'
+    //facebook shimmer
+    implementation 'com.facebook.shimmer:shimmer:0.5.0'
+    //immersion action bar
+    implementation 'com.jaeger.statusbarutil:library:1.5.1'
+    // amap
+    implementation 'com.amap.api:location:latest.integration'
+    implementation 'com.amap.api:map2d:latest.integration'
+    implementation 'com.amap.api:search:latest.integration'
+}

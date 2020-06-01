@@ -1,0 +1,40 @@
+<resources>
+    <string name="currency_RMB" translatable="false">¥</string>
+    <string name="tag_recycler_item" translatable="false">TagRecyclerItem</string>
+
+    <!--  substitutions  -->
+    <string name="indicator" translatable="false">/%1$d</string>
+
+
+    <!--  translatable  -->
+    <string name="home">首页</string>
+    <string name="my">我的</string>
+    <string name="NearBy">附近</string>
+    <string name="app_name">校园空投</string>
+    <string name="goods_description">物品描述</string>
+    <string name="Search">搜索</string>
+    <string name="Messages">消息</string>
+    <string name="Mails">邮件</string>
+    <string name="selling">在售</string>
+    <string name="sold">已售</string>
+    <string name="purchased">已购</string>
+    <string name="setting">设置</string>
+    <string name="personalInfo">个人信息</string>
+    <string name="avatar">头像</string>
+    <string name="second_hand">二手</string>
+    <string name="advertisement">广告</string>
+    <string name="negotiable">可议价</string>
+    <string name="likes">收藏</string>
+    <string name="onGoing">正在进行</string>
+    <string name="account">账号管理</string>
+    <string name="alipayBinding">支付宝绑定</string>
+    <string name="notification">消息通知</string>
+    <string name="privacy">隐私</string>
+    <string name="general">通用</string>
+    <string name="about">关于</string>
+    <string name="receiveNewMessages">接收新消息</string>
+    <string name="vibrate">振动</string>
+    <string name="sounds">声音</string>
+    <string name="receiveInAppMessages">接收站内信</string>
+
+</resources>

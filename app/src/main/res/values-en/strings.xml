@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">SchoolAirDrop</string>
+    <string name="my">My</string>
+    <string name="home">Home</string>
+    <string name="NearBy">NearBy</string>
+    <string name="goods_description">Description</string>
+    <string name="Search">Search</string>
+    <string name="Messages">Messages</string>
+    <string name="Mails">Mails</string>
+    <string name="selling">Selling</string>
+    <string name="sold">Sold</string>
+    <string name="purchased">Purchased</string>
+    <string name="setting">Setting</string>
+    <string name="personalInfo">PersonalInfo</string>
+    <string name="avatar">Avatar</string>
+    <string name="second_hand">SecondHand</string>
+    <string name="advertisement">Advertisement</string>
+    <string name="negotiable">Negotiable</string>
+    <string name="likes">Likes</string>
+    <string name="onGoing">OnGoing</string>
+    <string name="account">Account</string>
+    <string name="notification">Notifications</string>
+    <string name="about">About</string>
+    <string name="alipayBinding">Alipay</string>
+    <string name="general">General</string>
+    <string name="privacy">Privacy</string>
+    <string name="receiveNewMessages">Receive New Messages</string>
+    <string name="vibrate">Vibrate</string>
+    <string name="sounds">Sounds</string>
+    <string name="receiveInAppMessages">Receive In-App Messages</string>
+</resources>

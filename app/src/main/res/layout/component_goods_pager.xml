@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/goods_pager"
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/goods_pager_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/general_padding_large"
+        android:background="@drawable/indicator_dark"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="@dimen/general_padding"
+        android:paddingTop="4dp"
+        android:paddingEnd="@dimen/general_padding"
+        android:paddingBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="@+id/goods_pager"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <TextView
+            android:id="@+id/goods_pager_current"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:text="1"
+            android:textColor="@color/white"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/goods_pager_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="/3"
+            android:textColor="@color/white" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

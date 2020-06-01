@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/price_unpressed"
+    android:paddingStart="@dimen/general_padding_large"
+    android:paddingTop="6dp"
+    android:paddingEnd="@dimen/general_padding_large"
+    android:paddingBottom="6dp">
+
+    <TextView
+        android:id="@+id/price_currency"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:includeFontPadding="false"
+        android:text="@string/currency_RMB"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        app:layout_constraintBaseline_toBaselineOf="@id/price_int"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/price_int"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="1dp"
+        android:includeFontPadding="false"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/price_currency"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="SpUsage" />
+
+    <TextView
+        android:id="@+id/price_fraction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:includeFontPadding="false"
+        android:maxLength="4"
+        android:text=".09"
+        android:textColor="@color/white"
+        android:textSize="14dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/price_int"
+        app:layout_constraintStart_toEndOf="@+id/price_int"
+        tools:ignore="SpUsage" />
+</androidx.constraintlayout.widget.ConstraintLayout>

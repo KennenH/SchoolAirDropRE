@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:id="@+id/my_selling_wrapper"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sheet_button"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/general_padding_large"
+        android:paddingBottom="@dimen/general_padding_large"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/line1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/my_selling"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:padding="@dimen/general_padding_tiny"
+            android:textSize="24sp"
+            tools:text="5" />
+
+        <TextView
+            android:id="@+id/my_selling_t"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/selling"
+            app:layout_constraintEnd_toStartOf="@+id/line1"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/my_selling" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/my_sold_wrapper"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sheet_button"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/general_padding_large"
+        android:paddingBottom="@dimen/general_padding_large"
+        app:layout_constraintBottom_toBottomOf="@+id/my_selling_wrapper"
+        app:layout_constraintEnd_toStartOf="@id/my_bought_wrapper"
+        app:layout_constraintStart_toEndOf="@id/my_selling_wrapper"
+        app:layout_constraintTop_toTopOf="@+id/my_selling_wrapper">
+
+        <TextView
+            android:id="@+id/my_sold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:padding="@dimen/general_padding_tiny"
+            android:textSize="24sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/my_selling"
+            app:layout_constraintEnd_toEndOf="@+id/my_sold_t"
+            app:layout_constraintStart_toStartOf="@+id/my_sold_t"
+            tools:text="3" />
+
+        <TextView
+            android:id="@+id/my_sold_t"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/sold"
+            app:layout_constraintBaseline_toBaselineOf="@id/my_selling_t"
+            app:layout_constraintEnd_toStartOf="@+id/line2"
+            app:layout_constraintStart_toEndOf="@+id/line1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/my_bought_wrapper"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/sheet_button"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingTop="@dimen/general_padding_large"
+        android:paddingBottom="@dimen/general_padding_large"
+        app:layout_constraintBottom_toBottomOf="@+id/my_selling_wrapper"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/my_sold_wrapper"
+        app:layout_constraintTop_toTopOf="@+id/my_selling_wrapper">
+
+        <TextView
+            android:id="@+id/my_bought"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:includeFontPadding="false"
+            android:padding="@dimen/general_padding_tiny"
+            android:textSize="24sp"
+            app:layout_constraintBaseline_toBaselineOf="@id/my_sold"
+            app:layout_constraintEnd_toEndOf="@+id/my_bought_t"
+            app:layout_constraintStart_toStartOf="@+id/my_bought_t"
+            tools:text="12" />
+
+        <TextView
+            android:id="@+id/my_bought_t"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/purchased"
+            app:layout_constraintBaseline_toBaselineOf="@id/my_sold_t"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/line2" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/line1"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/general_padding_larger"
+        android:layout_marginBottom="@dimen/general_padding_larger"
+        android:background="@color/colorLine"
+        app:layout_constraintBottom_toBottomOf="@id/my_selling_wrapper"
+        app:layout_constraintEnd_toStartOf="@id/line2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/my_selling_wrapper" />
+
+    <View
+        android:id="@+id/line2"
+        android:layout_width="1dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/general_padding_larger"
+        android:layout_marginBottom="@dimen/general_padding_larger"
+        android:background="@color/colorLine"
+        app:layout_constraintBottom_toBottomOf="@+id/my_selling_wrapper"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/line1"
+        app:layout_constraintTop_toTopOf="@+id/my_selling_wrapper" />
+</androidx.constraintlayout.widget.ConstraintLayout>
