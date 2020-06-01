@@ -44,6 +44,7 @@ public class SettingsActivity extends AppCompatActivity {
         if (id == android.R.id.home) {
             // 当在设置主页时结束activity
             // 否则从回退栈中弹出一个页面
+            // ceshi
             Toast.makeText(this, "" + getSupportFragmentManager().getBackStackEntryCount(), Toast.LENGTH_SHORT).show();
             if (getSupportFragmentManager().getBackStackEntryCount() == 0)
                 finish();
