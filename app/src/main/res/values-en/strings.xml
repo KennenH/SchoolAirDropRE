@@ -29,4 +29,6 @@
     <string name="vibrate">Vibrate</string>
     <string name="sounds">Sounds</string>
     <string name="receiveInAppMessages">Receive In-App Messages</string>
+    <string name="language">Language</string>
+    <string name="storage">Storage</string>
 </resources>

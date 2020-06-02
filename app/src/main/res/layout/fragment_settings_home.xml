@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="@dimen/general_padding_large"
     app:srlEnableOverScrollDrag="true"
-    app:srlEnablePureScrollMode="true"
     app:srlEnableRefresh="false"
     app:srlFooterMaxDragRate="1.2"
     app:srlHeaderMaxDragRate="1.2">
@@ -18,10 +17,10 @@
             android:id="@+id/settings_home_alipay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:description="已绑定 小鱼子酱"
             app:icon="@drawable/ic_alipay"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="@string/alipayBinding"
-            app:description="已绑定 小鱼子酱" />
+            app:title="@string/alipayBinding" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/settings_home_privacy"
@@ -50,10 +49,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
+            app:description="校园空投 v0.0.1"
             app:icon="@drawable/logo_120x"
             app:layout_constraintTop_toBottomOf="@+id/settings_home_general"
-            app:title="@string/about"
-            app:description="校园空投 v0.0.1" />
+            app:title="@string/about" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

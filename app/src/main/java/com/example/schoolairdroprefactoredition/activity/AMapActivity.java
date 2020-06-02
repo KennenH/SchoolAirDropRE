@@ -31,7 +31,7 @@ public class AMapActivity extends AppCompatActivity {
         Toolbar mToolbar = findViewById(R.id.toolbar);
         mMapView = findViewById(R.id.map);
 
-        StatusBarUtil.setTranslucentForImageView(this, 204, mToolbar);
+        StatusBarUtil.setTranslucentForImageView(this, 40, mToolbar);
 
         mMapView.onCreate(savedInstanceState);
 

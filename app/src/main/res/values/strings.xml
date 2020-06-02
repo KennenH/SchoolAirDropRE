@@ -36,5 +36,7 @@
     <string name="vibrate">振动</string>
     <string name="sounds">声音</string>
     <string name="receiveInAppMessages">接收站内信</string>
+    <string name="language">语言</string>
+    <string name="storage">存储空间</string>
 
 </resources>

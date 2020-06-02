@@ -1,25 +1,34 @@
 package com.example.schoolairdroprefactoredition.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.view.animation.AnimationUtils;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 
-public class SettingsActivity extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
+
+    private String settingName;
+
+    private TextView mFragmentName;
+    private int stackNum = 0;
+
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,11 +36,18 @@ public class SettingsActivity extends AppCompatActivity {
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_settings);
 
+        settingName = getResources().getString(R.string.setting);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        mFragmentName = findViewById(R.id.textView);
+
+        getSupportFragmentManager().addOnBackStackChangedListener(this);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.settings, new SettingsFragment())
+                .replace(R.id.settings, new SettingsFragment(), settingName)
                 .commit();
 
+        setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
@@ -42,10 +58,6 @@ public class SettingsActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
-            // 当在设置主页时结束activity
-            // 否则从回退栈中弹出一个页面
-            // ceshi
-            Toast.makeText(this, "" + getSupportFragmentManager().getBackStackEntryCount(), Toast.LENGTH_SHORT).show();
             if (getSupportFragmentManager().getBackStackEntryCount() == 0)
                 finish();
             else
@@ -54,11 +66,25 @@ public class SettingsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onBackStackChanged() {
+        mFragmentName.startAnimation(AnimationUtils.loadAnimation(this, R.anim.enter_text));
+        Fragment now = getSupportFragmentManager().findFragmentById(R.id.settings);
+        if (now != null)
+            mFragmentName.setText(now.getTag());
+    }
+
     /**
      * 设置的主页面
      */
     public static class SettingsFragment extends Fragment implements View.OnClickListener {
-        private static final String NAME = "SettingsFragment";
+        private String notificationName;
+        private String alipayBindingName;
+        private String privacyName;
+        private String generalName;
+        private String aboutName;
+
+        private FragmentManager manager;
         private PageItem mAlipay;
         private PageItem mPrivacy;
         private PageItem mNotification;
@@ -66,6 +92,20 @@ public class SettingsActivity extends AppCompatActivity {
         private PageItem mAbout;
 
         public SettingsFragment() {
+        }
+
+        @Override
+        public void onAttach(@NonNull Context context) {
+            super.onAttach(context);
+
+            notificationName = getResources().getString(R.string.setting);
+            alipayBindingName = getResources().getString(R.string.alipayBinding);
+            privacyName = getResources().getString(R.string.privacy);
+            generalName = getResources().getString(R.string.general);
+            aboutName = getResources().getString(R.string.about);
+
+            if (getActivity() != null)
+                manager = getActivity().getSupportFragmentManager();
         }
 
         @Nullable
@@ -100,18 +140,25 @@ public class SettingsActivity extends AppCompatActivity {
                     break;
                 case R.id.settings_home_notification:
                     // notification
-                    FragmentActivity activity = getActivity();
-                    if (activity != null) {
-                        activity.getSupportFragmentManager().beginTransaction().addToBackStack(NAME);
-                        activity.getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.settings, new SettingsNotificationFragment());
-                    } else {
-                        Toast.makeText(getContext(), "activity null", Toast.LENGTH_SHORT).show();
-                    }
+                    manager.beginTransaction()
+                            // 这四个参数的意思分别是
+                            // 1 新fragment进入动画
+                            // 2 旧fragment退出动画
+                            // 3 在新fragment回退时旧fragment的进入动画
+                            // 4 在新fragment回退时新fragment的退出动画
+                            .setCustomAnimations(R.anim.enter_fragment, R.anim.popexit_fragment, R.anim.popenter_fragment, R.anim.exit_fragment)
+                            .replace(((ViewGroup) getView().getParent()).getId(), new SettingsNotificationFragment(), notificationName)
+                            .addToBackStack(null)
+                            .commit();
 
                     break;
                 case R.id.settings_home_general:
                     // general
+                    manager.beginTransaction()
+                            .setCustomAnimations(R.anim.enter_fragment, R.anim.popexit_fragment, R.anim.popenter_fragment, R.anim.exit_fragment)
+                            .replace(((ViewGroup) getView().getParent()).getId(), new SettingsGeneralFragment(), generalName)
+                            .addToBackStack(null)
+                            .commit();
                     break;
                 case R.id.settings_home_about:
                     // about
@@ -124,9 +171,13 @@ public class SettingsActivity extends AppCompatActivity {
      * 关于页面
      */
     public static class SettingsAboutFragment extends Fragment {
-        private static final String NAME = "SettingsAboutFragment";
 
         public SettingsAboutFragment() {
+        }
+
+        @Override
+        public void onAttach(@NonNull Context context) {
+            super.onAttach(context);
         }
 
         @Nullable
@@ -141,9 +192,13 @@ public class SettingsActivity extends AppCompatActivity {
      * 通知页面
      */
     public static class SettingsNotificationFragment extends Fragment {
-        private static final String NAME = "SettingsNotificationFragment";
 
         public SettingsNotificationFragment() {
+        }
+
+        @Override
+        public void onAttach(@NonNull Context context) {
+            super.onAttach(context);
         }
 
         private PageItem mReceiveNew;
@@ -164,4 +219,22 @@ public class SettingsActivity extends AppCompatActivity {
             return root;
         }
     }
+
+    public static class SettingsGeneralFragment extends Fragment {
+        public SettingsGeneralFragment() {
+        }
+
+        @Override
+        public void onAttach(@NonNull Context context) {
+            super.onAttach(context);
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_general, container, false);
+            return root;
+        }
+    }
+
 }
