@@ -31,4 +31,16 @@
     <string name="receiveInAppMessages">Receive In-App Messages</string>
     <string name="language">Language</string>
     <string name="storage">Storage</string>
+    <string name="allowAddViaAlipay">Allow Finding Me Via Alipay ID</string>
+    <string name="AllowAddViaAlipayDescription">After turning off, It will not show you to your Alipay friends, and others cannot find you by searching Alipay account</string>
+    <string name="recommendAlipay">Recommend My Alipay Friends To Me</string>
+    <string name="blacklist">Blacklist</string>
+    <string name="userInfo">User Infomation</string>
+    <string name="recommedAlipauFriendDescription">After turning on,Alipay friends who have joined theSchoolAirDrop will be recommended to you</string>
+    <string name="setAvatar">Set Avatar</string>
+    <string name="setName">Set Name</string>
+    <string name="more">More</string>
+    <string name="name">Name</string>
+    <string name="sex">Sex</string>
+    <string name="done">Done</string>
 </resources>

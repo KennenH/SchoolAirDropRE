@@ -6,21 +6,32 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:splitMotionEvents="false"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:splitMotionEvents="false">
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
-            android:id="@+id/settings_general_language"
+            android:id="@+id/settings_privacy_find_via_alipay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:title="@string/language" />
+            app:description="@string/AllowAddViaAlipayDescription"
+            app:isSwitch="true"
+            app:title="@string/allowAddViaAlipay" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
-            android:id="@+id/settings_general_storage"
+            android:id="@+id/settings_privacy_recommend_alipay_friend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:description="@string/recommedAlipauFriendDescription"
+            app:isSwitch="true"
+            app:title="@string/recommendAlipay" />
+
+        <com.example.schoolairdroprefactoredition.ui.components.PageItem
+            android:id="@+id/settings_privacy_blacklist"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
-            app:title="@string/storage" />
+            app:title="@string/blacklist" />
+
     </LinearLayout>
 </com.example.schoolairdroprefactoredition.utils.OverDragLayout>

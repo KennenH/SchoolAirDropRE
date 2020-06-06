@@ -77,7 +77,7 @@
                 android:layout_width="25dp"
                 android:layout_height="25dp"
                 android:contentDescription="@string/personalInfo"
-                android:src="@drawable/baseline_arrow_right_24"
+                android:src="@drawable/right_black"
                 app:layout_constraintBottom_toBottomOf="@+id/my_avatar"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/my_avatar" />
@@ -94,25 +94,25 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
-            app:arrow="@drawable/baseline_arrow_right_24"
-            app:icon="@drawable/baseline_watch_later_24"
+            app:arrow="@drawable/right_black"
+            app:icon="@drawable/later_blue"
             app:title="@string/onGoing" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/my_likes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/general_padding_large"
-            app:arrow="@drawable/baseline_arrow_right_24"
-            app:icon="@drawable/baseline_favorite_24"
+            app:arrow="@drawable/right_black"
+            app:icon="@drawable/favorite_red"
             app:title="@string/likes" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/my_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:arrow="@drawable/baseline_arrow_right_24"
-            app:icon="@drawable/baseline_settings_24"
+            android:layout_marginTop="@dimen/general_padding_large"
+            app:arrow="@drawable/right_black"
+            app:icon="@drawable/settings_black"
             app:title="@string/setting" />
 
     </LinearLayout>

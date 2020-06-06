@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/sheet_button"
+    android:padding="@dimen/general_padding_bit_larger">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <com.shehuan.niv.NiceImageView
+        android:id="@+id/item_page_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:scaleType="centerCrop"
+        app:corner_radius="3dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/item_page_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding_large"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/item_page_icon"
+        app:layout_constraintStart_toEndOf="@+id/item_page_icon"
+        app:layout_constraintTop_toTopOf="@+id/item_page_icon"
+        tools:text="@string/likes" />
+
+    <TextView
+        android:id="@+id/item_page_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding"
+        android:textColor="#888888"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/item_page_name"
+        app:layout_constraintTop_toBottomOf="@+id/item_page_name"
+        tools:text="查看我的收藏查看我的收藏查看我的收藏" />
+
+    <ImageView
+        android:id="@+id/item_page_arrow"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/right_black"
+        app:layout_constraintBottom_toBottomOf="@+id/item_page_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/item_page_icon" />
+
+    <Switch
+        android:id="@+id/item_page_switch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/item_page_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/item_page_icon" />
+
+    <CheckBox
+        android:id="@+id/item_page_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/item_page_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/item_page_icon" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

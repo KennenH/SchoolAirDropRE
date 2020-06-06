@@ -1,6 +1,9 @@
 <resources>
     <string name="currency_RMB" translatable="false">¥</string>
     <string name="tag_recycler_item" translatable="false">TagRecyclerItem</string>
+    <string name="simplifiedChinese" translatable="false">简体中文</string>
+    <string name="english" translatable="false">English</string>
+
 
     <!--  substitutions  -->
     <string name="indicator" translatable="false">/%1$d</string>
@@ -38,5 +41,17 @@
     <string name="receiveInAppMessages">接收站内信</string>
     <string name="language">语言</string>
     <string name="storage">存储空间</string>
+    <string name="allowAddViaAlipay">允许通过支付宝添加我</string>
+    <string name="AllowAddViaAlipayDescription">关闭后不会向你的支付宝好友展示你,同时其他人也无法通过搜索支付宝账号来找到你</string>
+    <string name="recommendAlipay">向我推荐支付宝好友</string>
+    <string name="recommedAlipauFriendDescription">开启后会向你推荐已加入校园空投的支付宝好友</string>
+    <string name="blacklist">黑名单</string>
+    <string name="userInfo">用户信息</string>
+    <string name="setAvatar">设置头像</string>
+    <string name="setName">设置名字</string>
+    <string name="more">更多</string>
+    <string name="name">名字</string>
+    <string name="sex">性别</string>
+    <string name="done">完成</string>
 
 </resources>

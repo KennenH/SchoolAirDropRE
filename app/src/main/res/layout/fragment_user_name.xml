@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.schoolairdroprefactoredition.utils.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="true">
+
+        <EditText
+            android:id="@+id/user_name_editor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:inputType="text"
+            android:lines="1"
+            android:padding="@dimen/general_padding_bit_larger"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/user_name_clear"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="@dimen/general_padding_bit_larger"
+            android:src="@drawable/cancel_black"
+            app:layout_constraintBottom_toBottomOf="@+id/user_name_editor"
+            app:layout_constraintEnd_toEndOf="@+id/user_name_editor"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/user_name_done"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:background="@drawable/sheet_button_green"
+            android:gravity="center"
+            android:padding="@dimen/general_padding_bit_larger"
+            android:text="@string/done"
+            app:layout_constraintTop_toBottomOf="@+id/user_name_editor" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.example.schoolairdroprefactoredition.utils.OverDragLayout>

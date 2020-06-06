@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.SettingsActivity;
+import com.example.schoolairdroprefactoredition.activity.UserActivity;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -57,7 +58,8 @@ public class MyFragment extends Fragment implements View.OnClickListener {
         int id = v.getId();
         switch (id) {
             case R.id.my_info:
-                // open my info editor
+                Intent intentInfo = new Intent(getContext(), UserActivity.class);
+                getContext().startActivity(intentInfo);
                 break;
             case R.id.my_selling_wrapper:
                 // my selling
@@ -76,8 +78,8 @@ public class MyFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.my_settings:
                 // open settings
-                Intent intent = new Intent(getContext(), SettingsActivity.class);
-                getContext().startActivity(intent);
+                Intent intentSetting = new Intent(getContext(), SettingsActivity.class);
+                getContext().startActivity(intentSetting);
                 break;
         }
     }

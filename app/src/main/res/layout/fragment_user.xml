@@ -1,26 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.example.schoolairdroprefactoredition.utils.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:splitMotionEvents="false"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
-            android:id="@+id/settings_general_language"
+            android:id="@+id/user_avatar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:title="@string/language" />
+            app:icon="@drawable/logo_120x"
+            app:isIconLarge="true"
+            app:title="@string/avatar" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
-            android:id="@+id/settings_general_storage"
+            android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
-            app:title="@string/storage" />
+            app:description="空小投"
+            app:title="@string/name" />
+
+        <com.example.schoolairdroprefactoredition.ui.components.PageItem
+            android:id="@+id/user_sex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:description="雌雄同体"
+            app:title="@string/sex" />
+
     </LinearLayout>
 </com.example.schoolairdroprefactoredition.utils.OverDragLayout>

@@ -31,7 +31,7 @@
                 android:background="@drawable/half_round_rect_bottom_left"
                 android:paddingTop="@dimen/general_padding_bit_larger"
                 android:paddingBottom="@dimen/general_padding_bit_larger"
-                android:src="@drawable/outline_favorite_white_48" />
+                android:src="@drawable/outline_favorite_24" />
 
             <View
                 android:layout_width="@dimen/line"
@@ -45,7 +45,7 @@
                 android:background="@drawable/half_round_rect_bottom_right"
                 android:paddingTop="@dimen/general_padding_bit_larger"
                 android:paddingBottom="@dimen/general_padding_bit_larger"
-                android:src="@drawable/outline_favorite_white_24" />
+                android:src="@drawable/outline_favorite_24" />
 
         </LinearLayout>
     </com.lihang.ShadowLayout>

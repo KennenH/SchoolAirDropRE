@@ -12,7 +12,10 @@
     <declare-styleable name="PageItem">
         <attr name="isFirst" format="boolean" />
         <attr name="isLast" format="boolean" />
+        <attr name="isIconLarge" format="boolean" />
         <attr name="isSwitch" format="boolean" />
+        <attr name="isCheck" format="boolean" />
+        <attr name="showArrow" format="boolean" />
         <attr name="icon" format="reference" />
         <attr name="arrow" format="reference" />
         <attr name="title" format="string" />

@@ -10,5 +10,5 @@
         android:layout_height="match_parent"
         android:background="@drawable/item_round"
         android:padding="@dimen/general_padding_large"
-        android:src="@drawable/outline_favorite_white_48" />
+        android:src="@drawable/outline_favorite_24" />
 </androidx.constraintlayout.widget.ConstraintLayout>
