@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -16,13 +16,23 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:isSwitch="true"
+            app:layout_constraintTop_toTopOf="parent"
             app:title="@string/receiveNewMessages" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginStart="50dp"
+            android:layout_height="1px"
+            android:background="@color/colorLine"
+            app:layout_constraintBottom_toBottomOf="@+id/settings_notification_receive"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/settings_notification_in_app"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:isSwitch="true"
+            app:layout_constraintTop_toBottomOf="@+id/settings_notification_receive"
             app:title="@string/receiveInAppMessages" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
@@ -31,14 +41,24 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
             app:isSwitch="true"
+            app:layout_constraintTop_toBottomOf="@+id/settings_notification_in_app"
             app:title="@string/vibrate" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_marginStart="50dp"
+            android:layout_height="1px"
+            android:background="@color/colorLine"
+            app:layout_constraintBottom_toBottomOf="@+id/settings_notification_vibrate"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/settings_notification_sounds"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:isSwitch="true"
+            app:layout_constraintTop_toBottomOf="@+id/settings_notification_vibrate"
             app:title="@string/sounds" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.example.schoolairdroprefactoredition.utils.OverDragLayout>

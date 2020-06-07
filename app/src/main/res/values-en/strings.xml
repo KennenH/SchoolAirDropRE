@@ -43,4 +43,16 @@
     <string name="name">Name</string>
     <string name="sex">Sex</string>
     <string name="done">Done</string>
+    <string name="switchAccount">Switch Account</string>
+    <string name="signOut">Sign Out</string>
+    <string name="address">Address</string>
+    <string name="addressDescription">The address is only visible to you, you can choose when you need to use it</string>
+    <string name="takePhoto">Take Photo</string>
+    <string name="selectFromAlbum">Select From Album</string>
+    <string name="saveToAlbum">Save To Album</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm">Confirm</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="hermaphrodite">Hermaphrodite</string>
 </resources>

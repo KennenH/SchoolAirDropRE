@@ -53,5 +53,17 @@
     <string name="name">名字</string>
     <string name="sex">性别</string>
     <string name="done">完成</string>
+    <string name="switchAccount">切换账号</string>
+    <string name="signOut">退出登录</string>
+    <string name="address">地址</string>
+    <string name="addressDescription">地址仅自己可见,可以在需要使用地址时选择</string>
+    <string name="takePhoto">拍照</string>
+    <string name="selectFromAlbum">从相册选择</string>
+    <string name="saveToAlbum">保存至相册</string>
+    <string name="cancel">取消</string>
+    <string name="confirm">确定</string>
+    <string name="female">雌</string>
+    <string name="male">雄</string>
+    <string name="hermaphrodite">雌雄同体</string>
 
 </resources>

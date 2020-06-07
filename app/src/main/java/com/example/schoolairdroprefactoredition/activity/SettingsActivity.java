@@ -33,6 +33,7 @@ public class SettingsActivity extends AppCompatActivity implements FragmentManag
 
     private boolean flag = true;// 用于标识需要进行变换的标题
     private boolean actionLock = true;// false 时为锁定,true 为释放
+    private String lastName;
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
@@ -139,9 +140,9 @@ public class SettingsActivity extends AppCompatActivity implements FragmentManag
 
             alpha.startAnimation(animA);
             translation.startAnimation(animT);
-
         } else { // 关闭fragment
             flag = !flag;
+            translation.setText(lastName);
             alpha.setText(now);
 
             Animation animA = AnimationUtils.loadAnimation(this, R.anim.alpha_in);
@@ -189,6 +190,7 @@ public class SettingsActivity extends AppCompatActivity implements FragmentManag
 
         flag = !flag;// 交换职责
         lastStack = nowStack;
+        lastName = now;
     }
 
     /**
@@ -207,6 +209,8 @@ public class SettingsActivity extends AppCompatActivity implements FragmentManag
         private PageItem mNotification;
         private PageItem mGeneral;
         private PageItem mAbout;
+        private TextView mSwitchAccount;
+        private TextView mSignOut;
 
         public SettingsFragment() {
         }
@@ -235,12 +239,16 @@ public class SettingsActivity extends AppCompatActivity implements FragmentManag
             mNotification = root.findViewById(R.id.settings_home_notification);
             mGeneral = root.findViewById(R.id.settings_home_general);
             mAbout = root.findViewById(R.id.settings_home_about);
+            mSwitchAccount = root.findViewById(R.id.settings_home_switch_account);
+            mSignOut = root.findViewById(R.id.settings_home_sign_out);
 
             mAlipay.setOnClickListener(this);
             mPrivacy.setOnClickListener(this);
             mNotification.setOnClickListener(this);
             mGeneral.setOnClickListener(this);
             mAbout.setOnClickListener(this);
+            mSwitchAccount.setOnClickListener(this);
+            mSignOut.setOnClickListener(this);
 
             return root;
         }
@@ -284,6 +292,12 @@ public class SettingsActivity extends AppCompatActivity implements FragmentManag
                     break;
                 case R.id.settings_home_about:
                     // about
+                    break;
+                case R.id.settings_home_switch_account:
+                    // switch account
+                    break;
+                case R.id.settings_home_sign_out:
+                    // sign out and delete all relative user info on this device
                     break;
             }
         }

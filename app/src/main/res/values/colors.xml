@@ -23,7 +23,7 @@
     <color name="black_overlay">#66000000</color>
     <color name="colorLine">#CCDADADA</color>
     <color name="colorPrimaryGreen">#44A944</color>
-    <color name="colorPrimaryGreenLight">#51CA51</color>
+    <color name="colorPrimaryGreenLight">#4BD34B</color>
 
     <color name="heart">#FF695E</color>
 </resources>

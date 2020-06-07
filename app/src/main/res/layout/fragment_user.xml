@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.example.schoolairdroprefactoredition.utils.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -16,6 +15,7 @@
             android:layout_height="wrap_content"
             app:icon="@drawable/logo_120x"
             app:isIconLarge="true"
+            app:layout_constraintTop_toTopOf="parent"
             app:title="@string/avatar" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
@@ -24,14 +24,25 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
             app:description="空小投"
+            app:layout_constraintTop_toBottomOf="@+id/user_avatar"
             app:title="@string/name" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="50dp"
+            android:background="@color/colorLine"
+            app:layout_constraintBottom_toBottomOf="@+id/user_name"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/user_sex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:description="雌雄同体"
+            app:layout_constraintTop_toBottomOf="@+id/user_name"
             app:title="@string/sex" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.example.schoolairdroprefactoredition.utils.OverDragLayout>

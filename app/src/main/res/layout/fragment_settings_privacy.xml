@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
@@ -16,7 +16,17 @@
             android:layout_height="wrap_content"
             app:description="@string/AllowAddViaAlipayDescription"
             app:isSwitch="true"
+            app:layout_constraintTop_toTopOf="parent"
             app:title="@string/allowAddViaAlipay" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="50dp"
+            android:background="@color/colorLine"
+            app:layout_constraintBottom_toBottomOf="@+id/settings_privacy_find_via_alipay"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/settings_privacy_recommend_alipay_friend"
@@ -24,6 +34,7 @@
             android:layout_height="wrap_content"
             app:description="@string/recommedAlipauFriendDescription"
             app:isSwitch="true"
+            app:layout_constraintTop_toBottomOf="@+id/settings_privacy_find_via_alipay"
             app:title="@string/recommendAlipay" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
@@ -31,7 +42,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
+            app:layout_constraintTop_toBottomOf="@+id/settings_privacy_recommend_alipay_friend"
             app:title="@string/blacklist" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.example.schoolairdroprefactoredition.utils.OverDragLayout>

@@ -17,12 +17,14 @@
             android:inputType="text"
             android:lines="1"
             android:padding="@dimen/general_padding_bit_larger"
+            android:textColor="?attr/colorControlNormal"
+            android:textSize="14sp"
             app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/user_name_clear"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
             android:layout_marginEnd="@dimen/general_padding_bit_larger"
             android:src="@drawable/cancel_black"
             app:layout_constraintBottom_toBottomOf="@+id/user_name_editor"
@@ -38,6 +40,7 @@
             android:gravity="center"
             android:padding="@dimen/general_padding_bit_larger"
             android:text="@string/done"
+            android:textColor="@color/white"
             app:layout_constraintTop_toBottomOf="@+id/user_name_editor" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

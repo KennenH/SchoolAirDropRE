@@ -26,8 +26,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 public class UserActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
 
@@ -203,10 +206,15 @@ public class UserActivity extends AppCompatActivity implements FragmentManager.O
         private String userAvatar;
         private String userName;
         private String userSex;
+        private String female;
+        private String male;
+        private String hermaphrodite;
 
         private PageItem avatar;
         private PageItem name;
         private PageItem sex;
+
+        private BottomSheetDialog dialog;
 
         private FragmentManager manager;
 
@@ -218,8 +226,11 @@ public class UserActivity extends AppCompatActivity implements FragmentManager.O
             super.onAttach(context);
 
             userAvatar = getResources().getString(R.string.avatar);
-            userName = getResources().getString(R.string.name);
+            userName = getResources().getString(R.string.setName);
             userSex = getResources().getString(R.string.sex);
+            female = getResources().getString(R.string.female);
+            male = getResources().getString(R.string.male);
+            hermaphrodite = getResources().getString(R.string.hermaphrodite);
 
             if (getActivity() != null)
                 manager = getActivity().getSupportFragmentManager();
@@ -241,11 +252,21 @@ public class UserActivity extends AppCompatActivity implements FragmentManager.O
             return root;
         }
 
+
         @Override
         public void onClick(View v) {
             int id = v.getId();
             if (id == R.id.user_avatar) {
-
+                manager.beginTransaction()
+                        // 这四个参数的意思分别是
+                        // 1 新fragment进入动画
+                        // 2 旧fragment退出动画
+                        // 3 在新fragment回退时旧fragment的进入动画
+                        // 4 在新fragment回退时新fragment的退出动画
+                        .setCustomAnimations(R.anim.enter_x_fragment, R.anim.exit_x_fragment, R.anim.popenter_x_fragment, R.anim.popexit_x_fragment)
+                        .replace(((ViewGroup) getView().getParent()).getId(), new UserAvatarFragment(), userAvatar)
+                        .addToBackStack(userAvatar)
+                        .commit();
             } else if (id == R.id.user_name) {
                 manager.beginTransaction()
                         // 这四个参数的意思分别是
@@ -254,12 +275,57 @@ public class UserActivity extends AppCompatActivity implements FragmentManager.O
                         // 3 在新fragment回退时旧fragment的进入动画
                         // 4 在新fragment回退时新fragment的退出动画
                         .setCustomAnimations(R.anim.enter_y_fragment, R.anim.exit_y_fragment, R.anim.popenter_y_fragment, R.anim.popexit_y_fragment)
-                        .replace(((ViewGroup) getView().getParent()).getId(), new SettingsActivity.SettingsLanguageFragment(), userName)
+                        .replace(((ViewGroup) getView().getParent()).getId(), new UserNameFragment(), userName)
                         .addToBackStack(userName)
                         .commit();
             } else if (id == R.id.user_sex) {
-
+                showSexDialog();
             }
+        }
+
+        private void showSexDialog() {
+            if (dialog == null) {
+                dialog = new BottomSheetDialog(getContext());
+                dialog.setContentView(LayoutInflater.from(getContext()).inflate(R.layout.sheet_sex, null));
+
+                dialog.findViewById(R.id.female).setOnClickListener(v -> {
+                    sex.setDescription(female);
+                    dialog.dismiss();
+                });
+                dialog.findViewById(R.id.male).setOnClickListener(v -> {
+                    sex.setDescription(male);
+                    dialog.dismiss();
+                });
+                dialog.findViewById(R.id.hermaphrodite).setOnClickListener(v -> {
+                    sex.setDescription(hermaphrodite);
+                    dialog.dismiss();
+                });
+                dialog.findViewById(R.id.cancel).setOnClickListener(v -> {
+                    dialog.dismiss();
+                });
+
+
+                View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                view1.setBackground(getResources().getDrawable(R.drawable.transparent, getContext().getTheme()));
+                final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(view1);
+                bottomSheetBehavior.setSkipCollapsed(true);
+                bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                    @Override
+                    public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                            dialog.dismiss();
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        }
+                    }
+
+                    @Override
+                    public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+                    }
+                });
+                dialog.show();
+            } else
+                dialog.show();
         }
     }
 
@@ -289,6 +355,8 @@ public class UserActivity extends AppCompatActivity implements FragmentManager.O
             mClear.setOnClickListener(this);
 
             mEditor.setText(name);
+            mEditor.requestFocus();
+            KeyboardUtils.showSoftInput();
 
             return root;
         }
@@ -302,8 +370,10 @@ public class UserActivity extends AppCompatActivity implements FragmentManager.O
                 if (!mEditor.hasFocus())
                     mEditor.requestFocus();
             } else if (id == R.id.user_name_done) {
-                if (getActivity() != null)
+                if (getActivity() != null) {
+                    KeyboardUtils.hideSoftInput(getActivity());
                     getActivity().getSupportFragmentManager().popBackStack();
+                }
             }
         }
 
@@ -335,5 +405,74 @@ public class UserActivity extends AppCompatActivity implements FragmentManager.O
         }
     }
 
+    public static class UserAvatarFragment extends Fragment implements View.OnLongClickListener {
+
+        private BottomSheetDialog dialog;
+        private ImageView mAvatar;
+
+        public UserAvatarFragment() {
+        }
+
+        @Nullable
+        @Override
+        public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+            View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_avatar, container, false);
+
+            mAvatar = root.findViewById(R.id.avatar);
+
+            mAvatar.setOnLongClickListener(this);
+
+            return root;
+        }
+
+        @Override
+        public boolean onLongClick(View v) {
+            if (v.getId() == R.id.avatar) {
+                showAvatarDialog();
+            }
+            return false;
+        }
+
+        private void showAvatarDialog() {
+            if (dialog == null) {
+                dialog = new BottomSheetDialog(getContext());
+                dialog.setContentView(LayoutInflater.from(getContext()).inflate(R.layout.sheet_avatar, null));
+
+                dialog.findViewById(R.id.take_photo).setOnClickListener(v -> {
+                    dialog.dismiss();
+                });
+                dialog.findViewById(R.id.select_from_album).setOnClickListener(v -> {
+                    dialog.dismiss();
+                });
+                dialog.findViewById(R.id.save_to_album).setOnClickListener(v -> {
+                    dialog.dismiss();
+                });
+                dialog.findViewById(R.id.cancel).setOnClickListener(v -> {
+                    dialog.dismiss();
+                });
+
+                View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                view1.setBackground(getResources().getDrawable(R.drawable.transparent, getContext().getTheme()));
+                final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(view1);
+                bottomSheetBehavior.setSkipCollapsed(true);
+                bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                    @Override
+                    public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                            dialog.dismiss();
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        }
+                    }
+
+                    @Override
+                    public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+                    }
+                });
+                dialog.show();
+            } else
+                dialog.show();
+        }
+    }
 
 }

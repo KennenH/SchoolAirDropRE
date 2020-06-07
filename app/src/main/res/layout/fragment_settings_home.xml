@@ -26,12 +26,28 @@
             app:layout_constraintTop_toBottomOf="@+id/settings_home_alipay"
             app:title="@string/privacy" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="50dp"
+            android:background="@color/colorLine"
+            app:layout_constraintBottom_toBottomOf="@+id/settings_home_privacy"
+            app:layout_constraintEnd_toEndOf="parent" />
+
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/settings_home_notification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/settings_home_privacy"
             app:title="@string/notification" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="50dp"
+            android:background="@color/colorLine"
+            app:layout_constraintBottom_toBottomOf="@+id/settings_home_notification"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/settings_home_general"
@@ -50,6 +66,28 @@
             app:layout_constraintTop_toBottomOf="@+id/settings_home_general"
             app:title="@string/about" />
 
+        <TextView
+            android:id="@+id/settings_home_switch_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:background="@drawable/sheet_button"
+            android:gravity="center"
+            android:padding="@dimen/general_padding_bit_larger"
+            android:text="@string/switchAccount"
+            app:layout_constraintTop_toBottomOf="@+id/settings_home_about" />
+
+        <TextView
+            android:id="@+id/settings_home_sign_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:background="@drawable/sheet_button_red"
+            android:gravity="center"
+            android:padding="@dimen/general_padding_bit_larger"
+            android:text="@string/signOut"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toBottomOf="@+id/settings_home_switch_account" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.example.schoolairdroprefactoredition.utils.OverDragLayout>

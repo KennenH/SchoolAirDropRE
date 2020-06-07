@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.schoolairdroprefactoredition.utils.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/avatar"
+            android:layout_width="@dimen/x320"
+            android:layout_height="@dimen/x320"
+            android:contentDescription="@string/avatar"
+            android:src="@drawable/logo_180x" />
+
+    </LinearLayout>
+</com.example.schoolairdroprefactoredition.utils.OverDragLayout>

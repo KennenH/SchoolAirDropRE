@@ -136,6 +136,10 @@ public class PageItem extends ConstraintLayout {
             mArrowView.setImageDrawable(mArrowRes);
     }
 
+    public void setDescription(String description) {
+        mDescriptionView.setText(description);
+    }
+
     public boolean isItemSelected() {
         if (isSwitch)
             return mSwitch.isSelected();
