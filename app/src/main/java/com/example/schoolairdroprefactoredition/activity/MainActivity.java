@@ -7,8 +7,8 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.ui.home.HomeFragment;
-import com.example.schoolairdroprefactoredition.ui.my.MyFragment;
+import com.example.schoolairdroprefactoredition.fragment.home.HomeFragment;
+import com.example.schoolairdroprefactoredition.fragment.my.MyFragment;
 import com.example.schoolairdroprefactoredition.utils.ColorUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.jaeger.library.StatusBarUtil;

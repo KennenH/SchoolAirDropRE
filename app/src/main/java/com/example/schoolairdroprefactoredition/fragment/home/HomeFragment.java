@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.ui.home;
+package com.example.schoolairdroprefactoredition.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -14,21 +13,22 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.blankj.utilcode.util.AppUtils;
-import com.blankj.utilcode.util.FragmentUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.AMapActivity;
+import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
 import com.example.schoolairdroprefactoredition.ui.components.Location;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
-import com.google.android.material.internal.ContextUtils;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import net.lucode.hackware.magicindicator.MagicIndicator;
 
 public class HomeFragment extends Fragment
         implements View.OnClickListener, HomeRecycler.OnLoadMoreListener, OnRefreshListener, AMapLocationListener {
@@ -38,6 +38,9 @@ public class HomeFragment extends Fragment
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
     private Location mLocation;
+
+    private MagicIndicator mIndicator;
+    private ViewPager mViewPager;
 
     private SmartRefreshLayout mRefreshLayout;
     private HomeRecycler mRecycler;
@@ -49,28 +52,29 @@ public class HomeFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+        FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        mIndicator = binding.homeIndicator;
+        mViewPager = binding.homeViewpager;
 
-        mRefreshLayout = root.findViewById(R.id.home_refresh);
-        mLocation = root.findViewById(R.id.home_location);
-        mRecycler = root.findViewById(R.id.home_recycler);
+        mRefreshLayout = binding.homeRefresh;
+        mLocation = binding.homeLocation;
+        mRecycler = binding.homeRecycler;
 
-        // instantiate 对象必须在此，不能在上面声明的同时 new，否则mLocationClient为空无法启动定位
         mLocationClient = new AMapLocationClient(getContext());
         mLocationOption = new AMapLocationClientOption();
         mAdapter = new HomeRecycler.HomeRecyclerAdapter();
 
         mRefreshLayout.setOnRefreshListener(this);
         mLocation.setOnClickListener(this);
-        root.findViewById(R.id.home_tap_to_top).setOnClickListener(this);
-        root.findViewById(R.id.home_search_bar).setOnClickListener(this);
+        binding.homeTapToTop.setOnClickListener(this);
+        binding.homeSearchBar.setOnClickListener(this);
 
         initRecyclerOnlineData();
         initRecycler();
         initLocation();
 
-        return root;
+        return binding.getRoot();
     }
 
     private void initLocation() {
@@ -131,6 +135,7 @@ public class HomeFragment extends Fragment
             mRecycler.smoothScrollToPosition(0);
         } else if (id == R.id.home_search_bar) {
             // todo open search activity
+
         } else if (id == R.id.home_location) {
             // open map
             Intent intent = new Intent(getContext(), AMapActivity.class);
@@ -143,7 +148,7 @@ public class HomeFragment extends Fragment
     public void autoLoadMore(HomeRecycler recycler) {
         homeViewModel.getRecyclerData().observe(getViewLifecycleOwner(), data -> {
             mAdapter.addData(data);
-            recycler.loadingFinished();
+            recycler.finishLoading();
         });
     }
 
@@ -152,7 +157,7 @@ public class HomeFragment extends Fragment
         homeViewModel.getRecyclerData().observe(getViewLifecycleOwner(), data -> {
             mAdapter.setList(data);
             mAdapter.notifyDataSetChanged();
-            mRecycler.loadingFinished();
+            mRecycler.finishLoading();
             refreshLayout.finishRefresh();
         });
     }

@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.ui.my;
+package com.example.schoolairdroprefactoredition.fragment.my;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -15,9 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.SettingsActivity;
 import com.example.schoolairdroprefactoredition.activity.UserActivity;
-import com.example.schoolairdroprefactoredition.ui.components.PageItem;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
 
 public class MyFragment extends Fragment implements View.OnClickListener {
     private ImageView mAvatar;

@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.ui.home;
+package com.example.schoolairdroprefactoredition.fragment.home;
 
 import android.os.Build;
 
@@ -6,6 +6,10 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainNews;
+import com.example.schoolairdroprefactoredition.presenter.callback.IHomeCallback;
+import com.example.schoolairdroprefactoredition.presenter.impl.HomeImpl;
 import com.example.schoolairdroprefactoredition.ui.components.RecyclerItemData;
 import com.example.schoolairdroprefactoredition.ui.components.Tags;
 
@@ -13,17 +17,21 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class HomeViewModel extends ViewModel {
-
+public class HomeViewModel extends ViewModel implements IHomeCallback {
+    private HomeImpl mHomeImpl;
     private MutableLiveData<List<RecyclerItemData>> mRecyclerOnlineData;
 
     public LiveData<List<RecyclerItemData>> getRecyclerData() {
         getRecyclerOnlineData();
+        mHomeImpl.getNearbyGoodsInfo();
         return mRecyclerOnlineData;
     }
 
 
     public HomeViewModel() {
+        mHomeImpl = new HomeImpl();
+        mHomeImpl.registerCallback(this);
+        mHomeImpl.getNearbyGoodsInfo();
         getRecyclerOnlineData();
     }
 
@@ -45,7 +53,7 @@ public class HomeViewModel extends ViewModel {
             };
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                tags.sort((a,b) -> a - b);
+                tags.sort((a, b) -> a - b);
             }
 
             data[i].setTags(tags);
@@ -93,5 +101,30 @@ public class HomeViewModel extends ViewModel {
         data[39].setImageUrl("http://img.souutu.com/2020/0415/20200415123551874.jpg");
 
         mRecyclerOnlineData.setValue(Arrays.asList(data));
+    }
+
+    /**
+     * 附近在售数据从这里出来
+     *
+     * @param domainGoodsInfo 附近商品信息
+     */
+    @Override
+    public void onGoodsInfoLoaded(DomainGoodsInfo domainGoodsInfo) {
+        //todo setValue 或 postValue来更新ui
+    }
+
+    /**
+     * 新闻数据从这里出来
+     *
+     * @param domainNews 新闻数据
+     */
+    @Override
+    public void onNewsLoaded(DomainNews domainNews) {
+        //todo setValue 或 postValue来更新ui
+    }
+
+    @Override
+    protected void onCleared() {
+        mHomeImpl.unregisterCallback(this);
     }
 }

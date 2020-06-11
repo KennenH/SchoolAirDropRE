@@ -65,5 +65,6 @@
     <string name="female">雌</string>
     <string name="male">雄</string>
     <string name="hermaphrodite">雌雄同体</string>
+    <string name="clear">清空</string>
 
 </resources>

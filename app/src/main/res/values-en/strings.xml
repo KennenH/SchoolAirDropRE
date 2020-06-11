@@ -55,4 +55,5 @@
     <string name="female">Female</string>
     <string name="male">Male</string>
     <string name="hermaphrodite">Hermaphrodite</string>
+    <string name="clear">Clear</string>
 </resources>

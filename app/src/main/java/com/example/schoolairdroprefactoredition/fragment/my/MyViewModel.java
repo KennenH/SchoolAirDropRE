@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.ui.my;
+package com.example.schoolairdroprefactoredition.fragment.my;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

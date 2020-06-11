@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <EditText
+        android:id="@+id/search_bar"
+        android:layout_width="0dp"
+        android:layout_height="@dimen/toolbar_icon_large"
+        android:layout_marginEnd="@dimen/general_padding_bit_larger"
+        android:background="@drawable/home_search_bar"
+        android:drawableStart="@drawable/round_search_24"
+        android:gravity="start|center_vertical"
+        android:hint="@string/Search"
+        android:importantForAutofill="no"
+        android:inputType="text"
+        android:lines="1"
+        android:paddingStart="@dimen/general_padding_large"
+        android:paddingEnd="@dimen/general_padding_large"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/search_cancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/search_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cancel"
+        app:layout_constraintBottom_toBottomOf="@+id/search_bar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/search_bar" />
+
+    <ImageView
+        android:id="@+id/search_clear"
+        android:layout_width="@dimen/toolbar_icon_large"
+        android:layout_height="@dimen/toolbar_icon_large"
+        android:contentDescription="@string/clear"
+        android:padding="7dp"
+        android:src="@drawable/cancel_black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/search_bar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

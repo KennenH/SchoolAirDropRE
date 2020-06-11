@@ -12,7 +12,7 @@
     app:srlFooterMaxDragRate="1.2"
     app:srlHeaderMaxDragRate="1.2"
     app:srlHeaderTriggerRate="10"
-    tools:context=".ui.my.MyFragment">
+    tools:context=".fragment.my.MyFragment">
 
     <View
         android:layout_width="match_parent"

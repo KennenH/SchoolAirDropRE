@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.ui.home;
+package com.example.schoolairdroprefactoredition.fragment.home;
 
 import android.content.Context;
 import android.content.Intent;
@@ -25,8 +25,6 @@ import com.example.schoolairdroprefactoredition.ui.components.Tags;
 import com.google.android.flexbox.FlexboxLayout;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
 
 /**
  * 自动加载数据、调整了tap to top滑动速度
@@ -66,7 +64,7 @@ public class HomeRecycler extends RecyclerView {
     /**
      * 当向下滑动时检测当前可见item的位置是否大于等于加载因子与总item数之积
      * 并加载新数据，以loading为加载标志，防止重复加载
-     * 加载完毕后外部必须调用 {@link #loadingFinished()}
+     * 加载完毕后外部必须调用 {@link #finishLoading()}
      *
      * @param dy 垂直方向的滑动
      */
@@ -129,7 +127,7 @@ public class HomeRecycler extends RecyclerView {
      * 数据加载完毕时必须调用此方法,否则之后不会自动加载数据
      * 自动加载参看{@link #onScrolled}
      */
-    public void loadingFinished() {
+    public void finishLoading() {
         loading = false;
     }
 
@@ -148,7 +146,7 @@ public class HomeRecycler extends RecyclerView {
 
     /**
      * 数据自动加载接口
-     * 数据加载完毕务必调用 {@link #loadingFinished()}
+     * 数据加载完毕务必调用 {@link #finishLoading()}
      */
     public interface OnLoadMoreListener {
         void autoLoadMore(HomeRecycler recycler);

@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/news_day"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding_bit_larger"
+        android:textColor="#FF5757"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/news_month"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/news_title"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:text="32" />
+
+    <TextView
+        android:id="@+id/news_month"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding"
+        android:includeFontPadding="false"
+        app:layout_constraintBottom_toBottomOf="@+id/news_sender"
+        app:layout_constraintEnd_toEndOf="@id/news_day"
+        app:layout_constraintStart_toStartOf="@id/news_day"
+        app:layout_constraintTop_toBottomOf="@id/news_day"
+        tools:text="13月" />
+
+    <TextView
+        android:id="@+id/news_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding_bit_larger"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:layout_marginEnd="@dimen/general_padding_bit_larger"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@id/news_sender"
+        app:layout_constraintEnd_toStartOf="@+id/news_cover"
+        app:layout_constraintStart_toEndOf="@+id/news_day"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="spread_inside"
+        tools:text="校园空投测试版开始测试啦" />
+
+    <TextView
+        android:id="@+id/news_sender"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding"
+        android:layout_marginBottom="@dimen/general_padding_large"
+        android:gravity="start|bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/news_title"
+        app:layout_constraintStart_toStartOf="@id/news_title"
+        app:layout_constraintTop_toBottomOf="@id/news_title"
+        tools:text="校园空投官方" />
+
+    <com.shehuan.niv.NiceImageView
+        android:id="@+id/news_cover"
+        android:layout_width="80dp"
+        android:layout_height="70dp"
+        android:layout_marginEnd="@dimen/general_padding_bit_larger"
+        android:scaleType="centerCrop"
+        app:corner_radius="@dimen/general_padding"
+        app:layout_constraintBottom_toBottomOf="@+id/news_sender"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/news_title"
+        tools:src="@drawable/logo_180x" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
