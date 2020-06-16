@@ -10,17 +10,17 @@ import com.blankj.utilcode.util.ScreenUtils;
 
 /**
  * 仅垂直方向decoration
- *  /代表decoration的区域
- *  ////////////////////
- *   ———————————————————
- *  | <-Match Parent-> |
- *  ———————————————————
- *  ///////////////////
+ * /代表decoration的区域
+ * ////////////////////
+ * ———————————————————
+ * | <-Match Parent-> |
+ * ———————————————————
+ * ///////////////////
  * 四周型 {@link MarginItemDecoration}
  * 仅水平方向 {@link HorizontalMarginItemDecoration}
  */
 public class VerticalMarginItemDecoration extends RecyclerView.ItemDecoration {
-    private int space = ScreenUtils.getAppScreenWidth() / 70;
+    private int space = ScreenUtils.getAppScreenWidth() / 140;
 
     public VerticalMarginItemDecoration() {
     }

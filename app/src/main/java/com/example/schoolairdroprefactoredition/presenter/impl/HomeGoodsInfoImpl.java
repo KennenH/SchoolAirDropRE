@@ -1,54 +1,54 @@
-package com.example.schoolairdroprefactoredition.fragment.home;
+package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import android.os.Build;
-
-import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
-
+import com.example.schoolairdroprefactoredition.presenter.IHomeGoodsInfoPresenter;
+import com.example.schoolairdroprefactoredition.presenter.callback.IHomeGoodsInfoCallback;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
-import com.example.schoolairdroprefactoredition.ui.components.Tags;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
-@Deprecated
-public class HomeViewModel extends ViewModel {
-    private MutableLiveData<List<TestGoodsItemBean>> mRecyclerOnlineData;
+public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
 
-    public LiveData<List<TestGoodsItemBean>> getRecyclerData() {
-        getRecyclerOnlineData();
-        return mRecyclerOnlineData;
-    }
+    private IHomeGoodsInfoCallback mCallback = null;
 
+    /**
+     * 请求附近在售的数据
+     *
+     * @param size 请求的item条数
+     */
+    @Override
+    public void getNearbyGoodsInfo(int size) {
+//        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+//        Api api = retrofit.create(Api.class);
+//        Call<DomainGoodsInfo> task = api.getGoodsInfo();
+//        task.enqueue(new Callback<DomainGoodsInfo>() {
+//            @Override
+//            public void onResponse(Call<DomainGoodsInfo> call, Response<DomainGoodsInfo> response) {
+//                int code = response.code();
+//                if (code == HttpURLConnection.HTTP_OK) {
+//                    DomainGoodsInfo info = response.body();
+//                    Log.d("HomeImpl", info.toString());
+//                    if (mCallback != null) {
+//                        // if (data.size() != 0)
+//                        mCallback.onGoodsInfoLoaded(info);
+//                        //else
+//                        // mCallback.onGoodsInfoEmpty();
+//                    }
+//                } else {
+//                    Log.d("HomeImpl", "请求错误 " + code);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<DomainGoodsInfo> call, Throwable t) {
+//                Log.e("HomeImpl", "请求失败 -- > " + t);
+//            }
+//        });
 
-    public HomeViewModel() {
-        getRecyclerOnlineData();
-    }
-
-
-    private void getRecyclerOnlineData() {
-        mRecyclerOnlineData = new MutableLiveData<>();
-        TestGoodsItemBean[] data = new TestGoodsItemBean[40];
+        // test
+        TestGoodsItemBean[] data = new TestGoodsItemBean[size];
         for (int i = 0; i < data.length; i++) {
             data[i] = new TestGoodsItemBean();
-            data[i].setTitle("计算机网络原理 第五版 低价出");
-            data[i].setPrice(20.99f);
-
-            List<Integer> tags = new ArrayList<Integer>() {
-                {
-                    add(Tags.ADVERTISEMENT);
-                    add(Tags.SECOND_HAND);
-                    add(Tags.NEGOTIABLE);
-                }
-            };
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                tags.sort((a, b) -> a - b);
-            }
-
-            data[i].setTags(tags);
+            data[i].setPrice(20000.99f);
         }
 
         data[0].setImageUrl("http://img.souutu.com/2020/0415/20200415123551376.jpg");
@@ -92,7 +92,16 @@ public class HomeViewModel extends ViewModel {
         data[38].setImageUrl("http://img.souutu.com/2020/0415/20200415123550781.jpg");
         data[39].setImageUrl("http://img.souutu.com/2020/0415/20200415123551874.jpg");
 
-        mRecyclerOnlineData.setValue(Arrays.asList(data));
+        mCallback.onGoodsInfoLoaded(Arrays.asList(data));
     }
 
+    @Override
+    public void registerCallback(IHomeGoodsInfoCallback callback) {
+        this.mCallback = callback;
+    }
+
+    @Override
+    public void unregisterCallback(IHomeGoodsInfoCallback callback) {
+        mCallback = null;
+    }
 }

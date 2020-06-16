@@ -19,10 +19,9 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.GoodsActivity;
-import com.example.schoolairdroprefactoredition.ui.components.GoodsPopularity;
-import com.example.schoolairdroprefactoredition.ui.components.RecyclerItemData;
-import com.example.schoolairdroprefactoredition.ui.components.Tags;
-import com.google.android.flexbox.FlexboxLayout;
+import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
+import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -32,7 +31,6 @@ import org.jetbrains.annotations.NotNull;
  */
 public class HomeRecycler extends RecyclerView {
 
-    private float loadFactor = 0.75f;// 加载因子，可见item位置 > 总数与因子乘积的位置 将加载新数据
     int pastVisibleItem, visibleItemCount, totalItemCount;
 
     int[] pastVisibleItems = new int[100];
@@ -62,8 +60,8 @@ public class HomeRecycler extends RecyclerView {
     }
 
     /**
-     * 当向下滑动时检测当前可见item的位置是否大于等于加载因子与总item数之积
-     * 并加载新数据，以loading为加载标志，防止重复加载
+     * 当向下滑动时检测剩余已加载的item数量是否小于一个定值
+     * 并加载新数据，以loading为加载标志，防止同时重复加载
      * 加载完毕后外部必须调用 {@link #finishLoading()}
      *
      * @param dy 垂直方向的滑动
@@ -88,7 +86,7 @@ public class HomeRecycler extends RecyclerView {
             // 是否正在加载
             if (!loading) {
                 // 是否需要加载新数据
-                if ((visibleItemCount + pastVisibleItem) >= totalItemCount * loadFactor) {
+                if (totalItemCount - pastVisibleItem < ConstantUtil.DATA_FETCH_DEFAULT_SIZE / 2) {
                     // 正在加载标志，防止重复加载
                     loading = true;
                     // 加载新数据
@@ -125,23 +123,10 @@ public class HomeRecycler extends RecyclerView {
 
     /**
      * 数据加载完毕时必须调用此方法,否则之后不会自动加载数据
-     * 自动加载参看{@link #onScrolled}
+     * {@link #onScrolled}
      */
     public void finishLoading() {
         loading = false;
-    }
-
-    /**
-     * 设置加载因子
-     * 可见item位置 > 总数与因子乘积的位置 将加载新数据
-     *
-     * @param factor 因子
-     * @throws Exception factor为介于 0 到 1 的float
-     */
-    public void setLoadFactor(float factor) throws Exception {
-        if (factor > 0f && factor < 1f)
-            loadFactor = factor;
-        else throw new Exception("factor could not be larger than 1 or less than 0.");
     }
 
     /**
@@ -163,33 +148,62 @@ public class HomeRecycler extends RecyclerView {
 
 
     /**
-     * 与HomeRecycler配对的Adapter
+     * 附近在售列表的adapter
      */
-    public static class HomeRecyclerAdapter extends BaseQuickAdapter<RecyclerItemData, BaseViewHolder> implements OnClickListener {
-        HomeRecyclerAdapter() {
-            super(R.layout.item_home_light);
+    public static class HomeNearbyRecyclerAdapter extends BaseQuickAdapter<TestGoodsItemBean, BaseViewHolder> implements OnClickListener {
+        HomeNearbyRecyclerAdapter() {
+            super(R.layout.item_home_goods_info);
         }
 
         @Override
-        protected void convert(@NotNull BaseViewHolder holder, RecyclerItemData item) {
-            Glide.with(getContext())
-                    .load(item.getImageUrl())
-                    .diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .dontTransform()
-                    .into((ImageView) holder.itemView.findViewById(R.id.item_image));
+        protected void convert(@NotNull BaseViewHolder holder, TestGoodsItemBean item) {
+            if (item != null) {
+                Glide.with(getContext())
+                        .load(item.getImageUrl())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop()
+                        .placeholder(getContext().getResources().getDrawable(R.drawable.logo_120x, getContext().getTheme()))
+                        .dontTransform()
+                        .into((ImageView) holder.itemView.findViewById(R.id.item_image));
 
-            holder.setText(R.id.item_title, item.getTitle());
-            GoodsPopularity popularity = holder.itemView.findViewById(R.id.item_popularity);
-            FlexboxLayout tagsWrapper = holder.itemView.findViewById(R.id.item_tags);
-            tagsWrapper.removeAllViews();
-            for (Integer tag : item.getTags()) {
-                tagsWrapper.addView(new Tags(getContext(), tag));
+                holder.itemView.setOnClickListener(this);
             }
-            popularity.setComments(item.getComments());
-            popularity.setLikes(item.getLikes());
-            popularity.setWatches(item.getWatches());
+        }
 
-            holder.itemView.setOnClickListener(this);
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getContext(), GoodsActivity.class);
+            getContext().startActivity(intent);
+        }
+    }
+
+    /**
+     * 新闻列表的adapter
+     * todo 将BaseQuickAdapter内的泛型改为新闻bean类
+     */
+    public static class HomeNewsRecyclerAdapter extends BaseQuickAdapter<TestNewsItemBean, BaseViewHolder> implements OnClickListener {
+        HomeNewsRecyclerAdapter() {
+            super(R.layout.item_home_news);
+        }
+
+        @Override
+        protected void convert(@NotNull BaseViewHolder holder, TestNewsItemBean item) {
+            if (item != null) {
+                Glide.with(getContext())
+                        .load(item.getUrl())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .centerCrop()
+                        .placeholder(getContext().getResources().getDrawable(R.drawable.logo_120x, getContext().getTheme()))
+                        .dontTransform()
+                        .into((ImageView) holder.itemView.findViewById(R.id.news_cover));
+
+                holder.setText(R.id.news_title, item.getTitle());
+                holder.setText(R.id.news_day, item.getDay());
+                holder.setText(R.id.news_month, item.getMonth());
+                holder.setText(R.id.news_sender, item.getSender());
+
+                holder.itemView.setOnClickListener(this);
+            }
         }
 
         @Override

@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.fragment.settings;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,12 +20,6 @@ public class SettingsPrivacyFragment extends Fragment implements View.OnClickLis
     private PageItem mBlackList;
 
     public SettingsPrivacyFragment() {
-    }
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
     }
 
     @Nullable

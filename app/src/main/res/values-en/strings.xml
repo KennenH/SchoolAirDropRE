@@ -3,11 +3,11 @@
     <string name="app_name">SchoolAirDrop</string>
     <string name="my">My</string>
     <string name="home">Home</string>
-    <string name="NearBy">NearBy</string>
+    <string name="nearby">NearBy</string>
     <string name="goods_description">Description</string>
-    <string name="Search">Search</string>
-    <string name="Messages">Messages</string>
-    <string name="Mails">Mails</string>
+    <string name="search">Search</string>
+    <string name="messages">Messages</string>
+    <string name="mails">Mails</string>
     <string name="selling">Selling</string>
     <string name="sold">Sold</string>
     <string name="purchased">Purchased</string>
@@ -32,7 +32,7 @@
     <string name="language">Language</string>
     <string name="storage">Storage</string>
     <string name="allowAddViaAlipay">Allow Finding Me Via Alipay ID</string>
-    <string name="AllowAddViaAlipayDescription">After turning off, It will not show you to your Alipay friends, and others cannot find you by searching Alipay account</string>
+    <string name="allowAddViaAlipayDescription">After turning off, It will not show you to your Alipay friends, and others cannot find you by searching Alipay account</string>
     <string name="recommendAlipay">Recommend My Alipay Friends To Me</string>
     <string name="blacklist">Blacklist</string>
     <string name="userInfo">User Infomation</string>
@@ -56,4 +56,6 @@
     <string name="male">Male</string>
     <string name="hermaphrodite">Hermaphrodite</string>
     <string name="clear">Clear</string>
+    <string name="noMoreData">No More Data...</string>
+    <string name="noMoreOlderData">You Are Up To Date</string>
 </resources>

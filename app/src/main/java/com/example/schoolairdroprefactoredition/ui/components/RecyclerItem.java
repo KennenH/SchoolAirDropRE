@@ -18,8 +18,6 @@ public class RecyclerItem extends ConstraintLayout {
     private TextView mTitle;
     private GoodsPrice mGoodsPrice;
 
-    private GoodsPopularity mPopularity;
-
     public RecyclerItem(Context context) {
         this(context, null);
     }
@@ -30,12 +28,11 @@ public class RecyclerItem extends ConstraintLayout {
 
     public RecyclerItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater.from(context).inflate(R.layout.item_home_light, this, true);
+        LayoutInflater.from(context).inflate(R.layout.item_home_goods_info, this, true);
 
         mImage = findViewById(R.id.item_image);
         mTitle = findViewById(R.id.item_title);
         mGoodsPrice = findViewById(R.id.item_price);
-        mPopularity = findViewById(R.id.item_popularity);
     }
 
     public void setImage(String url) {
@@ -54,15 +51,4 @@ public class RecyclerItem extends ConstraintLayout {
         mGoodsPrice.setPrice(price);
     }
 
-    public void setComments(int comments) {
-        mPopularity.setComments(comments);
-    }
-
-    public void setLikes(int likes) {
-        mPopularity.setLikes(likes);
-    }
-
-    public void setWatches(int watches) {
-        mPopularity.setWatches(watches);
-    }
 }

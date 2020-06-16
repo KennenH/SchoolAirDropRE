@@ -29,7 +29,7 @@ public class HomeNewsItem extends ConstraintLayout {
 
     public HomeNewsItem(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater.from(context).inflate(R.layout.component_home_news, this, true);
+        LayoutInflater.from(context).inflate(R.layout.item_home_news, this, true);
 
         mDay = findViewById(R.id.news_day);
         mMonth = findViewById(R.id.news_month);

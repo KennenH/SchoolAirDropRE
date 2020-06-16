@@ -4,15 +4,17 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISearchCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.SearchImpl;
+import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
+
+import java.util.List;
 
 public class SearchViewModel extends ViewModel implements ISearchCallback {
     private SearchImpl mSearchImpl;
 
-    private MutableLiveData<DomainGoodsInfo> mSearchResults;
+    private MutableLiveData<List<TestGoodsItemBean>> mSearchResults;
     private MutableLiveData<DomainSearchItems> mSearchHistories;
     private MutableLiveData<DomainSearchItems> mSearchSuggestions;
 
@@ -22,7 +24,12 @@ public class SearchViewModel extends ViewModel implements ISearchCallback {
     }
 
     @Override
-    public void onSearchResultLoaded(DomainGoodsInfo domainGoodsInfo) {
+    public void onSearchResultLoading() {
+        //todo 正在加载
+    }
+
+    @Override
+    public void onSearchResultLoaded(List<TestGoodsItemBean> domainGoodsInfo) {
         mSearchResults = new MutableLiveData<>();
         mSearchResults.setValue(domainGoodsInfo);
     }
@@ -39,7 +46,12 @@ public class SearchViewModel extends ViewModel implements ISearchCallback {
         mSearchSuggestions.setValue(domainSearchItems);
     }
 
-    public LiveData<DomainGoodsInfo> getSearchResult(String key) {
+    @Override
+    public void onResultEmpty() {
+        //todo 没有更多
+    }
+
+    public LiveData<List<TestGoodsItemBean>> getSearchResult(String key) {
         mSearchImpl.getSearchResult(key);
         return mSearchResults;
     }

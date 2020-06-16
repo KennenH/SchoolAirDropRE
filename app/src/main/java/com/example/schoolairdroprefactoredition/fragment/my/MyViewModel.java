@@ -4,55 +4,36 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
+import com.example.schoolairdroprefactoredition.model.databean.TestUserInfoBean;
+import com.example.schoolairdroprefactoredition.presenter.callback.IMyCallback;
+import com.example.schoolairdroprefactoredition.presenter.impl.MyImpl;
 import com.example.schoolairdroprefactoredition.utils.NumberUtil;
 
-public class MyViewModel extends ViewModel {
+public class MyViewModel extends ViewModel implements IMyCallback {
 
-    private MutableLiveData<String> mName;
-    private MutableLiveData<String> mSelling;
-    private MutableLiveData<String> mSold;
-    private MutableLiveData<String> mPurchased;
+    private MyImpl mImpl;
 
-    public LiveData<String> getName() {
-        return mName;
-    }
-
-    public LiveData<String> getSelling() {
-        return mSelling;
-    }
-
-    public LiveData<String> getSold() {
-        return mSold;
-    }
-
-    public LiveData<String> getPurchased() {
-        return mPurchased;
-    }
+    private MutableLiveData<TestUserInfoBean> mUserInfo;
 
     public MyViewModel() {
-        getOnlineName();
-        getOnlineSelling();
-        getOnlineSold();
-        getOnlinePurchased();
+        mImpl = new MyImpl();
+        mImpl.registerCallback(this);
+        mImpl.getUserInfo();
+
     }
 
-    private void getOnlineName() {
-        mName = new MutableLiveData<>();
-        mName.setValue("奥利给");
+    public LiveData<TestUserInfoBean> getUserInfo() {
+        return mUserInfo;
     }
 
-    private void getOnlineSelling() {
-        mSelling = new MutableLiveData<>();
-        mSelling.setValue(NumberUtil.num2StringWithUnit(4));
+    @Override
+    public void onUserInfoLoaded(TestUserInfoBean data) {
+        mUserInfo = new MutableLiveData<>();
+        mUserInfo.setValue(data);
     }
 
-    private void getOnlineSold() {
-        mSold = new MutableLiveData<>();
-        mSold.setValue(NumberUtil.num2StringWithUnit(5));
-    }
-
-    private void getOnlinePurchased() {
-        mPurchased = new MutableLiveData<>();
-        mPurchased.setValue(NumberUtil.num2StringWithUnit(13));
+    @Override
+    protected void onCleared() {
+        mImpl.unregisterCallback(this);
     }
 }

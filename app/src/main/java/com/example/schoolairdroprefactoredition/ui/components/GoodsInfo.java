@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.utils.NumberUtil;
+import com.example.schoolairdroprefactoredition.model.databean.TestGoodsDetailBean;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.flexbox.FlexboxLayout;
 
@@ -43,7 +43,7 @@ public class GoodsInfo extends ShimmerFrameLayout {
         mDescription = findViewById(R.id.goods_description);
     }
 
-    public void setData(GoodsData data) {
+    public void setData(TestGoodsDetailBean data) {
         mGoodsName.setText(data.getGoodsName());
         mTags.removeAllViews();
         for (Integer tag : data.getTags()) {

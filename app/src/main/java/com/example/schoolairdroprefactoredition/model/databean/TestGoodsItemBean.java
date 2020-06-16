@@ -1,8 +1,8 @@
-package com.example.schoolairdroprefactoredition.ui.components;
+package com.example.schoolairdroprefactoredition.model.databean;
 
 import java.util.List;
 
-public class RecyclerItemData {
+public class TestGoodsItemBean {
     private String imageUrl;
     private String title;
     private float price;

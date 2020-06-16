@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class HeaderOnlyRecyclerAdapter extends BaseQuickAdapter<String, BaseViewHolder> {
     public HeaderOnlyRecyclerAdapter() {
-        super(R.layout.item_home_light);
+        super(R.layout.item_home_goods_info);
     }
 
     @Override

@@ -15,39 +15,39 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.SettingsActivity;
 import com.example.schoolairdroprefactoredition.activity.UserActivity;
+import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding;
+import com.example.schoolairdroprefactoredition.ui.components.BoughtSoldInfo;
 
 public class MyFragment extends Fragment implements View.OnClickListener {
+
     private ImageView mAvatar;
     private TextView mName;
-    private TextView mSelling;
-    private TextView mSold;
-    private TextView mPurchased;
+    private BoughtSoldInfo mBoughtSoldInfo;
+    private Bundle mUserBundle;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         MyViewModel myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_my, container, false);
+        FragmentMyBinding binding = FragmentMyBinding.inflate(inflater, container, false);
 
-        mAvatar = root.findViewById(R.id.my_avatar);
-        mName = root.findViewById(R.id.my_name);
-        mSelling = root.findViewById(R.id.my_selling);
-        mSold = root.findViewById(R.id.my_sold);
-        mPurchased = root.findViewById(R.id.my_bought);
+        mUserBundle = new Bundle();
+        mAvatar = binding.myAvatar;
+        mName = binding.myName;
+        mBoughtSoldInfo = binding.myBoughtSold;
 
-        root.findViewById(R.id.my_info).setOnClickListener(this);
-        root.findViewById(R.id.my_selling_wrapper).setOnClickListener(this);
-        root.findViewById(R.id.my_sold_wrapper).setOnClickListener(this);
-        root.findViewById(R.id.my_bought_wrapper).setOnClickListener(this);
-        root.findViewById(R.id.my_onGoing).setOnClickListener(this);
-        root.findViewById(R.id.my_likes).setOnClickListener(this);
-        root.findViewById(R.id.my_settings).setOnClickListener(this);
+        binding.myInfo.setOnClickListener(this);
+        binding.myOnGoing.setOnClickListener(this);
+        binding.myLikes.setOnClickListener(this);
+        binding.mySettings.setOnClickListener(this);
 
 //        myViewModel.getAvatar()
-        myViewModel.getName().observe(getViewLifecycleOwner(), name -> mName.setText(name));
-        myViewModel.getSelling().observe(getViewLifecycleOwner(), name -> mSelling.setText(name));
-        myViewModel.getSold().observe(getViewLifecycleOwner(), name -> mSold.setText(name));
-        myViewModel.getPurchased().observe(getViewLifecycleOwner(), name -> mPurchased.setText(name));
+        myViewModel.getUserInfo().observe(getViewLifecycleOwner(), data -> {
+            mName.setText(data.getName());
+            mBoughtSoldInfo.setSelling(data.getSelling());
+            mBoughtSoldInfo.setSold(data.getSold());
+            mBoughtSoldInfo.setBought(data.getBought());
+        });
 
-        return root;
+        return binding.getRoot();
     }
 
     @Override
@@ -57,15 +57,6 @@ public class MyFragment extends Fragment implements View.OnClickListener {
             case R.id.my_info:
                 Intent intentInfo = new Intent(getContext(), UserActivity.class);
                 getContext().startActivity(intentInfo);
-                break;
-            case R.id.my_selling_wrapper:
-                // my selling
-                break;
-            case R.id.my_sold_wrapper:
-                // history sold
-                break;
-            case R.id.my_bought_wrapper:
-                // history bought
                 break;
             case R.id.my_onGoing:
                 // list on going

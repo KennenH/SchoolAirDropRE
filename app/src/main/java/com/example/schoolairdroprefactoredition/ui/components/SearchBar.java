@@ -53,7 +53,6 @@ public class SearchBar extends ConstraintLayout implements View.OnClickListener,
         return true;
     }
 
-
     public interface OnSearchActionListener {
         /**
          * 按关键字搜索
@@ -73,7 +72,7 @@ public class SearchBar extends ConstraintLayout implements View.OnClickListener,
         /**
          * 取消
          */
-        void onCanceled();
+        void onCanceled(View v);
     }
 
     public void setOnSearchActionListener(OnSearchActionListener onSearchActionListener) {
@@ -87,7 +86,7 @@ public class SearchBar extends ConstraintLayout implements View.OnClickListener,
             mSearch.setText("");
         } else if (id == R.id.cancel) {
             if (mOnSearchActionListener != null) {
-                mOnSearchActionListener.onCanceled();
+                mOnSearchActionListener.onCanceled(this);
             }
         } else if (id == R.id.search) {
 
@@ -97,12 +96,12 @@ public class SearchBar extends ConstraintLayout implements View.OnClickListener,
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+        // do nothing
     }
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+        // do nothing
     }
 
     @Override

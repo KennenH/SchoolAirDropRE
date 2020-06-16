@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:splitMotionEvents="false"
     tools:context=".fragment.home.HomeFragment">
 
     <androidx.appcompat.widget.Toolbar
@@ -43,7 +44,7 @@
                 android:background="@drawable/home_search_bar"
                 android:drawableStart="@drawable/round_search_24"
                 android:gravity="center_vertical"
-                android:hint="@string/Search"
+                android:hint="@string/search"
                 android:paddingStart="10dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/home_location"
@@ -55,37 +56,14 @@
     <net.lucode.hackware.magicindicator.MagicIndicator
         android:id="@+id/home_indicator"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="35dp"
         app:layout_constraintTop_toBottomOf="@+id/home_toolbar" />
 
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/home_viewpager"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/home_indicator" />
-
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/home_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/home_toolbar"
-        app:srlEnableOverScrollDrag="true"
-        app:srlFooterMaxDragRate="1.2"
-        app:srlHeaderMaxDragRate="1.2"
-        app:srlHeaderTriggerRate="0.7">
-
-        <com.example.schoolairdroprefactoredition.utils.refresher.DeliveryHeader
-            android:layout_width="match_parent"
-            android:layout_height="110dp" />
-
-        <com.example.schoolairdroprefactoredition.fragment.home.HomeRecycler
-            android:id="@+id/home_recycler"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:overScrollMode="never"
-            tools:listitem="@layout/item_home_light" />
-
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,12 +12,12 @@ import com.example.schoolairdroprefactoredition.R;
 
 /**
  * 四周型decoration
- * +和/代表decoration
- * ++//////////////////////++
+ * +代表decoration
+ * ++++++++++++++++++++++++++
  * ++  ——————————————————— ++
  * ++ |       View        |++
  * ++ ———————————————————  ++
- * ++//////////////////////++
+ * ++++++++++++++++++++++++++
  * <p>
  * 仅垂直方向 {@link VerticalMarginItemDecoration}
  * 仅水平方向 {@link HorizontalMarginItemDecoration}

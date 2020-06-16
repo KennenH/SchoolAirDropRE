@@ -4,20 +4,20 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.schoolairdroprefactoredition.ui.components.GoodsData;
+import com.example.schoolairdroprefactoredition.model.databean.TestGoodsDetailBean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsViewModel extends ViewModel {
 
-    private MutableLiveData<GoodsData> mGoodsData;
+    private MutableLiveData<TestGoodsDetailBean> mGoodsData;
 
     public GoodsViewModel() {
         getOnlineGoodsData();
     }
 
-    public LiveData<GoodsData> getGoodsData() {
+    public LiveData<TestGoodsDetailBean> getGoodsData() {
         return mGoodsData;
     }
 
@@ -25,7 +25,7 @@ public class GoodsViewModel extends ViewModel {
         mGoodsData = new MutableLiveData<>();
 
         //////////////////////test/////////////////////////
-        GoodsData data = new GoodsData();
+        TestGoodsDetailBean data = new TestGoodsDetailBean();
         List<String> list = new ArrayList<>();
         list.add("http://image.hbwh.net/uploads/20190415/12/1555303460-uvFtcOoTLa.jpg");
         list.add("http://image.hbwh.net/uploads/20190415/12/1555303460-xDmVrXGMhu.jpg");

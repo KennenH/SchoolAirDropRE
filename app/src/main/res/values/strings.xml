@@ -12,12 +12,11 @@
     <!--  translatable  -->
     <string name="home">首页</string>
     <string name="my">我的</string>
-    <string name="NearBy">附近</string>
     <string name="app_name">校园空投</string>
     <string name="goods_description">物品描述</string>
-    <string name="Search">搜索</string>
-    <string name="Messages">消息</string>
-    <string name="Mails">邮件</string>
+    <string name="search">搜索</string>
+    <string name="messages">消息</string>
+    <string name="mails">邮件</string>
     <string name="selling">在售</string>
     <string name="sold">已售</string>
     <string name="purchased">已购</string>
@@ -42,7 +41,7 @@
     <string name="language">语言</string>
     <string name="storage">存储空间</string>
     <string name="allowAddViaAlipay">允许通过支付宝添加我</string>
-    <string name="AllowAddViaAlipayDescription">关闭后不会向你的支付宝好友展示你,同时其他人也无法通过搜索支付宝账号来找到你</string>
+    <string name="allowAddViaAlipayDescription">关闭后不会向你的支付宝好友展示你,同时其他人也无法通过搜索支付宝账号来找到你</string>
     <string name="recommendAlipay">向我推荐支付宝好友</string>
     <string name="recommedAlipauFriendDescription">开启后会向你推荐已加入校园空投的支付宝好友</string>
     <string name="blacklist">黑名单</string>
@@ -66,5 +65,8 @@
     <string name="male">雄</string>
     <string name="hermaphrodite">雌雄同体</string>
     <string name="clear">清空</string>
+    <string name="nearby">附近</string>
+    <string name="noMoreData">没有更多了</string>
+    <string name="noMoreOlderData">没有更早的消息了</string>
 
 </resources>

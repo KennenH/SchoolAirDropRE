@@ -14,7 +14,7 @@
             android:id="@+id/settings_privacy_find_via_alipay"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:description="@string/AllowAddViaAlipayDescription"
+            app:description="@string/allowAddViaAlipayDescription"
             app:isSwitch="true"
             app:layout_constraintTop_toTopOf="parent"
             app:title="@string/allowAddViaAlipay" />

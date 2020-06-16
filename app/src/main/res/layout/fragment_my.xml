@@ -19,16 +19,11 @@
         android:layout_height="match_parent"
         android:background="@color/white" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:background="@color/white"
-            android:translationZ="-1dp" />
+        android:orientation="vertical"
+        android:splitMotionEvents="false">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/my_info"
@@ -37,7 +32,7 @@
             android:background="@color/white"
             android:orientation="horizontal"
             android:paddingStart="@dimen/general_padding_larger"
-            android:paddingTop="@dimen/general_padding_large"
+            android:paddingTop="45dp"
             android:paddingEnd="@dimen/general_padding_bit_larger"
             android:paddingBottom="@dimen/general_padding_large"
             app:layout_constraintTop_toTopOf="parent">
@@ -96,7 +91,16 @@
             android:layout_marginTop="@dimen/general_padding_large"
             app:arrow="@drawable/right_black"
             app:icon="@drawable/later_blue"
+            app:layout_constraintTop_toBottomOf="@+id/my_bought_sold"
             app:title="@string/onGoing" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="50dp"
+            android:background="@color/colorLine"
+            app:layout_constraintBottom_toBottomOf="@+id/my_onGoing"
+            app:layout_constraintEnd_toEndOf="parent" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/my_likes"
@@ -104,6 +108,7 @@
             android:layout_height="wrap_content"
             app:arrow="@drawable/right_black"
             app:icon="@drawable/favorite_red"
+            app:layout_constraintTop_toBottomOf="@+id/my_onGoing"
             app:title="@string/likes" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
@@ -113,7 +118,8 @@
             android:layout_marginTop="@dimen/general_padding_large"
             app:arrow="@drawable/right_black"
             app:icon="@drawable/settings_black"
+            app:layout_constraintTop_toBottomOf="@+id/my_likes"
             app:title="@string/setting" />
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.scwang.smartrefresh.layout.SmartRefreshLayout>

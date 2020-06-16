@@ -1,12 +1,13 @@
-package com.example.schoolairdroprefactoredition.ui.components;
+package com.example.schoolairdroprefactoredition.model.databean;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * FOR TEST ONLY
  * 商品详情页面的数据存储类
  */
-public class GoodsData {
+public class TestGoodsDetailBean {
     private List<String> imageData = new ArrayList<>();
     private String goodsName;
     private int comments;

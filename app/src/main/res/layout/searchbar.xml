@@ -12,7 +12,7 @@
         android:background="@drawable/home_search_bar"
         android:drawableStart="@drawable/round_search_24"
         android:gravity="start|center_vertical"
-        android:hint="@string/Search"
+        android:hint="@string/search"
         android:importantForAutofill="no"
         android:inputType="text"
         android:lines="1"

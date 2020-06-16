@@ -88,6 +88,8 @@ dependencies {
     implementation 'com.amap.api:location:latest.integration'
     implementation 'com.amap.api:map2d:latest.integration'
     implementation 'com.amap.api:search:latest.integration'
-
+    // magic indicator
     implementation 'com.github.hackware1993:MagicIndicator:1.6.0'
+    // rich text
+    implementation 'com.zzhoujay.richtext:richtext:3.0.8'
 }

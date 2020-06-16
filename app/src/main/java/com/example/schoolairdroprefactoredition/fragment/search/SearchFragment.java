@@ -70,14 +70,6 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     }
 
-    private void hideKeyboard(View view) {
-        KeyboardUtils.hideSoftInput(view);
-    }
-
-    private void showKeyboard() {
-        KeyboardUtils.showSoftInput();
-    }
-
     private void showHistory() {
         isHistoryShowing = true;
         isSuggestionShowing = false;
@@ -108,8 +100,8 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     @Override
     public void onSearch(String key, View v) {
         searchViewModel.getSearchResult(key).observe(getViewLifecycleOwner(), data -> {
-            // todo 将搜索结果显示在SearchResult上
             hideKeyboard(v);
+            // todo 将搜索结果显示在SearchResult上
         });
     }
 
@@ -121,8 +113,9 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     }
 
     @Override
-    public void onCanceled() {
+    public void onCanceled(View v) {
         if (getActivity() != null) {
+            hideKeyboard(v);
             getActivity().getSupportFragmentManager().popBackStack();
         }
     }
@@ -136,4 +129,13 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
                 hideKeyboard(v);
         }
     }
+
+    private void hideKeyboard(View view) {
+        KeyboardUtils.hideSoftInput(view);
+    }
+
+    private void showKeyboard() {
+        KeyboardUtils.showSoftInput();
+    }
+
 }
