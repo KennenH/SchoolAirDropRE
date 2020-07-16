@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/general_padding_small">
+
+    <ImageView
+        android:id="@+id/search_suggestion_icon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@drawable/round_search_24"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/search_suggestion_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding"
+        app:layout_constraintBottom_toBottomOf="@+id/search_suggestion_icon"
+        app:layout_constraintStart_toEndOf="@+id/search_suggestion_icon"
+        app:layout_constraintTop_toTopOf="@+id/search_suggestion_icon"
+        tools:text="Java核心技术" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -2,44 +2,64 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/primary"
+    android:clickable="true"
+    android:focusable="true">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/search_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:contentInsetEnd="@dimen/general_padding_bit_larger"
+        android:layout_height="?attr/actionBarSize"
+        app:contentInsetEnd="@dimen/general_padding_large"
+        app:contentInsetStart="@dimen/general_padding_large"
         app:layout_constraintTop_toTopOf="parent">
 
         <com.example.schoolairdroprefactoredition.ui.components.SearchBar
             android:id="@+id/search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:layout_marginEnd="@dimen/general_padding_bit_larger" />
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_history"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:overScrollMode="never"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
+        app:layout_constraintTop_toBottomOf="@+id/search_toolbar"
+        app:srlEnableOverScrollDrag="true"
+        app:srlEnableRefresh="false"
+        app:srlFooterMaxDragRate="1"
+        app:srlHeaderMaxDragRate="1.2">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_suggestion"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:overScrollMode="never"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/search_result"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:overScrollMode="never"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_history"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
 
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/search_suggestion"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
+
+            <com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
+                android:id="@+id/search_result"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
+
+        </FrameLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

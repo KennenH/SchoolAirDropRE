@@ -1,10 +1,7 @@
-package com.example.schoolairdroprefactoredition.fragment.home;
+package com.example.schoolairdroprefactoredition.ui.components;
 
 import android.content.Context;
-import android.content.Intent;
 import android.util.AttributeSet;
-import android.view.View;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,23 +10,13 @@ import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.viewholder.BaseViewHolder;
-import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.activity.GoodsActivity;
-import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
-import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 自动加载数据、调整了tap to top滑动速度
  * 的recycler view
  */
-public class HomeRecycler extends RecyclerView {
+public class EndlessRecyclerView extends RecyclerView {
 
     int pastVisibleItem, visibleItemCount, totalItemCount;
 
@@ -40,18 +27,17 @@ public class HomeRecycler extends RecyclerView {
     private LayoutManager mLayoutManager;
     private OnLoadMoreListener mOnLoadMoreListener;
 
-    public HomeRecycler(@NonNull Context context) {
+    public EndlessRecyclerView(@NonNull Context context) {
         this(context, null);
     }
 
-    public HomeRecycler(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public EndlessRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public HomeRecycler(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public EndlessRecyclerView(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-
 
     @Override
     public void setLayoutManager(@Nullable LayoutManager layout) {
@@ -134,7 +120,7 @@ public class HomeRecycler extends RecyclerView {
      * 数据加载完毕务必调用 {@link #finishLoading()}
      */
     public interface OnLoadMoreListener {
-        void autoLoadMore(HomeRecycler recycler);
+        void autoLoadMore(EndlessRecyclerView recycler);
     }
 
     /**
@@ -144,73 +130,6 @@ public class HomeRecycler extends RecyclerView {
      */
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
         this.mOnLoadMoreListener = onLoadMoreListener;
-    }
-
-
-    /**
-     * 附近在售列表的adapter
-     */
-    public static class HomeNearbyRecyclerAdapter extends BaseQuickAdapter<TestGoodsItemBean, BaseViewHolder> implements OnClickListener {
-        HomeNearbyRecyclerAdapter() {
-            super(R.layout.item_home_goods_info);
-        }
-
-        @Override
-        protected void convert(@NotNull BaseViewHolder holder, TestGoodsItemBean item) {
-            if (item != null) {
-                Glide.with(getContext())
-                        .load(item.getImageUrl())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .placeholder(getContext().getResources().getDrawable(R.drawable.logo_120x, getContext().getTheme()))
-                        .dontTransform()
-                        .into((ImageView) holder.itemView.findViewById(R.id.item_image));
-
-                holder.itemView.setOnClickListener(this);
-            }
-        }
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(getContext(), GoodsActivity.class);
-            getContext().startActivity(intent);
-        }
-    }
-
-    /**
-     * 新闻列表的adapter
-     * todo 将BaseQuickAdapter内的泛型改为新闻bean类
-     */
-    public static class HomeNewsRecyclerAdapter extends BaseQuickAdapter<TestNewsItemBean, BaseViewHolder> implements OnClickListener {
-        HomeNewsRecyclerAdapter() {
-            super(R.layout.item_home_news);
-        }
-
-        @Override
-        protected void convert(@NotNull BaseViewHolder holder, TestNewsItemBean item) {
-            if (item != null) {
-                Glide.with(getContext())
-                        .load(item.getUrl())
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
-                        .centerCrop()
-                        .placeholder(getContext().getResources().getDrawable(R.drawable.logo_120x, getContext().getTheme()))
-                        .dontTransform()
-                        .into((ImageView) holder.itemView.findViewById(R.id.news_cover));
-
-                holder.setText(R.id.news_title, item.getTitle());
-                holder.setText(R.id.news_day, item.getDay());
-                holder.setText(R.id.news_month, item.getMonth());
-                holder.setText(R.id.news_sender, item.getSender());
-
-                holder.itemView.setOnClickListener(this);
-            }
-        }
-
-        @Override
-        public void onClick(View v) {
-            Intent intent = new Intent(getContext(), GoodsActivity.class);
-            getContext().startActivity(intent);
-        }
     }
 
     static class FasterSmoothScroller extends LinearSmoothScroller {

@@ -18,10 +18,9 @@ public class OverDragLayout extends SmartRefreshLayout {
     }
 
     private void init() {
-        setPadding(0, (int) getResources().getDimension(R.dimen.general_padding_large), 0, 0);
         setEnableRefresh(false);
         setFooterMaxDragRate(1.2f);
-        setHeaderMaxDragRate(1.2f);
+        setHeaderMaxDragRate(1.4f);
         setEnableOverScrollDrag(true);
     }
 }

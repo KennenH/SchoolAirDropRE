@@ -13,19 +13,23 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.fragment.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
+
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 设置的主页面
  */
-public class SettingsFragment extends Fragment implements View.OnClickListener {
+public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener {
+    private FragmentManager manager;
+
     private String notificationName;
     private String alipayBindingName;
     private String privacyName;
     private String generalName;
     private String aboutName;
 
-    private FragmentManager manager;
     private PageItem mAlipay;
     private PageItem mPrivacy;
     private PageItem mNotification;
@@ -33,9 +37,6 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     private PageItem mAbout;
     private TextView mSwitchAccount;
     private TextView mSignOut;
-
-    public SettingsFragment() {
-    }
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -54,7 +55,7 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_home, container, false);
+        final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_home, container, false);
 
         mAlipay = root.findViewById(R.id.settings_home_alipay);
         mPrivacy = root.findViewById(R.id.settings_home_privacy);
@@ -83,34 +84,13 @@ public class SettingsFragment extends Fragment implements View.OnClickListener {
                 // alipay
                 break;
             case R.id.settings_home_privacy:
-                // privacy
-                manager.beginTransaction()
-                        // 这四个参数的意思分别是
-                        // 1 新fragment进入动画
-                        // 2 旧fragment退出动画
-                        // 3 在新fragment回退时旧fragment的进入动画
-                        // 4 在新fragment回退时新fragment的退出动画
-
-                        .setCustomAnimations(R.anim.enter_x_fragment, R.anim.exit_x_fragment, R.anim.popenter_x_fragment, R.anim.popexit_x_fragment)
-                        .replace(((ViewGroup) getView().getParent()).getId(), new SettingsPrivacyFragment(), privacyName)
-                        .addToBackStack(privacyName)
-                        .commit();
+                transact(manager,new SettingsPrivacyFragment(),privacyName);
                 break;
             case R.id.settings_home_notification:
-                // notification
-                manager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_x_fragment, R.anim.exit_x_fragment, R.anim.popenter_x_fragment, R.anim.popexit_x_fragment)
-                        .replace(((ViewGroup) getView().getParent()).getId(), new SettingsNotificationFragment(), notificationName)
-                        .addToBackStack(notificationName)
-                        .commit();
+                transact(manager,new SettingsNotificationFragment(),notificationName);
                 break;
             case R.id.settings_home_general:
-                // general
-                manager.beginTransaction()
-                        .setCustomAnimations(R.anim.enter_x_fragment, R.anim.exit_x_fragment, R.anim.popenter_x_fragment, R.anim.popexit_x_fragment)
-                        .replace(((ViewGroup) getView().getParent()).getId(), new SettingsGeneralFragment(), generalName)
-                        .addToBackStack(generalName)
-                        .commit();
+                transact(manager,new SettingsGeneralFragment(),generalName);
                 break;
             case R.id.settings_home_about:
                 // about

@@ -68,5 +68,19 @@
     <string name="nearby">附近</string>
     <string name="noMoreData">没有更多了</string>
     <string name="noMoreOlderData">没有更早的消息了</string>
+    <string name="searchHistory">历史搜索</string>
+    <string name="deleteAll">全部清除</string>
+    <string name="striker">表情</string>
+    <string name="send">发送</string>
+    <string name="quote">报价</string>
+    <string name="quoteDetail">报价详情</string>
+    <string name="received">我收到的</string>
+    <string name="sent">我发出的</string>
+    <string name="agree">同意</string>
+    <string name="userProtocol">《用户许可协议》</string>
+    <string name="serviceProtocol">《校园空投服务条款》</string>
+    <string name="loginTip">使用支付宝登陆将获取您的账号信息,查看服务条款以了解更多</string>
+    <string name="loginWithAlipay">支付宝登录</string>
+    <string name="pending">待处理</string>
 
 </resources>

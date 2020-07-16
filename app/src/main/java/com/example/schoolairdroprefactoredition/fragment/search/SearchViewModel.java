@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
+import com.example.schoolairdroprefactoredition.model.databean.SearchSuggestionBean;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISearchCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.SearchImpl;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
@@ -12,11 +13,13 @@ import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean
 import java.util.List;
 
 public class SearchViewModel extends ViewModel implements ISearchCallback {
+    private String lastSearchedKey;
+
     private SearchImpl mSearchImpl;
 
     private MutableLiveData<List<TestGoodsItemBean>> mSearchResults;
     private MutableLiveData<DomainSearchItems> mSearchHistories;
-    private MutableLiveData<DomainSearchItems> mSearchSuggestions;
+    private MutableLiveData<SearchSuggestionBean> mSearchSuggestions;
 
     public SearchViewModel() {
         mSearchImpl = new SearchImpl();
@@ -41,7 +44,7 @@ public class SearchViewModel extends ViewModel implements ISearchCallback {
     }
 
     @Override
-    public void onSearchSuggestionLoaded(DomainSearchItems domainSearchItems) {
+    public void onSearchSuggestionLoaded(SearchSuggestionBean domainSearchItems) {
         mSearchSuggestions = new MutableLiveData<>();
         mSearchSuggestions.setValue(domainSearchItems);
     }
@@ -51,7 +54,13 @@ public class SearchViewModel extends ViewModel implements ISearchCallback {
         //todo 没有更多
     }
 
+    public LiveData<List<TestGoodsItemBean>> getLastSearchedResult() {
+        mSearchImpl.getSearchResult(lastSearchedKey);
+        return mSearchResults;
+    }
+
     public LiveData<List<TestGoodsItemBean>> getSearchResult(String key) {
+        lastSearchedKey = key;
         mSearchImpl.getSearchResult(key);
         return mSearchResults;
     }
@@ -61,7 +70,7 @@ public class SearchViewModel extends ViewModel implements ISearchCallback {
         return mSearchHistories;
     }
 
-    public LiveData<DomainSearchItems> getSearchSuggestion(String input) {
+    public LiveData<SearchSuggestionBean> getSearchSuggestion(String input) {
         mSearchImpl.getSearchSuggestion(input);
         return mSearchSuggestions;
     }

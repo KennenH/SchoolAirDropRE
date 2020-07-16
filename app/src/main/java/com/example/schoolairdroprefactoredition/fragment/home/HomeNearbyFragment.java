@@ -13,20 +13,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
+import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-public class HomeNearbyFragment extends Fragment implements OnRefreshListener, HomeRecycler.OnLoadMoreListener {
+public class HomeNearbyFragment extends Fragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener {
     private int mFragmentNum;
 
     private HomeNearbyFragmentViewModel homeContentFragmentViewModel;
 
     private SmartRefreshLayout mRefresh;
 
-    private HomeRecycler mHomeRecycler;
-    private HomeRecycler.HomeNearbyRecyclerAdapter mHomeNearbyRecyclerAdapter;
+    private EndlessRecyclerView mEndlessRecyclerView;
+    private HomeNearbyRecyclerAdapter mHomeNearbyRecyclerAdapter;
 
 
     @Override
@@ -42,7 +44,7 @@ public class HomeNearbyFragment extends Fragment implements OnRefreshListener, H
         homeContentFragmentViewModel = new ViewModelProvider(this).get(HomeNearbyFragmentViewModel.class);
 
         mRefresh = binding.homeRefresh;
-        mHomeRecycler = binding.homeRecycler;
+        mEndlessRecyclerView = binding.homeRecycler;
 
         init();
 
@@ -52,11 +54,11 @@ public class HomeNearbyFragment extends Fragment implements OnRefreshListener, H
     private void init() {
         mRefresh.setOnRefreshListener(this);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, mFragmentNum == ConstantUtil.FRAGMENT_NUM_NEWS);
-        mHomeRecycler.setLayoutManager(manager);
-        mHomeRecycler.setOnLoadMoreListener(this);
+        mEndlessRecyclerView.setLayoutManager(manager);
+        mEndlessRecyclerView.setOnLoadMoreListener(this);
 
-        mHomeNearbyRecyclerAdapter = new HomeRecycler.HomeNearbyRecyclerAdapter();
-        mHomeRecycler.setAdapter(mHomeNearbyRecyclerAdapter);
+        mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter();
+        mEndlessRecyclerView.setAdapter(mHomeNearbyRecyclerAdapter);
 
         homeContentFragmentViewModel.getGoodsInfo().observe(getViewLifecycleOwner(), data -> {
             mHomeNearbyRecyclerAdapter.addData(data);
@@ -73,7 +75,7 @@ public class HomeNearbyFragment extends Fragment implements OnRefreshListener, H
     }
 
     @Override
-    public void autoLoadMore(HomeRecycler recycler) {
+    public void autoLoadMore(EndlessRecyclerView recycler) {
         homeContentFragmentViewModel.getGoodsInfo().observe(getViewLifecycleOwner(), data -> {
             mHomeNearbyRecyclerAdapter.addData(data);
             recycler.finishLoading();

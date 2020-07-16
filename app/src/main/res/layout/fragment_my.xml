@@ -85,13 +85,29 @@
             app:layout_constraintTop_toBottomOf="@+id/my_info" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
-            android:id="@+id/my_onGoing"
+            android:id="@+id/my_quote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
+            app:icon="@drawable/ic_price"
+            app:layout_constraintTop_toBottomOf="@+id/my_bought_sold"
+            app:title="@string/quote" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="50dp"
+            android:background="@color/colorLine"
+            app:layout_constraintBottom_toBottomOf="@+id/my_quote"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.example.schoolairdroprefactoredition.ui.components.PageItem
+            android:id="@+id/my_onGoing"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:arrow="@drawable/right_black"
             app:icon="@drawable/later_blue"
-            app:layout_constraintTop_toBottomOf="@+id/my_bought_sold"
+            app:layout_constraintTop_toBottomOf="@+id/my_quote"
             app:title="@string/onGoing" />
 
         <View

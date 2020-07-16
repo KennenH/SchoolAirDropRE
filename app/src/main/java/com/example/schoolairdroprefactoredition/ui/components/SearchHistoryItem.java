@@ -8,23 +8,21 @@ import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 
 public class SearchHistoryItem extends androidx.appcompat.widget.AppCompatTextView {
-    public SearchHistoryItem(Context context) {
-        this(context, null);
+    public SearchHistoryItem(Context context, String key) {
+        this(context, null, key);
     }
 
-    public SearchHistoryItem(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public SearchHistoryItem(Context context, AttributeSet attrs, String key) {
+        this(context, attrs, 0, key);
     }
 
-    public SearchHistoryItem(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SearchHistoryItem(Context context, AttributeSet attrs, int defStyleAttr, String key) {
         super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    private void init() {
-        setBackground(getContext().getResources().getDrawable(R.drawable.item_search_history, getContext().getTheme()));
         setLines(1);
-        setPadding(SizeUtils.dp2px(12), SizeUtils.dp2px(8), SizeUtils.dp2px(12), SizeUtils.dp2px(8));
+        setText(key);
         setEllipsize(TextUtils.TruncateAt.END);
+        setTextColor(context.getResources().getColor(R.color.primaryText));
+        setBackground(getContext().getResources().getDrawable(R.drawable.item_search_history, getContext().getTheme()));
+        setPadding(SizeUtils.dp2px(12), SizeUtils.dp2px(8), SizeUtils.dp2px(12), SizeUtils.dp2px(8));
     }
 }

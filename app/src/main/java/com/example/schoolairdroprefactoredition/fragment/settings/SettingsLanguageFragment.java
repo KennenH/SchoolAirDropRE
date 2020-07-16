@@ -26,7 +26,7 @@ public class SettingsLanguageFragment extends Fragment implements View.OnClickLi
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_language, container, false);
+        final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_language, container, false);
 
         mParent = root.findViewById(R.id.settings_language_parent);
         mSimplifiedCN = root.findViewById(R.id.settings_language_cn);

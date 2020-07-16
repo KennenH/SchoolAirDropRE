@@ -58,4 +58,18 @@
     <string name="clear">Clear</string>
     <string name="noMoreData">No More Data...</string>
     <string name="noMoreOlderData">You Are Up To Date</string>
+    <string name="searchHistory">Search History</string>
+    <string name="deleteAll">Delete All</string>
+    <string name="striker">Striker</string>
+    <string name="send">Send</string>
+    <string name="quote">Quote</string>
+    <string name="quoteDetail">Quote Detail</string>
+    <string name="received">Received</string>
+    <string name="sent">Sent</string>
+    <string name="agree">Agree</string>
+    <string name="userProtocol">\"User License Agreement\"</string>
+    <string name="serviceProtocol">\"SchoolAirdrop Service Terms\"</string>
+    <string name="loginTip">Logging in with Alipay will get your account information, check the Service Terms to learn more</string>
+    <string name="loginWithAlipay">Log in with Alipay</string>
+    <string name="pending">Pending</string>
 </resources>

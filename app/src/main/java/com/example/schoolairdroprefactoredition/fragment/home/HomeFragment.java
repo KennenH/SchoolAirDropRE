@@ -17,7 +17,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.activity.AMapActivity;
+import com.example.schoolairdroprefactoredition.activity.map.AMapActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNavigatorAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
@@ -34,11 +34,13 @@ public class HomeFragment extends Fragment
     private AMapLocationClientOption mLocationOption;
     private Location mLocation;
 
+    private OnSearchBarClickedListener mOnSearchBarClickedListener;
+
     private int relocateTimes = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
+        final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mLocationClient = new AMapLocationClient(getContext());
@@ -55,7 +57,6 @@ public class HomeFragment extends Fragment
         indicator.setNavigator(commonNavigator);
         ViewPagerHelper.bind(indicator, viewPager);
 
-        binding.homeTapToTop.setOnClickListener(this);
         binding.homeSearchBar.setOnClickListener(this);
         mLocation.setOnClickListener(this);
 
@@ -72,6 +73,17 @@ public class HomeFragment extends Fragment
         mLocationClient.setLocationListener(this);
         mLocationClient.startLocation();
         mLocation.setLocation("正在定位");
+    }
+
+    public interface OnSearchBarClickedListener {
+        /**
+         * 点击了搜索框,打开搜索页面
+         */
+        void onSearchBarClicked();
+    }
+
+    public void setOnSearchBarClickListener(OnSearchBarClickedListener listener) {
+        this.mOnSearchBarClickedListener = listener;
     }
 
     @Override
@@ -95,11 +107,10 @@ public class HomeFragment extends Fragment
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.home_tap_to_top) {
-
-        } else if (id == R.id.home_search_bar) {
-            // todo open search activity
-
+        if (id == R.id.home_search_bar) {
+            if (mOnSearchBarClickedListener != null) {
+                mOnSearchBarClickedListener.onSearchBarClicked();
+            }
         } else if (id == R.id.home_location) {
             Intent intent = new Intent(getContext(), AMapActivity.class);
             if (getContext() != null)

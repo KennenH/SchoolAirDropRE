@@ -11,12 +11,13 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.fragment.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 
 /**
  * 通知页面
  */
-public class SettingsNotificationFragment extends Fragment implements View.OnClickListener {
+public class SettingsNotificationFragment extends TransactionBaseFragment implements View.OnClickListener {
 
     public SettingsNotificationFragment() {
     }
@@ -34,7 +35,7 @@ public class SettingsNotificationFragment extends Fragment implements View.OnCli
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_notification, container, false);
+        final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_notification, container, false);
 
         mReceiveNew = root.findViewById(R.id.settings_notification_receive);
         mReceiveInApp = root.findViewById(R.id.settings_notification_in_app);

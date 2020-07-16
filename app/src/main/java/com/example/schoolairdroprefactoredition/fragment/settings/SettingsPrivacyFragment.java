@@ -10,10 +10,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.fragment.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 
 // 隐私
-public class SettingsPrivacyFragment extends Fragment implements View.OnClickListener {
+public class SettingsPrivacyFragment extends TransactionBaseFragment implements View.OnClickListener {
 
     private PageItem mAddViaAlipay;
     private PageItem mRecommendFriends;
@@ -25,7 +26,7 @@ public class SettingsPrivacyFragment extends Fragment implements View.OnClickLis
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_privacy, container, false);
+        final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_privacy, container, false);
 
         mAddViaAlipay = root.findViewById(R.id.settings_privacy_find_via_alipay);
         mRecommendFriends = root.findViewById(R.id.settings_privacy_recommend_alipay_friend);

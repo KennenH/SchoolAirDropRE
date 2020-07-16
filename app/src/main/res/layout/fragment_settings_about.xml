@@ -16,7 +16,8 @@
             android:layout_height="100dp"
             android:src="@drawable/logo_180x"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.scwang.smartrefresh.layout.SmartRefreshLayout>

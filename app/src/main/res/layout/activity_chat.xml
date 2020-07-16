@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.effective.android.panel.view.PanelSwitchLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:animationSpeed="standard">
+
+    <com.example.schoolairdroprefactoredition.ui.components.ConstraintContentContainer
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:hide_by_touch_outside_enable="true"
+        app:input_view="@id/chat_bar_input">
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/chat_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/chat_bar"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srlEnableOverScrollDrag="true"
+            app:srlFooterMaxDragRate="1.4"
+            app:srlHeaderMaxDragRate="1.2">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/chat_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                app:layout_constraintBottom_toTopOf="@+id/chat_bar"
+                app:layout_constraintTop_toTopOf="parent" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <com.example.schoolairdroprefactoredition.ui.components.ChatBar
+            android:id="@+id/chat_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </com.example.schoolairdroprefactoredition.ui.components.ConstraintContentContainer>
+
+    <com.effective.android.panel.view.panel.PanelContainer
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/primary">
+
+        <com.effective.android.panel.view.panel.PanelView
+            android:id="@+id/chat_emoji"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/red"
+            app:panel_layout="@layout/component_panel_emoji"
+            app:panel_toggle="true"
+            app:panel_trigger="@id/chat_bar_striker" />
+
+        <com.effective.android.panel.view.panel.PanelView
+            android:id="@+id/chat_more"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryGreen"
+            app:panel_layout="@layout/component_panel_more"
+            app:panel_toggle="true"
+            app:panel_trigger="@id/chat_bar_more" />
+
+    </com.effective.android.panel.view.panel.PanelContainer>
+</com.effective.android.panel.view.PanelSwitchLayout>

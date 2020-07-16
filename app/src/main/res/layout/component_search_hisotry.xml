@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingStart="@dimen/general_padding_large"
+    android:paddingEnd="@dimen/general_padding_large">
+
+    <TextView
+        android:id="@+id/search_history_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding_tiny"
+        android:text="@string/searchHistory"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/search_history_deleteAll"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:contentDescription="@string/deleteAll"
+        android:padding="6dp"
+        android:src="@drawable/ic_delete"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/search_history_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/search_history_title" />
+
+    <com.google.android.flexbox.FlexboxLayout
+        android:id="@+id/search_history_flex"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_bit_larger"
+        app:flexWrap="wrap"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/search_history_title" />
+
+    <TextView
+        android:id="@+id/search_history_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/general_padding_tiny"
+        android:padding="@dimen/general_padding_small"
+        android:text="@string/confirm"
+        android:textColor="@color/red"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/search_history_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/search_history_title" />
+
+    <TextView
+        android:id="@+id/search_history_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/general_padding_bit_larger"
+        android:padding="@dimen/general_padding_small"
+        android:text="@string/cancel"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/search_history_confirm"
+        app:layout_constraintEnd_toStartOf="@+id/search_history_confirm"
+        app:layout_constraintTop_toTopOf="@+id/search_history_confirm" />
+</androidx.constraintlayout.widget.ConstraintLayout>

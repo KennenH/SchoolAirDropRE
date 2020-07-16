@@ -7,12 +7,12 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.ui.components.ScalePagerTitleView;
 
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.CommonNavigatorAdapter;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerIndicator;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.abs.IPagerTitleView;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.indicators.LinePagerIndicator;
-import net.lucode.hackware.magicindicator.buildins.commonnavigator.titles.SimplePagerTitleView;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,9 +36,9 @@ public class HomeNavigatorAdapter extends CommonNavigatorAdapter {
 
     @Override
     public IPagerTitleView getTitleView(Context context, int index) {
-        SimplePagerTitleView title = new SimplePagerTitleView(context);
-        title.setNormalColor(Color.GRAY);
-        title.setSelectedColor(Color.GRAY);
+        ScalePagerTitleView title = new ScalePagerTitleView(context);
+        title.setNormalColor(Color.BLACK);
+        title.setSelectedColor(Color.BLACK);
         title.setTextSize(SizeUtils.sp2px(12));
         title.setOnClickListener(v -> mViewPager.setCurrentItem(index));
         title.setText(mList.get(index));
@@ -49,11 +49,11 @@ public class HomeNavigatorAdapter extends CommonNavigatorAdapter {
     @Override
     public IPagerIndicator getIndicator(Context context) {
         LinePagerIndicator indicator = new LinePagerIndicator(context);
-        indicator.setMode(LinePagerIndicator.MODE_EXACTLY);
-        indicator.setLineWidth(SizeUtils.dp2px(32));
-        indicator.setLineHeight(SizeUtils.dp2px(6));
-        indicator.setYOffset(SizeUtils.dp2px(6));
-        indicator.setColors(context.getResources().getColor(R.color.colorPrimaryLight));
+        indicator.setMode(LinePagerIndicator.MODE_WRAP_CONTENT);
+        indicator.setLineHeight(SizeUtils.dp2px(4));
+        indicator.setRoundRadius(SizeUtils.dp2px(4));
+        indicator.setYOffset(SizeUtils.dp2px(8));
+        indicator.setColors(Color.parseColor("#60A3F7"));
 
         return indicator;
     }

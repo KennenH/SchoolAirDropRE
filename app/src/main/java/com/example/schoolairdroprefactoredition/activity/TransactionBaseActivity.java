@@ -5,19 +5,27 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
+import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.fragment.settings.SettingsFragment;
 
+/**
+ * 整体框架为 一个activity中包含一个frameLayout以包含其他fragment
+ * 切换动画以及逻辑已实现，只需添加fragment即可
+ */
 public class TransactionBaseActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
 
     protected TextView mName1;
@@ -28,12 +36,23 @@ public class TransactionBaseActivity extends AppCompatActivity implements Fragme
     private boolean actionLock = true;// false 时为锁定,true 为释放
     private String lastName;
 
+    /**
+     * 第一个fragment切换
+     */
+    protected void firstTransact(@NonNull Fragment fragment, @Nullable String tag) {
+        mName1.setText(tag);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, fragment, tag)
+                .commit();
+    }
+
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_settings);
+        setContentView(R.layout.activity_fragment_container);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         getSupportFragmentManager().addOnBackStackChangedListener(this);

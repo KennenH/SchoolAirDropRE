@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.activity;
+package com.example.schoolairdroprefactoredition.activity.map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;

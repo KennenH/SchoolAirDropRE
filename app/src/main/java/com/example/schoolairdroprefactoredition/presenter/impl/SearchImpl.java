@@ -4,11 +4,15 @@ import android.util.Log;
 
 import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
 import com.example.schoolairdroprefactoredition.model.Api;
+import com.example.schoolairdroprefactoredition.model.databean.SearchSuggestionBean;
+import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 import com.example.schoolairdroprefactoredition.presenter.ISearchPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISearchCallback;
 import com.example.schoolairdroprefactoredition.utils.RetrofitManager;
 
 import java.net.HttpURLConnection;
+import java.util.ArrayList;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -50,40 +54,25 @@ public class SearchImpl implements ISearchPresenter {
 //            }
 //        });
 
+        List<TestGoodsItemBean> list = new ArrayList<>();
+        for (int i = 0; i < 20; i++) {
+            TestGoodsItemBean item = new TestGoodsItemBean();
+            item.setTitle(key);
+            item.setPrice(199.99f);
+            list.add(item);
+        }
+        mCallback.onSearchResultLoaded(list);
 
     }
 
     @Override
     public void getSearchHistory() {
-//        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
-//        Api api = retrofit.create(Api.class);
-//        Call<DomainSearchItems> task = api.getSearchHistory();
-//        task.enqueue(new Callback<DomainSearchItems>() {
-//            @Override
-//            public void onResponse(Call<DomainSearchItems> call, Response<DomainSearchItems> response) {
-//                int code = response.code();
-//                if (code == HttpURLConnection.HTTP_OK) {
-//                    DomainSearchItems histories = response.body();
-//                    if (mCallback != null) {
-//                        mCallback.onSearchHistoryLoaded(histories);
-//                    }
-//                    Log.d("SearchImpl", histories.toString());
-//                } else {
-//                    Log.d("SearchImpl", "请求错误");
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<DomainSearchItems> call, Throwable t) {
-//                Log.e("SearchImpl", "请求失败 " + t);
-//            }
-//        });
+        // todo 本地记录为主
     }
 
     @Override
     public void getSearchSuggestion(String key) {
-
-        // todo 用key拼接字符串作为url的参数传入获取数据
+        // todo 用key拼接字符串作为url的参数传入获取数据,分历史记录和
 
 //        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
 //        Api api = retrofit.create(Api.class);
@@ -108,6 +97,10 @@ public class SearchImpl implements ISearchPresenter {
 //                Log.e("SearchImpl", "请求失败 " + t);
 //            }
 //        });
+
+        SearchSuggestionBean items = new SearchSuggestionBean();
+        items.setTitle(key);
+        mCallback.onSearchSuggestionLoaded(items);
     }
 
     @Override

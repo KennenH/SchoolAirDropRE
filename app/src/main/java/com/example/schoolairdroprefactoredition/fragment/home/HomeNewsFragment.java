@@ -13,20 +13,22 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
+import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-public class HomeNewsFragment extends Fragment implements OnRefreshListener, HomeRecycler.OnLoadMoreListener {
+public class HomeNewsFragment extends Fragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener {
     private int mFragmentNum;
 
     private HomeNewsFragmentViewModel homeContentFragmentViewModel;
 
     private SmartRefreshLayout mRefresh;
 
-    private HomeRecycler mHomeRecycler;
-    private HomeRecycler.HomeNewsRecyclerAdapter mHomeNewsRecyclerAdapter;
+    private EndlessRecyclerView mEndlessRecyclerView;
+    private HomeNewsRecyclerAdapter mHomeNewsRecyclerAdapter;
 
 
     @Override
@@ -42,7 +44,7 @@ public class HomeNewsFragment extends Fragment implements OnRefreshListener, Hom
         homeContentFragmentViewModel = new ViewModelProvider(this).get(HomeNewsFragmentViewModel.class);
 
         mRefresh = binding.homeRefresh;
-        mHomeRecycler = binding.homeRecycler;
+        mEndlessRecyclerView = binding.homeRecycler;
 
         init();
 
@@ -51,12 +53,12 @@ public class HomeNewsFragment extends Fragment implements OnRefreshListener, Hom
 
     private void init() {
         mRefresh.setOnRefreshListener(this);
-        mHomeRecycler.setOnLoadMoreListener(this);
+        mEndlessRecyclerView.setOnLoadMoreListener(this);
 
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, mFragmentNum == ConstantUtil.FRAGMENT_NUM_NEWS);
-        mHomeRecycler.setLayoutManager(manager);
-        mHomeNewsRecyclerAdapter = new HomeRecycler.HomeNewsRecyclerAdapter();
-        mHomeRecycler.setAdapter(mHomeNewsRecyclerAdapter);
+        mEndlessRecyclerView.setLayoutManager(manager);
+        mHomeNewsRecyclerAdapter = new HomeNewsRecyclerAdapter();
+        mEndlessRecyclerView.setAdapter(mHomeNewsRecyclerAdapter);
 
         homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> mHomeNewsRecyclerAdapter.setList(data));
     }
@@ -71,7 +73,7 @@ public class HomeNewsFragment extends Fragment implements OnRefreshListener, Hom
     }
 
     @Override
-    public void autoLoadMore(HomeRecycler recycler) {
+    public void autoLoadMore(EndlessRecyclerView recycler) {
         homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
             mHomeNewsRecyclerAdapter.addData(data);
             recycler.finishLoading();

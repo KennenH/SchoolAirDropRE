@@ -54,7 +54,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_user, container, false);
+        final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_user, container, false);
 
         avatar = root.findViewById(R.id.user_avatar);
         name = root.findViewById(R.id.user_name);

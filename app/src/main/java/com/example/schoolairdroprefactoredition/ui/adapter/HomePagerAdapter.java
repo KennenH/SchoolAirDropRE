@@ -1,8 +1,5 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
-import android.view.View;
-import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -35,15 +32,5 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getItemPosition(@Nullable Object object) {
         return POSITION_NONE;
-    }
-
-    @Override
-    public void destroyItem(@NonNull ViewGroup container, int position, @NonNull Object object) {
-        container.removeView((View) object);
-    }
-
-    @Override
-    public boolean isViewFromObject(@NonNull View view, @NonNull Object object) {
-        return view == object;
     }
 }

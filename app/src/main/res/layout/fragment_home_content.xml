@@ -16,7 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="110dp" />
 
-    <com.example.schoolairdroprefactoredition.fragment.home.HomeRecycler
+    <com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
         android:id="@+id/home_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
