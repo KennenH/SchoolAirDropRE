@@ -11,14 +11,20 @@ import com.example.schoolairdroprefactoredition.fragment.home.HomeNewsFragment;
 
 public class HomePagerAdapter extends FragmentPagerAdapter {
 
-    public HomePagerAdapter(@NonNull FragmentManager fm, int behavior) {
+    public static final int HOME = 3;
+    public static final int PURCHASING = 1;
+
+    private int mIndex = HOME;
+
+    public HomePagerAdapter(@NonNull FragmentManager fm, int behavior, int page) {
         super(fm, behavior);
+        mIndex = page;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if (position == 0) {
+        if (mIndex == HOME) {
             return new HomeNewsFragment();
         }
         return new HomeNearbyFragment();
@@ -26,7 +32,7 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        return 2;
+        return mIndex;
     }
 
     @Override

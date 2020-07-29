@@ -89,9 +89,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
-            app:icon="@drawable/ic_price"
+            app:PI_icon="@drawable/ic_price"
             app:layout_constraintTop_toBottomOf="@+id/my_bought_sold"
-            app:title="@string/quote" />
+            app:PI_title="@string/quote" />
 
         <View
             android:layout_width="match_parent"
@@ -105,10 +105,10 @@
             android:id="@+id/my_onGoing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:arrow="@drawable/right_black"
-            app:icon="@drawable/later_blue"
+            app:PI_arrow="@drawable/right_black"
+            app:PI_icon="@drawable/later_blue"
             app:layout_constraintTop_toBottomOf="@+id/my_quote"
-            app:title="@string/onGoing" />
+            app:PI_title="@string/onGoing" />
 
         <View
             android:layout_width="match_parent"
@@ -122,20 +122,20 @@
             android:id="@+id/my_likes"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:arrow="@drawable/right_black"
-            app:icon="@drawable/favorite_red"
+            app:PI_arrow="@drawable/right_black"
+            app:PI_icon="@drawable/favorite_red"
             app:layout_constraintTop_toBottomOf="@+id/my_onGoing"
-            app:title="@string/likes" />
+            app:PI_title="@string/likes" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/my_settings"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
-            app:arrow="@drawable/right_black"
-            app:icon="@drawable/settings_black"
+            app:PI_arrow="@drawable/right_black"
+            app:PI_icon="@drawable/settings_black"
             app:layout_constraintTop_toBottomOf="@+id/my_likes"
-            app:title="@string/setting" />
+            app:PI_title="@string/setting" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.scwang.smartrefresh.layout.SmartRefreshLayout>

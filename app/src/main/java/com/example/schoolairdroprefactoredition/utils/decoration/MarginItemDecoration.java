@@ -8,7 +8,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.ScreenUtils;
-import com.example.schoolairdroprefactoredition.R;
 
 /**
  * 四周型decoration
@@ -19,29 +18,24 @@ import com.example.schoolairdroprefactoredition.R;
  * ++ ———————————————————  ++
  * ++++++++++++++++++++++++++
  * <p>
- * 仅垂直方向 {@link VerticalMarginItemDecoration}
- * 仅水平方向 {@link HorizontalMarginItemDecoration}
+ * 仅垂直方向 {@link VerticalItemMarginDecoration}
+ * 仅水平方向 {@link HorizontalItemMarginDecoration}
  */
 public class MarginItemDecoration extends RecyclerView.ItemDecoration {
-    private int space = ScreenUtils.getAppScreenWidth() / 90;
+    private int space = ScreenUtils.getAppScreenWidth() / 85;
 
     public MarginItemDecoration() {
     }
 
-    public MarginItemDecoration(int space) {
-        this.space = space;
-    }
-
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        if (parent.getPaddingLeft() != space) {
-            parent.setPadding(space, space, space, space);
-            parent.setClipToPadding(false);
-        }
+//        if (parent.getPaddingLeft() != space || parent.getPaddingRight() != space) {
+//        }
+        outRect.right = space;
+        outRect.left = space;
         outRect.bottom = space;
         outRect.top = space;
-        outRect.left = space;
-        outRect.right = space;
+        parent.setPadding(space, 0, space, space);
     }
 
 }

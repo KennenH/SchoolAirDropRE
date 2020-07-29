@@ -19,19 +19,26 @@ import java.util.List;
 
 public class HomeNavigatorAdapter extends CommonNavigatorAdapter {
 
+    public static final int HOME = 0;
+    public static final int PURCHASING = 1;
+
     private List<String> mList;
     private ViewPager mViewPager;
 
-    public HomeNavigatorAdapter(Context context, ViewPager viewPager) {
+    public HomeNavigatorAdapter(Context context, ViewPager viewPager, int page) {
         mViewPager = viewPager;
 
-        String[] menu = {context.getString(R.string.home), context.getString(R.string.nearby)};
+        String[] menu;
+        if (page == PURCHASING)
+            menu = new String[]{context.getString(R.string.purchasing)};
+        else
+            menu = new String[]{context.getString(R.string.all), context.getString(R.string.official), context.getString(R.string.nearby)};
         mList = Arrays.asList(menu);
     }
 
     @Override
     public int getCount() {
-        return 2;
+        return mList.size();
     }
 
     @Override

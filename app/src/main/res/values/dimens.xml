@@ -4,6 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="general_round_rect">50dp</dimen>
 
+    <dimen name="toolbar_icon_small">18dp</dimen>
     <dimen name="toolbar_icon">24dp</dimen>
     <dimen name="toolbar_icon_bit_large">28dp</dimen>
     <dimen name="toolbar_icon_large">35dp</dimen>
@@ -29,5 +30,9 @@
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="line">0.8dp</dimen>
+    <dimen name="ic_quote">55dp</dimen>
+    <dimen name="sheet_gap">0.8dp</dimen>
+
+    <dimen name="toolbar_2_center_margin">18.5dp</dimen>
     <dimen name="toolbar_center_margin">75dp</dimen>
 </resources>

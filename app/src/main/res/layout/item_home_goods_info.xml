@@ -16,8 +16,8 @@
         android:layout_width="@dimen/y65"
         android:layout_height="@dimen/y65"
         android:scaleType="centerCrop"
-        android:src="@drawable/brain"
-        app:corner_radius="@dimen/general_rounded_rect"
+        android:src="@drawable/logo_placeholder"
+        app:corner_radius="@dimen/general_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

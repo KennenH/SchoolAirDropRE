@@ -36,6 +36,7 @@ public class PageItem extends ConstraintLayout {
     private String mDescription = "";
     private Drawable mIconRes;
     private Drawable mArrowRes;
+    private Drawable mBackground;
 
     public PageItem(Context context) {
         this(context, null);
@@ -58,16 +59,16 @@ public class PageItem extends ConstraintLayout {
         if (attrs == null)
             return;
 
-        isFirst = attr.getBoolean(R.styleable.PageItem_isFirst, isFirst);
-        isLast = attr.getBoolean(R.styleable.PageItem_isLast, isLast);
-        isIconLarge = attr.getBoolean(R.styleable.PageItem_isIconLarge, isIconLarge);
+        isFirst = attr.getBoolean(R.styleable.PageItem_PI_isFirst, isFirst);
+        isLast = attr.getBoolean(R.styleable.PageItem_PI_isLast, isLast);
+        isIconLarge = attr.getBoolean(R.styleable.PageItem_PI_isIconLarge, isIconLarge);
         if (isFirst && isLast) {
             isFirst = false;
             isLast = false;
         }
 
-        isSwitch = attr.getBoolean(R.styleable.PageItem_isSwitch, isSwitch);
-        isCheck = attr.getBoolean(R.styleable.PageItem_isCheck, isCheck);
+        isSwitch = attr.getBoolean(R.styleable.PageItem_PI_isSwitch, isSwitch);
+        isCheck = attr.getBoolean(R.styleable.PageItem_PI_isCheck, isCheck);
         if (isSwitch && isCheck) {
             try {
                 throw new Exception("PageItem cannot be set as a Switch and a CheckBox at the same time");
@@ -76,11 +77,12 @@ public class PageItem extends ConstraintLayout {
             }
         }
 
-        isShowArrow = attr.getBoolean(R.styleable.PageItem_showArrow, isShowArrow);
-        mName = attr.getString(R.styleable.PageItem_title);
-        mDescription = attr.getString(R.styleable.PageItem_description);
-        mIconRes = attr.getDrawable(R.styleable.PageItem_icon);
-        mArrowRes = attr.getDrawable(R.styleable.PageItem_arrow);
+        isShowArrow = attr.getBoolean(R.styleable.PageItem_PI_showArrow, isShowArrow);
+        mName = attr.getString(R.styleable.PageItem_PI_title);
+        mDescription = attr.getString(R.styleable.PageItem_PI_description);
+        mIconRes = attr.getDrawable(R.styleable.PageItem_PI_icon);
+        mArrowRes = attr.getDrawable(R.styleable.PageItem_PI_arrow);
+        mBackground = attr.getDrawable(R.styleable.PageItem_PI_background);
 
         attr.recycle();
     }
@@ -98,12 +100,15 @@ public class PageItem extends ConstraintLayout {
             mIconView.setLayoutParams(params);
         }
 
-        if (isFirst)
-            setBackground(context.getResources().getDrawable(R.drawable.sheet_first, context.getTheme()));
-        else if (isLast)
-            setBackground(context.getResources().getDrawable(R.drawable.radius_last_button, context.getTheme()));
-        else
-            setBackground(context.getResources().getDrawable(R.drawable.sheet_button, context.getTheme()));
+        if (mBackground == null) {
+            if (isFirst)
+                setBackground(context.getResources().getDrawable(R.drawable.sheet_first, context.getTheme()));
+            else if (isLast)
+                setBackground(context.getResources().getDrawable(R.drawable.radius_last_button, context.getTheme()));
+            else
+                setBackground(context.getResources().getDrawable(R.drawable.sheet_button_white, context.getTheme()));
+        } else
+            setBackground(mBackground);
 
         if (isSwitch) {
             mArrowView.setVisibility(GONE);

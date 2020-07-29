@@ -3,17 +3,31 @@ package com.example.schoolairdroprefactoredition.fragment.settings;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.FragmentSettingsAboutBinding;
+import com.example.schoolairdroprefactoredition.fragment.TransactionBaseFragment;
+import com.example.schoolairdroprefactoredition.ui.components.PageItem;
+
 /**
  * 关于页面
  */
-public class SettingsAboutFragment extends Fragment {
+public class SettingsAboutFragment extends TransactionBaseFragment implements View.OnClickListener {
+
+    private TextView mVersion;
+    private PageItem mWhatsNew;
+    private PageItem mFeedback;
 
     public SettingsAboutFragment() {
     }
@@ -26,7 +40,28 @@ public class SettingsAboutFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        FragmentSettingsAboutBinding binding = FragmentSettingsAboutBinding.inflate(inflater, container, false);
 
-        return super.onCreateView(inflater, container, savedInstanceState);
+        mVersion = binding.settingsAboutVersion;
+        mWhatsNew = binding.settingsAboutNew;
+        mFeedback = binding.settingsAboutFeedback;
+
+        mVersion.setOnClickListener(this);
+        mWhatsNew.setOnClickListener(this);
+        mFeedback.setOnClickListener(this);
+
+        return binding.getRoot();
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.settings_about_version) {
+
+        } else if (id == R.id.settings_about_new) {
+            // 同一版本号,制定更新增加版本号的规则
+        } else if (id == R.id.settings_about_feedback) {
+            // 发送邮箱或app内文字加图片形式
+        }
     }
 }

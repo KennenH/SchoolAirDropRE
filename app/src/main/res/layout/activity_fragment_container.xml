@@ -9,13 +9,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
+        app:contentInsetEnd="@dimen/toolbar_center_margin"
         app:layout_constraintTop_toTopOf="parent"
         app:navigationIcon="@drawable/ic_left">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginEnd="@dimen/toolbar_center_margin">
+            android:layout_height="match_parent">
 
             <TextView
                 android:id="@+id/newcomer"

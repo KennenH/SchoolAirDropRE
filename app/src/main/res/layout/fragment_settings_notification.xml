@@ -2,12 +2,12 @@
 <com.example.schoolairdroprefactoredition.utils.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/general_padding_large">
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/general_padding_large"
         android:orientation="vertical"
         android:splitMotionEvents="false">
         <!--        split motion event 为 false 可以将多点触控失效的同时使多点滑动依然有效 与微信相仿 -->
@@ -16,9 +16,9 @@
             android:id="@+id/settings_notification_receive"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:isSwitch="true"
+            app:PI_isSwitch="true"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="@string/receiveNewMessages" />
+            app:PI_title="@string/receiveNewMessages" />
 
         <View
             android:layout_width="match_parent"
@@ -32,18 +32,18 @@
             android:id="@+id/settings_notification_in_app"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:isSwitch="true"
+            app:PI_isSwitch="true"
             app:layout_constraintTop_toBottomOf="@+id/settings_notification_receive"
-            app:title="@string/receiveInAppMessages" />
+            app:PI_title="@string/receiveInAppMessages" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/settings_notification_vibrate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
-            app:isSwitch="true"
+            app:PI_isSwitch="true"
             app:layout_constraintTop_toBottomOf="@+id/settings_notification_in_app"
-            app:title="@string/vibrate" />
+            app:PI_title="@string/vibrate" />
 
         <View
             android:layout_width="match_parent"
@@ -57,9 +57,9 @@
             android:id="@+id/settings_notification_sounds"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:isSwitch="true"
+            app:PI_isSwitch="true"
             app:layout_constraintTop_toBottomOf="@+id/settings_notification_vibrate"
-            app:title="@string/sounds" />
+            app:PI_title="@string/sounds" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.example.schoolairdroprefactoredition.utils.OverDragLayout>

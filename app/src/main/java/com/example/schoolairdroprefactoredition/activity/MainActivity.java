@@ -10,6 +10,7 @@ import android.view.View;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.fragment.home.HomeFragment;
 import com.example.schoolairdroprefactoredition.fragment.my.MyFragment;
+import com.example.schoolairdroprefactoredition.fragment.purchasing.PurchasingFragment;
 import com.example.schoolairdroprefactoredition.fragment.search.SearchFragment;
 import com.example.schoolairdroprefactoredition.utils.ColorUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -20,12 +21,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private FragmentManager mFragmentManager = getSupportFragmentManager();
 
     private HomeFragment mHome;
+    private PurchasingFragment mPurchase;
     private MyFragment mMy;
-    private SearchFragment mSearch;
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
@@ -37,13 +41,20 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
+        // 添加新的tab时添加
         mHome = new HomeFragment();
+        mPurchase = new PurchasingFragment();
         mMy = new MyFragment();
 
-        mHome.setOnSearchBarClickListener(() -> {
-            mSearch = new SearchFragment();
+        mPurchase.setOnSearchBarClickListener(() -> {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, mSearch)
+                    .replace(R.id.container, new SearchFragment(/* parameters such as home or purchase */))
+                    .addToBackStack(null)
+                    .commit();
+        });
+        mHome.setOnSearchBarClickListener(() -> {
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.container, new SearchFragment())
                     .addToBackStack(null)
                     .commit();
         });
@@ -68,8 +79,10 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         if (fragment.isHidden() || !fragment.isAdded()) {
             mFragmentManager
                     .beginTransaction()
+                    // 添加新的tab时添加
                     .hide(mHome)
                     .hide(mMy)
+                    .hide(mPurchase)
                     .commit();
 
             if (!fragment.isAdded()) {
@@ -91,18 +104,24 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        // 添加新的tab时添加
         mHome = null;
         mMy = null;
+        mPurchase = null;
     }
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
+            // 添加新的tab时添加
             case R.id.navigation_home:
                 showFragment(mHome);
                 return true;
             case R.id.navigation_my:
                 showFragment(mMy);
+                return true;
+            case R.id.navigation_box:
+                showFragment(mPurchase);
                 return true;
         }
         return false;

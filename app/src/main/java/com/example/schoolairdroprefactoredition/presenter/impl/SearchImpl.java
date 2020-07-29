@@ -1,23 +1,12 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import android.util.Log;
-
-import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
-import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.databean.SearchSuggestionBean;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 import com.example.schoolairdroprefactoredition.presenter.ISearchPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISearchCallback;
-import com.example.schoolairdroprefactoredition.utils.RetrofitManager;
 
-import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-import retrofit2.Retrofit;
 
 public class SearchImpl implements ISearchPresenter {
 

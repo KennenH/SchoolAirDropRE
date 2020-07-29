@@ -3,6 +3,8 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 import com.example.schoolairdroprefactoredition.presenter.IHomeNewsPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeNewsCallback;
 import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
+import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity;
 
 import java.util.Arrays;
 
@@ -46,11 +48,12 @@ public class HomeNewsImpl implements IHomeNewsPresenter {
         TestNewsItemBean[] data = new TestNewsItemBean[12];
         for (int i = 0; i < 12; i++) {
             data[i] = new TestNewsItemBean();
-            data[i].setTitle("民生大项目开盘啦！欢迎来帮我恰烂钱");
-            data[i].setDay("32");
-            data[i].setMonth((i + 13) + "月");
-            data[i].setSender("李伟的脑子");
-            data[i].setUrl("http://img.souutu.com/2020/0415/20200415123551376.jpg");
+            if (i % 4 == 0) {
+                data[i].setTitle("快速上手");
+                data[i].setType(HomeNewsRecyclerAdapter.TYPE_TWO);
+            } else {
+                data[i].setTitle("校园空投校园内测开始啦!进来解锁新姿势!");
+            }
         }
         mCallback.onNewsLoaded(Arrays.asList(data));
     }

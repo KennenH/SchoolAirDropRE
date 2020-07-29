@@ -99,7 +99,7 @@
         android:id="@+id/user_protocol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/general_padding_small"
+        android:ellipsize="end"
         android:text="@string/userProtocol"
         app:layout_constraintBottom_toBottomOf="@+id/agree"
         app:layout_constraintEnd_toStartOf="@+id/service_protocol"
@@ -110,7 +110,7 @@
         android:id="@+id/service_protocol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/general_padding_small"
+        android:ellipsize="end"
         android:text="@string/serviceProtocol"
         app:layout_constraintBottom_toBottomOf="@+id/agree"
         app:layout_constraintEnd_toEndOf="parent"
@@ -126,7 +126,7 @@
         android:text="@string/loginTip"
         android:textIsSelectable="false"
         android:textSize="12sp"
-        app:layout_constraintEnd_toEndOf="@id/service_protocol"
+        app:layout_constraintEnd_toEndOf="@+id/service_protocol"
         app:layout_constraintStart_toStartOf="@+id/checkbox"
         app:layout_constraintTop_toBottomOf="@+id/checkbox" />
 

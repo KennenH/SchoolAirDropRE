@@ -29,7 +29,7 @@ public class HomeNearbyRecyclerAdapter extends BaseQuickAdapter<TestGoodsItemBea
                     .load(item.getImageUrl())
                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                     .centerCrop()
-                    .placeholder(getContext().getResources().getDrawable(R.drawable.logo_120x, getContext().getTheme()))
+                    .placeholder(getContext().getResources().getDrawable(R.drawable.logo_placeholder, getContext().getTheme()))
                     .dontTransform()
                     .into((ImageView) holder.itemView.findViewById(R.id.item_image));
 

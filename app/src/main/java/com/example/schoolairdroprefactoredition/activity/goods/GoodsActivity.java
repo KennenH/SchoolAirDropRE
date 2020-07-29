@@ -9,6 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -22,6 +24,11 @@ import com.example.schoolairdroprefactoredition.ui.components.HeaderOnlyRecycler
 import com.jaeger.library.StatusBarUtil;
 
 public class GoodsActivity extends AppCompatActivity implements ButtonSingle.OnButtonClickListener, ButtonDouble.OnButtonClickListener {
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, GoodsActivity.class);
+        context.startActivity(intent);
+    }
 
     private GoodsViewModel goodsViewModel;
 

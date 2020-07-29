@@ -31,6 +31,8 @@
     <color name="black_overlay">#66000000</color>
     <color name="black">#000000</color>
 
+    <color name="colorPrimaryPink">#ED7ECD</color>
+    <color name="colorPrimaryRed">#DD402C</color>
     <color name="colorPrimaryGreen">#44A944</color>
     <color name="colorPrimaryGreenLight">#4BD34B</color>
 </resources>

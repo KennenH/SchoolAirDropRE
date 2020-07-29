@@ -4,7 +4,6 @@ import android.content.Context;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,7 +22,6 @@ public class SearchBar extends ConstraintLayout implements View.OnClickListener,
 
     private ImageView mClear;
     private EditText mSearch;
-    private TextView mCancel;
 
     public SearchBar(Context context) {
         this(context, null);
@@ -39,16 +37,13 @@ public class SearchBar extends ConstraintLayout implements View.OnClickListener,
 
         mClear = findViewById(R.id.search_clear);
         mSearch = findViewById(R.id.search_bar);
-        mCancel = findViewById(R.id.search_cancel);
 
+        mClear.setVisibility(GONE);
         mClear.setOnClickListener(this);
         mSearch.setOnClickListener(this);
-        mCancel.setOnClickListener(this);
         mSearch.addTextChangedListener(this);
         mSearch.setOnEditorActionListener(this);
         mSearch.setOnFocusChangeListener(this);
-
-        mSearch.setText("");
     }
 
     public void openSearch() {
@@ -89,11 +84,6 @@ public class SearchBar extends ConstraintLayout implements View.OnClickListener,
          * @param hasFocus 是否有焦点
          */
         void onFocusChanged(View view, boolean hasFocus);
-
-        /**
-         * 按下取消
-         */
-        void onCanceled();
     }
 
     public void setOnSearchActionListener(OnSearchActionListener onSearchActionListener) {
@@ -115,13 +105,7 @@ public class SearchBar extends ConstraintLayout implements View.OnClickListener,
             mSearch.setText("");
         } else if (id == R.id.search_bar) {
             openSearch();
-        } else if (id == R.id.search_cancel) {
-            Log.d("SearchBar", "canceled");
-            if (mOnSearchActionListener != null) {
-                mOnSearchActionListener.onCanceled();
-            }
         }
-
     }
 
     @Override

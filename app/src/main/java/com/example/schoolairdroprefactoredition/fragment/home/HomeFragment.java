@@ -2,7 +2,6 @@ package com.example.schoolairdroprefactoredition.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,7 +41,7 @@ public class HomeFragment extends Fragment
                              ViewGroup container, Bundle savedInstanceState) {
         final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, HomePagerAdapter.HOME);
         mLocationClient = new AMapLocationClient(getContext());
         mLocationOption = new AMapLocationClientOption();
 
@@ -51,7 +50,7 @@ public class HomeFragment extends Fragment
         mLocation = binding.homeLocation;
 
         CommonNavigator commonNavigator = new CommonNavigator(getContext());
-        HomeNavigatorAdapter adapter = new HomeNavigatorAdapter(getContext(), viewPager);
+        HomeNavigatorAdapter adapter = new HomeNavigatorAdapter(getContext(), viewPager, HomeNavigatorAdapter.HOME);
         commonNavigator.setAdapter(adapter);
         viewPager.setAdapter(homePagerAdapter);
         indicator.setNavigator(commonNavigator);
@@ -92,7 +91,6 @@ public class HomeFragment extends Fragment
             if (aMapLocation.getErrorCode() == 0) {
                 mLocation.setLocation(aMapLocation.getCity());
             } else {
-                Log.e("AmapError", "location Error, ErrCode:" + aMapLocation.getErrorCode() + ", errInfo:" + aMapLocation.getErrorInfo());
                 if (relocateTimes < 3) {
                     mLocation.setLocation("正在定位");
                 } else {

@@ -28,7 +28,7 @@
                 android:id="@+id/button_one"
                 android:layout_width="@dimen/icon_normal_with_general_padding"
                 android:layout_height="@dimen/icon_normal_with_general_padding"
-                android:background="@drawable/half_round_rect_bottom_left"
+                android:background="@drawable/bg_half_round_bottom_left"
                 android:paddingTop="@dimen/general_padding_bit_larger"
                 android:paddingBottom="@dimen/general_padding_bit_larger"
                 android:src="@drawable/outline_favorite_24" />
@@ -42,7 +42,7 @@
                 android:id="@+id/button_two"
                 android:layout_width="@dimen/icon_normal_with_general_padding"
                 android:layout_height="@dimen/icon_normal_with_general_padding"
-                android:background="@drawable/half_round_rect_bottom_right"
+                android:background="@drawable/bg_half_round_bottom_right"
                 android:paddingTop="@dimen/general_padding_bit_larger"
                 android:paddingBottom="@dimen/general_padding_bit_larger"
                 android:src="@drawable/outline_favorite_24" />

@@ -9,9 +9,9 @@
         android:id="@+id/search_bar"
         android:layout_width="0dp"
         android:layout_height="@dimen/toolbar_icon_large"
-        android:layout_marginEnd="@dimen/general_padding_large"
         android:background="@drawable/home_search_bar"
-        android:drawableStart="@drawable/round_search_24"
+        android:drawableStart="@drawable/ic_search"
+        android:drawablePadding="@dimen/general_padding_small"
         android:gravity="start|center_vertical"
         android:hint="@string/search"
         android:importantForAutofill="no"
@@ -21,7 +21,7 @@
         android:paddingEnd="@dimen/toolbar_icon_large"
         android:textColor="?attr/colorControlNormal"
         android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/search_cancel"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,15 +36,15 @@
         app:layout_constraintEnd_toEndOf="@+id/search_bar"
         app:layout_constraintTop_toTopOf="@+id/search_bar" />
 
-    <TextView
-        android:id="@+id/search_cancel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:paddingTop="@dimen/general_padding"
-        android:paddingBottom="@dimen/general_padding"
-        android:text="@string/cancel"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+<!--    <TextView-->
+<!--        android:id="@+id/search_cancel"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:paddingTop="@dimen/general_padding"-->
+<!--        android:paddingBottom="@dimen/general_padding"-->
+<!--        android:text="@string/cancel"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

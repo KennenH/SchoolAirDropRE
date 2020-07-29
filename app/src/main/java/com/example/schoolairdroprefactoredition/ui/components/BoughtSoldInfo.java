@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.activity.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.utils.NumberUtil;
 
 public class BoughtSoldInfo extends ConstraintLayout implements View.OnClickListener {
@@ -47,6 +48,9 @@ public class BoughtSoldInfo extends ConstraintLayout implements View.OnClickList
         mSellingT.setOnClickListener(this);
         mSoldT.setOnClickListener(this);
         mBoughtT.setOnClickListener(this);
+        findViewById(R.id.my_selling_wrapper).setOnClickListener(this);
+        findViewById(R.id.my_sold_wrapper).setOnClickListener(this);
+        findViewById(R.id.my_bought_wrapper).setOnClickListener(this);
     }
 
     public void setSelling(int selling) {
@@ -78,15 +82,20 @@ public class BoughtSoldInfo extends ConstraintLayout implements View.OnClickList
         switch (id) {
             case R.id.my_selling:
             case R.id.my_selling_t:
-                // open selling list
+            case R.id.my_selling_wrapper:
+                SSBActivity.start(getContext(), 0);
                 break;
             case R.id.my_sold:
             case R.id.my_sold_t:
+            case R.id.my_sold_wrapper:
                 // open sold history
+                SSBActivity.start(getContext(), 1);
                 break;
             case R.id.my_bought:
             case R.id.my_bought_t:
+            case R.id.my_bought_wrapper:
                 // open bought history
+                SSBActivity.start(getContext(), 2);
                 break;
         }
     }

@@ -32,7 +32,7 @@ public class GoodsInfo extends ShimmerFrameLayout {
 
     public GoodsInfo(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater.from(context).inflate(R.layout.component_goods_info, this, true);
+        LayoutInflater.from(context).inflate(R.layout.component_goods_detail, this, true);
 
         mGoodsName = findViewById(R.id.goods_name);
         mTags = findViewById(R.id.goods_tags);

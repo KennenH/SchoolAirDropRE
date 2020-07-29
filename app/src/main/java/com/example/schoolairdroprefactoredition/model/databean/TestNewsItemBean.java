@@ -1,6 +1,8 @@
 package com.example.schoolairdroprefactoredition.model.databean;
 
-public class TestNewsItemBean {
+import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity;
+
+public class TestNewsItemBean extends BaseHomeNewsEntity {
     private String title;
     private String month;
     private String day;

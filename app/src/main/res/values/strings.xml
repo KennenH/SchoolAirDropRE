@@ -4,9 +4,24 @@
     <string name="simplifiedChinese" translatable="false">简体中文</string>
     <string name="english" translatable="false">English</string>
 
+    <string name="indicator" translatable="false">/%1$d</string>
+    <string name="quoteHeaderNum" translatable="false">(%1$d)</string>
+    <string name="priceRMB" translatable="false">¥%1$d</string>
+    <string name="version" translatable="false">Version %1$s</string>
+    <string name="rightsReserved" translatable="false">校园空投 版权所有\nCopyright© 2019–2020 SchoolAirDrop. All Rights Reserved.</string>
+    <string name="alipayID" translatable="false">%1$s</string>
+    <string name="userProtocol" translatable="false">《用户许可协议》</string>
+    <string name="serviceProtocol" translatable="false">《校园空投服务条款》</string>
+
 
     <!--  substitutions  -->
-    <string name="indicator" translatable="false">/%1$d</string>
+    <string name="unprocessedSub">未处理(%1$d)</string>
+    <string name="processedSub">已处理(%1$d)</string>
+    <string name="orderID">订单编号 : %1$s</string>
+    <string name="orderCreation">创建时间 : %1$d-%2$d-%3$d</string>
+    <string name="orderExpiration">失效时间 : %1$d-%2$d-%3$d</string>
+    <string name="alipayAccount">支付宝账号 : %1$s</string>
+    <string name="statistics">统计(%1$d)</string>
 
 
     <!--  translatable  -->
@@ -29,7 +44,7 @@
     <string name="likes">收藏</string>
     <string name="onGoing">正在进行</string>
     <string name="account">账号管理</string>
-    <string name="alipayBinding">支付宝绑定</string>
+    <string name="alipayAccountText">支付宝账号</string>
     <string name="notification">消息通知</string>
     <string name="privacy">隐私</string>
     <string name="general">通用</string>
@@ -77,10 +92,35 @@
     <string name="received">我收到的</string>
     <string name="sent">我发出的</string>
     <string name="agree">同意</string>
-    <string name="userProtocol">《用户许可协议》</string>
-    <string name="serviceProtocol">《校园空投服务条款》</string>
     <string name="loginTip">使用支付宝登陆将获取您的账号信息,查看服务条款以了解更多</string>
     <string name="loginWithAlipay">支付宝登录</string>
     <string name="pending">待处理</string>
+    <string name="expired">已过期</string>
+    <string name="accepted">已接受</string>
+    <string name="rejected">已拒绝</string>
+    <string name="unprocessed">未处理</string>
+    <string name="processed">已处理</string>
+    <string name="whatsNew">更新介绍</string>
+    <string name="feedback">意见反馈</string>
+    <string name="manage">管理</string>
+    <string name="filter">筛选</string>
+    <string name="filterTimeAsc">按时间正序</string>
+    <string name="filterTimeDesc">按时间倒序</string>
+    <string name="filterWatches">按热度排序</string>
+    <string name="sortBy">物品排序依据</string>
+    <string name="add">新增</string>
+    <string name="offShelf">下架物品</string>
+    <string name="modifyInfo">修改信息</string>
+    <string name="addNewSelling">上架物品</string>
+    <string name="submit">提交</string>
+    <string name="clickable">可点击</string>
+    <string name="options">选项</string>
+    <string name="detailDescription">详细描述</string>
+    <string name="title">标题</string>
+    <string name="price">价格</string>
+    <string name="purchasing">淘物</string>
+    <string name="official">官方</string>
+    <string name="all">全部</string>
+
 
 </resources>

@@ -11,11 +11,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
+import com.example.schoolairdroprefactoredition.utils.decoration.VerticalItemLineDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -30,6 +34,13 @@ public class HomeNewsFragment extends Fragment implements OnRefreshListener, End
     private EndlessRecyclerView mEndlessRecyclerView;
     private HomeNewsRecyclerAdapter mHomeNewsRecyclerAdapter;
 
+    public static HomeNewsFragment newInstance(int args) {
+        HomeNewsFragment fragment = new HomeNewsFragment();
+        Bundle bundle = new Bundle();
+        bundle.putInt(ConstantUtil.FRAGMENT_NUM, args);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -55,10 +66,16 @@ public class HomeNewsFragment extends Fragment implements OnRefreshListener, End
         mRefresh.setOnRefreshListener(this);
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, mFragmentNum == ConstantUtil.FRAGMENT_NUM_NEWS);
+        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mEndlessRecyclerView.setLayoutManager(manager);
+        mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration());
         mHomeNewsRecyclerAdapter = new HomeNewsRecyclerAdapter();
         mEndlessRecyclerView.setAdapter(mHomeNewsRecyclerAdapter);
+        // 刷新布局管理器和item decoration 解决错误的spacing
+        mEndlessRecyclerView.post(() -> {
+            manager.invalidateSpanAssignments();
+            mEndlessRecyclerView.invalidateItemDecorations();
+        });
 
         homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> mHomeNewsRecyclerAdapter.setList(data));
     }

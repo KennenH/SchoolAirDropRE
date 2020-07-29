@@ -14,19 +14,19 @@
             android:id="@+id/user_avatar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:icon="@drawable/logo_120x"
-            app:isIconLarge="true"
+            app:PI_icon="@drawable/logo_120x"
+            app:PI_isIconLarge="true"
             app:layout_constraintTop_toTopOf="parent"
-            app:title="@string/avatar" />
+            app:PI_title="@string/avatar" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
-            app:description="空小投"
+            app:PI_description="空小投"
             app:layout_constraintTop_toBottomOf="@+id/user_avatar"
-            app:title="@string/name" />
+            app:PI_title="@string/name" />
 
         <View
             android:id="@+id/view3"
@@ -41,9 +41,9 @@
             android:id="@+id/user_sex"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:description="雌雄同体"
+            app:PI_description="雌雄同体"
             app:layout_constraintTop_toBottomOf="@+id/user_name"
-            app:title="@string/sex" />
+            app:PI_title="@string/sex" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.example.schoolairdroprefactoredition.utils.OverDragLayout>

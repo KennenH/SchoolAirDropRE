@@ -1,6 +1,8 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import com.example.schoolairdroprefactoredition.model.databean.TestQuoteReceiveItemBean;
+import android.util.Log;
+
+import com.example.schoolairdroprefactoredition.model.databean.TestQuoteSectionItemBean;
 import com.example.schoolairdroprefactoredition.presenter.IQuoteSectionsPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IQuoteSectionsCallback;
 
@@ -11,23 +13,45 @@ public class QuoteSectionImpl implements IQuoteSectionsPresenter {
     private IQuoteSectionsCallback mCallback;
 
     @Override
-    public void getQuote(/* 报价信息参数 */) {
+    public void getReceivedQuoteSection(/* 报价信息参数 */) {
         // 网络请求报价信息
-        TestQuoteReceiveItemBean[] beans = new TestQuoteReceiveItemBean[10];
+        TestQuoteSectionItemBean[] beans = new TestQuoteSectionItemBean[10];
         for (int i = 0; i < 10; i++)
-            beans[i] = new TestQuoteReceiveItemBean();
+            beans[i] = new TestQuoteSectionItemBean();
 
         beans[0].setHandled(false);
-        beans[1].setResult(TestQuoteReceiveItemBean.ACCEPT);
-        beans[2].setResult(TestQuoteReceiveItemBean.ACCEPT);
-        beans[3].setResult(TestQuoteReceiveItemBean.OUT_OF_DATE);
-        beans[4].setResult(TestQuoteReceiveItemBean.REFUSE);
-        beans[5].setResult(TestQuoteReceiveItemBean.OUT_OF_DATE);
-        beans[6].setResult(TestQuoteReceiveItemBean.REFUSE);
-        beans[7].setResult(TestQuoteReceiveItemBean.ACCEPT);
-        beans[8].setResult(TestQuoteReceiveItemBean.OUT_OF_DATE);
-        beans[9].setResult(TestQuoteReceiveItemBean.REFUSE);
-        mCallback.onQuoteLoaded(Arrays.asList(beans));
+        beans[1].setResult(TestQuoteSectionItemBean.ACCEPT);
+        beans[2].setResult(TestQuoteSectionItemBean.ACCEPT);
+        beans[3].setResult(TestQuoteSectionItemBean.OUT_OF_DATE);
+        beans[4].setResult(TestQuoteSectionItemBean.REFUSE);
+        beans[5].setHandled(false);
+        beans[6].setResult(TestQuoteSectionItemBean.REFUSE);
+        beans[7].setResult(TestQuoteSectionItemBean.ACCEPT);
+        beans[8].setHandled(false);
+        beans[9].setResult(TestQuoteSectionItemBean.REFUSE);
+        Log.d("SectionImpl", "getReceivedQuoteSection");
+        mCallback.onQuoteReceivedSectionLoaded(Arrays.asList(beans));
+    }
+
+    @Override
+    public void getSentQuoteSection() {
+        // 网络请求报价信息
+        TestQuoteSectionItemBean[] beans = new TestQuoteSectionItemBean[10];
+        for (int i = 0; i < 10; i++)
+            beans[i] = new TestQuoteSectionItemBean();
+
+        beans[0].setHandled(false);
+        beans[1].setResult(TestQuoteSectionItemBean.ACCEPT);
+        beans[2].setResult(TestQuoteSectionItemBean.ACCEPT);
+        beans[3].setHandled(false);
+        beans[4].setResult(TestQuoteSectionItemBean.REFUSE);
+        beans[5].setResult(TestQuoteSectionItemBean.OUT_OF_DATE);
+        beans[6].setResult(TestQuoteSectionItemBean.REFUSE);
+        beans[7].setResult(TestQuoteSectionItemBean.ACCEPT);
+        beans[8].setResult(TestQuoteSectionItemBean.OUT_OF_DATE);
+        beans[9].setHandled(false);
+        Log.d("SectionImpl", "getSentQuoteSection");
+        mCallback.onQuoteSentSectionLoaded(Arrays.asList(beans));
     }
 
     @Override

@@ -4,15 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/sheet_button">
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/user_avatar"
-        android:layout_width="@dimen/toolbar_icon_large"
-        android:layout_height="@dimen/toolbar_icon_large"
+        android:layout_width="@dimen/toolbar_icon_bit_large"
+        android:layout_height="@dimen/toolbar_icon_bit_large"
         android:layout_marginStart="@dimen/general_padding"
         android:layout_marginTop="@dimen/general_padding"
         android:contentDescription="@string/avatar"
+        android:scaleType="centerCrop"
         android:src="@drawable/logo"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -25,40 +26,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/user_avatar"
         app:layout_constraintStart_toEndOf="@+id/user_avatar"
         app:layout_constraintTop_toTopOf="@+id/user_avatar"
-        tools:text="测试用户0" />
-
-    <ImageView
-        android:id="@+id/goods_avatar"
-        android:layout_width="70dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="@dimen/general_padding"
-        android:layout_marginBottom="@dimen/general_padding"
-        android:src="@drawable/ic_alipay"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/user_avatar"
-        app:layout_constraintTop_toBottomOf="@+id/user_avatar" />
-
-    <TextView
-        android:id="@+id/goods_title"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="@dimen/general_padding"
-        android:layout_marginBottom="@dimen/general_padding"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:text="拼夕夕正品 iPhone20骨折出"
-        app:layout_constraintBottom_toTopOf="@+id/goods_origin_price"
-        app:layout_constraintEnd_toStartOf="@+id/handle_result"
-        app:layout_constraintStart_toEndOf="@+id/goods_avatar"
-        app:layout_constraintTop_toTopOf="@+id/goods_avatar" />
-
-    <TextView
-        android:id="@+id/goods_origin_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="$1099.0"
-        app:layout_constraintBottom_toBottomOf="@+id/goods_avatar"
-        app:layout_constraintStart_toStartOf="@+id/goods_title" />
+        android:text="测试用户0" />
 
     <ImageView
         android:id="@+id/handle_result"
@@ -67,7 +35,7 @@
         android:layout_marginEnd="@dimen/general_padding"
         android:scaleType="center"
         android:src="@drawable/ic_quote_accepted"
-        app:layout_constraintBottom_toTopOf="@+id/goods_avatar"
+        app:layout_constraintBottom_toBottomOf="@+id/user_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -77,27 +45,72 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/general_padding"
         android:text="@string/pending"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/user_avatar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/user_avatar" />
 
-    <TextView
-        android:id="@+id/quote_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/general_padding"
-        android:text="@string/quote"
-        android:textColor="@color/black"
-        app:layout_constraintBottom_toTopOf="@+id/quote_price"
-        app:layout_constraintEnd_toEndOf="@+id/quote_price" />
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/detail"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="@dimen/general_padding_small"
+        android:background="@drawable/sheet_button_white"
+        app:layout_constraintTop_toBottomOf="@+id/user_avatar">
 
-    <TextView
-        android:id="@+id/quote_price"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/general_padding"
-        android:text="$1024.0"
-        android:textColor="@color/colorAccentDark"
-        app:layout_constraintBaseline_toBaselineOf="@id/goods_origin_price"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <ImageView
+            android:id="@+id/goods_avatar"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginStart="@dimen/general_padding"
+            android:layout_marginTop="@dimen/general_padding_small"
+            android:layout_marginBottom="@dimen/general_padding"
+            android:scaleType="centerCrop"
+            android:src="@drawable/iphone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/goods_title"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="@dimen/general_padding"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="拼夕夕正品 iPhone20骨折出"
+            app:layout_constraintBottom_toTopOf="@+id/goods_origin_price"
+            app:layout_constraintEnd_toStartOf="@+id/quote_text"
+            app:layout_constraintStart_toEndOf="@+id/goods_avatar"
+            app:layout_constraintTop_toTopOf="@+id/goods_avatar" />
+
+        <TextView
+            android:id="@+id/goods_origin_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$1099.0"
+            app:layout_constraintBottom_toBottomOf="@+id/goods_avatar"
+            app:layout_constraintStart_toStartOf="@+id/goods_title" />
+
+        <TextView
+            android:id="@+id/quote_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/general_padding"
+            android:text="@string/quote"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toTopOf="@+id/quote_price"
+            app:layout_constraintEnd_toEndOf="@+id/quote_price" />
+
+        <TextView
+            android:id="@+id/quote_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/general_padding"
+            android:text="$1024.0"
+            android:textColor="@color/colorAccentDark"
+            app:layout_constraintBaseline_toBaselineOf="@id/goods_origin_price"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

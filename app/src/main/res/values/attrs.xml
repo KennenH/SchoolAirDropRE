@@ -10,18 +10,25 @@
     </declare-styleable>
 
     <declare-styleable name="PageItem">
-        <attr name="isFirst" format="boolean" />
-        <attr name="isLast" format="boolean" />
-        <attr name="isIconLarge" format="boolean" />
-        <attr name="isSwitch" format="boolean" />
-        <attr name="isCheck" format="boolean" />
-        <attr name="showArrow" format="boolean" />
-        <attr name="icon" format="reference" />
-        <attr name="arrow" format="reference" />
-        <attr name="title" format="string" />
-        <attr name="description" format="string" />
+        <attr name="PI_isFirst" format="boolean" />
+        <attr name="PI_isLast" format="boolean" />
+        <attr name="PI_isIconLarge" format="boolean" />
+        <attr name="PI_isSwitch" format="boolean" />
+        <attr name="PI_isCheck" format="boolean" />
+        <attr name="PI_showArrow" format="boolean" />
+        <attr name="PI_icon" format="reference" />
+        <attr name="PI_arrow" format="reference" />
+        <attr name="PI_title" format="string" />
+        <attr name="PI_description" format="string" />
+        <attr name="PI_background" format="reference" />
     </declare-styleable>
 
+    <declare-styleable name="SellingOption">
+        <attr name="SO_title" format="string" />
+        <attr name="SO_description" format="string" />
+        <attr name="SO_isSwitch" format="boolean" />
+        <attr name="SO_clickable" format="boolean" />
+    </declare-styleable>
 
     <!-- ConstraintContentContainer start-->
     <declare-styleable name="ConstraintContentContainer">

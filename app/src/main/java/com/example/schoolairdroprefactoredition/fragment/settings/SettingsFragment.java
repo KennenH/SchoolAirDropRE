@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.fragment.settings;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,19 +10,22 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.fragment.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
-
-import org.jetbrains.annotations.NotNull;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.impl.LoadingPopupView;
 
 /**
  * 设置的主页面
  */
 public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener {
+
+    private SettingsViewModel settingsViewModel;
+
     private FragmentManager manager;
 
     private String notificationName;
@@ -43,7 +47,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
         super.onAttach(context);
 
         notificationName = getResources().getString(R.string.notification);
-        alipayBindingName = getResources().getString(R.string.alipayBinding);
+        alipayBindingName = getResources().getString(R.string.alipayAccountText);
         privacyName = getResources().getString(R.string.privacy);
         generalName = getResources().getString(R.string.general);
         aboutName = getResources().getString(R.string.about);
@@ -56,6 +60,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_home, container, false);
+        settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
 
         mAlipay = root.findViewById(R.id.settings_home_alipay);
         mPrivacy = root.findViewById(R.id.settings_home_privacy);
@@ -81,19 +86,28 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
         int id = v.getId();
         switch (id) {
             case R.id.settings_home_alipay:
-                // alipay
+                final LoadingPopupView getLoading = (LoadingPopupView) new XPopup.Builder(getContext()).asLoading().show();
+                settingsViewModel.getPublicKey().observe(getViewLifecycleOwner(), key -> {
+                    getLoading.dismiss();
+                    Log.d("get Success", key.toString());
+                    final LoadingPopupView postLoading = (LoadingPopupView) new XPopup.Builder(getContext()).asLoading().show();
+                    settingsViewModel.authorizeWithAlipayID(key.getPublic_key(), "19858120611").observe(getViewLifecycleOwner(), token -> {
+                        postLoading.dismiss();
+                        Log.d("Authorization get", token.toString());
+                    });
+                });
                 break;
             case R.id.settings_home_privacy:
-                transact(manager,new SettingsPrivacyFragment(),privacyName);
+                transact(manager, new SettingsPrivacyFragment(), privacyName);
                 break;
             case R.id.settings_home_notification:
-                transact(manager,new SettingsNotificationFragment(),notificationName);
+                transact(manager, new SettingsNotificationFragment(), notificationName);
                 break;
             case R.id.settings_home_general:
-                transact(manager,new SettingsGeneralFragment(),generalName);
+                transact(manager, new SettingsGeneralFragment(), generalName);
                 break;
             case R.id.settings_home_about:
-                // about
+                transact(manager, new SettingsAboutFragment(), aboutName);
                 break;
             case R.id.settings_home_switch_account:
                 // switch account

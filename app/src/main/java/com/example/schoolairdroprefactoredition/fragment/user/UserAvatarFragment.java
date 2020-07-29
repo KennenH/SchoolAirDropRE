@@ -58,7 +58,7 @@ public class UserAvatarFragment extends Fragment implements View.OnLongClickList
 
             View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
             view1.setBackground(getResources().getDrawable(R.drawable.transparent, getContext().getTheme()));
-            final BottomSheetBehavior bottomSheetBehavior = BottomSheetBehavior.from(view1);
+            final BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(view1);
             bottomSheetBehavior.setSkipCollapsed(true);
             bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
                 @Override
@@ -74,8 +74,7 @@ public class UserAvatarFragment extends Fragment implements View.OnLongClickList
 
                 }
             });
-            dialog.show();
-        } else
-            dialog.show();
+        }
+        dialog.show();
     }
 }

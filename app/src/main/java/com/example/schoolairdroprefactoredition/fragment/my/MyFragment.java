@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.activity.quote.QuoteActivity;
 import com.example.schoolairdroprefactoredition.activity.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.activity.settings.UserActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding;
@@ -69,6 +70,7 @@ public class MyFragment extends Fragment implements View.OnClickListener {
                 break;
             case R.id.my_quote:
                 // quote list
+                QuoteActivity.start(getContext());
                 break;
         }
     }

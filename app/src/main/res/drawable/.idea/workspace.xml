@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="a6efc936-1951-473a-8f86-6dff451bf04f" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/activity/quote/QuoteDetailViewModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/activity/ssb/SSBActivity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/domain/DomainAuthorizeGet.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/purchasing/PurchasingFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/settings/SettingsAlipayFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/settings/SettingsViewModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/ssb/BoughtFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/ssb/BoughtViewModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/ssb/SellingFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/ssb/SellingViewModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/ssb/SoldFragment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/ssb/SoldViewModel.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/model/databean/TestQuoteDetailBean.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/model/databean/TestSSBItemBean.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/IBoughtPresenter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/IQuoteDetailPresenter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/ISellingPresenter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/ISettingsPresenter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/ISoldPresenter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/callback/IBoughtCallback.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/callback/IQuoteDetailCallback.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/callback/ISellingCallback.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/callback/ISettingsCallback.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/callback/ISoldCallback.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/impl/BoughtImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/impl/QuoteDetailImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/impl/SellingImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/impl/SettingsImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/impl/SoldImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/SSBAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/SSBPagerAdapter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/BaseHomeNewsEntity.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/QuoteGoodsSimpleProfile.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/QuoteOrderInfo.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/QuoteRecyclerHeader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/QuoteStatus.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/SSBFilter.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/SellingOption.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/SheetAddNew.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/DebouncedOnClickListener.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/decoration/QuoteDecoration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/decoration/VerticalItemLineDecoration.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bg_item_img_placeholder.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bg_primary.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bg_round_primary_light.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bg_round_theme.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/bg_rounded_primary.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_add_selling.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_all.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_attention.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_box.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_chart.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_close.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_down.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_expired.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_filter.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_like.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_loading.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_more_action.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_pass.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_pending.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_right_arrow.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_search.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_statistics.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_user.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/ic_waiting.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/iphone.jpg" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/logo_placeholder.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sheet_button_primary.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/sheet_button_theme.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/activity_ssb.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/component_order_info.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/component_quote_goods_profile.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/component_quote_section_recycler_header.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/component_selling_add_new.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/component_selling_add_new_img.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/component_ssb_filter.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/component_user_profile_simple.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/fragment_quote.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/fragment_search_prelayout.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/fragment_settings_alipay.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/fragment_ssb.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/item_home_news_1.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/item_home_news_2.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/item_ssb.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/sheet_selling_add.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/sheet_ssb_filter.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../layout/sheet_ssb_item_more.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../menu/selling_add_done.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../menu/settings_alipay.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../menu/ssb.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/build.gradle" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/proguard-rules.pro" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/androidTest/java/com/example/test/ExampleInstrumentedTest.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/AndroidManifest.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/drawable-v24/ic_launcher_foreground.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/drawable/ic_launcher_background.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-hdpi/ic_launcher.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-hdpi/ic_launcher_round.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-mdpi/ic_launcher.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-mdpi/ic_launcher_round.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-xhdpi/ic_launcher.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-xhdpi/ic_launcher_round.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-xxhdpi/ic_launcher_round.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/mipmap-xxxhdpi/ic_launcher_round.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/values/colors.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/values/strings.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/main/res/values/styles.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/../../../../../test/src/test/java/com/example/test/ExampleUnitTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/activity/MainActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/activity/MainActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/activity/goods/GoodsActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/activity/goods/GoodsActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/activity/quote/QuoteActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/activity/quote/QuoteActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/activity/quote/QuoteDetailActivity.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/activity/quote/QuoteDetailActivity.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/home/HomeFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/home/HomeFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/home/HomeNearbyFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/home/HomeNearbyFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/home/HomeNewsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/home/HomeNewsFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/home/HomeViewModel.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/my/MyFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/my/MyFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/quote/QuoteSectionsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/quote/QuoteSectionsFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/quote/QuoteSectionsFragmentViewModel.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/quote/QuoteSectionsFragmentViewModel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/search/SearchFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/search/SearchFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/settings/SettingsAboutFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/settings/SettingsAboutFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/settings/SettingsFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/settings/SettingsFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/user/UserAvatarFragment.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/fragment/user/UserAvatarFragment.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/model/Api.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/model/Api.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/model/databean/TestNewsItemBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/model/databean/TestNewsItemBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/model/databean/TestQuoteReceiveItemBean.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/model/databean/TestQuoteSectionItemBean.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/IQuoteSectionsPresenter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/IQuoteSectionsPresenter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/callback/IQuoteSectionsCallback.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/callback/IQuoteSectionsCallback.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/impl/HomeNewsImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/impl/HomeNewsImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/impl/QuoteSectionImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/impl/QuoteSectionImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/impl/SearchImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/presenter/impl/SearchImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/HomeNavigatorAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/HomeNavigatorAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/HomeNearbyRecyclerAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/HomeNearbyRecyclerAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/HomeNewsRecyclerAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/HomeNewsRecyclerAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/HomePagerAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/HomePagerAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/QuoteRecyclerAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/QuoteRecyclerAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/QuoteSectionsPagerAdapter.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/adapter/QuoteSectionsPagerAdapter.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/BoughtSoldInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/BoughtSoldInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/GoodsInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/GoodsInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/PageItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/PageItem.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/SearchBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/ui/components/SearchBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/ConstantUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/ConstantUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/MyUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/MyUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/RetrofitManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/model/RetrofitManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/decoration/HorizontalMarginItemDecoration.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/decoration/HorizontalItemMarginDecoration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/decoration/MarginItemDecoration.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/decoration/MarginItemDecoration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/decoration/VerticalMarginItemDecoration.java" beforeDir="false" afterPath="$PROJECT_DIR$/../../java/com/example/schoolairdroprefactoredition/utils/decoration/VerticalItemMarginDecoration.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/eye_green.xml" beforeDir="false" afterPath="$PROJECT_DIR$/eye_green.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/half_round_rect_bottom_left.xml" beforeDir="false" afterPath="$PROJECT_DIR$/bg_half_round_bottom_left.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/half_round_rect_bottom_right.xml" beforeDir="false" afterPath="$PROJECT_DIR$/bg_half_round_bottom_right.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/home_search_bar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/home_search_bar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ic_left_fill.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ic_left_fill.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ic_quote_accepted.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ic_quote_accepted.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ic_quote_out_of_date.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ic_quote_overdue.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ic_quote_refuse.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ic_quote_rejected.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ic_secondhand.xml" beforeDir="false" afterPath="$PROJECT_DIR$/ic_secondhand.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/right_black.xml" beforeDir="false" afterPath="$PROJECT_DIR$/right_black.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sheet_button.xml" beforeDir="false" afterPath="$PROJECT_DIR$/sheet_button_white.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/sheet_first_botton.xml" beforeDir="false" afterPath="$PROJECT_DIR$/sheet_button_first.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/activity_fragment_container.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/activity_fragment_container.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/activity_main.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/activity_main.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/activity_quote.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/activity_quote.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/activity_quote_detail.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/activity_quote_detail.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/component_bought_sold.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/component_bought_sold.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/component_goods_button_right.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/component_goods_button_right.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/component_goods_info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/component_goods_detail.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/component_search_bar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/component_search_bar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/fragment_home.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/fragment_home.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/fragment_my.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/fragment_my.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/fragment_search.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/fragment_search.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/fragment_settings_about.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/fragment_settings_about.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/fragment_settings_general.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/fragment_settings_general.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/fragment_settings_home.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/fragment_settings_home.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/fragment_settings_language.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/fragment_settings_language.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/fragment_settings_notification.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/fragment_settings_notification.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/fragment_settings_privacy.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/fragment_settings_privacy.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/fragment_user.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/fragment_user.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/fragment_user_name.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/fragment_user_name.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/item_home_goods_info.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/item_home_goods_info.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/item_quote.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/item_quote.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/page_item.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/page_item.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/sheet_avatar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/sheet_avatar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/sheet_select.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/sheet_select.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../layout/sheet_sex.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../layout/sheet_sex.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../menu/bottom_nav_menu.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../menu/bottom_nav_menu.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../values-en/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../values-en/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../values/attrs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../values/attrs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../values/colors.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../values/colors.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../values/dimens.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../values/dimens.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../values/strings.xml" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../../../../.." />
+  </component>
+  <component name="ProjectId" id="1fK4z29y5tNuXYNsHL9XC6HpPnd" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="android.sdk.path" value="D:/AndroidSDK" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a6efc936-1951-473a-8f86-6dff451bf04f" name="Default Changelist" comment="" />
+      <created>1595953708671</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1595953708671</updated>
+    </task>
+    <servers />
+  </component>
+</project>

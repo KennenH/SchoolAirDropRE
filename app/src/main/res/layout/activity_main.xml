@@ -27,7 +27,7 @@
             android:layout_alignParentBottom="true"
             android:background="@color/primary"
             android:elevation="1dp"
-            app:itemIconSize="@dimen/toolbar_icon_bit_large"
+            app:itemIconSize="@dimen/toolbar_icon"
             app:itemIconTint="@null"
             app:labelVisibilityMode="unlabeled"
             app:layout_constraintBottom_toBottomOf="parent"
