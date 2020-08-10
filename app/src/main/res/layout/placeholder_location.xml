@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="@dimen/error_placeholder"
+        android:layout_height="@dimen/error_placeholder"
+        android:layout_marginBottom="@dimen/general_padding_bit_larger"
+        app:layout_constraintBottom_toTopOf="@id/textView"
+        app:layout_constraintEnd_toStartOf="@+id/right"
+        app:layout_constraintStart_toStartOf="@+id/left"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        tools:src="@drawable/ic_error" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/general_padding_larger"
+        android:gravity="center"
+        android:text="@string/errorNetLocation"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizelarge"
+        app:layout_constraintBottom_toTopOf="@id/button"
+        app:layout_constraintEnd_toStartOf="@+id/right"
+        app:layout_constraintStart_toStartOf="@+id/left"
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <TextView
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_rounded_theme"
+        android:gravity="center"
+        android:padding="@dimen/general_padding"
+        android:text="@string/errorRetry"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/right"
+        app:layout_constraintStart_toStartOf="@+id/left"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
+
+</com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>

@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.activity;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -15,6 +16,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import me.jessyan.autosize.AutoSizeCompat;
 
 public class MainActivity extends ImmersionStatusBarActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private FragmentManager mFragmentManager = getSupportFragmentManager();
@@ -32,14 +35,14 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
-        // 添加新的tab时添加
+        // 添加新的tab时在此添加
         mHome = new HomeFragment();
         mPurchase = new PurchasingFragment();
         mMy = new MyFragment();
 
         mPurchase.setOnSearchBarClickListener(() -> {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.container, new SearchFragment(/* parameters such as home or purchase */))
+                    .replace(R.id.container, new SearchFragment())
                     .addToBackStack(null)
                     .commit();
         });
@@ -103,5 +106,11 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
                 return true;
         }
         return false;
+    }
+
+    @Override
+    public Resources getResources() {
+        AutoSizeCompat.autoConvertDensityOfGlobal((super.getResources()));
+        return super.getResources();
     }
 }

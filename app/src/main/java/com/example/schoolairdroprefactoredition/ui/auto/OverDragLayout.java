@@ -1,10 +1,13 @@
-package com.example.schoolairdroprefactoredition.utils;
+package com.example.schoolairdroprefactoredition.ui.auto;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+
+import me.jessyan.autosize.AutoSizeCompat;
 
 public class OverDragLayout extends SmartRefreshLayout {
     public OverDragLayout(Context context) {
@@ -22,5 +25,11 @@ public class OverDragLayout extends SmartRefreshLayout {
         setFooterMaxDragRate(1.2f);
         setHeaderMaxDragRate(1.4f);
         setEnableOverScrollDrag(true);
+    }
+
+    @Override
+    public ViewGroup.LayoutParams generateLayoutParams(AttributeSet attrs) {
+//        AutoSizeCompat.autoConvertDensityOfGlobal(super.getResources());
+        return super.generateLayoutParams(attrs);
     }
 }

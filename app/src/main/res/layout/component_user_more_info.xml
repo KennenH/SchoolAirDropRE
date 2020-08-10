@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/user_more"
     android:layout_width="match_parent"
@@ -67,4 +67,4 @@
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/user_more_transactions" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>

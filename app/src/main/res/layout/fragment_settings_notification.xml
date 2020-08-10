@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.schoolairdroprefactoredition.utils.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.schoolairdroprefactoredition.ui.auto.NestedScrollOverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -17,8 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:PI_isSwitch="true"
-            app:layout_constraintTop_toTopOf="parent"
-            app:PI_title="@string/receiveNewMessages" />
+            app:PI_title="@string/receiveNewMessages"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:layout_width="match_parent"
@@ -33,8 +33,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:PI_isSwitch="true"
-            app:layout_constraintTop_toBottomOf="@+id/settings_notification_receive"
-            app:PI_title="@string/receiveInAppMessages" />
+            app:PI_title="@string/receiveInAppMessages"
+            app:layout_constraintTop_toBottomOf="@+id/settings_notification_receive" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/settings_notification_vibrate"
@@ -42,8 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
             app:PI_isSwitch="true"
-            app:layout_constraintTop_toBottomOf="@+id/settings_notification_in_app"
-            app:PI_title="@string/vibrate" />
+            app:PI_title="@string/vibrate"
+            app:layout_constraintTop_toBottomOf="@+id/settings_notification_in_app" />
 
         <View
             android:layout_width="match_parent"
@@ -58,8 +58,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:PI_isSwitch="true"
-            app:layout_constraintTop_toBottomOf="@+id/settings_notification_vibrate"
-            app:PI_title="@string/sounds" />
+            app:PI_title="@string/sounds"
+            app:layout_constraintTop_toBottomOf="@+id/settings_notification_vibrate" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-</com.example.schoolairdroprefactoredition.utils.OverDragLayout>
+</com.example.schoolairdroprefactoredition.ui.auto.NestedScrollOverDragLayout>

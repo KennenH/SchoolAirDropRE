@@ -14,7 +14,7 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
     public static final int HOME = 3;
     public static final int PURCHASING = 1;
 
-    private int mIndex = HOME;
+    private int mIndex;
 
     public HomePagerAdapter(@NonNull FragmentManager fm, int behavior, int page) {
         super(fm, behavior);

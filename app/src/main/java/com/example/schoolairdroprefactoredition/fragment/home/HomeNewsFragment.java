@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -54,12 +53,12 @@ public class HomeNewsFragment extends Fragment implements OnRefreshListener, End
         mRefresh = binding.homeRefresh;
         mEndlessRecyclerView = binding.homeRecycler;
 
-        init();
+        initRecycler();
 
         return binding.getRoot();
     }
 
-    private void init() {
+    private void initRecycler() {
         mRefresh.setOnRefreshListener(this);
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 

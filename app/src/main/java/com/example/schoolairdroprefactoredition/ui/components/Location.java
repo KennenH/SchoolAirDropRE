@@ -31,10 +31,4 @@ public class Location extends ConstraintLayout {
         mIcon = findViewById(R.id.location_icon);
         mArea = findViewById(R.id.location_area);
     }
-
-    public void setLocation(String location) {
-        mArea.setText(location);
-    }
-
-
 }

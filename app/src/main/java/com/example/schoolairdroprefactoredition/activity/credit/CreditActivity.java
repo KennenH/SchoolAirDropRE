@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.ui.adapter.CreditRecyclerAdapter;
-import com.example.schoolairdroprefactoredition.utils.OverDragLayout;
+import com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout;
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
 

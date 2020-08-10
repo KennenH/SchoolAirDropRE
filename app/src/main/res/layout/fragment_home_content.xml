@@ -10,11 +10,11 @@
     app:srlEnableOverScrollDrag="true"
     app:srlFooterMaxDragRate="1.2"
     app:srlHeaderMaxDragRate="1.2"
-    app:srlHeaderTriggerRate="0.7">
+    app:srlHeaderTriggerRate="0.65">
 
     <com.example.schoolairdroprefactoredition.utils.refresher.DeliveryHeader
         android:layout_width="match_parent"
-        android:layout_height="110dp" />
+        android:layout_height="120dp" />
 
     <com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
         android:id="@+id/home_recycler"

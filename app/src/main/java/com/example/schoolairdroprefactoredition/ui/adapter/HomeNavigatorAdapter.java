@@ -47,9 +47,7 @@ public class HomeNavigatorAdapter extends CommonNavigatorAdapter {
         ScalePagerTitleView title = new ScalePagerTitleView(context);
         title.setNormalColor(Color.BLACK);
         title.setSelectedColor(Color.BLACK);
-        // !!!!!!!!!! 此处因为某些原因，字体大小不能设置为18 !!!!!!!!!!!!
         title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-        // !!!!!!!!!! 此处因为某些原因，字体大小不能设置为18 !!!!!!!!!!!!
         title.setOnClickListener(v -> mViewPager.setCurrentItem(index));
         title.setText(mList.get(index));
 

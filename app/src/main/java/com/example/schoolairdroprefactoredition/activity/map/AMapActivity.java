@@ -9,14 +9,20 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.AMapOptions;
 import com.amap.api.maps2d.CameraUpdate;
 import com.amap.api.maps2d.CameraUpdateFactory;
+import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.UiSettings;
 import com.amap.api.maps2d.model.CameraPosition;
@@ -28,17 +34,22 @@ import com.jaeger.library.StatusBarUtil;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AMapActivity extends ImmersionStatusBarActivity {
+public class AMapActivity extends ImmersionStatusBarActivity implements LocationSource, AMapLocationListener {
 
     public static void start(Context context) {
         Intent intent = new Intent(context, AMapActivity.class);
         context.startActivity(intent);
     }
 
+    private AMapLocationClient mClient;
+    private AMapLocationClientOption mOption;
+
     private MapView mMapView;
     private AMap mMap;
 
     private MyLocationStyle mLocationStyle;
+
+    private OnLocationChangedListener mOnLocationChangedListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,9 +74,50 @@ public class AMapActivity extends ImmersionStatusBarActivity {
 
         mLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
 
+        mMap.setLocationSource(this);
         mMap.setMyLocationStyle(mLocationStyle);
         mMap.setMyLocationEnabled(true);
         mMap.getUiSettings().setZoomControlsEnabled(false);
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (aMapLocation != null && mOnLocationChangedListener != null) {
+            if (aMapLocation.getErrorCode() == 0) {
+                mOnLocationChangedListener.onLocationChanged(aMapLocation);
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(13f), 200, new AMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    public void activate(OnLocationChangedListener onLocationChangedListener) {
+        mOnLocationChangedListener = onLocationChangedListener;
+        if (mClient == null) mClient = new AMapLocationClient(this);
+        if (mOption == null) mOption = new AMapLocationClientOption();
+        mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        mOption.setOnceLocation(true);
+        mOption.setLocationCacheEnable(true);
+        mClient.setLocationOption(mOption);
+        mClient.setLocationListener(this);
+        mClient.startLocation();
+    }
+
+    @Override
+    public void deactivate() {
+        if (mClient.isStarted())
+            mClient.stopLocation();
+        mClient = null;
+        mOnLocationChangedListener = null;
     }
 
     @Override
@@ -103,4 +155,5 @@ public class AMapActivity extends ImmersionStatusBarActivity {
         // 保存地图当前的状态
         mMapView.onSaveInstanceState(outState);
     }
+
 }

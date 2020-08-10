@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.schoolairdroprefactoredition.utils.OverDragLayout
+    <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -15,5 +15,5 @@
             android:overScrollMode="never"
             android:splitMotionEvents="false" />
 
-    </com.example.schoolairdroprefactoredition.utils.OverDragLayout>
+    </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
 </FrameLayout>

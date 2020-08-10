@@ -19,6 +19,7 @@ import com.example.schoolairdroprefactoredition.activity.map.AMapActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNavigatorAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
+import com.example.schoolairdroprefactoredition.ui.components.ErrorPlaceHolder;
 import com.example.schoolairdroprefactoredition.ui.components.Location;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
@@ -30,22 +31,18 @@ public class HomeFragment extends Fragment
 
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
-    private Location mLocation;
 
     private OnSearchBarClickedListener mOnSearchBarClickedListener;
-
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, HomePagerAdapter.HOME);
-        mLocationClient = new AMapLocationClient(getContext());
-        mLocationOption = new AMapLocationClientOption();
 
         MagicIndicator indicator = binding.homeIndicator;
         ViewPager viewPager = binding.homeViewpager;
-        mLocation = binding.homeLocation;
+        Location mLocation = binding.homeLocation;
 
         CommonNavigator commonNavigator = new CommonNavigator(getContext());
         HomeNavigatorAdapter adapter = new HomeNavigatorAdapter(getContext(), viewPager, HomeNavigatorAdapter.HOME);
@@ -63,6 +60,8 @@ public class HomeFragment extends Fragment
     }
 
     private void initLocation() {
+        if (mLocationClient == null) mLocationClient = new AMapLocationClient(getContext());
+        if (mLocationOption == null) mLocationOption = new AMapLocationClientOption();
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         mLocationOption.setOnceLocation(true);
         mLocationOption.setLocationCacheEnable(true);
@@ -85,8 +84,8 @@ public class HomeFragment extends Fragment
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
-            if (aMapLocation.getErrorCode() == 0) {
-                mLocation.setLocation(aMapLocation.getCity());
+            if (aMapLocation.getErrorCode() != 0) {
+
             }
         }
     }

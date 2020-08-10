@@ -12,12 +12,11 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
+import com.example.schoolairdroprefactoredition.ui.components.ErrorPlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.example.schoolairdroprefactoredition.utils.decoration.VerticalItemLineDecoration;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
@@ -47,12 +46,12 @@ public class HomeNearbyFragment extends Fragment implements OnRefreshListener, E
         mRefresh = binding.homeRefresh;
         mEndlessRecyclerView = binding.homeRecycler;
 
-        init();
+        initRecycler();
 
         return binding.getRoot();
     }
 
-    private void init() {
+    private void initRecycler() {
         mRefresh.setOnRefreshListener(this);
         RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, mFragmentNum == ConstantUtil.FRAGMENT_NUM_NEWS);
         mEndlessRecyclerView.setLayoutManager(manager);
@@ -61,7 +60,7 @@ public class HomeNearbyFragment extends Fragment implements OnRefreshListener, E
         mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter();
         mEndlessRecyclerView.setAdapter(mHomeNearbyRecyclerAdapter);
 
-        homeContentFragmentViewModel.getGoodsInfo(120.33036,30.122928).observe(getViewLifecycleOwner(), data -> {
+        homeContentFragmentViewModel.getGoodsInfo(120.33036, 30.122928).observe(getViewLifecycleOwner(), data -> {
             mHomeNearbyRecyclerAdapter.setList(data);
         });
     }

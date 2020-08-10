@@ -26,6 +26,7 @@
     <dimen name="general_rounded_rect">5dp</dimen>
     <dimen name="general_rounded_rect_large">15dp</dimen>
 
+    <dimen name="error_placeholder">100dp</dimen>
     <dimen name="home_item_image">85dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
@@ -40,4 +41,5 @@
     <dimen name="textSizeNormal">14dp</dimen>
     <dimen name="textSizeMin">12dp</dimen>
     <dimen name="textSizeLarger">20dp</dimen>
+    <dimen name="textSizelarge">16dp</dimen>
 </resources>

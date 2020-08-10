@@ -32,7 +32,6 @@ public class PurchasingFragment extends Fragment implements View.OnClickListener
 
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
-    private Location mLocation;
 
     private HomeFragment.OnSearchBarClickedListener mOnSearchBarClickedListener;
 
@@ -48,7 +47,7 @@ public class PurchasingFragment extends Fragment implements View.OnClickListener
 
         MagicIndicator indicator = binding.homeIndicator;
         ViewPager viewPager = binding.homeViewpager;
-        mLocation = binding.homeLocation;
+        Location mLocation = binding.homeLocation;
 
         CommonNavigator commonNavigator = new CommonNavigator(getContext());
         HomeNavigatorAdapter adapter = new HomeNavigatorAdapter(getContext(), viewPager, HomeNavigatorAdapter.PURCHASING);
@@ -72,7 +71,6 @@ public class PurchasingFragment extends Fragment implements View.OnClickListener
         mLocationClient.setLocationOption(mLocationOption);
         mLocationClient.setLocationListener(this);
         mLocationClient.startLocation();
-        mLocation.setLocation("正在定位");
     }
 
     public void setOnSearchBarClickListener(HomeFragment.OnSearchBarClickedListener listener) {
@@ -97,12 +95,9 @@ public class PurchasingFragment extends Fragment implements View.OnClickListener
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
-                mLocation.setLocation(aMapLocation.getCity());
+
             } else {
-                if (relocateTimes < 3) {
-                    mLocation.setLocation("正在定位");
-                } else {
-                    mLocation.setLocation("定位失败");
+                if (relocateTimes >= 3) {
                     mLocationClient.stopLocation();
                 }
                 relocateTimes++;

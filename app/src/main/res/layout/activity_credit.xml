@@ -79,7 +79,7 @@
         </com.google.android.material.appbar.CollapsingToolbarLayout>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <com.example.schoolairdroprefactoredition.utils.OverDragLayout
+    <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
         android:id="@+id/credit_recycler_wrapper"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -99,7 +99,7 @@
                 android:overScrollMode="never"
                 tools:listitem="@layout/item_credit_assessment" />
         </androidx.core.widget.NestedScrollView>
-    </com.example.schoolairdroprefactoredition.utils.OverDragLayout>
+    </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
