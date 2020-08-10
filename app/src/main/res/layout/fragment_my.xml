@@ -5,6 +5,7 @@
     android:id="@+id/smartRefreshLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintTop_toTopOf="parent"
     app:srlEnableOverScrollDrag="true"
@@ -22,8 +23,8 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:splitMotionEvents="false">
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/my_info"
@@ -37,16 +38,23 @@
             android:paddingBottom="@dimen/general_padding_large"
             app:layout_constraintTop_toTopOf="parent">
 
-            <com.shehuan.niv.NiceImageView
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.05" />
+
+            <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/my_avatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
                 android:contentDescription="@string/avatar"
                 android:scaleType="centerCrop"
-                android:src="@drawable/logo_180x"
-                app:corner_radius="@dimen/general_padding"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="@+id/guideline7"
+                app:placeholderImage="@drawable/logo"
+                app:roundedCornerRadius="@dimen/general_padding" />
 
             <TextView
                 android:id="@+id/my_name"
@@ -61,7 +69,7 @@
                 android:lines="1"
                 android:padding="@dimen/general_padding"
                 android:text="奥利给"
-                android:textSize="18sp"
+                android:textSize="18dp"
                 app:layout_constraintBottom_toBottomOf="@+id/my_avatar"
                 app:layout_constraintEnd_toStartOf="@+id/imageView"
                 app:layout_constraintStart_toEndOf="@+id/my_avatar"
@@ -78,7 +86,7 @@
                 app:layout_constraintTop_toTopOf="@+id/my_avatar" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <com.example.schoolairdroprefactoredition.ui.components.BoughtSoldInfo
+        <com.example.schoolairdroprefactoredition.ui.components.SSBInfo
             android:id="@+id/my_bought_sold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -90,8 +98,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
             app:PI_icon="@drawable/ic_price"
-            app:layout_constraintTop_toBottomOf="@+id/my_bought_sold"
-            app:PI_title="@string/quote" />
+            app:PI_title="@string/quote"
+            app:layout_constraintTop_toBottomOf="@+id/my_bought_sold" />
 
         <View
             android:layout_width="match_parent"
@@ -107,8 +115,8 @@
             android:layout_height="wrap_content"
             app:PI_arrow="@drawable/right_black"
             app:PI_icon="@drawable/later_blue"
-            app:layout_constraintTop_toBottomOf="@+id/my_quote"
-            app:PI_title="@string/onGoing" />
+            app:PI_title="@string/onGoing"
+            app:layout_constraintTop_toBottomOf="@+id/my_quote" />
 
         <View
             android:layout_width="match_parent"
@@ -124,8 +132,8 @@
             android:layout_height="wrap_content"
             app:PI_arrow="@drawable/right_black"
             app:PI_icon="@drawable/favorite_red"
-            app:layout_constraintTop_toBottomOf="@+id/my_onGoing"
-            app:PI_title="@string/likes" />
+            app:PI_title="@string/likes"
+            app:layout_constraintTop_toBottomOf="@+id/my_onGoing" />
 
         <com.example.schoolairdroprefactoredition.ui.components.PageItem
             android:id="@+id/my_settings"
@@ -134,8 +142,8 @@
             android:layout_marginTop="@dimen/general_padding_large"
             app:PI_arrow="@drawable/right_black"
             app:PI_icon="@drawable/settings_black"
-            app:layout_constraintTop_toBottomOf="@+id/my_likes"
-            app:PI_title="@string/setting" />
+            app:PI_title="@string/setting"
+            app:layout_constraintTop_toBottomOf="@+id/my_likes" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.scwang.smartrefresh.layout.SmartRefreshLayout>

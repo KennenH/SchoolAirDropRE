@@ -5,28 +5,25 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.fragment.settings.SettingsFragment;
 
 /**
- * 整体框架为 一个activity中包含一个frameLayout以包含其他fragment
- * 切换动画以及逻辑已实现，只需添加fragment即可
+ * 一个activity中包含一个frameLayout以包含其他fragment
+ * 切换动画以及逻辑已实现，只需添加fragment并调用
+ * {@link TransactionBaseActivity#firstTransact(androidx.fragment.app.Fragment, java.lang.String)}
  */
-public class TransactionBaseActivity extends AppCompatActivity implements FragmentManager.OnBackStackChangedListener {
+public class TransactionBaseActivity extends ImmersionStatusBarActivity implements FragmentManager.OnBackStackChangedListener {
 
     protected TextView mName1;
     protected TextView mName2;
@@ -44,6 +41,13 @@ public class TransactionBaseActivity extends AppCompatActivity implements Fragme
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.container, fragment, tag)
+                .commit();
+    }
+
+    protected void firstTransact(@NonNull Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container, fragment)
                 .commit();
     }
 
@@ -97,8 +101,10 @@ public class TransactionBaseActivity extends AppCompatActivity implements Fragme
         TextView alpha = flag ? mName1 : mName2;
         TextView translation = mName2 == alpha ? mName1 : mName2;
 
+        // 当前返回栈中有的fragment数量
         int nowStack = getSupportFragmentManager().getBackStackEntryCount();
 
+        // 当前显示的fragment的名字
         String now = getSupportFragmentManager().findFragmentById(R.id.container).getTag();
 
         if (lastStack < nowStack) { // 开启新的fragment
@@ -192,7 +198,7 @@ public class TransactionBaseActivity extends AppCompatActivity implements Fragme
 
         }
 
-        flag = !flag;// 交换职责
+        flag = !flag;// toolbar中的两个title交换职责
         lastStack = nowStack;
         lastName = now;
     }

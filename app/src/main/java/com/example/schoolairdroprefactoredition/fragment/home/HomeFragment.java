@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.fragment.home;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +34,6 @@ public class HomeFragment extends Fragment
 
     private OnSearchBarClickedListener mOnSearchBarClickedListener;
 
-    private int relocateTimes = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -67,11 +65,10 @@ public class HomeFragment extends Fragment
     private void initLocation() {
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         mLocationOption.setOnceLocation(true);
-        mLocationOption.setLocationCacheEnable(false);
+        mLocationOption.setLocationCacheEnable(true);
         mLocationClient.setLocationOption(mLocationOption);
         mLocationClient.setLocationListener(this);
         mLocationClient.startLocation();
-        mLocation.setLocation("正在定位");
     }
 
     public interface OnSearchBarClickedListener {
@@ -90,14 +87,6 @@ public class HomeFragment extends Fragment
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
                 mLocation.setLocation(aMapLocation.getCity());
-            } else {
-                if (relocateTimes < 3) {
-                    mLocation.setLocation("正在定位");
-                } else {
-                    mLocation.setLocation("定位失败");
-                    mLocationClient.stopLocation();
-                }
-                relocateTimes++;
             }
         }
     }
@@ -110,9 +99,8 @@ public class HomeFragment extends Fragment
                 mOnSearchBarClickedListener.onSearchBarClicked();
             }
         } else if (id == R.id.home_location) {
-            Intent intent = new Intent(getContext(), AMapActivity.class);
             if (getContext() != null)
-                getContext().startActivity(intent);
+                AMapActivity.start(getContext());
         }
     }
 

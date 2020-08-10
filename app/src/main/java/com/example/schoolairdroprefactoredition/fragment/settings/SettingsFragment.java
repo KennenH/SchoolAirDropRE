@@ -93,7 +93,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
                     final LoadingPopupView postLoading = (LoadingPopupView) new XPopup.Builder(getContext()).asLoading().show();
                     settingsViewModel.authorizeWithAlipayID(key.getPublic_key(), "19858120611").observe(getViewLifecycleOwner(), token -> {
                         postLoading.dismiss();
-                        Log.d("Authorization get", token.toString());
+                        Log.d("Authorization get", token);
                     });
                 });
                 break;

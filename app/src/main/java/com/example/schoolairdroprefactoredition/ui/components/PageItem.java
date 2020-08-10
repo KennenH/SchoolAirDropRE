@@ -102,11 +102,11 @@ public class PageItem extends ConstraintLayout {
 
         if (mBackground == null) {
             if (isFirst)
-                setBackground(context.getResources().getDrawable(R.drawable.sheet_first, context.getTheme()));
+                setBackground(context.getResources().getDrawable(R.drawable.button_sheet_first, context.getTheme()));
             else if (isLast)
-                setBackground(context.getResources().getDrawable(R.drawable.radius_last_button, context.getTheme()));
+                setBackground(context.getResources().getDrawable(R.drawable.button_radius_last, context.getTheme()));
             else
-                setBackground(context.getResources().getDrawable(R.drawable.sheet_button_white, context.getTheme()));
+                setBackground(context.getResources().getDrawable(R.drawable.button_sheet_white, context.getTheme()));
         } else
             setBackground(mBackground);
 

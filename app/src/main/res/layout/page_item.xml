@@ -13,21 +13,21 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.85" />
 
-    <com.shehuan.niv.NiceImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/item_page_icon"
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:scaleType="centerCrop"
-        app:corner_radius="3dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundedCornerRadius="@dimen/general_padding_tiny" />
 
     <TextView
         android:id="@+id/item_page_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/general_padding_large"
-        android:textSize="15sp"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="@+id/item_page_icon"
         app:layout_constraintStart_toEndOf="@+id/item_page_icon"
         app:layout_constraintTop_toTopOf="@+id/item_page_icon"
@@ -39,7 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/general_padding"
         android:textColor="#888888"
-        android:textSize="12sp"
+        android:textSize="@dimen/textSizeMin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/item_page_name"

@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.activity.quote;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,12 +12,13 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.ui.components.HeaderOnlyRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.activity.ImmersionStatusBarActivity;
+import com.example.schoolairdroprefactoredition.ui.adapter.HeaderOnlyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.QuoteGoodsSimpleProfile;
 import com.example.schoolairdroprefactoredition.ui.components.QuoteOrderInfo;
 import com.example.schoolairdroprefactoredition.ui.components.QuoteStatus;
 
-public class QuoteDetailActivity extends AppCompatActivity {
+public class QuoteDetailActivity extends ImmersionStatusBarActivity {
 
     public static void start(Context context) {
         Intent intent = new Intent(context, QuoteDetailActivity.class);

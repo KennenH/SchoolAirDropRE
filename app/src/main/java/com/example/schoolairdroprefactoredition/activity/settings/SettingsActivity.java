@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentManager;
@@ -11,6 +12,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.TransactionBaseActivity;
 import com.example.schoolairdroprefactoredition.fragment.settings.SettingsFragment;
+import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
 
 public class SettingsActivity extends TransactionBaseActivity implements FragmentManager.OnBackStackChangedListener {
 

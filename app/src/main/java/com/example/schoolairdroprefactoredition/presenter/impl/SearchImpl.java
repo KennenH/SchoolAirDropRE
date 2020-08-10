@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.model.databean.SearchSuggestionBean;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 import com.example.schoolairdroprefactoredition.presenter.ISearchPresenter;
@@ -43,11 +44,11 @@ public class SearchImpl implements ISearchPresenter {
 //            }
 //        });
 
-        List<TestGoodsItemBean> list = new ArrayList<>();
+        List<DomainGoodsInfo.GoodsInfoBean> list = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
-            TestGoodsItemBean item = new TestGoodsItemBean();
-            item.setTitle(key);
-            item.setPrice(199.99f);
+            DomainGoodsInfo.GoodsInfoBean item = new DomainGoodsInfo.GoodsInfoBean();
+            item.setTital(key);
+            item.setPrice("199.99");
             list.add(item);
         }
         mCallback.onSearchResultLoaded(list);

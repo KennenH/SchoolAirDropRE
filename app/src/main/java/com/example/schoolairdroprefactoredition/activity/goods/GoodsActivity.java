@@ -16,21 +16,27 @@ import android.os.Bundle;
 import android.view.MenuItem;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonSingle;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonDouble;
 import com.example.schoolairdroprefactoredition.ui.components.GoodsInfo;
 import com.example.schoolairdroprefactoredition.ui.components.GoodsPager;
-import com.example.schoolairdroprefactoredition.ui.components.HeaderOnlyRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.adapter.HeaderOnlyRecyclerAdapter;
 import com.jaeger.library.StatusBarUtil;
 
 public class GoodsActivity extends AppCompatActivity implements ButtonSingle.OnButtonClickListener, ButtonDouble.OnButtonClickListener {
 
-    public static void start(Context context) {
+    private static final String ARGS = "GoodsInfo";
+
+    public static void start(Context context, DomainGoodsInfo.GoodsInfoBean info) {
         Intent intent = new Intent(context, GoodsActivity.class);
+        if (info != null)
+            intent.putExtra(ARGS, info);
         context.startActivity(intent);
     }
 
-    private GoodsViewModel goodsViewModel;
+//    private GoodsViewModel goodsViewModel;
+    private DomainGoodsInfo.GoodsInfoBean mInfo;
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
@@ -39,7 +45,8 @@ public class GoodsActivity extends AppCompatActivity implements ButtonSingle.OnB
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_goods);
 
-        goodsViewModel = new ViewModelProvider(this).get(GoodsViewModel.class);
+//        goodsViewModel = new ViewModelProvider(this).get(GoodsViewModel.class);
+        mInfo = (DomainGoodsInfo.GoodsInfoBean) getIntent().getSerializableExtra(ARGS);
 
         initView();
         initRecycler();
@@ -70,12 +77,8 @@ public class GoodsActivity extends AppCompatActivity implements ButtonSingle.OnB
         // instantiate headers
         GoodsPager goodsPager = new GoodsPager(this);
         GoodsInfo goodsInfo = new GoodsInfo(this);
-
-        // get online data
-        goodsViewModel.getGoodsData().observe(this, data -> {
-            goodsPager.setData(data.getImageData());
-            goodsInfo.setData(data);
-        });
+//        goodsPager.setData(mInfo.getPicset());
+        goodsInfo.setData(mInfo);
 
         // add headers
         mRecyclerAdapter.addHeaderView(goodsPager);

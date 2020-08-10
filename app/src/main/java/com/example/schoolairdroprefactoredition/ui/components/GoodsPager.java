@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
 import com.example.schoolairdroprefactoredition.R;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +26,7 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
     private ViewPager mViewPager;
     private List<String> mData = new ArrayList<>();
 
+    private LinearLayout mIndicatorContainer;
     private TextView mCurrent;
     private TextView mTotal;
 
@@ -39,6 +42,7 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.component_goods_pager, this, true);
 
+        mIndicatorContainer = findViewById(R.id.goods_pager_indicator);
         mViewPager = findViewById(R.id.goods_pager);
         mCurrent = findViewById(R.id.goods_pager_current);
         mTotal = findViewById(R.id.goods_pager_total);
@@ -49,6 +53,11 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
     }
 
     public void setData(List<String> data) {
+        if (data.size() < 2)
+            mIndicatorContainer.setVisibility(GONE);
+        else
+            mIndicatorContainer.setVisibility(VISIBLE);
+
         mData = data;
         if (mViewPager.getAdapter() != null)
             mViewPager.getAdapter().notifyDataSetChanged();
@@ -89,8 +98,8 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
             Glide.with(getContext())
                     .load(mData.get(position))
                     .centerCrop()
+                    .placeholder(R.drawable.logo_placeholder)
                     .into(view);
-
             if (view.getParent() instanceof ViewGroup)
                 ((ViewGroup) view.getParent()).removeView(view);
 

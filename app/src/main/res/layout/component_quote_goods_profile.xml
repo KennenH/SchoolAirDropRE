@@ -4,9 +4,9 @@
     android:id="@+id/goods_info"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/sheet_button_white">
+    android:background="@drawable/button_sheet_white">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/goods_info_avatar"
         android:layout_width="@dimen/home_item_image"
         android:layout_height="@dimen/home_item_image"
@@ -16,7 +16,8 @@
         android:src="@drawable/logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundedCornerRadius="@dimen/general_padding" />
 
     <TextView
         android:id="@+id/goods_info_name"
@@ -27,6 +28,7 @@
         android:layout_marginBottom="@dimen/general_padding"
         android:ellipsize="end"
         android:text="拼夕夕正品iPhone20 骨折出"
+        android:textSize="14dp"
         app:layout_constraintBottom_toTopOf="@+id/goods_info_price"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/goods_info_avatar"
@@ -37,6 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="$1099"
+        android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="@+id/goods_info_avatar"
         app:layout_constraintStart_toStartOf="@+id/goods_info_name" />
 

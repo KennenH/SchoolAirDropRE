@@ -3,138 +3,108 @@ package com.example.schoolairdroprefactoredition.fragment.user;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.ui.components.PageItem;
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.bottomsheet.BottomSheetDialog;
+import com.example.schoolairdroprefactoredition.activity.credit.CreditActivity;
+import com.example.schoolairdroprefactoredition.databinding.FragmentUserBinding;
+import com.example.schoolairdroprefactoredition.fragment.TransactionBaseFragment;
+import com.example.schoolairdroprefactoredition.ui.adapter.HeaderOnlyRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.components.UserHomeBaseInfo;
+import com.example.schoolairdroprefactoredition.ui.components.UserHomeMoreInfo;
+import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.lxj.xpopup.XPopup;
 
-// 用户信息主页面
-public class UserFragment extends Fragment implements View.OnClickListener {
-    private String userAvatar;
-    private String userName;
-    private String userSex;
-    private String female;
-    private String male;
-    private String hermaphrodite;
+public class UserFragment extends TransactionBaseFragment implements UserHomeBaseInfo.OnBaseInfoActionListener, UserHomeMoreInfo.OnMoreInfoActionListener {
 
-    private PageItem avatar;
-    private PageItem name;
-    private PageItem sex;
+    private UserViewModel viewModel;
 
-    private BottomSheetDialog dialog;
+    private String userInfoModify;
+    private String userCredits;
+    private String userTransactionsHistory;
+
+    private RecyclerView mRecycler;
+    private UserHomeBaseInfo mBaseInfo;
+    private UserHomeMoreInfo mMoreInfo;
 
     private FragmentManager manager;
-
-    public UserFragment() {
-    }
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        userAvatar = getResources().getString(R.string.avatar);
-        userName = getResources().getString(R.string.setName);
-        userSex = getResources().getString(R.string.sex);
-        female = getResources().getString(R.string.female);
-        male = getResources().getString(R.string.male);
-        hermaphrodite = getResources().getString(R.string.hermaphrodite);
+        userInfoModify = getResources().getString(R.string.modifyInfo);
+        userCredits = getResources().getString(R.string.credits);
+        userTransactionsHistory = getResources().getString(R.string.transactionsHistory);
 
-        if (getActivity() != null)
-            manager = getActivity().getSupportFragmentManager();
+        if (getActivity() != null) manager = getActivity().getSupportFragmentManager();
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_user, container, false);
+        final FragmentUserBinding binding = FragmentUserBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(this).get(UserViewModel.class);
+        setHasOptionsMenu(true);
 
-        avatar = root.findViewById(R.id.user_avatar);
-        name = root.findViewById(R.id.user_name);
-        sex = root.findViewById(R.id.user_sex);
+        mRecycler = binding.userRecycler;
+        mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        avatar.setOnClickListener(this);
-        name.setOnClickListener(this);
-        sex.setOnClickListener(this);
+        mBaseInfo = new UserHomeBaseInfo(getContext());
+        mMoreInfo = new UserHomeMoreInfo(getContext());
 
-        return root;
+        mBaseInfo.setOnBaseInfoActionListener(this);
+        mMoreInfo.setOnMoreInfoActionListener(this);
+
+        HeaderOnlyRecyclerAdapter adapter = new HeaderOnlyRecyclerAdapter();
+        adapter.addHeaderView(mBaseInfo);
+        adapter.addHeaderView(mMoreInfo);
+
+        mRecycler.setAdapter(adapter);
+
+        return binding.getRoot();
     }
-
 
     @Override
-    public void onClick(View v) {
-        int id = v.getId();
-        if (id == R.id.user_avatar) {
-            manager.beginTransaction()
-                    // 这四个参数的意思分别是
-                    // 1 新fragment进入动画
-                    // 2 旧fragment退出动画
-                    // 3 在新fragment回退时旧fragment的进入动画
-                    // 4 在新fragment回退时新fragment的退出动画
-                    .setCustomAnimations(R.anim.enter_x_fragment, R.anim.exit_x_fragment, R.anim.popenter_x_fragment, R.anim.popexit_x_fragment)
-                    .replace(((ViewGroup) getView().getParent()).getId(), new UserAvatarFragment(), userAvatar)
-                    .addToBackStack(userAvatar)
-                    .commit();
-        } else if (id == R.id.user_name) {
-            manager.beginTransaction()
-                    .setCustomAnimations(R.anim.enter_y_fragment, R.anim.exit_y_fragment, R.anim.popenter_y_fragment, R.anim.popexit_y_fragment)
-                    .replace(((ViewGroup) getView().getParent()).getId(), new UserNameFragment(), userName)
-                    .addToBackStack(userName)
-                    .commit();
-        } else if (id == R.id.user_sex) {
-            showSexDialog();
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.modify_info) {
+            transact(manager, new UserModifyInfoFragment(), userInfoModify);
         }
+        return super.onOptionsItemSelected(item);
     }
 
-    private void showSexDialog() {
-        if (dialog == null  && getContext() != null) {
-            dialog = new BottomSheetDialog(getContext());
-            dialog.setContentView(LayoutInflater.from(getContext()).inflate(R.layout.sheet_sex, null));
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.user_personal, menu);
+    }
 
-            dialog.findViewById(R.id.female).setOnClickListener(v -> {
-                sex.setDescription(female);
-                dialog.dismiss();
-            });
-            dialog.findViewById(R.id.male).setOnClickListener(v -> {
-                sex.setDescription(male);
-                dialog.dismiss();
-            });
-            dialog.findViewById(R.id.hermaphrodite).setOnClickListener(v -> {
-                sex.setDescription(hermaphrodite);
-                dialog.dismiss();
-            });
-            dialog.findViewById(R.id.cancel).setOnClickListener(v -> {
-                dialog.dismiss();
-            });
+    @Override
+    public void onAvatarClick(ImageView src) {
+        new XPopup.Builder(getContext())
+                .asImageViewer(src, R.drawable.logo, false, -1, -1, 50, false, new MyUtil.ImageLoader())
+                .show();
+    }
 
+    @Override
+    public void onTransactionClick() {
+        // 交易记录
+    }
 
-            View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
-            view1.setBackground(getResources().getDrawable(R.drawable.transparent, getContext().getTheme()));
-            final BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(view1);
-            bottomSheetBehavior.setSkipCollapsed(true);
-            bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                @Override
-                public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                    if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                        dialog.dismiss();
-                        bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                    }
-                }
-
-                @Override
-                public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-                }
-            });
-            dialog.show();
-        } else
-            dialog.show();
+    @Override
+    public void onCreditsClick() {
+        // 信用界面
+        CreditActivity.start(getContext());
     }
 }

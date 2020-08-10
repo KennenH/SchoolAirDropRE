@@ -32,7 +32,6 @@ public class HomeNearbyFragment extends Fragment implements OnRefreshListener, E
     private EndlessRecyclerView mEndlessRecyclerView;
     private HomeNearbyRecyclerAdapter mHomeNearbyRecyclerAdapter;
 
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,15 +61,14 @@ public class HomeNearbyFragment extends Fragment implements OnRefreshListener, E
         mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter();
         mEndlessRecyclerView.setAdapter(mHomeNearbyRecyclerAdapter);
 
-        homeContentFragmentViewModel.getGoodsInfo().observe(getViewLifecycleOwner(), data -> {
-            mHomeNearbyRecyclerAdapter.addData(data);
+        homeContentFragmentViewModel.getGoodsInfo(120.33036,30.122928).observe(getViewLifecycleOwner(), data -> {
+            mHomeNearbyRecyclerAdapter.setList(data);
         });
     }
 
-
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        homeContentFragmentViewModel.getGoodsInfo().observe(getViewLifecycleOwner(), data -> {
+        homeContentFragmentViewModel.getGoodsInfo(120.33036, 30.122928).observe(getViewLifecycleOwner(), data -> {
             mHomeNearbyRecyclerAdapter.setList(data);
             refreshLayout.finishRefresh();
         });
@@ -78,7 +76,7 @@ public class HomeNearbyFragment extends Fragment implements OnRefreshListener, E
 
     @Override
     public void autoLoadMore(EndlessRecyclerView recycler) {
-        homeContentFragmentViewModel.getGoodsInfo().observe(getViewLifecycleOwner(), data -> {
+        homeContentFragmentViewModel.getGoodsInfo(120.33036, 30.122928).observe(getViewLifecycleOwner(), data -> {
             mHomeNearbyRecyclerAdapter.addData(data);
             recycler.finishLoading();
         });

@@ -6,7 +6,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainAuthorizePost;
 public interface ISettingsCallback {
     void onPublicKeyGot(DomainAuthorizeGet authorization);
 
-    void onAuthorizationSuccess(DomainAuthorizePost authorization);
+    void onAuthorizationSuccess(String authorization);
 
     void onAuthorizationFailed();
 }

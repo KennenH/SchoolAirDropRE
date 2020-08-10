@@ -2,29 +2,21 @@ package com.example.schoolairdroprefactoredition.activity;
 
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.fragment.home.HomeFragment;
 import com.example.schoolairdroprefactoredition.fragment.my.MyFragment;
 import com.example.schoolairdroprefactoredition.fragment.purchasing.PurchasingFragment;
 import com.example.schoolairdroprefactoredition.fragment.search.SearchFragment;
-import com.example.schoolairdroprefactoredition.utils.ColorUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.jaeger.library.StatusBarUtil;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends ImmersionStatusBarActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
     private FragmentManager mFragmentManager = getSupportFragmentManager();
 
     private HomeFragment mHome;
@@ -37,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
-        setStatusBar();
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
 
@@ -60,19 +51,6 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         });
         navView.setOnNavigationItemSelectedListener(this);
         showFragment(mHome);
-    }
-
-    private void setStatusBar() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            StatusBarUtil.setTranslucent(this, 0);
-            if (ColorUtil.isColorDark(getResources().getColor(R.color.primary, getTheme()))) {
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-            } else {
-                getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
-            }
-        } else {
-            StatusBarUtil.setTranslucent(this, 66);
-        }
     }
 
     private void showFragment(Fragment fragment) {

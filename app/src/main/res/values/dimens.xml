@@ -13,6 +13,7 @@
     <dimen name="icon_normal">46dp</dimen>
     <dimen name="toolbar_icon_even_larger">55dp</dimen>
     <dimen name="icon_normal_with_general_padding">56dp</dimen>
+    <dimen name="padding_with_toolbar_size">85dp</dimen>
 
     <dimen name="general_padding_tiny">3dp</dimen>
     <dimen name="general_padding_small">5dp</dimen>
@@ -33,6 +34,10 @@
     <dimen name="ic_quote">55dp</dimen>
     <dimen name="sheet_gap">0.8dp</dimen>
 
-    <dimen name="toolbar_2_center_margin">18.5dp</dimen>
-    <dimen name="toolbar_center_margin">75dp</dimen>
+    <dimen name="toolbar_2_center_margin">20dp</dimen>
+    <dimen name="toolbar_center_margin">72dp</dimen>
+    <dimen name="sheet_cancel_padding">20dp</dimen>
+    <dimen name="textSizeNormal">14dp</dimen>
+    <dimen name="textSizeMin">12dp</dimen>
+    <dimen name="textSizeLarger">20dp</dimen>
 </resources>

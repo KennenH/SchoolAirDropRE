@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -17,12 +18,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/general_padding"
-        android:text="20"
+        android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/item_likes"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toEndOf="@+id/item_comments_icon"
-        app:layout_constraintTop_toTopOf="@+id/item_comments_icon" />
+        app:layout_constraintTop_toTopOf="@+id/item_comments_icon"
+        tools:text="20" />
 
     <ImageView
         android:id="@+id/item_likes_icon"
@@ -38,11 +40,11 @@
         android:id="@+id/item_likes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="16"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/item_watches"
         app:layout_constraintStart_toEndOf="@+id/item_comments"
-        app:layout_constraintTop_toTopOf="@+id/item_likes_icon" />
+        app:layout_constraintTop_toTopOf="@+id/item_likes_icon"
+        tools:text="16" />
 
     <ImageView
         android:id="@+id/item_watches_icon"
@@ -59,10 +61,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/general_padding"
-        android:text="23"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/item_likes"
-        app:layout_constraintTop_toTopOf="@+id/item_watches_icon" />
+        app:layout_constraintTop_toTopOf="@+id/item_watches_icon"
+        tools:text="23" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

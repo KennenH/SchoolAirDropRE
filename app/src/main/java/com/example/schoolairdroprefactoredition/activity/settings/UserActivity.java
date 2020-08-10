@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
-import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.TransactionBaseActivity;
 import com.example.schoolairdroprefactoredition.fragment.user.UserFragment;
 
@@ -25,12 +24,6 @@ public class UserActivity extends TransactionBaseActivity implements FragmentMan
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        String userInfoName = getResources().getString(R.string.userInfo);
-        mName1.setText(userInfoName);
-
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container, new UserFragment(), userInfoName)
-                .commit();
+        firstTransact(new UserFragment());
     }
 }

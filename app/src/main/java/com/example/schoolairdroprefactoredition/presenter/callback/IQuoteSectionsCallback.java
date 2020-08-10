@@ -5,7 +5,7 @@ import com.example.schoolairdroprefactoredition.model.databean.TestQuoteSectionI
 import java.util.List;
 
 public interface IQuoteSectionsCallback {
-    void onQuoteReceivedSectionLoaded(List<TestQuoteSectionItemBean> received);
+    void onQuoteReceivedLoaded(List<TestQuoteSectionItemBean> received);
 
-    void onQuoteSentSectionLoaded(List<TestQuoteSectionItemBean> sent);
+    void onQuoteSentLoaded(List<TestQuoteSectionItemBean> sent);
 }

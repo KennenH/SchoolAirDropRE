@@ -22,6 +22,8 @@
     <string name="orderExpiration">失效时间 : %1$d-%2$d-%3$d</string>
     <string name="alipayAccount">支付宝账号 : %1$s</string>
     <string name="statistics">统计(%1$d)</string>
+    <string name="userJoinTime">#%1$d年%2$d月%3$d日加入</string>
+    <string name="time">$1$d年$2$d月$3$d日</string>
 
 
     <!--  translatable  -->
@@ -121,6 +123,32 @@
     <string name="purchasing">淘物</string>
     <string name="official">官方</string>
     <string name="all">全部</string>
+    <string name="transactions">完成交易次数</string>
+    <string name="credits">个人信用</string>
+    <string name="transactionsHistory">交易记录</string>
+    <string name="creditExcellent">信用极好</string>
+    <string name="creditGreat">信用优秀</string>
+    <string name="creditGood">信用良好</string>
+    <string name="creditFair">信用一般</string>
+    <string name="creditLow">信用较低</string>
+    <string name="monthlyAssessmentDes">基于你最近一个月的交易情况进行的信用评估</string>
+    <string name="reportAssessmentDes">基于用户反馈以及审查验证的信用评估</string>
+    <string name="assessResult4">信用优秀 4</string>
+    <string name="assessResult3">信用良好 3</string>
+    <string name="assessResult2">信用一般 2</string>
+    <string name="assessResult1">信用较低 1</string>
+    <string name="assessResult5">信用极好 5</string>
+    <string name="monthlyAssessment">信用评估</string>
+    <string name="reportAssessment">反馈评估</string>
+    <string name="assessmentUp">信用较上期上升</string>
+    <string name="assessmentDown">信用较上期下降</string>
+    <string name="remainingTime">剩余\n$1%d:$2%d:$3%d</string>
+    <string name="waitingForDelivery">待交付</string>
+    <string name="waitingForPay">待付款</string>
+    <string name="cover">封面</string>
+    <string name="picSet">图片集</string>
+    <string name="textRemainCount">剩余%1$d字可输入</string>
+    <string name="Locating">正在获取定位信息...</string>
 
 
 </resources>

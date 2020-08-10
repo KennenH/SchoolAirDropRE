@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.bumptech.glide.Glide;
 import com.example.schoolairdroprefactoredition.R;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 public class HomeNewsItem extends ConstraintLayout {
 
@@ -17,7 +17,7 @@ public class HomeNewsItem extends ConstraintLayout {
     private TextView mMonth;
     private TextView mTitle;
     private TextView mSender;
-    private ImageView mCover;
+    private SimpleDraweeView mCover;
 
     public HomeNewsItem(Context context) {
         this(context, null);
@@ -57,11 +57,7 @@ public class HomeNewsItem extends ConstraintLayout {
     }
 
     public void setCover(String url) {
-        Glide.with(getContext())
-                .load(url)
-                .centerCrop()
-                .placeholder(R.drawable.logo_120x)
-                .into(mCover);
+        mCover.setImageURI(url);
     }
 
     public String getDay() {

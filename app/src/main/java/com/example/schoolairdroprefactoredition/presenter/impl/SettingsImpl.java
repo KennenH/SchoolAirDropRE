@@ -50,26 +50,27 @@ public class SettingsImpl implements ISettingsPresenter {
     public void postAlipayIDRSA(String publicKey, String alipayID) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainAuthorizePost> task = api.postAlipayIDRSA(RSACoder.encryptByPublicKey(publicKey, alipayID));
-        task.enqueue(new Callback<DomainAuthorizePost>() {
-            @Override
-            public void onResponse(Call<DomainAuthorizePost> call, Response<DomainAuthorizePost> response) {
-                int code = response.code();
-                if (code == HttpURLConnection.HTTP_OK) {
-                    DomainAuthorizePost authorization = response.body();
-                    if (mCallback != null) {
-                        mCallback.onAuthorizationSuccess(authorization);
-                    }
-                } else {
-                    Log.d("HomeImpl", "请求错误 " + code);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DomainAuthorizePost> call, Throwable t) {
-                Log.e("HomeImpl", "请求失败 -- > " + t);
-            }
-        });
+        mCallback.onAuthorizationSuccess(RSACoder.encryptByPublicKey(publicKey, alipayID));
+//        Call<DomainAuthorizePost> task = api.postAlipayIDRSA(RSACoder.encryptByPublicKey(publicKey, alipayID));
+//        task.enqueue(new Callback<DomainAuthorizePost>() {
+//            @Override
+//            public void onResponse(Call<DomainAuthorizePost> call, Response<DomainAuthorizePost> response) {
+//                int code = response.code();
+//                if (code == HttpURLConnection.HTTP_OK) {
+//                    DomainAuthorizePost authorization = response.body();
+//                    if (mCallback != null) {
+//                        mCallback.onAuthorizationSuccess(authorization);
+//                    }
+//                } else {
+//                    Log.d("HomeImpl", "请求错误 " + code);
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<DomainAuthorizePost> call, Throwable t) {
+//                Log.e("HomeImpl", "请求失败 -- > " + t);
+//            }
+//        });
     }
 
     @Override

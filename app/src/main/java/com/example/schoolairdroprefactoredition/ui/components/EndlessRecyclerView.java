@@ -13,8 +13,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 /**
- * 自动加载数据、调整了tap to top滑动速度
- * 的recycler view
+ * 自动加载数据
  */
 public class EndlessRecyclerView extends RecyclerView {
 

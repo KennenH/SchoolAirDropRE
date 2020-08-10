@@ -2,11 +2,14 @@ package com.example.schoolairdroprefactoredition.model;
 
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizePost;
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 
 import retrofit2.Call;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
@@ -18,9 +21,11 @@ public interface Api {
 
     /**
      * 获取附近在售的商品
+     * x-www-form-urlendoded
      */
-    @GET("goods/relative")
-    Call<TestGoodsItemBean> getGoodsInfo();
+    @FormUrlEncoded
+    @POST("server/GetNearByGoods.php")
+    Call<DomainGoodsInfo> getGoodsInfo(@Field("longitude") Double longitude, @Field("latitude") Double latitude);
 
     /**
      * 获取首页最新消息
@@ -53,6 +58,6 @@ public interface Api {
     Call<DomainAuthorizeGet> getAuthorizePublicKey();
 
     @POST("server/authorize.php")
-    Call<DomainAuthorizePost> postAlipayIDRSA(@Query("string") String encryptedID);
+    Call<DomainAuthorizePost> postAlipayIDRSA(@Query("user_alipay") String encryptedID);
 
 }

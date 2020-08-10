@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.fragment.ssb;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,12 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.activity.addnew.SellingAddNewActivity;
 import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
-import com.example.schoolairdroprefactoredition.ui.components.SheetAddNew;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.example.schoolairdroprefactoredition.utils.DebouncedOnClickListener;
 
 import java.util.List;
 
@@ -62,7 +60,8 @@ public class SellingFragment extends Fragment implements SSBFilter.OnFilterListe
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (SystemClock.elapsedRealtime() - lastClickTime < ConstantUtil.MENU_CLICK_GAP) return false;
+        if (SystemClock.elapsedRealtime() - lastClickTime < ConstantUtil.MENU_CLICK_GAP)
+            return false;
         lastClickTime = SystemClock.elapsedRealtime();
 
         int id = item.getItemId();
@@ -71,7 +70,8 @@ public class SellingFragment extends Fragment implements SSBFilter.OnFilterListe
                 getActivity().getSupportFragmentManager().popBackStack();
         } else if (id == R.id.ssb_selling_add) {
             if (getActivity() != null) {
-                new SheetAddNew().show(getActivity().getSupportFragmentManager(), "Add");
+                SellingAddNewActivity.start(getContext());
+                getActivity().overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
             }
         }
         return super.onOptionsItemSelected(item);

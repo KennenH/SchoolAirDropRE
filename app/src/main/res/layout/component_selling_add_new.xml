@@ -3,28 +3,38 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/toolbar_icon_even_larger"
-    android:background="@drawable/bg_rounded_primary">
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_rounded_primary"
+    android:paddingTop="@dimen/general_padding_bit_larger"
+    android:paddingBottom="@dimen/general_padding_bit_larger">
 
     <TextView
         android:id="@+id/title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/general_padding_bit_larger"
+        android:ellipsize="end"
         android:gravity="center_vertical"
         android:textColor="@color/black"
+        android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/arrow"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/description"
-        android:layout_width="wrap_content"
+        android:id="@+id/user_description"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding_bit_larger"
         android:layout_marginEnd="@dimen/general_padding"
+        android:ellipsize="end"
+        android:gravity="end|center_vertical"
+        android:maxLines="1"
+        android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/arrow"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView

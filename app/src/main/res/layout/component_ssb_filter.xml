@@ -16,6 +16,7 @@
         android:drawableStart="@drawable/ic_statistics"
         android:drawablePadding="@dimen/general_padding"
         android:gravity="center_vertical"
+        android:textSize="14dp"
         android:text="@string/statistics"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

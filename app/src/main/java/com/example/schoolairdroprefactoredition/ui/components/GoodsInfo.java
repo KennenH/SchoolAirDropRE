@@ -6,9 +6,10 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsDetailBean;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.flexbox.FlexboxLayout;
 
@@ -18,7 +19,7 @@ public class GoodsInfo extends ShimmerFrameLayout {
     private FlexboxLayout mTags;
     private GoodsPopularity mPopularity;
     private GoodsPrice mPrice;
-    private ImageView mAvatar;
+    private SimpleDraweeView mAvatar;
     private TextView mUserName;
     private TextView mDescription;
 
@@ -43,22 +44,22 @@ public class GoodsInfo extends ShimmerFrameLayout {
         mDescription = findViewById(R.id.goods_description);
     }
 
-    public void setData(TestGoodsDetailBean data) {
-        mGoodsName.setText(data.getGoodsName());
-        mTags.removeAllViews();
-        for (Integer tag : data.getTags()) {
-            mTags.addView(new Tags(getContext(), tag));
+    public void setData(DomainGoodsInfo.GoodsInfoBean data) {
+        if (data != null) {
+            mGoodsName.setText(data.getTital());
+            mTags.removeAllViews();
+//        for (Integer tag : data.getTags()) {
+//            mTags.addView(new Tags(getContext(), tag));
+//        }
+//        mPopularity.setComments(data.get());
+//        mPopularity.setLikes(data.getLikes());
+//        mPopularity.setWatches(data.getWatches());
+            mPrice.setPrice(data.getPrice());
+//        mAvatar.setImageURI(data.getAvatar());
+            mUserName.setText("校园空投官方");
+            mDescription.setText(data.getDescription());
+            stopShimmer();
+            hideShimmer();
         }
-        mPopularity.setComments(data.getComments());
-        mPopularity.setLikes(data.getLikes());
-        mPopularity.setWatches(data.getWatches());
-        mPrice.setPrice(data.getPrice());
-        Glide.with(getContext())
-                .load(data.getAvatar())
-                .into(mAvatar);
-        mUserName.setText(data.getUserName());
-        mDescription.setText(data.getDescription());
-        stopShimmer();
-        hideShimmer();
     }
 }

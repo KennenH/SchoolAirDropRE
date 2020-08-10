@@ -34,15 +34,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
-            android:text="1"
+            tools:text="1"
             android:textColor="@color/white"
-            android:textSize="18sp" />
+            android:textSize="18dp" />
 
         <TextView
             android:id="@+id/goods_pager_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="/3"
-            android:textColor="@color/white" />
+            tools:text="/3"
+            android:textColor="@color/white"
+            android:textSize="14dp" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

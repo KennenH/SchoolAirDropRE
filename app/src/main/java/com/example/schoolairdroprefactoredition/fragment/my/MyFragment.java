@@ -12,17 +12,18 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.activity.ongoing.OnGoingActivity;
 import com.example.schoolairdroprefactoredition.activity.quote.QuoteActivity;
 import com.example.schoolairdroprefactoredition.activity.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.activity.settings.UserActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding;
-import com.example.schoolairdroprefactoredition.ui.components.BoughtSoldInfo;
+import com.example.schoolairdroprefactoredition.ui.components.SSBInfo;
 
 public class MyFragment extends Fragment implements View.OnClickListener {
 
     private ImageView mAvatar;
     private TextView mName;
-    private BoughtSoldInfo mBoughtSoldInfo;
+    private SSBInfo mSSBInfo;
     private Bundle mUserBundle;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -32,7 +33,7 @@ public class MyFragment extends Fragment implements View.OnClickListener {
         mUserBundle = new Bundle();
         mAvatar = binding.myAvatar;
         mName = binding.myName;
-        mBoughtSoldInfo = binding.myBoughtSold;
+        mSSBInfo = binding.myBoughtSold;
 
         binding.myInfo.setOnClickListener(this);
         binding.myQuote.setOnClickListener(this);
@@ -43,9 +44,9 @@ public class MyFragment extends Fragment implements View.OnClickListener {
 //        myViewModel.getAvatar()
         myViewModel.getUserInfo().observe(getViewLifecycleOwner(), data -> {
             mName.setText(data.getName());
-            mBoughtSoldInfo.setSelling(data.getSelling());
-            mBoughtSoldInfo.setSold(data.getSold());
-            mBoughtSoldInfo.setBought(data.getBought());
+            mSSBInfo.setSelling(data.getSelling());
+            mSSBInfo.setSold(data.getSold());
+            mSSBInfo.setBought(data.getBought());
         });
 
         return binding.getRoot();
@@ -59,7 +60,7 @@ public class MyFragment extends Fragment implements View.OnClickListener {
                 UserActivity.start(getContext());
                 break;
             case R.id.my_onGoing:
-                // list on going
+                OnGoingActivity.start(getContext());
                 break;
             case R.id.my_likes:
                 // list my likes

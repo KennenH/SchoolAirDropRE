@@ -12,7 +12,7 @@ import com.example.schoolairdroprefactoredition.presenter.impl.SettingsImpl;
 public class SettingsViewModel extends ViewModel implements ISettingsCallback {
 
     private MutableLiveData<DomainAuthorizeGet> mAuthorizationKey = new MutableLiveData<>();
-    private MutableLiveData<DomainAuthorizePost> mAuthorizedSession = new MutableLiveData<>();
+    private MutableLiveData<String> mAuthorizedSession = new MutableLiveData<>();
 
     private SettingsImpl settingsImpl;
 
@@ -26,7 +26,7 @@ public class SettingsViewModel extends ViewModel implements ISettingsCallback {
         return mAuthorizationKey;
     }
 
-    public LiveData<DomainAuthorizePost> authorizeWithAlipayID(String publicKey, String alipayID){
+    public LiveData<String> authorizeWithAlipayID(String publicKey, String alipayID){
         settingsImpl.postAlipayIDRSA(publicKey, alipayID);
         return mAuthorizedSession;
     }
@@ -37,7 +37,7 @@ public class SettingsViewModel extends ViewModel implements ISettingsCallback {
     }
 
     @Override
-    public void onAuthorizationSuccess(DomainAuthorizePost authorization) {
+    public void onAuthorizationSuccess(String authorization) {
         mAuthorizedSession.postValue(authorization);
     }
 

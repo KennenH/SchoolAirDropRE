@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.example.schoolairdroprefactoredition.utils.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/black">
@@ -9,12 +10,13 @@
         android:layout_height="match_parent"
         android:gravity="center">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/avatar"
-            android:layout_width="@dimen/x320"
-            android:layout_height="@dimen/x320"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:contentDescription="@string/avatar"
-            android:src="@drawable/logo_180x" />
+            android:src="@drawable/logo_180x"
+            app:viewAspectRatio="1" />
 
     </LinearLayout>
 </com.example.schoolairdroprefactoredition.utils.OverDragLayout>

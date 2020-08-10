@@ -10,13 +10,15 @@
 
     <color name="colorAccentShadow">#DA4395FA</color>
 
-    <color name="primaryLight">#F3F3F3</color>
+    <color name="primaryLight">#F4F4F4</color>
     <color name="primary">#efefef</color>
     <color name="primaryDark">#eeeeee</color>
     <color name="primaryDarker">#DADADA</color>
     <color name="primaryEvenDarker">#B5B5B5</color>
     <color name="primaryDarkest">#9E9E9E</color>
     <color name="primaryText">#888888</color>
+
+    <color name="translucent">#D8FFFFFF</color>
 
 
     <color name="orangeLight">#F56C0F</color>
@@ -35,4 +37,11 @@
     <color name="colorPrimaryRed">#DD402C</color>
     <color name="colorPrimaryGreen">#44A944</color>
     <color name="colorPrimaryGreenLight">#4BD34B</color>
+
+    <color name="colorCreditGoodBg">#ddf6ff</color>
+    <color name="colorCreditGood">#0394e4</color>
+    <color name="colorCreditGoodDark">#0077DF</color>
+    <color name="colorCreditLowBg">#fefede</color>
+    <color name="colorCreditLow">#e8b13e</color>
+    <color name="colorCreditLowDark">#C88D12</color>
 </resources>

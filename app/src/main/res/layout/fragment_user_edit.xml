@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.schoolairdroprefactoredition.utils.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/primary">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:orientation="vertical">
+
+        <com.example.schoolairdroprefactoredition.ui.components.PageItem
+            android:id="@+id/user_avatar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:PI_icon="@drawable/logo_120x"
+            app:PI_isIconLarge="true"
+            app:PI_title="@string/avatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <com.example.schoolairdroprefactoredition.ui.components.PageItem
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/general_padding_large"
+            app:PI_description="空小投"
+            app:PI_title="@string/name"
+            app:layout_constraintTop_toBottomOf="@+id/user_avatar" />
+
+        <View
+            android:id="@+id/view3"
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginStart="50dp"
+            android:background="@color/colorLine"
+            app:layout_constraintBottom_toBottomOf="@+id/user_name"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <com.example.schoolairdroprefactoredition.ui.components.PageItem
+            android:id="@+id/user_sex"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:PI_description="雌雄同体"
+            app:PI_title="@string/sex"
+            app:layout_constraintTop_toBottomOf="@+id/user_name" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.example.schoolairdroprefactoredition.utils.OverDragLayout>

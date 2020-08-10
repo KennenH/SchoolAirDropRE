@@ -1,9 +1,6 @@
 package com.example.schoolairdroprefactoredition.activity.ssb;
 
-import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -11,19 +8,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.AttributeSet;
-import android.util.EventLog;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.activity.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBPagerAdapter;
 
-public class SSBActivity extends AppCompatActivity implements View.OnClickListener {
+public class SSBActivity extends ImmersionStatusBarActivity implements View.OnClickListener {
 
     public static final int SELLING = R.string.selling;
     public static final int SOLD = R.string.sold;

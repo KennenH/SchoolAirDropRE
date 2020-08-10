@@ -72,8 +72,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
-            android:background="@drawable/sheet_button_white"
+            android:background="@drawable/button_sheet_white"
             android:gravity="center"
+            android:textSize="@dimen/textSizeNormal"
             android:padding="@dimen/general_padding_bit_larger"
             android:text="@string/switchAccount"
             app:layout_constraintTop_toBottomOf="@+id/settings_home_about" />
@@ -83,9 +84,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
-            android:background="@drawable/sheet_button_red"
+            android:background="@drawable/button_sheet_red"
             android:gravity="center"
             android:padding="@dimen/general_padding_bit_larger"
+            android:textSize="@dimen/textSizeNormal"
             android:text="@string/signOut"
             android:textColor="@color/white"
             app:layout_constraintTop_toBottomOf="@+id/settings_home_switch_account" />

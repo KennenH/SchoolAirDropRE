@@ -7,12 +7,13 @@
 
     <TextView
         android:id="@+id/female"
+        style="@style/SheetNormal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/sheet_button_first"
+        android:background="@drawable/button_sheet_first"
         android:gravity="center"
-        android:padding="@dimen/general_padding_bit_larger"
         android:text="@string/female"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -24,12 +25,13 @@
 
     <TextView
         android:id="@+id/male"
+        style="@style/SheetNormal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/sheet_button_white"
+        android:background="@drawable/button_sheet_white"
         android:gravity="center"
-        android:padding="@dimen/general_padding_bit_larger"
         android:text="@string/male"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintTop_toBottomOf="@+id/s1" />
 
     <View
@@ -41,12 +43,13 @@
 
     <TextView
         android:id="@+id/hermaphrodite"
+        style="@style/SheetNormal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/sheet_button_white"
+        android:background="@drawable/button_sheet_white"
         android:gravity="center"
-        android:padding="@dimen/general_padding_bit_larger"
         android:text="@string/hermaphrodite"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintTop_toBottomOf="@+id/s2" />
 
     <View
@@ -58,12 +61,13 @@
 
     <TextView
         android:id="@+id/cancel"
+        style="@style/SheetCancel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/sheet_button_white"
+        android:background="@drawable/button_sheet_white"
         android:gravity="center"
-        android:padding="@dimen/general_padding_bit_larger"
         android:text="@string/cancel"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gap"
         app:layout_goneMarginTop="@dimen/general_padding_large" />

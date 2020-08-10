@@ -32,7 +32,7 @@ public class UserNameFragment extends Fragment implements View.OnClickListener, 
 
         mClear = root.findViewById(R.id.user_name_clear);
         mEditor = root.findViewById(R.id.user_name_editor);
-        mDone = root.findViewById(R.id.user_name_done);
+        mDone = root.findViewById(R.id.done);
 
         mEditor.addTextChangedListener(this);
         mEditor.setOnClickListener(this);
@@ -54,7 +54,7 @@ public class UserNameFragment extends Fragment implements View.OnClickListener, 
         } else if (id == R.id.user_name_editor) {
             if (!mEditor.hasFocus())
                 mEditor.requestFocus();
-        } else if (id == R.id.user_name_done) {
+        } else if (id == R.id.done) {
             if (getActivity() != null) {
                 KeyboardUtils.hideSoftInput(getActivity());
                 getActivity().getSupportFragmentManager().popBackStack();

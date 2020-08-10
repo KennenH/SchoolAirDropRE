@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.ui.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.util.TypedValue;
 
 import androidx.viewpager.widget.ViewPager;
 
@@ -46,7 +47,9 @@ public class HomeNavigatorAdapter extends CommonNavigatorAdapter {
         ScalePagerTitleView title = new ScalePagerTitleView(context);
         title.setNormalColor(Color.BLACK);
         title.setSelectedColor(Color.BLACK);
-        title.setTextSize(SizeUtils.sp2px(12));
+        // !!!!!!!!!! 此处因为某些原因，字体大小不能设置为18 !!!!!!!!!!!!
+        title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
+        // !!!!!!!!!! 此处因为某些原因，字体大小不能设置为18 !!!!!!!!!!!!
         title.setOnClickListener(v -> mViewPager.setCurrentItem(index));
         title.setText(mList.get(index));
 

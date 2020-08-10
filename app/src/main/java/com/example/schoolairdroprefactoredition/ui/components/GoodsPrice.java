@@ -40,4 +40,15 @@ public class GoodsPrice extends ConstraintLayout {
         mPriceInt.setText(p.substring(0, dot));
         mPriceFraction.setText(p.substring(dot));
     }
+
+    public void setPrice(String price) {
+        int dot = price.indexOf(".");
+        mCurrency.setText(R.string.currency_RMB);
+        if (dot != -1) {
+            mPriceInt.setText(price.substring(0, dot));
+            mPriceFraction.setText(price.substring(dot));
+        } else {
+            mPriceInt.setText(price);
+        }
+    }
 }

@@ -24,8 +24,8 @@ public class HorizontalItemMarginDecoration extends RecyclerView.ItemDecoration 
     public HorizontalItemMarginDecoration() {
     }
 
-    public HorizontalItemMarginDecoration(int space) {
-        this.space = space;
+    public HorizontalItemMarginDecoration(float space) {
+        this.space = (int) space;
     }
 
     @Override

@@ -1,7 +1,9 @@
 package com.example.schoolairdroprefactoredition.utils;
 
+import android.util.Base64;
 import android.util.Log;
 
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -9,6 +11,7 @@ import java.security.KeyFactory;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.Signature;
@@ -121,98 +124,41 @@ public class RSACoder {
      * @param publicKey
      */
     public static String encryptByPublicKey(String publicKey, String data) {
-        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(publicKey.getBytes(StandardCharsets.UTF_8));
-        KeyFactory keyFactory = null;
+//        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(publicKey.getBytes(StandardCharsets.UTF_8));
         try {
-            keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
-            Key publicK = keyFactory.generatePublic(x509KeySpec);
+            KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
+            PublicKey publicK = getFromString(publicKey);
+//            PublicKey publicK = keyFactory.generatePublic(x509KeySpec);
 
             Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
             cipher.init(Cipher.ENCRYPT_MODE, publicK);
 
-            String encrypted = new String(cipher.doFinal(data.getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
-            Log.d("Encrypt", "encrypted code -- > " + encrypted);
-            return encrypted;
-        } catch (NoSuchAlgorithmException | InvalidKeySpecException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
+            byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
+            String s = Base64.encodeToString(encrypted, Base64.NO_WRAP);
+            Log.d("RSA", " s -- > " + s);
+            return s;
+        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
-        return "";
+        return "Encryption Error";
     }
 
-    /**
-     * 私钥加密
-     *
-     * @param data
-     * @param privateKey
-     * @return
-     * @throws Exception
-     */
-    public static byte[] encryptByPrivateKey(byte[] data, byte[] privateKey)
-            throws Exception {
-        PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(privateKey);
-        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
-        Key privateK = keyFactory.generatePrivate(pkcs8KeySpec);
+    public static PublicKey getFromString(String keystr) {
+        try {
+            String pubKeyDER = keystr.replace("-----BEGIN PUBLIC KEY-----", "");
+            pubKeyDER = pubKeyDER.replace("-----END PUBLIC KEY-----", "");
+            pubKeyDER = pubKeyDER.replace("\n", "");
 
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
-        cipher.init(1, privateK);
-        return cipher.doFinal(data);
+            Log.d("RSA public key DER", pubKeyDER);
+            byte[] encoded = Base64.decode(pubKeyDER, Base64.NO_WRAP);
+            X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
+            KeyFactory kf = KeyFactory.getInstance(KEY_ALGORITHM);
+
+            return kf.generatePublic(keySpec);
+        } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
-    /**
-     * 私钥解密
-     *
-     * @param data
-     * @param privateKey
-     * @return
-     * @throws Exception
-     */
-    public static byte[] decryptByPrivateKey(byte[] data, byte[] privateKey)
-            throws Exception {
-        PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(privateKey);
-        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
-        Key privateK = keyFactory.generatePrivate(pkcs8KeySpec);
-
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
-        cipher.init(2, privateK);
-        return cipher.doFinal(data);
-    }
-
-    /**
-     * 公钥解密
-     *
-     * @param data
-     * @param publicKey
-     * @return
-     * @throws Exception
-     */
-    public static byte[] decryptByPublicKey(byte[] data, byte[] publicKey)
-            throws Exception {
-        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(publicKey);
-        KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
-        Key publicK = keyFactory.generatePublic(x509KeySpec);
-
-        Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
-        cipher.init(2, publicK);
-        return cipher.doFinal(data);
-    }
-
-    /**
-     * 初始化密钥
-     *
-     * @return
-     * @throws Exception
-     */
-    public static Map<String, byte[]> initKey() throws Exception {
-        KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
-        keyPairGen.initialize(1024);
-        KeyPair keyPair = keyPairGen.generateKeyPair();
-
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();
-
-        RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-        Map<String, byte[]> keyMap = new HashMap<String, byte[]>(2);
-        keyMap.put(PUBLIC_KEY, publicKey.getEncoded());
-        keyMap.put(PRIVATE_KEY, privateKey.getEncoded());
-        return keyMap;
-    }
 }

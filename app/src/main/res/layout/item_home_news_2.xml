@@ -14,9 +14,9 @@
         android:drawableTop="@drawable/ic_chart"
         android:drawablePadding="@dimen/general_padding"
         android:gravity="center"
-        android:padding="@dimen/general_padding"
+        android:padding="@dimen/general_padding_large"
         android:text="快速上手"
         android:textColor="@color/white"
-        android:textSize="18sp" />
+        android:textSize="18dp" />
 
 </androidx.cardview.widget.CardView>

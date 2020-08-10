@@ -18,7 +18,7 @@ public class SSBAdapter extends BaseQuickAdapter<TestSSBItemBean, BaseViewHolder
     protected void convert(@NotNull BaseViewHolder holder, TestSSBItemBean bean) {
         holder.itemView.setOnClickListener(v -> {
             // open goods detail page
-            GoodsActivity.start(getContext());
+            GoodsActivity.start(getContext(), null);
         });
 
         holder.itemView.findViewById(R.id.ssb_item_more_action).setOnClickListener(v -> {

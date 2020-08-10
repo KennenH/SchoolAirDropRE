@@ -12,6 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/general_padding_tiny"
+        android:textSize="14dp"
         android:text="@string/searchHistory"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -44,6 +45,7 @@
         android:layout_marginEnd="@dimen/general_padding_tiny"
         android:padding="@dimen/general_padding_small"
         android:text="@string/confirm"
+        android:textSize="14dp"
         android:textColor="@color/red"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/search_history_title"
@@ -55,6 +57,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/general_padding_bit_larger"
+        android:textSize="14dp"
         android:padding="@dimen/general_padding_small"
         android:text="@string/cancel"
         android:visibility="gone"

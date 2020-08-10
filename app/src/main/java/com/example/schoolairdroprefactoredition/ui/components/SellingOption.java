@@ -20,7 +20,7 @@ public class SellingOption extends ConstraintLayout {
     private ImageView mArrow;
 
     private boolean isSwitch = false;
-    private boolean clickable = false;
+    private boolean isShowArrow = false;
     private String title = "";
     private String description = "";
 
@@ -45,7 +45,7 @@ public class SellingOption extends ConstraintLayout {
         if (attrs == null) return;
 
         isSwitch = ta.getBoolean(R.styleable.SellingOption_SO_isSwitch, isSwitch);
-        clickable = ta.getBoolean(R.styleable.SellingOption_SO_clickable, clickable);
+        isShowArrow = ta.getBoolean(R.styleable.SellingOption_SO_clickable, isShowArrow);
         title = ta.getString(R.styleable.SellingOption_SO_title);
         description = ta.getString(R.styleable.SellingOption_SO_description);
 
@@ -54,7 +54,7 @@ public class SellingOption extends ConstraintLayout {
 
     private void init() {
         mTitle = findViewById(R.id.title);
-        mDescription = findViewById(R.id.description);
+        mDescription = findViewById(R.id.user_description);
         mArrow = findViewById(R.id.arrow);
         mSwitch = findViewById(R.id.swi);
 
@@ -63,18 +63,42 @@ public class SellingOption extends ConstraintLayout {
             mDescription.setVisibility(GONE);
             mArrow.setVisibility(INVISIBLE);
         } else {
-            mSwitch.setVisibility(GONE);
+            mSwitch.setVisibility(INVISIBLE);
             mDescription.setVisibility(VISIBLE);
             mArrow.setVisibility(VISIBLE);
         }
 
-        if (clickable) {
-            mSwitch.setVisibility(GONE);
+        if (isShowArrow) {
+            mSwitch.setVisibility(INVISIBLE);
             mArrow.setVisibility(VISIBLE);
         }
 
         if (title != null && !title.equals("")) mTitle.setText(title);
         if (description != null && !description.equals("")) mDescription.setText(description);
 
+    }
+
+    public CharSequence getText() {
+        return mTitle.getText();
+    }
+
+    public CharSequence getDescription() {
+        return mDescription.getText();
+    }
+
+    public void setText(CharSequence text) {
+        mTitle.setText(text);
+    }
+
+    public void setDescription(CharSequence description) {
+        mDescription.setText(description);
+    }
+
+    public boolean getIsSelected() {
+        return mSwitch.isSelected();
+    }
+
+    public void toggle() {
+        mSwitch.toggle();
     }
 }

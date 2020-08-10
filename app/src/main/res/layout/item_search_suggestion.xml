@@ -19,6 +19,7 @@
         android:id="@+id/search_suggestion_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:textSize="@dimen/textSizeNormal"
         android:layout_marginStart="@dimen/general_padding"
         app:layout_constraintBottom_toBottomOf="@+id/search_suggestion_icon"
         app:layout_constraintStart_toEndOf="@+id/search_suggestion_icon"

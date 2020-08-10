@@ -8,13 +8,12 @@ import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.example.schoolairdroprefactoredition.R;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 public class RecyclerItem extends ConstraintLayout {
 
-    private ImageView mImage;
+    private SimpleDraweeView mImage;
     private TextView mTitle;
     private GoodsPrice mGoodsPrice;
 
@@ -36,11 +35,7 @@ public class RecyclerItem extends ConstraintLayout {
     }
 
     public void setImage(String url) {
-        Glide.with(getContext())
-                .load(url)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .dontTransform()
-                .into(mImage);
+        mImage.setImageURI(url);
     }
 
     public void setTitle(String title) {

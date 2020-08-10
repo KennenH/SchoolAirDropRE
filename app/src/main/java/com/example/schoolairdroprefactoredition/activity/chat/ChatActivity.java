@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.activity.chat;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,13 +10,14 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.activity.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.presenter.impl.ChatImpl;
 import com.example.schoolairdroprefactoredition.ui.components.ChatBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-public class ChatActivity extends AppCompatActivity implements OnRefreshListener, ChatBar.OnChatBarActionListener {
+public class ChatActivity extends ImmersionStatusBarActivity implements OnRefreshListener, ChatBar.OnChatBarActionListener {
 
     public static void start(Context context) {
         Intent intent = new Intent(context, ChatActivity.class);

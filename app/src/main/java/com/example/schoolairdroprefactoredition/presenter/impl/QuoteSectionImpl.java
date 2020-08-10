@@ -13,7 +13,7 @@ public class QuoteSectionImpl implements IQuoteSectionsPresenter {
     private IQuoteSectionsCallback mCallback;
 
     @Override
-    public void getReceivedQuoteSection(/* 报价信息参数 */) {
+    public void getReceivedQuote(/* 报价信息参数 */) {
         // 网络请求报价信息
         TestQuoteSectionItemBean[] beans = new TestQuoteSectionItemBean[10];
         for (int i = 0; i < 10; i++)
@@ -30,11 +30,11 @@ public class QuoteSectionImpl implements IQuoteSectionsPresenter {
         beans[8].setHandled(false);
         beans[9].setResult(TestQuoteSectionItemBean.REFUSE);
         Log.d("SectionImpl", "getReceivedQuoteSection");
-        mCallback.onQuoteReceivedSectionLoaded(Arrays.asList(beans));
+        mCallback.onQuoteReceivedLoaded(Arrays.asList(beans));
     }
 
     @Override
-    public void getSentQuoteSection() {
+    public void getSentQuote() {
         // 网络请求报价信息
         TestQuoteSectionItemBean[] beans = new TestQuoteSectionItemBean[10];
         for (int i = 0; i < 10; i++)
@@ -51,7 +51,7 @@ public class QuoteSectionImpl implements IQuoteSectionsPresenter {
         beans[8].setResult(TestQuoteSectionItemBean.OUT_OF_DATE);
         beans[9].setHandled(false);
         Log.d("SectionImpl", "getSentQuoteSection");
-        mCallback.onQuoteSentSectionLoaded(Arrays.asList(beans));
+        mCallback.onQuoteSentLoaded(Arrays.asList(beans));
     }
 
     @Override

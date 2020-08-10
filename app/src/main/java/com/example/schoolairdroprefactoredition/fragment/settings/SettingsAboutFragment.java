@@ -40,7 +40,7 @@ public class SettingsAboutFragment extends TransactionBaseFragment implements Vi
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentSettingsAboutBinding binding = FragmentSettingsAboutBinding.inflate(inflater, container, false);
+        final FragmentSettingsAboutBinding binding = FragmentSettingsAboutBinding.inflate(inflater, container, false);
 
         mVersion = binding.settingsAboutVersion;
         mWhatsNew = binding.settingsAboutNew;

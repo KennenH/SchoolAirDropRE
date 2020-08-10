@@ -33,13 +33,14 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/user_name_done"
+            android:id="@+id/done"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
-            android:background="@drawable/sheet_button_theme"
+            android:background="@drawable/button_sheet_theme"
             android:gravity="center"
             android:padding="@dimen/general_padding_bit_larger"
+            android:textSize="@dimen/textSizeNormal"
             android:text="@string/done"
             android:textColor="@color/white"
             app:layout_constraintTop_toBottomOf="@+id/user_name_editor" />

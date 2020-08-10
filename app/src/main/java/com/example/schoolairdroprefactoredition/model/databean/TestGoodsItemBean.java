@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.model.databean;
 
+import android.net.Uri;
+
 import java.util.List;
 
 public class TestGoodsItemBean {

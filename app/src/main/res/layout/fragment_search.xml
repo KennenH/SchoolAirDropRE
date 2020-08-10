@@ -4,7 +4,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/primary"
+    android:background="@color/white"
     android:clickable="true"
     android:focusable="true">
 
@@ -12,8 +12,8 @@
         android:id="@+id/search_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:contentInsetStart="0dp"
         app:contentInsetEnd="0dp"
+        app:contentInsetStart="0dp"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,8 +24,8 @@
             <com.example.schoolairdroprefactoredition.ui.components.SearchBar
                 android:id="@+id/search"
                 android:layout_width="0dp"
-                android:layout_marginStart="@dimen/general_padding_large"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_padding_large"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/search_cancel"
                 app:layout_constraintStart_toStartOf="parent"
@@ -38,6 +38,7 @@
                 android:gravity="center"
                 android:padding="@dimen/general_padding_large"
                 android:text="@string/cancel"
+                android:textSize="14dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

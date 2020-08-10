@@ -102,4 +102,17 @@
     <string name="price">Price</string>
     <string name="official">Official</string>
     <string name="all">All</string>
+    <string name="transactions">Transactions</string>
+    <string name="credits">Personal Credits</string>
+    <string name="userJoinTime">#Joined on %2$d %3$d, %1$d</string>
+    <string name="transactionsHistory">Transaction History</string>
+    <string name="creditExcellent">Excellent</string>
+    <string name="creditGreat">Great</string>
+    <string name="creditGood">Good</string>
+    <string name="creditFair">Fair</string>
+    <string name="creditLow">Low</string>
+    <string name="time">%2$d %3$d, %1$d</string>
+    <string name="cover">Cover</string>
+    <string name="picSet">Picture Set</string>
+    <string name="Locating">Locating...</string>
 </resources>

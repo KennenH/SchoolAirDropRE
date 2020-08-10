@@ -33,6 +33,6 @@ public class HomeNewsRecyclerAdapter extends BaseMultiItemQuickAdapter<BaseHomeN
 
     @Override
     public void onClick(View v) {
-        GoodsActivity.start(getContext());
+        GoodsActivity.start(getContext(), null);
     }
 }

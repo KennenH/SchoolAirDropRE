@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <set xmlns:android="http://schemas.android.com/apk/res/android">
     <scale
-        android:duration="@android:integer/config_mediumAnimTime"
+        android:duration="@integer/animNormalSpeed"
         android:fromXScale="1"
         android:fromYScale="1"
         android:interpolator="@android:anim/decelerate_interpolator"
@@ -11,7 +11,7 @@
         android:toYScale="0.9"
         android:translationZ="-1dp" />
     <alpha
-        android:duration="@android:integer/config_mediumAnimTime"
+        android:duration="@integer/animNormalSpeed"
         android:fromAlpha="1"
         android:interpolator="@android:anim/decelerate_interpolator"
         android:toAlpha="0" />
