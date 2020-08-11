@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.fragment.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,9 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
+import com.amap.api.location.AMapLocation;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
+import com.example.schoolairdroprefactoredition.fragment.BaseMainFragment;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -20,7 +23,7 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-public class HomeNewsFragment extends Fragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener {
+public class HomeNewsFragment extends Fragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseMainFragment.OnLocationCallbackListener {
     private int mFragmentNum;
 
     private HomeNewsFragmentViewModel homeContentFragmentViewModel;
@@ -29,6 +32,8 @@ public class HomeNewsFragment extends Fragment implements OnRefreshListener, End
 
     private EndlessRecyclerView mEndlessRecyclerView;
     private HomeNewsRecyclerAdapter mHomeNewsRecyclerAdapter;
+
+    private AMapLocation mLocation;
 
     public static HomeNewsFragment newInstance(int args) {
         HomeNewsFragment fragment = new HomeNewsFragment();
@@ -42,6 +47,8 @@ public class HomeNewsFragment extends Fragment implements OnRefreshListener, End
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentNum = getArguments() != null ? getArguments().getInt(ConstantUtil.FRAGMENT_NUM) : 0;
+        if (getParentFragment() != null && getParentFragment() instanceof HomeFragment)
+            ((HomeFragment) getParentFragment()).setOnLocationCallbackListener(this);
     }
 
     @Nullable
@@ -76,6 +83,20 @@ public class HomeNewsFragment extends Fragment implements OnRefreshListener, End
         homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> mHomeNewsRecyclerAdapter.setList(data));
     }
 
+    /**
+     * 来自父Fragment{@link HomeFragment}的定位回调
+     */
+    @Override
+    public void onLocated(AMapLocation aMapLocation) {
+        if (aMapLocation != null) {
+            if (aMapLocation.getErrorCode() == 0) {
+                mLocation = aMapLocation;
+//                Log.d("NewsFragment", aMapLocation.getAddress());
+            } else {
+//                Log.d("NewsFragment", "onLocation error -- > " + aMapLocation.getErrorInfo());
+            }
+        }
+    }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {

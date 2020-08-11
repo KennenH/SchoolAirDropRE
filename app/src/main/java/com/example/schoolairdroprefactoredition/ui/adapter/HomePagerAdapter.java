@@ -24,10 +24,10 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if (mIndex == HOME) {
+        if (mIndex == HOME)
             return new HomeNewsFragment();
-        }
-        return new HomeNearbyFragment();
+        else
+            return new HomeNearbyFragment();
     }
 
     @Override

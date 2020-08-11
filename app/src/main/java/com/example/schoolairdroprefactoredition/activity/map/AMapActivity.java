@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.activity.map;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
@@ -36,13 +37,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class AMapActivity extends ImmersionStatusBarActivity implements LocationSource, AMapLocationListener {
 
-    public static void start(Context context) {
-        Intent intent = new Intent(context, AMapActivity.class);
-        context.startActivity(intent);
-    }
+    public static final int REQUEST_CODE = 300;
+    public static final String LOCATION_KEY = "AMapLocation";
 
     private AMapLocationClient mClient;
     private AMapLocationClientOption mOption;
+    private AMapLocation mLocation;
 
     private MapView mMapView;
     private AMap mMap;
@@ -50,6 +50,11 @@ public class AMapActivity extends ImmersionStatusBarActivity implements Location
     private MyLocationStyle mLocationStyle;
 
     private OnLocationChangedListener mOnLocationChangedListener;
+
+    public static void start(Context context) {
+        Intent intent = new Intent(context, AMapActivity.class);
+        ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_CODE);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,16 +90,18 @@ public class AMapActivity extends ImmersionStatusBarActivity implements Location
         if (aMapLocation != null && mOnLocationChangedListener != null) {
             if (aMapLocation.getErrorCode() == 0) {
                 mOnLocationChangedListener.onLocationChanged(aMapLocation);
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(13f), 200, new AMap.CancelableCallback() {
-                    @Override
-                    public void onFinish() {
-
-                    }
-
-                    @Override
-                    public void onCancel() {
-                    }
-                });
+                mLocation = aMapLocation;
+                Log.d("AMapActivity", aMapLocation.getAddress());
+//                mMap.animateCamera(CameraUpdateFactory.zoomTo(13f), 200, new AMap.CancelableCallback() {
+//                    @Override
+//                    public void onFinish() {
+//
+//                    }
+//
+//                    @Override
+//                    public void onCancel() {
+//                    }
+//                });
             }
         }
     }
@@ -120,12 +127,26 @@ public class AMapActivity extends ImmersionStatusBarActivity implements Location
         mOnLocationChangedListener = null;
     }
 
+    private void sendBackLocation() {
+        Intent intent = new Intent();
+        intent.putExtra(LOCATION_KEY, mLocation);
+        setResult(RESULT_OK, intent);
+    }
+
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home)
+        if (item.getItemId() == android.R.id.home) {
+            sendBackLocation();
             finish();
+        }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        sendBackLocation();
+        super.onBackPressed();
     }
 
     @Override

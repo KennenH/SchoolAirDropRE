@@ -1,11 +1,14 @@
 package com.example.schoolairdroprefactoredition.fragment.home;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -15,8 +18,11 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.activity.MainActivity;
 import com.example.schoolairdroprefactoredition.activity.map.AMapActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
+import com.example.schoolairdroprefactoredition.fragment.BaseMainFragment;
+import com.example.schoolairdroprefactoredition.fragment.purchasing.PurchasingFragment;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNavigatorAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.ErrorPlaceHolder;
@@ -26,13 +32,21 @@ import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 
-public class HomeFragment extends Fragment
-        implements View.OnClickListener, AMapLocationListener {
+import static android.app.Activity.RESULT_OK;
 
-    private AMapLocationClient mLocationClient;
-    private AMapLocationClientOption mLocationOption;
+public class HomeFragment extends BaseMainFragment
+        implements View.OnClickListener, MainActivity.OnLocationListener {
+
+    private AMapLocation mLocation;
 
     private OnSearchBarClickedListener mOnSearchBarClickedListener;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getActivity() != null && getActivity() instanceof MainActivity)
+            ((MainActivity) getActivity()).setOnLocationListener(HomeFragment.this);
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -54,20 +68,45 @@ public class HomeFragment extends Fragment
         binding.homeSearchBar.setOnClickListener(this);
         mLocation.setOnClickListener(this);
 
-        initLocation();
-
         return binding.getRoot();
     }
 
-    private void initLocation() {
-        if (mLocationClient == null) mLocationClient = new AMapLocationClient(getContext());
-        if (mLocationOption == null) mLocationOption = new AMapLocationClientOption();
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        mLocationOption.setOnceLocation(true);
-        mLocationOption.setLocationCacheEnable(true);
-        mLocationClient.setLocationOption(mLocationOption);
-        mLocationClient.setLocationListener(this);
-        mLocationClient.startLocation();
+    /**
+     * 来自{@link AMapActivity}的定位回调结果
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (resultCode == RESULT_OK) {
+            if (requestCode == AMapActivity.REQUEST_CODE) {
+                if (data != null) {
+                    mLocation = data.getParcelableExtra(AMapActivity.LOCATION_KEY);
+                    Log.d("HomeFragment", "callback from AMap activity" + mLocation.getAddress());
+                    if (mOnLocationCallbackListener != null)
+                        mOnLocationCallbackListener.onLocated(mLocation);
+                    else
+                        Log.d("HomeFragment", "mOnLocationCallbackListener is null");
+                }
+            } else {
+                Log.d("HomeFragment", "requestCode not compatible");
+            }
+        } else {
+            Log.d("HomeFragment", "resultCode not ok");
+        }
+    }
+
+    @Override
+    public void onLocated(AMapLocation aMapLocation) {
+        if (aMapLocation != null) {
+            if (aMapLocation.getErrorCode() == 0) {
+                if (mOnLocationCallbackListener != null)
+                    mOnLocationCallbackListener.onLocated(aMapLocation);
+                Log.d("HomeFragment", "callback from Main Activity" + aMapLocation.getAddress());
+            } else {
+                Log.d("HomeFragment", aMapLocation.getErrorInfo());
+            }
+        } else {
+            Log.d("HomeFragment", "callback from main is null");
+        }
     }
 
     public interface OnSearchBarClickedListener {
@@ -82,35 +121,13 @@ public class HomeFragment extends Fragment
     }
 
     @Override
-    public void onLocationChanged(AMapLocation aMapLocation) {
-        if (aMapLocation != null) {
-            if (aMapLocation.getErrorCode() != 0) {
-
-            }
-        }
-    }
-
-    @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.home_search_bar) {
-            if (mOnSearchBarClickedListener != null) {
+            if (mOnSearchBarClickedListener != null)
                 mOnSearchBarClickedListener.onSearchBarClicked();
-            }
         } else if (id == R.id.home_location) {
-            if (getContext() != null)
-                AMapActivity.start(getContext());
+            AMapActivity.start(getContext());
         }
     }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (mLocationClient != null) {
-            mLocationClient.onDestroy();
-            mLocationClient = null;
-            mLocationOption = null;
-        }
-    }
-
 }
