@@ -17,34 +17,6 @@ public class HomeNewsImpl implements IHomeNewsPresenter {
      */
     @Override
     public void getNews() {
-//        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
-//        Api api = retrofit.create(Api.class);
-//        Call<DomainNews> task = api.getNews();
-//        task.enqueue(new Callback<DomainNews>() {
-//            @Override
-//            public void onResponse(Call<DomainNews> call, Response<DomainNews> response) {
-//                int code = response.code();
-//                if (code == HttpURLConnection.HTTP_OK) {
-//                    DomainNews info = response.body();
-//                    Log.d("HomeImpl", info.toString());
-//                    if (mCallback != null) {
-//                        // if (data.size() != 0)
-//                        mCallback.onNewsLoaded(info);
-//                        //else
-//                        // mCallback.onNewsEmpty();
-//                    }
-//                } else {
-//                    Log.d("HomeImpl", "请求错误 " + code);
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<DomainNews> call, Throwable t) {
-//                Log.e("HomeImpl", "请求失败 -- > " + t);
-//            }
-//        });
-
-        // test
         TestNewsItemBean[] data = new TestNewsItemBean[12];
         for (int i = 0; i < 12; i++) {
             data[i] = new TestNewsItemBean();

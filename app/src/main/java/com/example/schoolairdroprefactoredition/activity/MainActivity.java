@@ -1,6 +1,8 @@
 package com.example.schoolairdroprefactoredition.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
@@ -11,13 +13,14 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.fragment.home.HomeFragment;
+import com.example.schoolairdroprefactoredition.fragment.home.ParentNewsFragment;
 import com.example.schoolairdroprefactoredition.fragment.my.MyFragment;
-import com.example.schoolairdroprefactoredition.fragment.purchasing.PurchasingFragment;
+import com.example.schoolairdroprefactoredition.fragment.home.ParentPurchasingFragment;
 import com.example.schoolairdroprefactoredition.fragment.search.SearchFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
@@ -31,8 +34,8 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
 
     private OnLocationListener mOnLocationListener;
 
-    private HomeFragment mHome;
-    private PurchasingFragment mPurchase;
+    private ParentNewsFragment mHome;
+    private ParentPurchasingFragment mPurchase;
     private MyFragment mMy;
 
     @Override
@@ -44,22 +47,18 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
 
         // 添加新的tab时在此添加
         if (mHome == null) {
-            mHome = new HomeFragment();
-            mHome.setOnSearchBarClickListener(() -> {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new SearchFragment())
-                        .addToBackStack(null)
-                        .commit();
-            });
+            mHome = new ParentNewsFragment();
+            mHome.setOnSearchBarClickedListener(() -> mFragmentManager.beginTransaction()
+                    .replace(R.id.container, new SearchFragment())
+                    .addToBackStack(null)
+                    .commit());
         }
         if (mPurchase == null) {
-            mPurchase = new PurchasingFragment();
-            mPurchase.setOnSearchBarClickListener(() -> {
-                getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.container, new SearchFragment())
-                        .addToBackStack(null)
-                        .commit();
-            });
+            mPurchase = new ParentPurchasingFragment();
+            mPurchase.setOnSearchBarClickedListener(() -> mFragmentManager.beginTransaction()
+                    .replace(R.id.container, new SearchFragment())
+                    .addToBackStack(null)
+                    .commit());
         }
         if (mMy == null)
             mMy = new MyFragment();
@@ -67,12 +66,37 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(this);
         showFragment(mHome);
-        startLocation();
     }
 
-    // 开启定位
-    private void startLocation() {
-        if (mLocationClient == null) mLocationClient = new AMapLocationClient(this);
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+
+        }
+    }
+
+    /**
+     * 设置沉浸式状态栏
+     * 白色 字体黑色
+     */
+    @Override
+    protected void setStatusBar() {
+
+    }
+
+    /**
+     * 定位
+     * 结果回调至
+     * {@link ParentPurchasingFragment}
+     * {@link ParentNewsFragment}
+     */
+    public void startLocation() {
+        if (mLocationClient == null) {
+            mLocationClient = new AMapLocationClient(this);
+            mLocationClient.setLocationListener(this);
+        }
         if (mLocationOption == null) {
             mLocationOption = new AMapLocationClientOption();
             mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
@@ -80,7 +104,6 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
         mLocationOption.setOnceLocation(true);
         mLocationOption.setLocationCacheEnable(true);
         mLocationClient.setLocationOption(mLocationOption);
-        mLocationClient.setLocationListener(this);
         mLocationClient.startLocation();
     }
 
@@ -133,6 +156,7 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
         mPurchase = null;
 
         if (mLocationClient != null) {
+            mLocationClient.unRegisterLocationListener(this);
             mLocationClient.onDestroy();
             mLocationClient = null;
             mLocationOption = null;

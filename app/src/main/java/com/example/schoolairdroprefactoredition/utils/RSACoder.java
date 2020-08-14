@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.utils;
 import android.util.Base64;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
@@ -26,6 +27,7 @@ import java.util.Map;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.CipherOutputStream;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
@@ -117,31 +119,60 @@ public class RSACoder {
         return signature.verify(sign);
     }
 
+
+    /***************************************公钥加密*************************************/
+
     /**
      * 公钥加密
      *
-     * @param data
-     * @param publicKey
+     * @param textToEncrypt 要加密的信息
+     * @param publicK       公钥
+     * @return 加密后的信息
+     */
+    public static String encryptWithPublicKey(String publicK, String textToEncrypt) {
+        try {
+            PublicKey publicKey = getFromString(publicK);
+            Cipher inCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
+            inCipher.init(Cipher.ENCRYPT_MODE, publicKey);
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            CipherOutputStream cipherOutputStream = new CipherOutputStream(
+                    outputStream, inCipher);
+            cipherOutputStream.write(Base64.decode(textToEncrypt, Base64.DEFAULT));
+            cipherOutputStream.close();
+
+            byte[] vals = outputStream.toByteArray();
+            return Base64.encodeToString(vals, Base64.DEFAULT);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /**
+     * 公钥加密
+     *
+     * @param data      要加密的信息
+     * @param publicKey 公钥
+     * @return 加密后的信息
      */
     public static String encryptByPublicKey(String publicKey, String data) {
-//        X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(publicKey.getBytes(StandardCharsets.UTF_8));
         try {
-            KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
             PublicKey publicK = getFromString(publicKey);
-//            PublicKey publicK = keyFactory.generatePublic(x509KeySpec);
-
-            Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
+            Cipher cipher = Cipher.getInstance("RSA/NONE/PKCS1PADDING");
             cipher.init(Cipher.ENCRYPT_MODE, publicK);
-
             byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
             String s = Base64.encodeToString(encrypted, Base64.NO_WRAP);
-            Log.d("RSA", " s -- > " + s);
+            Log.d("RSA", "encrypted alipay id ---- > " + s);
             return s;
         } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
             e.printStackTrace();
         }
-        return "Encryption Error";
+        return null;
     }
+
+    /**************************************************************************************/
+
 
     public static PublicKey getFromString(String keystr) {
         try {

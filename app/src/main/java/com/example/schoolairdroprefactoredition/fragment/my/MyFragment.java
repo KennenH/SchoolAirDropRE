@@ -24,13 +24,19 @@ public class MyFragment extends Fragment implements View.OnClickListener {
     private ImageView mAvatar;
     private TextView mName;
     private SSBInfo mSSBInfo;
-    private Bundle mUserBundle;
+
+    private Bundle bundle;
+
+    public static MyFragment newInstance(Bundle bundle) {
+        MyFragment fragment = new MyFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final MyViewModel myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
         FragmentMyBinding binding = FragmentMyBinding.inflate(inflater, container, false);
 
-        mUserBundle = new Bundle();
         mAvatar = binding.myAvatar;
         mName = binding.myName;
         mSSBInfo = binding.myBoughtSold;
@@ -65,12 +71,13 @@ public class MyFragment extends Fragment implements View.OnClickListener {
             case R.id.my_likes:
                 // list my likes
                 break;
+            case R.id.my_trash:
+                // list trash
+                break;
             case R.id.my_settings:
-                // open settings
-                SettingsActivity.start(getContext());
+                SettingsActivity.startForResult(getContext());
                 break;
             case R.id.my_quote:
-                // quote list
                 QuoteActivity.start(getContext());
                 break;
         }

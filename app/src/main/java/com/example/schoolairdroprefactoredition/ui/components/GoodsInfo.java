@@ -3,20 +3,16 @@ package com.example.schoolairdroprefactoredition.ui.components;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.model.databean.TestGoodsDetailBean;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.shimmer.ShimmerFrameLayout;
-import com.google.android.flexbox.FlexboxLayout;
 
 public class GoodsInfo extends ShimmerFrameLayout {
 
     private TextView mGoodsName;
-    private FlexboxLayout mTags;
     private GoodsPopularity mPopularity;
     private GoodsPrice mPrice;
     private SimpleDraweeView mAvatar;
@@ -36,7 +32,6 @@ public class GoodsInfo extends ShimmerFrameLayout {
         LayoutInflater.from(context).inflate(R.layout.component_goods_detail, this, true);
 
         mGoodsName = findViewById(R.id.goods_name);
-        mTags = findViewById(R.id.goods_tags);
         mPopularity = findViewById(R.id.goods_popularity);
         mPrice = findViewById(R.id.goods_price);
         mAvatar = findViewById(R.id.goods_avatar);
@@ -46,17 +41,23 @@ public class GoodsInfo extends ShimmerFrameLayout {
 
     public void setData(DomainGoodsInfo.GoodsInfoBean data) {
         if (data != null) {
-            mGoodsName.setText(data.getTital());
-            mTags.removeAllViews();
-//        for (Integer tag : data.getTags()) {
-//            mTags.addView(new Tags(getContext(), tag));
-//        }
+            boolean negotiable = data.getIsPrice().equals("1");// 是否可议价
+            boolean secondHand = data.getIstender().equals("1");// 是否二手
+            if (negotiable && secondHand)
+                mGoodsName.setText(getContext().getResources().getString(R.string.itemNS, data.getTitle()));
+            else if (negotiable)
+                mGoodsName.setText(getContext().getResources().getString(R.string.itemN, data.getTitle()));
+            else if (secondHand)
+                mGoodsName.setText(getContext().getResources().getString(R.string.itemS, data.getTitle()));
+            else
+                mGoodsName.setText(data.getTitle());
+
 //        mPopularity.setComments(data.get());
 //        mPopularity.setLikes(data.getLikes());
 //        mPopularity.setWatches(data.getWatches());
             mPrice.setPrice(data.getPrice());
 //        mAvatar.setImageURI(data.getAvatar());
-            mUserName.setText("校园空投官方");
+            mUserName.setText(data.getUname());
             mDescription.setText(data.getDescription());
             stopShimmer();
             hideShimmer();

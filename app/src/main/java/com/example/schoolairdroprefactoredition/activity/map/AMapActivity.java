@@ -51,7 +51,7 @@ public class AMapActivity extends ImmersionStatusBarActivity implements Location
 
     private OnLocationChangedListener mOnLocationChangedListener;
 
-    public static void start(Context context) {
+    public static void startForResult(Context context) {
         Intent intent = new Intent(context, AMapActivity.class);
         ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_CODE);
     }
@@ -152,8 +152,15 @@ public class AMapActivity extends ImmersionStatusBarActivity implements Location
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        // 销毁地图
+
+        if (mClient != null) {
+            mClient.stopLocation();
+            mClient.onDestroy();
+            mClient = null;
+        }
         mMapView.onDestroy();
+        if (mOnLocationChangedListener != null)
+            mOnLocationChangedListener = null;
     }
 
     @Override

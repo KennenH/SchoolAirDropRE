@@ -1,48 +1,46 @@
 package com.example.schoolairdroprefactoredition.fragment.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.location.AMapLocation;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
-import com.example.schoolairdroprefactoredition.fragment.purchasing.PurchasingFragment;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
+import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
-public class HomeNearbyFragment extends Fragment
-        implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, PurchasingFragment.OnLocationCallbackListener {
-    private int mFragmentNum;
-
+public class HomeNearbyFragment extends BaseChildFragment
+        implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseChildFragmentViewModel.OnRequestListener {
     private HomeNearbyFragmentViewModel homeContentFragmentViewModel;
 
     private SmartRefreshLayout mRefresh;
-
     private EndlessRecyclerView mEndlessRecyclerView;
     private HomeNearbyRecyclerAdapter mHomeNearbyRecyclerAdapter;
 
-    private AMapLocation mLocation;
+    private AMapLocation mLocation = null;
 
-    private OnLocationCalledBackListener mOnLocationCalledBackListener;
+    private int mFragmentNum;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentNum = getArguments() != null ? getArguments().getInt(ConstantUtil.FRAGMENT_NUM) : 0;
-        if (getParentFragment() != null && getParentFragment() instanceof PurchasingFragment)
-            ((PurchasingFragment) getParentFragment()).setOnLocationCallbackListener(this);
+
+        if (getParentFragment() instanceof BaseParentFragment)
+            ((BaseParentFragment) getParentFragment()).setOnLocationCallbackListener(this);
     }
 
     @Nullable
@@ -50,11 +48,14 @@ public class HomeNearbyFragment extends Fragment
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         FragmentHomeContentBinding binding = FragmentHomeContentBinding.inflate(inflater, container, false);
         homeContentFragmentViewModel = new ViewModelProvider(this).get(HomeNearbyFragmentViewModel.class);
+        homeContentFragmentViewModel.setOnRequestListener(this);
 
         mRefresh = binding.homeRefresh;
         mEndlessRecyclerView = binding.homeRecycler;
 
         initRecycler();
+        if (mLocation == null)
+            locate();// 请求MainActivity的定位
 
         return binding.getRoot();
     }
@@ -70,60 +71,72 @@ public class HomeNearbyFragment extends Fragment
     }
 
     /**
-     * 当从父Fragment {@link PurchasingFragment}获取定位回调时
-     * 通知回父Fragment以更新placeholder状态
-     */
-    public interface OnLocationCalledBackListener {
-        void onLocationSuccess();
-
-        void onLocationFailed();
-    }
-
-    public void setOnLocationCalledBackListener(OnLocationCalledBackListener listener) {
-        mOnLocationCalledBackListener = listener;
-    }
-
-    /**
-     * 来自父Fragment {@link PurchasingFragment}的定位回调
+     * 来自父Fragment {@link ParentPurchasingFragment}的定位回调
      */
     @Override
     public void onLocated(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
+                showContentContainer();
                 mLocation = aMapLocation;
-                if (mOnLocationCalledBackListener != null)
-                    mOnLocationCalledBackListener.onLocationSuccess();
 
                 // 定位回调成功以后才为网络api设置观察者
-                homeContentFragmentViewModel.getGoodsInfo(aMapLocation.getLongitude(), aMapLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
-                    mHomeNearbyRecyclerAdapter.setList(data);
+                homeContentFragmentViewModel.getGoodsInfo(mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+                    Log.d("HomeNearByFragment", "data == > " + data.toString());
+                    if (data.size() == 0) {
+                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
+                    } else {
+                        mHomeNearbyRecyclerAdapter.setList(data);
+                        showContentContainer();
+                    }
                 });
-            } else {
-                if (mOnLocationCalledBackListener != null)
-                    mOnLocationCalledBackListener.onLocationFailed();
-            }
-        } else {
-            if (mOnLocationCalledBackListener != null)
-                mOnLocationCalledBackListener.onLocationFailed();
-        }
+            } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+        } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        if (mLocation != null)
-            homeContentFragmentViewModel.getGoodsInfo(mLocation.getLatitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
-                mHomeNearbyRecyclerAdapter.setList(data);
+        if (mLocation != null) { // 定位信息不为null时
+            homeContentFragmentViewModel.getGoodsInfo(mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+                if (data.size() == 0) {
+                    showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
+                } else {
+                    mHomeNearbyRecyclerAdapter.setList(data);
+                    showContentContainer();
+                }
                 refreshLayout.finishRefresh();
             });
+        } else { // 定位失败时通知父Fragment显示PlaceHolder
+            refreshLayout.finishRefresh();
+            showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+            locate();
+        }
     }
 
     @Override
     public void autoLoadMore(EndlessRecyclerView recycler) {
-        if (mLocation != null)
+        if (mLocation != null) {
             homeContentFragmentViewModel.getGoodsInfo(mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
                 mHomeNearbyRecyclerAdapter.addData(data);
+                showContentContainer();
                 recycler.finishLoading();
             });
+        } else {
+            Log.d("NearByFragment", "autoLoadMore erupted");
+            showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+            recycler.finishLoading();
+        }
+    }
 
+    @Override
+    public void onError() {
+        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+        Log.d("NearByFragment", "On Error Callback");
+    }
+
+    @Override
+    public void onLoading() {
+        showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
+        Log.d("NearByFragment", "========== On Loading ==========");
     }
 }

@@ -6,26 +6,27 @@
     android:layout_height="match_parent"
     tools:context=".activity.goods.GoodsActivity">
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+    <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
         android:id="@+id/smartRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srlEnableOverScrollDrag="true"
-        app:srlEnablePureScrollMode="true"
-        app:srlEnableRefresh="false"
-        app:srlFooterMaxDragRate="1.2"
-        app:srlHeaderMaxDragRate="1.4">
+        app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/goods_recycler"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never" />
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            android:overScrollMode="never">
+
+            <com.example.schoolairdroprefactoredition.ui.components.GoodsInfo
+                android:id="@+id/goods_info_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </androidx.core.widget.NestedScrollView>
+    </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
 
     <com.example.schoolairdroprefactoredition.ui.components.ButtonSingle
         android:id="@+id/goods_button_left"
@@ -49,5 +50,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="@id/smartRefreshLayout"
+        app:navigationIcon="@drawable/ic_left_fill"
         app:title="" />
 </com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>

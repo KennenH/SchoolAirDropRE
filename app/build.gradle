@@ -82,16 +82,17 @@ dependencies {
     implementation 'com.amap.api:search:latest.integration'
     // magic indicator
     implementation 'com.github.hackware1993:MagicIndicator:1.6.0'
-    // rich text
-    implementation 'com.zzhoujay.richtext:richtext:3.0.8'
     // x pop
     implementation 'com.lxj:xpopup:2.0.2'
     // keyboard
-    implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.1'
+    implementation 'com.effective.android:panelSwitchHelper-androidx:1.3.6'
     // auto size
     implementation 'me.jessyan:autosize:1.2.1'
 
-    // matisse
+    // photo picker
     implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.5.8'
+
+    // canary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'
 
 }

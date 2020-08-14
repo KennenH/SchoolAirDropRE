@@ -11,8 +11,8 @@
         android:layout_height="0dp"
         android:includeFontPadding="false"
         android:text="@string/currency_RMB"
-        android:textSize="14dp"
         android:textColor="@color/colorPrimaryDark"
+        android:textSize="14dp"
         app:layout_constraintBaseline_toBaselineOf="@id/price_int"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="SpUsage" />
@@ -37,9 +37,9 @@
         android:layout_height="wrap_content"
         android:includeFontPadding="false"
         android:maxLength="4"
-        android:text=".09"
-        android:textSize="14dp"
+        android:text="@string/fraction0"
         android:textColor="@color/colorPrimaryDark"
+        android:textSize="14dp"
         app:layout_constraintBaseline_toBaselineOf="@+id/price_int"
         app:layout_constraintStart_toEndOf="@+id/price_int"
         tools:ignore="SpUsage" />

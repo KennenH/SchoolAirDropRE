@@ -15,7 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@string/avatar"
-            android:src="@drawable/logo_180x"
+            app:actualImageResource="@drawable/logo_180x"
             app:viewAspectRatio="1" />
 
     </LinearLayout>

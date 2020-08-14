@@ -37,18 +37,27 @@ public class GoodsPrice extends ConstraintLayout {
         String p = NumberUtil.num2Money(price);
         int dot = p.indexOf(".");
         mCurrency.setText(R.string.currency_RMB);
-        mPriceInt.setText(p.substring(0, dot));
-        mPriceFraction.setText(p.substring(dot));
+        if (dot != -1) {
+            mPriceInt.setText(p.substring(0, dot));
+            mPriceFraction.setText(p.substring(dot));
+        } else {
+            mPriceInt.setText(p);
+            mPriceFraction.setText(R.string.fraction0);
+        }
     }
 
     public void setPrice(String price) {
-        int dot = price.indexOf(".");
+        float priceF = Float.parseFloat(price);
+        String p = NumberUtil.num2Money(priceF);
+        int dot = p.indexOf(".");
+
         mCurrency.setText(R.string.currency_RMB);
         if (dot != -1) {
-            mPriceInt.setText(price.substring(0, dot));
-            mPriceFraction.setText(price.substring(dot));
+            mPriceInt.setText(p.substring(0, dot));
+            mPriceFraction.setText(p.substring(dot));
         } else {
-            mPriceInt.setText(price);
+            mPriceInt.setText(p);
+            mPriceFraction.setText(R.string.fraction0);
         }
     }
 }

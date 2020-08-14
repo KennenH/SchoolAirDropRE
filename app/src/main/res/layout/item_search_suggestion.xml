@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/general_padding_small">
+    android:background="@drawable/button_sheet_white"
+    android:padding="@dimen/general_padding_large">
 
     <ImageView
         android:id="@+id/search_suggestion_icon"
@@ -17,11 +18,14 @@
 
     <TextView
         android:id="@+id/search_suggestion_title"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding_large"
+        android:ellipsize="end"
+        android:lines="1"
         android:textSize="@dimen/textSizeNormal"
-        android:layout_marginStart="@dimen/general_padding"
         app:layout_constraintBottom_toBottomOf="@+id/search_suggestion_icon"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/search_suggestion_icon"
         app:layout_constraintTop_toTopOf="@+id/search_suggestion_icon"
         tools:text="Java核心技术" />

@@ -28,7 +28,7 @@ public class UserNameFragment extends Fragment implements View.OnClickListener, 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_user_name, container, false);
+        final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_user_name, container, false);
 
         mClear = root.findViewById(R.id.user_name_clear);
         mEditor = root.findViewById(R.id.user_name_editor);

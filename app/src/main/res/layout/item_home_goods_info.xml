@@ -23,16 +23,14 @@
         app:roundedCornerRadius="@dimen/general_padding"
         app:viewAspectRatio="1" />
 
-    <TextView
+    <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
         android:id="@+id/item_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/general_padding"
-        android:drawableStart="@drawable/ic_negotiable"
-        android:drawablePadding="@dimen/general_padding"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="李伟脑子 倒贴 价格可面议"
+        android:text="[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] iPhone20 骨折低价出售，跳楼大甩卖"
         android:textColor="@color/black"
         android:textSize="@dimen/textSizeNormal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -49,28 +47,17 @@
         app:layout_constraintTop_toBottomOf="@+id/item_title" />
 
     <TextView
-        android:id="@+id/item_watched"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/general_padding"
-        android:text="1.2k人看过"
-        android:textSize="@dimen/textSizeNormal"
-        app:layout_constraintBottom_toBottomOf="@+id/item_price"
-        app:layout_constraintStart_toEndOf="@id/item_price"
-        app:layout_constraintTop_toTopOf="@+id/item_price" />
-
-    <TextView
         android:id="@+id/item_seller"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="校园空投官方"
         android:textSize="@dimen/textSizeNormal"
-        app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+        app:layout_constraintBottom_toBottomOf="@+id/item_credit"
         app:layout_constraintStart_toStartOf="@+id/item_price"
-        app:layout_constraintTop_toTopOf="@+id/imageView2" />
+        app:layout_constraintTop_toTopOf="@+id/item_credit"
+        tools:text="校园空投官方" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/item_credit"
         android:layout_width="78dp"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_credit5"

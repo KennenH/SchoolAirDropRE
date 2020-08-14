@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.scwang.smartrefresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/smartRefreshLayout2"
@@ -72,7 +72,7 @@
                     android:includeFontPadding="false"
                     android:lines="1"
                     android:padding="@dimen/general_padding"
-                    android:text="奥利给"
+                    android:text="@string/login"
                     android:textSize="18dp"
                     app:layout_constraintBottom_toBottomOf="@+id/my_avatar"
                     app:layout_constraintEnd_toStartOf="@+id/imageView"
@@ -131,13 +131,30 @@
                 app:layout_constraintEnd_toEndOf="parent" />
 
             <com.example.schoolairdroprefactoredition.ui.components.PageItem
+                android:id="@+id/my_trash"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:PI_arrow="@drawable/right_black"
+                app:PI_icon="@drawable/ic_trash"
+                app:PI_title="@string/trash"
+                app:layout_constraintTop_toBottomOf="@+id/my_onGoing" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1px"
+                android:layout_marginStart="50dp"
+                android:background="@color/colorLine"
+                app:layout_constraintBottom_toBottomOf="@+id/my_trash"
+                app:layout_constraintEnd_toEndOf="parent" />
+
+            <com.example.schoolairdroprefactoredition.ui.components.PageItem
                 android:id="@+id/my_likes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:PI_arrow="@drawable/right_black"
                 app:PI_icon="@drawable/favorite_red"
                 app:PI_title="@string/likes"
-                app:layout_constraintTop_toBottomOf="@+id/my_onGoing" />
+                app:layout_constraintTop_toBottomOf="@+id/my_trash" />
 
             <com.example.schoolairdroprefactoredition.ui.components.PageItem
                 android:id="@+id/my_settings"
@@ -151,4 +168,4 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-</com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
+</com.scwang.smartrefresh.layout.SmartRefreshLayout>

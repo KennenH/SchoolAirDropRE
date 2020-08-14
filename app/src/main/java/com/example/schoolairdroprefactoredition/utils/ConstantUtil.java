@@ -24,4 +24,9 @@ public class ConstantUtil {
     public static String SCHOOL_AIR_DROP_BASE_URL = "http://106.54.110.46/inf/";
 
     public static final int MENU_CLICK_GAP = 1000;
+
+    /**
+     * 页面获取用户授权信息的键
+     */
+    public static final String KEY_AUTHORIZE = "AUTH2User";
 }

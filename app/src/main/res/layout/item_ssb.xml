@@ -14,23 +14,22 @@
         android:layout_marginTop="@dimen/general_padding_large"
         android:layout_marginBottom="@dimen/general_padding_large"
         android:scaleType="centerCrop"
-        app:placeholderImage="@drawable/bg_item_img_placeholder"
-        app:roundedCornerRadius="@dimen/general_padding"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@drawable/bg_item_img_placeholder"
+        app:roundedCornerRadius="@dimen/general_padding" />
 
-    <TextView
+    <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
         android:id="@+id/ssb_item_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/general_padding_large"
         android:layout_marginEnd="@dimen/general_padding_large"
-        android:drawableStart="@drawable/ic_negotiable"
-        android:drawablePadding="@dimen/general_padding_small"
+        android:ellipsize="end"
         android:gravity="center_vertical"
         android:maxLines="2"
-        android:text="iPhone20 限时跳楼大甩卖,鸡会有限"
+        android:text="[img src=ic_secondhand_small/] 苹果20 限时跳楼大甩卖,鸡会有限 机不可失 失不再来"
         android:textSize="14dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ssb_item_img"
@@ -58,10 +57,10 @@
         android:paddingStart="@dimen/general_padding"
         android:paddingTop="@dimen/general_padding_tiny"
         android:paddingEnd="@dimen/general_padding"
-        android:textSize="@dimen/textSizeNormal"
         android:paddingBottom="@dimen/general_padding_tiny"
         android:text="1.2k"
         android:textColor="@color/black"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="@+id/ssb_item_watches"
         app:layout_constraintEnd_toStartOf="@+id/ssb_item_watches"
         app:layout_constraintTop_toTopOf="@+id/ssb_item_watches" />
@@ -73,7 +72,6 @@
         android:layout_marginEnd="@dimen/general_padding"
         android:background="@drawable/bg_round_theme"
         android:drawableStart="@drawable/eye_green"
-        android:textSize="@dimen/textSizeNormal"
         android:drawablePadding="@dimen/general_padding_tiny"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/general_padding"
@@ -82,6 +80,7 @@
         android:paddingBottom="@dimen/general_padding_tiny"
         android:text="122k"
         android:textColor="@color/white"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="@+id/ssb_item_more_action"
         app:layout_constraintEnd_toStartOf="@+id/ssb_item_more_action"
         app:layout_constraintTop_toTopOf="@+id/ssb_item_more_action" />

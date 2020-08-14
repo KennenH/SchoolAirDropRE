@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:background="@color/white">
 
-    <ImageView
+    <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/user_avatar"
         android:layout_width="@dimen/toolbar_icon_bit_large"
         android:layout_height="@dimen/toolbar_icon_bit_large"
@@ -14,9 +14,10 @@
         android:layout_marginTop="@dimen/general_padding"
         android:contentDescription="@string/avatar"
         android:scaleType="centerCrop"
-        android:src="@drawable/logo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@drawable/logo"
+        app:roundedCornerRadius="@dimen/general_padding_small" />
 
     <TextView
         android:id="@+id/user_name"
@@ -60,7 +61,7 @@
         android:background="@drawable/button_sheet_white"
         app:layout_constraintTop_toBottomOf="@+id/user_avatar">
 
-        <ImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/goods_avatar"
             android:layout_width="75dp"
             android:layout_height="75dp"
@@ -68,10 +69,11 @@
             android:layout_marginTop="@dimen/general_padding_small"
             android:layout_marginBottom="@dimen/general_padding"
             android:scaleType="centerCrop"
-            android:src="@drawable/iphone"
+            app:actualImageResource="@drawable/iphone"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            app:roundedCornerRadius="@dimen/general_padding" />
 
         <TextView
             android:id="@+id/goods_title"

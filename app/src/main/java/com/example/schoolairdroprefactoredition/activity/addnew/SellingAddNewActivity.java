@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -41,10 +42,25 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
     public static void start(Context context) {
         Intent intent = new Intent(context, SellingAddNewActivity.class);
         context.startActivity(intent);
+        if (context instanceof AppCompatActivity)
+            ((AppCompatActivity) context).overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
     }
 
-    public static final int REQUEST_CODE_COVER = 219;
-    public static final int REQUEST_CODE_PIC_SET = 11;
+    public static void startForResult(Context context) {
+        Intent intent = new Intent(context, SellingAddNewActivity.class);
+        if (context instanceof AppCompatActivity) {
+            AppCompatActivity activity = (AppCompatActivity) context;
+            activity.startActivityForResult(intent, REQUEST_ADD_NEW);
+            activity.overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
+        }
+    }
+
+
+    public static final int REQUEST_ADD_NEW = 888;// 请求码 表单提交
+    public static final String ADD_KEY = "AddNew";// 键 表单提交
+
+    public static final int REQUEST_CODE_COVER = 219;// 请求码 封面
+    public static final int REQUEST_CODE_PIC_SET = 11;// 请求码 图片集
 
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
@@ -69,8 +85,6 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
         setContentView(R.layout.activity_selling_add_new);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setSupportActionBar(findViewById(R.id.toolbar));
-        mLocationClient = new AMapLocationClient(this);
-        mLocationOption = new AMapLocationClientOption();
 
         mAdapter = new HorizontalImageRecyclerAdapter();
 
@@ -134,19 +148,30 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
         }
     }
 
-    // 定位
+    /**
+     * 定位
+     */
     private void locate() {
+        if (mLocationClient == null) {
+            mLocationClient = new AMapLocationClient(this);
+            mLocationClient.setLocationListener(this);
+        }
+        if (mLocationOption == null)
+            mLocationOption = new AMapLocationClientOption();
         mLocation.setDescription(getString(R.string.Locating));
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         mLocationOption.setOnceLocation(true);
         mLocationOption.setLocationCacheEnable(true);
         mLocationClient.setLocationOption(mLocationOption);
-        mLocationClient.setLocationListener(this);
         mLocationClient.startLocation();
     }
 
+    /**
+     * 提交新物品的表单
+     */
     private void submit() {
         // if (submit success){
+        // isSubmitted = true
         // finish
         //}
 
@@ -193,8 +218,7 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
 
                 break;
             case R.id.option_location:
-
-                // 重新定位
+                locate();
                 break;
             case R.id.option_negotiable:
                 isNegotiable.toggle();
@@ -230,6 +254,7 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
     public void onDestroy() {
         super.onDestroy();
         if (mLocationClient != null) {
+            mLocationClient.unRegisterLocationListener(this);
             mLocationClient.onDestroy();
             mLocationClient = null;
             mLocationOption = null;

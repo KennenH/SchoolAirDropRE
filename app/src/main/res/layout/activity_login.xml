@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:context=".activity.settings.LoginActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline1"
@@ -67,10 +68,10 @@
         android:longClickable="false"
         android:text="@string/app_name"
         android:textIsSelectable="false"
-        android:textSize="24dp"
+        android:textSize="26dp"
         app:layout_constraintBottom_toTopOf="@id/guideline4"
         app:layout_constraintEnd_toStartOf="@id/guideline2"
-        app:layout_constraintStart_toEndOf="@+id/logo"
+        app:layout_constraintStart_toEndOf="@id/logo"
         app:layout_constraintTop_toBottomOf="@id/guideline3"
         tools:ignore="SpUsage" />
 
@@ -89,8 +90,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/agree"
-        android:textSize="@dimen/textSizeNormal"
+        android:textColor="@color/black"
         android:textIsSelectable="false"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="@+id/checkbox"
         app:layout_constraintEnd_toStartOf="@id/user_protocol"
         app:layout_constraintStart_toEndOf="@+id/checkbox"
@@ -137,15 +139,15 @@
         android:id="@+id/cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="@dimen/general_padding"
+        android:padding="@dimen/general_padding_large"
         android:text="@string/cancel"
-        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintBottom_toTopOf="@+id/guideline5"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
-    <TextView
+    <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
         android:id="@+id/login_with_alipay"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

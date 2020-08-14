@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.addnew.SellingAddNewActivity;
+import com.example.schoolairdroprefactoredition.activity.ssb.SSBActivity;
+import com.example.schoolairdroprefactoredition.fragment.home.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
@@ -29,7 +31,7 @@ import java.util.List;
  * {@link SoldFragment}
  * {@link BoughtFragment}
  */
-public class SellingFragment extends Fragment implements SSBFilter.OnFilterListener {
+public class SellingFragment extends Fragment implements SSBFilter.OnFilterListener, BaseChildFragmentViewModel.OnRequestListener {
     public static SellingFragment newInstance(String param) {
         SellingFragment fragment = new SellingFragment();
 
@@ -53,6 +55,41 @@ public class SellingFragment extends Fragment implements SSBFilter.OnFilterListe
         setHasOptionsMenu(true);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        final com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding
+                = com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding.inflate(inflater, container, false);
+        viewModel = new ViewModelProvider(this).get(SellingViewModel.class);
+        viewModel.setOnRequestListener(this);
+
+        mRecycler = binding.ssbRecycler;
+        mRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+
+        mFilter = new SSBFilter(getContext());
+        mAdapter = new SSBAdapter();
+
+        mFilter.setOnFilterListener(this);
+        mAdapter.addHeaderView(mFilter);
+        mRecycler.setAdapter(mAdapter);
+
+        viewModel.getSellingBeans().observe(getViewLifecycleOwner(), data -> {
+            mList = data;
+            mAdapter.setList(data);
+        });
+
+        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (getActivity() instanceof SSBActivity) {
+                    ((SSBActivity) getActivity()).hideSearchBar();
+                }
+            }
+        });
+
+        return binding.getRoot();
+    }
+
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.ssb, menu);
@@ -71,35 +108,9 @@ public class SellingFragment extends Fragment implements SSBFilter.OnFilterListe
         } else if (id == R.id.ssb_selling_add) {
             if (getActivity() != null) {
                 SellingAddNewActivity.start(getContext());
-                getActivity().overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
             }
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding
-                = com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(this).get(SellingViewModel.class);
-
-        mRecycler = binding.ssbRecycler;
-        mRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-
-        mFilter = new SSBFilter(getContext());
-        mAdapter = new SSBAdapter();
-
-        mFilter.setOnFilterListener(this);
-        mAdapter.addHeaderView(mFilter);
-        mRecycler.setAdapter(mAdapter);
-
-        viewModel.getSellingBeans().observe(getViewLifecycleOwner(), data -> {
-            mList = data;
-            mAdapter.setList(data);
-        });
-
-        return binding.getRoot();
     }
 
     @Override
@@ -119,5 +130,15 @@ public class SellingFragment extends Fragment implements SSBFilter.OnFilterListe
     @Override
     public void onFilterWatches() {
         // 将data按浏览量排序
+    }
+
+    @Override
+    public void onError() {
+
+    }
+
+    @Override
+    public void onLoading() {
+
     }
 }

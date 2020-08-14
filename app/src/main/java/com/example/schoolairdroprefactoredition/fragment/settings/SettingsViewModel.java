@@ -2,17 +2,17 @@ package com.example.schoolairdroprefactoredition.fragment.settings;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorizePost;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.fragment.home.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISettingsCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.SettingsImpl;
 
-public class SettingsViewModel extends ViewModel implements ISettingsCallback {
+public class SettingsViewModel extends BaseChildFragmentViewModel implements ISettingsCallback {
 
     private MutableLiveData<DomainAuthorizeGet> mAuthorizationKey = new MutableLiveData<>();
-    private MutableLiveData<String> mAuthorizedSession = new MutableLiveData<>();
+    private MutableLiveData<DomainAuthorize> mAuthorizedSession = new MutableLiveData<>();
 
     private SettingsImpl settingsImpl;
 
@@ -26,8 +26,8 @@ public class SettingsViewModel extends ViewModel implements ISettingsCallback {
         return mAuthorizationKey;
     }
 
-    public LiveData<String> authorizeWithAlipayID(String publicKey, String alipayID){
-        settingsImpl.postAlipayIDRSA(publicKey, alipayID);
+    public LiveData<DomainAuthorize> authorizeWithAlipayID(String sessionID, String grantType, String clientID, String clientSecret, String rawAlipay, String publicKey) {
+        settingsImpl.postAlipayIDRSA(sessionID, grantType, clientID, clientSecret, rawAlipay, publicKey);
         return mAuthorizedSession;
     }
 
@@ -37,17 +37,23 @@ public class SettingsViewModel extends ViewModel implements ISettingsCallback {
     }
 
     @Override
-    public void onAuthorizationSuccess(String authorization) {
+    public void onAuthorizationSuccess(DomainAuthorize authorization) {
         mAuthorizedSession.postValue(authorization);
-    }
-
-    @Override
-    public void onAuthorizationFailed() {
-
     }
 
     @Override
     protected void onCleared() {
         settingsImpl.unregisterCallback(this);
+    }
+
+
+    @Override
+    public void onError() {
+
+    }
+
+    @Override
+    public void onLoading() {
+
     }
 }

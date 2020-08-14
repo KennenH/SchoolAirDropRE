@@ -115,4 +115,7 @@
     <string name="cover">Cover</string>
     <string name="picSet">Picture Set</string>
     <string name="Locating">Locating...</string>
+    <string name="errorRetry">Retry</string>
+    <string name="postMyItem">Go Post My Goods</string>
+    <string name="errorNetLocation">Something Went Wrong…</string>
 </resources>

@@ -10,10 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.schoolairdroprefactoredition.R;
+import com.blankj.utilcode.util.KeyboardUtils;
+import com.example.schoolairdroprefactoredition.activity.ssb.SSBActivity;
+import com.example.schoolairdroprefactoredition.fragment.home.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
@@ -24,7 +27,7 @@ import java.util.List;
  * {@link SellingFragment}
  * {@link SoldFragment}
  */
-public class BoughtFragment extends Fragment implements SSBFilter.OnFilterListener {
+public class BoughtFragment extends Fragment implements SSBFilter.OnFilterListener, BaseChildFragmentViewModel.OnRequestListener {
 
     private BoughtViewModel viewModel;
 
@@ -34,22 +37,15 @@ public class BoughtFragment extends Fragment implements SSBFilter.OnFilterListen
 
     private List<TestSSBItemBean> mList;
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    private String mParam1;
-    private String mParam2;
+    private Bundle bundle;
 
     public BoughtFragment() {
         // Required empty public constructor
     }
 
-    public static BoughtFragment newInstance(String param1, String param2) {
+    public static BoughtFragment newInstance(Bundle bundle) {
         BoughtFragment fragment = new BoughtFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        fragment.setArguments(new Bundle(bundle));
         return fragment;
     }
 
@@ -57,10 +53,12 @@ public class BoughtFragment extends Fragment implements SSBFilter.OnFilterListen
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        bundle = getArguments();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(@NonNull Menu menu) {
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Nullable
@@ -69,6 +67,7 @@ public class BoughtFragment extends Fragment implements SSBFilter.OnFilterListen
         final com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding
                 = com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(BoughtViewModel.class);
+        viewModel.setOnRequestListener(this);
 
         mRecycler = binding.ssbRecycler;
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
@@ -83,6 +82,15 @@ public class BoughtFragment extends Fragment implements SSBFilter.OnFilterListen
         viewModel.getBoughtBeans().observe(getViewLifecycleOwner(), data -> {
             mList = data;
             mAdapter.setList(data);
+        });
+
+        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (getActivity() instanceof SSBActivity) {
+                    ((SSBActivity) getActivity()).hideSearchBar();
+                }
+            }
         });
 
         return binding.getRoot();
@@ -100,6 +108,16 @@ public class BoughtFragment extends Fragment implements SSBFilter.OnFilterListen
 
     @Override
     public void onFilterWatches() {
+
+    }
+
+    @Override
+    public void onError() {
+
+    }
+
+    @Override
+    public void onLoading() {
 
     }
 }

@@ -1,31 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.schoolairdroprefactoredition.ui.auto.NestedScrollOverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/settings_language_parent"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/general_padding_large"
-        android:splitMotionEvents="false">
+        android:layout_height="match_parent">
 
-        <com.example.schoolairdroprefactoredition.ui.components.PageItem
-            android:id="@+id/settings_language_cn"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/settings_language_parent"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:PI_isCheck="true"
-            app:layout_constraintTop_toTopOf="parent"
-            app:PI_title="@string/simplifiedChinese" />
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:splitMotionEvents="false">
 
-        <com.example.schoolairdroprefactoredition.ui.components.PageItem
-            android:id="@+id/settings_language_en"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:PI_isCheck="true"
-            app:layout_constraintTop_toBottomOf="@+id/settings_language_cn"
-            app:PI_title="@string/english" />
+            <com.example.schoolairdroprefactoredition.ui.components.PageItem
+                android:id="@+id/settings_language_cn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:PI_isCheck="true"
+                app:PI_title="@string/simplifiedChinese"
+                app:layout_constraintTop_toTopOf="parent" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</com.example.schoolairdroprefactoredition.ui.auto.NestedScrollOverDragLayout>
+            <com.example.schoolairdroprefactoredition.ui.components.PageItem
+                android:id="@+id/settings_language_en"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:PI_isCheck="true"
+                app:PI_title="@string/english"
+                app:layout_constraintTop_toBottomOf="@+id/settings_language_cn" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.core.widget.NestedScrollView>
+</com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>

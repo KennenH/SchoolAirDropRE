@@ -2,18 +2,14 @@ package com.example.schoolairdroprefactoredition.fragment.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeGoodsInfoCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.HomeGoodsInfoImpl;
-import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class HomeNearbyFragmentViewModel extends ViewModel implements IHomeGoodsInfoCallback {
+public class HomeNearbyFragmentViewModel extends BaseChildFragmentViewModel implements IHomeGoodsInfoCallback {
 
     private HomeGoodsInfoImpl mHomeImpl;
 
@@ -24,29 +20,24 @@ public class HomeNearbyFragmentViewModel extends ViewModel implements IHomeGoods
         mHomeImpl.registerCallback(this);
     }
 
-    public LiveData<List<DomainGoodsInfo.GoodsInfoBean>> getGoodsInfo(double longitude, double latitude) {
-        mHomeImpl.getNearbyGoods(20, longitude, latitude);
-        return mGoodsInfo;
-    }
-
     @Override
-    public void onNearbyGoodsLoaded(List<DomainGoodsInfo.GoodsInfoBean> domainGoodsInfo) {
-        mGoodsInfo.postValue(domainGoodsInfo);
+    public void onNearbyGoodsLoaded(List<DomainGoodsInfo.GoodsInfoBean> goodsData) {
+        mGoodsInfo.postValue(goodsData);
     }
 
     @Override
     public void onError() {
-
+        mOnRequestListener.onError();
     }
 
     @Override
-    public void onDataEmpty() {
-
+    public void onLoading() {
+        mOnRequestListener.onLoading();
     }
 
-    @Override
-    public void onPositionError() {
-
+    public LiveData<List<DomainGoodsInfo.GoodsInfoBean>> getGoodsInfo(double longitude, double latitude) {
+        mHomeImpl.getNearbyGoods(20, longitude, latitude);
+        return mGoodsInfo;
     }
 
     @Override

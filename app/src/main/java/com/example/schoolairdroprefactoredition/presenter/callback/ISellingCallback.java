@@ -4,6 +4,6 @@ import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
 
 import java.util.List;
 
-public interface ISellingCallback {
+public interface ISellingCallback extends IBaseCallback {
     void onSellingListLoaded(List<TestSSBItemBean> beans);
 }

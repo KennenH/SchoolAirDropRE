@@ -5,5 +5,5 @@ import com.example.schoolairdroprefactoredition.presenter.callback.ISettingsCall
 public interface ISettingsPresenter extends IBasePresenter<ISettingsCallback> {
     void getPublicKey();
 
-    void postAlipayIDRSA(String publicKey, String alipayID) throws Exception;
+    void postAlipayIDRSA(String sessionID, String grantType, String clientID, String clientSecret, String rawAlipay, String publicKey) throws Exception;
 }

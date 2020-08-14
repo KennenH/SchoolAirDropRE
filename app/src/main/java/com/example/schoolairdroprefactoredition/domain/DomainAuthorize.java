@@ -1,6 +1,8 @@
 package com.example.schoolairdroprefactoredition.domain;
 
-public class DomainAuthorizePost {
+import java.io.Serializable;
+
+public class DomainAuthorize implements Serializable {
 
     @Override
     public String toString() {
@@ -14,13 +16,12 @@ public class DomainAuthorizePost {
     }
 
     /**
-     * access_token : d1571cdecd8b40365517ae0d690142518bcb6819
-     * expires_in : 3600
-     * message : success
-     * scope : basic
-     * token_type : Bearer
+     * "access_token": "1e488dad5b02256152d0d450cb3d06ddf9839a9a",
+     * "expires_in": 3600,
+     * "token_type": "Bearer",
+     * "scope": "basic",
+     * "message": "success"
      */
-
     private String access_token;
     private int expires_in;
     private String message;

@@ -1,20 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.scwang.smartrefresh.horizontal.SmartRefreshHorizontal xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:srlEnableOverScrollDrag="true"
-    app:srlEnableRefresh="false"
-    app:srlFooterMaxDragRate="0.8"
-    app:srlHeaderMaxDragRate="0.8">
+    android:layout_height="match_parent">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/panel_more_pager"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/more_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:overScrollMode="never" />
-</com.scwang.smartrefresh.horizontal.SmartRefreshHorizontal>
+</com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
 

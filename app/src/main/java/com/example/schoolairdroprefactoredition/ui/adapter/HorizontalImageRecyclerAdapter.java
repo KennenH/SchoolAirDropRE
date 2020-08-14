@@ -3,6 +3,9 @@ package com.example.schoolairdroprefactoredition.ui.adapter;
 import android.net.Uri;
 import android.os.Build;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
@@ -25,6 +28,4 @@ public class HorizontalImageRecyclerAdapter extends BaseQuickAdapter<LocalMedia,
             image.setImageURI(Uri.fromFile(new File(s.getPath())));
         else image.setImageURI(Uri.fromFile(new File(s.getAndroidQToPath())));
     }
-
-
 }

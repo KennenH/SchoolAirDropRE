@@ -8,11 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBPagerAdapter;
@@ -31,7 +34,7 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
         context.startActivity(intent);
     }
 
-    private TextView mSearch;
+    private EditText mSearch;
     private TextView mTitle;
 
     private ViewPager mPager;
@@ -54,6 +57,13 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
         Intent intent = getIntent();
         int index = intent.getIntExtra(PAGE_INDEX, 0);
         mPagerAdapter = new SSBPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+
+        mSearch.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus)
+                KeyboardUtils.showSoftInput(v);
+            else
+                KeyboardUtils.hideSoftInput(v);
+        });
         mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -79,8 +89,13 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
         mPager.setCurrentItem(index);
     }
 
+    public void hideSearchBar() {
+        mTitle.requestFocus();
+        mSearch.clearFocus();
+    }
+
     @Override
-    public boolean onPrepareOptionsMenu(Menu menu) {
+    public boolean onCreateOptionsMenu(Menu menu) {
         int now = mPager.getCurrentItem();
         final MenuItem add = menu.findItem(R.id.ssb_selling_add);
         if (add != null) {
@@ -89,7 +104,7 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
             else
                 add.setVisible(false);
         }
-        return super.onPrepareOptionsMenu(menu);
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override

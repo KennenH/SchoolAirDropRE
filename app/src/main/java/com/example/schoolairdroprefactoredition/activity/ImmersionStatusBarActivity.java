@@ -14,6 +14,7 @@ public class ImmersionStatusBarActivity extends AppCompatActivity {
     }
 
     protected void setStatusBar() {
+
     }
 
 }

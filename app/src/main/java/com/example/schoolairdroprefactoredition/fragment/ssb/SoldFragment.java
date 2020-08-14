@@ -13,9 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.activity.ssb.SSBActivity;
+import com.example.schoolairdroprefactoredition.fragment.home.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
-import com.example.schoolairdroprefactoredition.presenter.impl.SoldImpl;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
 
@@ -25,7 +25,7 @@ import java.util.List;
  * {@link SellingFragment}
  * {@link BoughtFragment}
  */
-public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener {
+public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener, BaseChildFragmentViewModel.OnRequestListener {
 
     public static SoldFragment newInstance(String param1, String param2) {
         SoldFragment fragment = new SoldFragment();
@@ -72,6 +72,7 @@ public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener
         final com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding
                 = com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(SoldViewModel.class);
+        viewModel.setOnRequestListener(this);
 
         mRecycler = binding.ssbRecycler;
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
@@ -86,6 +87,15 @@ public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener
         viewModel.getSoldBeans().observe(getViewLifecycleOwner(), data -> {
             mList = data;
             mAdapter.setList(data);
+        });
+
+        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (getActivity() instanceof SSBActivity) {
+                    ((SSBActivity) getActivity()).hideSearchBar();
+                }
+            }
         });
 
         return binding.getRoot();
@@ -103,6 +113,16 @@ public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener
 
     @Override
     public void onFilterWatches() {
+
+    }
+
+    @Override
+    public void onError() {
+
+    }
+
+    @Override
+    public void onLoading() {
 
     }
 }

@@ -6,19 +6,10 @@ import java.util.List;
 
 public class DomainGoodsInfo {
 
-    @Override
-    public String toString() {
-        return "DomainGoodsInfo{" +
-                "success=" + success +
-                ", message='" + message + '\'' +
-                ", goodsInfo=" + goodsInfo +
-                '}';
-    }
-
     /**
      * success : true
      * message : position send success
-     * goodsInfo : [{"goodid":"10004","cover":"http://text4.jpg","picset":"http://test4.jpg&http://ttext.jpg","tital":"hkn","price":"10000","IsPrice":"1","Istender":"1","Description":"This is a test"}]
+     * goodsInfo : [{"goodsid":"10004","cover":"http://text4.jpg","picset":"http://test4.jpg&http://ttext.jpg","title":"hkn","price":"10000","IsPrice":"1","Istender":"1","Description":"This is a test","sellerid":"100001","uname":"user100001","user_img_path":null,"credit_num":"100"}]
      */
 
     private boolean success;
@@ -51,31 +42,39 @@ public class DomainGoodsInfo {
 
     public static class GoodsInfoBean implements Serializable {
         /**
-         * goodid : 10004
+         * goodsid : 10004
          * cover : http://text4.jpg
          * picset : http://test4.jpg&http://ttext.jpg
-         * tital : hkn
+         * title : hkn
          * price : 10000
          * IsPrice : 1
          * Istender : 1
          * Description : This is a test
+         * sellerid : 100001
+         * uname : user100001
+         * user_img_path : null
+         * credit_num : 100
          */
 
-        private String goodid;
+        private String goodsid;
         private String cover;
         private String picset;
-        private String tital;
+        private String title;
         private String price;
         private String IsPrice;
         private String Istender;
         private String Description;
+        private String sellerid;
+        private String uname;
+        private Object user_img_path;
+        private String credit_num;
 
-        public String getGoodid() {
-            return goodid;
+        public String getGoodsid() {
+            return goodsid;
         }
 
-        public void setGoodid(String goodid) {
-            this.goodid = goodid;
+        public void setGoodsid(String goodsid) {
+            this.goodsid = goodsid;
         }
 
         public String getCover() {
@@ -94,12 +93,12 @@ public class DomainGoodsInfo {
             this.picset = picset;
         }
 
-        public String getTital() {
-            return tital;
+        public String getTitle() {
+            return title;
         }
 
-        public void setTital(String tital) {
-            this.tital = tital;
+        public void setTitle(String title) {
+            this.title = title;
         }
 
         public String getPrice() {
@@ -132,6 +131,38 @@ public class DomainGoodsInfo {
 
         public void setDescription(String Description) {
             this.Description = Description;
+        }
+
+        public String getSellerid() {
+            return sellerid;
+        }
+
+        public void setSellerid(String sellerid) {
+            this.sellerid = sellerid;
+        }
+
+        public String getUname() {
+            return uname;
+        }
+
+        public void setUname(String uname) {
+            this.uname = uname;
+        }
+
+        public Object getUser_img_path() {
+            return user_img_path;
+        }
+
+        public void setUser_img_path(Object user_img_path) {
+            this.user_img_path = user_img_path;
+        }
+
+        public String getCredit_num() {
+            return credit_num;
+        }
+
+        public void setCredit_num(String credit_num) {
+            this.credit_num = credit_num;
         }
     }
 }

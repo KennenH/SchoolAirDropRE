@@ -28,6 +28,8 @@ import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.language.LanguageConfig;
 import com.luck.picture.lib.style.PictureWindowAnimationStyle;
+import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.impl.LoadingPopupView;
 import com.lxj.xpopup.interfaces.XPopupImageLoader;
 
 import java.io.File;
@@ -93,6 +95,43 @@ public class MyUtil {
             }
             return null;
         }
+    }
+
+    public static LoadingPopupView loading(Context context) {
+        return (LoadingPopupView) new XPopup.Builder(context).asLoading();
+    }
+
+
+    public static void takePhoto(Fragment fragment, int requestCode) {
+        PictureWindowAnimationStyle animStyle = new PictureWindowAnimationStyle();
+        animStyle.ofAllAnimation(R.anim.enter_y_fragment, R.anim.popexit_y_fragment);
+        PictureSelector.create(fragment)
+                .openCamera(PictureMimeType.ofImage())
+                .isEnableCrop(true)
+                .theme(R.style.picture_white_style)
+                .imageEngine(GlideEngine.createGlideEngine())
+                .setPictureWindowAnimationStyle(animStyle)//相册启动退出动画
+                .isZoomAnim(false)
+                .imageSpanCount(3)//列表每行显示个数
+                .isPreviewImage(false)//是否预览图片
+                .setRecyclerAnimationMode(AnimationType.ALPHA_IN_ANIMATION)
+                .forResult(requestCode);
+    }
+
+    public static void takePhoto(Activity activity, int requestCode) {
+        PictureWindowAnimationStyle animStyle = new PictureWindowAnimationStyle();
+        animStyle.ofAllAnimation(R.anim.enter_y_fragment, R.anim.popexit_y_fragment);
+        PictureSelector.create(activity)
+                .openCamera(PictureMimeType.ofImage())
+                .isEnableCrop(true)
+                .theme(R.style.picture_white_style)
+                .imageEngine(GlideEngine.createGlideEngine())
+                .setPictureWindowAnimationStyle(animStyle)//相册启动退出动画
+                .isZoomAnim(false)
+                .imageSpanCount(3)//列表每行显示个数
+                .isPreviewImage(false)//是否预览图片
+                .setRecyclerAnimationMode(AnimationType.ALPHA_IN_ANIMATION)
+                .forResult(requestCode);
     }
 
     public static void pickPhotoFromAlbum(Activity activity, int requestCode, List<LocalMedia> selected, int max) {

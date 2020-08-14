@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".fragment.home.HomeFragment">
+    android:fitsSystemWindows="true"
+    tools:context=".fragment.home.ParentNewsFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/home_toolbar"
@@ -40,13 +41,6 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
-
-    <com.example.schoolairdroprefactoredition.ui.components.ErrorPlaceHolder
-        android:id="@+id/placeholder"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/home_toolbar" />
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/goods_container"
@@ -86,6 +80,12 @@
                 app:layout_scrollFlags="snap|scroll|enterAlways"
                 tools:ignore="RtlSymmetry" />
         </com.google.android.material.appbar.AppBarLayout>
+
+        <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
+            android:id="@+id/placeholder"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/home_viewpager"

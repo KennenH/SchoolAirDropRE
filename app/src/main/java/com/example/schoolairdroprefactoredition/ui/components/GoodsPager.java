@@ -41,14 +41,13 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
     public GoodsPager(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.component_goods_pager, this, true);
-
         mIndicatorContainer = findViewById(R.id.goods_pager_indicator);
-        mViewPager = findViewById(R.id.goods_pager);
+        mViewPager = findViewById(R.id.goods_pager_pager);
         mCurrent = findViewById(R.id.goods_pager_current);
         mTotal = findViewById(R.id.goods_pager_total);
 
-        GoodsPagerAdapter mAdapter = new GoodsPagerAdapter();
         mViewPager.addOnPageChangeListener(this);
+        GoodsPagerAdapter mAdapter = new GoodsPagerAdapter();
         mViewPager.setAdapter(mAdapter);
     }
 

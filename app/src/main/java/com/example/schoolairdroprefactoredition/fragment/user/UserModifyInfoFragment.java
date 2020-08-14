@@ -19,7 +19,6 @@ import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-// 用户信息主页面
 public class UserModifyInfoFragment extends TransactionBaseFragment implements View.OnClickListener {
     private String userAvatar;
     private String userName;

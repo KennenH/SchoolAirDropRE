@@ -4,6 +4,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IHomeGoodsInfoCallback extends IBaseCallback {
     /**

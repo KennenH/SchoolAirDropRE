@@ -2,7 +2,6 @@ package com.example.schoolairdroprefactoredition.fragment.home;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeNewsCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.HomeNewsImpl;
@@ -11,11 +10,11 @@ import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeNewsFragmentViewModel extends ViewModel implements IHomeNewsCallback {
+public class HomeNewsFragmentViewModel extends BaseChildFragmentViewModel implements IHomeNewsCallback {
 
     private HomeNewsImpl mHomeImpl;
 
-    private MutableLiveData<List<TestNewsItemBean>> mHomeNews;
+    private MutableLiveData<List<TestNewsItemBean>> mHomeNews = new MutableLiveData<>();
 
     public HomeNewsFragmentViewModel() {
         mHomeImpl = new HomeNewsImpl();
@@ -36,20 +35,17 @@ public class HomeNewsFragmentViewModel extends ViewModel implements IHomeNewsCal
     }
 
     @Override
-    public void onNewsLoading() {
-
-    }
-
-    @Override
-    public void onNewsEmpty() {
-        if (mHomeNews == null)
-            mHomeNews = new MutableLiveData<>();
-
-        mHomeNews.setValue(new ArrayList<>());
-    }
-
-    @Override
     protected void onCleared() {
         mHomeImpl.unregisterCallback(this);
+    }
+
+    @Override
+    public void onError() {
+        mOnRequestListener.onError();
+    }
+
+    @Override
+    public void onLoading() {
+        mOnRequestListener.onLoading();
     }
 }
