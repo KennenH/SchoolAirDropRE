@@ -72,7 +72,7 @@
                     android:includeFontPadding="false"
                     android:lines="1"
                     android:padding="@dimen/general_padding"
-                    android:text="@string/login"
+                    android:text="@string/pleaseLogin"
                     android:textSize="18dp"
                     app:layout_constraintBottom_toBottomOf="@+id/my_avatar"
                     app:layout_constraintEnd_toStartOf="@+id/imageView"

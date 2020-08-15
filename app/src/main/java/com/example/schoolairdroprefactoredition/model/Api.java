@@ -39,6 +39,8 @@ public interface Api {
     @POST("server/UpdateUserAvatar.php")
     Call<DomainAvatarUpdate> updateAvatar(@Part MultipartBody.Part photo, @Part("uid") RequestBody uid);
 
+
+
     /**
      * 获取首页最新消息
      */

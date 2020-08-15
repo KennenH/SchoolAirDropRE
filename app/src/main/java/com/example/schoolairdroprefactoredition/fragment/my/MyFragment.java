@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -31,6 +32,12 @@ public class MyFragment extends Fragment implements View.OnClickListener {
         MyFragment fragment = new MyFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bundle = getArguments();
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -63,10 +70,10 @@ public class MyFragment extends Fragment implements View.OnClickListener {
         int id = v.getId();
         switch (id) {
             case R.id.my_info:
-                UserActivity.start(getContext());
+                UserActivity.start(getContext(), bundle);
                 break;
             case R.id.my_onGoing:
-                OnGoingActivity.start(getContext());
+                OnGoingActivity.start(getContext(), bundle);
                 break;
             case R.id.my_likes:
                 // list my likes
@@ -78,7 +85,7 @@ public class MyFragment extends Fragment implements View.OnClickListener {
                 SettingsActivity.startForResult(getContext());
                 break;
             case R.id.my_quote:
-                QuoteActivity.start(getContext());
+                QuoteActivity.start(getContext(), bundle);
                 break;
         }
     }

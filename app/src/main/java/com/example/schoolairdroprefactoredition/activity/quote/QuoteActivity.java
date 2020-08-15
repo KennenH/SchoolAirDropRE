@@ -14,23 +14,28 @@ import androidx.viewpager.widget.ViewPager;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.QuotePagerAdapter;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.google.android.material.tabs.TabLayout;
 
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
 public class QuoteActivity extends ImmersionStatusBarActivity {
 
-    public static void start(Context context) {
+    public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, QuoteActivity.class);
+        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, bundle);
         context.startActivity(intent);
     }
 
     private TabLayout mTabLayout;
     private ViewPager mPager;
 
+    private Bundle bundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bundle = getIntent().getExtras();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_tab);
         setSupportActionBar(findViewById(R.id.toolbar));

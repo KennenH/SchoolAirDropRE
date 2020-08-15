@@ -23,6 +23,12 @@ public class SettingsPrivacyFragment extends TransactionBaseFragment implements 
     public SettingsPrivacyFragment() {
     }
 
+    public static SettingsPrivacyFragment newInstance(Bundle bundle) {
+        SettingsPrivacyFragment fragment = new SettingsPrivacyFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

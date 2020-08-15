@@ -22,6 +22,12 @@ public class SettingsNotificationFragment extends TransactionBaseFragment implem
     public SettingsNotificationFragment() {
     }
 
+    public static SettingsNotificationFragment newInstance(Bundle bundle) {
+        SettingsNotificationFragment fragment = new SettingsNotificationFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

@@ -33,6 +33,7 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
     private AMapLocationClientOption mLocationOption;
 
     private OnLocationListener mOnLocationListener;
+    private OnLoginActivityListener mOnLoginActivityListener;
 
     private ParentNewsFragment mHome;
     private ParentPurchasingFragment mPurchase;
@@ -133,6 +134,10 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
         }
     }
 
+
+    /**
+     * ============== Location listener begin ================
+     */
     public interface OnLocationListener {
         void onLocated(AMapLocation aMapLocation);
     }
@@ -146,6 +151,27 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
         if (mOnLocationListener != null)
             mOnLocationListener.onLocated(aMapLocation);
     }
+
+    /**
+     * ============== Location listener end ================
+     */
+
+
+    /**
+     * ============== Login listener begin =================
+     */
+    public interface OnLoginActivityListener {
+        void onLoginActivity(Bundle bundle);
+    }
+
+    public void setOnLoginActivityListener(OnLoginActivityListener listener) {
+        mOnLoginActivityListener = listener;
+    }
+
+    /**
+     * =============== Login listener end ==================
+     */
+
 
     @Override
     protected void onDestroy() {
@@ -181,6 +207,10 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
         return false;
     }
 
+    /**
+     * 帮助AndroidAutoSize适配屏幕
+     * @return
+     */
     @Override
     public Resources getResources() {
         AutoSizeCompat.autoConvertDensityOfGlobal((super.getResources()));

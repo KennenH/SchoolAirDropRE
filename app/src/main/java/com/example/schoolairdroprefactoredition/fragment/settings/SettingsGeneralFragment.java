@@ -25,6 +25,12 @@ public class SettingsGeneralFragment extends TransactionBaseFragment implements 
     public SettingsGeneralFragment() {
     }
 
+    public static SettingsGeneralFragment newInstance(Bundle bundle) {
+        SettingsGeneralFragment fragment = new SettingsGeneralFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

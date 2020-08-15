@@ -45,8 +45,8 @@
 
     <ImageView
         android:id="@+id/refresh"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
         android:layout_marginTop="@dimen/general_padding_larger"
         android:src="@drawable/ic_refresh"
         app:layout_constraintBottom_toTopOf="@id/button"
@@ -64,7 +64,6 @@
         android:padding="@dimen/general_padding_large"
         android:textColor="@color/white"
         android:textSize="@dimen/textSizeNormal"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/right"
         app:layout_constraintStart_toStartOf="@+id/left"

@@ -3,7 +3,6 @@ package com.example.schoolairdroprefactoredition.fragment.settings;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.icu.util.ULocale;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,19 +17,17 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.settings.LoginActivity;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.activity.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.fragment.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.fragment.home.BaseChildFragmentViewModel;
-import com.example.schoolairdroprefactoredition.fragment.ssb.SoldFragment;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
 
 /**
  * 设置的主页面
  */
-public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, BaseChildFragmentViewModel.OnRequestListener {
+public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, BaseChildFragmentViewModel.OnRequestListener, SettingsActivity.OnLoginInfoListener {
 
     private SettingsViewModel settingsViewModel;
 
@@ -78,6 +75,11 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = getArguments();
+
+        // 监听SettingsActivity的登陆回调
+        if (getActivity() instanceof SettingsActivity) {
+            ((SettingsActivity) getActivity()).setOnLoginInfoListener(this);
+        }
     }
 
     @Nullable
@@ -147,16 +149,17 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
 //                LoginActivity.startForResult(getContext());// 直接getActivity 会使结果返回至fragment的父Activity
                 Intent intent = new Intent(getContext(), LoginActivity.class);
                 startActivityForResult(intent, LoginActivity.REQUEST_LOGIN);
-                getActivity().overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
+                if (getActivity() != null)
+                    getActivity().overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
                 break;
             case R.id.settings_home_privacy:
-                transact(manager, new SettingsPrivacyFragment(), privacyName);
+                transact(manager, SettingsPrivacyFragment.newInstance(bundle), privacyName);
                 break;
             case R.id.settings_home_notification:
-                transact(manager, new SettingsNotificationFragment(), notificationName);
+                transact(manager, SettingsNotificationFragment.newInstance(bundle), notificationName);
                 break;
             case R.id.settings_home_general:
-                transact(manager, new SettingsGeneralFragment(), generalName);
+                transact(manager, SettingsGeneralFragment.newInstance(bundle), generalName);
                 break;
             case R.id.settings_home_about:
                 transact(manager, new SettingsAboutFragment(), aboutName);
@@ -180,5 +183,17 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     public void onLoading() {
         if (mLoading != null)
             mLoading.dismiss();
+    }
+
+    /**
+     * {@link SettingsActivity}回调的登陆信息
+     *
+     * @param bundle
+     */
+    @Override
+    public void onLogin(Bundle bundle) {
+        this.bundle = bundle;
+
+        mAlipay.setDescription(getContext().getString(R.string.logedin, "小鱼子酱"));
     }
 }

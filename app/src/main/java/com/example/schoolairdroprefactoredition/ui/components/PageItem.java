@@ -145,6 +145,10 @@ public class PageItem extends ConstraintLayout {
         mDescriptionView.setText(description);
     }
 
+    public void setName(String title) {
+        mNameView.setText(title);
+    }
+
     public boolean isItemSelected() {
         if (isSwitch)
             return mSwitch.isSelected();

@@ -111,10 +111,10 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
 
     private List<MorePanelBean> getMorePanelItem() {
         List<MorePanelBean> list = new ArrayList<>();
-        MorePanelBean quote = new MorePanelBean(R.drawable.ic_quote);
-        MorePanelBean album = new MorePanelBean(R.drawable.ic_album);
-        MorePanelBean camera = new MorePanelBean(R.drawable.ic_camera);
-        MorePanelBean location = new MorePanelBean(R.drawable.ic_map);
+        MorePanelBean quote = new MorePanelBean(R.drawable.ic_quote); // 报价
+        MorePanelBean album = new MorePanelBean(R.drawable.ic_album); // 相册
+        MorePanelBean camera = new MorePanelBean(R.drawable.ic_camera); // 相机
+        MorePanelBean location = new MorePanelBean(R.drawable.ic_map); // 约定地点
         list.add(quote);
         list.add(album);
         list.add(camera);

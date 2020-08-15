@@ -55,6 +55,7 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
         mRefresh = findViewById(R.id.refresh);
         mAction = findViewById(R.id.button);
         mAction.setOnClickListener(this);
+        mAction.setText(R.string.postMyItem);
 
         mLoadingAnim = AnimationUtils.loadAnimation(getContext(), R.anim.rotation_infinite);
 

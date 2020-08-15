@@ -17,21 +17,26 @@ import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.ui.adapter.OnGoingPagerAdapter;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.google.android.material.tabs.TabLayout;
 
 public class OnGoingActivity extends AppCompatActivity {
 
-    public static void start(Context context) {
+    public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, OnGoingActivity.class);
+        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, bundle);
         context.startActivity(intent);
     }
 
     private ViewPager mPager;
     private TabLayout mTab;
 
+    private Bundle bundle;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bundle = getIntent().getExtras();
         setContentView(R.layout.activity_tab);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setSupportActionBar(findViewById(R.id.toolbar));

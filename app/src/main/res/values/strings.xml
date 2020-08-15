@@ -162,7 +162,8 @@
     <string name="itemSs" translatable="false">"[img src=ic_secondhand_small/] %s"</string>
     <string name="recyclerFooter" translatable="false">[img src=ic_line/]     [img src=ic_logo/]     [img src=ic_line/]</string>
     <string name="trash">回收站</string>
-    <string name="login">请登录</string>
+    <string name="pleaseLogin">请登录</string>
+    <string name="logedin">已登陆 $1%s</string>
 
 
 </resources>

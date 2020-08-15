@@ -27,6 +27,8 @@ public class SettingsActivity extends TransactionBaseActivity implements Fragmen
 
     public static final int REQUEST_LOGIN = 1212; // 请求码 登陆
 
+    private OnLoginInfoListener mOnLoginInfoListener;
+
     public Bundle bundle;
 
     public static void startForResult(Context context) {
@@ -52,8 +54,18 @@ public class SettingsActivity extends TransactionBaseActivity implements Fragmen
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_LOGIN) {
                 if (data != null)
+                    // 获取SettingsFragment返回的登录信息
                     bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, data.getSerializableExtra(KEY_AUTHORIZE));
+                mOnLoginInfoListener.onLogin(bundle);// 登陆信息回调
             }
         }
+    }
+
+    public interface OnLoginInfoListener {
+        void onLogin(Bundle bundle);
+    }
+
+    public void setOnLoginInfoListener(OnLoginInfoListener listener) {
+        mOnLoginInfoListener = listener;
     }
 }
