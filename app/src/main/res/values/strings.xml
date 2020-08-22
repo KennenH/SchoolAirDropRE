@@ -12,7 +12,14 @@
     <string name="alipayID" translatable="false">%1$s</string>
     <string name="userProtocol" translatable="false">《用户许可协议》</string>
     <string name="serviceProtocol" translatable="false">《校园空投服务条款》</string>
-
+    <string name="fraction0" translatable="false">.00</string>
+    <string name="itemNS" translatable="false">"[img src=ic_negotiable/] [img src=ic_secondhand/] %s"</string>
+    <string name="itemNSs" translatable="false">"[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] %s"</string>
+    <string name="itemN" translatable="false">"[img src=ic_negotiable/] %s"</string>
+    <string name="itemNs" translatable="false">"[img src=ic_negotiable_small/] %s"</string>
+    <string name="itemS" translatable="false">"[img src=ic_secondhand/] %s"</string>
+    <string name="itemSs" translatable="false">"[img src=ic_secondhand_small/] %s"</string>
+    <string name="recyclerFooter" translatable="false">[img src=ic_line/]     [img src=ic_logo/]     [img src=ic_line/]</string>
 
     <!--  substitutions  -->
     <string name="unprocessedSub">未处理(%1$d)</string>
@@ -24,6 +31,7 @@
     <string name="statistics">统计(%1$d)</string>
     <string name="userJoinTime">#%1$d年%2$d月%3$d日加入</string>
     <string name="time">$1$d年$2$d月$3$d日</string>
+    <string name="logedin">已登陆 $1%s</string>
 
 
     <!--  translatable  -->
@@ -153,17 +161,14 @@
     <string name="errorEmpty">附近还没有人发布过物品 快去发布你自己的物品吧</string>
     <string name="postMyItem">去发布我的物品</string>
     <string name="errorRetry">重试</string>
-    <string name="fraction0" translatable="false">.00</string>
-    <string name="itemNS" translatable="false">"[img src=ic_negotiable/] [img src=ic_secondhand/] %s"</string>
-    <string name="itemNSs" translatable="false">"[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] %s"</string>
-    <string name="itemN" translatable="false">"[img src=ic_negotiable/] %s"</string>
-    <string name="itemNs" translatable="false">"[img src=ic_negotiable_small/] %s"</string>
-    <string name="itemS" translatable="false">"[img src=ic_secondhand/] %s"</string>
-    <string name="itemSs" translatable="false">"[img src=ic_secondhand_small/] %s"</string>
-    <string name="recyclerFooter" translatable="false">[img src=ic_line/]     [img src=ic_logo/]     [img src=ic_line/]</string>
     <string name="trash">回收站</string>
     <string name="pleaseLogin">请登录</string>
-    <string name="logedin">已登陆 $1%s</string>
+    <string name="selectPosition">选择地点</string>
+    <string name="searchPosition">搜索附近的地点</string>
+    <string name="countDown" translatable="false">$1%d:$2%d:$3%d</string>
+    <string name="relocate">重新定位</string>
+    <string name="refuse">拒绝</string>
+    <string name="accept">接受</string>
 
 
 </resources>

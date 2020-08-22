@@ -167,13 +167,31 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
     }
 
     /**
-     * 提交新物品的表单
+     * 提交物品表单
      */
     private void submit() {
         // if (submit success){
         // isSubmitted = true
         // finish
         //}
+
+    }
+
+    /**
+     * 保存用户草稿
+     */
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+    }
+
+    /**
+     * 回复用户草稿
+     */
+    @Override
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
 
     }
 

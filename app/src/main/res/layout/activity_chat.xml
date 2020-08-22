@@ -1,20 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.effective.android.panel.view.PanelSwitchLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/panel_switch_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    android:orientation="vertical"
-    app:animationSpeed="standard">
+    tools:viewBindingIgnore="true">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:elevation="0dp"
         app:contentInsetEnd="@dimen/toolbar_center_margin"
+        app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/chat_more"
         app:navigationIcon="@drawable/ic_left">
 
@@ -28,158 +27,159 @@
             android:textColor="@color/black" />
     </androidx.appcompat.widget.Toolbar>
 
-    <!-- linear_edit_view 指定一个 EditText 用于输入 ，必须项-->
-    <!-- linear_auto_reset_enable 指定是否 LinearContentContainer 是否能够接受 Touch 事件自动隐藏面板-->
-    <!-- linear_auto_reset_area 指定是否 LinearContentContainer 只接受某个 View 区域的 Touch 事件来自定隐藏面板-->
-    <com.effective.android.panel.view.content.RelativeContentContainer
-        android:id="@+id/content_view"
+    <com.effective.android.panel.view.PanelSwitchLayout
+        android:id="@+id/panel_switch_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        tools:layout_height="500dp">
-
-        <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
-            android:id="@+id/recycler_container"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@+id/bottom_action">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginTop="0dp"
-                android:overScrollMode="never"
-                android:tag="recycler_view" />
-        </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_alignBottom="@+id/recycler_container"
-            android:background="@color/primaryDarker" />
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/bottom_action"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentBottom="true"
-            android:background="@color/white"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/input_container"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/attachments"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <EditText
-                    android:id="@+id/edit_text"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="@dimen/general_padding"
-                    android:layout_marginTop="@dimen/general_padding"
-                    android:layout_marginEnd="@dimen/general_padding"
-                    android:layout_marginBottom="@dimen/general_padding"
-                    android:background="@drawable/bg_round_primary"
-                    android:imeOptions="actionSearch"
-                    android:inputType="textMultiLine|textShortMessage"
-                    android:maxLines="4"
-                    android:minHeight="@dimen/toolbar_icon_large"
-                    android:paddingStart="@dimen/general_padding_large"
-                    android:paddingTop="@dimen/general_padding"
-                    android:paddingEnd="@dimen/general_padding_large"
-                    android:paddingBottom="@dimen/general_padding"
-                    android:textColor="?attr/colorControlNormal"
-                    android:textSize="@dimen/textSizeNormal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/chat_bar_emoji"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/chat_bar_emoji"
-                    android:layout_width="@dimen/toolbar_icon_bit_large"
-                    android:layout_height="@dimen/toolbar_icon_bit_large"
-                    android:layout_marginEnd="@dimen/general_padding"
-                    android:src="@drawable/ic_face"
-                    app:layout_constraintBottom_toBottomOf="@id/edit_text"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/edit_text" />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/attachments"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/general_padding"
-                app:layout_constraintBottom_toBottomOf="@id/input_container"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/chat_bar_send"
-                    android:layout_width="65dp"
-                    android:layout_height="@dimen/toolbar_icon_large"
-                    android:background="@drawable/bg_rounded_theme"
-                    android:gravity="center"
-                    android:text="@string/send"
-                    android:textColor="#ffffff"
-                    android:textSize="18sp"
-                    android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-
-                <ImageView
-                    android:id="@+id/chat_bar_more"
-                    android:layout_width="@dimen/toolbar_icon_bit_large"
-                    android:layout_height="@dimen/toolbar_icon_bit_large"
-                    android:src="@drawable/ic_chat_more"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.effective.android.panel.view.content.RelativeContentContainer>
-
-    <!-- 面板区域，仅能包含PanelView-->
-    <com.effective.android.panel.view.panel.PanelContainer
-        android:id="@+id/panel_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
         android:background="@color/white"
-        tools:layout_height="0dp"
-        tools:layout_weight="1">
+        android:orientation="vertical"
+        app:animationSpeed="standard"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
-        <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
-        <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
-        <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
-        <com.effective.android.panel.view.panel.PanelView
-            android:id="@+id/panel_emotion"
+        <!-- linear_edit_view 指定一个 EditText 用于输入 ，必须项-->
+        <!-- linear_auto_reset_enable 指定是否 LinearContentContainer 是否能够接受 Touch 事件自动隐藏面板-->
+        <!-- linear_auto_reset_area 指定是否 LinearContentContainer 只接受某个 View 区域的 Touch 事件来自定隐藏面板-->
+        <com.example.schoolairdroprefactoredition.ui.components.CusContentContainer
+            android:id="@+id/content_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:panel_layout="@layout/component_panel_emoji"
-            app:panel_toggle="true"
-            app:panel_trigger="@id/chat_bar_emoji" />
+            android:orientation="vertical"
+            app:hide_by_touch_area="@id/recycler_view"
+            app:hide_by_touch_outside_enable="true"
+            app:input_view="@id/edit_view">
 
-        <com.effective.android.panel.view.panel.PanelView
-            android:id="@+id/panel_addition"
+            <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
+                android:id="@+id/recycler_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_above="@+id/bottom_action"
+                app:layout_constraintBottom_toTopOf="@+id/bottom_action"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="0dp"
+                    android:overScrollMode="never"
+                    android:tag="recycler_view" />
+            </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/bottom_action"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/input_container"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/send_and_more"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <EditText
+                        android:id="@+id/edit_view"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/general_padding"
+                        android:background="@drawable/bg_rounded_primary5"
+                        android:imeOptions="actionSearch"
+                        android:inputType="textMultiLine|textShortMessage"
+                        android:letterSpacing="0.1"
+                        android:lineSpacingExtra="1dp"
+                        android:maxLines="4"
+                        android:minHeight="@dimen/toolbar_icon_large"
+                        android:paddingStart="@dimen/general_padding_large"
+                        android:paddingTop="@dimen/general_padding"
+                        android:paddingEnd="@dimen/general_padding_large"
+                        android:paddingBottom="@dimen/general_padding"
+                        android:textColor="?attr/colorControlNormal"
+                        android:textCursorDrawable="@drawable/cursor"
+                        android:textSize="@dimen/textSizeNormal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@id/chat_bar_emoji"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/chat_bar_emoji"
+                        android:layout_width="@dimen/toolbar_icon_bit_large"
+                        android:layout_height="@dimen/toolbar_icon_bit_large"
+                        android:layout_marginEnd="@dimen/general_padding"
+                        android:src="@drawable/ic_face"
+                        app:layout_constraintBottom_toBottomOf="@id/edit_view"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@id/edit_view" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/send_and_more"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/general_padding"
+                    app:layout_constraintBottom_toBottomOf="@+id/input_container"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/input_container">
+
+                    <TextView
+                        android:id="@+id/chat_bar_send"
+                        android:layout_width="60dp"
+                        android:layout_height="@dimen/toolbar_icon_large"
+                        android:background="@drawable/bg_rounded_theme"
+                        android:gravity="center"
+                        android:text="@string/send"
+                        android:textColor="#ffffff"
+                        android:textSize="17dp"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <ImageView
+                        android:id="@+id/chat_bar_more"
+                        android:layout_width="@dimen/toolbar_icon_bit_large"
+                        android:layout_height="@dimen/toolbar_icon_bit_large"
+                        android:src="@drawable/ic_chat_more"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.example.schoolairdroprefactoredition.ui.components.CusContentContainer>
+
+        <!-- 面板区域，仅能包含PanelView-->
+        <com.effective.android.panel.view.panel.PanelContainer
+            android:id="@+id/panel_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:panel_layout="@layout/component_panel_more"
-            app:panel_toggle="true"
-            app:panel_trigger="@id/chat_bar_more" />
-    </com.effective.android.panel.view.panel.PanelContainer>
-</com.effective.android.panel.view.PanelSwitchLayout>
+            android:background="@color/white">
 
+            <!-- panel_layout 用于指定面板该 ID 对应的布局 ，必须项-->
+            <!-- panel_trigger 用于用户点击该 ID 对应的 View 时切换到该面板 -->
+            <!-- panel_toggle  用于当该面板显示时 ，用户再次点击 panel_trigger 对应的 View 时是否回切输入法-->
+            <com.effective.android.panel.view.panel.PanelView
+                android:id="@+id/panel_emotion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:panel_layout="@layout/component_panel_emoji"
+                app:panel_toggle="true"
+                app:panel_trigger="@id/chat_bar_emoji" />
+
+            <com.effective.android.panel.view.panel.PanelView
+                android:id="@+id/panel_addition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:panel_layout="@layout/component_panel_more"
+                app:panel_toggle="true"
+                app:panel_trigger="@id/chat_bar_more" />
+        </com.effective.android.panel.view.panel.PanelContainer>
+    </com.effective.android.panel.view.PanelSwitchLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

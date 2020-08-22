@@ -4,12 +4,14 @@ import android.util.Log;
 
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
+import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ISettingsPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISettingsCallback;
 import com.example.schoolairdroprefactoredition.utils.RSACoder;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import retrofit2.Call;
@@ -64,7 +66,7 @@ public class SettingsImpl implements ISettingsPresenter {
         Api api = retrofit.create(Api.class);
         Log.d("Impl", "encrypted alipay == > " + RSACoder.encryptWithPublicKey(publicKey, rawAlipay) +
                 "\nsession id == > " + sessionID);
-        Call<DomainAuthorize> task = api.authorize(sessionID, grantType, clientID, clientSecret, RSACoder.encryptByPublicKey(publicKey, rawAlipay));
+        Call<DomainAuthorize> task = api.authorize(sessionID, grantType, clientID, clientSecret, RSACoder.encryptWithPublicKey(publicKey, rawAlipay));
         task.enqueue(new Callback<DomainAuthorize>() {
             @Override
             public void onResponse(Call<DomainAuthorize> call, Response<DomainAuthorize> response) {
@@ -75,14 +77,47 @@ public class SettingsImpl implements ISettingsPresenter {
                         mCallback.onAuthorizationSuccess(authorization);
                     }
                 } else {
-                    Log.d("HomeImpl", "请求错误 " + code + " response -- > " + response.toString());
+                    try {
+                        Log.d("SettingsImpl", "请求错误 " + code + " response -- > " + response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     mCallback.onError();
                 }
             }
 
             @Override
             public void onFailure(Call<DomainAuthorize> call, Throwable t) {
-                Log.e("HomeImpl", "请求失败 -- > " + t);
+                Log.e("SettingsImpl", "请求失败 -- > " + t);
+                mCallback.onError();
+            }
+        });
+    }
+
+    @Override
+    public void getUserInfo(String token) {
+        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+        Api api = retrofit.create(Api.class);
+        Call<DomainGetUserInfo> task = api.getUserInfo(token);
+        task.enqueue(new Callback<DomainGetUserInfo>() {
+            @Override
+            public void onResponse(Call<DomainGetUserInfo> call, Response<DomainGetUserInfo> response) {
+                int code = response.code();
+                Response<DomainGetUserInfo> respond = response;
+                Log.d("SettingsImpl", respond.toString());
+                DomainGetUserInfo info = respond.body();
+                if (code == HttpURLConnection.HTTP_OK) {
+                    if (info != null && info.isSuccess()) {
+                        mCallback.onUserInfoLoaded(info);
+                    } else
+                        mCallback.onError();
+                } else
+                    mCallback.onError();
+            }
+
+            @Override
+            public void onFailure(Call<DomainGetUserInfo> call, Throwable t) {
+                Log.e("MyImpl", "请求失败 -- > " + t);
                 mCallback.onError();
             }
         });

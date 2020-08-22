@@ -118,4 +118,10 @@
     <string name="errorRetry">Retry</string>
     <string name="postMyItem">Go Post My Goods</string>
     <string name="errorNetLocation">Something Went Wrong…</string>
+    <string name="trash">Trash</string>
+    <string name="pleaseLogin">Please Login</string>
+    <string name="searchPosition">Search Nearby POI</string>
+    <string name="relocate">Relocate</string>
+    <string name="refuse">Refuse</string>
+    <string name="accept">Accept</string>
 </resources>

@@ -31,15 +31,10 @@
     </declare-styleable>
 
     <!-- ConstraintContentContainer start-->
-    <declare-styleable name="ConstraintContentContainer">
+    <declare-styleable name="CusContentContainer">
         <attr name="input_view" format="reference" />
         <attr name="hide_by_touch_area" format="reference" />
         <attr name="hide_by_touch_outside_enable" format="boolean" />
-    </declare-styleable>
-
-    <declare-styleable name="ConstraintPanelView">
-        <attr name="constraint_panel_trigger" format="reference" />
-        <attr name="constraint_panel_toggle" format="boolean" />
     </declare-styleable>
     <!-- ConstraintContentContainer end-->
 </resources>

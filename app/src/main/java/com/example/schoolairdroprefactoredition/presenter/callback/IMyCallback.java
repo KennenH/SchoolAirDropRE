@@ -1,7 +1,7 @@
 package com.example.schoolairdroprefactoredition.presenter.callback;
 
-import com.example.schoolairdroprefactoredition.model.databean.TestUserInfoBean;
+import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 
-public interface IMyCallback {
-    void onUserInfoLoaded(TestUserInfoBean data);
+public interface IMyCallback extends IBaseCallback {
+    void onUserInfoLoaded(DomainGetUserInfo data);
 }

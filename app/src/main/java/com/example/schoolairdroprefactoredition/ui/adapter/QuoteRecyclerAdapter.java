@@ -23,25 +23,7 @@ public class QuoteRecyclerAdapter extends BaseQuickAdapter<TestQuoteSectionItemB
 
     @Override
     protected void convert(@NotNull BaseViewHolder holder, TestQuoteSectionItemBean bean) {
-        TextView pending = holder.itemView.findViewById(R.id.handle_waiting);
-        ImageView result = holder.itemView.findViewById(R.id.handle_result);
 
-        if (!bean.isHandled()) {
-            result.setVisibility(View.GONE);
-            pending.setVisibility(View.VISIBLE);
-        } else {
-            int resultCode = bean.getResult();
-            result.setScaleType(ImageView.ScaleType.CENTER);
-            if (resultCode == TestQuoteSectionItemBean.ACCEPT) {
-                result.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_quote_accepted, getContext().getTheme()));
-            } else if (resultCode == TestQuoteSectionItemBean.REFUSE) {
-                result.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_quote_rejected, getContext().getTheme()));
-            } else if (resultCode == TestQuoteSectionItemBean.OUT_OF_DATE) {
-                result.setImageDrawable(getContext().getResources().getDrawable(R.drawable.ic_quote_overdue, getContext().getTheme()));
-            }
-            pending.setVisibility(View.GONE);
-            result.setVisibility(View.VISIBLE);
-        }
 
         holder.itemView.findViewById(R.id.user_avatar).setOnClickListener(v -> {
             // todo 以用户唯一标识号为参数开启用户个人信息页面

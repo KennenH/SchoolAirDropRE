@@ -13,6 +13,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.activity.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.fragment.home.ParentNewsFragment;
 import com.example.schoolairdroprefactoredition.fragment.my.MyFragment;
 import com.example.schoolairdroprefactoredition.fragment.home.ParentPurchasingFragment;
@@ -23,6 +24,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
 
 import me.jessyan.autosize.AutoSizeCompat;
 
@@ -74,7 +76,11 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-
+            if (requestCode == SettingsActivity.REQUEST_LOGIN) { // 来自SettingsActivity的登录结果返回
+                if (data != null && mOnLoginActivityListener != null) {
+                    mOnLoginActivityListener.onLoginActivity(data.getExtras());
+                }
+            }
         }
     }
 
@@ -135,9 +141,8 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
     }
 
 
-    /**
-     * ============== Location listener begin ================
-     */
+    //============== Location listener begin ================
+    // 定位成功后的回调监听
     public interface OnLocationListener {
         void onLocated(AMapLocation aMapLocation);
     }
@@ -151,15 +156,11 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
         if (mOnLocationListener != null)
             mOnLocationListener.onLocated(aMapLocation);
     }
-
-    /**
-     * ============== Location listener end ================
-     */
+    //============== Location listener end ================
 
 
-    /**
-     * ============== Login listener begin =================
-     */
+    //============== Login listener begin =================
+    //登录成功后的回调监听
     public interface OnLoginActivityListener {
         void onLoginActivity(Bundle bundle);
     }
@@ -167,10 +168,7 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
     public void setOnLoginActivityListener(OnLoginActivityListener listener) {
         mOnLoginActivityListener = listener;
     }
-
-    /**
-     * =============== Login listener end ==================
-     */
+    //=============== Login listener end ==================
 
 
     @Override
@@ -209,6 +207,7 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
 
     /**
      * 帮助AndroidAutoSize适配屏幕
+     *
      * @return
      */
     @Override

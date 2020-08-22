@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/position"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawablePadding="@dimen/general_padding"
+        android:ellipsize="end"
+        android:gravity="start|center_vertical"
+        android:lines="1"
+        android:padding="@dimen/general_padding_large"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizeNormal"
+        tools:drawableStart="@drawable/ic_favorite_small"
+        tools:text="紫薇花苑大头儿子鲜奶吧" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

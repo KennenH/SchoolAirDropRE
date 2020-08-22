@@ -99,4 +99,21 @@
         <item name="picture.folder_checked_dot">@drawable/ic_null</item>
     </style>
     <!--=============================picker Theme================================-->
+
+    <style name="SearchEditText" parent="Widget.AppCompat.EditText">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">@dimen/toolbar_icon_large</item>
+        <item name="android:layout_marginStart">@dimen/general_padding_larger</item>
+        <item name="android:layout_marginTop">@dimen/general_padding_small</item>
+        <item name="android:layout_marginEnd">@dimen/general_padding_larger</item>
+        <item name="android:layout_marginBottom">@dimen/general_padding_small</item>
+        <item name="android:background">@drawable/bg_round_primary_light</item>
+        <item name="android:drawableStart">@drawable/ic_search</item>
+        <item name="android:drawablePadding">@dimen/general_padding</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:inputType">text</item>
+        <item name="android:paddingStart">@dimen/general_padding_large</item>
+        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textSize">@dimen/textSizeNormal</item>
+    </style>
 </resources>

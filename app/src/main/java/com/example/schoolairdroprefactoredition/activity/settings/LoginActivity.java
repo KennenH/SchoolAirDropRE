@@ -23,7 +23,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public static void startForResult(Context context) {
         Intent intent = new Intent(context, LoginActivity.class);
         if (context instanceof AppCompatActivity) {
-            Log.d("Login", "start form result");
             AppCompatActivity activity = (AppCompatActivity) context;
             activity.startActivityForResult(intent, REQUEST_LOGIN);
             activity.overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);

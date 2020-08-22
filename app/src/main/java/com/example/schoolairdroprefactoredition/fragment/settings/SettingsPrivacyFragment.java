@@ -42,7 +42,16 @@ public class SettingsPrivacyFragment extends TransactionBaseFragment implements 
         mRecommendFriends.setOnClickListener(this);
         mBlackList.setOnClickListener(this);
 
+        init();
+
         return root;
+    }
+
+    private void init() {
+        Bundle bundle = getArguments();
+
+        // 初始化用户设置
+
     }
 
     @Override

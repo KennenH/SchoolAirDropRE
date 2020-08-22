@@ -14,7 +14,7 @@ public class ConstantUtil {
     public static int FRAGMENT_NUM_NEARBY = 102;
 
     /**
-     * SOB Api
+     * SOB base Api
      */
     public static String SOB_API_BASE_URL = "https://api.sunofbeach.net/shop/";
 
@@ -29,4 +29,8 @@ public class ConstantUtil {
      * 页面获取用户授权信息的键
      */
     public static final String KEY_AUTHORIZE = "AUTH2User";
+    /**
+     * 使用token请求获取的用户信息键
+     */
+    public static final String KEY_USER_INFO = "UserInfo";
 }

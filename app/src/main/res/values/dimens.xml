@@ -41,5 +41,5 @@
     <dimen name="textSizeNormal">14dp</dimen>
     <dimen name="textSizeMin">12dp</dimen>
     <dimen name="textSizeLarger">20dp</dimen>
-    <dimen name="textSizelarge">16dp</dimen>
+    <dimen name="textSizeLarge">16dp</dimen>
 </resources>

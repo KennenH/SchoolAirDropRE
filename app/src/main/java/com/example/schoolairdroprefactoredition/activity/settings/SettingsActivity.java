@@ -27,45 +27,23 @@ public class SettingsActivity extends TransactionBaseActivity implements Fragmen
 
     public static final int REQUEST_LOGIN = 1212; // 请求码 登陆
 
-    private OnLoginInfoListener mOnLoginInfoListener;
-
     public Bundle bundle;
 
-    public static void startForResult(Context context) {
+    public static void startForResult(Context context, Bundle bundle) {
         Intent intent = new Intent(context, SettingsActivity.class);
+        if (bundle != null) intent.putExtras(bundle);
         if (context instanceof AppCompatActivity)
             ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_LOGIN);
     }
-
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        bundle = getIntent().getExtras();
 
         final String settingName = getResources().getString(R.string.setting);
         firstTransact(SettingsFragment.newInstance(bundle), settingName);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == REQUEST_LOGIN) {
-                if (data != null)
-                    // 获取SettingsFragment返回的登录信息
-                    bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, data.getSerializableExtra(KEY_AUTHORIZE));
-                mOnLoginInfoListener.onLogin(bundle);// 登陆信息回调
-            }
-        }
-    }
-
-    public interface OnLoginInfoListener {
-        void onLogin(Bundle bundle);
-    }
-
-    public void setOnLoginInfoListener(OnLoginInfoListener listener) {
-        mOnLoginInfoListener = listener;
     }
 }

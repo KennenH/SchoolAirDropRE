@@ -86,7 +86,7 @@ public class CreditActivity extends AppCompatActivity {
         StatusBarUtil.setTranslucentForImageView(this, 0, toolbar);
 
         mRecycler.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, true));
-        mRecycler.addItemDecoration(new MarginItemDecoration(false));
+        mRecycler.addItemDecoration(new MarginItemDecoration());
         mRecycler.setAdapter(mAdapter);
 
         viewModel.getCredit().observe(this, data -> {

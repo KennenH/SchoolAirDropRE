@@ -6,4 +6,6 @@ public interface ISettingsPresenter extends IBasePresenter<ISettingsCallback> {
     void getPublicKey();
 
     void postAlipayIDRSA(String sessionID, String grantType, String clientID, String clientSecret, String rawAlipay, String publicKey) throws Exception;
+
+    void getUserInfo(String token);
 }

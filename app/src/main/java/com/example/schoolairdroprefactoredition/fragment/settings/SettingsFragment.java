@@ -18,16 +18,18 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.activity.settings.SettingsActivity;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.fragment.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.fragment.home.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
 
 /**
  * 设置的主页面
  */
-public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, BaseChildFragmentViewModel.OnRequestListener, SettingsActivity.OnLoginInfoListener {
+public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, BaseChildFragmentViewModel.OnRequestListener {
 
     private SettingsViewModel settingsViewModel;
 
@@ -50,6 +52,8 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     private LoadingPopupView mLoading;
 
     private Bundle bundle;
+
+    private OnLoginInfoListener mOnLoginInfoListener;
 
     public static SettingsFragment newInstance(Bundle bundle) {
         SettingsFragment fragment = new SettingsFragment();
@@ -75,11 +79,6 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = getArguments();
-
-        // 监听SettingsActivity的登陆回调
-        if (getActivity() instanceof SettingsActivity) {
-            ((SettingsActivity) getActivity()).setOnLoginInfoListener(this);
-        }
     }
 
     @Nullable
@@ -110,21 +109,28 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
         return root;
     }
 
+    /**
+     * 监听设置主页面的登陆成功回调监听器
+     */
+    public interface OnLoginInfoListener {
+        void onLogin(Bundle bundle);
+    }
+
+    public void setOnLoginInfoListener(OnLoginInfoListener listener) {
+        mOnLoginInfoListener = listener;
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Log.d("SettingFragment", "result code == > " + resultCode + " request code == > " + requestCode);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == LoginActivity.REQUEST_LOGIN) {
                 // 请求公钥与sessionID
+
                 if (mLoading != null)
                     mLoading.show();
                 settingsViewModel.getPublicKey().observe(getViewLifecycleOwner(), key -> {
-                    if (mLoading != null) mLoading.dismiss();
-
                     // 将加密的数据post回去请求token
-                    if (mLoading != null)
-                        mLoading.show();
                     settingsViewModel.authorizeWithAlipayID(key.getSession_id()
                             , "client_credentials"
                             , "testclient"
@@ -134,7 +140,24 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
                             .observe(getViewLifecycleOwner(), token -> {
                                 if (mLoading != null) mLoading.dismiss();
 
-                                Log.d("Authorization get", token.toString());
+                                // token
+                                bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, token);
+
+                                if (mLoading != null) mLoading.show();
+                                settingsViewModel.getUserInfo(token.getAccess_token()).observe(getViewLifecycleOwner(), info -> {
+                                    if (mLoading != null) mLoading.dismiss();
+
+                                    // 用户信息
+                                    bundle.putSerializable(ConstantUtil.KEY_USER_INFO, info);
+                                    mAlipay.setDescription(getString(R.string.logedin, info.getUser_info().getUname()));
+                                });
+
+                                if (getActivity() != null) {
+                                    getActivity().getIntent().putExtras(bundle);
+                                    getActivity().setResult(Activity.RESULT_OK, getActivity().getIntent());
+                                }
+
+                                Log.d("Authorization", "token -- > " + token.toString());
                             });
                 });
             }
@@ -183,17 +206,5 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     public void onLoading() {
         if (mLoading != null)
             mLoading.dismiss();
-    }
-
-    /**
-     * {@link SettingsActivity}回调的登陆信息
-     *
-     * @param bundle
-     */
-    @Override
-    public void onLogin(Bundle bundle) {
-        this.bundle = bundle;
-
-        mAlipay.setDescription(getContext().getString(R.string.logedin, "小鱼子酱"));
     }
 }

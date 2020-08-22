@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.model;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdate;
+import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
@@ -39,7 +40,12 @@ public interface Api {
     @POST("server/UpdateUserAvatar.php")
     Call<DomainAvatarUpdate> updateAvatar(@Part MultipartBody.Part photo, @Part("uid") RequestBody uid);
 
-
+    /**
+     * 用access_token换取用户基本信息
+     */
+    @FormUrlEncoded
+    @POST("server/getUserInfo.php")
+    Call<DomainGetUserInfo> getUserInfo(@Field("access_token") String token);
 
     /**
      * 获取首页最新消息

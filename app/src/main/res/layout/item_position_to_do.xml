@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/button_sheet_white">
+
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/img"
+        android:layout_width="@dimen/home_item_image"
+        android:layout_height="@dimen/home_item_image"
+        android:layout_marginStart="@dimen/general_padding"
+        android:layout_marginTop="@dimen/general_padding"
+        android:layout_marginBottom="@dimen/general_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@drawable/iphone"
+        app:roundedCornerRadius="@dimen/general_padding" />
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding_large"
+        android:maxLines="2"
+        android:text="iPhone 20 限时半价出"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintEnd_toStartOf="@id/imageView2"
+        app:layout_constraintStart_toEndOf="@id/img"
+        app:layout_constraintTop_toTopOf="@+id/img"
+        app:layout_goneMarginEnd="@dimen/general_padding" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_round_theme"
+        android:drawableStart="@drawable/ic_time"
+        android:drawablePadding="@dimen/general_padding_small"
+        android:paddingStart="@dimen/general_padding"
+        android:paddingTop="@dimen/general_padding_small"
+        android:paddingEnd="@dimen/general_padding"
+        android:paddingBottom="@dimen/general_padding_small"
+        android:text="@string/countDown"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintBottom_toBottomOf="@+id/img"
+        app:layout_constraintStart_toStartOf="@id/title" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginEnd="@dimen/general_padding_large"
+        android:src="@drawable/ic_right_arrow"
+        app:layout_constraintBottom_toBottomOf="@+id/img"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/img" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

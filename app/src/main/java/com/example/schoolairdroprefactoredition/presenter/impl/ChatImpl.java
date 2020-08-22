@@ -1,17 +1,15 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import androidx.lifecycle.ViewModel;
-
 import com.example.schoolairdroprefactoredition.presenter.IChatPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IChatCallback;
 
-public class ChatImpl extends ViewModel implements IChatPresenter {
+public class ChatImpl implements IChatPresenter {
 
-    private IChatCallback mCallback = null;
+    private IChatCallback mCallback;
 
     @Override
     public void getChatHistories() {
-//        mCallback.onHistoriesLoaded(data);
+
     }
 
     @Override

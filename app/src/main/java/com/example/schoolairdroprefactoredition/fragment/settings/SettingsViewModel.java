@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 import com.example.schoolairdroprefactoredition.fragment.home.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISettingsCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.SettingsImpl;
@@ -13,6 +14,7 @@ public class SettingsViewModel extends BaseChildFragmentViewModel implements ISe
 
     private MutableLiveData<DomainAuthorizeGet> mAuthorizationKey = new MutableLiveData<>();
     private MutableLiveData<DomainAuthorize> mAuthorizedSession = new MutableLiveData<>();
+    private MutableLiveData<DomainGetUserInfo> mUserInfo = new MutableLiveData<>();
 
     private SettingsImpl settingsImpl;
 
@@ -31,6 +33,11 @@ public class SettingsViewModel extends BaseChildFragmentViewModel implements ISe
         return mAuthorizedSession;
     }
 
+    public LiveData<DomainGetUserInfo> getUserInfo(String token) {
+        settingsImpl.getUserInfo(token);
+        return mUserInfo;
+    }
+
     @Override
     public void onPublicKeyGot(DomainAuthorizeGet authorization) {
         mAuthorizationKey.postValue(authorization);
@@ -39,6 +46,11 @@ public class SettingsViewModel extends BaseChildFragmentViewModel implements ISe
     @Override
     public void onAuthorizationSuccess(DomainAuthorize authorization) {
         mAuthorizedSession.postValue(authorization);
+    }
+
+    @Override
+    public void onUserInfoLoaded(DomainGetUserInfo info) {
+        mUserInfo.postValue(info);
     }
 
     @Override
