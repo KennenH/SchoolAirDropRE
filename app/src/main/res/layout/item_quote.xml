@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/general_padding">
+    app:cardCornerRadius="@dimen/general_padding"
+    app:cardElevation="1dp">
 
     <com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto
         android:layout_width="match_parent"

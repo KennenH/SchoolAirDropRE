@@ -26,7 +26,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.arrangeplace.ArrangePlaceActivity" />
+        <activity
+            android:name=".activity.transactionstate.TransactionStateActivity"
+            android:label="" />
+        <activity android:name=".activity.arrangeplace.UnselectedTransactionActivity" />
+        <activity android:name=".activity.arrangeplace.SelectPositionActivity" />
         <activity android:name=".activity.settings.LoginActivity" />
         <activity android:name=".activity.addnew.SellingAddSetActivity" />
         <activity android:name=".activity.addnew.SellingAddNewActivity" />
@@ -47,7 +51,7 @@
         <activity android:name=".activity.quote.QuoteActivity" />
         <activity
             android:name=".activity.chat.ChatActivity"
-            android:windowSoftInputMode="stateAlwaysHidden|adjustResize" />
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".activity.settings.UserActivity" />
         <activity
             android:name=".activity.map.AMapActivity"

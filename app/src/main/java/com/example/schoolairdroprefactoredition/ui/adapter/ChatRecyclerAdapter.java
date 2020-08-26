@@ -11,6 +11,7 @@ import com.example.schoolairdroprefactoredition.activity.chat.entity.ChatSendIma
 import com.example.schoolairdroprefactoredition.activity.chat.entity.ChatSendMessageEntity;
 
 public class ChatRecyclerAdapter extends BaseBinderAdapter {
+
     public ChatRecyclerAdapter() {
         super();
         init();
@@ -20,7 +21,6 @@ public class ChatRecyclerAdapter extends BaseBinderAdapter {
         addItemBinder(ChatSendMessageEntity.class, new ChatSendMessageBinder())
                 .addItemBinder(ChatReceiveMessageEntity.class, new ChatReceiveMessageBinder())
                 .addItemBinder(ChatSendImageEntity.class, new ChatSendImageBinder())
-                .addItemBinder(ChatReceiveImageEntity.class, new ChatReceiveImageBinder())
-        ;
+                .addItemBinder(ChatReceiveImageEntity.class, new ChatReceiveImageBinder());
     }
 }

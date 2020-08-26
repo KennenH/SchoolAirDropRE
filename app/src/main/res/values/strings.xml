@@ -169,6 +169,8 @@
     <string name="relocate">重新定位</string>
     <string name="refuse">拒绝</string>
     <string name="accept">接受</string>
+    <string name="toBeAgreedPosition">您与%s待约定地点的物品</string>
+    <string name="noItemToAgree">您与%s没有待约定地点的物品</string>
 
 
 </resources>

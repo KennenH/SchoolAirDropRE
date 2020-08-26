@@ -17,4 +17,6 @@ public class ChatSendMessageBinder extends QuickItemBinder<ChatSendMessageEntity
     public void convert(@NotNull BaseViewHolder holder, ChatSendMessageEntity data) {
         holder.setText(R.id.send_image, data.getMessage());
     }
+
+
 }

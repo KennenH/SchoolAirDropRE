@@ -32,7 +32,7 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.activity.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.activity.chat.entity.ChatReceiveMessageEntity;
 import com.example.schoolairdroprefactoredition.activity.chat.entity.ChatSendMessageEntity;
-import com.example.schoolairdroprefactoredition.model.adapterbean.MorePanelBean;
+import com.example.schoolairdroprefactoredition.activity.chat.panel.PanelMore;
 import com.example.schoolairdroprefactoredition.presenter.impl.ChatViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.MorePanelAdapter;
@@ -42,9 +42,6 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static androidx.recyclerview.widget.RecyclerView.SCROLL_STATE_DRAGGING;
 
 public class ChatActivity extends ImmersionStatusBarActivity implements OnRefreshListener {
@@ -53,6 +50,10 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
         Intent intent = new Intent(context, ChatActivity.class);
         context.startActivity(intent);
     }
+
+    public static final int TAKE_PHOTO = 111; // requestCode take photo
+    public static final int PICK_PHOTO = 222; // requestCode select from album
+    public static final int SELECT_POSITION = 333; // requestCode arrange transaction position
 
     private PanelSwitchHelper mHelper;
 
@@ -79,6 +80,30 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
     private int mUnfilledHeight = 0;
 
     @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_chat);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
+
+        setSupportActionBar(findViewById(R.id.toolbar));
+        mUserName = findViewById(R.id.user_name);
+        mInput = findViewById(R.id.edit_view);
+        mEmoji = findViewById(R.id.chat_bar_emotion);
+        mMore = findViewById(R.id.chat_bar_addition);
+        mSend = findViewById(R.id.chat_bar_send);
+        mChatRecycler = findViewById(R.id.recycler_view);
+        mEmojiRecycler = findViewById(R.id.emoji_recycler);
+        mMoreRecycler = findViewById(R.id.more_recycler);
+
+        mSend.setVisibility(View.GONE);
+
+        initRecyclerLists();
+        initEvents();
+        initAnim();
+    }
+
+    @Override
     protected void onStart() {
         super.onStart();
         if (mHelper == null) {
@@ -86,7 +111,6 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
                     .addEditTextFocusChangeListener((view, b) -> {
                         if (!b) KeyboardUtils.hideSoftInput(this);
                     })
-                    .contentScrollOutsideEnable(true)
                     .addContentScrollMeasurer(new ContentScrollMeasurer() {
                         @Override
                         public int getScrollDistance(int defaultDistance) {
@@ -107,7 +131,6 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
                         public void onKeyboard() {
                             mEmoji.setSelected(false);
                             mMore.setSelected(false);
-                            scrollToFirst();
                         }
 
                         @Override
@@ -123,36 +146,10 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
                                 mEmoji.setSelected(((PanelView) view).getId() == R.id.panel_emotion);
                                 mMore.setSelected(((PanelView) view).getId() == R.id.panel_addition);
                             }
-                            scrollToFirst();
                         }
                     })
                     .build();
         }
-
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chat);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
-
-        setSupportActionBar(findViewById(R.id.toolbar));
-        mUserName = findViewById(R.id.user_name);
-        mInput = findViewById(R.id.edit_view);
-        mEmoji = findViewById(R.id.chat_bar_emoji);
-        mMore = findViewById(R.id.chat_bar_more);
-        mSend = findViewById(R.id.chat_bar_send);
-        mChatRecycler = findViewById(R.id.recycler_view);
-        mEmojiRecycler = findViewById(R.id.emoji_recycler);
-        mMoreRecycler = findViewById(R.id.more_recycler);
-
-        mSend.setVisibility(View.GONE);
-
-        initRecyclerLists();
-        initEvents();
-        initAnim();
     }
 
 
@@ -190,7 +187,9 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
     ///////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// 初始化页面 //////////////////////////////////
 
-    // 初始化动画
+    /**
+     * 初始化动画
+     */
     private void initAnim() {
         sendOut = AnimationUtils.loadAnimation(this, R.anim.send_fade_out_right);
         moreOut = AnimationUtils.loadAnimation(this, R.anim.send_fade_out_right);
@@ -198,13 +197,13 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
         sendOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                mMore.setEnabled(false);
+                mSend.setEnabled(false);
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 mSend.setVisibility(View.GONE);
-                mMore.setEnabled(true);
+                mSend.setEnabled(true);
             }
 
             @Override
@@ -216,13 +215,13 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
         moreOut.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-                mSend.setEnabled(false);
+                mMore.setEnabled(false);
             }
 
             @Override
             public void onAnimationEnd(Animation animation) {
                 mMore.setVisibility(View.GONE);
-                mSend.setEnabled(true);
+                mMore.setEnabled(true);
             }
 
             @Override
@@ -232,7 +231,9 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
         });
     }
 
-    // 初始化事件监听
+    /**
+     * 初始化监听事件
+     */
     private void initEvents() {
         // 输入框输入监听
         mInput.addTextChangedListener(new TextWatcher() {
@@ -267,7 +268,7 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
         mChatRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (newState == SCROLL_STATE_DRAGGING) { // 滑动时
+                if (newState == SCROLL_STATE_DRAGGING) { // 消息列表滑动时隐藏键盘和面板
                     if (mHelper.isKeyboardState())
                         mInput.clearFocus();
                     else if (mHelper.isPanelState())
@@ -280,19 +281,21 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
                 super.onScrolled(recyclerView, dx, dy);
                 RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
                 if (layoutManager instanceof LinearLayoutManager) {
-//                    int childCount = recyclerView.getChildCount();
-//                    if (childCount > 0) {
-                    View newestChildView = recyclerView.getChildAt(0);
-                    int bottom = newestChildView.getBottom();
-                    int listHeight = mChatRecycler.getHeight() - mChatRecycler.getPaddingBottom();
-                    mUnfilledHeight = listHeight - bottom;
-//                    }
+                    int childCount = recyclerView.getChildCount();
+                    if (childCount > 0) {
+                        View newestChildView = recyclerView.getChildAt(0);
+                        int bottom = newestChildView.getBottom();
+                        int listHeight = mChatRecycler.getHeight() - mChatRecycler.getPaddingBottom();
+                        mUnfilledHeight = listHeight - bottom;
+                    }
                 }
             }
         });
     }
 
-    // 初始化列表
+    /**
+     * 初始化所有RV
+     */
     private void initRecyclerLists() {
         // 聊天列表
         mChatLayoutManager = new LinearLayoutManager(this);
@@ -303,39 +306,29 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
         mChatRecycler.setAdapter(mChatRecyclerAdapter);
 
 
-        // 键盘中表情按钮，一排七个，均匀分布
+        // 键盘中Emotion按钮，一排七个，均匀分布
         GridLayoutManager emojiManager = new GridLayoutManager(this, 7);
-        mEmojiRecycler.addItemDecoration(new GridItemDecoration(7, getResources().getDimension(R.dimen.toolbar_center_margin)));
         mEmojiRecycler.setLayoutManager(emojiManager);
+        mEmojiRecycler.addItemDecoration(new GridItemDecoration(7, getResources().getDimension(R.dimen.toolbar_icon)));
 
 
-        // 键盘中更多按键，一排四个，均匀分布
+        // 键盘中Addition按键，一排四个，均匀分布
         GridLayoutManager moreManager = new GridLayoutManager(this, 4);
+        mMoreRecycler.setLayoutManager(moreManager);
         mMoreRecycler.addItemDecoration(new GridItemDecoration(4, getResources().getDimension(R.dimen.toolbar_center_margin)));
         MorePanelAdapter morePanelAdapter = new MorePanelAdapter();
-        morePanelAdapter.setList(getMorePanelItem());
-        mMoreRecycler.setLayoutManager(moreManager);
+        morePanelAdapter.setList(PanelMore.getPanelMore());
         mMoreRecycler.setAdapter(morePanelAdapter);
     }
 
-    // 更多按钮内容填充
-    private List<MorePanelBean> getMorePanelItem() {
-        List<MorePanelBean> list = new ArrayList<>();
-        MorePanelBean quote = new MorePanelBean(R.drawable.ic_quote); // 报价
-        MorePanelBean album = new MorePanelBean(R.drawable.ic_album); // 相册
-        MorePanelBean camera = new MorePanelBean(R.drawable.ic_camera); // 相机
-        MorePanelBean location = new MorePanelBean(R.drawable.ic_map); // 约定地点
-        list.add(quote);
-        list.add(album);
-        list.add(camera);
-        list.add(location);
-        return list;
-    }
+
     ////////////////////////////////// 初始化页面 //////////////////////////////////
     ///////////////////////////////////////////////////////////////////////////////
 
 
-    // 显示发送按钮，隐藏更多按钮
+    /**
+     * 显示发送按钮，隐藏Addition按钮
+     */
     private void showSend() {
         if (!isSendShowing) {
             isSendShowing = true;
@@ -345,7 +338,9 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
         }
     }
 
-    // 隐藏发送按钮，显示更多按钮
+    /**
+     * 显示Addition按钮，隐藏发送按钮
+     */
     private void hideSend() {
         if (isSendShowing) {
             isSendShowing = false;
@@ -355,9 +350,11 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
         }
     }
 
-    // 将列表滑动至最新消息
+    /**
+     * 将列表滑动至最底下
+     */
     private void scrollToFirst() {
-        mChatRecycler.smoothScrollToPosition(0);
+        mChatLayoutManager.scrollToPosition(0);
     }
 
 }

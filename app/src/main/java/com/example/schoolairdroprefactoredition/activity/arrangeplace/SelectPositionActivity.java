@@ -6,11 +6,15 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
@@ -18,8 +22,14 @@ import com.example.schoolairdroprefactoredition.ui.adapter.ArrangePositionRecycl
 import com.example.schoolairdroprefactoredition.ui.components.ArrangePositionHeader;
 import com.example.schoolairdroprefactoredition.ui.components.Location;
 
-public class ArrangePlaceActivity extends AppCompatActivity {
+public class SelectPositionActivity extends AppCompatActivity {
 
+    public static void startForResult(Context context, int requestCode) {
+        Intent intent = new Intent(context, SelectPositionActivity.class);
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).startActivityForResult(intent, requestCode);
+        }
+    }
 
     private Location mCity;
     private EditText mSearch;
@@ -35,7 +45,7 @@ public class ArrangePlaceActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_arrange_place);
+        setContentView(R.layout.activity_select_position);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         final Toolbar toolbar = findViewById(R.id.toolbar);
@@ -44,7 +54,6 @@ public class ArrangePlaceActivity extends AppCompatActivity {
         mCity = findViewById(R.id.city);
         mDistrict = findViewById(R.id.district);
         mSearch = findViewById(R.id.search);
-        mHeader = new ArrangePositionHeader(this);
 
         mSearchRecycler = findViewById(R.id.search_recycler);
         mPOIRecycler = findViewById(R.id.poi_recycler);
@@ -57,8 +66,16 @@ public class ArrangePlaceActivity extends AppCompatActivity {
         mSearchAdapter = new ArrangePositionRecyclerAdapter();
         mPOIAdapter = new ArrangePositionRecyclerAdapter();
 
+        mHeader = new ArrangePositionHeader(this);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        final int marginSE = (int) getResources().getDimension(R.dimen.general_padding_bit_larger);
+        final int marginTB = (int) getResources().getDimension(R.dimen.general_padding);
+        params.setMargins(marginSE, marginTB, marginSE, marginTB);
+        mHeader.setLayoutParams(params);
         mPOIAdapter.addHeaderView(mHeader);
 
+        mSearchRecycler.setAdapter(mSearchAdapter);
+        mPOIRecycler.setAdapter(mPOIAdapter);
     }
 
     private void showPOI() {

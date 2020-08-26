@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="@color/colorAccent"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintTop_toTopOf="@+id/toolbar" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_left_white" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.35" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.1" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.9" />
+
+    <LinearLayout
+        android:id="@+id/state_wrapper"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/state_progress_bar"
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <TextView
+            android:id="@+id/state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="等待买家付款"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSizeLarger" />
+
+        <TextView
+            android:id="@+id/remaining"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="23:59:59"
+            android:textColor="@color/colorPrimaryLight"
+            android:textSize="@dimen/textSizeLarger" />
+
+    </LinearLayout>
+
+
+    <com.kofigyan.stateprogressbar.StateProgressBar
+        android:id="@+id/state_progress_bar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/guideline"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/state_wrapper"
+        app:spb_animateToCurrentProgressState="true"
+        app:spb_animationDuration="@integer/animFastSpeed"
+        app:spb_checkStateCompleted="true"
+        app:spb_currentStateNumber="two"
+        app:spb_maxStateNumber="four"
+        app:spb_stateBackgroundColor="@color/white"
+        app:spb_stateDescriptionColor="#808080"
+        app:spb_stateForegroundColor="@color/colorPrimaryGreen"
+        app:spb_stateNumberBackgroundColor="#808080"
+        app:spb_stateNumberForegroundColor="#eeeeee" />
+
+    <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            android:padding="@dimen/general_padding_large">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_rounded_white"
+                    android:padding="@dimen/general_padding_bit_larger"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/tip"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="@dimen/general_padding_large"
+                        android:text="我已收到物品，并且已经验收。"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/textSizeNormal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/incompatible"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/general_padding"
+                        android:layout_marginEnd="@dimen/general_padding"
+                        android:background="@drawable/button_rounded_primary5"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/general_padding_large"
+                        android:paddingBottom="@dimen/general_padding_large"
+                        android:text="实物与描述不符"
+                        android:textSize="@dimen/textSizeNormal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/QR_code"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/tip" />
+
+                    <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
+                        android:id="@+id/QR_code"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/general_padding"
+                        android:background="@drawable/button_rounded_theme"
+                        android:gravity="center"
+                        android:paddingTop="@dimen/general_padding_large"
+                        android:paddingBottom="@dimen/general_padding_large"
+                        android:text="[img src=ic_qr/]收货码"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/textSizeNormal"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@id/incompatible"
+                        app:layout_constraintTop_toTopOf="@+id/incompatible" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/general_padding_large"
+                    android:background="@drawable/bg_rounded_white"
+                    android:padding="@dimen/general_padding_bit_larger"
+                    app:layout_constraintTop_toBottomOf="@id/constraintLayout">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/avatar"
+                        android:layout_width="@dimen/toolbar_icon_large"
+                        android:layout_height="@dimen/toolbar_icon_large"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:placeholderImage="@drawable/logo_placeholder"
+                        app:roundedCornerRadius="@dimen/general_padding_small" />
+
+                    <TextView
+                        android:id="@+id/user_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/general_padding_bit_larger"
+                        android:layout_marginEnd="@dimen/general_padding_bit_larger"
+                        android:ellipsize="end"
+                        android:text="特朗普"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/textSizeNormal"
+                        app:layout_constraintBottom_toBottomOf="@+id/avatar"
+                        app:layout_constraintEnd_toStartOf="@+id/chat"
+                        app:layout_constraintStart_toEndOf="@+id/avatar"
+                        app:layout_constraintTop_toTopOf="@+id/avatar" />
+
+                    <ImageView
+                        android:id="@+id/chat"
+                        android:layout_width="@dimen/toolbar_icon_large"
+                        android:layout_height="@dimen/toolbar_icon_large"
+                        android:src="@drawable/ic_message"
+                        app:layout_constraintBottom_toBottomOf="@+id/avatar"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="@+id/avatar" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/seller_warning"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/general_padding_large"
+                    android:background="@drawable/bg_rounded_white"
+                    android:padding="@dimen/general_padding_bit_larger"
+                    app:layout_constraintTop_toBottomOf="@id/constraintLayout1">
+
+                    <ImageView
+                        android:id="@+id/warning"
+                        android:layout_width="@dimen/toolbar_icon_large"
+                        android:layout_height="@dimen/toolbar_icon_large"
+                        android:padding="@dimen/general_padding_small"
+                        android:src="@drawable/ic_warning"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/general_padding_bit_larger"
+                        android:text="如果倒计时结束，卖家未完成交付，将会扣除卖家信用分数。"
+                        android:textSize="@dimen/textSizeNormal"
+                        app:layout_constraintBottom_toBottomOf="@+id/warning"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toEndOf="@+id/warning"
+                        app:layout_constraintTop_toTopOf="@+id/warning" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

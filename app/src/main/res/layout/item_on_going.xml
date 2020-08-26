@@ -8,7 +8,8 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_rounded_white">
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/on_going_img"
@@ -90,6 +91,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/general_padding_small"
             android:text="校园空投"
+            android:textSize="@dimen/textSizeNormal"
             app:layout_constraintBottom_toBottomOf="@+id/on_going_user_avatar"
             app:layout_constraintStart_toEndOf="@+id/on_going_user_avatar"
             app:layout_constraintTop_toTopOf="@+id/on_going_user_avatar" />

@@ -23,8 +23,13 @@ import com.blankj.utilcode.util.ScreenUtils;
  */
 public class MarginItemDecoration extends RecyclerView.ItemDecoration {
     private int space = ScreenUtils.getAppScreenWidth() / 70;
+    private boolean noTop = false;
 
     public MarginItemDecoration() {
+    }
+
+    public MarginItemDecoration(boolean noTop) {
+        this.noTop = noTop;
     }
 
     @Override
@@ -33,9 +38,9 @@ public class MarginItemDecoration extends RecyclerView.ItemDecoration {
             parent.setPadding(space, 0, space, 0);
 
         int pos = parent.getChildAdapterPosition(view);
-        if (pos == 0)
+        if (pos == 0 && !noTop)
             outRect.top = space * 2;
-        else
+        else if (pos != 0)
             outRect.top = space;
 
         if (pos == parent.getChildCount())
