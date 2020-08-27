@@ -23,6 +23,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.ContentScrollMeasurer;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
@@ -36,9 +38,10 @@ import com.example.schoolairdroprefactoredition.activity.chat.panel.PanelMore;
 import com.example.schoolairdroprefactoredition.presenter.impl.ChatViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.MorePanelAdapter;
+import com.example.schoolairdroprefactoredition.utils.decoration.DecorationUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.GridItemDecoration;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import org.jetbrains.annotations.Nullable;
 
@@ -124,7 +127,26 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
                     })
                     .addPanelChangeListener(new OnPanelChangeListener() {
                         @Override
-                        public void onPanelSizeChange(@Nullable IPanelView iPanelView, boolean b, int i, int i1, int i2, int i3) {
+                        public void onPanelSizeChange(@Nullable IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
+                            if (panelView instanceof PanelView) {
+                                switch (((PanelView) panelView).getId()) {
+                                    case R.id.panel_emotion:
+
+                                        break;
+                                    case R.id.panel_addition: {
+                                        GridLayoutManager moreManager = new GridLayoutManager(ChatActivity.this, 4);
+                                        mMoreRecycler.setLayoutManager(moreManager);
+                                        int space = DecorationUtil.getSpace(4, getResources().getDimension(R.dimen.toolbar_center_margin));
+                                        mMoreRecycler.setPadding(space, space, space, space);
+                                        mMoreRecycler.addItemDecoration(new GridItemDecoration(space));
+                                        MorePanelAdapter morePanelAdapter = new MorePanelAdapter();
+                                        morePanelAdapter.setList(PanelMore.getPanelMore());
+                                        mMoreRecycler.setAdapter(morePanelAdapter);
+                                        morePanelAdapter.notifyDataSetChanged();
+                                        break;
+                                    }
+                                }
+                            }
                         }
 
                         @Override
@@ -313,12 +335,7 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
 
 
         // 键盘中Addition按键，一排四个，均匀分布
-        GridLayoutManager moreManager = new GridLayoutManager(this, 4);
-        mMoreRecycler.setLayoutManager(moreManager);
-        mMoreRecycler.addItemDecoration(new GridItemDecoration(4, getResources().getDimension(R.dimen.toolbar_center_margin)));
-        MorePanelAdapter morePanelAdapter = new MorePanelAdapter();
-        morePanelAdapter.setList(PanelMore.getPanelMore());
-        mMoreRecycler.setAdapter(morePanelAdapter);
+
     }
 
 

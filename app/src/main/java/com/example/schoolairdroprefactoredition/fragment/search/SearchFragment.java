@@ -30,7 +30,7 @@ import com.example.schoolairdroprefactoredition.ui.adapter.SearchSuggestionRecyc
 import com.example.schoolairdroprefactoredition.ui.components.SearchBar;
 import com.example.schoolairdroprefactoredition.ui.components.SearchHistoryHeader;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 
 public class SearchFragment extends Fragment implements SearchBar.OnSearchActionListener, EndlessRecyclerView.OnLoadMoreListener {
     private SearchViewModel searchViewModel;

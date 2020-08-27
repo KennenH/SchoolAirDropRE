@@ -17,9 +17,9 @@ import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerVie
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 public class HomeNewsFragment extends BaseChildFragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseChildFragmentViewModel.OnRequestListener {
     private HomeNewsFragmentViewModel homeContentFragmentViewModel;
@@ -27,7 +27,10 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     private SmartRefreshLayout mRefresh;
 
     private EndlessRecyclerView mEndlessRecyclerView;
+
     private HomeNewsRecyclerAdapter mHomeNewsRecyclerAdapter;
+
+    private StaggeredGridLayoutManager mManager;
 
     private AMapLocation mLocation;
 
@@ -64,19 +67,19 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         mRefresh.setOnRefreshListener(this);
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 
-        StaggeredGridLayoutManager manager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        mEndlessRecyclerView.setLayoutManager(manager);
+        mManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mEndlessRecyclerView.setLayoutManager(mManager);
         mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration());
         mHomeNewsRecyclerAdapter = new HomeNewsRecyclerAdapter();
         mEndlessRecyclerView.setAdapter(mHomeNewsRecyclerAdapter);
 
-        mEndlessRecyclerView.post(() -> {
-            // 刷新布局管理器和item decoration 解决错误的spacing
-            manager.invalidateSpanAssignments();
-            mEndlessRecyclerView.invalidateItemDecorations();
-        });
-
         homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> mHomeNewsRecyclerAdapter.setList(data));
+    }
+
+    private void invalidateDecoration() {
+        mManager.invalidateSpanAssignments();
+        mEndlessRecyclerView.invalidateItemDecorations();
+        mHomeNewsRecyclerAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -92,6 +95,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
                 homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
                     showContentContainer();
                     mHomeNewsRecyclerAdapter.setList(data);
+                    invalidateDecoration();
                 });
             } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
         } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
@@ -102,6 +106,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         if (mLocation != null) {
             homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
                 mHomeNewsRecyclerAdapter.setList(data);
+                invalidateDecoration();
                 showContentContainer();
                 refreshLayout.finishRefresh();
             });
@@ -112,6 +117,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     public void autoLoadMore(EndlessRecyclerView recycler) {
         homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
             mHomeNewsRecyclerAdapter.addData(data);
+            invalidateDecoration();
             showContentContainer();
             recycler.finishLoading();
         });

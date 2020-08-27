@@ -116,4 +116,9 @@
         <item name="android:textColor">@color/primaryText</item>
         <item name="android:textSize">@dimen/textSizeNormal</item>
     </style>
+
+    <style name="NormalTabText" parent="TextAppearance.Design.Tab">
+        <item name="android:textSize">@dimen/textSizeNormal</item>
+    </style>
+
 </resources>

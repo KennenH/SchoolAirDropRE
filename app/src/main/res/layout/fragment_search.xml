@@ -45,7 +45,7 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.appcompat.widget.Toolbar>
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/refresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -86,5 +86,5 @@
                 app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
 
         </FrameLayout>
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>

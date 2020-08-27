@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.activity.transactionstate;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
@@ -14,7 +15,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.activity.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.activity.chat.ChatActivity;
+import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.kofigyan.stateprogressbar.StateProgressBar;
 
@@ -42,7 +45,9 @@ public class TransactionStateActivity extends AppCompatActivity implements View.
         setContentView(R.layout.activity_transaction_state);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        setSupportActionBar(findViewById(R.id.toolbar));
+        final Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        StatusBarUtil.setTranslucentForImageView(this, 0, toolbar);
         mState = findViewById(R.id.state);
         mRemaining = findViewById(R.id.remaining);
         mProgress = findViewById(R.id.state_progress_bar);

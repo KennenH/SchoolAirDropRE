@@ -66,6 +66,9 @@ public class QuoteDecoration extends RecyclerView.ItemDecoration {
         else
             outRect.top = (int) gap;
 
+        if (pos == parent.getChildCount() - 1)
+            outRect.bottom = (int) gap;
+
         outRect.right = (int) gap;
         outRect.left = (int) gap;
     }

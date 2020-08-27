@@ -41,7 +41,6 @@ public class QuoteActivity extends ImmersionStatusBarActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
         ((TextView) findViewById(R.id.name)).setText(R.string.quote);
 
-
         mTabLayout = findViewById(R.id.tab);
         mPager = findViewById(R.id.pager);
 

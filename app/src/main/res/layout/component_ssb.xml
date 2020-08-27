@@ -26,8 +26,8 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:padding="@dimen/general_padding_tiny"
-            android:textSize="21dp"
-            tools:text="5" />
+            android:text="0"
+            android:textSize="21dp" />
 
         <TextView
             android:id="@+id/my_selling_t"
@@ -61,11 +61,11 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:padding="@dimen/general_padding_tiny"
+            android:text="0"
             android:textSize="21dp"
             app:layout_constraintBaseline_toBaselineOf="@id/my_selling"
             app:layout_constraintEnd_toEndOf="@+id/my_sold_t"
-            app:layout_constraintStart_toStartOf="@+id/my_sold_t"
-            tools:text="3" />
+            app:layout_constraintStart_toStartOf="@+id/my_sold_t" />
 
         <TextView
             android:id="@+id/my_sold_t"
@@ -98,11 +98,11 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:padding="@dimen/general_padding_tiny"
+            android:text="0"
             android:textSize="21dp"
             app:layout_constraintBaseline_toBaselineOf="@id/my_sold"
             app:layout_constraintEnd_toEndOf="@+id/my_bought_t"
-            app:layout_constraintStart_toStartOf="@+id/my_bought_t"
-            tools:text="12" />
+            app:layout_constraintStart_toStartOf="@+id/my_bought_t" />
 
         <TextView
             android:id="@+id/my_bought_t"

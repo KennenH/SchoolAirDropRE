@@ -4,8 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
-import com.example.schoolairdroprefactoredition.R;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 
 import me.jessyan.autosize.AutoSizeCompat;
 

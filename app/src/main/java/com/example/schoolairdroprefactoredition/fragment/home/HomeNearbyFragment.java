@@ -18,9 +18,9 @@ import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAda
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 public class HomeNearbyFragment extends BaseChildFragment
         implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseChildFragmentViewModel.OnRequestListener {

@@ -11,15 +11,15 @@ import androidx.annotation.ColorInt;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.scwang.smartrefresh.layout.api.RefreshHeader;
-import com.scwang.smartrefresh.layout.api.RefreshKernel;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.constant.RefreshState;
-import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
-import com.scwang.smartrefresh.layout.internal.InternalAbstract;
-import com.scwang.smartrefresh.layout.util.SmartUtil;
+import com.scwang.smart.refresh.layout.api.RefreshHeader;
+import com.scwang.smart.refresh.layout.api.RefreshKernel;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.constant.RefreshState;
+import com.scwang.smart.refresh.layout.constant.SpinnerStyle;
+import com.scwang.smart.refresh.layout.simple.SimpleComponent;
+import com.scwang.smart.refresh.layout.util.SmartUtil;
 
-public class DeliveryHeader extends InternalAbstract implements RefreshHeader {
+public class DeliveryHeader extends SimpleComponent implements RefreshHeader {
 
     //<editor-fold desc="static">
     protected static String[] umbrellaPaths = new String[]{
@@ -247,7 +247,7 @@ public class DeliveryHeader extends InternalAbstract implements RefreshHeader {
 
     /**
      * @param colors 对应Xml中配置的 srlPrimaryColor srlAccentColor
-     * @deprecated 请使用 {@link RefreshLayout#setPrimaryColorsId(int...)}
+     * @deprecated 请使用 {@link com.scwang.smart.refresh.layout.api.RefreshLayout#setPrimaryColorsId(int...)}
      */
     @Override@Deprecated
     public void setPrimaryColors(@ColorInt int ... colors) {

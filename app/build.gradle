@@ -53,15 +53,15 @@ dependencies {
     //base recycler view
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     //utils
-    implementation 'com.blankj:utilcodex:1.27.6'
+    implementation 'com.blankj:utilcodex:1.29.0'
     //retrofit
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
     //flex box
     implementation 'com.google.android:flexbox:2.0.1'
     //smart refresh layout
-    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.2'
-    implementation 'com.scwang.smartrefresh:SmartRefreshHorizontal:1.0.0-andx'
+    implementation  'com.scwang.smart:refresh-layout-kernel:2.0.1'
+
     // glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
