@@ -31,7 +31,12 @@
     <string name="statistics">统计(%1$d)</string>
     <string name="userJoinTime">#%1$d年%2$d月%3$d日加入</string>
     <string name="time">$1$d年$2$d月$3$d日</string>
-    <string name="logedin">已登陆 $1%s</string>
+    <string name="logedin">已登陆 %s</string>
+    <string name="remainingTime">剩余\n $1%d:$2%d:$3%d</string>
+    <string name="textRemainCount">剩余%d字可输入</string>
+    <string name="toBeAgreedPosition">您与%s待约定地点的物品</string>
+    <string name="noItemToAgree">您与%s没有待约定地点的物品</string>
+    <string name="countDown" translatable="false">$1%d:$2%d:$3%d</string>
 
 
     <!--  translatable  -->
@@ -150,13 +155,11 @@
     <string name="reportAssessment">反馈评估</string>
     <string name="assessmentUp">信用较上期上升</string>
     <string name="assessmentDown">信用较上期下降</string>
-    <string name="remainingTime">剩余\n$1%d:$2%d:$3%d</string>
     <string name="waitingForDelivery">待交付</string>
     <string name="waitingForPay">待付款</string>
     <string name="cover">封面</string>
     <string name="picSet">图片集</string>
-    <string name="textRemainCount">剩余%1$d字可输入</string>
-    <string name="Locating">正在获取定位信息…</string>
+    <string name="locating">正在获取定位信息…</string>
     <string name="errorNetLocation">网络或定位出错啦…</string>
     <string name="errorEmpty">附近还没有人发布过物品 快去发布你自己的物品吧</string>
     <string name="postMyItem">去发布我的物品</string>
@@ -165,12 +168,21 @@
     <string name="pleaseLogin">请登录</string>
     <string name="selectPosition">选择地点</string>
     <string name="searchPosition">搜索附近的地点</string>
-    <string name="countDown" translatable="false">$1%d:$2%d:$3%d</string>
     <string name="relocate">重新定位</string>
     <string name="refuse">拒绝</string>
     <string name="accept">接受</string>
-    <string name="toBeAgreedPosition">您与%s待约定地点的物品</string>
-    <string name="noItemToAgree">您与%s没有待约定地点的物品</string>
+    <string name="locationPermissionTitle">允许校园空投获取定位权限</string>
+    <string name="cameraPermissionTitle">允许校园空投获取相机权限</string>
+    <string name="albumPermissionTitle">允许校园空投获取相册权限</string>
+    <string name="waitingForBuyerPayment">等待买家付款</string>
+    <string name="WaitingForSellerToDeliver">等待卖家交付</string>
+    <string name="warningForSeller">如果倒计时结束，卖家未完成交付，将会扣除卖家信用分数。</string>
+    <string name="notMatchDescription">实物与描述不符</string>
+    <string name="receivingCode">[img src=ic_qr/] 收货码</string>
+    <string name="goSetting">去设置</string>
+    <string name="notNow">不了</string>
+    <string name="clickToGrantLocationPermission">开启定位</string>
+    <string name="permissionDenied">权限被拒绝啦…</string>
 
 
 </resources>

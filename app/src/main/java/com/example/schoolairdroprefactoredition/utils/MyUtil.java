@@ -100,7 +100,7 @@ public class MyUtil {
     }
 
     public static LoadingPopupView loading(Context context) {
-        return (LoadingPopupView) new XPopup.Builder(context).asLoading();
+        return new XPopup.Builder(context).asLoading();
     }
 
 
@@ -146,9 +146,11 @@ public class MyUtil {
                 .setPictureWindowAnimationStyle(animStyle)//相册启动退出动画
                 .isZoomAnim(false)
                 .maxSelectNum(max)
-                .imageSpanCount(3)//列表每行显示个数
-                .selectionData(selected)//是否传入已选图片
-                .isPreviewImage(false)//是否预览图片
+                .isMaxSelectEnabledMask(true)
+                .imageSpanCount(3)
+                .selectionData(selected)
+                .isCamera(false)
+                .isPreviewImage(false)
                 .setRecyclerAnimationMode(AnimationType.ALPHA_IN_ANIMATION)
                 .forResult(requestCode);
     }
@@ -162,10 +164,12 @@ public class MyUtil {
                 .imageEngine(GlideEngine.createGlideEngine())
                 .setPictureWindowAnimationStyle(animStyle)//相册启动退出动画
                 .isZoomAnim(false)
+                .isCamera(false)
+                .isMaxSelectEnabledMask(true)
                 .maxSelectNum(max)
-                .imageSpanCount(3)//列表每行显示个数
-                .selectionData(selected)//是否传入已选图片
-                .isPreviewImage(false)//是否预览图片
+                .imageSpanCount(3)
+                .selectionData(selected)
+                .isPreviewImage(false)
                 .setRecyclerAnimationMode(AnimationType.ALPHA_IN_ANIMATION)
                 .forResult(requestCode);
     }

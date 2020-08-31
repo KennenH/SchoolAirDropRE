@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.fragment.home;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -10,6 +11,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.amap.api.location.AMapLocation;
 import com.example.schoolairdroprefactoredition.activity.MainActivity;
+import com.example.schoolairdroprefactoredition.activity.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.activity.addnew.SellingAddNewActivity;
 import com.example.schoolairdroprefactoredition.activity.map.AMapActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
@@ -68,8 +70,18 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
             if (aMapLocation.getErrorCode() == 0) {
                 if (mOnLocationCallbackListener != null)
                     mOnLocationCallbackListener.onLocated(aMapLocation);
-            }
+            } else
+                mOnLocationCallbackListener.onLocationError();
         }
+    }
+
+    /**
+     * 来自{@link MainActivity}的定位回调
+     * 定位权限已被拒绝
+     */
+    @Override
+    public void onPermissionDenied() {
+        showPlaceholder(StatePlaceHolder.TYPE_DENIED);
     }
 
     /**
@@ -104,8 +116,10 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
      */
     @Override
     public void onRetry(View view) {
-        if (getActivity() instanceof MainActivity)
-            ((MainActivity) getActivity()).startLocation();
+        if (getActivity() instanceof MainActivity) {
+            Log.d("哈哈哈哈啊哈哈哈哈哈啊哈", "正在手动调用权限获取！");
+            ((MainActivity) getActivity()).requestLocationPermission(PermissionBaseActivity.RequestType.MANUAL);
+        }
     }
 
     /**
@@ -125,6 +139,8 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
      */
     public interface OnLocationCallbackListener {
         void onLocated(AMapLocation aMapLocation);
+
+        void onLocationError();
     }
 
     public void setOnLocationCallbackListener(OnLocationCallbackListener listener) {

@@ -15,7 +15,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.activity.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.activity.chat.ChatActivity;
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
 import com.facebook.drawee.view.SimpleDraweeView;

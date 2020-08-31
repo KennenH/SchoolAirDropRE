@@ -1,18 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.scwang.smart.refresh.layout.SmartRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/smartRefreshLayout2"
+    android:id="@+id/root_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary"
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintTop_toTopOf="parent"
+    app:srlEnableNestedScrolling="true"
+    app:srlEnableOverScrollDrag="true"
+    app:srlEnablePreviewInEditMode="false"
+    app:srlFooterMaxDragRate="1.2"
+    app:srlHeaderMaxDragRate="0.6"
+    app:srlHeaderTriggerRate="10"
     tools:context=".fragment.my.MyFragment">
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="200dp"
         android:background="@color/white" />
 
     <androidx.core.widget.NestedScrollView
@@ -163,4 +169,4 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>
-</com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
+</com.scwang.smart.refresh.layout.SmartRefreshLayout>

@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.amap.api.location.AMapLocation;
+import com.example.schoolairdroprefactoredition.activity.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
@@ -58,7 +59,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         initRecycler();
 
         if (mLocation == null)
-            locate();// 请求MainActivity的定位
+            locate(PermissionBaseActivity.RequestType.AUTO);// 自动请求MainActivity的定位
 
         return binding.getRoot();
     }
@@ -99,6 +100,11 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
                 });
             } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
         } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+    }
+
+    @Override
+    public void onLocationError() {
+        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 
     @Override

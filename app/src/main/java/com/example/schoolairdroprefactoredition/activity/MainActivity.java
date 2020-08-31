@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 
 import com.amap.api.location.AMapLocation;
@@ -24,18 +25,18 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-import androidx.lifecycle.ViewModelProvider;
 
 import me.jessyan.autosize.AutoSizeCompat;
 
-public class MainActivity extends ImmersionStatusBarActivity implements BottomNavigationView.OnNavigationItemSelectedListener, AMapLocationListener {
+public class MainActivity extends PermissionBaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, AMapLocationListener {
+
     private FragmentManager mFragmentManager = getSupportFragmentManager();
 
-    private AMapLocationClient mLocationClient;
-    private AMapLocationClientOption mLocationOption;
-
-    private OnLocationListener mOnLocationListener;
     private OnLoginActivityListener mOnLoginActivityListener;
+    protected OnLocationListener mOnLocationListener;
+
+    private AMapLocationClient mClient;
+    private AMapLocationClientOption mOption;
 
     private ParentNewsFragment mHome;
     private ParentPurchasingFragment mPurchase;
@@ -71,47 +72,37 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
         showFragment(mHome);
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == SettingsActivity.REQUEST_LOGIN) { // 来自SettingsActivity的登录结果返回
-                if (data != null && mOnLoginActivityListener != null) {
-                    mOnLoginActivityListener.onLoginActivity(data.getExtras());
-                }
-            }
-        }
-    }
-
-    /**
-     * 设置沉浸式状态栏
-     * 白色 字体黑色
-     */
-    @Override
-    protected void setStatusBar() {
-
-    }
-
     /**
      * 定位
      * 结果回调至
      * {@link ParentPurchasingFragment}
      * {@link ParentNewsFragment}
      */
-    public void startLocation() {
-        if (mLocationClient == null) {
-            mLocationClient = new AMapLocationClient(this);
-            mLocationClient.setLocationListener(this);
+    private void startLocation() {
+        if (mClient == null) {
+            mClient = new AMapLocationClient(this);
+            mClient.setLocationListener(this);
         }
-        if (mLocationOption == null) {
-            mLocationOption = new AMapLocationClientOption();
-            mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        if (mOption == null) {
+            mOption = new AMapLocationClientOption();
+            mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         }
-        mLocationOption.setOnceLocation(true);
-        mLocationOption.setLocationCacheEnable(true);
-        mLocationClient.setLocationOption(mLocationOption);
-        mLocationClient.startLocation();
+        mOption.setOnceLocation(true);
+        mOption.setLocationCacheEnable(true);
+        mClient.setLocationOption(mOption);
+        mClient.startLocation();
+    }
+
+    @Override
+    protected void locationGranted() {
+        super.locationGranted();
+        startLocation();
+    }
+
+    @Override
+    protected void locationDenied() {
+        super.locationDenied();
+        mOnLocationListener.onPermissionDenied();
     }
 
     private void showFragment(Fragment fragment) {
@@ -140,24 +131,30 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SettingsActivity.REQUEST_LOGIN) { // 来自SettingsActivity的登录结果返回
+                if (data != null && mOnLoginActivityListener != null) {
+                    mOnLoginActivityListener.onLoginActivity(data.getExtras());
+                }
+            }
+        }
+    }
 
     //============== Location listener begin ================
     // 定位成功后的回调监听
     public interface OnLocationListener {
         void onLocated(AMapLocation aMapLocation);
+
+        void onPermissionDenied();
     }
 
     public void setOnLocationListener(OnLocationListener listener) {
         mOnLocationListener = listener;
     }
-
-    @Override
-    public void onLocationChanged(AMapLocation aMapLocation) {
-        if (mOnLocationListener != null)
-            mOnLocationListener.onLocated(aMapLocation);
-    }
     //============== Location listener end ================
-
 
     //============== Login listener begin =================
     //登录成功后的回调监听
@@ -170,6 +167,11 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
     }
     //=============== Login listener end ==================
 
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (mOnLocationListener != null)
+            mOnLocationListener.onLocated(aMapLocation);
+    }
 
     @Override
     protected void onDestroy() {
@@ -179,13 +181,13 @@ public class MainActivity extends ImmersionStatusBarActivity implements BottomNa
         mMy = null;
         mPurchase = null;
 
-        if (mLocationClient != null) {
-            mLocationClient.unRegisterLocationListener(this);
-            mLocationClient.onDestroy();
-            mLocationClient = null;
-            mLocationOption = null;
-            mOnLocationListener = null;
+        if (mClient != null) {
+            mClient.onDestroy();
+            mClient = null;
+            mOption = null;
         }
+        mOnLoginActivityListener = null;
+        mOnLocationListener = null;
     }
 
     @Override

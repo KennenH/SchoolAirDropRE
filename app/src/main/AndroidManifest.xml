@@ -26,6 +26,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activity.PermissionBaseActivity" />
         <activity
             android:name=".activity.transactionstate.TransactionStateActivity"
             android:label="" />

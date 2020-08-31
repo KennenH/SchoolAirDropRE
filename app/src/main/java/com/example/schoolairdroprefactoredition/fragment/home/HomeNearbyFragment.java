@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.location.AMapLocation;
+import com.example.schoolairdroprefactoredition.activity.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
@@ -55,7 +56,7 @@ public class HomeNearbyFragment extends BaseChildFragment
 
         initRecycler();
         if (mLocation == null)
-            locate();// 请求MainActivity的定位
+            locate(PermissionBaseActivity.RequestType.AUTO);// 自动请求MainActivity的定位
 
         return binding.getRoot();
     }
@@ -80,9 +81,7 @@ public class HomeNearbyFragment extends BaseChildFragment
                 showContentContainer();
                 mLocation = aMapLocation;
 
-                // 定位回调成功以后才为网络api设置观察者
                 homeContentFragmentViewModel.getGoodsInfo(mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
-                    Log.d("HomeNearByFragment", "data == > " + data.toString());
                     if (data.size() == 0) {
                         showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
                     } else {
@@ -92,6 +91,11 @@ public class HomeNearbyFragment extends BaseChildFragment
                 });
             } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
         } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+    }
+
+    @Override
+    public void onLocationError() {
+        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 
     @Override
@@ -109,7 +113,7 @@ public class HomeNearbyFragment extends BaseChildFragment
         } else { // 定位失败时通知父Fragment显示PlaceHolder
             refreshLayout.finishRefresh();
             showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
-            locate();
+            locate(PermissionBaseActivity.RequestType.AUTO);// 自动请求MainActivity的定位
         }
     }
 
@@ -122,7 +126,6 @@ public class HomeNearbyFragment extends BaseChildFragment
                 recycler.finishLoading();
             });
         } else {
-            Log.d("NearByFragment", "autoLoadMore erupted");
             showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
             recycler.finishLoading();
         }
@@ -131,12 +134,10 @@ public class HomeNearbyFragment extends BaseChildFragment
     @Override
     public void onError() {
         showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
-        Log.d("NearByFragment", "On Error Callback");
     }
 
     @Override
     public void onLoading() {
         showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
-        Log.d("NearByFragment", "========== On Loading ==========");
     }
 }

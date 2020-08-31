@@ -9,9 +9,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.LinearGradient;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -23,8 +25,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.blankj.utilcode.util.KeyboardUtils;
-import com.blankj.utilcode.util.ScreenUtils;
-import com.blankj.utilcode.util.SizeUtils;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.ContentScrollMeasurer;
 import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
@@ -128,25 +128,6 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
                     .addPanelChangeListener(new OnPanelChangeListener() {
                         @Override
                         public void onPanelSizeChange(@Nullable IPanelView panelView, boolean portrait, int oldWidth, int oldHeight, int width, int height) {
-                            if (panelView instanceof PanelView) {
-                                switch (((PanelView) panelView).getId()) {
-                                    case R.id.panel_emotion:
-
-                                        break;
-                                    case R.id.panel_addition: {
-                                        GridLayoutManager moreManager = new GridLayoutManager(ChatActivity.this, 4);
-                                        mMoreRecycler.setLayoutManager(moreManager);
-                                        int space = DecorationUtil.getSpace(4, getResources().getDimension(R.dimen.toolbar_center_margin));
-                                        mMoreRecycler.setPadding(space, space, space, space);
-                                        mMoreRecycler.addItemDecoration(new GridItemDecoration(space));
-                                        MorePanelAdapter morePanelAdapter = new MorePanelAdapter();
-                                        morePanelAdapter.setList(PanelMore.getPanelMore());
-                                        mMoreRecycler.setAdapter(morePanelAdapter);
-                                        morePanelAdapter.notifyDataSetChanged();
-                                        break;
-                                    }
-                                }
-                            }
                         }
 
                         @Override
@@ -204,7 +185,6 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         // todo 加载10条历史记录
     }
-
 
     ///////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// 初始化页面 //////////////////////////////////
@@ -335,6 +315,15 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
 
 
         // 键盘中Addition按键，一排四个，均匀分布
+        GridLayoutManager moreManager = new GridLayoutManager(ChatActivity.this, 4);
+        mMoreRecycler.setLayoutManager(moreManager);
+        int space = DecorationUtil.getSpace(4, getResources().getDimension(R.dimen.toolbar_center_margin));
+        mMoreRecycler.setPadding(space, space, space, space);
+        mMoreRecycler.addItemDecoration(new GridItemDecoration(space));
+        MorePanelAdapter morePanelAdapter = new MorePanelAdapter();
+        morePanelAdapter.setList(PanelMore.getPanelMore());
+        mMoreRecycler.setAdapter(morePanelAdapter);
+        morePanelAdapter.notifyDataSetChanged();
 
     }
 

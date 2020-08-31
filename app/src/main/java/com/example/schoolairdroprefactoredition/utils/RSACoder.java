@@ -123,7 +123,7 @@ public class RSACoder {
     /***************************************公钥加密*************************************/
 
     /**
-     * 公钥加密
+     * 公钥加密(已验证)
      *
      * @param textToEncrypt 要加密的信息
      * @param publicK       公钥
@@ -138,7 +138,7 @@ public class RSACoder {
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             CipherOutputStream cipherOutputStream = new CipherOutputStream(
                     outputStream, inCipher);
-            cipherOutputStream.write(Base64.decode(textToEncrypt, Base64.DEFAULT));
+            cipherOutputStream.write(Base64.decode(textToEncrypt.getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP));
             cipherOutputStream.close();
 
             byte[] vals = outputStream.toByteArray();
@@ -150,7 +150,7 @@ public class RSACoder {
     }
 
     /**
-     * 公钥加密
+     * 公钥加密(不可用)
      *
      * @param data      要加密的信息
      * @param publicKey 公钥

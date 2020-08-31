@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.fragment.my;
 
 import android.os.Bundle;
+import android.text.style.AlignmentSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,9 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
+import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 public class MyFragment extends Fragment implements View.OnClickListener, MainActivity.OnLoginActivityListener, BaseChildFragmentViewModel.OnRequestListener {
 
@@ -71,6 +75,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
         binding.myOnGoing.setOnClickListener(this);
         binding.myLikes.setOnClickListener(this);
         binding.mySettings.setOnClickListener(this);
+        binding.rootLayout.setOnRefreshListener(RefreshLayout::finishRefresh);
 
         return binding.getRoot();
     }

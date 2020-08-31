@@ -19,13 +19,16 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
     public static final int TYPE_LOADING = 77;//状态 类型 正在加载
     public static final int TYPE_ERROR = 88;//状态 类型 错误
     public static final int TYPE_EMPTY = 99;//状态 类型 空
+    public static final int TYPE_DENIED = 11;//状态 类型 权限被拒
 
     private static final int ICON_LOADING = R.drawable.ic_loading;// 状态 图标 正在加载
-    private static final int ICON_ERROR = R.drawable.ic_error;// 状态 图标 错误
+    private static final int ICON_ERROR = R.drawable.ic_location_error;// 状态 图标 错误
     private static final int ICON_EMPTY = R.drawable.ic_empty;// 状态 图标 空
+    private static final int ICON_DENIED = R.drawable.ic_reject;// 状态 图标 权限被拒
 
     private static final int TIP_ERROR = R.string.errorNetLocation;// 状态 提示 错误
     private static final int TIP_EMPTY = R.string.errorEmpty;// 状态 提示 空
+    private static final int TIP_DENIED = R.string.permissionDenied;// 状态 提示 权限被拒
 
     private Animation mLoadingAnim;
 
@@ -54,8 +57,9 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
         mTip = findViewById(R.id.textView);
         mRefresh = findViewById(R.id.refresh);
         mAction = findViewById(R.id.button);
+
+        mRefresh.setOnClickListener(this);
         mAction.setOnClickListener(this);
-        mAction.setText(R.string.postMyItem);
 
         mLoadingAnim = AnimationUtils.loadAnimation(getContext(), R.anim.rotation_infinite);
 
@@ -70,9 +74,6 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
      *             {@link StatePlaceHolder#TYPE_ERROR}
      */
     public void setPlaceHolderType(int type) {
-        if (type != TYPE_EMPTY && type != TYPE_ERROR && type != TYPE_LOADING)
-            throw new IllegalArgumentException("no such type of placeholder");
-
         this.type = type;
         if (type == TYPE_ERROR) {
             // 网络或定位出错
@@ -85,16 +86,25 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
             // 附近没有物品
             mIcon.setImageResource(ICON_EMPTY);
             mTip.setText(TIP_EMPTY);
-            mRefresh.setVisibility(VISIBLE);
             mTip.setVisibility(VISIBLE);
+            mRefresh.setVisibility(VISIBLE);
             mAction.setVisibility(VISIBLE);
-        } else {
+            mAction.setText(R.string.postMyItem);
+        } else if (type == TYPE_LOADING) {
             // 正在加载
             mIcon.setImageResource(ICON_LOADING);
             mTip.setVisibility(GONE);
             mRefresh.setVisibility(GONE);
             mAction.setVisibility(GONE);
             mIcon.startAnimation(mLoadingAnim);
+        } else if (type == TYPE_DENIED) {
+            // 权限拒绝
+            mIcon.setImageResource(ICON_DENIED);
+            mTip.setText(TIP_DENIED);
+            mTip.setVisibility(VISIBLE);
+            mRefresh.setVisibility(GONE);
+            mAction.setText(R.string.clickToGrantLocationPermission);
+            mAction.setVisibility(VISIBLE);
         }
     }
 
@@ -145,7 +155,10 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
             }
         } else if (id == R.id.button) {
             if (mOnPlaceHolderActionListener != null) {
-                mOnPlaceHolderActionListener.onPostMyItem(v);
+                if (type == TYPE_EMPTY)
+                    mOnPlaceHolderActionListener.onPostMyItem(v); // 当附近无物品时按钮效果为发布物品
+                else
+                    mOnPlaceHolderActionListener.onRetry(v); // 否则当权限被拒绝时为开启权限
             }
         }
     }

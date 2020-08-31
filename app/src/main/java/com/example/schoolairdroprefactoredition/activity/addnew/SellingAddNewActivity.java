@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -24,7 +25,7 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.activity.TransactionBaseActivity;
+import com.example.schoolairdroprefactoredition.activity.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SellingOption;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
@@ -37,7 +38,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SellingAddNewActivity extends TransactionBaseActivity implements View.OnClickListener, AMapLocationListener {
+public class SellingAddNewActivity extends PermissionBaseActivity implements View.OnClickListener, AMapLocationListener {
 
     public static void start(Context context) {
         Intent intent = new Intent(context, SellingAddNewActivity.class);
@@ -55,15 +56,11 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
         }
     }
 
-
     public static final int REQUEST_ADD_NEW = 888;// 请求码 表单提交
     public static final String ADD_KEY = "AddNew";// 键 表单提交
 
     public static final int REQUEST_CODE_COVER = 219;// 请求码 封面
     public static final int REQUEST_CODE_PIC_SET = 11;// 请求码 图片集
-
-    private AMapLocationClient mLocationClient;
-    private AMapLocationClientOption mLocationOption;
 
     private SimpleDraweeView mCover;
     private RecyclerView mPicRecycler;
@@ -74,10 +71,15 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
     private SellingOption isSecondHand;
     private SellingOption mDescription;
 
+    private AMapLocationClient mClient;
+    private AMapLocationClientOption mOption;
+
     private List<LocalMedia> selected = new ArrayList<>();
     private List<LocalMedia> cover = new ArrayList<>();
 
     private HorizontalImageRecyclerAdapter mAdapter;
+
+    private int request;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,11 +113,50 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
         ImageView add = new ImageView(this);
         add.setLayoutParams(new LinearLayout.LayoutParams((int) getResources().getDimension(R.dimen.home_item_image), (int) getResources().getDimension(R.dimen.home_item_image)));
         add.setImageResource(R.drawable.bg_add_pic);
-        add.setOnClickListener(v -> MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_PIC_SET, selected, 6));
+        add.setOnClickListener(v -> {
+            request = REQUEST_CODE_PIC_SET;
+            requestAlbumPermission(RequestType.MANUAL);
+        });
         mAdapter.addFooterView(add);
         mPicRecycler.setAdapter(mAdapter);
 
-        locate();
+        requestLocationPermission(RequestType.AUTO);
+    }
+
+    @Override
+    protected void locationGranted() {
+        super.locationGranted();
+        startLocation();
+    }
+
+    @Override
+    protected void locationDenied() {
+        super.locationDenied();
+        mLocation.setDescription(getString(R.string.clickToGrantLocationPermission));
+    }
+
+    @Override
+    protected void cameraGranted() {
+        super.cameraGranted();
+    }
+
+    @Override
+    protected void cameraDenied() {
+        super.cameraDenied();
+    }
+
+    @Override
+    protected void albumGranted() {
+        super.albumGranted();
+        if (request == REQUEST_CODE_COVER)
+            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_COVER, cover, 1);
+        else if (request == REQUEST_CODE_PIC_SET)
+            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_PIC_SET, selected, 6);
+    }
+
+    @Override
+    protected void albumDenied() {
+        super.albumDenied();
     }
 
     @Override
@@ -151,19 +192,19 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
     /**
      * 定位
      */
-    private void locate() {
-        if (mLocationClient == null) {
-            mLocationClient = new AMapLocationClient(this);
-            mLocationClient.setLocationListener(this);
+    private void startLocation() {
+        if (mClient == null) {
+            mClient = new AMapLocationClient(this);
+            mClient.setLocationListener(this);
         }
-        if (mLocationOption == null)
-            mLocationOption = new AMapLocationClientOption();
-        mLocation.setDescription(getString(R.string.Locating));
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
-        mLocationOption.setOnceLocation(true);
-        mLocationOption.setLocationCacheEnable(true);
-        mLocationClient.setLocationOption(mLocationOption);
-        mLocationClient.startLocation();
+        if (mOption == null)
+            mOption = new AMapLocationClientOption();
+        mLocation.setDescription(getString(R.string.locating));
+        mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        mOption.setOnceLocation(true);
+        mOption.setLocationCacheEnable(true);
+        mClient.setLocationOption(mOption);
+        mClient.startLocation();
     }
 
     /**
@@ -227,7 +268,8 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
         int id = v.getId();
         switch (id) {
             case R.id.cover:
-                MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_COVER, cover, 1);
+                request = REQUEST_CODE_COVER;
+                requestAlbumPermission(RequestType.MANUAL);
                 break;
             case R.id.option_title:
                 SellingAddSetActivity.start(this, SellingAddSetActivity.TYPE_TITLE, mTitle.getText().toString());
@@ -236,7 +278,7 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
 
                 break;
             case R.id.option_location:
-                locate();
+                requestLocationPermission(RequestType.MANUAL);
                 break;
             case R.id.option_negotiable:
                 isNegotiable.toggle();
@@ -271,11 +313,11 @@ public class SellingAddNewActivity extends TransactionBaseActivity implements Vi
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mLocationClient != null) {
-            mLocationClient.unRegisterLocationListener(this);
-            mLocationClient.onDestroy();
-            mLocationClient = null;
-            mLocationOption = null;
+        if (mClient != null) {
+            mClient.unRegisterLocationListener(this);
+            mClient.onDestroy();
+            mClient = null;
+            mOption = null;
         }
     }
 }

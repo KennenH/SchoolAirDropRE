@@ -126,7 +126,6 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == LoginActivity.REQUEST_LOGIN) {
                 // 请求公钥与sessionID
-
                 if (mLoading != null)
                     mLoading.show();
                 settingsViewModel.getPublicKey().observe(getViewLifecycleOwner(), key -> {
@@ -135,7 +134,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
                             , "client_credentials"
                             , "testclient"
                             , "123456"
-                            , "19858120611"
+                            , "11111122222"
                             , key.getPublic_key())
                             .observe(getViewLifecycleOwner(), token -> {
                                 if (mLoading != null) mLoading.dismiss();

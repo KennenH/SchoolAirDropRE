@@ -3,39 +3,29 @@ package com.example.schoolairdroprefactoredition.activity.map;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.location.Location;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.AMapOptions;
-import com.amap.api.maps2d.CameraUpdate;
-import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
-import com.amap.api.maps2d.UiSettings;
-import com.amap.api.maps2d.model.CameraPosition;
-import com.amap.api.maps2d.model.LatLng;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.activity.ImmersionStatusBarActivity;
+import com.example.schoolairdroprefactoredition.activity.PermissionBaseActivity;
 import com.jaeger.library.StatusBarUtil;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AMapActivity extends ImmersionStatusBarActivity implements LocationSource, AMapLocationListener {
+public class AMapActivity extends PermissionBaseActivity implements LocationSource, AMapLocationListener {
 
     public static final int REQUEST_CODE = 300;
     public static final String LOCATION_KEY = "AMapLocation";
@@ -67,7 +57,20 @@ public class AMapActivity extends ImmersionStatusBarActivity implements Location
 
         mMapView = findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
+
+        requestLocationPermission(RequestType.AUTO);
+    }
+
+    @Override
+    protected void locationGranted() {
+        super.locationGranted();
         displayMap();
+    }
+
+    @Override
+    protected void locationDenied() {
+        super.locationDenied();
+
     }
 
     private void displayMap() {

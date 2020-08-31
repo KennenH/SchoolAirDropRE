@@ -11,7 +11,7 @@
         android:layout_height="0dp"
         android:background="@color/colorAccent"
         app:layout_constraintBottom_toTopOf="@+id/guideline"
-        app:layout_constraintTop_toTopOf="@+id/toolbar" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -55,7 +55,7 @@
             android:id="@+id/state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="等待买家付款"
+            android:text="@string/waitingForBuyerPayment"
             android:textColor="@color/white"
             android:textSize="@dimen/textSizeLarger" />
 
@@ -136,7 +136,7 @@
                         android:gravity="center"
                         android:paddingTop="@dimen/general_padding_large"
                         android:paddingBottom="@dimen/general_padding_large"
-                        android:text="实物与描述不符"
+                        android:text="@string/notMatchDescription"
                         android:textSize="@dimen/textSizeNormal"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/QR_code"
@@ -146,16 +146,16 @@
                     <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
                         android:id="@+id/QR_code"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="0dp"
                         android:layout_marginStart="@dimen/general_padding"
                         android:background="@drawable/button_rounded_theme"
                         android:gravity="center"
                         android:paddingTop="@dimen/general_padding_large"
                         android:paddingBottom="@dimen/general_padding_large"
-                        android:text="[img src=ic_qr/]收货码"
+                        android:text="@string/receivingCode"
                         android:textColor="@color/white"
                         android:textSize="@dimen/textSizeNormal"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintBottom_toBottomOf="@+id/incompatible"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toEndOf="@id/incompatible"
                         app:layout_constraintTop_toTopOf="@+id/incompatible" />
@@ -229,7 +229,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/general_padding_bit_larger"
-                        android:text="如果倒计时结束，卖家未完成交付，将会扣除卖家信用分数。"
+                        android:text="@string/warningForSeller"
                         android:textSize="@dimen/textSizeNormal"
                         app:layout_constraintBottom_toBottomOf="@+id/warning"
                         app:layout_constraintEnd_toEndOf="parent"

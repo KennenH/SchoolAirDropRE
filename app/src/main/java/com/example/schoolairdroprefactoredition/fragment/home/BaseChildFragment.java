@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.fragment.home;
 import androidx.fragment.app.Fragment;
 
 import com.example.schoolairdroprefactoredition.activity.MainActivity;
+import com.example.schoolairdroprefactoredition.activity.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 
 public class BaseChildFragment extends Fragment {
@@ -29,12 +30,12 @@ public class BaseChildFragment extends Fragment {
     }
 
     /**
-     * 请求{@link MainActivity#startLocation()}的定位
+     * 请求{@link MainActivity#requestLocationPermission(int)} ()}的定位
      */
-    protected void locate() {
+    protected void locate(@PermissionBaseActivity.RequestType int type) {
         showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
         if (getActivity() instanceof MainActivity)
-            ((MainActivity) getActivity()).startLocation();
+            ((MainActivity) getActivity()).requestLocationPermission(type);
     }
 
 }
