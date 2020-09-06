@@ -22,6 +22,8 @@ public class ConstantUtil {
      * 校园空投 网络接口base url
      */
     public static String SCHOOL_AIR_DROP_BASE_URL = "http://106.54.110.46/inf/";
+    public static String SCHOOL_AIR_DROP_BASE_URL_NEW = "http://106.54.110.46:8000/";
+    public static String LOCAL = "http://10.0.2.2:8000/";
 
     public static final int MENU_CLICK_GAP = 1000;
 

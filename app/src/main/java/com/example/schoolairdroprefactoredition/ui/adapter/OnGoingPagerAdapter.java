@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.fragment.ongoing.OnGoingFragment;
+import com.example.schoolairdroprefactoredition.scene.ongoing.fragment.OnGoingFragment;
 
 public class OnGoingPagerAdapter extends FragmentPagerAdapter {
 

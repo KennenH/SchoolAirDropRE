@@ -29,7 +29,7 @@ public class DomainAuthorize implements Serializable {
     private String token_type;
 
     public String getAccess_token() {
-        return access_token;
+        return token_type + " " + access_token;
     }
 
     public void setAccess_token(String access_token) {

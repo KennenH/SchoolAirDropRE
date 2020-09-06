@@ -29,9 +29,9 @@ public class MyImpl implements IMyPresenter {
             public void onResponse(Call<DomainGetUserInfo> call, Response<DomainGetUserInfo> response) {
                 int code = response.code();
                 Response<DomainGetUserInfo> respond = response;
-                Log.d("MyImpl", respond.toString());
                 DomainGetUserInfo info = respond.body();
                 if (code == HttpURLConnection.HTTP_OK) {
+
                     if (info != null && info.isSuccess()) {
                         mCallback.onUserInfoLoaded(info);
                     } else

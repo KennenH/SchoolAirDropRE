@@ -132,7 +132,7 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
         void onRetry(View view);
 
         /**
-         * 发布我的物品 打开{@link com.example.schoolairdroprefactoredition.activity.addnew.SellingAddNewActivity}
+         * 发布我的物品 打开{@link com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity}
          *
          * @param view
          */

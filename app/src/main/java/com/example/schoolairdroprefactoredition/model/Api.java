@@ -11,11 +11,13 @@ import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -30,7 +32,7 @@ public interface Api {
      * 表单
      */
     @FormUrlEncoded
-    @POST("server/GetNearByGoods.php")
+    @POST("goods/getNearByGoods")
     Call<DomainGoodsInfo> getGoodsInfo(@Field("longitude") Double longitude, @Field("latitude") Double latitude);
 
     /**
@@ -43,9 +45,8 @@ public interface Api {
     /**
      * 用access_token换取用户基本信息
      */
-    @FormUrlEncoded
-    @POST("server/getUserInfo.php")
-    Call<DomainGetUserInfo> getUserInfo(@Field("access_token") String token);
+    @POST("user/getUserInfo")
+    Call<DomainGetUserInfo> getUserInfo(@Header("Authorization") String token);
 
     /**
      * 获取首页最新消息
@@ -72,15 +73,14 @@ public interface Api {
     /**
      * 服务器授权
      */
-    @GET("server/authorize.php")
+    @POST("authorize/login")
     Call<DomainAuthorizeGet> getAuthorizePublicKey();
 
     @FormUrlEncoded
-    @POST("server/authorize.php")
-    Call<DomainAuthorize> authorize(@Header("session_id") String sessionID
+    @POST("authorize/login")
+    Call<DomainAuthorize> authorize(@Header("Cookie") String sessionID
             , @Field("grant_type") String grantType
             , @Field("client_id") String clientID
             , @Field("client_secret") String clientSecret
-            , @Field("user_alipay") String encryptedAlipayID);
-
+            , @Field("alipay_id") String encryptedAlipayID);
 }

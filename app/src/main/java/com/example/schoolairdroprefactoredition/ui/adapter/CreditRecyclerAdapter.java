@@ -7,7 +7,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.activity.credit.CreditActivity;
+import com.example.schoolairdroprefactoredition.scene.credit.CreditActivity;
 import com.example.schoolairdroprefactoredition.model.databean.TestCreditHistory;
 import com.example.schoolairdroprefactoredition.ui.components.CreditAssessment;
 

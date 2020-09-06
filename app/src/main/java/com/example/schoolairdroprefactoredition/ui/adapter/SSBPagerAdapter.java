@@ -6,9 +6,9 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.schoolairdroprefactoredition.fragment.ssb.BoughtFragment;
-import com.example.schoolairdroprefactoredition.fragment.ssb.SellingFragment;
-import com.example.schoolairdroprefactoredition.fragment.ssb.SoldFragment;
+import com.example.schoolairdroprefactoredition.scene.ssb.fragment.BoughtFragment;
+import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SellingFragment;
+import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SoldFragment;
 
 public class SSBPagerAdapter extends FragmentPagerAdapter {
     public SSBPagerAdapter(@NonNull FragmentManager fm, int behavior) {

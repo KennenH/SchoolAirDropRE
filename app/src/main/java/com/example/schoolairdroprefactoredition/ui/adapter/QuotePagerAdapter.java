@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.fragment.quote.QuoteFragment;
+import com.example.schoolairdroprefactoredition.scene.quote.fragment.QuoteFragment;
 
 public class QuotePagerAdapter extends FragmentPagerAdapter {
 

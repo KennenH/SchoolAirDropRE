@@ -122,53 +122,19 @@ public class RSACoder {
 
     /***************************************公钥加密*************************************/
 
-    /**
-     * 公钥加密(已验证)
-     *
-     * @param textToEncrypt 要加密的信息
-     * @param publicK       公钥
-     * @return 加密后的信息
-     */
     public static String encryptWithPublicKey(String publicK, String textToEncrypt) {
+        String encoded = "";
+        byte[] encrypted;
         try {
-            PublicKey publicKey = getFromString(publicK);
-            Cipher inCipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-            inCipher.init(Cipher.ENCRYPT_MODE, publicKey);
-
-            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            CipherOutputStream cipherOutputStream = new CipherOutputStream(
-                    outputStream, inCipher);
-            cipherOutputStream.write(Base64.decode(textToEncrypt.getBytes(StandardCharsets.UTF_8), Base64.NO_WRAP));
-            cipherOutputStream.close();
-
-            byte[] vals = outputStream.toByteArray();
-            return Base64.encodeToString(vals, Base64.DEFAULT);
+            PublicKey pubKey = getFromString(publicK);
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1PADDING"); //or try with "RSA"
+            cipher.init(Cipher.ENCRYPT_MODE, pubKey);
+            encrypted = cipher.doFinal(textToEncrypt.getBytes(StandardCharsets.UTF_8));
+            encoded = Base64.encodeToString(encrypted, Base64.DEFAULT);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
         }
-    }
-
-    /**
-     * 公钥加密(不可用)
-     *
-     * @param data      要加密的信息
-     * @param publicKey 公钥
-     * @return 加密后的信息
-     */
-    public static String encryptByPublicKey(String publicKey, String data) {
-        try {
-            PublicKey publicK = getFromString(publicKey);
-            Cipher cipher = Cipher.getInstance("RSA/NONE/PKCS1PADDING");
-            cipher.init(Cipher.ENCRYPT_MODE, publicK);
-            byte[] encrypted = cipher.doFinal(data.getBytes(StandardCharsets.UTF_8));
-            String s = Base64.encodeToString(encrypted, Base64.NO_WRAP);
-            Log.d("RSA", "encrypted alipay id ---- > " + s);
-            return s;
-        } catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return encoded;
     }
 
     /**************************************************************************************/
@@ -180,7 +146,6 @@ public class RSACoder {
             pubKeyDER = pubKeyDER.replace("-----END PUBLIC KEY-----", "");
             pubKeyDER = pubKeyDER.replace("\n", "");
 
-            Log.d("RSA public key DER", pubKeyDER);
             byte[] encoded = Base64.decode(pubKeyDER, Base64.NO_WRAP);
             X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
             KeyFactory kf = KeyFactory.getInstance(KEY_ALGORITHM);

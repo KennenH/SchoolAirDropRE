@@ -5,8 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.activity.arrangeplace.UnselectedTransactionActivity;
-import com.example.schoolairdroprefactoredition.activity.chat.ChatActivity;
+import com.example.schoolairdroprefactoredition.scene.arrangeplace.UnselectedTransactionActivity;
+import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
 import com.example.schoolairdroprefactoredition.model.adapterbean.MorePanelBean;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 

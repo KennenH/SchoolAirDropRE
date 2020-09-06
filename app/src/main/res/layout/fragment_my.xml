@@ -14,7 +14,7 @@
     app:srlFooterMaxDragRate="1.2"
     app:srlHeaderMaxDragRate="0.6"
     app:srlHeaderTriggerRate="10"
-    tools:context=".fragment.my.MyFragment">
+    tools:context=".scene.main.my.MyFragment">
 
     <View
         android:layout_width="match_parent"
@@ -29,7 +29,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:splitMotionEvents="false">
-
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/my_info"

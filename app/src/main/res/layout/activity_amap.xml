@@ -5,7 +5,7 @@
     android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.map.AMapActivity">
+    tools:context=".scene.map.AMapActivity">
 
     <com.amap.api.maps2d.MapView
         android:id="@+id/map"

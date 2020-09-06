@@ -1,30 +1,25 @@
 package com.example.schoolairdroprefactoredition.domain;
 
 import java.io.Serializable;
+import java.util.List;
 
-public class DomainGetUserInfo implements Serializable {
+public class DomainGetUserInfo {
 
     @Override
     public String toString() {
         return "DomainGetUserInfo{" +
                 "success=" + success +
-                ", user_info=" + user_info +
+                ", data=" + data +
                 '}';
     }
 
     /**
      * success : true
-     * user_info : {
-     * "uid":"100002",
-     * "uname":"user_100002",
-     * "ugender":"m",
-     * "uphone":null,
-     * "user_img_path":"http://106.54.110.46/Avatars/default.jpg"
-     * }
+     * data : [{"uid":15,"uname":"user_15","ugender":"m","user_img_path":"http://106.54.110.46/public/assets/user/avatars/default.jpg","ualipay":"19858120611","uphone":null,"credit_num":2,"device_token":null}]
      */
 
     private boolean success;
-    private UserInfoBean user_info;
+    private List<DataBean> data;
 
     public boolean isSuccess() {
         return success;
@@ -34,46 +29,55 @@ public class DomainGetUserInfo implements Serializable {
         this.success = success;
     }
 
-    public UserInfoBean getUser_info() {
-        return user_info;
+    public List<DataBean> getData() {
+        return data;
     }
 
-    public void setUser_info(UserInfoBean user_info) {
-        this.user_info = user_info;
+    public void setData(List<DataBean> data) {
+        this.data = data;
     }
 
-    public static class UserInfoBean {
+    public static class DataBean implements Serializable {
 
         @Override
         public String toString() {
-            return "UserInfoBean{" +
-                    "uid='" + uid + '\'' +
+            return "DataBean{" +
+                    "uid=" + uid +
                     ", uname='" + uname + '\'' +
                     ", ugender='" + ugender + '\'' +
-                    ", uphone=" + uphone +
                     ", user_img_path='" + user_img_path + '\'' +
+                    ", ualipay='" + ualipay + '\'' +
+                    ", uphone=" + uphone +
+                    ", credit_num=" + credit_num +
+                    ", device_token=" + device_token +
                     '}';
         }
 
         /**
-         * uid : 100002
-         * uname : user_100002
+         * uid : 15
+         * uname : user_15
          * ugender : m
+         * user_img_path : http://106.54.110.46/public/assets/user/avatars/default.jpg
+         * ualipay : 19858120611
          * uphone : null
-         * user_img_path : http://106.54.110.46/Avatars/default.jpg
+         * credit_num : 2
+         * device_token : null
          */
 
-        private String uid;
+        private int uid;
         private String uname;
         private String ugender;
-        private Object uphone;
         private String user_img_path;
+        private String ualipay;
+        private String uphone;
+        private int credit_num;
+        private String device_token;
 
-        public String getUid() {
+        public int getUid() {
             return uid;
         }
 
-        public void setUid(String uid) {
+        public void setUid(int uid) {
             this.uid = uid;
         }
 
@@ -93,20 +97,44 @@ public class DomainGetUserInfo implements Serializable {
             this.ugender = ugender;
         }
 
-        public Object getUphone() {
-            return uphone;
-        }
-
-        public void setUphone(Object uphone) {
-            this.uphone = uphone;
-        }
-
         public String getUser_img_path() {
             return user_img_path;
         }
 
         public void setUser_img_path(String user_img_path) {
             this.user_img_path = user_img_path;
+        }
+
+        public String getUalipay() {
+            return ualipay;
+        }
+
+        public void setUalipay(String ualipay) {
+            this.ualipay = ualipay;
+        }
+
+        public Object getUphone() {
+            return uphone;
+        }
+
+        public void setUphone(String uphone) {
+            this.uphone = uphone;
+        }
+
+        public int getCredit_num() {
+            return credit_num;
+        }
+
+        public void setCredit_num(int credit_num) {
+            this.credit_num = credit_num;
+        }
+
+        public Object getDevice_token() {
+            return device_token;
+        }
+
+        public void setDevice_token(String device_token) {
+            this.device_token = device_token;
         }
     }
 }

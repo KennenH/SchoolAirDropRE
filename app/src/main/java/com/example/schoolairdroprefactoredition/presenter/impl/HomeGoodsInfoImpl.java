@@ -9,10 +9,12 @@ import com.example.schoolairdroprefactoredition.presenter.IHomeGoodsInfoPresente
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeGoodsInfoCallback;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Arrays;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -34,9 +36,14 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
             @Override
             public void onResponse(Call<DomainGoodsInfo> call, Response<DomainGoodsInfo> response) {
                 int code = response.code();
-                Response<DomainGoodsInfo> respond = response;
-                Log.d("HomeGoodsInfoImpl", respond.toString());
-                DomainGoodsInfo info = respond.body();
+                DomainGoodsInfo info = response.body();
+
+//                try {
+//                    Log.d("HomeGoodsInfoImpl", info.string());
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+
                 if (code == HttpURLConnection.HTTP_OK) {
                     if (info != null && info.isSuccess()) {
                         mCallback.onNearbyGoodsLoaded(info.getGoodsInfo());

@@ -6,8 +6,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
-import com.example.schoolairdroprefactoredition.fragment.home.HomeNearbyFragment;
-import com.example.schoolairdroprefactoredition.fragment.home.HomeNewsFragment;
+import com.example.schoolairdroprefactoredition.scene.main.home.HomeNearbyFragment;
+import com.example.schoolairdroprefactoredition.scene.main.home.HomeNewsFragment;
 
 public class HomePagerAdapter extends FragmentPagerAdapter {
 

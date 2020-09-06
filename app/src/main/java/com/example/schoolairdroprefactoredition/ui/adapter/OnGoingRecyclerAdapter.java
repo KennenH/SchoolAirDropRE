@@ -5,8 +5,8 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.activity.chat.ChatActivity;
-import com.example.schoolairdroprefactoredition.activity.transactionstate.TransactionStateActivity;
+import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
+import com.example.schoolairdroprefactoredition.scene.transactionstate.TransactionStateActivity;
 import com.example.schoolairdroprefactoredition.model.databean.TestOnGoingBean;
 
 import org.jetbrains.annotations.NotNull;

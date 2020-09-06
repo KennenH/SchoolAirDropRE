@@ -1,14 +1,14 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
 import com.chad.library.adapter.base.BaseBinderAdapter;
-import com.example.schoolairdroprefactoredition.activity.chat.binder.ChatReceiveImageBinder;
-import com.example.schoolairdroprefactoredition.activity.chat.binder.ChatReceiveMessageBinder;
-import com.example.schoolairdroprefactoredition.activity.chat.binder.ChatSendImageBinder;
-import com.example.schoolairdroprefactoredition.activity.chat.binder.ChatSendMessageBinder;
-import com.example.schoolairdroprefactoredition.activity.chat.entity.ChatReceiveImageEntity;
-import com.example.schoolairdroprefactoredition.activity.chat.entity.ChatReceiveMessageEntity;
-import com.example.schoolairdroprefactoredition.activity.chat.entity.ChatSendImageEntity;
-import com.example.schoolairdroprefactoredition.activity.chat.entity.ChatSendMessageEntity;
+import com.example.schoolairdroprefactoredition.scene.chat.binder.ChatReceiveImageBinder;
+import com.example.schoolairdroprefactoredition.scene.chat.binder.ChatReceiveMessageBinder;
+import com.example.schoolairdroprefactoredition.scene.chat.binder.ChatSendImageBinder;
+import com.example.schoolairdroprefactoredition.scene.chat.binder.ChatSendMessageBinder;
+import com.example.schoolairdroprefactoredition.scene.chat.entity.ChatReceiveImageEntity;
+import com.example.schoolairdroprefactoredition.scene.chat.entity.ChatReceiveMessageEntity;
+import com.example.schoolairdroprefactoredition.scene.chat.entity.ChatSendImageEntity;
+import com.example.schoolairdroprefactoredition.scene.chat.entity.ChatSendMessageEntity;
 
 public class ChatRecyclerAdapter extends BaseBinderAdapter {
 

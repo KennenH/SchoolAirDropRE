@@ -1,19 +1,12 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.activity.quote.QuoteDetailActivity;
+import com.example.schoolairdroprefactoredition.scene.quote.QuoteDetailActivity;
 import com.example.schoolairdroprefactoredition.model.databean.TestQuoteSectionItemBean;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
 
 public class QuoteRecyclerAdapter extends BaseQuickAdapter<TestQuoteSectionItemBean, BaseViewHolder> {
 

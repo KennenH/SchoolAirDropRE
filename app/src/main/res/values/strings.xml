@@ -4,12 +4,12 @@
     <string name="simplifiedChinese" translatable="false">简体中文</string>
     <string name="english" translatable="false">English</string>
 
-    <string name="indicator" translatable="false">/%1$d</string>
-    <string name="quoteHeaderNum" translatable="false">(%1$d)</string>
-    <string name="priceRMB" translatable="false">¥%1$d</string>
-    <string name="version" translatable="false">Version %1$s</string>
+    <string name="indicator" translatable="false">/$d</string>
+    <string name="quoteHeaderNum" translatable="false">($d)</string>
+    <string name="priceRMB" translatable="false">¥$d</string>
+    <string name="version" translatable="false">Version $s</string>
     <string name="rightsReserved" translatable="false">校园空投 版权所有\nCopyright© 2019–2020 SchoolAirDrop. All Rights Reserved.</string>
-    <string name="alipayID" translatable="false">%1$s</string>
+    <string name="alipayID" translatable="false">$s</string>
     <string name="userProtocol" translatable="false">《用户许可协议》</string>
     <string name="serviceProtocol" translatable="false">《校园空投服务条款》</string>
     <string name="fraction0" translatable="false">.00</string>
@@ -21,22 +21,24 @@
     <string name="itemSs" translatable="false">"[img src=ic_secondhand_small/] %s"</string>
     <string name="recyclerFooter" translatable="false">[img src=ic_line/]     [img src=ic_logo/]     [img src=ic_line/]</string>
 
+
     <!--  substitutions  -->
-    <string name="unprocessedSub">未处理(%1$d)</string>
-    <string name="processedSub">已处理(%1$d)</string>
-    <string name="orderID">订单编号 : %1$s</string>
+    <string name="unprocessedSub">未处理($d)</string>
+    <string name="processedSub">已处理($d)</string>
+    <string name="orderID">订单编号 : $s</string>
     <string name="orderCreation">创建时间 : %1$d-%2$d-%3$d</string>
     <string name="orderExpiration">失效时间 : %1$d-%2$d-%3$d</string>
-    <string name="alipayAccount">支付宝账号 : %1$s</string>
-    <string name="statistics">统计(%1$d)</string>
+    <string name="alipayAccount">支付宝账号 : $s</string>
+    <string name="statistics">统计($d)</string>
     <string name="userJoinTime">#%1$d年%2$d月%3$d日加入</string>
     <string name="time">$1$d年$2$d月$3$d日</string>
-    <string name="logedin">已登陆 %s</string>
+    <string name="loggedIn">已登录 %s</string>
     <string name="remainingTime">剩余\n $1%d:$2%d:$3%d</string>
     <string name="textRemainCount">剩余%d字可输入</string>
     <string name="toBeAgreedPosition">您与%s待约定地点的物品</string>
     <string name="noItemToAgree">您与%s没有待约定地点的物品</string>
     <string name="countDown" translatable="false">$1%d:$2%d:$3%d</string>
+    <string name="app_name_with_icon">[img src=ic_logo/] 校园空投</string>
 
 
     <!--  translatable  -->
@@ -171,9 +173,7 @@
     <string name="relocate">重新定位</string>
     <string name="refuse">拒绝</string>
     <string name="accept">接受</string>
-    <string name="locationPermissionTitle">允许校园空投获取定位权限</string>
-    <string name="cameraPermissionTitle">允许校园空投获取相机权限</string>
-    <string name="albumPermissionTitle">允许校园空投获取相册权限</string>
+    <string name="permissionTitle">需要权限</string>
     <string name="waitingForBuyerPayment">等待买家付款</string>
     <string name="WaitingForSellerToDeliver">等待卖家交付</string>
     <string name="warningForSeller">如果倒计时结束，卖家未完成交付，将会扣除卖家信用分数。</string>
@@ -183,6 +183,16 @@
     <string name="notNow">不了</string>
     <string name="clickToGrantLocationPermission">开启定位</string>
     <string name="permissionDenied">权限被拒绝啦…</string>
+    <string name="locationPermissionContentWithoutCheck">定位将用于获取首页信息、淘物附近在售、交易地点以及物品发布位置。若不允许，校园空投核心功能将不可用，确定退出App？</string>
+    <string name="locationPermissionContentWithCheck">定位将用于获取首页信息、淘物附近在售、交易地点以及物品发布位置。若不允许，校园空投核心功能将不可用。</string>
+    <string name="cameraPermissionContentWithoutCheck">相机将用于即时拍照，在上传头像以及物品发布时可能需要此功能。若不允许，上述功能将不可用，确定拒绝授予该权限？</string>
+    <string name="cameraPermissionContentWithCheck">相机将用于即时拍照，在上传头像以及物品发布时可能需要此功能。若不允许，上述功能将不可用。</string>
+    <string name="albumPermissionContentWithoutCheck">相册将用于选择图片，上传头像以及物品发布时可能需要此功能。若不允许，上述功能将不可用，确定拒绝授予该权限？</string>
+    <string name="albumPermissionContentWithCheck">相册将用于选择图片，上传头像以及物品发布时可能需要此功能。若不允许，上述功能将不可用。</string>
+    <string name="imSure">我确定</string>
+    <string name="retry">重试</string>
+    <string name="grantPermission">给予权限</string>
+    <string name="logged">已登录</string>
 
 
 </resources>

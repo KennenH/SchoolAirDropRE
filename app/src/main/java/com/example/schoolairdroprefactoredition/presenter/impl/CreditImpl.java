@@ -1,6 +1,6 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import com.example.schoolairdroprefactoredition.activity.credit.CreditActivity;
+import com.example.schoolairdroprefactoredition.scene.credit.CreditActivity;
 import com.example.schoolairdroprefactoredition.model.databean.TestCreditBean;
 import com.example.schoolairdroprefactoredition.model.databean.TestCreditHistory;
 import com.example.schoolairdroprefactoredition.presenter.ICreditPresenter;

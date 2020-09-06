@@ -26,17 +26,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.PermissionBaseActivity" />
+        <activity android:name=".scene.base.PermissionBaseActivity" />
         <activity
-            android:name=".activity.transactionstate.TransactionStateActivity"
+            android:name=".scene.transactionstate.TransactionStateActivity"
             android:label="" />
-        <activity android:name=".activity.arrangeplace.UnselectedTransactionActivity" />
-        <activity android:name=".activity.arrangeplace.SelectPositionActivity" />
-        <activity android:name=".activity.settings.LoginActivity" />
-        <activity android:name=".activity.addnew.SellingAddSetActivity" />
-        <activity android:name=".activity.addnew.SellingAddNewActivity" />
-        <activity android:name=".activity.ongoing.OnGoingActivity" />
-        <activity android:name=".activity.credit.CreditActivity" />
+        <activity android:name=".scene.arrangeplace.UnselectedTransactionActivity" />
+        <activity android:name=".scene.arrangeplace.SelectPositionActivity" />
+        <activity android:name=".scene.settings.LoginActivity" />
+        <activity android:name=".scene.addnew.SellingAddSetActivity" />
+        <activity android:name=".scene.addnew.SellingAddNewActivity" />
+        <activity android:name=".scene.ongoing.OnGoingActivity" />
+        <activity android:name=".scene.credit.CreditActivity" />
 
         <meta-data
             android:name="design_width_in_dp"
@@ -46,16 +46,16 @@
             android:value="640" />
 
         <activity
-            android:name=".activity.ssb.SSBActivity"
+            android:name=".scene.ssb.SSBActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".activity.quote.QuoteDetailActivity" />
-        <activity android:name=".activity.quote.QuoteActivity" />
+        <activity android:name=".scene.quote.QuoteDetailActivity" />
+        <activity android:name=".scene.quote.QuoteActivity" />
         <activity
-            android:name=".activity.chat.ChatActivity"
+            android:name=".scene.chat.ChatActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".activity.settings.UserActivity" />
+        <activity android:name=".scene.settings.UserActivity" />
         <activity
-            android:name=".activity.map.AMapActivity"
+            android:name=".scene.map.AMapActivity"
             android:label="" />
 
         <service
@@ -67,10 +67,10 @@
             android:value="000d70a1a333ed61daa264e000de94e1" />
 
         <activity
-            android:name=".activity.goods.GoodsActivity"
+            android:name=".scene.goods.GoodsActivity"
             android:label="" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".scene.main.MainActivity"
             android:configChanges="locale|layoutDirection|orientation|screenSize|keyboardHidden"
             android:label="@string/app_name">
             <intent-filter>
@@ -79,7 +79,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.settings.SettingsActivity" />
+        <activity android:name=".scene.settings.SettingsActivity" />
     </application>
 
 </manifest>
