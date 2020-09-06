@@ -6,10 +6,10 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
+import com.example.schoolairdroprefactoredition.domain.SearchHistories;
 import com.example.schoolairdroprefactoredition.model.databean.SearchSuggestionBean;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISearchCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.SearchImpl;
-import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 
 import java.util.List;
 
@@ -18,9 +18,9 @@ public class SearchViewModel extends ViewModel implements ISearchCallback {
 
     private SearchImpl mSearchImpl;
 
-    private MutableLiveData<List<DomainGoodsInfo.GoodsInfoBean>> mSearchResults;
-    private MutableLiveData<DomainSearchItems> mSearchHistories;
-    private MutableLiveData<SearchSuggestionBean> mSearchSuggestions;
+    private MutableLiveData<List<DomainGoodsInfo.DataBean>> mSearchResults = new MutableLiveData<>();
+    private MutableLiveData<SearchHistories> mSearchHistories = new MutableLiveData<>();
+    private MutableLiveData<SearchSuggestionBean> mSearchSuggestions = new MutableLiveData<>();
 
     public SearchViewModel() {
         mSearchImpl = new SearchImpl();
@@ -33,21 +33,18 @@ public class SearchViewModel extends ViewModel implements ISearchCallback {
     }
 
     @Override
-    public void onSearchResultLoaded(List<DomainGoodsInfo.GoodsInfoBean> domainGoodsInfo) {
-        mSearchResults = new MutableLiveData<>();
-        mSearchResults.setValue(domainGoodsInfo);
+    public void onSearchResultLoaded(List<DomainGoodsInfo.DataBean> beans) {
+        mSearchResults.postValue(beans);
     }
 
     @Override
-    public void onSearchHistoryLoaded(DomainSearchItems domainSearchItems) {
-        mSearchHistories = new MutableLiveData<>();
-        mSearchHistories.setValue(domainSearchItems);
+    public void onSearchHistoryLoaded(SearchHistories histories) {
+        mSearchHistories.postValue(histories);
     }
 
     @Override
     public void onSearchSuggestionLoaded(SearchSuggestionBean domainSearchItems) {
-        mSearchSuggestions = new MutableLiveData<>();
-        mSearchSuggestions.setValue(domainSearchItems);
+        mSearchSuggestions.postValue(domainSearchItems);
     }
 
     @Override
@@ -55,18 +52,21 @@ public class SearchViewModel extends ViewModel implements ISearchCallback {
         //todo 没有更多
     }
 
-    public LiveData<List<DomainGoodsInfo.GoodsInfoBean>> getLastSearchedResult() {
-        mSearchImpl.getSearchResult(lastSearchedKey);
+    public void deleteHistories() {
+        mSearchImpl.deleteHistories();
+    }
+
+    public LiveData<List<DomainGoodsInfo.DataBean>> getLastSearchedResult(String token, double longitude, double latitude) {
+        mSearchImpl.getSearchResult(token, longitude, latitude, lastSearchedKey, true);
         return mSearchResults;
     }
 
-    public LiveData<List<DomainGoodsInfo.GoodsInfoBean>> getSearchResult(String key) {
-        lastSearchedKey = key;
-        mSearchImpl.getSearchResult(key);
+    public LiveData<List<DomainGoodsInfo.DataBean>> getSearchResult(String token, double longitude, double latitude, String key) {
+        mSearchImpl.getSearchResult(token, longitude, latitude, key, false);
         return mSearchResults;
     }
 
-    public LiveData<DomainSearchItems> getSearchHistories() {
+    public LiveData<SearchHistories> getSearchHistories() {
         mSearchImpl.getSearchHistory();
         return mSearchHistories;
     }

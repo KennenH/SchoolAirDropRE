@@ -14,7 +14,7 @@ public class HomeNearbyFragmentViewModel extends BaseChildFragmentViewModel impl
 
     private HomeGoodsInfoImpl mHomeImpl;
 
-    private MutableLiveData<List<DomainGoodsInfo.GoodsInfoBean>> mGoodsInfo = new MutableLiveData<>();
+    private MutableLiveData<List<DomainGoodsInfo.DataBean>> mGoodsInfo = new MutableLiveData<>();
 
     public HomeNearbyFragmentViewModel() {
         mHomeImpl = new HomeGoodsInfoImpl();
@@ -22,7 +22,7 @@ public class HomeNearbyFragmentViewModel extends BaseChildFragmentViewModel impl
     }
 
     @Override
-    public void onNearbyGoodsLoaded(List<DomainGoodsInfo.GoodsInfoBean> goodsData) {
+    public void onNearbyGoodsLoaded(List<DomainGoodsInfo.DataBean> goodsData) {
         mGoodsInfo.postValue(goodsData);
     }
 
@@ -36,7 +36,7 @@ public class HomeNearbyFragmentViewModel extends BaseChildFragmentViewModel impl
         mOnRequestListener.onLoading();
     }
 
-    public LiveData<List<DomainGoodsInfo.GoodsInfoBean>> getGoodsInfo(double longitude, double latitude) {
+    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo(double longitude, double latitude) {
         mHomeImpl.getNearbyGoods(20, longitude, latitude);
         return mGoodsInfo;
     }

@@ -46,7 +46,7 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
 
                 if (code == HttpURLConnection.HTTP_OK) {
                     if (info != null && info.isSuccess()) {
-                        mCallback.onNearbyGoodsLoaded(info.getGoodsInfo());
+                        mCallback.onNearbyGoodsLoaded(info.getData());
                     } else
                         mCallback.onError();
                 } else

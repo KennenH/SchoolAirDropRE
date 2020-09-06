@@ -39,26 +39,23 @@ public class GoodsInfo extends ShimmerFrameLayout {
         mDescription = findViewById(R.id.goods_description);
     }
 
-    public void setData(DomainGoodsInfo.GoodsInfoBean data) {
+    public void setData(DomainGoodsInfo.DataBean data) {
         if (data != null) {
-            boolean negotiable = data.getIsPrice().equals("1");// 是否可议价
-            boolean secondHand = data.getIstender().equals("1");// 是否二手
+            boolean negotiable = data.getGoods_is_quotable() == 1;// 是否可议价
+            boolean secondHand = data.getGoods_is_brandNew() == 0;// 是否二手
             if (negotiable && secondHand)
-                mGoodsName.setText(getContext().getResources().getString(R.string.itemNS, data.getTitle()));
+                mGoodsName.setText(getContext().getResources().getString(R.string.itemNS, data.getGoods_name()));
             else if (negotiable)
-                mGoodsName.setText(getContext().getResources().getString(R.string.itemN, data.getTitle()));
+                mGoodsName.setText(getContext().getResources().getString(R.string.itemN, data.getGoods_name()));
             else if (secondHand)
-                mGoodsName.setText(getContext().getResources().getString(R.string.itemS, data.getTitle()));
+                mGoodsName.setText(getContext().getResources().getString(R.string.itemS, data.getGoods_name()));
             else
-                mGoodsName.setText(data.getTitle());
+                mGoodsName.setText(data.getGoods_name());
 
-//        mPopularity.setComments(data.get());
-//        mPopularity.setLikes(data.getLikes());
-//        mPopularity.setWatches(data.getWatches());
-            mPrice.setPrice(data.getPrice());
-//        mAvatar.setImageURI(data.getAvatar());
-            mUserName.setText(data.getUname());
-            mDescription.setText(data.getDescription());
+            mPrice.setPrice(data.getGoods_price());
+            mAvatar.setImageURI(data.getSeller_info().getUser_img_path());
+            mUserName.setText(data.getSeller_info().getUname());
+            mDescription.setText(data.getGoods_description());
             stopShimmer();
             hideShimmer();
         }

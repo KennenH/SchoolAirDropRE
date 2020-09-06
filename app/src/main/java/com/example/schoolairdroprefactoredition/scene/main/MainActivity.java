@@ -20,6 +20,7 @@ import com.example.schoolairdroprefactoredition.scene.main.home.ParentNewsFragme
 import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment;
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasingFragment;
 import com.example.schoolairdroprefactoredition.scene.search.SearchFragment;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
@@ -43,6 +44,8 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     private ParentPurchasingFragment mPurchase;
     private MyFragment mMy;
 
+    private Bundle bundle = new Bundle();
+
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,14 +57,14 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
         if (mHome == null) {
             mHome = new ParentNewsFragment();
             mHome.setOnSearchBarClickedListener(() -> mFragmentManager.beginTransaction()
-                    .replace(R.id.container, new SearchFragment())
+                    .replace(R.id.container, SearchFragment.newInstance(bundle))
                     .addToBackStack(null)
                     .commit());
         }
         if (mPurchase == null) {
             mPurchase = new ParentPurchasingFragment();
             mPurchase.setOnSearchBarClickedListener(() -> mFragmentManager.beginTransaction()
-                    .replace(R.id.container, new SearchFragment())
+                    .replace(R.id.container, SearchFragment.newInstance(bundle))
                     .addToBackStack(null)
                     .commit());
         }
@@ -142,6 +145,7 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == LoginActivity.LOGIN) { // 来自SettingsActivity的登录结果返回,去向子fragment的监听回调
                 if (data != null && mOnLoginActivityListener != null) {
+                    bundle.putAll(data.getExtras());
                     mOnLoginActivityListener.onLoginActivity(data.getExtras());
                 }
             }
@@ -182,11 +186,13 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
         mOnLoginActivityListener = listener;
     }
 
-
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
         if (mOnLocationListener != null)
             mOnLocationListener.onLocated(aMapLocation);
+
+        bundle.putDouble(ConstantUtil.LONGITUDE, aMapLocation.getLongitude());
+        bundle.putDouble(ConstantUtil.LATITUDE, aMapLocation.getLatitude());
     }
 
     @Override

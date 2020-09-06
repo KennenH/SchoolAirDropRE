@@ -26,8 +26,7 @@
                 android:id="@+id/search"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/general_padding_larger"
-                android:layout_marginEnd="@dimen/general_padding_larger"
+                android:layout_marginStart="@dimen/general_padding_large"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/search_cancel"
                 app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +40,6 @@
                 android:padding="@dimen/general_padding_large"
                 android:text="@string/cancel"
                 android:textSize="14dp"
-                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

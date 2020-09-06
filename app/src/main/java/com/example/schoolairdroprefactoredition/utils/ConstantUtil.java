@@ -1,6 +1,14 @@
 package com.example.schoolairdroprefactoredition.utils;
 
 public class ConstantUtil {
+
+    /**
+     * location
+     */
+    public static final String LONGITUDE = "nowLongitude";
+    public static final String LATITUDE = "nowLatitude";
+
+
     /**
      * home fragment data fetch num
      */

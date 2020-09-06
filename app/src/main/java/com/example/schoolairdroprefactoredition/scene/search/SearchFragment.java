@@ -22,13 +22,18 @@ import androidx.transition.TransitionManager;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSearchPrelayoutBinding;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderFooterOnlyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.SearchSuggestionRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SearchBar;
 import com.example.schoolairdroprefactoredition.ui.components.SearchHistoryHeader;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
+
+import java.util.ArrayList;
 
 public class SearchFragment extends Fragment implements SearchBar.OnSearchActionListener, EndlessRecyclerView.OnLoadMoreListener {
     private SearchViewModel searchViewModel;
@@ -49,9 +54,30 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     private SearchHistoryHeader mHistoryHeader;
 
+    private DomainAuthorize token;
+    private double longitude;
+    private double latitude;
+
     private boolean isHistoryShowing = false;
     private boolean isSuggestionShowing = false;
     private boolean isResultShowing = false;
+
+    public static SearchFragment newInstance(Bundle bundle) {
+        SearchFragment fragment = new SearchFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+            longitude = (double) bundle.getSerializable(ConstantUtil.LONGITUDE);
+            latitude = (double) bundle.getSerializable(ConstantUtil.LATITUDE);
+        }
+    }
 
     @Nullable
     @Override
@@ -98,10 +124,16 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         mSuggestion.setAdapter(mSuggestionAdapter);
         mResult.setAdapter(mResultAdapter);
 
+        searchViewModel.getSearchHistories().observe(getViewLifecycleOwner(), histories -> mHistoryHeader.showAfterUpdate(histories.getHistoryList()));
+
         mSearchBar.setOnSearchActionListener(this);
         mCancel.setOnClickListener(v -> {
             if (getActivity() != null)
                 getActivity().getSupportFragmentManager().popBackStack();
+        });
+        mHistoryHeader.setOnDeleteAllListener(() -> {
+            searchViewModel.deleteHistories();
+            mHistoryHeader.showAfterUpdate(new ArrayList<>());
         });
         mHistory.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -124,6 +156,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
                     mSearchBar.closeSearch();
             }
         });
+
         mResult.setOnLoadMoreListener(this);
         showHistory();
         mSearchBar.openSearch();
@@ -131,7 +164,6 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     private void startAnimation() {
         constraintSet.clone(getContext(), R.layout.fragment_search);
-
         Transition transition = new ChangeBounds();
         transition.setInterpolator(new DecelerateInterpolator());
         transition.setDuration(100);
@@ -161,7 +193,6 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
             }
         });
-
         TransitionManager.beginDelayedTransition(root, transition);
         constraintSet.applyTo(root);
     }
@@ -195,20 +226,24 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     @Override
     public void autoLoadMore(EndlessRecyclerView recycler) {
-        searchViewModel.getLastSearchedResult().observe(getViewLifecycleOwner(), data -> {
-            mResultAdapter.addData(data);
-            recycler.finishLoading();
-        });
+        if (token != null)
+            searchViewModel.getLastSearchedResult(token.getAccess_token(), longitude, latitude).observe(getViewLifecycleOwner(), data -> {
+                mResultAdapter.addData(data);
+                recycler.finishLoading();
+            });
     }
 
     @Override
     public void onSearch(String key, View v) {
-        showResult();
-        mHistoryHeader.addHistory(key);
-        searchViewModel.getSearchResult(key).observe(getViewLifecycleOwner(), data -> {
-            mSearchBar.closeSearch();
-            mResultAdapter.setList(data);
-        });
+        if (token != null) {
+
+            showResult();
+            searchViewModel.getSearchResult(token.getAccess_token(), longitude, latitude, key).observe(getViewLifecycleOwner(), data -> {
+                mSearchBar.closeSearch();
+                mResultAdapter.setList(data);
+            });
+            searchViewModel.getSearchHistories().observe(getViewLifecycleOwner(), histories -> mHistoryHeader.showAfterUpdate(histories.getHistoryList()));
+        }
     }
 
     @Override
@@ -217,11 +252,6 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
             showHistory();
         } else
             showSuggestion();
-
-        searchViewModel.getSearchSuggestion(input).observe(getViewLifecycleOwner(), data -> {
-            // todo 将搜索建议显示在SearchSuggestion上
-            mSuggestionAdapter.addData(data);
-        });
     }
 
     @Override

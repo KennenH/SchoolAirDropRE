@@ -25,7 +25,7 @@ public class GoodsActivity extends AppCompatActivity implements ButtonSingle.OnB
 
     private static final String ARGS = "GoodsInfo";
 
-    public static void start(Context context, DomainGoodsInfo.GoodsInfoBean info) {
+    public static void start(Context context, DomainGoodsInfo.DataBean info) {
         Intent intent = new Intent(context, GoodsActivity.class);
         if (info != null)
             intent.putExtra(ARGS, info);
@@ -33,7 +33,7 @@ public class GoodsActivity extends AppCompatActivity implements ButtonSingle.OnB
     }
 
     //    private GoodsViewModel goodsViewModel;
-    private DomainGoodsInfo.GoodsInfoBean mInfo;
+    private DomainGoodsInfo.DataBean mInfo;
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
@@ -45,7 +45,7 @@ public class GoodsActivity extends AppCompatActivity implements ButtonSingle.OnB
         StatusBarUtil.setTranslucentForImageView(this, 0, mToolbar);
         setSupportActionBar(mToolbar);
 
-        mInfo = (DomainGoodsInfo.GoodsInfoBean) getIntent().getSerializableExtra(ARGS);
+        mInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ARGS);
 //        goodsViewModel = new ViewModelProvider(this).get(GoodsViewModel.class);
 
         ButtonSingle mLeft = findViewById(R.id.goods_button_left);

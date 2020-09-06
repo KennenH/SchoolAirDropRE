@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.scene.settings.fragment;
+package com.example.schoolairdroprefactoredition.scene.settings;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

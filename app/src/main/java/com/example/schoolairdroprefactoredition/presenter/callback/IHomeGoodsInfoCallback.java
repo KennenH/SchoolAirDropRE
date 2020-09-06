@@ -10,5 +10,5 @@ public interface IHomeGoodsInfoCallback extends IBaseCallback {
     /**
      * 附近商品信息被加载
      */
-    void onNearbyGoodsLoaded(List<DomainGoodsInfo.GoodsInfoBean> goodsData);
+    void onNearbyGoodsLoaded(List<DomainGoodsInfo.DataBean> goodsData);
 }

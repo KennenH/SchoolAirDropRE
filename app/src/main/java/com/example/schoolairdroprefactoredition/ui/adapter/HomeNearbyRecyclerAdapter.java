@@ -17,48 +17,48 @@ import org.jetbrains.annotations.NotNull;
 /**
  * 附近在售列表的adapter
  */
-public class HomeNearbyRecyclerAdapter extends BaseQuickAdapter<DomainGoodsInfo.GoodsInfoBean, BaseViewHolder> implements View.OnClickListener {
+public class HomeNearbyRecyclerAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseViewHolder> implements View.OnClickListener {
     public HomeNearbyRecyclerAdapter() {
         super(R.layout.item_home_goods_info);
     }
 
-    private DomainGoodsInfo.GoodsInfoBean info;
+    private DomainGoodsInfo.DataBean info;
 
     @Override
-    protected void convert(@NotNull BaseViewHolder holder, DomainGoodsInfo.GoodsInfoBean data) {
+    protected void convert(@NotNull BaseViewHolder holder, DomainGoodsInfo.DataBean data) {
         if (data != null) {
             info = data;
-            boolean negotiable = data.getIsPrice().equals("1");
-            boolean secondHand = data.getIstender().equals("1");
+            boolean negotiable = data.getGoods_is_quotable() == 1;
+            boolean secondHand = data.getGoods_is_brandNew() == 0;
 
-            ((SimpleDraweeView) holder.findView(R.id.item_image)).setImageURI(data.getCover());
-            ((GoodsPrice) holder.findView(R.id.item_price)).setPrice(data.getPrice());
-            holder.setText(R.id.item_seller, data.getUname());
+            ((SimpleDraweeView) holder.findView(R.id.item_image)).setImageURI(data.getGoods_img_cover());
+            ((GoodsPrice) holder.findView(R.id.item_price)).setPrice(data.getGoods_price());
+            holder.setText(R.id.item_seller, data.getSeller_info().getUname());
             TextViewWithImages title = holder.findView(R.id.item_title);
             ImageView credit = holder.findView(R.id.item_credit);
             holder.itemView.setOnClickListener(this);
 
             if (negotiable && secondHand)
-                title.setText(getContext().getResources().getString(R.string.itemNSs, data.getTitle()));
+                title.setText(getContext().getResources().getString(R.string.itemNSs, data.getGoods_name()));
             else if (negotiable)
-                title.setText(getContext().getResources().getString(R.string.itemNs, data.getTitle()));
+                title.setText(getContext().getResources().getString(R.string.itemNs, data.getGoods_name()));
             else if (secondHand)
-                title.setText(getContext().getResources().getString(R.string.itemSs, data.getTitle()));
+                title.setText(getContext().getResources().getString(R.string.itemSs, data.getGoods_name()));
             else
-                title.setText(data.getTitle());
+                title.setText(data.getGoods_name());
 
-            String creditNum = data.getCredit_num();
+            int creditNum = data.getSeller_info().getCredit_num();
 
-            if (creditNum != null)
-                if (creditNum.equals("5"))
+            if (creditNum != 0)
+                if (creditNum == 5)
                     credit.setImageResource(R.drawable.ic_credit5);
-                else if (creditNum.equals("4"))
+                else if (creditNum == 4)
                     credit.setImageResource(R.drawable.ic_credit4);
-                else if (creditNum.equals("3"))
+                else if (creditNum == 3)
                     credit.setImageResource(R.drawable.ic_credit3);
-                else if (creditNum.equals("2"))
+                else if (creditNum == 2)
                     credit.setImageResource(R.drawable.ic_credit2);
-                else if (creditNum.equals("1"))
+                else if (creditNum == 1)
                     credit.setImageResource(R.drawable.ic_credit1);
         }
     }

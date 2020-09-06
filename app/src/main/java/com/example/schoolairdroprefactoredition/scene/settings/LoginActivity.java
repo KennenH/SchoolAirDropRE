@@ -17,7 +17,6 @@ import android.widget.TextView;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
-import com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsViewModel;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;

@@ -9,6 +9,8 @@ import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 
+import java.util.List;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
@@ -34,6 +36,16 @@ public interface Api {
     @FormUrlEncoded
     @POST("goods/getNearByGoods")
     Call<DomainGoodsInfo> getGoodsInfo(@Field("longitude") Double longitude, @Field("latitude") Double latitude);
+
+    /**
+     * 搜索关键字物品
+     */
+    @FormUrlEncoded
+    @POST("goods/searchGoods")
+    Call<DomainGoodsInfo> searchGoods(@Header("Authorization") String token,
+                                                          @Field("longitude") Double longitude,
+                                                          @Field("latitude") Double latitude,
+                                                          @Field("keyWords") String keyWord);
 
     /**
      * 上传用户头像

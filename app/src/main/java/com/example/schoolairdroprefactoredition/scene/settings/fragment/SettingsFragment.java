@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.scene.settings.fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -21,6 +20,7 @@ import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
+import com.example.schoolairdroprefactoredition.scene.settings.SettingsViewModel;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.lxj.xpopup.XPopup;

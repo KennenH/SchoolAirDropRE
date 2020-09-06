@@ -1,9 +1,8 @@
 package com.example.schoolairdroprefactoredition.presenter.callback;
 
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
+import com.example.schoolairdroprefactoredition.domain.SearchHistories;
 import com.example.schoolairdroprefactoredition.model.databean.SearchSuggestionBean;
-import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 
 import java.util.List;
 
@@ -16,12 +15,12 @@ public interface ISearchCallback {
     /**
      * 搜索结果加载完毕
      */
-    void onSearchResultLoaded(List<DomainGoodsInfo.GoodsInfoBean> goodsInfoBeans);
+    void onSearchResultLoaded(List<DomainGoodsInfo.DataBean> goodsInfoBeans);
 
     /**
      * 搜索历史加载完毕
      */
-    void onSearchHistoryLoaded(DomainSearchItems domainSearchItem);
+    void onSearchHistoryLoaded(SearchHistories domainSearchItem);
 
     /**
      * 搜索建议加载完毕

@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.ui.components;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +13,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.SearchHistories;
 import com.google.android.flexbox.FlexboxLayout;
+
+import java.util.Collections;
+import java.util.List;
 
 public class SearchHistoryHeader extends ConstraintLayout implements View.OnClickListener {
 
@@ -22,6 +27,10 @@ public class SearchHistoryHeader extends ConstraintLayout implements View.OnClic
     private FlexboxLayout mFlex;
 
     private OnDeleteAllListener mOnDeleteAllListener;
+
+    private List<String> mHistories;
+
+    private int startIndex;
 
     public SearchHistoryHeader(Context context) {
         this(context, null);
@@ -43,15 +52,38 @@ public class SearchHistoryHeader extends ConstraintLayout implements View.OnClic
         mDeleteAll.setOnClickListener(this);
         mCancel.setOnClickListener(this);
         mConfirm.setOnClickListener(this);
+
+        startIndex = getChildCount();
     }
 
-    public void addHistory(String key) {
-        SearchHistoryItem item = new SearchHistoryItem(getContext(), key.trim());
-        FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-        int margin = SizeUtils.dp2px(3);
-        params.setMargins(margin, margin, margin, margin);
-        item.setLayoutParams(params);
-        mFlex.addView(item);
+    /**
+     * 组合方法
+     */
+    public void showAfterUpdate(List<String> histories) {
+        updateHistories(histories);
+        showHistories();
+    }
+
+    /**
+     * 装填对象的历史记录
+     */
+    public void updateHistories(List<String> histories) {
+        mHistories = histories;
+    }
+
+    /**
+     * 显示历史记录
+     */
+    public void showHistories() {
+        mFlex.removeAllViews();
+        for (String history : mHistories) {
+            SearchHistoryItem item = new SearchHistoryItem(getContext(), history.trim());
+            FlexboxLayout.LayoutParams params = new FlexboxLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            int margin = SizeUtils.dp2px(3);
+            params.setMargins(margin, margin, margin, margin);
+            item.setLayoutParams(params);
+            mFlex.addView(item);
+        }
     }
 
     public void showDeleteAll() {
@@ -79,6 +111,7 @@ public class SearchHistoryHeader extends ConstraintLayout implements View.OnClic
             mConfirm.setVisibility(VISIBLE);
             mDeleteAll.setVisibility(GONE);
         } else if (id == R.id.search_history_confirm) {
+            showDeleteAll();
             if (mOnDeleteAllListener != null) {
                 mOnDeleteAllListener.onDeleteConfirm();
             }
