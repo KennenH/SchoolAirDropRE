@@ -10,18 +10,21 @@ import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 public class PageItem extends ConstraintLayout {
 
-    private ImageView mIconView;
+    private SimpleDraweeView mIconView;
     private TextView mNameView;
     private TextView mDescriptionView;
     private ImageView mArrowView;
-    private Switch mSwitch;
+    private SwitchCompat mSwitch;
     private CheckBox mCheck;
 
     private boolean isFirst = false;
@@ -102,11 +105,11 @@ public class PageItem extends ConstraintLayout {
 
         if (mBackground == null) {
             if (isFirst)
-                setBackground(context.getResources().getDrawable(R.drawable.button_sheet_first, context.getTheme()));
+                setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_sheet_first, context.getTheme()));
             else if (isLast)
-                setBackground(context.getResources().getDrawable(R.drawable.button_radius_last, context.getTheme()));
+                setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_radius_last, context.getTheme()));
             else
-                setBackground(context.getResources().getDrawable(R.drawable.button_sheet_white, context.getTheme()));
+                setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_sheet_white, context.getTheme()));
         } else
             setBackground(mBackground);
 
@@ -139,6 +142,10 @@ public class PageItem extends ConstraintLayout {
 
         if (mArrowRes != null && isShowArrow)
             mArrowView.setImageDrawable(mArrowRes);
+    }
+
+    public void setIconImage(String url) {
+        mIconView.setImageURI(url);
     }
 
     public void setDescription(String description) {

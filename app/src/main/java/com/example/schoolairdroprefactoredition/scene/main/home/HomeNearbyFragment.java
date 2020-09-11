@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.scene.main.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,7 +59,7 @@ public class HomeNearbyFragment extends BaseChildFragment
 
         initRecycler();
         if (mLocation == null)
-            locate(PermissionBaseActivity.RequestType.AUTO);// 自动请求MainActivity的定位
+            locateWithoutRequest();// 自动请求MainActivity的定位
 
         return binding.getRoot();
     }
@@ -83,7 +84,7 @@ public class HomeNearbyFragment extends BaseChildFragment
                 showContentContainer();
                 mLocation = aMapLocation;
 
-                homeContentFragmentViewModel.getGoodsInfo(mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+                homeContentFragmentViewModel.getGoodsInfo(1, aMapLocation.getLongitude(), aMapLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
                     if (data == null || data.size() == 0) {
                         showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
                     } else {
@@ -91,7 +92,10 @@ public class HomeNearbyFragment extends BaseChildFragment
                         showContentContainer();
                     }
                 });
-            } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+            } else {
+                showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+                Log.d("HomeNearByGoods", aMapLocation.getErrorInfo());
+            }
         } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 
@@ -103,7 +107,7 @@ public class HomeNearbyFragment extends BaseChildFragment
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (mLocation != null) { // 定位信息不为null时
-            homeContentFragmentViewModel.getGoodsInfo(mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+            homeContentFragmentViewModel.getGoodsInfo(1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
                 if (data.size() == 0) {
                     showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
                 } else {
@@ -115,14 +119,14 @@ public class HomeNearbyFragment extends BaseChildFragment
         } else { // 定位失败时通知父Fragment显示PlaceHolder
             refreshLayout.finishRefresh();
             showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
-            locate(PermissionBaseActivity.RequestType.AUTO);// 自动请求MainActivity的定位
+            locateWithoutRequest();// 自动请求MainActivity的定位
         }
     }
 
     @Override
     public void autoLoadMore(EndlessRecyclerView recycler) {
         if (mLocation != null) {
-            homeContentFragmentViewModel.getGoodsInfo(mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+            homeContentFragmentViewModel.getGoodsInfo(1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
                 mHomeNearbyRecyclerAdapter.addData(data);
                 showContentContainer();
                 recycler.finishLoading();

@@ -18,8 +18,9 @@ import android.widget.TextView;
 
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 
-public class SellingAddSetActivity extends AppCompatActivity {
+public class SellingAddSetActivity extends ImmersionStatusBarActivity {
 
     public static void start(Context context, int type, String content) {
         Intent intent = new Intent(context, SellingAddSetActivity.class);
@@ -67,9 +68,10 @@ public class SellingAddSetActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (type == TYPE_TITLE)
+                if (type == TYPE_TITLE) {
                     mRemaining.setText(getString(R.string.textRemainCount, MAX_TITLE - mInput.getText().length()));
-                else
+                    mInput.setMaxLines(2);
+                } else
                     mRemaining.setText(getString(R.string.textRemainCount, MAX_DESCRIPTION - mInput.getText().length()));
             }
         });

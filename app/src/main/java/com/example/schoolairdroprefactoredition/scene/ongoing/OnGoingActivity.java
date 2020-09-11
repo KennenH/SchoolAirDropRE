@@ -13,11 +13,12 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.OnGoingPagerAdapter;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.google.android.material.tabs.TabLayout;
 
-public class OnGoingActivity extends AppCompatActivity {
+public class OnGoingActivity extends ImmersionStatusBarActivity {
 
     public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, OnGoingActivity.class);

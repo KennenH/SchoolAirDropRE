@@ -18,8 +18,9 @@ import com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto;
 public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClickListener {
     public static final int TYPE_LOADING = 77;//状态 类型 正在加载
     public static final int TYPE_ERROR = 88;//状态 类型 错误
-    public static final int TYPE_EMPTY = 99;//状态 类型 空
+    public static final int TYPE_EMPTY = 99;//状态 类型 没有物品
     public static final int TYPE_DENIED = 11;//状态 类型 权限被拒
+    public static final int TYPE_NULL = 22;//状态 类型 空
 
     private static final int ICON_LOADING = R.drawable.ic_loading;// 状态 图标 正在加载
     private static final int ICON_ERROR = R.drawable.ic_location_error;// 状态 图标 错误
@@ -63,7 +64,7 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
 
         mLoadingAnim = AnimationUtils.loadAnimation(getContext(), R.anim.rotation_infinite);
 
-        setPlaceHolderType(TYPE_LOADING);
+        setPlaceHolderType(TYPE_NULL);
     }
 
     /**
@@ -78,6 +79,7 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
         if (type == TYPE_ERROR) {
             // 网络或定位出错
             mIcon.setImageResource(ICON_ERROR);
+            mIcon.setVisibility(VISIBLE);
             mTip.setText(TIP_ERROR);
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(VISIBLE);
@@ -85,6 +87,7 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
         } else if (type == TYPE_EMPTY) {
             // 附近没有物品
             mIcon.setImageResource(ICON_EMPTY);
+            mIcon.setVisibility(VISIBLE);
             mTip.setText(TIP_EMPTY);
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(VISIBLE);
@@ -93,6 +96,7 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
         } else if (type == TYPE_LOADING) {
             // 正在加载
             mIcon.setImageResource(ICON_LOADING);
+            mIcon.setVisibility(VISIBLE);
             mTip.setVisibility(GONE);
             mRefresh.setVisibility(GONE);
             mAction.setVisibility(GONE);
@@ -100,11 +104,17 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
         } else if (type == TYPE_DENIED) {
             // 权限拒绝
             mIcon.setImageResource(ICON_DENIED);
+            mIcon.setVisibility(VISIBLE);
             mTip.setText(TIP_DENIED);
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(GONE);
-            mAction.setText(R.string.clickToGrantLocationPermission);
+            mAction.setText(R.string.errorRetry);
             mAction.setVisibility(VISIBLE);
+        } else {
+            mIcon.setVisibility(GONE);
+            mTip.setVisibility(GONE);
+            mRefresh.setVisibility(GONE);
+            mAction.setVisibility(GONE);
         }
     }
 

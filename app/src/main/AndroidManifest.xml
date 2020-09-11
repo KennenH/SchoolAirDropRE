@@ -26,17 +26,36 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".scene.base.PermissionBaseActivity" />
+        <activity
+            android:name=".scene.addnew.AddNewResultActivity"
+            android:label="" />
+        <activity
+            android:name=".scene.base.PermissionBaseActivity"
+            android:label="" />
         <activity
             android:name=".scene.transactionstate.TransactionStateActivity"
             android:label="" />
-        <activity android:name=".scene.arrangeplace.UnselectedTransactionActivity" />
-        <activity android:name=".scene.arrangeplace.SelectPositionActivity" />
-        <activity android:name=".scene.settings.LoginActivity" />
-        <activity android:name=".scene.addnew.SellingAddSetActivity" />
-        <activity android:name=".scene.addnew.SellingAddNewActivity" />
-        <activity android:name=".scene.ongoing.OnGoingActivity" />
-        <activity android:name=".scene.credit.CreditActivity" />
+        <activity
+            android:name=".scene.arrangeplace.UnArrangePositionTransactionActivity"
+            android:label="" />
+        <activity
+            android:name=".scene.arrangeplace.arrangePositionActivity"
+            android:label="" />
+        <activity
+            android:name=".scene.settings.LoginActivity"
+            android:label="" />
+        <activity
+            android:name=".scene.addnew.SellingAddSetActivity"
+            android:label="" />
+        <activity
+            android:name=".scene.addnew.SellingAddNewActivity"
+            android:label="" />
+        <activity
+            android:name=".scene.ongoing.OnGoingActivity"
+            android:label="" />
+        <activity
+            android:name=".scene.credit.CreditActivity"
+            android:label="" />
 
         <meta-data
             android:name="design_width_in_dp"
@@ -48,12 +67,18 @@
         <activity
             android:name=".scene.ssb.SSBActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".scene.quote.QuoteDetailActivity" />
-        <activity android:name=".scene.quote.QuoteActivity" />
+        <activity
+            android:name=".scene.quote.QuoteDetailActivity"
+            android:label="" />
+        <activity
+            android:name=".scene.quote.QuoteActivity"
+            android:label="" />
         <activity
             android:name=".scene.chat.ChatActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".scene.settings.UserActivity" />
+        <activity
+            android:name=".scene.user.UserActivity"
+            android:label="" />
         <activity
             android:name=".scene.map.AMapActivity"
             android:label="" />
@@ -79,7 +104,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".scene.settings.SettingsActivity" />
+        <activity
+            android:name=".scene.settings.SettingsActivity"
+            android:label="" />
     </application>
 
 </manifest>

@@ -8,12 +8,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.BarUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
@@ -44,9 +46,13 @@ public class TransactionStateActivity extends AppCompatActivity implements View.
         setContentView(R.layout.activity_transaction_state);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
+
         final Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         StatusBarUtil.setTranslucentForImageView(this, 0, toolbar);
+        BarUtils.setNavBarLightMode(this, true);
+        BarUtils.setNavBarColor(this, getColor(R.color.primary));
+
         mState = findViewById(R.id.state);
         mRemaining = findViewById(R.id.remaining);
         mProgress = findViewById(R.id.state_progress_bar);

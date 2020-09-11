@@ -28,7 +28,7 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
      * 请求附近在售的数据
      */
     @Override
-    public void getNearbyGoods(int size, double longitude, double latitude) {
+    public void getNearbyGoods(int page, double longitude, double latitude) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
         Call<DomainGoodsInfo> task = api.getGoodsInfo(longitude, latitude);
@@ -44,6 +44,7 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
 //                    e.printStackTrace();
 //                }
 
+//                Log.d("getNearbyGoods", "longitude -- > " + longitude + " latitude -- > " + latitude);
                 if (code == HttpURLConnection.HTTP_OK) {
                     if (info != null && info.isSuccess()) {
                         mCallback.onNearbyGoodsLoaded(info.getData());

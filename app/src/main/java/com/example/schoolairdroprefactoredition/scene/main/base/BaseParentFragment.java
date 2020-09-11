@@ -10,6 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.amap.api.location.AMapLocation;
+import com.blankj.utilcode.constant.PermissionConstants;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
@@ -117,7 +118,7 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
     @Override
     public void onRetry(View view) {
         if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).requestLocationPermission(PermissionBaseActivity.RequestType.MANUAL);
+            ((MainActivity) getActivity()).requestPermission(PermissionConstants.LOCATION, PermissionBaseActivity.RequestType.MANUAL);
         }
     }
 

@@ -16,6 +16,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 
 /**
@@ -74,10 +75,12 @@ public class TransactionBaseActivity extends ImmersionStatusBarActivity implemen
     @Override
     public void onBackPressed() {
         if (actionLock) {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                 finish();
-            else
+            } else {
                 getSupportFragmentManager().popBackStack();
+                KeyboardUtils.hideSoftInput(this);
+            }
         }
     }
 
@@ -85,10 +88,12 @@ public class TransactionBaseActivity extends ImmersionStatusBarActivity implemen
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (actionLock && id == android.R.id.home) {
-            if (getSupportFragmentManager().getBackStackEntryCount() == 0)
+            if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
                 finish();
-            else
+            } else {
                 getSupportFragmentManager().popBackStack();
+                KeyboardUtils.hideSoftInput(this);
+            }
             return true;
         } else
             return false;
@@ -96,7 +101,6 @@ public class TransactionBaseActivity extends ImmersionStatusBarActivity implemen
 
     @Override
     public void onBackStackChanged() {
-        actionLock = false;
 
         TextView alpha = flag ? mName1 : mName2;
         TextView translation = mName2 == alpha ? mName1 : mName2;
@@ -108,6 +112,7 @@ public class TransactionBaseActivity extends ImmersionStatusBarActivity implemen
         String now = getSupportFragmentManager().findFragmentById(R.id.container).getTag();
 
         if (lastStack < nowStack) { // 开启新的fragment
+            actionLock = false;
             translation.setText(now);
 
             Animation animA = AnimationUtils.loadAnimation(this, R.anim.alpha_out);
@@ -151,6 +156,7 @@ public class TransactionBaseActivity extends ImmersionStatusBarActivity implemen
             alpha.startAnimation(animA);
             translation.startAnimation(animT);
         } else { // 关闭fragment
+            actionLock = true;
             flag = !flag;
             translation.setText(lastName);
             alpha.setText(now);
@@ -165,7 +171,6 @@ public class TransactionBaseActivity extends ImmersionStatusBarActivity implemen
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     alpha.setVisibility(View.VISIBLE);
-                    actionLock = true;
                 }
 
                 @Override
@@ -184,7 +189,6 @@ public class TransactionBaseActivity extends ImmersionStatusBarActivity implemen
                 @Override
                 public void onAnimationEnd(Animation animation) {
                     translation.setVisibility(View.INVISIBLE);
-                    actionLock = true;
                 }
 
                 @Override

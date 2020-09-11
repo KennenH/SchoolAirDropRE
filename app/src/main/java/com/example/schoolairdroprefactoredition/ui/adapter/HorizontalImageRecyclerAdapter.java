@@ -24,8 +24,7 @@ public class HorizontalImageRecyclerAdapter extends BaseQuickAdapter<LocalMedia,
     @Override
     protected void convert(@NotNull BaseViewHolder holder, LocalMedia s) {
         SimpleDraweeView image = (SimpleDraweeView) holder.itemView.getRootView();
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q)
-            image.setImageURI(Uri.fromFile(new File(s.getPath())));
-        else image.setImageURI(Uri.fromFile(new File(s.getAndroidQToPath())));
+        String qPath = s.getAndroidQToPath();
+        image.setImageURI(Uri.fromFile(new File(qPath == null ? s.getPath() : qPath)));
     }
 }

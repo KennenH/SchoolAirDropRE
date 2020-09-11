@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.scene.main.my.user;
+package com.example.schoolairdroprefactoredition.scene.user.user;
 
 import android.content.Intent;
 import android.os.Build;
@@ -12,12 +12,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.blankj.utilcode.util.ImageUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.luck.picture.lib.PictureSelector;
@@ -36,9 +41,29 @@ public class UserAvatarFragment extends Fragment implements View.OnLongClickList
     private LoadingPopupView mLoading;
 
     private BottomSheetDialog mDialog;
-    private ImageView mAvatar;
+    private SimpleDraweeView mAvatar;
 
     private UserAvatarViewModel viewModel;
+
+    private Bundle bundle;
+
+    private DomainGetUserInfo.DataBean info;
+
+    public static UserAvatarFragment newInstance(Bundle bundle) {
+        UserAvatarFragment fragment = new UserAvatarFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bundle = getArguments();
+        if (bundle == null)
+            bundle = new Bundle();
+
+        info = (DomainGetUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+    }
 
     @Nullable
     @Override
@@ -51,7 +76,17 @@ public class UserAvatarFragment extends Fragment implements View.OnLongClickList
         mAvatar.setOnLongClickListener(this);
         mLoading = MyUtil.loading(getContext());
 
+        init();
+
         return root;
+    }
+
+    private void init() {
+        try {
+            mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
+        } catch (NullPointerException e) {
+            Log.d("UserAvatarFragment", e.toString());
+        }
     }
 
     @Override
@@ -74,7 +109,7 @@ public class UserAvatarFragment extends Fragment implements View.OnLongClickList
             mDialog.findViewById(R.id.cancel).setOnClickListener(this);
 
             View view1 = mDialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
-            view1.setBackground(getResources().getDrawable(R.drawable.transparent, getContext().getTheme()));
+            view1.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.transparent, getContext().getTheme()));
             final BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(view1);
             bottomSheetBehavior.setSkipCollapsed(true);
             bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
@@ -102,32 +137,23 @@ public class UserAvatarFragment extends Fragment implements View.OnLongClickList
                 if (data != null) {
                     String uri;
                     LocalMedia photo = PictureSelector.obtainMultipleResult(data).get(0);
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) uri = photo.getPath();
-                    else uri = photo.getAndroidQToPath();
+                    uri = photo.getPath();
                     if (mLoading == null)
                         mLoading = MyUtil.loading(getContext());
                     mLoading.show();
 
                     viewModel.updateAvatar(uri, "100001").observe(getViewLifecycleOwner(), bean -> {
                         mLoading.dismiss();
-                        if (bean.isSuccess()) {
-                            
-                        } else {
 
-                        }
                     });
                 }
             } else if (requestCode == REQUEST_ALBUM) {
                 if (data != null) {
-                    String uri;
                     LocalMedia photo = PictureSelector.obtainMultipleResult(data).get(0);
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) uri = photo.getPath();
-                    else uri = photo.getAndroidQToPath();
-                    if (mLoading == null)
-                        mLoading = MyUtil.loading(getContext());
+                    mLoading = MyUtil.loading(getContext());
                     mLoading.show();
 
-                    viewModel.updateAvatar(uri, "100001").observe(getViewLifecycleOwner(), bean -> {
+                    viewModel.updateAvatar(photo.getPath(), "100001").observe(getViewLifecycleOwner(), bean -> {
                         mLoading.dismiss();
                         if (bean.isSuccess())
                             Log.d("UserAvatar", "========Avatar upload success========");
@@ -152,7 +178,8 @@ public class UserAvatarFragment extends Fragment implements View.OnLongClickList
                 mDialog.dismiss();
                 break;
             case R.id.save_to_album:
-                // 保存图片至相册
+                // todo 保存图片至相册
+
                 Toast.makeText(getContext(), "图片已保存至相册", Toast.LENGTH_SHORT).show();
                 mDialog.dismiss();
                 break;

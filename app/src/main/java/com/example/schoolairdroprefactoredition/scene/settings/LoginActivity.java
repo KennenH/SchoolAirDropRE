@@ -13,15 +13,20 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.blankj.utilcode.util.ClickUtils;
+import com.blankj.utilcode.util.NetworkUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
+import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, BaseChildFragmentViewModel.OnRequestListener {
+public class LoginActivity extends ImmersionStatusBarActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, BaseChildFragmentViewModel.OnRequestListener {
 
     public static final int LOGIN = 1212;// 请求码 网络登录请求
 
@@ -32,7 +37,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = new Intent(context, LoginActivity.class);
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).startActivityForResult(intent, LOGIN);
-            ((AppCompatActivity) context).overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
+            MyUtil.startAnimUp((AppCompatActivity) context);
         }
     }
 
@@ -43,6 +48,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = new Intent(context, LoginActivity.class);
         intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo);
         context.startActivity(intent);
+        if (context instanceof AppCompatActivity)
+            MyUtil.startAnimUp((AppCompatActivity) context);
     }
 
     private CheckBox mCheck;
@@ -54,6 +61,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     private LoadingPopupView mLoading;
 
     private Intent intent;
+
+    private NetworkUtils.OnNetworkStatusChangedListener networkStatusListener = new NetworkUtils.OnNetworkStatusChangedListener() {
+        @Override
+        public void onDisconnected() {
+            showToast(getString(R.string.connectionLost));
+            dismissPopup();
+        }
+
+        @Override
+        public void onConnected(NetworkUtils.NetworkType networkType) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +102,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             close.setOnClickListener(v -> {
                 finish();
-                overrideAnimation();
+                MyUtil.exitAnimDown(this);
             });
 
-
+            ClickUtils.applyPressedViewAlpha(close, 0.6f);
         }
         // 尚未登录
         else {
@@ -114,11 +134,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void onBackPressed() {
         setResult(Activity.RESULT_CANCELED);
         super.onBackPressed();
-        overrideAnimation();
-    }
-
-    private void overrideAnimation() {
-        overridePendingTransition(0, R.anim.popexit_y_fragment);
+        MyUtil.exitAnimDown(this);
     }
 
     @Override
@@ -128,41 +144,52 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             // 请求公钥与sessionID
             showPopup();
 
-            viewModel.getPublicKey().observe(this, key -> {
-                // 将加密的数据post回去请求token
-                viewModel.authorizeWithAlipayID(key.getCookie()
-                        , "client_credentials"
-                        , "testclient"
-                        , "123456"
-                        , "19858120611"
-                        , key.getPublic_key()).observe(this, token -> {
-                    dismissPopup();
-
-                    // token
-                    intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
-
-                    if (mLoading != null) mLoading.show();
-                    viewModel.getUserInfo(token.getAccess_token()).observe(this, info -> {
+            if (NetworkUtils.isConnected()) {
+                NetworkUtils.registerNetworkStatusChangedListener(networkStatusListener);
+                viewModel.getPublicKey().observe(this, key -> {
+                    // 将加密的数据post回去请求token
+                    viewModel.authorizeWithAlipayID(key.getCookie()
+                            , "client_credentials"
+                            , "testclient"
+                            , "123456"
+                            , "19858120611"
+                            , key.getPublic_key()).observe(this, token -> {
                         dismissPopup();
 
-                        DomainGetUserInfo.DataBean userInfo = info.getData().get(0);
-                        // token换取的user info
-                        intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo);
+                        // token
+                        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
 
-                        setResult(Activity.RESULT_OK, intent);
+                        showPopup();
+                        viewModel.getUserInfo(token.getAccess_token()).observe(this, info -> {
+                            DomainGetUserInfo.DataBean userInfo = info.getData().get(0);
+                            // token换取的user info
+                            intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo);
 
-                        finish();
-                        overrideAnimation();
+                            setResult(Activity.RESULT_OK, intent);
+                            NetworkUtils.unregisterNetworkStatusChangedListener(networkStatusListener);
+
+                            dismissPopup();
+
+                            finish();
+                            MyUtil.exitAnimDown(this);
+                        });
                     });
                 });
-            });
+            } else {
+                showToast(getString(R.string.networkUnavailable));
+                dismissPopup();
+            }
 
 
         } else if (id == R.id.cancel) {
             setResult(Activity.RESULT_CANCELED);
             finish();
-            overrideAnimation();
+            MyUtil.exitAnimDown(this);
         }
+    }
+
+    private void showToast(String info) {
+        Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
     }
 
     /**

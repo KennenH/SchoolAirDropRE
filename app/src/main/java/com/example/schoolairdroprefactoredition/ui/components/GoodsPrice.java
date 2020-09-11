@@ -47,6 +47,7 @@ public class GoodsPrice extends ConstraintLayout {
     }
 
     public void setPrice(String price) {
+        if (price == null) return;
         float priceF = Float.parseFloat(price);
         String p = NumberUtil.num2Money(priceF);
         int dot = p.indexOf(".");

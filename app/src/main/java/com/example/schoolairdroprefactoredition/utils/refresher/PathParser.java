@@ -2,14 +2,17 @@ package com.example.schoolairdroprefactoredition.utils.refresher;
 
 import android.graphics.Matrix;
 import android.graphics.Path;
-import android.os.Build;
 
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+// This class is a duplicate from the PathParser.java of frameworks/base, with slight
+// update on incompatible API like copyOfRange().
+@SuppressWarnings({"WeakerAccess", "SameParameterValue"})
 public class PathParser {
+
     private static final String TAG = "PathParser";
 
     // Copy from Arrays.copyOfRange() which is only available from API level 9.
@@ -27,7 +30,7 @@ public class PathParser {
     //     * @throws ArrayIndexOutOfBoundsException if {@code start < 0 || start > original.length}
     //     * @throws IllegalArgumentException       if {@code start > end}
      */
-    static float[] copyOfRange(@NonNull float[] original, int start, int end) {
+    private static float[] copyOfRange(@NonNull float[] original, int start, int end) {
 //        if (start > end) {
 //            throw new IllegalArgumentException();
 //        }
@@ -46,21 +49,10 @@ public class PathParser {
         Matrix matrix = new Matrix();
         matrix.setScale(ratioWidth, ratioHeight);
         List<Path> paths = new ArrayList<>();
-        if (Build.VERSION.SDK_INT > 16) {
-            for (Path path : originPaths) {
-                Path nPath = new Path();
-                path.transform(matrix, nPath);
-                paths.add(nPath);
-            }
-        } else {
-            for (String svgPath : orginSvgs) {
-                Path path = new Path();
-                PathDataNode[] nodes = createNodesFromPathData(svgPath);
-                transformScaleNodes(ratioWidth, ratioHeight, nodes);
-                PathDataNode.nodesToPath(nodes, path);
-                paths.add(path);
-            }
-
+        for (Path path : originPaths) {
+            Path nPath = new Path();
+            path.transform(matrix, nPath);
+            paths.add(nPath);
         }
         return paths;
     }

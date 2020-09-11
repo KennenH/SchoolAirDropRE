@@ -23,6 +23,8 @@ public class SSBInfo extends ConstraintLayout implements View.OnClickListener {
     private TextView mSoldT;
     private TextView mBoughtT;
 
+    private OnSSBActionListener mOnSSBActionListener;
+
     public SSBInfo(Context context) {
         this(context, null);
     }
@@ -65,15 +67,17 @@ public class SSBInfo extends ConstraintLayout implements View.OnClickListener {
         mBought.setText(NumberUtil.num2StringWithUnit(bought));
     }
 
-    public void setDarkMode(boolean isDarkMode) {
-        if (isDarkMode) {
-            mSelling.setTextColor(Color.WHITE);
-            mSold.setTextColor(Color.WHITE);
-            mBought.setTextColor(Color.WHITE);
-            mSellingT.setTextColor(Color.WHITE);
-            mSoldT.setTextColor(Color.WHITE);
-            mBoughtT.setTextColor(Color.WHITE);
-        }
+
+    public interface OnSSBActionListener {
+        void onSellingClick(View view);
+
+        void onSoldClick(View view);
+
+        void onBoughtClick(View view);
+    }
+
+    public void setOnSSBActionListener(OnSSBActionListener listener) {
+        this.mOnSSBActionListener = listener;
     }
 
     @Override
@@ -83,19 +87,20 @@ public class SSBInfo extends ConstraintLayout implements View.OnClickListener {
             case R.id.my_selling:
             case R.id.my_selling_t:
             case R.id.my_selling_wrapper:
-                SSBActivity.start(getContext(), 0);
+                if (mOnSSBActionListener != null)
+                    mOnSSBActionListener.onSellingClick(v);
                 break;
             case R.id.my_sold:
             case R.id.my_sold_t:
             case R.id.my_sold_wrapper:
-                // open sold history
-                SSBActivity.start(getContext(), 1);
+                if (mOnSSBActionListener != null)
+                    mOnSSBActionListener.onSoldClick(v);
                 break;
             case R.id.my_bought:
             case R.id.my_bought_t:
             case R.id.my_bought_wrapper:
-                // open bought history
-                SSBActivity.start(getContext(), 2);
+                if (mOnSSBActionListener != null)
+                    mOnSSBActionListener.onBoughtClick(v);
                 break;
         }
     }

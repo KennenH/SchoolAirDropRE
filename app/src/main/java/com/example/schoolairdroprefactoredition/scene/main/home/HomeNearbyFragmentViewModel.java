@@ -36,8 +36,8 @@ public class HomeNearbyFragmentViewModel extends BaseChildFragmentViewModel impl
         mOnRequestListener.onLoading();
     }
 
-    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo(double longitude, double latitude) {
-        mHomeImpl.getNearbyGoods(20, longitude, latitude);
+    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo(int page, double longitude, double latitude) {
+        mHomeImpl.getNearbyGoods(page, longitude, latitude);
         return mGoodsInfo;
     }
 

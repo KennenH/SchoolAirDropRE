@@ -30,12 +30,15 @@
         android:id="@+id/overDragLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/scroll_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@color/white"
             android:overScrollMode="never"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
@@ -110,14 +113,60 @@
                     android:textSize="@dimen/textSizeNormal"
                     app:layout_constraintTop_toBottomOf="@id/option_title" />
 
-                <com.example.schoolairdroprefactoredition.ui.components.SellingOption
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/option_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/general_padding_large"
                     android:layout_marginEnd="@dimen/general_padding_large"
-                    app:SO_title="@string/priceRMB"
-                    app:layout_constraintTop_toBottomOf="@id/price_title" />
+                    app:layout_constraintTop_toBottomOf="@id/price_title">
+
+                    <TextView
+                        android:id="@+id/price_currency"
+                        android:layout_width="10dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/general_padding_small"
+                        android:gravity="center"
+                        android:text="@string/currency_RMB"
+                        android:textColor="@color/colorAccent"
+                        app:layout_constraintBaseline_toBaselineOf="@id/price_input"
+                        app:layout_constraintStart_toStartOf="parent" />
+
+                    <EditText
+                        android:id="@+id/price_input"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/transparent"
+                        android:gravity="center_vertical|start"
+                        android:importantForAutofill="no"
+                        android:inputType="numberDecimal"
+                        android:paddingStart="@dimen/general_padding_small"
+                        android:paddingTop="@dimen/general_padding_large"
+                        android:paddingEnd="@dimen/general_padding_large"
+                        android:paddingBottom="@dimen/general_padding_large"
+                        android:textColor="@color/colorAccent"
+                        android:textSize="@dimen/textSizeLarger"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/price_confirm"
+                        app:layout_constraintStart_toEndOf="@+id/price_currency"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <TextView
+                        android:id="@+id/price_confirm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/button_round_theme"
+                        android:paddingStart="@dimen/general_padding_large"
+                        android:paddingTop="@dimen/general_padding_small"
+                        android:paddingEnd="@dimen/general_padding_large"
+                        android:paddingBottom="@dimen/general_padding_small"
+                        android:text="@string/confirm"
+                        android:textColor="@color/white"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/option_title_title"

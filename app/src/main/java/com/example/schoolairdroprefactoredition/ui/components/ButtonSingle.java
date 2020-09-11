@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import androidx.core.content.res.ResourcesCompat;
+
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 
@@ -30,7 +32,7 @@ public class ButtonSingle extends LinearLayout {
         int padding = SizeUtils.dp2px(15);
         mButtonOne = findViewById(R.id.button_one);
         mButtonOne.setPadding(padding, padding, padding, padding);
-        mButtonOne.setImageDrawable(getResources().getDrawable(R.drawable.chat));
+        mButtonOne.setImageDrawable(ResourcesCompat.getDrawable(getResources(), R.drawable.chat, getContext().getTheme()));
         mButtonOne = findViewById(R.id.button_one);
         mButtonOne.setOnClickListener(v -> {
             if (mOnButtonClickListener != null)
@@ -43,7 +45,7 @@ public class ButtonSingle extends LinearLayout {
      *
      * @param res drawable res
      */
-    public void setImageOne(int res) {
+    public void setImage(int res) {
         mButtonOne.setImageResource(res);
     }
 

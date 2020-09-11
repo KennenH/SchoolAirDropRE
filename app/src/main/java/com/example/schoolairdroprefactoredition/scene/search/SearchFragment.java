@@ -74,8 +74,11 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         Bundle bundle = getArguments();
         if (bundle != null) {
             token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-            longitude = (double) bundle.getSerializable(ConstantUtil.LONGITUDE);
-            latitude = (double) bundle.getSerializable(ConstantUtil.LATITUDE);
+            try {
+                longitude = (double) bundle.getSerializable(ConstantUtil.LONGITUDE);
+                latitude = (double) bundle.getSerializable(ConstantUtil.LATITUDE);
+            } catch (NullPointerException ignored) {
+            }
         }
     }
 

@@ -15,6 +15,7 @@ import java.net.HttpURLConnection;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,30 +34,30 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
                 "photo",
                 file.getName(),
                 RequestBody.create(MediaType.parse("image/*"), file));
-        RequestBody id = RequestBody.create(MediaType.parse("text/plain"), uid);
-
-        retrofit2.Call<DomainAvatarUpdate> task = api.updateAvatar(photo, id);
-        task.enqueue(new Callback<DomainAvatarUpdate>() {
-            @Override
-            public void onResponse(retrofit2.Call<DomainAvatarUpdate> call, Response<DomainAvatarUpdate> response) {
-                int code = response.code();
-                if (code == HttpURLConnection.HTTP_OK) {
-                    DomainAvatarUpdate body = response.body();
-                    if (body.isSuccess()) {
-                        Log.d("UserAvatarImpl", "code -- > " + code + " message -- > " + response.toString());
-                        mCallback.onSent(body);
-                    } else mCallback.onError();
-                } else {
-                    Log.d("UserAvatarImpl", "code -- > " + code + " message -- > " + response.toString());
-                    mCallback.onError();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DomainAvatarUpdate> call, Throwable t) {
-                mCallback.onError();
-            }
-        });
+//        RequestBody id = RequestBody.create(MediaType.parse("text/plain"), uid);
+//
+//        retrofit2.Call<DomainAvatarUpdate> task = api.updateAvatar(photo, id);
+//        task.enqueue(new Callback<DomainAvatarUpdate>() {
+//            @Override
+//            public void onResponse(retrofit2.Call<DomainAvatarUpdate> call, Response<DomainAvatarUpdate> response) {
+//                int code = response.code();
+//                if (code == HttpURLConnection.HTTP_OK) {
+//                    DomainAvatarUpdate body = response.body();
+//                    if (body.isSuccess()) {
+//                        Log.d("UserAvatarImpl", "code -- > " + code + " message -- > " + response.toString());
+//                        mCallback.onSent(body);
+//                    } else mCallback.onError();
+//                } else {
+//                    Log.d("UserAvatarImpl", "code -- > " + code + " message -- > " + response.toString());
+//                    mCallback.onError();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<DomainAvatarUpdate> call, Throwable t) {
+//                mCallback.onError();
+//            }
+//        });
     }
 
     @Override

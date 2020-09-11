@@ -28,6 +28,8 @@
 
     <dimen name="error_placeholder">100dp</dimen>
     <dimen name="home_item_image">85dp</dimen>
+    <dimen name="home_item_image_small">70dp</dimen>
+    <dimen name="home_item_image_smaller">60dp</dimen>
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>

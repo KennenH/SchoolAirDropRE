@@ -4,14 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,10 +25,13 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.blankj.utilcode.constant.PermissionConstants;
+import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SellingOption;
+import com.example.schoolairdroprefactoredition.utils.DecimalFilter;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.HorizontalItemMarginDecoration;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -43,7 +48,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         Intent intent = new Intent(context, SellingAddNewActivity.class);
         context.startActivity(intent);
         if (context instanceof AppCompatActivity)
-            ((AppCompatActivity) context).overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
+            MyUtil.startAnimUp((AppCompatActivity) context);
     }
 
     public static void startForResult(Context context) {
@@ -51,7 +56,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         if (context instanceof AppCompatActivity) {
             AppCompatActivity activity = (AppCompatActivity) context;
             activity.startActivityForResult(intent, REQUEST_ADD_NEW);
-            activity.overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
+            MyUtil.startAnimUp((AppCompatActivity) context);
         }
     }
 
@@ -64,7 +69,8 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     private SimpleDraweeView mCover;
     private RecyclerView mPicRecycler;
     private SellingOption mTitle;
-    private SellingOption mPrice;
+    private EditText mPrice;
+    private TextView mConfirm;
     private SellingOption mLocation;
     private SellingOption isNegotiable;
     private SellingOption isSecondHand;
@@ -74,7 +80,6 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     private AMapLocationClientOption mOption;
 
     private List<LocalMedia> selected = new ArrayList<>();
-    private List<LocalMedia> cover = new ArrayList<>();
 
     private HorizontalImageRecyclerAdapter mAdapter;
 
@@ -92,7 +97,8 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         mCover = findViewById(R.id.cover);
         mPicRecycler = findViewById(R.id.pic_set);
         mTitle = findViewById(R.id.option_title);
-        mPrice = findViewById(R.id.option_price);
+        mPrice = findViewById(R.id.price_input);
+        mConfirm = findViewById(R.id.price_confirm);
         mLocation = findViewById(R.id.option_location);
         isNegotiable = findViewById(R.id.option_negotiable);
         isSecondHand = findViewById(R.id.option_secondHand);
@@ -101,12 +107,17 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         mCover.setOnClickListener(this);
         mPicRecycler.setOnClickListener(this);
         mTitle.setOnClickListener(this);
-        mPrice.setOnClickListener(this);
+        mConfirm.setOnClickListener(this);
         mLocation.setOnClickListener(this);
         isNegotiable.setOnClickListener(this);
         isSecondHand.setOnClickListener(this);
         mDescription.setOnClickListener(this);
+        mPrice.setOnEditorActionListener((v, actionId, event) -> {
+            mPrice.clearFocus();
+            return true;
+        });
 
+        mPrice.setFilters(new InputFilter[]{new DecimalFilter(5, 2)});
         mPicRecycler.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         mPicRecycler.addItemDecoration(new HorizontalItemMarginDecoration(getResources().getDimension(R.dimen.general_padding_small)));
         ImageView add = new ImageView(this);
@@ -114,12 +125,13 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         add.setImageResource(R.drawable.bg_add_pic);
         add.setOnClickListener(v -> {
             request = REQUEST_CODE_PIC_SET;
-            requestAlbumPermission(RequestType.MANUAL);
+            requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL);
         });
         mAdapter.addFooterView(add);
         mPicRecycler.setAdapter(mAdapter);
 
-        requestLocationPermission(RequestType.AUTO);
+//        requestLocationPermission(RequestType.AUTO);
+        requestPermission(PermissionConstants.LOCATION, RequestType.AUTO);
     }
 
     @Override
@@ -131,7 +143,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     @Override
     protected void locationDenied() {
         super.locationDenied();
-        mLocation.setDescription(getString(R.string.clickToGrantLocationPermission));
+        mLocation.setDescription(getString(R.string.goToGrantLocationPermission));
     }
 
     @Override
@@ -148,7 +160,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     protected void albumGranted() {
         super.albumGranted();
         if (request == REQUEST_CODE_COVER)
-            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_COVER, cover, 1);
+            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_COVER, new ArrayList<>(), 1);
         else if (request == REQUEST_CODE_PIC_SET)
             MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_PIC_SET, selected, 6);
     }
@@ -172,11 +184,9 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                 }
             } else if (requestCode == REQUEST_CODE_COVER) {
                 if (data != null) {
-                    this.cover = PictureSelector.obtainMultipleResult(data);
-                    LocalMedia cover = this.cover.get(0);
-                    if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.Q)
-                        mCover.setImageURI(Uri.fromFile(new File(cover.getPath())));
-                    else mCover.setImageURI(Uri.fromFile(new File(cover.getAndroidQToPath())));
+                    LocalMedia cover = PictureSelector.obtainMultipleResult(data).get(0);
+                    String qPath = cover.getAndroidQToPath();
+                    mCover.setImageURI(Uri.fromFile(new File(qPath == null ? cover.getPath() : qPath)));
                 }
             } else if (requestCode == REQUEST_CODE_PIC_SET) {
                 if (data != null) {
@@ -210,10 +220,13 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
      * 提交物品表单
      */
     private void submit() {
-        // if (submit success){
-        // isSubmitted = true
-        // finish
-        //}
+//if (success)
+//        AddNewResultActivity.start(this, true);
+
+        finish();
+        MyUtil.exitAnimDown(this);
+//else
+        AddNewResultActivity.start(this, false);
 
     }
 
@@ -259,7 +272,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(0, R.anim.popexit_y_fragment);
+        MyUtil.exitAnimDown(this);
     }
 
     @Override
@@ -268,16 +281,17 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         switch (id) {
             case R.id.cover:
                 request = REQUEST_CODE_COVER;
-                requestAlbumPermission(RequestType.MANUAL);
+                requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL);
                 break;
             case R.id.option_title:
                 SellingAddSetActivity.start(this, SellingAddSetActivity.TYPE_TITLE, mTitle.getText().toString());
                 break;
-            case R.id.option_price:
-
+            case R.id.price_confirm:
+                KeyboardUtils.hideSoftInput(v);
+                mPrice.clearFocus();
                 break;
             case R.id.option_location:
-                requestLocationPermission(RequestType.MANUAL);
+                requestPermission(PermissionConstants.LOCATION, RequestType.MANUAL);
                 break;
             case R.id.option_negotiable:
                 isNegotiable.toggle();
@@ -313,7 +327,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     public void onDestroy() {
         super.onDestroy();
         if (mClient != null) {
-            mClient.unRegisterLocationListener(this);
+            mClient.setLocationListener(null);
             mClient.onDestroy();
             mClient = null;
             mOption = null;

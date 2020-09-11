@@ -8,24 +8,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
+import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.MyLocationStyle;
+import com.blankj.utilcode.constant.PermissionConstants;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.jaeger.library.StatusBarUtil;
 
 import org.jetbrains.annotations.NotNull;
 
-public class AMapActivity extends PermissionBaseActivity implements LocationSource, AMapLocationListener {
+public class AMapActivity extends PermissionBaseActivity implements LocationSource, AMapLocationListener, View.OnClickListener {
 
     public static final int REQUEST_CODE = 300;
     public static final String LOCATION_KEY = "AMapLocation";
@@ -36,6 +39,9 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
 
     private MapView mMapView;
     private AMap mMap;
+
+    private TextView mAddress;
+    private TextView mRelocate;
 
     private MyLocationStyle mLocationStyle;
 
@@ -52,13 +58,31 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
         setContentView(R.layout.activity_amap);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Toolbar mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
         StatusBarUtil.setTranslucentForImageView(this, 40, mToolbar);
+        setSupportActionBar(mToolbar);
 
         mMapView = findViewById(R.id.map);
         mMapView.onCreate(savedInstanceState);
+        mAddress = findViewById(R.id.map_location);
+        mRelocate = findViewById(R.id.map_relocate);
+        mAddress.setOnClickListener(this);
+        mRelocate.setOnClickListener(this);
 
-        requestLocationPermission(RequestType.AUTO);
+        displayMap();
+
+        requestPermission(PermissionConstants.LOCATION, RequestType.AUTO);
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.map_relocate) {
+            requestPermission(PermissionConstants.LOCATION, RequestType.MANUAL);
+        }
+    }
+
+    @Override
+    protected void setStatusBar() {
     }
 
     @Override
@@ -70,7 +94,7 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
     @Override
     protected void locationDenied() {
         super.locationDenied();
-
+        mAddress.setText(getString(R.string.permissionDenied));
     }
 
     private void displayMap() {
@@ -94,17 +118,16 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
             if (aMapLocation.getErrorCode() == 0) {
                 mOnLocationChangedListener.onLocationChanged(aMapLocation);
                 mLocation = aMapLocation;
-                Log.d("AMapActivity", aMapLocation.getAddress());
-//                mMap.animateCamera(CameraUpdateFactory.zoomTo(13f), 200, new AMap.CancelableCallback() {
-//                    @Override
-//                    public void onFinish() {
-//
-//                    }
-//
-//                    @Override
-//                    public void onCancel() {
-//                    }
-//                });
+//                Log.d("AMapActivity", aMapLocation.getAddress());
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(13f), 200, new AMap.CancelableCallback() {
+                    @Override
+                    public void onFinish() {
+                    }
+
+                    @Override
+                    public void onCancel() {
+                    }
+                });
             }
         }
     }
@@ -186,5 +209,4 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
         // 保存地图当前的状态
         mMapView.onSaveInstanceState(outState);
     }
-
 }

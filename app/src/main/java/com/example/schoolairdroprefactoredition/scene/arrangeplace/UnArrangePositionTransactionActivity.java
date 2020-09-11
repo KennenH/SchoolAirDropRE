@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.arrangeplace;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -14,17 +13,18 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.UnselectedTransactionRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
 
-public class UnselectedTransactionActivity extends AppCompatActivity {
+public class UnArrangePositionTransactionActivity extends ImmersionStatusBarActivity {
 
     public static void start(Context context) {
-        Intent intent = new Intent(context, UnselectedTransactionActivity.class);
+        Intent intent = new Intent(context, UnArrangePositionTransactionActivity.class);
         context.startActivity(intent);
     }
 
-    private UnselectedTransactionViewModel viewModel;
+    private UnArrangePositionTransactionViewModel viewModel;
 
     private TextView mTitle;
     private RecyclerView mRecycler;
@@ -35,7 +35,7 @@ public class UnselectedTransactionActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unselected_transaction);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        viewModel = new ViewModelProvider(this).get(UnselectedTransactionViewModel.class);
+        viewModel = new ViewModelProvider(this).get(UnArrangePositionTransactionViewModel.class);
 
         setSupportActionBar(findViewById(R.id.toolbar));
         mTitle = findViewById(R.id.title);

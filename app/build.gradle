@@ -87,7 +87,7 @@ dependencies {
     implementation 'me.jessyan:autosize:1.2.1'
 
     // photo picker
-    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.5.8'
+    implementation 'com.github.LuckSiege.PictureSelector:picture_library:v2.5.9'
 
     // canary
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.4'

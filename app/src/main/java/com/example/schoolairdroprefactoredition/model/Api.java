@@ -5,6 +5,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdate;
 import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainModifyResult;
 import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
@@ -37,22 +38,41 @@ public interface Api {
     @POST("goods/getNearByGoods")
     Call<DomainGoodsInfo> getGoodsInfo(@Field("longitude") Double longitude, @Field("latitude") Double latitude);
 
+//    @FormUrlEncoded
+//    @POST("paster/getGroundPaster")
+//    Call<> getNearByNews(@Field("longitude") Double longitude, @Field("latitude") Double latitude);
+
+    /**
+     * 获取本人在售物品列表
+     */
+    @POST("goods/getGoodsInfo")
+    Call<DomainGoodsInfo> getMySellingGoods(@Header("Authorization") String token);
+
     /**
      * 搜索关键字物品
      */
     @FormUrlEncoded
     @POST("goods/searchGoods")
     Call<DomainGoodsInfo> searchGoods(@Header("Authorization") String token,
-                                                          @Field("longitude") Double longitude,
-                                                          @Field("latitude") Double latitude,
-                                                          @Field("keyWords") String keyWord);
+                                      @Field("longitude") Double longitude,
+                                      @Field("latitude") Double latitude,
+                                      @Field("keyWords") String keyWord);
+
 
     /**
      * 上传用户头像
      */
     @Multipart
-    @POST("server/UpdateUserAvatar.php")
-    Call<DomainAvatarUpdate> updateAvatar(@Part MultipartBody.Part photo, @Part("uid") RequestBody uid);
+    @FormUrlEncoded
+    @POST("user/updateAvatars")
+    Call<DomainAvatarUpdate> updateAvatar(@Header("Authorization") String token, @Part MultipartBody.Part photo, @Part("uid") RequestBody uid);
+
+    /**
+     * 用户重命名
+     */
+    @FormUrlEncoded
+    @POST("user/updateUserName")
+    Call<DomainModifyResult> updateUserName(@Header("Authorization") String token, @Field("uName") String name);
 
     /**
      * 用access_token换取用户基本信息

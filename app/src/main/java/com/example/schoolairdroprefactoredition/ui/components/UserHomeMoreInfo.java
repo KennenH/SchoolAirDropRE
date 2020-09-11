@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 
 public class UserHomeMoreInfo extends ConstraintLayout implements View.OnClickListener {
 
@@ -41,6 +42,26 @@ public class UserHomeMoreInfo extends ConstraintLayout implements View.OnClickLi
 
         mTransactions.setOnClickListener(this);
         mCredits.setOnClickListener(this);
+    }
+
+    public void setUserMoreInfo(DomainGetUserInfo.DataBean info) {
+        switch (info.getCredit_num()) {
+            case 1:
+                mCredits.setImageResource(CREDIT1);
+                break;
+            case 2:
+                mCredits.setImageResource(CREDIT2);
+                break;
+            case 3:
+                mCredits.setImageResource(CREDIT3);
+                break;
+            case 4:
+                mCredits.setImageResource(CREDIT4);
+                break;
+            case 5:
+                mCredits.setImageResource(CREDIT5);
+                break;
+        }
     }
 
     public interface OnMoreInfoActionListener {

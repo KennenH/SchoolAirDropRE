@@ -43,7 +43,7 @@ public class SettingsImpl implements ISettingsPresenter {
                     if (authorization != null)
                         authorization.setCookie(session);
 //
-                    Log.d("getPublicKey", authorization.toString());
+//                    Log.d("getPublicKey", authorization.toString());
 
                     if (mCallback != null)
                         mCallback.onPublicKeyGot(authorization);
@@ -79,8 +79,8 @@ public class SettingsImpl implements ISettingsPresenter {
     public void postAlipayIDRSA(String cookie, String grantType, String clientID, String clientSecret, String rawAlipay, String publicKey) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Log.d("postAlipayIDRSA", "encrypted alipay -- > " + RSACoder.encryptWithPublicKey(publicKey, rawAlipay) +
-                "cookie -- > " + cookie);
+//        Log.d("postAlipayIDRSA", "encrypted alipay -- > " + RSACoder.encryptWithPublicKey(publicKey, rawAlipay) +
+//                "cookie -- > " + cookie);
         Call<DomainAuthorize> task = api.authorize(cookie, grantType, clientID, clientSecret, RSACoder.encryptWithPublicKey(publicKey, rawAlipay));
         task.enqueue(new Callback<DomainAuthorize>() {
             @Override

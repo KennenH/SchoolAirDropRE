@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.scene.main.base;
 
 import androidx.fragment.app.Fragment;
 
+import com.blankj.utilcode.constant.PermissionConstants;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
@@ -30,12 +31,21 @@ public class BaseChildFragment extends Fragment {
     }
 
     /**
-     * 请求{@link MainActivity#requestLocationPermission(int)} ()}的定位
+     * 请求{@link MainActivity#requestPermission(String, int)} (int)} ()}的定位
      */
     protected void locate(@PermissionBaseActivity.RequestType int type) {
         showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
-        if (getActivity() instanceof MainActivity)
-            ((MainActivity) getActivity()).requestLocationPermission(type);
+        if (getActivity() instanceof PermissionBaseActivity)
+            ((PermissionBaseActivity) getActivity()).requestPermission(PermissionConstants.LOCATION, type);
+    }
+
+    /**
+     * 请求定位但是不请求权限
+     */
+    protected void locateWithoutRequest() {
+        showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
+        if (getActivity() instanceof PermissionBaseActivity)
+            ((PermissionBaseActivity) getActivity()).checkPermissionWithoutRequest(PermissionBaseActivity.Automatically.LOCATION);
     }
 
 }

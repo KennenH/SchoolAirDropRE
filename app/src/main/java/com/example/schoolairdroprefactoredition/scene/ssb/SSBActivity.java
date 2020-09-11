@@ -27,9 +27,10 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
 
     public static final String PAGE_INDEX = "SSBPageIndex";
 
-    public static void start(Context context, int index) {
+    public static void start(Context context, Bundle bundle, int index) {
         Intent intent = new Intent(context, SSBActivity.class);
         intent.putExtra(PAGE_INDEX, index);
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
@@ -55,7 +56,7 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
 
         Intent intent = getIntent();
         int index = intent.getIntExtra(PAGE_INDEX, 0);
-        mPagerAdapter = new SSBPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        mPagerAdapter = new SSBPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getIntent().getExtras());
 
         mSearch.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)

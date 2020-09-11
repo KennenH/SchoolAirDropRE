@@ -3,21 +3,23 @@ package com.example.schoolairdroprefactoredition.utils.refresher;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.Region;
 import android.graphics.drawable.Drawable;
-import android.graphics.drawable.PaintDrawable;
 
 import androidx.annotation.NonNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 路径
+ * Created by scwang on 2017/6/1.
+ */
+@SuppressWarnings({"WeakerAccess"})
 public class PathsDrawable extends PaintDrawable {
 
-    protected Paint mPaint;
     protected int mWidth = 1,mHeight = 1;
     protected int mStartX = 0,mStartY = 0;
     protected int mOriginWidth;
@@ -30,13 +32,6 @@ public class PathsDrawable extends PaintDrawable {
     protected List<Integer> mColors;
     protected List<Path> mltOriginPath;
     protected List<String> mltOriginSvg;
-
-    public PathsDrawable() {
-        mPaint = new Paint();
-        mPaint.setColor(0xff11bbff);
-        mPaint.setStyle(Paint.Style.FILL);
-        mPaint.setAntiAlias(true);
-    }
 
     protected boolean onMeasure() {
         Integer top = null,left = null,right = null,bottom = null;
@@ -116,11 +111,6 @@ public class PathsDrawable extends PaintDrawable {
         return onMeasure();
     }
 
-//    public void printOriginal(String name) {
-//        System.out.println(String.format("%s : %s", name, Arrays.toString(new int[]{mStartX, mStartY, mOriginWidth, mOriginHeight})));
-//        Log.e("printOriginal", String.format("%s : %s", name, Arrays.toString(new int[]{mStartX, mStartY, mOriginWidth, mOriginHeight})));
-//    }
-
     public void declareOriginal(int startX, int startY, int width, int height) {
         this.mStartX = startX;
         this.mStartY = startY;
@@ -171,21 +161,6 @@ public class PathsDrawable extends PaintDrawable {
             canvas.drawBitmap(mCachedBitmap, bounds.left, bounds.top, mPaint);
         }
     }
-
-//    @Override
-//    public void setAlpha(int alpha) {
-//        mPaint.setAlpha(alpha);
-//    }
-//
-//    @Override
-//    public void setColorFilter(ColorFilter cf) {
-//        mPaint.setColorFilter(cf);
-//    }
-//
-//    @Override
-//    public int getOpacity() {
-//        return PixelFormat.TRANSLUCENT;
-//    }
     //</editor-fold>
 
     //<editor-fold desc="API">
@@ -233,8 +208,7 @@ public class PathsDrawable extends PaintDrawable {
 
     private void createCachedBitmapIfNeeded(int width, int height) {
         if (mCachedBitmap == null || width != mCachedBitmap.getWidth() || height != mCachedBitmap.getHeight()) {
-            mCachedBitmap = Bitmap.createBitmap(width, height,
-                    Bitmap.Config.ARGB_8888);
+            mCachedBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             mCacheDirty = true;
         }
 

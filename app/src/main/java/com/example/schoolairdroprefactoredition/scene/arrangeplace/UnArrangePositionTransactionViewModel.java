@@ -10,7 +10,7 @@ import com.example.schoolairdroprefactoredition.presenter.impl.UnselectedTransac
 
 import java.util.List;
 
-public class UnselectedTransactionViewModel extends ViewModel implements IUnselectedTransactionCallback {
+public class UnArrangePositionTransactionViewModel extends ViewModel implements IUnselectedTransactionCallback {
 
     private UnselectedTransactionImpl unselectedTransactionImpl;
 
@@ -21,7 +21,7 @@ public class UnselectedTransactionViewModel extends ViewModel implements IUnsele
         return mUnselectedTransactionList;
     }
 
-    public UnselectedTransactionViewModel() {
+    public UnArrangePositionTransactionViewModel() {
         unselectedTransactionImpl = new UnselectedTransactionImpl();
         unselectedTransactionImpl.registerCallback(this);
     }

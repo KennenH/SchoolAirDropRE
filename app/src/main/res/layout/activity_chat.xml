@@ -55,6 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_above="@+id/bottom_action"
+                android:background="@color/white"
                 app:layout_constraintBottom_toTopOf="@+id/bottom_action"
                 app:layout_constraintTop_toTopOf="parent">
 
@@ -63,6 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="0dp"
+                    android:background="@color/white"
                     android:overScrollMode="never"
                     android:tag="recycler_view" />
             </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
@@ -161,7 +163,7 @@
                         android:id="@+id/chat_bar_send"
                         android:layout_width="60dp"
                         android:layout_height="@dimen/toolbar_icon_large"
-                        android:background="@drawable/bg_rounded_theme"
+                        android:background="@drawable/button_rounded_theme_dark"
                         android:gravity="center"
                         android:text="@string/send"
                         android:textColor="#ffffff"

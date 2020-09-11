@@ -64,7 +64,7 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-        // non
+        // do nothing
     }
 
     @Override
@@ -74,7 +74,7 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        // non
+        // do nothing
     }
 
     public class GoodsPagerAdapter extends PagerAdapter {

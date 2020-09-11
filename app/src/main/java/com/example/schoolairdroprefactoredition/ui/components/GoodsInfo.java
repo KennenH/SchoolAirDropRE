@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.ui.components;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 
@@ -41,23 +42,28 @@ public class GoodsInfo extends ShimmerFrameLayout {
 
     public void setData(DomainGoodsInfo.DataBean data) {
         if (data != null) {
-            boolean negotiable = data.getGoods_is_quotable() == 1;// 是否可议价
-            boolean secondHand = data.getGoods_is_brandNew() == 0;// 是否二手
-            if (negotiable && secondHand)
-                mGoodsName.setText(getContext().getResources().getString(R.string.itemNS, data.getGoods_name()));
-            else if (negotiable)
-                mGoodsName.setText(getContext().getResources().getString(R.string.itemN, data.getGoods_name()));
-            else if (secondHand)
-                mGoodsName.setText(getContext().getResources().getString(R.string.itemS, data.getGoods_name()));
-            else
-                mGoodsName.setText(data.getGoods_name());
+            try {
+                boolean negotiable = data.getGoods_is_quotable() == 1;// 是否可议价
+                boolean secondHand = data.getGoods_is_brandNew() == 0;// 是否二手
+                if (negotiable && secondHand)
+                    mGoodsName.setText(getContext().getResources().getString(R.string.itemNS, data.getGoods_name()));
+                else if (negotiable)
+                    mGoodsName.setText(getContext().getResources().getString(R.string.itemN, data.getGoods_name()));
+                else if (secondHand)
+                    mGoodsName.setText(getContext().getResources().getString(R.string.itemS, data.getGoods_name()));
+                else
+                    mGoodsName.setText(data.getGoods_name());
 
-            mPrice.setPrice(data.getGoods_price());
-            mAvatar.setImageURI(data.getSeller_info().getUser_img_path());
-            mUserName.setText(data.getSeller_info().getUname());
-            mDescription.setText(data.getGoods_description());
-            stopShimmer();
-            hideShimmer();
+                mPrice.setPrice(data.getGoods_price());
+                mAvatar.setImageURI(data.getSeller_info().getUser_img_path());
+                mUserName.setText(data.getSeller_info().getUname());
+                mDescription.setText(data.getGoods_description());
+            } catch (NullPointerException e) {
+                Log.d("GoodsInfo", "null pointer exception");
+            } finally {
+                stopShimmer();
+                hideShimmer();
+            }
         }
     }
 }

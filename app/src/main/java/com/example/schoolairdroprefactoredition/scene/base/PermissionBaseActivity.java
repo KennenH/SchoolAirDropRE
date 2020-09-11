@@ -3,78 +3,284 @@ package com.example.schoolairdroprefactoredition.scene.base;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
-import android.widget.Toast;
 
-import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.constant.PermissionConstants;
+import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.PermissionUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.impl.ConfirmPopupView;
 
-import static android.content.pm.PackageManager.PERMISSION_DENIED;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
-public class PermissionBaseActivity extends AppCompatActivity {
+public class PermissionBaseActivity extends ImmersionStatusBarActivity {
+
     /**
-     * 检查是否拥有定位权限
-     *
-     * @param type 请求类型 one of {@link RequestType#AUTO} {@link RequestType#MANUAL}
+     * 请求获取权限
+     * 在{@link RequestType#MANUAL}时若不再提醒，则弹窗引导用户手动设置
+     * 否则不弹窗
      */
-    public void requestLocationPermission(@RequestType int type) {
-        int request = type == RequestType.AUTO ? Automatically.LOCATION : Manually.LOCATION;
-        int finalPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
+    public void requestPermission(@PermissionConstants.Permission String permission, @RequestType int type) {
+        int res = 0;
+
+        switch (permission) {
+            case PermissionConstants.LOCATION:
+                res = R.string.locationPermissionContent;
+                break;
+            case PermissionConstants.CAMERA:
+                res = R.string.cameraPermissionContent;
+                break;
+            case PermissionConstants.STORAGE:
+                res = R.string.albumPermissionContent;
+                break;
+            default:
+                break;
+        }
+
+        int finalRes = res;
+        PermissionUtils.permission(permission)
+                .rationale((activity, shouldRequest) -> {
+                })
+                .callback((isAllGranted, granted, deniedForever, denied) -> {
+                    LogUtils.d(isAllGranted, granted, deniedForever, denied);
+                    // 权限允许
+                    if (isAllGranted) {
+                        switch (permission) {
+                            case PermissionConstants.LOCATION:
+                                locationGranted();
+                                break;
+                            case PermissionConstants.CAMERA:
+                                cameraGranted();
+                                break;
+                            case PermissionConstants.STORAGE:
+                                albumGranted();
+                                break;
+                            default:
+                                break;
+                        }
+                        return;
+                    }
+
+                    // 拒绝并不再提醒
+                    if (deniedForever.size() != 0) {
+                        if (type == RequestType.MANUAL)
+                            popUpToSettingsForPermission(finalRes, permission);
+                    } else if (denied.size() != 0) {
+                        popUpForRequestPermission(finalRes, permission);
+                    }
+
+                    switch (permission) {
+                        case PermissionConstants.LOCATION:
+                            locationDenied();
+                            break;
+                        case PermissionConstants.CAMERA:
+                            cameraDenied();
+                            break;
+                        case PermissionConstants.STORAGE:
+                            albumDenied();
+                            break;
+                        default:
+                            break;
+                    }
+                })
+                .request();
+    }
+
+    private void popUpForRequestPermission(@PermissionConstants.Permission String permission, PermissionUtils.OnRationaleListener.ShouldRequest shouldRequest) {
+        int request = 0;
+        switch (permission) {
+            case PermissionConstants.LOCATION:
+                request = Automatically.LOCATION;
+                break;
+            case PermissionConstants.CAMERA:
+                request = Automatically.CAMERA;
+                break;
+            case PermissionConstants.STORAGE:
+                request = Automatically.ALBUM;
+                break;
+            default:
+                break;
+        }
+        new XPopup.Builder(this).asConfirm(getString(R.string.permissionTitle), getString(R.string.locationPermissionContent), getString(android.R.string.cancel), getString(android.R.string.ok)
+                , () -> shouldRequest.again(true),
+                () -> shouldRequest.again(false), false)
+                .show();
+
+
+    }
+
+    private void popUpForRequestPermission(@StringRes int res, @PermissionConstants.Permission String permission) {
+        int request = 0;
+        switch (permission) {
+            case PermissionConstants.LOCATION:
+                request = Automatically.LOCATION;
+                break;
+            case PermissionConstants.CAMERA:
+                request = Automatically.CAMERA;
+                break;
+            case PermissionConstants.STORAGE:
+                request = Automatically.ALBUM;
+                break;
+            default:
+                break;
+        }
+        int finalRequest = request;
+        new XPopup.Builder(this).asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
+                , () -> {
+                    switch (permission) {
+                        case PermissionConstants.LOCATION:
+                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, finalRequest);
+                            break;
+                        case PermissionConstants.CAMERA:
+                            requestPermissions(new String[]{Manifest.permission.CAMERA}, finalRequest);
+                            break;
+                        case PermissionConstants.STORAGE:
+                            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, finalRequest);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                , () -> {
+                    switch (permission) {
+                        case PermissionConstants.LOCATION:
+                            locationDenied();
+                            break;
+                        case PermissionConstants.CAMERA:
+                            cameraDenied();
+                            break;
+                        case PermissionConstants.STORAGE:
+                            albumDenied();
+                            break;
+                        default:
+                            break;
+                    }
+                }, false).show();
+    }
+
+    private void popUpToSettingsForPermission(@StringRes int res, @PermissionConstants.Permission String permission) {
+        new XPopup.Builder(this).asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
+                , () -> {
+                    switch (permission) {
+                        case PermissionConstants.LOCATION:
+                            goSettings(Automatically.LOCATION);
+                            break;
+                        case PermissionConstants.CAMERA:
+                            goSettings(Automatically.CAMERA);
+                            break;
+                        case PermissionConstants.STORAGE:
+                            goSettings(Automatically.ALBUM);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                , () -> { // do nothing
+                },
+                false).show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK)
+            // 设置返回时检查自动权限
+            checkPermissionWithoutRequest(requestCode);
+    }
+
+    /**
+     * 进入设置，手动给予权限
+     * 只接受{@link RequestType#AUTO}
+     */
+    private void goSettings(int requestCode) {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        intent.setData(uri);
+        startActivityForResult(intent, requestCode);
+    }
+
+    /**
+     * 仅检查是否有定位权限，不请求权限
+     */
+    public void checkPermissionWithoutRequest(int requestCode) {
+        switch (requestCode) {
+            case Automatically.LOCATION:
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED)
+                    locationGranted();
+                else locationDenied();
+                break;
+            case Automatically.CAMERA:
+                if (checkSelfPermission(Manifest.permission.CAMERA) == PERMISSION_GRANTED)
+                    cameraGranted();
+                else cameraDenied();
+                break;
+            case Automatically.ALBUM:
+                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED)
+                    albumGranted();
+                else albumDenied();
+                break;
+            default:
+                break;
+        }
+    }
+
+//
+//    /**
+//     * 检查是否拥有定位权限
+//     * 若无则请求权限
+//     *
+//     * @param type 请求类型 one of {@link RequestType#AUTO} {@link RequestType#MANUAL}
+//     */
+//    public void requestLocationPermission(@RequestType int type) {
+//        int request = type == RequestType.AUTO ? Automatically.LOCATION : Manually.LOCATION;
+//        int finalPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
 //        int coarsePermission = checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
-        if (finalPermission != PERMISSION_GRANTED
-//                || coarsePermission != PERMISSION_GRANTED
-        ) {
-            requestPermissions(new String[]
-                    {Manifest.permission.ACCESS_FINE_LOCATION
-//                            , Manifest.permission.ACCESS_COARSE_LOCATION
-                    }, request);
-        } else locationGranted();
-    }
-
-    /**
-     * {@link Automatically}
-     * 检查是否有相机权限
-     *
-     * @param type 请求类型 one of {@link RequestType#AUTO} {@link RequestType#MANUAL}
-     */
-    public void requestCameraPermission(@RequestType int type) {
-        int request = type == RequestType.AUTO ? Automatically.LOCATION : Manually.LOCATION;
-        int permission = checkSelfPermission(Manifest.permission.CAMERA);
-        if (permission != PERMISSION_GRANTED) {
-            requestPermissions(new String[]
-                    {Manifest.permission.CAMERA}, request);
-        } else cameraGranted();
-    }
-
-    /**
-     * {@link Automatically}
-     * 检查是否有相册权限
-     *
-     * @param type 请求类型 one of {@link RequestType#AUTO} {@link RequestType#MANUAL}
-     */
-    public void requestAlbumPermission(@RequestType int type) {
-        int request = type == RequestType.AUTO ? Automatically.LOCATION : Manually.LOCATION;
-        int readPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
+//        if (finalPermission != PERMISSION_GRANTED
+//                || coarsePermission != PERMISSION_GRANTED) {
+//            requestPermissions(new String[]
+//                    {Manifest.permission.ACCESS_FINE_LOCATION
+//                            , Manifest.permission.ACCESS_COARSE_LOCATION}, request);
+//        } else locationGranted();
+//    }
+//
+//
+//    /**
+//     * {@link Automatically}
+//     * 检查是否有相机权限
+//     *
+//     * @param type 请求类型 one of {@link RequestType#AUTO} {@link RequestType#MANUAL}
+//     */
+//    public void requestCameraPermission(@RequestType int type) {
+//        int request = type == RequestType.AUTO ? Automatically.LOCATION : Manually.LOCATION;
+//        int permission = checkSelfPermission(Manifest.permission.CAMERA);
+//        if (permission != PERMISSION_GRANTED) {
+//            requestPermissions(new String[]
+//                    {Manifest.permission.CAMERA}, request);
+//        } else cameraGranted();
+//    }
+//
+//    /**
+//     * {@link Automatically}
+//     * 检查是否有相册权限
+//     *
+//     * @param type 请求类型 one of {@link RequestType#AUTO} {@link RequestType#MANUAL}
+//     */
+//    public void requestAlbumPermission(@RequestType int type) {
+//        int request = type == RequestType.AUTO ? Automatically.LOCATION : Manually.LOCATION;
+//        int readPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
 //        int writePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (readPermission != PERMISSION_GRANTED
-//                || writePermission != PERMISSION_GRANTED
-        ) {
-            requestPermissions(new String[]
-                    {Manifest.permission.READ_EXTERNAL_STORAGE
-//                            , Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    }, request);
-        } else albumGranted();
-    }
+//        if (readPermission != PERMISSION_GRANTED
+//                || writePermission != PERMISSION_GRANTED) {
+//            requestPermissions(new String[]
+//                    {Manifest.permission.READ_EXTERNAL_STORAGE
+//                            , Manifest.permission.WRITE_EXTERNAL_STORAGE}, request);
+//        } else albumGranted();
+//    }
 
     /**
      * 请求码类型
@@ -89,7 +295,7 @@ public class PermissionBaseActivity extends AppCompatActivity {
     /**
      * 自动请求码，在检测到权限被拒绝时不再弹窗提示
      */
-    private @interface Automatically {
+    public @interface Automatically {
         int LOCATION = 999; // requestCode 自动定位权限请求码
         int CAMERA = 888; // requestCode 自动相机权限请求码
         int ALBUM = 777; // requestCode 自动相册权限请求码
@@ -98,20 +304,10 @@ public class PermissionBaseActivity extends AppCompatActivity {
     /**
      * 手动请求码，在检测到权限被拒绝时会弹窗引导用户手动设置
      */
-    private @interface Manually {
+    public @interface Manually {
         int LOCATION = 99; // requestCode 手动定位权限请求码
         int CAMERA = 88; // requestCode 手动相机权限请求码
         int ALBUM = 77; // requestCode 手动相册权限请求码
-    }
-
-    private ConfirmPopupView confirm = null;
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK)
-            // 设置返回时检查自动权限
-            permissionSettingResult(requestCode);
     }
 
     /**
@@ -150,62 +346,6 @@ public class PermissionBaseActivity extends AppCompatActivity {
     protected void albumDenied() {
     }
 
-    /**
-     * 当用户在此前勾选了不再提示并且这一次手动设置之后返回的未知结果
-     * 根据{@link Automatically}请求码确定该调用的方法
-     *
-     * @param requestCode {@link Automatically}权限请求码
-     */
-    protected void permissionSettingResult(@Automatically int requestCode) {
-        switch (requestCode) {
-            case Automatically.LOCATION:
-                requestLocationPermission(RequestType.AUTO);
-                break;
-            case Automatically.CAMERA:
-                requestCameraPermission(RequestType.AUTO);
-                break;
-            case Automatically.ALBUM:
-                requestAlbumPermission(RequestType.AUTO);
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * 权限被拒但未勾选不再提醒
-     * 弹出消息框提示重试
-     * 只能接受{@link Automatically}
-     */
-    private void popUpForPermissionAutomatically(String p, @StringRes int content) {
-        if (confirm == null)
-            confirm = new XPopup.Builder(this).asConfirm(getString(R.string.permissionTitle), getString(content), getString(R.string.imSure), getString(R.string.retry), () -> {
-                if (p.equals(Manifest.permission.ACCESS_FINE_LOCATION))
-                    requestLocationPermission(RequestType.MANUAL);
-                else if (p.equals(Manifest.permission.CAMERA))
-                    requestCameraPermission(RequestType.MANUAL);
-                else if (p.equals(Manifest.permission.READ_EXTERNAL_STORAGE))
-                    requestAlbumPermission(RequestType.MANUAL);
-            }, this::locationDenied, false);
-        confirm.show();
-    }
-
-    /**
-     * 权限被拒且不再提醒
-     * 弹出消息框引导用户手动设置
-     * 只能接受{@link Automatically}
-     */
-    private void popUpForPermissionManually(@StringRes int content, @Automatically int requestCode) {
-        if (confirm == null)
-            confirm = new XPopup.Builder(this).asConfirm(getString(R.string.permissionTitle), getString(content), getString(R.string.notNow), getString(R.string.goSetting), () -> {
-                Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                Uri uri = Uri.fromParts("package", getPackageName(), null);
-                intent.setData(uri);
-                startActivityForResult(intent, requestCode);
-            }, this::locationDenied, false);
-
-        confirm.show();
-    }
 
     // 到这里结果返回时系统弹窗已经弹过，因此若没有权限则无需在此检查
     // 但若此时请求码为手动，说明之前用户拒绝过，则需要判断用户是否之前勾选了不再提醒
@@ -217,57 +357,24 @@ public class PermissionBaseActivity extends AppCompatActivity {
         // 定位权限
         if (requestCode == Automatically.LOCATION || requestCode == Manually.LOCATION) {
             if (grantResults.length > 0) {
-                if (grantResults[0] == PERMISSION_GRANTED) {
-                    locationGranted();
-                } else if (grantResults[0] == PERMISSION_DENIED) {
-                    locationDenied();
-                    if (shouldShowRequestPermissionRationale(Manifest.permission.ACCESS_FINE_LOCATION)) {
-                        popUpForPermissionAutomatically(Manifest.permission.ACCESS_FINE_LOCATION, R.string.locationPermissionContentWithoutCheck);
-                    } else {
-                        locationDenied();
-                        popUpForPermissionManually(R.string.locationPermissionContentWithCheck, Automatically.LOCATION);
-//                        AppUtils.exitApp();
-//                        if (requestCode == Manually.LOCATION) {
-//                        }
-                    }
-                }
+                if (grantResults[0] == PERMISSION_GRANTED) locationGranted();
+                else locationDenied();
             }
         }
 
         // 相机权限
         else if (requestCode == Automatically.CAMERA || requestCode == Manually.CAMERA) {
             if (grantResults.length > 0) {
-                if (grantResults[0] == PERMISSION_GRANTED) {
-                    locationGranted();
-                } else if (grantResults[0] == PERMISSION_DENIED) {
-                    cameraDenied();
-                    if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                        popUpForPermissionAutomatically(Manifest.permission.CAMERA, R.string.cameraPermissionContentWithoutCheck);
-                    } else {
-                        cameraDenied();
-                        if (requestCode == Manually.CAMERA) {
-                            popUpForPermissionManually(R.string.cameraPermissionContentWithCheck, Automatically.CAMERA);
-                        }
-                    }
-                }
+                if (grantResults[0] == PERMISSION_GRANTED) cameraGranted();
+                else cameraDenied();
             }
         }
 
         // 相册权限
         else if (requestCode == Automatically.ALBUM || requestCode == Manually.ALBUM) {
             if (grantResults.length > 0) {
-                if (grantResults[0] == PERMISSION_GRANTED) {
-                    albumDenied();
-                } else if (grantResults[0] == PERMISSION_DENIED) {
-                    if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                        popUpForPermissionAutomatically(Manifest.permission.READ_EXTERNAL_STORAGE, R.string.albumPermissionContentWithoutCheck);
-                    } else {
-                        albumDenied();
-                        if (requestCode == Manually.ALBUM) {
-                            popUpForPermissionManually(R.string.albumPermissionContentWithCheck, Automatically.ALBUM);
-                        }
-                    }
-                }
+                if (grantResults[0] == PERMISSION_GRANTED) albumGranted();
+                else albumDenied();
             }
         }
     }

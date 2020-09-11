@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.scene.main.my.user;
+package com.example.schoolairdroprefactoredition.scene.user.user;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

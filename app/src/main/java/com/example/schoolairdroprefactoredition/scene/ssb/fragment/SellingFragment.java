@@ -17,10 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
-import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -32,9 +33,10 @@ import java.util.List;
  * {@link BoughtFragment}
  */
 public class SellingFragment extends Fragment implements SSBFilter.OnFilterListener, BaseChildFragmentViewModel.OnRequestListener {
-    public static SellingFragment newInstance(String param) {
-        SellingFragment fragment = new SellingFragment();
 
+    public static SellingFragment newInstance(Bundle bundle) {
+        SellingFragment fragment = new SellingFragment();
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -45,14 +47,23 @@ public class SellingFragment extends Fragment implements SSBFilter.OnFilterListe
 
     private SSBFilter mFilter;
 
-    private List<TestSSBItemBean> mList;
+    private List<DomainGoodsInfo.DataBean> mList;
 
     private long lastClickTime = 0;
+
+    private Bundle bundle;
+
+    private DomainAuthorize token;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        bundle = getArguments();
+        if (bundle == null)
+            bundle = new Bundle();
+
+        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
     }
 
     @Nullable
@@ -73,10 +84,11 @@ public class SellingFragment extends Fragment implements SSBFilter.OnFilterListe
         mAdapter.addHeaderView(mFilter);
         mRecycler.setAdapter(mAdapter);
 
-        viewModel.getSellingBeans().observe(getViewLifecycleOwner(), data -> {
-            mList = data;
-            mAdapter.setList(data);
-        });
+        if (token != null)
+            viewModel.getSelling(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
+                mList = data.getData();
+                mAdapter.setList(mList);
+            });
 
         mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

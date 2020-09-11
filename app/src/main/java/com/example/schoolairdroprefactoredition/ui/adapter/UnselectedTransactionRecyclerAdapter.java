@@ -5,7 +5,7 @@ import android.view.View;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.scene.arrangeplace.SelectPositionActivity;
+import com.example.schoolairdroprefactoredition.scene.arrangeplace.arrangePositionActivity;
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
 import com.example.schoolairdroprefactoredition.domain.DomainUnselectedTransaction;
 
@@ -23,6 +23,6 @@ public class UnselectedTransactionRecyclerAdapter extends BaseQuickAdapter<Domai
 
     @Override
     public void onClick(View v) {
-        SelectPositionActivity.startForResult(getContext(), ChatActivity.SELECT_POSITION);
+        arrangePositionActivity.startForResult(getContext(), ChatActivity.SELECT_POSITION);
     }
 }

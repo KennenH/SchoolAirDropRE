@@ -18,14 +18,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.ArrangePositionRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.ArrangePositionHeader;
 import com.example.schoolairdroprefactoredition.ui.components.Location;
 
-public class SelectPositionActivity extends AppCompatActivity {
+public class arrangePositionActivity extends ImmersionStatusBarActivity {
 
     public static void startForResult(Context context, int requestCode) {
-        Intent intent = new Intent(context, SelectPositionActivity.class);
+        Intent intent = new Intent(context, arrangePositionActivity.class);
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).startActivityForResult(intent, requestCode);
         }

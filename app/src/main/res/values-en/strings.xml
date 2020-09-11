@@ -150,17 +150,25 @@
     <string name="warningForSeller">If the countdown ends and the seller fails to complete the delivery, the seller\'s credit score will be deducted.</string>
     <string name="receivingCode">[img src=ic_qr/] Receiving QR Code</string>
     <string name="notMatchDescription">Item not match the description</string>
-    <string name="notNow">NEXT TIME</string>
-    <string name="goSetting">GO TO SET</string>
+    <string name="NEXTTIME">NEXT TIME</string>
+    <string name="GOSETTING">GO SETTING</string>
     <string name="purchasing">Purchasing</string>
-    <string name="clickToGrantLocationPermission">Click to grant locating permission</string>
+    <string name="goToGrantLocationPermission">Grant locating permission</string>
     <string name="permissionDenied">Permission denied…</string>
-    <string name="locationPermissionContentWithoutCheck">"Positioning will be used to obtain information on the Home page, nearby items, transaction locations, and item release locations. "</string>
-    <string name="cameraPermissionContentWithoutCheck">The camera will be used to take photos in real time. This function may be required when uploading avatars and publishing items.</string>
-    <string name="albumPermissionContentWithoutCheck">"The album will be used to select pictures, upload avatars, and post items may require this feature. "</string>
-    <string name="imSure">I\'M SURE</string>
-    <string name="grantPermission">GRANT PERMISSION</string>
-    <string name="retry">RE-TRY</string>
+    <string name="locationPermissionContent">Location will be used to obtain information on the Home page, nearby items, transaction locations, and item release locations.</string>
+    <string name="cameraPermissionContent">The camera will be used to take photos in real time. This function may be required when uploading avatars and publishing items.</string>
+    <string name="albumPermissionContent">The album will be used to select pictures, upload avatars, and post items may require this feature.</string>
+    <string name="REJECT">REJECT</string>
+    <string name="GRANTPERMISSION">GRANT PERMISSION</string>
+    <string name="RETRY">RE-TRY</string>
     <string name="logged">Logged</string>
     <string name="app_name_with_icon">[img src=ic_logo/] SchoolAirDrop</string>
+    <string name="networkUnavailable">Network connection is unavailable\\nPlease check network connection</string>
+    <string name="connectionLost">Connection lost, please try again</string>
+    <string name="submitSuccess">Success</string>
+    <string name="submitFailed">Failed</string>
+    <string name="submitSuccessTip">The item enters the review stage, and the result will be notified to you via app station letter within 72 hours</string>
+    <string name="submitFailedTip">It may be because the network is unstable or the server is too busy, please try again later</string>
+    <string name="OK">OK</string>
+    <string name="mapNoPermission">Location Obtain Failed</string>
 </resources>

@@ -1,6 +1,7 @@
-package com.example.schoolairdroprefactoredition.scene.main.my.user;
+package com.example.schoolairdroprefactoredition.scene.user.user;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,12 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 import com.example.schoolairdroprefactoredition.scene.credit.CreditActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentUserBinding;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderOnlyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.UserHomeBaseInfo;
 import com.example.schoolairdroprefactoredition.ui.components.UserHomeMoreInfo;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.XPopup;
 
@@ -41,6 +45,23 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
 
     private FragmentManager manager;
 
+    private Bundle bundle;
+
+    private DomainGetUserInfo.DataBean info;
+    private DomainAuthorize token;
+
+    public static UserFragment newInstance(Bundle bundle) {
+        UserFragment fragment = new UserFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    public static UserFragment newInstance(Intent intent) {
+        UserFragment fragment = new UserFragment();
+        fragment.setArguments(intent.getExtras());
+        return fragment;
+    }
+
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
@@ -50,6 +71,18 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
         userTransactionsHistory = getResources().getString(R.string.transactionsHistory);
 
         if (getActivity() != null) manager = getActivity().getSupportFragmentManager();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bundle = getArguments();
+        if (bundle == null) {
+            bundle = new Bundle();
+        } else {
+            info = (DomainGetUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+            token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        }
     }
 
     @Nullable
@@ -74,13 +107,20 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
 
         mRecycler.setAdapter(adapter);
 
+        init();
+
         return binding.getRoot();
+    }
+
+    private void init() {
+        mBaseInfo.setUserBaseInfo(info);
+        mMoreInfo.setUserMoreInfo(info);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.modify_info) {
-            transact(manager, new UserModifyInfoFragment(), userInfoModify);
+            transact(manager, UserModifyInfoFragment.newInstance(bundle), userInfoModify);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -93,7 +133,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
     @Override
     public void onAvatarClick(ImageView src) {
         new XPopup.Builder(getContext())
-                .asImageViewer(src, R.drawable.logo, false, -1, -1, 50, false, new MyUtil.ImageLoader())
+                .asImageViewer(src, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), false, -1, -1, 50, false, new MyUtil.ImageLoader())
                 .show();
     }
 
@@ -105,6 +145,6 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
     @Override
     public void onCreditsClick() {
         // 信用界面
-        CreditActivity.start(getContext());
+        CreditActivity.start(getContext(), bundle);
     }
 }

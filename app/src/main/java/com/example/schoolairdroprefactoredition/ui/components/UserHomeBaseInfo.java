@@ -10,6 +10,8 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 public class UserHomeBaseInfo extends ConstraintLayout implements View.OnClickListener {
@@ -41,6 +43,12 @@ public class UserHomeBaseInfo extends ConstraintLayout implements View.OnClickLi
         mJoinTime = findViewById(R.id.user_join_time);
 
         mAvatar.setOnClickListener(this);
+    }
+
+    public void setUserBaseInfo(DomainGetUserInfo.DataBean info) {
+        mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
+        mUserName.setText(info.getUname());
+
     }
 
     public interface OnBaseInfoActionListener {

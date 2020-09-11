@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
@@ -27,12 +28,9 @@ import java.util.List;
  */
 public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener, BaseChildFragmentViewModel.OnRequestListener {
 
-    public static SoldFragment newInstance(String param1, String param2) {
+    public static SoldFragment newInstance(Bundle bundle) {
         SoldFragment fragment = new SoldFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
+        fragment.setArguments(bundle);
         return fragment;
     }
 
@@ -43,7 +41,7 @@ public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener
 
     private SSBFilter mFilter;
 
-    private List<TestSSBItemBean> mList;
+    private List<DomainGoodsInfo.DataBean> mList;
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -85,8 +83,8 @@ public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener
         mRecycler.setAdapter(mAdapter);
 
         viewModel.getSoldBeans().observe(getViewLifecycleOwner(), data -> {
-            mList = data;
-            mAdapter.setList(data);
+            mList = data.getData();
+            mAdapter.setList(mList);
         });
 
         mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {

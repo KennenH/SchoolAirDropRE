@@ -10,8 +10,7 @@ import androidx.fragment.app.FragmentManager;
 import com.example.schoolairdroprefactoredition.R;
 
 /**
- * {@link com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity}页面子fragment的base fragment
- * 重写设置页面的切换动画
+ * 重写切换动画，将所有子页面都以fragment打开
  */
 public class TransactionBaseFragment extends Fragment {
     protected void transact(FragmentManager manager, @NonNull Fragment fragment, @Nullable String tag) {

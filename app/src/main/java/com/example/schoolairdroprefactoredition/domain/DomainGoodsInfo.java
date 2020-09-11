@@ -25,7 +25,7 @@ public class DomainGoodsInfo {
      * "goods_is_brandNew":1,
      * "goods_description":"114",
      * "seller_info":{"uid":15,"uname":"user_15","credit_num":2,"user_img_path":"http://106.54.110.46/public/assets/user/avatars/default.jpg"}},
-     *
+     * <p>
      * {"goods_name":"金毛",
      * "goods_img_cover":"",
      * "goods_img_set":"",
@@ -89,7 +89,7 @@ public class DomainGoodsInfo {
         private String goods_img_cover;
         private String goods_img_set;
         private String goods_id;
-        private int goods_price;
+        private String goods_price;
         private int goods_is_quotable;
         private int goods_is_brandNew;
         private String goods_description;
@@ -127,11 +127,11 @@ public class DomainGoodsInfo {
             this.goods_id = goods_id;
         }
 
-        public int getGoods_price() {
+        public String getGoods_price() {
             return goods_price;
         }
 
-        public void setGoods_price(int goods_price) {
+        public void setGoods_price(String goods_price) {
             this.goods_price = goods_price;
         }
 

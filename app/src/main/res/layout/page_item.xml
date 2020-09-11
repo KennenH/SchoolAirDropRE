@@ -55,7 +55,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/item_page_icon" />
 
-    <Switch
+    <androidx.appcompat.widget.SwitchCompat
         android:id="@+id/item_page_switch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

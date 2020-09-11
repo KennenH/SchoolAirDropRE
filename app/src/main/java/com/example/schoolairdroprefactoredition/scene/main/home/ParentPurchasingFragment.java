@@ -30,8 +30,6 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
         super.onCreate(savedInstanceState);
         if (getActivity() != null && getActivity() instanceof MainActivity)
             ((MainActivity) getActivity()).setOnLocationListener(ParentPurchasingFragment.this);
-
-
     }
 
     @Nullable

@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.scene.ssb.fragment;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISellingCallback;
@@ -14,22 +15,21 @@ public class SellingViewModel extends BaseChildFragmentViewModel implements ISel
 
     private SellingImpl sellingImpl;
 
-    private MutableLiveData<List<TestSSBItemBean>> mSellingBeans;
+    private MutableLiveData<DomainGoodsInfo> mSellingBeans = new MutableLiveData<>();
 
     public SellingViewModel() {
         sellingImpl = new SellingImpl();
         sellingImpl.registerCallback(this);
     }
 
-    public LiveData<List<TestSSBItemBean>> getSellingBeans() {
-        sellingImpl.getSellingList();
+    public LiveData<DomainGoodsInfo> getSelling(String token) {
+        sellingImpl.getSelling(token);
         return mSellingBeans;
     }
 
     @Override
-    public void onSellingListLoaded(List<TestSSBItemBean> beans) {
-        mSellingBeans = new MutableLiveData<>();
-        mSellingBeans.setValue(beans);
+    public void onSellingLoaded(DomainGoodsInfo beans) {
+        mSellingBeans.postValue(beans);
     }
 
     @Override

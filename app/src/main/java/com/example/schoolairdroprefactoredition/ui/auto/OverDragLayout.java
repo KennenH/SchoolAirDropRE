@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 
+import com.example.schoolairdroprefactoredition.R;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 
 import me.jessyan.autosize.AutoSizeCompat;
@@ -20,6 +21,7 @@ public class OverDragLayout extends SmartRefreshLayout {
     }
 
     private void init() {
+        setBackgroundColor(getContext().getResources().getColor(R.color.primary, getContext().getTheme()));
         setEnableRefresh(false);
         setFooterMaxDragRate(1.2f);
         setHeaderMaxDragRate(1.4f);

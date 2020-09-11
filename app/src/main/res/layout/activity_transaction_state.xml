@@ -79,7 +79,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/state_wrapper"
         app:spb_animateToCurrentProgressState="true"
-        app:spb_animationDuration="@integer/animFastSpeed"
+        app:spb_animationDuration="@integer/animNormalSpeed"
         app:spb_checkStateCompleted="true"
         app:spb_currentStateNumber="two"
         app:spb_maxStateNumber="four"

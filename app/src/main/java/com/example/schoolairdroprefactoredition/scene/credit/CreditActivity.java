@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,22 +12,29 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.BarUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 import com.example.schoolairdroprefactoredition.ui.adapter.CreditRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout;
-import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
+import com.jaeger.library.StatusBarUtil;
 
 public class CreditActivity extends AppCompatActivity {
 
-    public static void start(Context context) {
+    public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, CreditActivity.class);
+        intent.putExtra(ConstantUtil.KEY_USER_INFO, bundle.getSerializable(ConstantUtil.KEY_USER_INFO));
+        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE));
         context.startActivity(intent);
     }
 
@@ -67,71 +75,39 @@ public class CreditActivity extends AppCompatActivity {
 
     private CreditRecyclerAdapter mAdapter;
 
+    private Bundle bundle;
+    private DomainGetUserInfo.DataBean info;
+    private DomainAuthorize token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit);
-        viewModel = new ViewModelProvider(this).get(CreditViewModel.class);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        viewModel = new ViewModelProvider(this).get(CreditViewModel.class);
 
+        bundle = getIntent().getExtras();
+        if (bundle == null) bundle = new Bundle();
+        info = (DomainGetUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         mCreditNum = findViewById(R.id.credit_num);
         mCreditLevel = findViewById(R.id.credit_level);
         mRecycler = findViewById(R.id.credit_recycler);
         mCreditWrapper = findViewById(R.id.credit_wrapper);
         mHistoryWrapper = findViewById(R.id.credit_recycler_wrapper);
         mAdapter = new CreditRecyclerAdapter();
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("");
-        setSupportActionBar(toolbar);
+
+        // 设置状态栏透明，虚拟按钮背景为白色且按钮颜色为深色
         StatusBarUtil.setTranslucentForImageView(this, 0, toolbar);
+        BarUtils.setNavBarColor(this, Color.WHITE);
+        BarUtils.setNavBarLightMode(this, true);
 
         mRecycler.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, true));
         mRecycler.addItemDecoration(new MarginItemDecoration());
         mRecycler.setAdapter(mAdapter);
-
-        viewModel.getCredit().observe(this, data -> {
-            switch (data.getCredits()) {
-                case CREDIT1:
-                    mCreditNum.setImageDrawable(getDrawable(NUM_1));
-                    mCreditLevel.setText(LV_1);
-                    mCreditLevel.setBackgroundResource(BG_LOW_LIGHT);
-                    mCreditWrapper.setBackgroundResource(BG_LOW_DARK);
-                    mHistoryWrapper.setBackgroundResource(BG_LOW_GRADIENT);
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-//                        mCreditWrapper.setBackgroundColor(getResources().getColor(BG_Low_DARK, getTheme()));
-//                    else
-//                        mCreditWrapper.setBackgroundColor(getResources().getColor(BG_Low_DARK));
-                    break;
-                case CREDIT2:
-                    mCreditNum.setImageDrawable(getDrawable(NUM_2));
-                    mCreditLevel.setText(LV_2);
-                    mCreditLevel.setBackgroundResource(BG_LOW_LIGHT);
-                    mCreditWrapper.setBackgroundResource(BG_LOW_DARK);
-                    mHistoryWrapper.setBackgroundResource(BG_LOW_GRADIENT);
-                    break;
-                case CREDIT3:
-                    mCreditNum.setImageDrawable(getDrawable(NUM_3));
-                    mCreditLevel.setText(LV_3);
-                    mCreditLevel.setBackgroundResource(BG_HIGH_LIGHT);
-                    mCreditWrapper.setBackgroundResource(BG_HIGH_DARK);
-                    mHistoryWrapper.setBackgroundResource(BG_HIGH_GRADIENT);
-                    break;
-                case CREDIT4:
-                    mCreditNum.setImageDrawable(getDrawable(NUM_4));
-                    mCreditLevel.setText(LV_4);
-                    mCreditLevel.setBackgroundResource(BG_HIGH_LIGHT);
-                    mCreditWrapper.setBackgroundResource(BG_HIGH_DARK);
-                    mHistoryWrapper.setBackgroundResource(BG_HIGH_GRADIENT);
-                    break;
-                case CREDIT5:
-                    mCreditNum.setImageDrawable(getDrawable(NUM_5));
-                    mCreditLevel.setText(LV_5);
-                    mCreditLevel.setBackgroundResource(BG_HIGH_LIGHT);
-                    mCreditWrapper.setBackgroundResource(BG_HIGH_DARK);
-                    mHistoryWrapper.setBackgroundResource(BG_HIGH_GRADIENT);
-                    break;
-            }
-        });
 
         viewModel.getCreditHistory().observe(this, data -> {
             mAdapter.setList(data);
@@ -139,7 +115,50 @@ public class CreditActivity extends AppCompatActivity {
             mRecycler.smoothScrollToPosition(0);
         });
 
+        init();
+    }
 
+    private void init() {
+        int credit = info.getCredit_num();
+        switch (credit) {
+            case CREDIT1:
+                mCreditNum.setImageDrawable(ContextCompat.getDrawable(this, NUM_1));
+                mCreditLevel.setText(LV_1);
+                mCreditLevel.setBackgroundResource(BG_LOW_LIGHT);
+                mCreditLevel.setTextColor(getResources().getColor(BG_LOW_DARK, getTheme()));
+                mCreditWrapper.setBackgroundResource(BG_LOW_DARK);
+                mHistoryWrapper.setBackgroundResource(BG_LOW_GRADIENT);
+                break;
+            case CREDIT2:
+                mCreditNum.setImageDrawable(ContextCompat.getDrawable(this, NUM_2));
+                mCreditLevel.setText(LV_2);
+                mCreditLevel.setBackgroundResource(BG_LOW_LIGHT);
+                mCreditLevel.setTextColor(getResources().getColor(BG_LOW_DARK, getTheme()));
+                mCreditWrapper.setBackgroundResource(BG_LOW_DARK);
+                mHistoryWrapper.setBackgroundResource(BG_LOW_GRADIENT);
+                break;
+            case CREDIT3:
+                mCreditNum.setImageDrawable(ContextCompat.getDrawable(this, NUM_3));
+                mCreditLevel.setText(LV_3);
+                mCreditLevel.setBackgroundResource(BG_HIGH_LIGHT);
+                mCreditWrapper.setBackgroundResource(BG_HIGH_DARK);
+                mHistoryWrapper.setBackgroundResource(BG_HIGH_GRADIENT);
+                break;
+            case CREDIT4:
+                mCreditNum.setImageDrawable(ContextCompat.getDrawable(this, NUM_4));
+                mCreditLevel.setText(LV_4);
+                mCreditLevel.setBackgroundResource(BG_HIGH_LIGHT);
+                mCreditWrapper.setBackgroundResource(BG_HIGH_DARK);
+                mHistoryWrapper.setBackgroundResource(BG_HIGH_GRADIENT);
+                break;
+            case CREDIT5:
+                mCreditNum.setImageDrawable(ContextCompat.getDrawable(this, NUM_5));
+                mCreditLevel.setText(LV_5);
+                mCreditLevel.setBackgroundResource(BG_HIGH_LIGHT);
+                mCreditWrapper.setBackgroundResource(BG_HIGH_DARK);
+                mHistoryWrapper.setBackgroundResource(BG_HIGH_GRADIENT);
+                break;
+        }
     }
 
     @Override

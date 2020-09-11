@@ -104,7 +104,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding"
             android:layout_marginBottom="@dimen/general_padding"
-            android:background="@drawable/bg_rounded_theme"
+            android:background="@drawable/button_rounded_theme_dark"
             android:paddingStart="@dimen/general_padding"
             android:paddingTop="@dimen/general_padding_small"
             android:paddingEnd="@dimen/general_padding"

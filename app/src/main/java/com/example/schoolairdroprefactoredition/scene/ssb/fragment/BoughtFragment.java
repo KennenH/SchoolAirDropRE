@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
@@ -34,7 +35,7 @@ public class BoughtFragment extends Fragment implements SSBFilter.OnFilterListen
     private SSBAdapter mAdapter;
     private SSBFilter mFilter;
 
-    private List<TestSSBItemBean> mList;
+    private List<DomainGoodsInfo.DataBean> mList;
 
     private Bundle bundle;
 
@@ -79,16 +80,15 @@ public class BoughtFragment extends Fragment implements SSBFilter.OnFilterListen
         mRecycler.setAdapter(mAdapter);
 
         viewModel.getBoughtBeans().observe(getViewLifecycleOwner(), data -> {
-            mList = data;
-            mAdapter.setList(data);
+            mList = data.getData();
+            mAdapter.setList(data.getData());
         });
 
         mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (getActivity() instanceof SSBActivity) {
+                if (getActivity() instanceof SSBActivity)
                     ((SSBActivity) getActivity()).hideSearchBar();
-                }
             }
         });
 
