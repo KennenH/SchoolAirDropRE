@@ -130,7 +130,6 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         mAdapter.addFooterView(add);
         mPicRecycler.setAdapter(mAdapter);
 
-//        requestLocationPermission(RequestType.AUTO);
         requestPermission(PermissionConstants.LOCATION, RequestType.AUTO);
     }
 
@@ -143,7 +142,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     @Override
     protected void locationDenied() {
         super.locationDenied();
-        mLocation.setDescription(getString(R.string.goToGrantLocationPermission));
+        mLocation.setDescription(getString(R.string.errorRetry));
     }
 
     @Override

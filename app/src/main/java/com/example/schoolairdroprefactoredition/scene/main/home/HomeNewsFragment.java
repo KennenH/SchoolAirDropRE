@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.scene.main.home;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.amap.api.location.AMapLocation;
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
@@ -40,6 +42,8 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
 
     private int mFragmentNum;
 
+    private static boolean requested = false;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +65,10 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
 
         initRecycler();
 
-        if (mLocation == null)
-            locate(PermissionBaseActivity.RequestType.AUTO);// 自动请求MainActivity的定位
+        if (mLocation == null && !requested) {
+            locate(PermissionBaseActivity.RequestType.AUTO);// 自动请求MainActivity的定位}
+            requested = true;
+        }
 
         return binding.getRoot();
     }

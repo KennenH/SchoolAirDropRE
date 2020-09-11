@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,9 +23,10 @@ import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.blankj.utilcode.constant.PermissionConstants;
+import com.blankj.utilcode.util.BarUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
-import com.jaeger.library.StatusBarUtil;
+import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -58,7 +60,10 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
         setContentView(R.layout.activity_amap);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         Toolbar mToolbar = findViewById(R.id.toolbar);
-        StatusBarUtil.setTranslucentForImageView(this, 40, mToolbar);
+        StatusBarUtil.setTranslucentForImageView(this, mToolbar);
+        BarUtils.setNavBarColor(this, Color.WHITE);
+        BarUtils.setNavBarLightMode(this, true);
+
         setSupportActionBar(mToolbar);
 
         mMapView = findViewById(R.id.map);

@@ -44,7 +44,7 @@ public class ParentNewsFragment extends BaseParentFragment
         HomeNavigatorAdapter adapter = new HomeNavigatorAdapter(getContext(), viewPager, HomeNavigatorAdapter.HOME);
         commonNavigator.setAdapter(adapter);
         viewPager.setAdapter(homePagerAdapter);
-        viewPager.setOffscreenPageLimit(3);
+//        viewPager.setOffscreenPageLimit(0);
         indicator.setNavigator(commonNavigator);
         ViewPagerHelper.bind(indicator, viewPager);
 

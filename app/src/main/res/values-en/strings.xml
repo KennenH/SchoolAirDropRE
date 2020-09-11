@@ -114,7 +114,7 @@
     <string name="time">%2$d %3$d, %1$d</string>
     <string name="cover">Cover</string>
     <string name="picSet">Picture Set</string>
-    <string name="locating">Locating...</string>
+    <string name="locating">Locating…</string>
     <string name="errorRetry">Retry</string>
     <string name="postMyItem">Post My Item</string>
     <string name="errorNetLocation">Something Went Wrong…</string>
@@ -153,8 +153,8 @@
     <string name="NEXTTIME">NEXT TIME</string>
     <string name="GOSETTING">GO SETTING</string>
     <string name="purchasing">Purchasing</string>
-    <string name="goToGrantLocationPermission">Grant locating permission</string>
-    <string name="permissionDenied">Permission denied…</string>
+    <string name="obtainLocationInfo">Obtain Location Information</string>
+    <string name="permissionDenied">Permission denied</string>
     <string name="locationPermissionContent">Location will be used to obtain information on the Home page, nearby items, transaction locations, and item release locations.</string>
     <string name="cameraPermissionContent">The camera will be used to take photos in real time. This function may be required when uploading avatars and publishing items.</string>
     <string name="albumPermissionContent">The album will be used to select pictures, upload avatars, and post items may require this feature.</string>

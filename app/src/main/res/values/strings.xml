@@ -162,7 +162,7 @@
     <string name="cover">封面</string>
     <string name="picSet">图片集</string>
     <string name="locating">正在获取定位…</string>
-    <string name="errorNetLocation">网络或定位出错啦…</string>
+    <string name="errorNetLocation">网络或定位出错啦</string>
     <string name="errorEmpty">附近还没有人发布过物品 快去发布你自己的物品吧</string>
     <string name="postMyItem">去发布我的物品</string>
     <string name="errorRetry">重试</string>
@@ -181,8 +181,8 @@
     <string name="receivingCode">[img src=ic_qr/] 收货码</string>
     <string name="GOSETTING">去设置</string>
     <string name="NEXTTIME">不了</string>
-    <string name="goToGrantLocationPermission">获取定位信息</string>
-    <string name="permissionDenied">权限被拒绝啦…</string>
+    <string name="obtainLocationInfo">获取定位信息</string>
+    <string name="permissionDenied">权限被拒绝</string>
     <string name="mapNoPermission">定位信息获取失败</string>
     <string name="locationPermissionContent">定位将用于获取首页信息、淘物附近在售、交易地点以及物品发布位置。若不允许，校园空投核心功能将不可用。</string>
     <string name="cameraPermissionContent">相机将用于即时拍照，在上传头像以及物品发布时可能需要此功能。若不允许，上述功能将不可用。</string>

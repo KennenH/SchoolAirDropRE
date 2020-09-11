@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.location.AMapLocation;
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;

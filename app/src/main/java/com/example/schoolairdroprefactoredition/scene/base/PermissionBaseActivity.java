@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
+import android.util.Log;
 
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.LogUtils;
@@ -44,10 +45,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
 
         int finalRes = res;
         PermissionUtils.permission(permission)
-                .rationale((activity, shouldRequest) -> {
-                })
                 .callback((isAllGranted, granted, deniedForever, denied) -> {
-                    LogUtils.d(isAllGranted, granted, deniedForever, denied);
                     // 权限允许
                     if (isAllGranted) {
                         switch (permission) {
@@ -66,7 +64,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                         return;
                     }
 
-                    // 拒绝并不再提醒
+//                     拒绝并不再提醒
                     if (deniedForever.size() != 0) {
                         if (type == RequestType.MANUAL)
                             popUpToSettingsForPermission(finalRes, permission);
@@ -91,27 +89,25 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                 .request();
     }
 
-    private void popUpForRequestPermission(@PermissionConstants.Permission String permission, PermissionUtils.OnRationaleListener.ShouldRequest shouldRequest) {
-        int request = 0;
-        switch (permission) {
-            case PermissionConstants.LOCATION:
-                request = Automatically.LOCATION;
-                break;
-            case PermissionConstants.CAMERA:
-                request = Automatically.CAMERA;
-                break;
-            case PermissionConstants.STORAGE:
-                request = Automatically.ALBUM;
-                break;
-            default:
-                break;
-        }
-        new XPopup.Builder(this).asConfirm(getString(R.string.permissionTitle), getString(R.string.locationPermissionContent), getString(android.R.string.cancel), getString(android.R.string.ok)
+    private void popUpForRequestPermission(Activity activity, @StringRes int res, PermissionUtils.OnRationaleListener.ShouldRequest shouldRequest) {
+//        int request = 0;
+//        switch (permission) {
+//            case PermissionConstants.LOCATION:
+//                request = Automatically.LOCATION;
+//                break;
+//            case PermissionConstants.CAMERA:
+//                request = Automatically.CAMERA;
+//                break;
+//            case PermissionConstants.STORAGE:
+//                request = Automatically.ALBUM;
+//                break;
+//            default:
+//                break;
+//        }
+        new XPopup.Builder(activity).asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
                 , () -> shouldRequest.again(true),
                 () -> shouldRequest.again(false), false)
                 .show();
-
-
     }
 
     private void popUpForRequestPermission(@StringRes int res, @PermissionConstants.Permission String permission) {
@@ -188,9 +184,8 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK)
-            // 设置返回时检查自动权限
-            checkPermissionWithoutRequest(requestCode);
+        // 设置返回时检查自动权限
+        checkPermissionWithoutRequest(requestCode);
     }
 
     /**
@@ -346,36 +341,31 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     protected void albumDenied() {
     }
 
-
-    // 到这里结果返回时系统弹窗已经弹过，因此若没有权限则无需在此检查
-    // 但若此时请求码为手动，说明之前用户拒绝过，则需要判断用户是否之前勾选了不再提醒
-    // 若否，则直接请求权限
-    // 若是，则弹出提示框引导用户手动给与权限
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
-        // 定位权限
-        if (requestCode == Automatically.LOCATION || requestCode == Manually.LOCATION) {
-            if (grantResults.length > 0) {
-                if (grantResults[0] == PERMISSION_GRANTED) locationGranted();
-                else locationDenied();
-            }
-        }
-
-        // 相机权限
-        else if (requestCode == Automatically.CAMERA || requestCode == Manually.CAMERA) {
-            if (grantResults.length > 0) {
-                if (grantResults[0] == PERMISSION_GRANTED) cameraGranted();
-                else cameraDenied();
-            }
-        }
-
-        // 相册权限
-        else if (requestCode == Automatically.ALBUM || requestCode == Manually.ALBUM) {
-            if (grantResults.length > 0) {
-                if (grantResults[0] == PERMISSION_GRANTED) albumGranted();
-                else albumDenied();
-            }
-        }
-    }
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+//                                           @NonNull int[] grantResults) {
+//        // 定位权限
+//        if (requestCode == Automatically.LOCATION || requestCode == Manually.LOCATION) {
+//            if (grantResults.length > 0) {
+//                if (grantResults[0] == PERMISSION_GRANTED) locationGranted();
+//                else locationDenied();
+//            }
+//        }
+//
+//        // 相机权限
+//        else if (requestCode == Automatically.CAMERA || requestCode == Manually.CAMERA) {
+//            if (grantResults.length > 0) {
+//                if (grantResults[0] == PERMISSION_GRANTED) cameraGranted();
+//                else cameraDenied();
+//            }
+//        }
+//
+//        // 相册权限
+//        else if (requestCode == Automatically.ALBUM || requestCode == Manually.ALBUM) {
+//            if (grantResults.length > 0) {
+//                if (grantResults[0] == PERMISSION_GRANTED) albumGranted();
+//                else albumDenied();
+//            }
+//        }
+//    }
 }
