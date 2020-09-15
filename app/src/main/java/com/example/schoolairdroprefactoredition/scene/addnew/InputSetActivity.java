@@ -1,11 +1,7 @@
 package com.example.schoolairdroprefactoredition.scene.addnew;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -16,32 +12,46 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 
-public class SellingAddSetActivity extends ImmersionStatusBarActivity {
+public class InputSetActivity extends ImmersionStatusBarActivity {
 
-    public static void start(Context context, int type, String content) {
-        Intent intent = new Intent(context, SellingAddSetActivity.class);
-        intent.putExtra("Type", type);
-        intent.putExtra("Content", content);
+    /**
+     * @param context context
+     * @param type    类型 one of {@link InputSetActivity#TYPE_TITLE} {@link InputSetActivity#TYPE_DESCRIPTION}
+     * @param input   已有输入 方便用户修改而不是全部重写
+     * @param title   标题
+     */
+    public static void start(Context context, int type, String input, String title) {
+        Intent intent = new Intent(context, InputSetActivity.class);
+        intent.putExtra(TITLE, title);
+        intent.putExtra(TYPE, type);
+        intent.putExtra(CONTENT, input);
         ((AppCompatActivity) context).startActivityForResult(intent, RESULT_CODE);
     }
 
     public static final int RESULT_CODE = 100;
     public static final String RESULT = "Result";
+    public static final String TITLE = "Title";
     public static final String TYPE = "Type";
+    public static final String CONTENT = "Content";
 
-    public static final int TYPE_TITLE = 0;
-    public static final int TYPE_DESCRIPTION = 1;
+    public static final int TYPE_TITLE = 0; // 类型 仅一行
+    public static final int TYPE_DESCRIPTION = 1; // 类型 多行
 
     private static final int MAX_TITLE = 30;
     private static final int MAX_DESCRIPTION = 500;
 
     private int type;
     private String content;
+    private String title = "";
 
+    private TextView mTitle;
     private EditText mInput;
     private TextView mRemaining;
 
@@ -50,12 +60,15 @@ public class SellingAddSetActivity extends ImmersionStatusBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selling_add_set);
         setSupportActionBar(findViewById(R.id.toolbar));
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        type = getIntent().getIntExtra("Type", TYPE_TITLE);
-        content = getIntent().getStringExtra("Content");
 
+        Intent intent = getIntent();
+        title = intent.getStringExtra(TITLE);
+        type = intent.getIntExtra(TYPE, TYPE_TITLE);
+        content = intent.getStringExtra(CONTENT);
+
+        mTitle = findViewById(R.id.title);
         mInput = findViewById(R.id.input);
-        mRemaining = findViewById(R.id.input_remaining_count);
+        mRemaining = findViewById(R.id.input_tip);
 
         mInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -83,6 +96,11 @@ public class SellingAddSetActivity extends ImmersionStatusBarActivity {
                 KeyboardUtils.hideSoftInput(v);
         });
 
+        init();
+    }
+
+    private void init() {
+        mTitle.setText(title);
         if (type == TYPE_TITLE) {
             mInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_TITLE)});
         } else {

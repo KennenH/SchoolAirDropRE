@@ -1,16 +1,15 @@
 package com.example.schoolairdroprefactoredition.scene.arrangeplace;
 
+import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.os.Bundle;
-import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
@@ -34,7 +33,6 @@ public class UnArrangePositionTransactionActivity extends ImmersionStatusBarActi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_unselected_transaction);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         viewModel = new ViewModelProvider(this).get(UnArrangePositionTransactionViewModel.class);
 
         setSupportActionBar(findViewById(R.id.toolbar));
@@ -43,7 +41,7 @@ public class UnArrangePositionTransactionActivity extends ImmersionStatusBarActi
 
         mAdapter = new UnselectedTransactionRecyclerAdapter();
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mRecycler.addItemDecoration(new MarginItemDecoration(true));
+        mRecycler.addItemDecoration(new MarginItemDecoration());
         mRecycler.setAdapter(mAdapter);
 
         viewModel.getUnselectedTransactionList().observe(this, list -> {

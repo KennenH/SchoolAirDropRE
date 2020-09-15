@@ -1,13 +1,18 @@
 package com.example.schoolairdroprefactoredition.domain;
 
 public class DomainModifyResult {
-    private boolean isSuccess;
+
+    /**
+     * success : true
+     */
+
+    private boolean success;
 
     public boolean isSuccess() {
-        return isSuccess;
+        return success;
     }
 
     public void setSuccess(boolean success) {
-        isSuccess = success;
+        this.success = success;
     }
 }

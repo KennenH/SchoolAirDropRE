@@ -6,11 +6,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeGoodsInfoCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.HomeGoodsInfoImpl;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 
 import java.util.List;
 
-public class HomeNearbyFragmentViewModel extends BaseChildFragmentViewModel implements IHomeGoodsInfoCallback {
+public class HomeNearbyFragmentViewModel extends BaseStateViewModel implements IHomeGoodsInfoCallback {
 
     private HomeGoodsInfoImpl mHomeImpl;
 
@@ -36,8 +36,8 @@ public class HomeNearbyFragmentViewModel extends BaseChildFragmentViewModel impl
         mOnRequestListener.onLoading();
     }
 
-    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo(int page, double longitude, double latitude) {
-        mHomeImpl.getNearbyGoods(page, longitude, latitude);
+    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo( int page, double longitude, double latitude) {
+        mHomeImpl.getNearbyGoods( page, longitude, latitude);
         return mGoodsInfo;
     }
 

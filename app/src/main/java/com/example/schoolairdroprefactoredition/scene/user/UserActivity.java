@@ -1,41 +1,32 @@
 package com.example.schoolairdroprefactoredition.scene.user;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MenuItem;
 
-import com.blankj.utilcode.util.KeyboardUtils;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
+
+import com.blankj.utilcode.util.LogUtils;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseActivity;
-import com.example.schoolairdroprefactoredition.scene.user.user.UserFragment;
+import com.example.schoolairdroprefactoredition.scene.user.fragment.UserFragment;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 public class UserActivity extends TransactionBaseActivity implements FragmentManager.OnBackStackChangedListener {
-
-    public static final int USER_MODIFY = 520;
-
-    public static void start(Context context, Bundle bundle) {
-        Intent intent = new Intent(context, UserActivity.class);
-        intent.putExtras(bundle);
-        context.startActivity(intent);
-    }
+    public static final int REQUEST_UPDATE = 520;
 
     public static void startForResult(Context context, Bundle bundle) {
         Intent intent = new Intent(context, UserActivity.class);
         intent.putExtras(bundle);
-        if (context instanceof AppCompatActivity) {
-            ((AppCompatActivity) context).startActivityForResult(intent, 520, intent.getExtras());
-        }
+        ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_UPDATE);
     }
+
+    private OnUserInfoUpdatedListener mOnUserInfoUpdatedListener;
 
     private Bundle bundle;
 
@@ -47,5 +38,33 @@ public class UserActivity extends TransactionBaseActivity implements FragmentMan
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         firstTransact(UserFragment.newInstance(bundle));
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (data != null)
+                if (requestCode == REQUEST_UPDATE) {
+                    LogUtils.d("user info modified");
+
+                    data.putExtra(ConstantUtil.KEY_UPDATED, true);
+                    setResult(Activity.RESULT_OK, data);
+
+                    bundle = data.getExtras();
+                    if (bundle != null) {
+                        mOnUserInfoUpdatedListener
+                                .onUpdated((DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO));
+                    }
+                }
+        }
+    }
+
+    public interface OnUserInfoUpdatedListener {
+        void onUpdated(DomainUserInfo.DataBean info);
+    }
+
+    public void setOnUserInfoUpdateListener(OnUserInfoUpdatedListener listener) {
+        mOnUserInfoUpdatedListener = listener;
     }
 }

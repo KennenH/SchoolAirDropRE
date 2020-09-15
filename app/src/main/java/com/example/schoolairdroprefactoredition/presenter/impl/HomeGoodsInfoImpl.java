@@ -7,14 +7,9 @@ import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IHomeGoodsInfoPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeGoodsInfoCallback;
-import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.Arrays;
-import java.util.Map;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,7 +26,7 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
     public void getNearbyGoods(int page, double longitude, double latitude) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainGoodsInfo> task = api.getGoodsInfo(longitude, latitude);
+        Call<DomainGoodsInfo> task = api.getGoodsInfo( longitude, latitude);
         task.enqueue(new Callback<DomainGoodsInfo>() {
             @Override
             public void onResponse(Call<DomainGoodsInfo> call, Response<DomainGoodsInfo> response) {

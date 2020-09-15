@@ -15,10 +15,10 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsViewModel;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
@@ -29,7 +29,7 @@ import com.lxj.xpopup.impl.LoadingPopupView;
 /**
  * 设置的主页面
  */
-public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, BaseChildFragmentViewModel.OnRequestListener, SettingsActivity.OnLoginListener {
+public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, BaseStateViewModel.OnRequestListener, SettingsActivity.OnLoginListener {
 
     private SettingsViewModel settingsViewModel;
 
@@ -52,7 +52,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     private LoadingPopupView mLoading;
 
     private Bundle bundle;
-    private DomainGetUserInfo.DataBean userInfo = null;
+    private DomainUserInfo.DataBean userInfo = null;
     private DomainAuthorize token = null;
 
     public static SettingsFragment newInstance(Intent intent) {
@@ -85,7 +85,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
         if (bundle == null) {
             bundle = new Bundle();
         } else {
-            userInfo = (DomainGetUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+            userInfo = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
             token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
         }
     }
@@ -127,7 +127,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     public void onLogged(Intent intent) {
         bundle = intent.getExtras();
         if (bundle != null) {
-            userInfo = (DomainGetUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+            userInfo = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
             if (userInfo != null)
                 mAlipay.setDescription(getString(R.string.loggedIn, userInfo.getUname()));
         }

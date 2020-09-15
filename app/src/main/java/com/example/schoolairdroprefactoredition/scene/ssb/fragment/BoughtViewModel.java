@@ -4,14 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
-import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.presenter.callback.IBoughtCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.BoughtImpl;
 
-import java.util.List;
-
-public class BoughtViewModel extends BaseChildFragmentViewModel implements IBoughtCallback {
+public class BoughtViewModel extends BaseStateViewModel implements IBoughtCallback {
 
     private BoughtImpl boughtImpl;
 
@@ -22,8 +19,8 @@ public class BoughtViewModel extends BaseChildFragmentViewModel implements IBoug
         boughtImpl.registerCallback(this);
     }
 
-    public LiveData<DomainGoodsInfo> getBoughtBeans() {
-        boughtImpl.getBoughtList();
+    public LiveData<DomainGoodsInfo> getBoughtBeans(String token) {
+        boughtImpl.getBoughtList(token);
         return mBoughtBeans;
     }
 

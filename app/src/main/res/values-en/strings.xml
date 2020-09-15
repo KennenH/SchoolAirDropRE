@@ -171,4 +171,5 @@
     <string name="submitFailedTip">It may be because the network is unstable or the server is too busy, please try again later</string>
     <string name="OK">OK</string>
     <string name="mapNoPermission">Location Obtain Failed</string>
+    <string name="errorUpdateAvatar">Error Updating Avatar</string>
 </resources>

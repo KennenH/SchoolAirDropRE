@@ -2,12 +2,12 @@ package com.example.schoolairdroprefactoredition.scene.user;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.example.schoolairdroprefactoredition.presenter.callback.IUserNameCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.UserNameImpl;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 
-public class UserNameViewModel extends ViewModel implements IUserNameCallback {
+public class UserNameViewModel extends BaseStateViewModel implements IUserNameCallback {
 
     private MutableLiveData<Boolean> mRenameResult = new MutableLiveData<>();
 
@@ -32,5 +32,15 @@ public class UserNameViewModel extends ViewModel implements IUserNameCallback {
     protected void onCleared() {
         super.onCleared();
         userNameImpl.unregisterCallback(this);
+    }
+
+    @Override
+    public void onError() {
+        mOnRequestListener.onError();
+    }
+
+    @Override
+    public void onLoading() {
+
     }
 }

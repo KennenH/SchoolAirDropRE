@@ -23,7 +23,6 @@ import androidx.transition.TransitionManager;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSearchPrelayoutBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderFooterOnlyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.SearchSuggestionRecyclerAdapter;

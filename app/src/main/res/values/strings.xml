@@ -198,6 +198,9 @@
     <string name="submitSuccessTip">物品进入审核阶段，结果将会于72小时内通过站内信通知你</string>
     <string name="submitFailedTip">可能是网络不稳定或者服务器忙碌，请稍后重试</string>
     <string name="OK">好</string>
+    <string name="errorUpdateAvatar">上传头像出错</string>
+    <string name="imageSaved">图片已保存至相册</string>
+    <string name="errorUpdatingName">名字修改失败</string>
 
 
 </resources>

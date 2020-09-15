@@ -1,26 +1,21 @@
 package com.example.schoolairdroprefactoredition.model;
 
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdate;
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainModifyResult;
 import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 
-import java.util.List;
-
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -32,7 +27,6 @@ public interface Api {
 
     /**
      * 获取附近在售的商品
-     * 表单
      */
     @FormUrlEncoded
     @POST("goods/getNearByGoods")
@@ -49,6 +43,18 @@ public interface Api {
     Call<DomainGoodsInfo> getMySellingGoods(@Header("Authorization") String token);
 
     /**
+     * 获取本人已售物品列表
+     */
+    @POST("goods/getUserSell")
+    Call<DomainGoodsInfo> getMySoldGoods(@Header("Authorization") String token);
+
+    /**
+     * 获取本人已购物品列表
+     */
+    @POST("goods/getUserBought")
+    Call<DomainGoodsInfo> getMyBoughtGoods(@Header("Authorization") String token);
+
+    /**
      * 搜索关键字物品
      */
     @FormUrlEncoded
@@ -63,22 +69,28 @@ public interface Api {
      * 上传用户头像
      */
     @Multipart
-    @FormUrlEncoded
-    @POST("user/updateAvatars")
-    Call<DomainAvatarUpdate> updateAvatar(@Header("Authorization") String token, @Part MultipartBody.Part photo, @Part("uid") RequestBody uid);
+    @POST("user/uploadAvatars")
+    Call<ResponseBody> updateAvatar(@Header("Authorization") String token, @Part MultipartBody.Part photo);
 
     /**
-     * 用户重命名
+     * 修改用户名字
      */
     @FormUrlEncoded
-    @POST("user/updateUserName")
-    Call<DomainModifyResult> updateUserName(@Header("Authorization") String token, @Field("uName") String name);
+    @POST("user/updateUserInfo")
+    Call<DomainModifyResult> updateUserName(@Header("Authorization") String token, @Field("uname") String name);
+
+    /**
+     * 修改用户性别
+     */
+    @FormUrlEncoded
+    @POST("user/updateUserInfo")
+    Call<DomainModifyResult> updateUserSex(@Header("Authorization") String token, @Field("ugender") String gender);
 
     /**
      * 用access_token换取用户基本信息
      */
     @POST("user/getUserInfo")
-    Call<DomainGetUserInfo> getUserInfo(@Header("Authorization") String token);
+    Call<DomainUserInfo> getUserInfo(@Header("Authorization") String token);
 
     /**
      * 获取首页最新消息

@@ -1,14 +1,7 @@
 package com.example.schoolairdroprefactoredition.scene.chat;
 
-import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -22,6 +15,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.effective.android.panel.PanelSwitchHelper;
 import com.effective.android.panel.interfaces.ContentScrollMeasurer;
@@ -29,11 +28,11 @@ import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.presenter.impl.ChatViewModel;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.chat.entity.ChatReceiveMessageEntity;
 import com.example.schoolairdroprefactoredition.scene.chat.entity.ChatSendMessageEntity;
 import com.example.schoolairdroprefactoredition.scene.chat.panel.PanelMore;
-import com.example.schoolairdroprefactoredition.presenter.impl.ChatViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.MorePanelAdapter;
 import com.example.schoolairdroprefactoredition.utils.decoration.DecorationUtil;
@@ -84,7 +83,6 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
 
         setSupportActionBar(findViewById(R.id.toolbar));

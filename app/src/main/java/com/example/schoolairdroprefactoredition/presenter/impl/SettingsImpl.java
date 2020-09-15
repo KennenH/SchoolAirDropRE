@@ -4,7 +4,7 @@ import android.util.Log;
 
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ISettingsPresenter;
@@ -14,7 +14,6 @@ import com.example.schoolairdroprefactoredition.utils.RSACoder;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -122,12 +121,12 @@ public class SettingsImpl implements ISettingsPresenter {
     public void getUserInfo(String token) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainGetUserInfo> task = api.getUserInfo(token);
-        task.enqueue(new Callback<DomainGetUserInfo>() {
+        Call<DomainUserInfo> task = api.getUserInfo(token);
+        task.enqueue(new Callback<DomainUserInfo>() {
             @Override
-            public void onResponse(Call<DomainGetUserInfo> call, Response<DomainGetUserInfo> response) {
+            public void onResponse(Call<DomainUserInfo> call, Response<DomainUserInfo> response) {
                 int code = response.code();
-                DomainGetUserInfo info = response.body();
+                DomainUserInfo info = response.body();
                 if (code == HttpURLConnection.HTTP_OK) {
 
 //                    try {
@@ -151,7 +150,7 @@ public class SettingsImpl implements ISettingsPresenter {
             }
 
             @Override
-            public void onFailure(Call<DomainGetUserInfo> call, Throwable t) {
+            public void onFailure(Call<DomainUserInfo> call, Throwable t) {
                 Log.e("getUserInfo", "请求失败 -- > " + t);
                 mCallback.onError();
             }

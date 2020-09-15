@@ -1,6 +1,9 @@
 package com.example.schoolairdroprefactoredition.scene.ssb.fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -9,16 +12,14 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-
+import com.blankj.utilcode.util.LogUtils;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
-import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 import java.util.List;
 
@@ -26,7 +27,7 @@ import java.util.List;
  * {@link SellingFragment}
  * {@link BoughtFragment}
  */
-public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener, BaseChildFragmentViewModel.OnRequestListener {
+public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener, BaseStateViewModel.OnRequestListener {
 
     public static SoldFragment newInstance(Bundle bundle) {
         SoldFragment fragment = new SoldFragment();
@@ -43,25 +44,19 @@ public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener
 
     private List<DomainGoodsInfo.DataBean> mList;
 
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private Bundle bundle;
 
-    private String mParam1;
-    private String mParam2;
-
-    public SoldFragment() {
-        // Required empty public constructor
-    }
-
+    private DomainAuthorize token;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(false);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        bundle = getArguments();
+        if (bundle == null)
+            bundle = new Bundle();
+
+        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
     }
 
     @Nullable
@@ -82,10 +77,17 @@ public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener
         mAdapter.addHeaderView(mFilter);
         mRecycler.setAdapter(mAdapter);
 
-        viewModel.getSoldBeans().observe(getViewLifecycleOwner(), data -> {
-            mList = data.getData();
-            mAdapter.setList(mList);
-        });
+        if (token != null)
+            viewModel.getSoldBeans(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
+                mList = data.getData();
+                mAdapter.setList(mList);
+
+                LogUtils.d(mList.size());
+                if (mList.size() == 0)
+                    binding.nothing.setVisibility(View.VISIBLE);
+                else
+                    binding.nothing.setVisibility(View.GONE);
+            });
 
         mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override

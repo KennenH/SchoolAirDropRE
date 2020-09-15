@@ -2,7 +2,6 @@ package com.example.schoolairdroprefactoredition.scene.addnew;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -35,7 +34,6 @@ public class AddNewResultActivity extends ImmersionStatusBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_new_success);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         Intent intent = getIntent();
         boolean isSuccess = false;

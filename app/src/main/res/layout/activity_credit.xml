@@ -95,6 +95,7 @@
                 android:id="@+id/credit_recycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:clipToPadding="false"
                 android:nestedScrollingEnabled="false"
                 android:overScrollMode="never"
                 tools:listitem="@layout/item_credit_assessment" />
@@ -106,5 +107,5 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@drawable/transparent"
-        app:navigationIcon="@drawable/ic_left_fill" />
+        app:navigationIcon="@drawable/ic_left_white" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

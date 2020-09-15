@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.main.my;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,18 +13,17 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.ongoing.OnGoingActivity;
 import com.example.schoolairdroprefactoredition.scene.quote.QuoteActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
-import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SellingFragment;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
-import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.ui.components.SSBInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -33,7 +31,7 @@ import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
-public class MyFragment extends Fragment implements View.OnClickListener, MainActivity.OnLoginActivityListener, BaseChildFragmentViewModel.OnRequestListener, SSBInfo.OnSSBActionListener {
+public class MyFragment extends Fragment implements View.OnClickListener, MainActivity.OnLoginActivityListener, BaseStateViewModel.OnRequestListener, SSBInfo.OnSSBActionListener {
 
     private MyViewModel viewModel;
 
@@ -45,7 +43,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
 
     private Bundle bundle = new Bundle();
 
-    private DomainGetUserInfo.DataBean info;
+    private DomainUserInfo.DataBean info;
     private DomainAuthorize token;
 
     public static MyFragment newInstance(Bundle bundle) {
@@ -61,7 +59,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
         if (bundle == null)
             bundle = new Bundle();
 
-        info = (DomainGetUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
 
         if (getActivity() instanceof MainActivity) {
@@ -98,7 +96,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
             case R.id.my_info:
                 if (bundle != null && bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE) != null
                         && bundle.getSerializable(ConstantUtil.KEY_USER_INFO) != null) {
-                    UserActivity.start(getContext(), bundle);
+                    UserActivity.startForResult(getActivity(), bundle);
                 } else {
                     LoginActivity.startForLogin(getContext());
                 }
@@ -122,7 +120,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
     }
 
     /**
-     * {@link MainActivity}收到来自{@link SettingsActivity}返回的登录成功信息后的回调
+     * {@link MainActivity}收到来自{@link SettingsActivity}返回的登录成功信息 或者 自身收到用户信息修改 后的回调
      * #if 若bundle中的用户信息不为空，则直接使用该信息填充页面
      * #else 若bundle中token信息不为空，则使用token换取用户信息并填充页面
      */
@@ -131,7 +129,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
         if (bundle != null) {
             this.bundle = bundle;
 
-            DomainGetUserInfo.DataBean info = (DomainGetUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+            DomainUserInfo.DataBean info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
             if (info != null) {
                 mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
                 mName.setText(info.getUname());
@@ -139,7 +137,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
                 DomainAuthorize authorize = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
                 if (authorize != null)
                     viewModel.getUserInfo(authorize.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
-                        DomainGetUserInfo.DataBean info_ = data.getData().get(0);
+                        DomainUserInfo.DataBean info_ = data.getData().get(0);
                         mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info_.getUser_img_path());
                         mName.setText(info_.getUname());
                     });

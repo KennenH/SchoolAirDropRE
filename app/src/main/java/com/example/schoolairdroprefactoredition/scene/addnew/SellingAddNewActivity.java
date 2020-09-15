@@ -2,7 +2,6 @@ package com.example.schoolairdroprefactoredition.scene.addnew;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -89,7 +88,6 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selling_add_new);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setSupportActionBar(findViewById(R.id.toolbar));
 
         mAdapter = new HorizontalImageRecyclerAdapter();
@@ -173,13 +171,13 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == SellingAddSetActivity.RESULT_CODE) {
+            if (requestCode == InputSetActivity.RESULT_CODE) {
                 if (data != null) {
-                    int type = data.getIntExtra(SellingAddSetActivity.TYPE, SellingAddSetActivity.TYPE_TITLE);
-                    if (type == SellingAddSetActivity.TYPE_TITLE)
-                        mTitle.setText(data.getStringExtra(SellingAddSetActivity.RESULT));
+                    int type = data.getIntExtra(InputSetActivity.TYPE, InputSetActivity.TYPE_TITLE);
+                    if (type == InputSetActivity.TYPE_TITLE)
+                        mTitle.setText(data.getStringExtra(InputSetActivity.RESULT));
                     else
-                        mDescription.setText(data.getStringExtra(SellingAddSetActivity.RESULT));
+                        mDescription.setText(data.getStringExtra(InputSetActivity.RESULT));
                 }
             } else if (requestCode == REQUEST_CODE_COVER) {
                 if (data != null) {
@@ -222,11 +220,28 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
 //if (success)
 //        AddNewResultActivity.start(this, true);
 
-        finish();
+//        finish();
         MyUtil.exitAnimDown(this);
 //else
         AddNewResultActivity.start(this, false);
 
+    }
+
+    /**
+     * 检查表单填写是否完整
+     */
+    private boolean checkFormIsLegal() {
+        if (mTitle.getDescription().length() < 6) {
+
+            return false;
+        }
+
+        if (mDescription.getDescription().length() < 11) {
+
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -283,7 +298,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                 requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL);
                 break;
             case R.id.option_title:
-                SellingAddSetActivity.start(this, SellingAddSetActivity.TYPE_TITLE, mTitle.getText().toString());
+                InputSetActivity.start(this, InputSetActivity.TYPE_TITLE, mTitle.getText().toString(), getString(R.string.title));
                 break;
             case R.id.price_confirm:
                 KeyboardUtils.hideSoftInput(v);
@@ -299,7 +314,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                 isSecondHand.toggle();
                 break;
             case R.id.option_description:
-                SellingAddSetActivity.start(this, SellingAddSetActivity.TYPE_DESCRIPTION, mDescription.getText().toString());
+                InputSetActivity.start(this, InputSetActivity.TYPE_DESCRIPTION, mDescription.getText().toString(), getString(R.string.goods_description));
                 break;
             default:
                 break;

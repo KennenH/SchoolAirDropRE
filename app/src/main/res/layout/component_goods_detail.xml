@@ -41,10 +41,9 @@
         android:id="@+id/goods_popularity"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@id/goods_price"
-        app:layout_constraintEnd_toStartOf="@+id/guideline"
-        app:layout_constraintStart_toStartOf="@+id/goods_name"
-        app:layout_constraintTop_toTopOf="@id/goods_price" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/goods_price" />
 
     <com.example.schoolairdroprefactoredition.ui.components.GoodsPrice
         android:id="@+id/goods_price"
@@ -59,17 +58,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.1" />
+        app:layout_constraintGuide_percent="0.099236645" />
 
     <View
         android:id="@+id/view"
         android:layout_width="0dp"
         android:layout_height="0.8dp"
-        android:layout_marginTop="@dimen/general_padding_larger"
         android:background="@color/colorLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@id/goods_price" />
+        app:layout_constraintTop_toBottomOf="@+id/goods_popularity" />
 
     <com.facebook.drawee.view.SimpleDraweeView
         android:id="@+id/goods_avatar"
@@ -126,8 +124,10 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/recycler_header"
+        android:letterSpacing="0.03"
+        android:lineSpacingExtra="@dimen/general_padding_tiny"
         android:padding="@dimen/general_padding"
-        android:textSize="14dp"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintEnd_toEndOf="@id/goods_name"
         app:layout_constraintStart_toStartOf="@+id/goods_name"
         app:layout_constraintTop_toBottomOf="@id/goods_description_header"

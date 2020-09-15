@@ -26,7 +26,16 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".scene.likes.LikesActivity"></activity>
+        <activity
+            android:name=".scene.user.UserModifyInfoActivity"
+            android:label="" />
+        <activity
+            android:name=".scene.user.UserUpdateNameActivity"
+            android:label="" />
+        <activity
+            android:name=".scene.user.UserUpdateAvatarActivity"
+            android:label="" />
+        <activity android:name=".scene.likes.LikesActivity" />
         <activity
             android:name=".scene.addnew.AddNewResultActivity"
             android:label="" />
@@ -46,7 +55,7 @@
             android:name=".scene.settings.LoginActivity"
             android:label="" />
         <activity
-            android:name=".scene.addnew.SellingAddSetActivity"
+            android:name=".scene.addnew.InputSetActivity"
             android:label="" />
         <activity
             android:name=".scene.addnew.SellingAddNewActivity"

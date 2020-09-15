@@ -3,7 +3,7 @@ package com.example.schoolairdroprefactoredition.domain;
 import java.io.Serializable;
 import java.util.List;
 
-public class DomainGetUserInfo {
+public class DomainUserInfo implements Serializable {
 
     @Override
     public String toString() {

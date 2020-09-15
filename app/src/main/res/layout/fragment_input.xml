@@ -24,7 +24,7 @@
             tools:text="我是标题" />
 
         <TextView
-            android:id="@+id/input_remaining_count"
+            android:id="@+id/input_tip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/general_padding_large"

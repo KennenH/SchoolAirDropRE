@@ -1,11 +1,10 @@
-package com.example.schoolairdroprefactoredition.scene.user.user;
+package com.example.schoolairdroprefactoredition.scene.user.fragment;
 
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -19,11 +18,11 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
-import com.example.schoolairdroprefactoredition.presenter.impl.UserNameImpl;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.user.UserNameViewModel;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
+@Deprecated
 public class UserNameFragment extends Fragment implements View.OnClickListener, TextWatcher {
 
     private UserNameViewModel viewModel;
@@ -50,7 +49,7 @@ public class UserNameFragment extends Fragment implements View.OnClickListener, 
             bundle = new Bundle();
 
         try {
-            name = ((DomainGetUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO)).getUname();
+            name = ((DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO)).getUname();
         } catch (NullPointerException e) {
             Log.d("UserNameFragment", e.toString());
         }

@@ -4,14 +4,11 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
-import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISellingCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.SellingImpl;
 
-import java.util.List;
-
-public class SellingViewModel extends BaseChildFragmentViewModel implements ISellingCallback {
+public class SellingViewModel extends BaseStateViewModel implements ISellingCallback {
 
     private SellingImpl sellingImpl;
 

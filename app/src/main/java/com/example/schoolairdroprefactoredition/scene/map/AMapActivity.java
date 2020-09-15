@@ -1,24 +1,22 @@
 package com.example.schoolairdroprefactoredition.scene.map;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.CameraUpdateFactory;
 import com.amap.api.maps2d.LocationSource;
 import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.MyLocationStyle;
@@ -59,10 +57,11 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_amap);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         Toolbar mToolbar = findViewById(R.id.toolbar);
         StatusBarUtil.setTranslucentForImageView(this, mToolbar);
-        BarUtils.setNavBarColor(this, Color.WHITE);
-        BarUtils.setNavBarLightMode(this, true);
+        BarUtils.setNavBarColor(this, getColor(R.color.darkTranslucent));
+        BarUtils.setNavBarLightMode(this, false);
 
         setSupportActionBar(mToolbar);
 
@@ -124,15 +123,15 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
                 mOnLocationChangedListener.onLocationChanged(aMapLocation);
                 mLocation = aMapLocation;
 //                Log.d("AMapActivity", aMapLocation.getAddress());
-                mMap.animateCamera(CameraUpdateFactory.zoomTo(13f), 200, new AMap.CancelableCallback() {
-                    @Override
-                    public void onFinish() {
-                    }
-
-                    @Override
-                    public void onCancel() {
-                    }
-                });
+//                mMap.animateCamera(CameraUpdateFactory.zoomTo(13f), 200, new AMap.CancelableCallback() {
+//                    @Override
+//                    public void onFinish() {
+//                    }
+//
+//                    @Override
+//                    public void onCancel() {
+//                    }
+//                });
             }
         }
     }

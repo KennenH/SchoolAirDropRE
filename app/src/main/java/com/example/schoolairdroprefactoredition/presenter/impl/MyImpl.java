@@ -2,7 +2,7 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import android.util.Log;
 
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IMyPresenter;
@@ -23,13 +23,13 @@ public class MyImpl implements IMyPresenter {
     public void getUserInfo(String token) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainGetUserInfo> task = api.getUserInfo(token);
-        task.enqueue(new Callback<DomainGetUserInfo>() {
+        Call<DomainUserInfo> task = api.getUserInfo(token);
+        task.enqueue(new Callback<DomainUserInfo>() {
             @Override
-            public void onResponse(Call<DomainGetUserInfo> call, Response<DomainGetUserInfo> response) {
+            public void onResponse(Call<DomainUserInfo> call, Response<DomainUserInfo> response) {
                 int code = response.code();
-                Response<DomainGetUserInfo> respond = response;
-                DomainGetUserInfo info = respond.body();
+                Response<DomainUserInfo> respond = response;
+                DomainUserInfo info = respond.body();
                 if (code == HttpURLConnection.HTTP_OK) {
 
                     if (info != null && info.isSuccess()) {
@@ -41,7 +41,7 @@ public class MyImpl implements IMyPresenter {
             }
 
             @Override
-            public void onFailure(Call<DomainGetUserInfo> call, Throwable t) {
+            public void onFailure(Call<DomainUserInfo> call, Throwable t) {
                 Log.e("MyImpl", "请求失败 -- > " + t);
                 mCallback.onError();
             }

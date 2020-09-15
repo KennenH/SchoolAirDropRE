@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.main.home;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,11 +11,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.amap.api.location.AMapLocation;
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
@@ -27,7 +25,7 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
-public class HomeNewsFragment extends BaseChildFragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseChildFragmentViewModel.OnRequestListener {
+public class HomeNewsFragment extends BaseChildFragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseStateViewModel.OnRequestListener {
     private HomeNewsFragmentViewModel homeContentFragmentViewModel;
 
     private SmartRefreshLayout mRefresh;
@@ -78,6 +76,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 
         mManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
         mEndlessRecyclerView.setLayoutManager(mManager);
         mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration());
         mHomeNewsRecyclerAdapter = new HomeNewsRecyclerAdapter();

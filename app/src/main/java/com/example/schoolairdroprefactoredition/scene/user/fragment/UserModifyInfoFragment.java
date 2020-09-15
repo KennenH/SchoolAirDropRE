@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.scene.user.user;
+package com.example.schoolairdroprefactoredition.scene.user.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,14 +13,18 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
+import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
+import com.example.schoolairdroprefactoredition.scene.user.UserUpdateAvatarActivity;
+import com.example.schoolairdroprefactoredition.scene.user.UserUpdateNameActivity;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 
-public class UserModifyInfoFragment extends TransactionBaseFragment implements View.OnClickListener {
+@Deprecated
+public class UserModifyInfoFragment extends TransactionBaseFragment implements View.OnClickListener, UserActivity.OnUserInfoUpdatedListener {
     private String userAvatar;
     private String userName;
     private String userSex;
@@ -39,7 +43,7 @@ public class UserModifyInfoFragment extends TransactionBaseFragment implements V
     private Bundle bundle;
 
     private DomainAuthorize token;
-    private DomainGetUserInfo.DataBean info;
+    private DomainUserInfo.DataBean info;
 
     public static UserModifyInfoFragment newInstance(Bundle bundle) {
         UserModifyInfoFragment fragment = new UserModifyInfoFragment();
@@ -65,12 +69,15 @@ public class UserModifyInfoFragment extends TransactionBaseFragment implements V
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getActivity() instanceof UserActivity) {
+            ((UserActivity) getActivity()).setOnUserInfoUpdateListener(this);
+        }
         bundle = getArguments();
         if (bundle == null)
             bundle = new Bundle();
 
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-        info = (DomainGetUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
     }
 
     @Nullable
@@ -86,12 +93,15 @@ public class UserModifyInfoFragment extends TransactionBaseFragment implements V
         mName.setOnClickListener(this);
         mSex.setOnClickListener(this);
 
-        init();
+        setUserInfo();
 
         return root;
     }
 
-    private void init() {
+    /**
+     * 使用info填充ui，在用户第一次打开页面时和用户修改信息后回到页面时调用
+     */
+    private void setUserInfo() {
         if (info != null) {
             mAvatar.setIconImage(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
             mName.setDescription(info.getUname());
@@ -109,16 +119,23 @@ public class UserModifyInfoFragment extends TransactionBaseFragment implements V
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.user_avatar) {
-            transact(manager, UserAvatarFragment.newInstance(bundle), userAvatar);
+            UserUpdateAvatarActivity.startForResult(getContext(), bundle);
         } else if (id == R.id.user_name) {
-            manager.beginTransaction()
-                    .setCustomAnimations(R.anim.enter_y_fragment, R.anim.exit_y_fragment, R.anim.popenter_y_fragment, R.anim.popexit_y_fragment)
-                    .replace(((ViewGroup) getView().getParent()).getId(), new UserNameFragment(), userName)
-                    .addToBackStack(userName)
-                    .commit();
+            UserUpdateNameActivity.startForResult(getContext(), bundle);
         } else if (id == R.id.user_sex) {
             showSexDialog();
         }
+    }
+
+    /**
+     * {@link UserActivity} 收到用户信息修改后的回调
+     *
+     * @param info
+     */
+    @Override
+    public void onUpdated(DomainUserInfo.DataBean info) {
+        this.info = info;
+        setUserInfo();
     }
 
     private void showSexDialog() {

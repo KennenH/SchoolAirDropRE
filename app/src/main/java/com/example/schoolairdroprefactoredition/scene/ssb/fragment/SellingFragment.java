@@ -21,7 +21,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -32,7 +32,7 @@ import java.util.List;
  * {@link SoldFragment}
  * {@link BoughtFragment}
  */
-public class SellingFragment extends Fragment implements SSBFilter.OnFilterListener, BaseChildFragmentViewModel.OnRequestListener {
+public class SellingFragment extends Fragment implements SSBFilter.OnFilterListener, BaseStateViewModel.OnRequestListener {
 
     public static SellingFragment newInstance(Bundle bundle) {
         SellingFragment fragment = new SellingFragment();

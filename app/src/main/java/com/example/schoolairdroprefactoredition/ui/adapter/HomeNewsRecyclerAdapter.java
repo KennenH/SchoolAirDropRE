@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.ui.adapter;
 
 import android.view.View;
 
+import com.blankj.utilcode.util.ClickUtils;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
@@ -10,7 +11,7 @@ import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity
 
 import org.jetbrains.annotations.NotNull;
 
-public class HomeNewsRecyclerAdapter extends BaseMultiItemQuickAdapter<BaseHomeNewsEntity, BaseViewHolder> implements View.OnClickListener {
+public class HomeNewsRecyclerAdapter extends BaseMultiItemQuickAdapter<BaseHomeNewsEntity, BaseViewHolder> {
 
     public static final int TYPE_ONE = 0;
     public static final int TYPE_TWO = 1;
@@ -21,18 +22,18 @@ public class HomeNewsRecyclerAdapter extends BaseMultiItemQuickAdapter<BaseHomeN
     }
 
     @Override
-    protected void convert(@NotNull BaseViewHolder holder, BaseHomeNewsEntity item) {
+    protected void convert(@NotNull BaseViewHolder holder, BaseHomeNewsEntity data) {
         if (holder.getItemViewType() == TYPE_ONE) {
-            // holder.setImage(news_image,item.getUrl())
-            holder.setText(R.id.news_title, item.getTitle());
+            // holder.setImage(news_image,data.getUrl())
+            holder.setText(R.id.news_title, data.getTitle());
         } else {
-            holder.setText(R.id.news_title, item.getTitle());
+            holder.setText(R.id.news_title, data.getTitle());
         }
-    }
 
-
-    @Override
-    public void onClick(View v) {
-        GoodsActivity.start(getContext(), null);
+        View item = holder.itemView;
+        ClickUtils.applyPressedViewScale(item);
+        item.setOnClickListener(v -> {
+            GoodsActivity.start(getContext(), null);
+        });
     }
 }

@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
+import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -16,9 +18,15 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
 
     private int mIndex;
 
+    private Bundle bundle;
+
     public HomePagerAdapter(@NonNull FragmentManager fm, int behavior, int page) {
         super(fm, behavior);
         mIndex = page;
+    }
+
+    public void setBundle(Bundle bundle) {
+        this.bundle = bundle;
     }
 
     @NonNull

@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.scene.user.user;
+package com.example.schoolairdroprefactoredition.scene.user.fragment;
 
 import androidx.lifecycle.ViewModel;
 

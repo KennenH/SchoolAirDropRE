@@ -13,12 +13,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.location.AMapLocation;
-import com.blankj.utilcode.util.LogUtils;
-import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
@@ -28,7 +27,7 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 public class HomeNearbyFragment extends BaseChildFragment
-        implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseChildFragmentViewModel.OnRequestListener {
+        implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseStateViewModel.OnRequestListener {
     private HomeNearbyFragmentViewModel homeContentFragmentViewModel;
 
     private SmartRefreshLayout mRefresh;
@@ -38,11 +37,23 @@ public class HomeNearbyFragment extends BaseChildFragment
     private AMapLocation mLocation = null;
 
     private int mFragmentNum;
+    private Bundle bundle;
+    private DomainAuthorize token;
+
+    public static HomeNearbyFragment newInstance(Bundle bundle) {
+        HomeNearbyFragment fragment = new HomeNearbyFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mFragmentNum = getArguments() != null ? getArguments().getInt(ConstantUtil.FRAGMENT_NUM) : 0;
+        bundle = getArguments();
+        if (bundle != null)
+            token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+
 
         if (getParentFragment() instanceof BaseParentFragment)
             ((BaseParentFragment) getParentFragment()).setOnLocationCallbackListener(this);

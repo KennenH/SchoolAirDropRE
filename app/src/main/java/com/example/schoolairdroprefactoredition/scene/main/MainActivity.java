@@ -3,36 +3,40 @@ package com.example.schoolairdroprefactoredition.scene.main;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
-
-import com.amap.api.location.AMapLocation;
-import com.amap.api.location.AMapLocationClient;
-import com.amap.api.location.AMapLocationClientOption;
-import com.amap.api.location.AMapLocationListener;
-import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
-import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
-import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
-import com.example.schoolairdroprefactoredition.scene.main.home.ParentNewsFragment;
-import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment;
-import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasingFragment;
-import com.example.schoolairdroprefactoredition.scene.search.SearchFragment;
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
+import com.blankj.utilcode.util.LogUtils;
+import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
+import com.example.schoolairdroprefactoredition.scene.main.home.ParentNewsFragment;
+import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasingFragment;
+import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment;
+import com.example.schoolairdroprefactoredition.scene.search.SearchFragment;
+import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
+import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
+import com.example.schoolairdroprefactoredition.scene.settings.SettingsViewModel;
+import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import me.jessyan.autosize.AutoSizeCompat;
 
 public class MainActivity extends PermissionBaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, AMapLocationListener {
+    private SettingsViewModel viewModel;
 
     private FragmentManager mFragmentManager = getSupportFragmentManager();
 
@@ -52,8 +56,8 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_main);
+        viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
 
         // 添加新的tab时在此添加
         if (mHome == null) {
@@ -145,10 +149,16 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == LoginActivity.LOGIN) { // 来自SettingsActivity的登录结果返回,去向子fragment的监听回调
-                if (data != null && mOnLoginActivityListener != null) {
-                    bundle.putAll(data.getExtras());
-                    mOnLoginActivityListener.onLoginActivity(data.getExtras());
+            if (data != null) {
+                if (requestCode == LoginActivity.LOGIN) { // 登录结果返回,去向子fragment的监听回调
+                    if (mOnLoginActivityListener != null) {
+                        bundle.putAll(data.getExtras());
+                        mOnLoginActivityListener.onLoginActivity(data.getExtras());
+                    }
+                } else if (requestCode == UserActivity.REQUEST_UPDATE) {
+                    if (data.getBooleanExtra(ConstantUtil.KEY_UPDATED, false)) {
+                        getUserInfoWithToken();
+                    }
                 }
             }
         }
@@ -195,6 +205,25 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
 
         bundle.putDouble(ConstantUtil.LONGITUDE, aMapLocation.getLongitude());
         bundle.putDouble(ConstantUtil.LATITUDE, aMapLocation.getLatitude());
+    }
+
+    /**
+     * 使用token换取用户信息
+     * 在用户修改信息后调用
+     */
+    private void getUserInfoWithToken() {
+        DomainAuthorize token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        try {
+            viewModel.getUserInfo(token.getAccess_token()).observe(this, data -> {
+                DomainUserInfo.DataBean userInfo = data.getData().get(0);
+                bundle.putSerializable(ConstantUtil.KEY_USER_INFO, userInfo);
+                if (mOnLoginActivityListener != null) {
+                    mOnLoginActivityListener.onLoginActivity(bundle);
+                }
+            });
+        } catch (NullPointerException e) {
+            LogUtils.d("token null");
+        }
     }
 
     @Override

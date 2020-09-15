@@ -3,10 +3,10 @@ package com.example.schoolairdroprefactoredition.scene.main;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 
 public class MainViewModel extends ViewModel {
 
-    private MutableLiveData<DomainGetUserInfo> mUserInfo = new MutableLiveData<>();
+    private MutableLiveData<DomainUserInfo> mUserInfo = new MutableLiveData<>();
 
 }

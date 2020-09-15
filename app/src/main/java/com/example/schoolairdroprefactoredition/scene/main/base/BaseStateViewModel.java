@@ -2,7 +2,7 @@ package com.example.schoolairdroprefactoredition.scene.main.base;
 
 import androidx.lifecycle.ViewModel;
 
-public class BaseChildFragmentViewModel extends ViewModel {
+public class BaseStateViewModel extends ViewModel {
     /**
      * 通用请求监听，请求错误和正在加载
      */

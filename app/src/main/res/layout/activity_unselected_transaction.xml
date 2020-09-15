@@ -10,7 +10,7 @@
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/primary"
+        android:background="@color/white"
         android:gravity="center"
         android:padding="@dimen/general_padding_large"
         android:text="@string/toBeAgreedPosition"
@@ -36,7 +36,6 @@
     <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:translationZ="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title">
 
@@ -44,7 +43,6 @@
             android:id="@+id/recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:overScrollMode="never"
-            tools:listitem="@layout/item_position_to_do" />
+            android:overScrollMode="never" />
     </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

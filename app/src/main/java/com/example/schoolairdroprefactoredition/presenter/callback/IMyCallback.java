@@ -1,7 +1,7 @@
 package com.example.schoolairdroprefactoredition.presenter.callback;
 
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 
 public interface IMyCallback extends IBaseCallback {
-    void onUserInfoLoaded(DomainGetUserInfo data);
+    void onUserInfoLoaded(DomainUserInfo data);
 }

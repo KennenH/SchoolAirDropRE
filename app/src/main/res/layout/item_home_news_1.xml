@@ -32,11 +32,11 @@
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
             android:ellipsize="end"
-            android:lines="3"
-            android:textSize="@dimen/textSizeNormal"
+            android:maxLines="3"
             android:padding="@dimen/general_padding"
             android:text="校园空投开始校园内测啦,速戳宇宙最全攻略!"
             android:textColor="@color/white"
+            android:textSize="@dimen/textSizeNormal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/news_image" />

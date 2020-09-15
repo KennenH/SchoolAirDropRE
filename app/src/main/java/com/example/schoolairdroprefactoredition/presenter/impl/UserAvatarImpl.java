@@ -1,15 +1,13 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import android.os.Handler;
-import android.util.Log;
-
-import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdate;
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IUserAvatarPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IUserAvatarCallback;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import okhttp3.MediaType;
@@ -25,7 +23,7 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
     private IUserAvatarCallback mCallback;
 
     @Override
-    public void sendAvatar(String img, String uid) {
+    public void updateAvatar(String token, String img) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
         File file = new File(img);
@@ -34,30 +32,43 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
                 "photo",
                 file.getName(),
                 RequestBody.create(MediaType.parse("image/*"), file));
-//        RequestBody id = RequestBody.create(MediaType.parse("text/plain"), uid);
-//
-//        retrofit2.Call<DomainAvatarUpdate> task = api.updateAvatar(photo, id);
-//        task.enqueue(new Callback<DomainAvatarUpdate>() {
-//            @Override
-//            public void onResponse(retrofit2.Call<DomainAvatarUpdate> call, Response<DomainAvatarUpdate> response) {
-//                int code = response.code();
-//                if (code == HttpURLConnection.HTTP_OK) {
-//                    DomainAvatarUpdate body = response.body();
-//                    if (body.isSuccess()) {
-//                        Log.d("UserAvatarImpl", "code -- > " + code + " message -- > " + response.toString());
-//                        mCallback.onSent(body);
-//                    } else mCallback.onError();
-//                } else {
-//                    Log.d("UserAvatarImpl", "code -- > " + code + " message -- > " + response.toString());
-//                    mCallback.onError();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<DomainAvatarUpdate> call, Throwable t) {
-//                mCallback.onError();
-//            }
-//        });
+
+        retrofit2.Call<ResponseBody> task = api.updateAvatar(token, photo);
+        task.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+                int code = response.code();
+                if (code == HttpURLConnection.HTTP_OK) {
+                    ResponseBody body = response.body();
+                    if (body != null)
+//                        if (body.isSuccess()) {
+
+                    {
+                        try {
+                            LogUtils.d(body.string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+//                            mCallback.onUpdateSuccess(body);
+//                        } else mCallback.onError();
+                } else {
+                    try {
+                        LogUtils.d(response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    mCallback.onError();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                LogUtils.d(t.toString());
+                mCallback.onError();
+            }
+        });
     }
 
     @Override

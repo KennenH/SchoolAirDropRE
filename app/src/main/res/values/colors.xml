@@ -20,6 +20,7 @@
     <color name="primaryText">#888888</color>
 
     <color name="translucent">#E6FFFFFF</color>
+    <color name="darkTranslucent">#E6808080</color>
 
 
     <color name="orangeLight">#F56C0F</color>

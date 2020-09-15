@@ -1,7 +1,6 @@
-package com.example.schoolairdroprefactoredition.scene.user.user;
+package com.example.schoolairdroprefactoredition.scene.user.fragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,11 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
-import com.example.schoolairdroprefactoredition.scene.credit.CreditActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentUserBinding;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
+import com.example.schoolairdroprefactoredition.scene.credit.CreditActivity;
+import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
+import com.example.schoolairdroprefactoredition.scene.user.UserModifyInfoActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderOnlyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.UserHomeBaseInfo;
 import com.example.schoolairdroprefactoredition.ui.components.UserHomeMoreInfo;
@@ -31,7 +32,7 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.XPopup;
 
-public class UserFragment extends TransactionBaseFragment implements UserHomeBaseInfo.OnBaseInfoActionListener, UserHomeMoreInfo.OnMoreInfoActionListener {
+public class UserFragment extends TransactionBaseFragment implements UserHomeBaseInfo.OnBaseInfoActionListener, UserHomeMoreInfo.OnMoreInfoActionListener, UserActivity.OnUserInfoUpdatedListener {
 
     private UserViewModel viewModel;
 
@@ -47,18 +48,12 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
 
     private Bundle bundle;
 
-    private DomainGetUserInfo.DataBean info;
+    private DomainUserInfo.DataBean info;
     private DomainAuthorize token;
 
     public static UserFragment newInstance(Bundle bundle) {
         UserFragment fragment = new UserFragment();
         fragment.setArguments(bundle);
-        return fragment;
-    }
-
-    public static UserFragment newInstance(Intent intent) {
-        UserFragment fragment = new UserFragment();
-        fragment.setArguments(intent.getExtras());
         return fragment;
     }
 
@@ -76,11 +71,15 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getActivity() instanceof UserActivity) {
+            ((UserActivity) getActivity()).setOnUserInfoUpdateListener(this);
+        }
+
         bundle = getArguments();
         if (bundle == null) {
             bundle = new Bundle();
         } else {
-            info = (DomainGetUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+            info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
             token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
         }
     }
@@ -107,12 +106,16 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
 
         mRecycler.setAdapter(adapter);
 
-        init();
+        setUserInfo();
 
         return binding.getRoot();
     }
 
-    private void init() {
+    /**
+     * 使用用户信息装填ui界面
+     * 在用户第一次进入页面时以及用户修改信息后返回时调用
+     */
+    private void setUserInfo() {
         mBaseInfo.setUserBaseInfo(info);
         mMoreInfo.setUserMoreInfo(info);
     }
@@ -120,7 +123,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         if (item.getItemId() == R.id.modify_info) {
-            transact(manager, UserModifyInfoFragment.newInstance(bundle), userInfoModify);
+            UserModifyInfoActivity.startForResult(getContext(), bundle);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -128,6 +131,17 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.user_personal, menu);
+    }
+
+    /**
+     * {@link UserActivity} 收到用户信息修改的回调
+     *
+     * @param info
+     */
+    @Override
+    public void onUpdated(DomainUserInfo.DataBean info) {
+        this.info = info;
+        setUserInfo();
     }
 
     @Override

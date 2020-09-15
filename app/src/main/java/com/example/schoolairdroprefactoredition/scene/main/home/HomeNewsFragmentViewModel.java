@@ -6,11 +6,11 @@ import androidx.lifecycle.MutableLiveData;
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeNewsCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.HomeNewsImpl;
 import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragmentViewModel;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 
 import java.util.List;
 
-public class HomeNewsFragmentViewModel extends BaseChildFragmentViewModel implements IHomeNewsCallback {
+public class HomeNewsFragmentViewModel extends BaseStateViewModel implements IHomeNewsCallback {
 
     private HomeNewsImpl mHomeImpl;
 

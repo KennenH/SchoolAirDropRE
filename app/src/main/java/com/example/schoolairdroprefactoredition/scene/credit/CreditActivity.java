@@ -1,5 +1,14 @@
 package com.example.schoolairdroprefactoredition.scene.credit;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,20 +18,10 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.blankj.utilcode.util.BarUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainGetUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.ui.adapter.CreditRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -58,11 +57,13 @@ public class CreditActivity extends AppCompatActivity {
 
     private static final int BG_HIGH_DARK = R.color.colorCreditGoodDark;
     private static final int BG_HIGH_LIGHT = R.drawable.bg_rounded_credit_good;
-    private static final int BG_HIGH_GRADIENT = R.drawable.bg_credit_good;
+    //    private static final int BG_HIGH_GRADIENT = R.drawable.bg_credit_good;
+    private static final int BG_HIGH_GRADIENT = R.color.colorCreditGoodDark;
 
     private static final int BG_LOW_DARK = R.color.colorCreditLowDark;
     private static final int BG_LOW_LIGHT = R.drawable.bg_rounded_credit_low;
-    private static final int BG_LOW_GRADIENT = R.drawable.bg_credit_low;
+    //    private static final int BG_LOW_GRADIENT = R.drawable.bg_credit_low;
+    private static final int BG_LOW_GRADIENT = R.color.colorCreditLowDark;
 
     private CreditViewModel viewModel;
 
@@ -76,7 +77,7 @@ public class CreditActivity extends AppCompatActivity {
     private CreditRecyclerAdapter mAdapter;
 
     private Bundle bundle;
-    private DomainGetUserInfo.DataBean info;
+    private DomainUserInfo.DataBean info;
     private DomainAuthorize token;
 
     @Override
@@ -84,14 +85,16 @@ public class CreditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
         viewModel = new ViewModelProvider(this).get(CreditViewModel.class);
 
         bundle = getIntent().getExtras();
         if (bundle == null) bundle = new Bundle();
-        info = (DomainGetUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        StatusBarUtil.setTranslucentForImageView(this, 0, toolbar);
         setSupportActionBar(toolbar);
         mCreditNum = findViewById(R.id.credit_num);
         mCreditLevel = findViewById(R.id.credit_level);
@@ -99,11 +102,6 @@ public class CreditActivity extends AppCompatActivity {
         mCreditWrapper = findViewById(R.id.credit_wrapper);
         mHistoryWrapper = findViewById(R.id.credit_recycler_wrapper);
         mAdapter = new CreditRecyclerAdapter();
-
-        // 设置状态栏透明，虚拟按钮背景为白色且按钮颜色为深色
-        StatusBarUtil.setTranslucentForImageView(this, 0, toolbar);
-        BarUtils.setNavBarColor(this, Color.WHITE);
-        BarUtils.setNavBarLightMode(this, true);
 
         mRecycler.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, true));
         mRecycler.addItemDecoration(new MarginItemDecoration());
@@ -128,6 +126,9 @@ public class CreditActivity extends AppCompatActivity {
                 mCreditLevel.setTextColor(getResources().getColor(BG_LOW_DARK, getTheme()));
                 mCreditWrapper.setBackgroundResource(BG_LOW_DARK);
                 mHistoryWrapper.setBackgroundResource(BG_LOW_GRADIENT);
+
+                BarUtils.setNavBarColor(this, getResources().getColor(BG_LOW_DARK, getTheme()));
+                BarUtils.setNavBarLightMode(this, false);
                 break;
             case CREDIT2:
                 mCreditNum.setImageDrawable(ContextCompat.getDrawable(this, NUM_2));
@@ -136,6 +137,9 @@ public class CreditActivity extends AppCompatActivity {
                 mCreditLevel.setTextColor(getResources().getColor(BG_LOW_DARK, getTheme()));
                 mCreditWrapper.setBackgroundResource(BG_LOW_DARK);
                 mHistoryWrapper.setBackgroundResource(BG_LOW_GRADIENT);
+
+                BarUtils.setNavBarColor(this, getResources().getColor(BG_LOW_DARK, getTheme()));
+                BarUtils.setNavBarLightMode(this, false);
                 break;
             case CREDIT3:
                 mCreditNum.setImageDrawable(ContextCompat.getDrawable(this, NUM_3));
@@ -143,6 +147,9 @@ public class CreditActivity extends AppCompatActivity {
                 mCreditLevel.setBackgroundResource(BG_HIGH_LIGHT);
                 mCreditWrapper.setBackgroundResource(BG_HIGH_DARK);
                 mHistoryWrapper.setBackgroundResource(BG_HIGH_GRADIENT);
+
+                BarUtils.setNavBarColor(this, getResources().getColor(BG_HIGH_DARK, getTheme()));
+                BarUtils.setNavBarLightMode(this, false);
                 break;
             case CREDIT4:
                 mCreditNum.setImageDrawable(ContextCompat.getDrawable(this, NUM_4));
@@ -150,6 +157,9 @@ public class CreditActivity extends AppCompatActivity {
                 mCreditLevel.setBackgroundResource(BG_HIGH_LIGHT);
                 mCreditWrapper.setBackgroundResource(BG_HIGH_DARK);
                 mHistoryWrapper.setBackgroundResource(BG_HIGH_GRADIENT);
+
+                BarUtils.setNavBarColor(this, getResources().getColor(BG_HIGH_DARK, getTheme()));
+                BarUtils.setNavBarLightMode(this, false);
                 break;
             case CREDIT5:
                 mCreditNum.setImageDrawable(ContextCompat.getDrawable(this, NUM_5));
@@ -157,6 +167,9 @@ public class CreditActivity extends AppCompatActivity {
                 mCreditLevel.setBackgroundResource(BG_HIGH_LIGHT);
                 mCreditWrapper.setBackgroundResource(BG_HIGH_DARK);
                 mHistoryWrapper.setBackgroundResource(BG_HIGH_GRADIENT);
+
+                BarUtils.setNavBarColor(this, getResources().getColor(BG_HIGH_DARK, getTheme()));
+                BarUtils.setNavBarLightMode(this, false);
                 break;
         }
     }

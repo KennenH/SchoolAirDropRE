@@ -36,6 +36,10 @@ public class ConstantUtil {
     public static final int MENU_CLICK_GAP = 1000;
 
     /**
+     * 主页获取用户修改信息的标识
+     */
+    public static final String KEY_UPDATED = "UserInfoModified";
+    /**
      * 页面获取用户授权信息的键
      */
     public static final String KEY_AUTHORIZE = "AUTH2User";
