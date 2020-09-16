@@ -1,9 +1,5 @@
 package com.example.schoolairdroprefactoredition.scene.ssb;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -13,6 +9,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
@@ -84,7 +84,7 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
             public void onPageScrollStateChanged(int state) {
             }
         });
-        mPager.setOffscreenPageLimit(0);
+        mPager.setOffscreenPageLimit(3);
         mPager.setAdapter(mPagerAdapter);
         mPager.setCurrentItem(index);
     }

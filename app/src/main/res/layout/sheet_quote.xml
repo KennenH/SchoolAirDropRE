@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@drawable/sheet_first">
+
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/SheetNormal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_sheet_white"
+        android:gravity="center"
+        android:text="@string/InitiateQuote"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/header" />
+
+    <TextView
+        android:id="@+id/second_hand_tip"
+        style="@style/SheetNormal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:drawablePadding="@dimen/general_padding_larger"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/general_padding_even_larger"
+        android:paddingEnd="@dimen/general_padding_even_larger"
+        android:text="@string/goodsIsSecondHand"
+        android:textSize="@dimen/textSizeNormal"
+        app:drawableStartCompat="@drawable/ic_attention_normal"
+        app:drawableTint="@color/orangeLight"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <TextView
+        android:id="@+id/origin_title"
+        style="@style/SheetNormal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|start"
+        android:paddingStart="@dimen/general_padding_even_larger"
+        android:paddingEnd="@dimen/general_padding_even_larger"
+        android:text="@string/originPrice"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintEnd_toStartOf="@id/origin_price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/second_hand_tip" />
+
+    <TextView
+        android:id="@+id/origin_price"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:gravity="center_vertical|end"
+        android:paddingStart="@dimen/general_padding_even_larger"
+        android:paddingEnd="@dimen/general_padding_even_larger"
+        android:text="￥0.0"
+        android:textSize="@dimen/textSizeLarge"
+        app:layout_constraintBaseline_toBaselineOf="@id/origin_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/origin_title"
+        app:layout_constraintTop_toBottomOf="@id/second_hand_tip" />
+
+    <TextView
+        android:id="@+id/quote_title"
+        style="@style/SheetNormal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical|start"
+        android:paddingStart="@dimen/general_padding_even_larger"
+        android:paddingEnd="@dimen/general_padding_even_larger"
+        android:text="@string/quote"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintEnd_toStartOf="@id/quote_price"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/origin_title" />
+
+
+    <EditText
+        android:id="@+id/quote_price"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/transparent"
+        android:ellipsize="end"
+        android:gravity="center_vertical|end"
+        android:inputType="numberDecimal"
+        android:paddingStart="@dimen/general_padding_even_larger"
+        android:paddingEnd="@dimen/general_padding_even_larger"
+        android:textSize="@dimen/textSizeLarger"
+        app:layout_constraintBottom_toBottomOf="@id/quote_title"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/origin_title"
+        app:layout_constraintTop_toBottomOf="@id/origin_title"
+        app:layout_constraintTop_toTopOf="@id/quote_title" />
+
+    <TextView
+        android:id="@+id/cancel"
+        style="@style/SheetNormal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/general_padding"
+        android:background="@drawable/button_rounded_primary8"
+        android:gravity="center"
+        android:text="@string/cancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/confirm"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/quote_title" />
+
+    <TextView
+        android:id="@+id/confirm"
+        style="@style/SheetNormal"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/general_padding"
+        android:layout_marginBottom="4dp"
+        android:background="@drawable/button_rounded_theme_dark"
+        android:gravity="center"
+        android:text="@string/send"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toBottomOf="@+id/cancel"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/cancel"
+        app:layout_constraintTop_toTopOf="@+id/cancel" />
+
+    <include
+        android:id="@+id/header"
+        layout="@layout/sheet_drag_header"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -39,7 +39,7 @@ public interface Api {
     /**
      * 获取本人在售物品列表
      */
-    @POST("goods/getGoodsInfo")
+    @POST("goods/getGoodsOnSale")
     Call<DomainGoodsInfo> getMySellingGoods(@Header("Authorization") String token);
 
     /**

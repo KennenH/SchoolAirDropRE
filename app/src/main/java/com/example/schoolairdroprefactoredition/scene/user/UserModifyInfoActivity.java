@@ -153,24 +153,27 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
                     dialog.dismiss();
                 });
 
-                View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
-                view1.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.transparent, this.getTheme()));
-                final BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(view1);
-                bottomSheetBehavior.setSkipCollapsed(true);
-                bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                    @Override
-                    public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                            dialog.dismiss();
-                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                {
+                    View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                    view1.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.transparent, this.getTheme()));
+                    final BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(view1);
+                    bottomSheetBehavior.setSkipCollapsed(true);
+                    bottomSheetBehavior.setDraggable(false);
+                    bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                        @Override
+                        public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                                dialog.dismiss();
+                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                        @Override
+                        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
 
-                    }
-                });
+                        }
+                    });
+                }
             } catch (NullPointerException ignored) {
             }
         }

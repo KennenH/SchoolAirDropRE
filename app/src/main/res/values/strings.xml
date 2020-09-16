@@ -6,7 +6,7 @@
 
     <string name="indicator" translatable="false">/%d</string>
     <string name="quoteHeaderNum" translatable="false">(%d)</string>
-    <string name="priceRMB" translatable="false">¥%d</string>
+    <string name="priceRMB" translatable="false">¥ %d</string>
     <string name="version" translatable="false">Version %s</string>
     <string name="rightsReserved" translatable="false">校园空投 版权所有\nCopyright© 2019–2020 SchoolAirDrop. All Rights Reserved.</string>
     <string name="alipayID" translatable="false">%s</string>
@@ -201,6 +201,9 @@
     <string name="errorUpdateAvatar">上传头像出错</string>
     <string name="imageSaved">图片已保存至相册</string>
     <string name="errorUpdatingName">名字修改失败</string>
+    <string name="InitiateQuote">发起报价</string>
+    <string name="goodsIsSecondHand">物品为二手</string>
+    <string name="originPrice">原价</string>
 
 
 </resources>

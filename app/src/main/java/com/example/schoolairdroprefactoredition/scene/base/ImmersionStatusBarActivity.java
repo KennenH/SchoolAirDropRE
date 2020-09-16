@@ -24,6 +24,8 @@ public class ImmersionStatusBarActivity extends AppCompatActivity {
     }
 
     protected void setStatusBar() {
+//        BarUtils.setStatusBarColor(this, Color.WHITE);
+//        BarUtils.setStatusBarLightMode(this, true);
         StatusBarUtil.setStatusTextColorBlack(this, Color.WHITE);
     }
 

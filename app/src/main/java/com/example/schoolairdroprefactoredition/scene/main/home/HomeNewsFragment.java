@@ -76,13 +76,16 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 
         mManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
-        mManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_NONE);
+        mManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         mEndlessRecyclerView.setLayoutManager(mManager);
         mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration());
         mHomeNewsRecyclerAdapter = new HomeNewsRecyclerAdapter();
         mEndlessRecyclerView.setAdapter(mHomeNewsRecyclerAdapter);
 
-        homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> mHomeNewsRecyclerAdapter.setList(data));
+        homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
+            mHomeNewsRecyclerAdapter.setList(data);
+            invalidateDecoration();
+        });
     }
 
     private void invalidateDecoration() {

@@ -7,7 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.blankj.utilcode.util.ScreenUtils;
+import com.blankj.utilcode.util.SizeUtils;
 
 /**
  * 四周型decoration
@@ -22,7 +22,7 @@ import com.blankj.utilcode.util.ScreenUtils;
  * 仅水平方向 {@link HorizontalItemMarginDecoration}
  */
 public class MarginItemDecoration extends RecyclerView.ItemDecoration {
-    private int space = ScreenUtils.getAppScreenWidth() / 70;
+    private int space = SizeUtils.dp2px(5f);
 
     public MarginItemDecoration() {
     }

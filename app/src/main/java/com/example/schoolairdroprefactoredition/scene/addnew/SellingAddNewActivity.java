@@ -112,6 +112,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         mDescription.setOnClickListener(this);
         mPrice.setOnEditorActionListener((v, actionId, event) -> {
             mPrice.clearFocus();
+            KeyboardUtils.hideSoftInput(this);
             return true;
         });
 
