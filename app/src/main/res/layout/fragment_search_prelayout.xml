@@ -86,6 +86,28 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
 
+            <LinearLayout
+                android:id="@+id/search_tip"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/general_padding_larger"
+                    android:src="@drawable/ic_empty" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:lineSpacingExtra="3dp"
+                    android:text="@string/emptyOops" />
+
+            </LinearLayout>
         </FrameLayout>
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>

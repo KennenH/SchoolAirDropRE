@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.blankj.utilcode.util.Utils;
-import com.example.schoolairdroprefactoredition.domain.CacheWithDuration;
+import com.example.schoolairdroprefactoredition.cache.CacheWithDuration;
 import com.google.gson.Gson;
 
 /**

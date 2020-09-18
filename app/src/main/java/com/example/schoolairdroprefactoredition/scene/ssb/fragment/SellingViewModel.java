@@ -34,8 +34,4 @@ public class SellingViewModel extends BaseStateViewModel implements ISellingCall
         mOnRequestListener.onError();
     }
 
-    @Override
-    public void onLoading() {
-        mOnRequestListener.onLoading();
-    }
 }

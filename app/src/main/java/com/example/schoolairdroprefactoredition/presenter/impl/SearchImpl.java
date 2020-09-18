@@ -3,10 +3,9 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 import android.util.Log;
 
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.domain.SearchHistories;
+import com.example.schoolairdroprefactoredition.cache.SearchHistories;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
-import com.example.schoolairdroprefactoredition.model.databean.SearchSuggestionBean;
 import com.example.schoolairdroprefactoredition.presenter.ISearchPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISearchCallback;
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
@@ -16,11 +15,12 @@ import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static com.example.schoolairdroprefactoredition.cache.SearchHistories.SEARCH_HISTORY;
 
 public class SearchImpl implements ISearchPresenter {
 
@@ -28,7 +28,6 @@ public class SearchImpl implements ISearchPresenter {
 
     private JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
 
-    public static final String SEARCH_HISTORY = "search_history";
     private int historyMaxStack = 10;
 
     /**
@@ -81,6 +80,7 @@ public class SearchImpl implements ISearchPresenter {
                     }
 
                 } else {
+                    mCallback.onError();
                     try {
                         Log.d("SearchImpl", "请求错误 -- > " + response.errorBody().string() + " token -- > " + token);
                     } catch (IOException e) {
@@ -91,6 +91,7 @@ public class SearchImpl implements ISearchPresenter {
 
             @Override
             public void onFailure(Call<DomainGoodsInfo> call, Throwable t) {
+                mCallback.onError();
                 Log.e("SearchImpl", "请求失败 " + t);
             }
         });

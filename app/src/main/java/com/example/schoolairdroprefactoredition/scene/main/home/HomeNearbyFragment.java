@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.main.home;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -104,10 +103,7 @@ public class HomeNearbyFragment extends BaseChildFragment
                         showContentContainer();
                     }
                 });
-            } else {
-                showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
-                Log.d("HomeNearByGoods", aMapLocation.getErrorInfo());
-            }
+            } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
         } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 
@@ -154,8 +150,4 @@ public class HomeNearbyFragment extends BaseChildFragment
         showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 
-    @Override
-    public void onLoading() {
-        showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
-    }
 }

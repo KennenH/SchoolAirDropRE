@@ -17,8 +17,8 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.cache.UserCache;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
@@ -27,21 +27,25 @@ import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasing
 import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment;
 import com.example.schoolairdroprefactoredition.scene.search.SearchFragment;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
+import com.example.schoolairdroprefactoredition.scene.settings.LoginViewModel;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
-import com.example.schoolairdroprefactoredition.scene.settings.SettingsViewModel;
+import com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import org.jetbrains.annotations.NotNull;
 
 import me.jessyan.autosize.AutoSizeCompat;
 
 public class MainActivity extends PermissionBaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, AMapLocationListener {
-    private SettingsViewModel viewModel;
+    private LoginViewModel viewModel;
 
     private FragmentManager mFragmentManager = getSupportFragmentManager();
 
-    private OnLoginActivityListener mOnLoginActivityListener;
     protected OnLocationListener mOnLocationListener;
+    private OnLoginStateChangedListener mOnLoginStateChangedListener;
 
     private AMapLocationClient mClient;
     private AMapLocationClientOption mOption;
@@ -52,12 +56,16 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
 
     private Bundle bundle = new Bundle();
 
+    private JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
+
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
+        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+
+        initCache();
 
         // 添加新的tab时在此添加
         if (mHome == null) {
@@ -75,11 +83,32 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
                     .commit());
         }
         if (mMy == null)
-            mMy = new MyFragment();
+            mMy = MyFragment.newInstance(bundle);
 
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(this);
         showFragment(mHome);
+    }
+
+    /**
+     * 检查是否存在用户信息缓存
+     */
+    private void initCache() {
+        UserCache userCache = mJsonCacheUtil.getValue(UserCache.USER_CACHE, UserCache.class);
+        if (userCache == null) userCache = new UserCache();
+        bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, userCache.getToken());
+        bundle.putSerializable(ConstantUtil.KEY_USER_INFO, userCache.getInfo());
+    }
+
+    /**
+     * 在有本地用户token时自动登录
+     */
+    public void autoLogin() {
+        UserCache token = mJsonCacheUtil.getValue(UserCache.USER_CACHE, UserCache.class);
+        if (token != null) {
+            bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, token.getToken());
+            getUserInfoWithToken();
+        }
     }
 
     /**
@@ -142,29 +171,39 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     }
 
     /**
-     * 登录结果回调至子fragment
-     * 登录流程详见{@link OnLoginActivityListener}
+     * 登录 退登 用户信息修改
+     * 登录流程详见{@link OnLoginStateChangedListener}
      */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
-            if (data != null) {
-                if (requestCode == LoginActivity.LOGIN) { // 登录结果返回,去向子fragment的监听回调
-                    if (mOnLoginActivityListener != null) {
+            switch (requestCode) {
+                case LoginActivity.LOGIN: // 登录返回
+                    if (data != null) {
                         bundle.putAll(data.getExtras());
-                        mOnLoginActivityListener.onLoginActivity(data.getExtras());
+                        if (mOnLoginStateChangedListener != null)
+                            mOnLoginStateChangedListener.onLoginStateChanged(bundle);
                     }
-                } else if (requestCode == UserActivity.REQUEST_UPDATE) {
-                    if (data.getBooleanExtra(ConstantUtil.KEY_UPDATED, false)) {
+                    break;
+                case UserActivity.REQUEST_UPDATE: // 用户信息修改返回:
+                    if (data != null && data.getBooleanExtra(ConstantUtil.KEY_UPDATED, false))
                         getUserInfoWithToken();
-                    }
-                }
+                    break;
+                case SettingsFragment.LOGOUT: // 退出登录返回:
+                    bundle = new Bundle();
+                    if (mOnLoginStateChangedListener != null)
+                        mOnLoginStateChangedListener.onLoginStateChanged(bundle);
+                    break;
+                default:
+                    break;
             }
         }
     }
 
-    // 定位成功后的回调监听
+    /**
+     * 定位成功后的回调监听
+     */
     public interface OnLocationListener {
         void onLocated(AMapLocation aMapLocation);
 
@@ -177,8 +216,8 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
 
 
     /**
-     * 登录成功后的回调监听
-     * 整个流程为:
+     * 登录状态改变后的后的回调监听 登录 退登 都会回到此处
+     * 整个登录流程为:
      * .                  监听
      * {@link MyFragment} ===> {@link MainActivity}
      * .                                                                                         监听
@@ -189,13 +228,15 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
      * <p>
      * 再按原路返回至各个Activity,然后监听回调至{@link MyFragment} 与 {@link com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment}
      * <p>
+     * <p>
+     * 退出登录后将本地token清除 同时清除页面用户信息
      */
-    public interface OnLoginActivityListener {
-        void onLoginActivity(Bundle bundle);
+    public interface OnLoginStateChangedListener {
+        void onLoginStateChanged(@NotNull Bundle bundle);
     }
 
-    public void setOnLoginActivityListener(OnLoginActivityListener listener) {
-        mOnLoginActivityListener = listener;
+    public void setOnLoginActivityListener(OnLoginStateChangedListener listener) {
+        mOnLoginStateChangedListener = listener;
     }
 
     @Override
@@ -213,16 +254,14 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
      */
     private void getUserInfoWithToken() {
         DomainAuthorize token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-        try {
+        if (token != null && token.getAccess_token() != null) {
             viewModel.getUserInfo(token.getAccess_token()).observe(this, data -> {
                 DomainUserInfo.DataBean userInfo = data.getData().get(0);
                 bundle.putSerializable(ConstantUtil.KEY_USER_INFO, userInfo);
-                if (mOnLoginActivityListener != null) {
-                    mOnLoginActivityListener.onLoginActivity(bundle);
+                if (mOnLoginStateChangedListener != null) {
+                    mOnLoginStateChangedListener.onLoginStateChanged(bundle);
                 }
             });
-        } catch (NullPointerException e) {
-            LogUtils.d("token null");
         }
     }
 
@@ -239,7 +278,7 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
             mClient = null;
             mOption = null;
         }
-        mOnLoginActivityListener = null;
+        mOnLoginStateChangedListener = null;
         mOnLocationListener = null;
     }
 

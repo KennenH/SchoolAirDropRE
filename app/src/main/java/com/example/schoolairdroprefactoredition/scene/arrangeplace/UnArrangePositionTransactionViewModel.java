@@ -40,9 +40,4 @@ public class UnArrangePositionTransactionViewModel extends ViewModel implements 
     public void onError() {
 
     }
-
-    @Override
-    public void onLoading() {
-
-    }
 }

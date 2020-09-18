@@ -188,7 +188,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
                 mDialog.dismiss();
                 break;
             case R.id.select_from_album:
-                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, new ArrayList<>(), 1);
+                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, new ArrayList<>(), 1, true);
                 mDialog.dismiss();
                 break;
             case R.id.save_to_album:
@@ -209,11 +209,6 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
     public void onError() {
         runOnUiThread(this::dismissLoading);
         Toast.makeText(this, R.string.errorUpdateAvatar, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onLoading() {
-
     }
 
     private void showLoading() {

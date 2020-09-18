@@ -46,6 +46,15 @@ public class SearchBar extends ConstraintLayout implements View.OnClickListener,
         mSearch.setOnFocusChangeListener(this);
     }
 
+    /**
+     * 设置当前输入
+     *
+     * @param key 搜索关键词
+     */
+    public void setInputKey(String key) {
+        mSearch.setText(key);
+    }
+
     public void openSearch() {
         mSearch.requestFocus();
     }

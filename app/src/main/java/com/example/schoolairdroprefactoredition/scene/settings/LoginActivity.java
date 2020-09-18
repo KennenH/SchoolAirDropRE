@@ -58,7 +58,7 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
     private TextView mLogin;
     private TextView mCancel;
 
-    private SettingsViewModel viewModel;
+    private LoginViewModel viewModel;
 
     private LoadingPopupView mLoading;
 
@@ -112,7 +112,7 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
         // 尚未登录
         else {
             setContentView(R.layout.activity_login);
-            viewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
+            viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
             viewModel.setOnRequestListener(this);
 
             mCheck = findViewById(R.id.checkbox);
@@ -180,7 +180,6 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
 
                 // token
                 intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
-
                 getUserInfoWithToken(token);
             });
         });
@@ -236,7 +235,4 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
         dismissPopup();
     }
 
-    @Override
-    public void onLoading() {
-    }
 }

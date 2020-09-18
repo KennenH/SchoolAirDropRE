@@ -2,7 +2,6 @@ package com.example.schoolairdroprefactoredition.ui.components;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +12,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.domain.SearchHistories;
 import com.google.android.flexbox.FlexboxLayout;
 
-import java.util.Collections;
 import java.util.List;
 
 public class SearchHistoryHeader extends ConstraintLayout implements View.OnClickListener {
@@ -26,7 +23,7 @@ public class SearchHistoryHeader extends ConstraintLayout implements View.OnClic
     private TextView mConfirm;
     private FlexboxLayout mFlex;
 
-    private OnDeleteAllListener mOnDeleteAllListener;
+    private OnHistoryActionListener mOnHistoryActionListener;
 
     private List<String> mHistories;
 
@@ -82,9 +79,14 @@ public class SearchHistoryHeader extends ConstraintLayout implements View.OnClic
             int margin = SizeUtils.dp2px(3);
             params.setMargins(margin, margin, margin, margin);
             item.setLayoutParams(params);
+            item.setOnClickListener(v -> {
+                if (mOnHistoryActionListener != null)
+                    mOnHistoryActionListener.onSearchHistory(history.trim());
+            });
             mFlex.addView(item);
         }
     }
+
 
     public void showDeleteAll() {
         mCancel.setVisibility(GONE);
@@ -92,15 +94,25 @@ public class SearchHistoryHeader extends ConstraintLayout implements View.OnClic
         mDeleteAll.setVisibility(VISIBLE);
     }
 
-    public interface OnDeleteAllListener {
+    /**
+     * 搜索历史管理回调
+     */
+    public interface OnHistoryActionListener {
         /**
-         * 确认删除
+         * 删除历史记录
          */
-        void onDeleteConfirm();
+        void onDeleteHistory();
+
+        /**
+         * 点击搜索历史搜索
+         *
+         * @param key 搜索关键词
+         */
+        void onSearchHistory(String key);
     }
 
-    public void setOnDeleteAllListener(OnDeleteAllListener listener) {
-        this.mOnDeleteAllListener = listener;
+    public void setOnHistoryActionListener(OnHistoryActionListener listener) {
+        this.mOnHistoryActionListener = listener;
     }
 
     @Override
@@ -112,8 +124,8 @@ public class SearchHistoryHeader extends ConstraintLayout implements View.OnClic
             mDeleteAll.setVisibility(GONE);
         } else if (id == R.id.search_history_confirm) {
             showDeleteAll();
-            if (mOnDeleteAllListener != null) {
-                mOnDeleteAllListener.onDeleteConfirm();
+            if (mOnHistoryActionListener != null) {
+                mOnHistoryActionListener.onDeleteHistory();
             }
         } else if (id == R.id.search_history_cancel) {
             showDeleteAll();

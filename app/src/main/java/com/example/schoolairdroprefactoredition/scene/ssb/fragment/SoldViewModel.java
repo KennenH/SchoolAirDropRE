@@ -34,8 +34,4 @@ public class SoldViewModel extends BaseStateViewModel implements ISoldCallback {
         mOnRequestListener.onError();
     }
 
-    @Override
-    public void onLoading() {
-        mOnRequestListener.onLoading();
-    }
 }

@@ -172,4 +172,7 @@
     <string name="OK">OK</string>
     <string name="mapNoPermission">Location Obtain Failed</string>
     <string name="errorUpdateAvatar">Error Updating Avatar</string>
+    <string name="emptyOops">Oh…\nThere is no similar item yet</string>
+    <string name="imageSaved">Image Saved</string>
+    <string name="errorUpdatingName">Error updating name</string>
 </resources>

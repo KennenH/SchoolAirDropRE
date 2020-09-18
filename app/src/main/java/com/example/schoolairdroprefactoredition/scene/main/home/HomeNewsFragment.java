@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.amap.api.location.AMapLocation;
+import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
@@ -78,13 +79,12 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         mManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         mEndlessRecyclerView.setLayoutManager(mManager);
-        mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration());
+        mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(3)));
         mHomeNewsRecyclerAdapter = new HomeNewsRecyclerAdapter();
         mEndlessRecyclerView.setAdapter(mHomeNewsRecyclerAdapter);
 
         homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
             mHomeNewsRecyclerAdapter.setList(data);
-            invalidateDecoration();
         });
     }
 
@@ -145,8 +145,4 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 
-    @Override
-    public void onLoading() {
-        showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
-    }
 }

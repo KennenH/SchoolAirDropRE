@@ -18,7 +18,7 @@
                 android:id="@+id/settings_home_alipay"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:PI_description="@string/alipayID"
+                app:PI_description="@string/unLogged"
                 app:PI_icon="@drawable/ic_alipay_48"
                 app:PI_title="@string/alipayAccountText"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -66,7 +66,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/general_padding_large"
-                app:PI_description="@string/version"
+                app:PI_description="Version beta 0.0.1 "
                 app:PI_icon="@drawable/logo"
                 app:PI_title="@string/about"
                 app:layout_constraintTop_toBottomOf="@+id/settings_home_general" />

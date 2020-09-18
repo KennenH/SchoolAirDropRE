@@ -121,8 +121,4 @@ public class SoldFragment extends Fragment implements SSBFilter.OnFilterListener
 
     }
 
-    @Override
-    public void onLoading() {
-
-    }
 }

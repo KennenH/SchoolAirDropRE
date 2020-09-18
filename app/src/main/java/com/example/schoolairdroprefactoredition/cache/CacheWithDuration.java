@@ -1,6 +1,4 @@
-package com.example.schoolairdroprefactoredition.domain;
-
-import java.security.PrivateKey;
+package com.example.schoolairdroprefactoredition.cache;
 
 public class CacheWithDuration {
     private long duration;

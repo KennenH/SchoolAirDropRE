@@ -55,9 +55,9 @@
                     android:layout_height="80dp"
                     android:contentDescription="@string/avatar"
                     android:scaleType="centerCrop"
+                    app:actualImageResource="@drawable/logo"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/guideline7"
-                    app:placeholderImage="@drawable/logo"
                     app:roundedCornerRadius="@dimen/general_padding" />
 
                 <TextView

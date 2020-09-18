@@ -26,7 +26,7 @@ public class MorePanelAdapter extends BaseQuickAdapter<MorePanelBean, BaseViewHo
             switch (bean.getItem()) {
                 case MorePanelBean.ALBUM:
                     if (getContext() instanceof AppCompatActivity)
-                        MyUtil.pickPhotoFromAlbum((AppCompatActivity) getContext(), ChatActivity.TAKE_PHOTO, null, 6);
+                        MyUtil.pickPhotoFromAlbum((AppCompatActivity) getContext(), ChatActivity.TAKE_PHOTO, null, 6, false);
                     break;
                 case MorePanelBean.CAMERA:
                     if (getContext() instanceof AppCompatActivity)

@@ -39,8 +39,4 @@ public class UserNameViewModel extends BaseStateViewModel implements IUserNameCa
         mOnRequestListener.onError();
     }
 
-    @Override
-    public void onLoading() {
-
-    }
 }

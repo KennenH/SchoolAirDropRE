@@ -43,9 +43,4 @@ public class HomeNewsFragmentViewModel extends BaseStateViewModel implements IHo
     public void onError() {
         mOnRequestListener.onError();
     }
-
-    @Override
-    public void onLoading() {
-        mOnRequestListener.onLoading();
-    }
 }

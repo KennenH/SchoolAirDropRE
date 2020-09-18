@@ -6,6 +6,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -23,18 +24,21 @@ import androidx.transition.TransitionManager;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSearchPrelayoutBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderFooterOnlyRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.SearchSuggestionRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.SearchBar;
 import com.example.schoolairdroprefactoredition.ui.components.SearchHistoryHeader;
-import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.lxj.xpopup.impl.LoadingPopupView;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
 
-public class SearchFragment extends Fragment implements SearchBar.OnSearchActionListener, EndlessRecyclerView.OnLoadMoreListener {
+public class SearchFragment extends Fragment implements SearchBar.OnSearchActionListener, EndlessRecyclerView.OnLoadMoreListener, BaseStateViewModel.OnRequestListener {
     private SearchViewModel searchViewModel;
 
     private ConstraintSet constraintSet;
@@ -43,9 +47,11 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     private SearchBar mSearchBar;
     private TextView mCancel;
     private SmartRefreshLayout mOverDrag;
+
     private RecyclerView mHistory;
     private RecyclerView mSuggestion;
     private EndlessRecyclerView mResult;
+    private LinearLayout mTip;
 
     private HeaderFooterOnlyRecyclerAdapter mHistoryAdapter;
     private SearchSuggestionRecyclerAdapter mSuggestionAdapter;
@@ -60,6 +66,8 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     private boolean isHistoryShowing = false;
     private boolean isSuggestionShowing = false;
     private boolean isResultShowing = false;
+
+    private LoadingPopupView mLoading;
 
     public static SearchFragment newInstance(Bundle bundle) {
         SearchFragment fragment = new SearchFragment();
@@ -86,6 +94,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final FragmentSearchPrelayoutBinding binding = FragmentSearchPrelayoutBinding.inflate(inflater, container, false);
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
+        searchViewModel.setOnRequestListener(this);
 
         constraintSet = new ConstraintSet();
         root = binding.root;
@@ -95,6 +104,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         mHistory = binding.searchHistory;
         mSuggestion = binding.searchSuggestion;
         mResult = binding.searchResult;
+        mTip = binding.searchTip;
 
         init();
 
@@ -133,9 +143,18 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
             if (getActivity() != null)
                 getActivity().getSupportFragmentManager().popBackStack();
         });
-        mHistoryHeader.setOnDeleteAllListener(() -> {
-            searchViewModel.deleteHistories();
-            mHistoryHeader.showAfterUpdate(new ArrayList<>());
+        mHistoryHeader.setOnHistoryActionListener(new SearchHistoryHeader.OnHistoryActionListener() {
+            @Override
+            public void onDeleteHistory() {
+                searchViewModel.deleteHistories();
+                mHistoryHeader.showAfterUpdate(new ArrayList<>());
+            }
+
+            @Override
+            public void onSearchHistory(String key) {
+                mSearchBar.setInputKey(key);
+                performSearch(key);
+            }
         });
         mHistory.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -164,11 +183,34 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         mSearchBar.openSearch();
     }
 
+    /**
+     * 执行搜索
+     * 显示结果列表
+     *
+     * @param key 搜索关键词
+     */
+    private void performSearch(String key) {
+        if (token != null) {
+            showResult();
+            showLoading();
+            searchViewModel.getSearchResult(token.getAccess_token(), longitude, latitude, key).observe(getViewLifecycleOwner(), data -> {
+                dismissLoading();
+
+                mSearchBar.closeSearch();
+                mResultAdapter.setList(data);
+                if (data.size() < 1) {
+                    showTip();
+                }
+            });
+            searchViewModel.getSearchHistories().observe(getViewLifecycleOwner(), histories -> mHistoryHeader.showAfterUpdate(histories.getHistoryList()));
+        }
+    }
+
     private void startAnimation() {
         constraintSet.clone(getContext(), R.layout.fragment_search);
         Transition transition = new ChangeBounds();
         transition.setInterpolator(new DecelerateInterpolator());
-        transition.setDuration(100);
+        transition.setDuration(150);
         transition.addListener(new Transition.TransitionListener() {
             @Override
             public void onTransitionStart(@NonNull Transition transition) {
@@ -199,6 +241,18 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         constraintSet.applyTo(root);
     }
 
+    private void showLoading() {
+        if (mLoading == null)
+            mLoading = MyUtil.loading(getContext());
+
+        mLoading.show();
+    }
+
+    private void dismissLoading() {
+        if (mLoading != null)
+            mLoading.dismiss();
+    }
+
     private void showHistory() {
         isHistoryShowing = true;
         isSuggestionShowing = false;
@@ -206,6 +260,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         mHistory.setVisibility(View.VISIBLE);
         mSuggestion.setVisibility(View.GONE);
         mResult.setVisibility(View.GONE);
+        mTip.setVisibility(View.GONE);
     }
 
     private void showSuggestion() {
@@ -215,6 +270,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         mHistory.setVisibility(View.GONE);
         mSuggestion.setVisibility(View.VISIBLE);
         mResult.setVisibility(View.GONE);
+        mTip.setVisibility(View.GONE);
     }
 
     private void showResult() {
@@ -224,6 +280,17 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         mHistory.setVisibility(View.GONE);
         mSuggestion.setVisibility(View.GONE);
         mResult.setVisibility(View.VISIBLE);
+        mTip.setVisibility(View.GONE);
+    }
+
+    private void showTip() {
+        isHistoryShowing = false;
+        isSuggestionShowing = false;
+        isResultShowing = false;
+        mHistory.setVisibility(View.GONE);
+        mSuggestion.setVisibility(View.GONE);
+        mResult.setVisibility(View.GONE);
+        mTip.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -237,15 +304,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     @Override
     public void onSearch(String key, View v) {
-        if (token != null) {
-
-            showResult();
-            searchViewModel.getSearchResult(token.getAccess_token(), longitude, latitude, key).observe(getViewLifecycleOwner(), data -> {
-                mSearchBar.closeSearch();
-                mResultAdapter.setList(data);
-            });
-            searchViewModel.getSearchHistories().observe(getViewLifecycleOwner(), histories -> mHistoryHeader.showAfterUpdate(histories.getHistoryList()));
-        }
+        performSearch(key);
     }
 
     @Override
@@ -261,4 +320,10 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         if (hasFocus)
             showHistory();
     }
+
+    @Override
+    public void onError() {
+        dismissLoading();
+    }
+
 }

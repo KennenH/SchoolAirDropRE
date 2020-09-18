@@ -35,10 +35,6 @@ public class UserAvatarViewModel extends BaseStateViewModel implements IUserAvat
         mOnRequestListener.onError();
     }
 
-    @Override
-    public void onLoading() {
-        mOnRequestListener.onLoading();
-    }
 
 
 }

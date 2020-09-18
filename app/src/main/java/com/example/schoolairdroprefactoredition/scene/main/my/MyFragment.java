@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.main.my;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,7 +9,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -31,7 +31,9 @@ import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
-public class MyFragment extends Fragment implements View.OnClickListener, MainActivity.OnLoginActivityListener, BaseStateViewModel.OnRequestListener, SSBInfo.OnSSBActionListener {
+import org.jetbrains.annotations.NotNull;
+
+public class MyFragment extends Fragment implements View.OnClickListener, MainActivity.OnLoginStateChangedListener, BaseStateViewModel.OnRequestListener, SSBInfo.OnSSBActionListener {
 
     private MyViewModel viewModel;
 
@@ -53,8 +55,9 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
         bundle = getArguments();
         if (bundle == null)
             bundle = new Bundle();
@@ -64,6 +67,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
 
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setOnLoginActivityListener(this);
+            ((MainActivity) getActivity()).autoLogin();
         }
     }
 
@@ -86,7 +90,28 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
         binding.rootLayout.setOnRefreshListener(RefreshLayout::finishRefresh);
         mSSBInfo.setOnSSBActionListener(this);
 
+        setUserData();
+
         return binding.getRoot();
+    }
+
+    /**
+     * 使用当前页面保存的bundle来显示用户信息
+     * 若用户token与info都存在 则使用服务器数据填充页面
+     * 否则使用页面默认值填充
+     */
+    private void setUserData() {
+        if (token == null) { // 无token认证信息，显示默认值
+            mAvatar.setActualImageResource(R.drawable.logo);
+            mName.setText(getString(R.string.pleaseLogin));
+            mSSBInfo.setSelling(0);
+            mSSBInfo.setBought(0);
+            mSSBInfo.setSold(0);
+        } else if (info != null) { // 设置页面数据
+            mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
+            mName.setText(info.getUname());
+            // set selling sold bought number
+        }
     }
 
     @Override
@@ -111,7 +136,10 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
                 // list trash
                 break;
             case R.id.my_settings:
-                SettingsActivity.startForResult(getContext(), bundle);
+                if (token == null)
+                    SettingsActivity.startForResultLogin(getContext(), bundle);
+                else
+                    SettingsActivity.startForResultLogout(getContext(), bundle);
                 break;
             case R.id.my_quote:
                 QuoteActivity.start(getContext(), bundle);
@@ -120,42 +148,22 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
     }
 
     /**
-     * {@link MainActivity}收到来自{@link SettingsActivity}返回的登录成功信息 或者 自身收到用户信息修改 后的回调
-     * #if 若bundle中的用户信息不为空，则直接使用该信息填充页面
-     * #else 若bundle中token信息不为空，则使用token换取用户信息并填充页面
+     * 来自{@link MainActivity}的
+     * 登录状态改变的回调
      */
     @Override
-    public void onLoginActivity(Bundle bundle) {
-        if (bundle != null) {
-            this.bundle = bundle;
+    public void onLoginStateChanged(@NotNull Bundle bundle) {
+        this.bundle = bundle;
 
-            DomainUserInfo.DataBean info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
-            if (info != null) {
-                mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
-                mName.setText(info.getUname());
-            } else {
-                DomainAuthorize authorize = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-                if (authorize != null)
-                    viewModel.getUserInfo(authorize.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
-                        DomainUserInfo.DataBean info_ = data.getData().get(0);
-                        mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info_.getUser_img_path());
-                        mName.setText(info_.getUname());
-                    });
+        this.info = (DomainUserInfo.DataBean) this.bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        this.token = (DomainAuthorize) this.bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
 
-                else
-                    Toast.makeText(getContext(), "error login", Toast.LENGTH_SHORT).show();
-            }
-        }
-    }
-
-    @Override
-    public void onError() {
-        Toast.makeText(getContext(), "error getting user info", Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void onLoading() {
-
+        setUserData();
+        if (token != null)
+            viewModel.getUserInfo(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
+                this.info = data.getData().get(0);
+                setUserData();
+            });
     }
 
     /**
@@ -176,4 +184,10 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
     public void onBoughtClick(View view) {
         SSBActivity.start(getContext(), bundle, 2);
     }
+
+    @Override
+    public void onError() {
+        Toast.makeText(getContext(), "Error getting user info", Toast.LENGTH_SHORT).show();
+    }
+
 }

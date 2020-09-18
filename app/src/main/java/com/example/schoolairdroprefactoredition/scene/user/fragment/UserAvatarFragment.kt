@@ -143,7 +143,7 @@ class UserAvatarFragment : Fragment(), OnLongClickListener, View.OnClickListener
                 mDialog!!.dismiss()
             }
             R.id.select_from_album -> {
-                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, ArrayList(), 1)
+                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, ArrayList(), 1, false)
                 mDialog!!.dismiss()
             }
             R.id.save_to_album -> {

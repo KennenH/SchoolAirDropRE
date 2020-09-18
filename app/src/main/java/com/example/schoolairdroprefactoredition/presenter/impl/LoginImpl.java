@@ -2,13 +2,15 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import android.util.Log;
 
+import com.example.schoolairdroprefactoredition.cache.UserCache;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
-import com.example.schoolairdroprefactoredition.presenter.ISettingsPresenter;
-import com.example.schoolairdroprefactoredition.presenter.callback.ISettingsCallback;
+import com.example.schoolairdroprefactoredition.presenter.ILoginPresenter;
+import com.example.schoolairdroprefactoredition.presenter.callback.ILoginCallback;
+import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
 import com.example.schoolairdroprefactoredition.utils.RSACoder;
 
 import java.io.IOException;
@@ -19,8 +21,45 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class SettingsImpl implements ISettingsPresenter {
-    private ISettingsCallback mCallback;
+public class LoginImpl implements ILoginPresenter {
+    private ILoginCallback mCallback;
+
+    private JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
+
+    /**
+     * 保存用户上一次登录获取的用户token
+     * 以便下次用户在token有效期内登录时自动登录
+     *
+     * @param token 本次登录获取到的token
+     */
+    private void saveUserToken(DomainAuthorize token) {
+        UserCache userCache = mJsonCacheUtil.getValue(UserCache.USER_CACHE, UserCache.class);
+        if (userCache == null) userCache = new UserCache();
+        userCache.setToken(token);
+        mJsonCacheUtil.saveCache(UserCache.USER_CACHE, userCache);
+    }
+
+    /**
+     * 保存上次登录后获取的用户信息
+     * 以便下次打开app时即时加载
+     *
+     * @param info 本次登录获取的用户信息
+     */
+    private void saveUserInfo(DomainUserInfo.DataBean info) {
+        UserCache userCache = mJsonCacheUtil.getValue(UserCache.USER_CACHE, UserCache.class);
+        if (userCache == null) userCache = new UserCache();
+        userCache.setInfo(info);
+        mJsonCacheUtil.saveCache(UserCache.USER_CACHE, userCache);
+    }
+
+    /**
+     * 退出登录
+     * 清除本地用户信息和token
+     */
+    @Override
+    public void logout() {
+        mJsonCacheUtil.deleteCache(UserCache.USER_CACHE);
+    }
 
     @Override
     public void getPublicKey() {
@@ -78,8 +117,6 @@ public class SettingsImpl implements ISettingsPresenter {
     public void postAlipayIDRSA(String cookie, String grantType, String clientID, String clientSecret, String rawAlipay, String publicKey) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-//        Log.d("postAlipayIDRSA", "encrypted alipay -- > " + RSACoder.encryptWithPublicKey(publicKey, rawAlipay) +
-//                "cookie -- > " + cookie);
         Call<DomainAuthorize> task = api.authorize(cookie, grantType, clientID, clientSecret, RSACoder.encryptWithPublicKey(publicKey, rawAlipay));
         task.enqueue(new Callback<DomainAuthorize>() {
             @Override
@@ -87,14 +124,13 @@ public class SettingsImpl implements ISettingsPresenter {
                 int code = response.code();
                 if (code == HttpURLConnection.HTTP_OK) {
                     DomainAuthorize authorization = response.body();
+                    saveUserToken(authorization);
 
 //                    try {
 //                        Log.d("postAlipayIDRSA", "response.body.string -- > " + authorization.string());
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
-
-                    Log.d("postAlipayIDRSA", authorization.toString());
 
                     if (mCallback != null) {
                         mCallback.onAuthorizationSuccess(authorization);
@@ -126,17 +162,17 @@ public class SettingsImpl implements ISettingsPresenter {
             @Override
             public void onResponse(Call<DomainUserInfo> call, Response<DomainUserInfo> response) {
                 int code = response.code();
-                DomainUserInfo info = response.body();
                 if (code == HttpURLConnection.HTTP_OK) {
+                    DomainUserInfo info = response.body();
 
 //                    try {
 //                        Log.d("getUserInfo", info.string());
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
-
                     if (info != null && info.isSuccess()) {
                         mCallback.onUserInfoLoaded(info);
+                        saveUserInfo(info.getData().get(0));
                     } else
                         mCallback.onError();
                 } else {
@@ -158,12 +194,12 @@ public class SettingsImpl implements ISettingsPresenter {
     }
 
     @Override
-    public void registerCallback(ISettingsCallback callback) {
+    public void registerCallback(ILoginCallback callback) {
         mCallback = callback;
     }
 
     @Override
-    public void unregisterCallback(ISettingsCallback callback) {
+    public void unregisterCallback(ILoginCallback callback) {
         mCallback = null;
     }
 }

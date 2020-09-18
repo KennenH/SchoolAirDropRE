@@ -21,11 +21,18 @@ public class SettingsActivity extends TransactionBaseActivity implements Fragmen
 
     private OnLoginListener mOnLoginListener;
 
-    public static void startForResult(Context context, Bundle bundle) {
+    public static void startForResultLogin(Context context, Bundle bundle) {
         Intent intent = new Intent(context, SettingsActivity.class);
         if (bundle != null) intent.putExtras(bundle);
         if (context instanceof AppCompatActivity)
             ((AppCompatActivity) context).startActivityForResult(intent, LoginActivity.LOGIN);
+    }
+
+    public static void startForResultLogout(Context context, Bundle bundle) {
+        Intent intent = new Intent(context, SettingsActivity.class);
+        if (bundle != null) intent.putExtras(bundle);
+        if (context instanceof AppCompatActivity)
+            ((AppCompatActivity) context).startActivityForResult(intent, SettingsFragment.LOGOUT);
     }
 
     @Override
@@ -61,5 +68,4 @@ public class SettingsActivity extends TransactionBaseActivity implements Fragmen
     public void setOnLoginListener(OnLoginListener listener) {
         mOnLoginListener = listener;
     }
-
 }

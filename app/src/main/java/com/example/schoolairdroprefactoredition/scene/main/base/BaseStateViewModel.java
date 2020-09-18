@@ -10,8 +10,6 @@ public class BaseStateViewModel extends ViewModel {
 
     public interface OnRequestListener {
         void onError();
-
-        void onLoading();
     }
 
     public void setOnRequestListener(OnRequestListener listener) {

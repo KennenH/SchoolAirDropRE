@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.settings.fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -20,7 +21,7 @@ import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
-import com.example.schoolairdroprefactoredition.scene.settings.SettingsViewModel;
+import com.example.schoolairdroprefactoredition.scene.settings.LoginViewModel;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.lxj.xpopup.XPopup;
@@ -30,8 +31,9 @@ import com.lxj.xpopup.impl.LoadingPopupView;
  * 设置的主页面
  */
 public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, BaseStateViewModel.OnRequestListener, SettingsActivity.OnLoginListener {
+    public static final int LOGOUT = 1205; // 请求码 退出本地登录
 
-    private SettingsViewModel settingsViewModel;
+    private LoginViewModel loginViewModel;
 
     private FragmentManager manager;
 
@@ -47,7 +49,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     private PageItem mGeneral;
     private PageItem mAbout;
     private TextView mSwitchAccount;
-    private TextView mSignOut;
+    private TextView mLogout;
 
     private LoadingPopupView mLoading;
 
@@ -94,8 +96,8 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_home, container, false);
-        settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
-        settingsViewModel.setOnRequestListener(this);
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        loginViewModel.setOnRequestListener(this);
 
         mAlipay = root.findViewById(R.id.settings_home_alipay);
         mPrivacy = root.findViewById(R.id.settings_home_privacy);
@@ -103,7 +105,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
         mGeneral = root.findViewById(R.id.settings_home_general);
         mAbout = root.findViewById(R.id.settings_home_about);
         mSwitchAccount = root.findViewById(R.id.settings_home_switch_account);
-        mSignOut = root.findViewById(R.id.settings_home_sign_out);
+        mLogout = root.findViewById(R.id.settings_home_sign_out);
 
         mAlipay.setOnClickListener(this);
         mPrivacy.setOnClickListener(this);
@@ -111,11 +113,11 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
         mGeneral.setOnClickListener(this);
         mAbout.setOnClickListener(this);
         mSwitchAccount.setOnClickListener(this);
-        mSignOut.setOnClickListener(this);
+        mLogout.setOnClickListener(this);
 
         mLoading = new XPopup.Builder(getContext()).asLoading();
 
-        init();
+        validateState();
 
         return root;
     }
@@ -134,11 +136,17 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     }
 
     /**
-     * 使用bundle填充页面用户信息
+     * 有效化登录状态或退登状态
+     * 使用bundle填充页面用户信息或清除页面数据
      */
-    private void init() {
-        if (userInfo != null) {
+    private void validateState() {
+        if (isLoggedIn()) {
             mAlipay.setDescription(getString(R.string.loggedIn, userInfo.getUname()));
+            mSwitchAccount.setVisibility(View.VISIBLE);
+            mLogout.setVisibility(View.VISIBLE);
+        } else {
+            mSwitchAccount.setVisibility(View.GONE);
+            mLogout.setVisibility(View.GONE);
         }
     }
 
@@ -149,7 +157,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
      */
     private boolean isLoggedIn() {
         return userInfo != null
-                || token != null;
+                && token != null;
     }
 
     @Override
@@ -182,19 +190,17 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
                 // switch account
                 break;
             case R.id.settings_home_sign_out:
-                // sign out and delete all relative user info on this device
+                loginViewModel.logout();
+                if (getActivity() != null) {
+                    getActivity().setResult(Activity.RESULT_OK);
+                    getActivity().finish();
+                }
                 break;
         }
     }
 
     @Override
     public void onError() {
-        if (mLoading != null)
-            mLoading.dismiss();
-    }
-
-    @Override
-    public void onLoading() {
         if (mLoading != null)
             mLoading.dismiss();
     }

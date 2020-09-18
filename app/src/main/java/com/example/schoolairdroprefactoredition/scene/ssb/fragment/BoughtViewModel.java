@@ -34,8 +34,4 @@ public class BoughtViewModel extends BaseStateViewModel implements IBoughtCallba
         mOnRequestListener.onError();
     }
 
-    @Override
-    public void onLoading() {
-        mOnRequestListener.onLoading();
-    }
 }
