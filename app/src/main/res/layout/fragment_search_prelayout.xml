@@ -57,7 +57,7 @@
         app:srlFooterMaxDragRate="1"
         app:srlHeaderMaxDragRate="1.2">
 
-        <FrameLayout
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
@@ -66,33 +66,41 @@
                 android:id="@+id/search_history"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
+                android:overScrollMode="never" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/search_suggestion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
+                android:overScrollMode="never" />
 
             <com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
                 android:id="@+id/search_result"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:overScrollMode="never"
+                android:overScrollMode="never" />
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/loading"
+                style="@style/SpinKitView.FadingCircle"
+                android:layout_width="@dimen/home_item_image"
+                android:layout_height="@dimen/home_item_image"
+                app:SpinKit_Color="@color/primaryText"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
                 android:id="@+id/search_tip"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:visibility="gone">
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -108,6 +116,6 @@
                     android:text="@string/emptyOops" />
 
             </LinearLayout>
-        </FrameLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>

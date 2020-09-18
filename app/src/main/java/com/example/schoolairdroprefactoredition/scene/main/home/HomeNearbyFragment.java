@@ -53,7 +53,6 @@ public class HomeNearbyFragment extends BaseChildFragment
         if (bundle != null)
             token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
 
-
         if (getParentFragment() instanceof BaseParentFragment)
             ((BaseParentFragment) getParentFragment()).setOnLocationCallbackListener(this);
     }

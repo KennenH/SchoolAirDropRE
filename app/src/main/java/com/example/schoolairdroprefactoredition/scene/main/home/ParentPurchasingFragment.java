@@ -25,6 +25,12 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigat
 
 public class ParentPurchasingFragment extends BaseParentFragment implements View.OnClickListener, MainActivity.OnLocationListener {
 
+    public static ParentPurchasingFragment newInstance(Bundle bundle) {
+        ParentPurchasingFragment fragment = new ParentPurchasingFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

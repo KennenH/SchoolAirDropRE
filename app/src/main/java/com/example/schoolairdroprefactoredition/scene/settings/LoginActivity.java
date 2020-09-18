@@ -180,31 +180,33 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
 
                 // token
                 intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
-                getUserInfoWithToken(token);
+                getUserInfoWithToken();
             });
         });
     }
 
     /**
      * 使用token获取用户信息
-     *
-     * @param token token
      */
-    private void getUserInfoWithToken(DomainAuthorize token) {
-        showPopup();
-        viewModel.getUserInfo(token.getAccess_token()).observe(this, info -> {
-            DomainUserInfo.DataBean userInfo = info.getData().get(0);
-            // token换取的user info
-            intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo);
+    private void getUserInfoWithToken() {
+        DomainAuthorize token = (DomainAuthorize) getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
+        if (token != null) {
+            showPopup();
 
-            setResult(Activity.RESULT_OK, intent);
-            NetworkUtils.unregisterNetworkStatusChangedListener(networkStatusListener);
+            viewModel.getUserInfo(token.getAccess_token()).observe(this, info -> {
+                DomainUserInfo.DataBean userInfo = info.getData().get(0);
+                // token换取的user info
+                intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo);
 
-            dismissPopup();
+                setResult(Activity.RESULT_OK, intent);
+                NetworkUtils.unregisterNetworkStatusChangedListener(networkStatusListener);
 
-            finish();
-            MyUtil.exitAnimDown(this);
-        });
+                dismissPopup();
+
+                finish();
+                MyUtil.exitAnimDown(this);
+            });
+        }
     }
 
     private void showToast(String info) {

@@ -22,8 +22,8 @@ import com.blankj.utilcode.util.SizeUtils;
  * 仅水平方向 {@link HorizontalItemMarginDecoration}
  */
 public class MarginItemDecoration extends RecyclerView.ItemDecoration {
-    private int space = SizeUtils.dp2px(3f);
-    private int spaceB = SizeUtils.dp2px(5f);
+    private int space = SizeUtils.dp2px(8f);
+    private boolean isHome = false;
 
     public MarginItemDecoration() {
 
@@ -31,12 +31,15 @@ public class MarginItemDecoration extends RecyclerView.ItemDecoration {
 
     public MarginItemDecoration(int space) {
         this.space = space;
+        isHome = true;
     }
 
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        if (parent.getPaddingLeft() != space)
-            parent.setPadding(spaceB, spaceB, spaceB, spaceB);
+        if (parent.getPaddingLeft() != space) {
+            if (!isHome)
+                parent.setPadding(space, space, space, space);
+        }
 
         outRect.top = space;
         outRect.right = space;

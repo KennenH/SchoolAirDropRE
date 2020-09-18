@@ -32,8 +32,7 @@ import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerVie
 import com.example.schoolairdroprefactoredition.ui.components.SearchBar;
 import com.example.schoolairdroprefactoredition.ui.components.SearchHistoryHeader;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.example.schoolairdroprefactoredition.utils.MyUtil;
-import com.lxj.xpopup.impl.LoadingPopupView;
+import com.github.ybq.android.spinkit.SpinKitView;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
@@ -52,6 +51,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     private RecyclerView mSuggestion;
     private EndlessRecyclerView mResult;
     private LinearLayout mTip;
+    private SpinKitView mLoading;
 
     private HeaderFooterOnlyRecyclerAdapter mHistoryAdapter;
     private SearchSuggestionRecyclerAdapter mSuggestionAdapter;
@@ -66,8 +66,6 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     private boolean isHistoryShowing = false;
     private boolean isSuggestionShowing = false;
     private boolean isResultShowing = false;
-
-    private LoadingPopupView mLoading;
 
     public static SearchFragment newInstance(Bundle bundle) {
         SearchFragment fragment = new SearchFragment();
@@ -105,6 +103,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         mSuggestion = binding.searchSuggestion;
         mResult = binding.searchResult;
         mTip = binding.searchTip;
+        mLoading = binding.loading;
 
         init();
 
@@ -191,13 +190,12 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
      */
     private void performSearch(String key) {
         if (token != null) {
-            showResult();
             showLoading();
             searchViewModel.getSearchResult(token.getAccess_token(), longitude, latitude, key).observe(getViewLifecycleOwner(), data -> {
-                dismissLoading();
-
                 mSearchBar.closeSearch();
                 mResultAdapter.setList(data);
+
+                showResult();
                 if (data.size() < 1) {
                     showTip();
                 }
@@ -241,26 +239,15 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         constraintSet.applyTo(root);
     }
 
-    private void showLoading() {
-        if (mLoading == null)
-            mLoading = MyUtil.loading(getContext());
-
-        mLoading.show();
-    }
-
-    private void dismissLoading() {
-        if (mLoading != null)
-            mLoading.dismiss();
-    }
-
     private void showHistory() {
         isHistoryShowing = true;
         isSuggestionShowing = false;
         isResultShowing = false;
-        mHistory.setVisibility(View.VISIBLE);
         mSuggestion.setVisibility(View.GONE);
         mResult.setVisibility(View.GONE);
         mTip.setVisibility(View.GONE);
+        mLoading.setVisibility(View.GONE);
+        mHistory.setVisibility(View.VISIBLE);
     }
 
     private void showSuggestion() {
@@ -268,9 +255,10 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         isSuggestionShowing = true;
         isResultShowing = false;
         mHistory.setVisibility(View.GONE);
-        mSuggestion.setVisibility(View.VISIBLE);
         mResult.setVisibility(View.GONE);
         mTip.setVisibility(View.GONE);
+        mLoading.setVisibility(View.GONE);
+        mSuggestion.setVisibility(View.VISIBLE);
     }
 
     private void showResult() {
@@ -279,8 +267,9 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         isResultShowing = true;
         mHistory.setVisibility(View.GONE);
         mSuggestion.setVisibility(View.GONE);
-        mResult.setVisibility(View.VISIBLE);
         mTip.setVisibility(View.GONE);
+        mLoading.setVisibility(View.GONE);
+        mResult.setVisibility(View.VISIBLE);
     }
 
     private void showTip() {
@@ -290,7 +279,19 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         mHistory.setVisibility(View.GONE);
         mSuggestion.setVisibility(View.GONE);
         mResult.setVisibility(View.GONE);
+        mLoading.setVisibility(View.GONE);
         mTip.setVisibility(View.VISIBLE);
+    }
+
+    private void showLoading() {
+        isHistoryShowing = false;
+        isSuggestionShowing = false;
+        isResultShowing = false;
+        mHistory.setVisibility(View.GONE);
+        mSuggestion.setVisibility(View.GONE);
+        mResult.setVisibility(View.GONE);
+        mTip.setVisibility(View.GONE);
+        mLoading.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -323,7 +324,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     @Override
     public void onError() {
-        dismissLoading();
+        mLoading.setVisibility(View.GONE);
     }
 
 }

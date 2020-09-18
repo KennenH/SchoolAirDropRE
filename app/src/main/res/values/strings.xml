@@ -206,6 +206,7 @@
     <string name="originPrice">原价</string>
     <string name="unLogged">未登录</string>
     <string name="emptyOops">啊哦…\n还没有相似物品哦</string>
+    <string name="nothingThere">空空如也…</string>
 
 
 </resources>

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     app:hl_cornerRadius="@dimen/general_padding_large"
     app:hl_shadowColor="@color/blackShadow"
-    app:hl_shadowLimit="@dimen/general_padding_small">
+    app:hl_shadowLimit="@dimen/general_padding">
 
     <TextView
         android:id="@+id/news_title"

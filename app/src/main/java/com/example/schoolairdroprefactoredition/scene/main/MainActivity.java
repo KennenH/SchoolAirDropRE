@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +19,8 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.cache.UserCache;
+import com.example.schoolairdroprefactoredition.cache.UserInfoCache;
+import com.example.schoolairdroprefactoredition.cache.UserTokenCache;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
@@ -69,14 +71,14 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
 
         // 添加新的tab时在此添加
         if (mHome == null) {
-            mHome = new ParentNewsFragment();
+            mHome = ParentNewsFragment.newInstance(bundle);
             mHome.setOnSearchBarClickedListener(() -> mFragmentManager.beginTransaction()
                     .replace(R.id.container, SearchFragment.newInstance(bundle))
                     .addToBackStack(null)
                     .commit());
         }
         if (mPurchase == null) {
-            mPurchase = new ParentPurchasingFragment();
+            mPurchase = ParentPurchasingFragment.newInstance(bundle);
             mPurchase.setOnSearchBarClickedListener(() -> mFragmentManager.beginTransaction()
                     .replace(R.id.container, SearchFragment.newInstance(bundle))
                     .addToBackStack(null)
@@ -94,20 +96,29 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
      * 检查是否存在用户信息缓存
      */
     private void initCache() {
-        UserCache userCache = mJsonCacheUtil.getValue(UserCache.USER_CACHE, UserCache.class);
-        if (userCache == null) userCache = new UserCache();
-        bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, userCache.getToken());
-        bundle.putSerializable(ConstantUtil.KEY_USER_INFO, userCache.getInfo());
+        UserTokenCache userTokenCache = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache.class);
+        UserInfoCache userInfoCache = mJsonCacheUtil.getValue(UserInfoCache.USER_INFO, UserInfoCache.class);
+
+        if (userTokenCache == null) userTokenCache = new UserTokenCache();
+        if (userInfoCache == null) userInfoCache = new UserInfoCache();
+
+        bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, userTokenCache.getToken());
+        bundle.putSerializable(ConstantUtil.KEY_USER_INFO, userInfoCache.getInfo());
     }
 
     /**
      * 在有本地用户token时自动登录
+     * 如果获取本地token为空而用户基本信息仍有缓存则代表用户token已过期，将自动重新登录
      */
     public void autoLogin() {
-        UserCache token = mJsonCacheUtil.getValue(UserCache.USER_CACHE, UserCache.class);
-        if (token != null) {
-            bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, token.getToken());
-            getUserInfoWithToken();
+        UserTokenCache userTokenCache = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache.class);
+        UserInfoCache userInfoCache = mJsonCacheUtil.getValue(UserInfoCache.USER_INFO, UserInfoCache.class);
+
+        if (userTokenCache != null) // token 仍有效 直接使用token获取用户信息
+            autoLoginWithToken();
+        else if (userInfoCache != null) // token 已无效 使用本地缓存重新获取token后登录
+            autoReLoginWithCache();
+        else {// 从未登录 do nothing
         }
     }
 
@@ -188,7 +199,7 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
                     break;
                 case UserActivity.REQUEST_UPDATE: // 用户信息修改返回:
                     if (data != null && data.getBooleanExtra(ConstantUtil.KEY_UPDATED, false))
-                        getUserInfoWithToken();
+                        autoLoginWithToken();
                     break;
                 case SettingsFragment.LOGOUT: // 退出登录返回:
                     bundle = new Bundle();
@@ -217,7 +228,7 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
 
     /**
      * 登录状态改变后的后的回调监听 登录 退登 都会回到此处
-     * 整个登录流程为:
+     * SettingsActivity中登录流程为:
      * .                  监听
      * {@link MyFragment} ===> {@link MainActivity}
      * .                                                                                         监听
@@ -249,10 +260,37 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     }
 
     /**
+     * 使用既有的用户基本信息缓存获取token
+     */
+    private void autoReLoginWithCache() {
+
+        Toast.makeText(this, "token 已过期 正在尝试登录", Toast.LENGTH_SHORT).show();
+
+        DomainUserInfo.DataBean info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        if (info != null) // 判断本地缓存是否存在
+            viewModel.getPublicKey().observe(this, key -> {
+                viewModel.authorizeWithAlipayID(
+                        key.getCookie()
+                        , "client_credentials"
+                        , "testclient"
+                        , "123456"
+                        , info.getUalipay()
+                        , key.getPublic_key())
+                        .observe(this, token -> {
+
+                            Toast.makeText(this, "自动登录成功", Toast.LENGTH_SHORT).show();
+
+                            bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, token);
+                            autoLoginWithToken();
+                        });
+            });
+    }
+
+    /**
      * 使用token换取用户信息
      * 在用户修改信息后调用
      */
-    private void getUserInfoWithToken() {
+    private void autoLoginWithToken() {
         DomainAuthorize token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
         if (token != null && token.getAccess_token() != null) {
             viewModel.getUserInfo(token.getAccess_token()).observe(this, data -> {

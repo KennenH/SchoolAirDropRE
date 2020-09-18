@@ -120,5 +120,4 @@
     <style name="NormalTabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">@dimen/textSizeNormal</item>
     </style>
-
 </resources>

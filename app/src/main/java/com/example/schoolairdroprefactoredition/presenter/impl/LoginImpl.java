@@ -2,7 +2,8 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import android.util.Log;
 
-import com.example.schoolairdroprefactoredition.cache.UserCache;
+import com.example.schoolairdroprefactoredition.cache.UserInfoCache;
+import com.example.schoolairdroprefactoredition.cache.UserTokenCache;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
@@ -10,8 +11,8 @@ import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ILoginPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ILoginCallback;
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
 import com.example.schoolairdroprefactoredition.utils.RSACoder;
+import com.example.schoolairdroprefactoredition.utils.UserLoginCacheUtils;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -24,41 +25,14 @@ import retrofit2.Retrofit;
 public class LoginImpl implements ILoginPresenter {
     private ILoginCallback mCallback;
 
-    private JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
-
-    /**
-     * 保存用户上一次登录获取的用户token
-     * 以便下次用户在token有效期内登录时自动登录
-     *
-     * @param token 本次登录获取到的token
-     */
-    private void saveUserToken(DomainAuthorize token) {
-        UserCache userCache = mJsonCacheUtil.getValue(UserCache.USER_CACHE, UserCache.class);
-        if (userCache == null) userCache = new UserCache();
-        userCache.setToken(token);
-        mJsonCacheUtil.saveCache(UserCache.USER_CACHE, userCache);
-    }
-
-    /**
-     * 保存上次登录后获取的用户信息
-     * 以便下次打开app时即时加载
-     *
-     * @param info 本次登录获取的用户信息
-     */
-    private void saveUserInfo(DomainUserInfo.DataBean info) {
-        UserCache userCache = mJsonCacheUtil.getValue(UserCache.USER_CACHE, UserCache.class);
-        if (userCache == null) userCache = new UserCache();
-        userCache.setInfo(info);
-        mJsonCacheUtil.saveCache(UserCache.USER_CACHE, userCache);
-    }
-
     /**
      * 退出登录
      * 清除本地用户信息和token
      */
     @Override
     public void logout() {
-        mJsonCacheUtil.deleteCache(UserCache.USER_CACHE);
+        UserLoginCacheUtils.deleteCache(UserTokenCache.USER_TOKEN);
+        UserLoginCacheUtils.deleteCache(UserInfoCache.USER_INFO);
     }
 
     @Override
@@ -124,7 +98,7 @@ public class LoginImpl implements ILoginPresenter {
                 int code = response.code();
                 if (code == HttpURLConnection.HTTP_OK) {
                     DomainAuthorize authorization = response.body();
-                    saveUserToken(authorization);
+                    UserLoginCacheUtils.saveUserToken(authorization);
 
 //                    try {
 //                        Log.d("postAlipayIDRSA", "response.body.string -- > " + authorization.string());
@@ -172,7 +146,7 @@ public class LoginImpl implements ILoginPresenter {
 //                    }
                     if (info != null && info.isSuccess()) {
                         mCallback.onUserInfoLoaded(info);
-                        saveUserInfo(info.getData().get(0));
+                        UserLoginCacheUtils.saveUserInfo(info.getData().get(0));
                     } else
                         mCallback.onError();
                 } else {

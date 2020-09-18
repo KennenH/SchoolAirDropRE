@@ -33,9 +33,9 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
     @Override
     public Fragment getItem(int position) {
         if (mIndex == HOME)
-            return new HomeNewsFragment();
+            return HomeNewsFragment.newInstance(bundle);
         else
-            return new HomeNearbyFragment();
+            return HomeNearbyFragment.newInstance(bundle);
     }
 
     @Override

@@ -6,14 +6,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment;
 import com.example.schoolairdroprefactoredition.scene.map.AMapActivity;
-import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNavigatorAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.Location;
@@ -25,9 +24,10 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigat
 public class ParentNewsFragment extends BaseParentFragment
         implements View.OnClickListener {
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public static ParentNewsFragment newInstance(Bundle bundle) {
+        ParentNewsFragment fragment = new ParentNewsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

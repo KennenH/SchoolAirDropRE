@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.main.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,11 +13,12 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.amap.api.location.AMapLocation;
 import com.blankj.utilcode.util.SizeUtils;
-import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
+import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
+import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
@@ -26,11 +28,12 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
-public class HomeNewsFragment extends BaseChildFragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseStateViewModel.OnRequestListener {
+import org.jetbrains.annotations.NotNull;
+
+public class HomeNewsFragment extends BaseChildFragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseStateViewModel.OnRequestListener, MainActivity.OnLoginStateChangedListener {
     private HomeNewsFragmentViewModel homeContentFragmentViewModel;
 
     private SmartRefreshLayout mRefresh;
-
     private EndlessRecyclerView mEndlessRecyclerView;
 
     private HomeNewsRecyclerAdapter mHomeNewsRecyclerAdapter;
@@ -41,13 +44,23 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
 
     private int mFragmentNum;
 
-    private static boolean requested = false;
+    private static boolean requested = false; // 只在第一个新闻页加载时询问权限
+
+    public static HomeNewsFragment newInstance(Bundle bundle) {
+        HomeNewsFragment fragment = new HomeNewsFragment();
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
         mFragmentNum = getArguments() != null ? getArguments().getInt(ConstantUtil.FRAGMENT_NUM) : 0;
+        if (getActivity() != null && getActivity() instanceof MainActivity)
+            ((MainActivity) getActivity()).setOnLoginActivityListener(this);
 
+        // todo 此处没必要通过父fragment来接受main activity的回调
+        //  可以直接监听main activity获取定位，就像上面的监听一样
         if (getParentFragment() instanceof BaseParentFragment)
             ((BaseParentFragment) getParentFragment()).setOnLocationCallbackListener(this);
     }
@@ -79,7 +92,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         mManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         mEndlessRecyclerView.setLayoutManager(mManager);
-        mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(3)));
+        mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(1f)));
         mHomeNewsRecyclerAdapter = new HomeNewsRecyclerAdapter();
         mEndlessRecyclerView.setAdapter(mHomeNewsRecyclerAdapter);
 
@@ -92,6 +105,15 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         mManager.invalidateSpanAssignments();
         mEndlessRecyclerView.invalidateItemDecorations();
         mHomeNewsRecyclerAdapter.notifyDataSetChanged();
+    }
+
+
+    /**
+     * main activity 登录回调
+     */
+    @Override
+    public void onLoginStateChanged(@NotNull Bundle bundle) {
+
     }
 
     /**
@@ -144,5 +166,4 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     public void onError() {
         showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
-
 }

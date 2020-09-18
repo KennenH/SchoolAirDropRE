@@ -2,7 +2,6 @@ package com.example.schoolairdroprefactoredition.scene.main.base;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -11,9 +10,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.amap.api.location.AMapLocation;
 import com.blankj.utilcode.constant.PermissionConstants;
-import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
-import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
+import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
+import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.map.AMapActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
@@ -133,6 +132,9 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
 
 
     /**
+     * {@// TODO: 2020/9/18  没必要将main activity定位回调至此后再将此结果回调至该fragment的子fragment可以让子fragment直接监听main activity}
+     *
+     * @deprecated <p>
      * 定位回调时的回调
      * 多源单一去向，来自{@link MainActivity}{@link AMapActivity}
      * 去向{@link HomePagerAdapter}
