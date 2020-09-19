@@ -31,6 +31,7 @@ import com.luck.picture.lib.language.LanguageConfig;
 import com.luck.picture.lib.style.PictureWindowAnimationStyle;
 import com.luck.picture.lib.tools.SdkVersionUtils;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.impl.LoadingPopupView;
 import com.lxj.xpopup.interfaces.XPopupImageLoader;
 
@@ -105,7 +106,7 @@ public class MyUtil {
     }
 
 
-    public static void takePhoto(Fragment fragment, int requestCode) {
+    public static void takePhoto(Fragment fragment, int requestCode, boolean isCircle) {
         PictureWindowAnimationStyle animStyle = new PictureWindowAnimationStyle();
         animStyle.ofAllAnimation(R.anim.enter_y_fragment, R.anim.popexit_y_fragment);
         PictureSelector.create(fragment)
@@ -118,12 +119,13 @@ public class MyUtil {
                 .forResult(requestCode);
     }
 
-    public static void takePhoto(Activity activity, int requestCode) {
+    public static void takePhoto(Activity activity, int requestCode, boolean isCircle) {
         PictureWindowAnimationStyle animStyle = new PictureWindowAnimationStyle();
         animStyle.ofAllAnimation(R.anim.enter_y_fragment, R.anim.popexit_y_fragment);
         PictureSelector.create(activity)
                 .openCamera(PictureMimeType.ofImage())
                 .isEnableCrop(true)
+                .circleDimmedLayer(isCircle)
                 .theme(R.style.picture_white_style)
                 .imageEngine(GlideEngine.createGlideEngine())
                 .setPictureWindowAnimationStyle(animStyle)//相册启动退出动画
@@ -131,7 +133,7 @@ public class MyUtil {
                 .forResult(requestCode);
     }
 
-    public static void pickPhotoFromAlbum(Activity activity, int requestCode, List<LocalMedia> selected, int max, boolean isCrop) {
+    public static void pickPhotoFromAlbum(Activity activity, int requestCode, List<LocalMedia> selected, int max, boolean isCrop, boolean isCircle) {
         PictureWindowAnimationStyle animStyle = new PictureWindowAnimationStyle();
         animStyle.ofAllAnimation(R.anim.enter_y_fragment, R.anim.popexit_y_fragment);
         PictureSelector.create(activity)
@@ -178,7 +180,7 @@ public class MyUtil {
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示
                 .isGif(false)// 是否显示gif图片
                 .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
-                .circleDimmedLayer(false)// 是否圆形裁剪
+                .circleDimmedLayer(isCircle)// 是否圆形裁剪
                 //.setCropDimmedColor(ContextCompat.getColor(getContext(), R.color.app_color_white))// 设置裁剪背景色值
                 //.setCircleDimmedBorderColor(ContextCompat.getColor(getApplicationContext(), R.color.app_color_white))// 设置圆形裁剪边框色值
                 //.setCircleStrokeWidth(3)// 设置圆形裁剪边框粗细
@@ -203,7 +205,7 @@ public class MyUtil {
                 .forResult(requestCode);
     }
 
-    public static void pickPhotoFromAlbum(Fragment fragment, int requestCode, List<LocalMedia> selected, int max, boolean isCrop) {
+    public static void pickPhotoFromAlbum(Fragment fragment, int requestCode, List<LocalMedia> selected, int max, boolean isCrop, boolean isCircle) {
         PictureWindowAnimationStyle animStyle = new PictureWindowAnimationStyle();
         animStyle.ofAllAnimation(R.anim.enter_y_fragment, R.anim.popexit_y_fragment);
 
@@ -251,7 +253,7 @@ public class MyUtil {
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示
                 .isGif(false)// 是否显示gif图片
                 .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
-                .circleDimmedLayer(false)// 是否圆形裁剪
+                .circleDimmedLayer(isCircle)// 是否圆形裁剪
                 //.setCropDimmedColor(ContextCompat.getColor(getContext(), R.color.app_color_white))// 设置裁剪背景色值
                 //.setCircleDimmedBorderColor(ContextCompat.getColor(getApplicationContext(), R.color.app_color_white))// 设置圆形裁剪边框色值
                 //.setCircleStrokeWidth(3)// 设置圆形裁剪边框粗细
@@ -274,6 +276,50 @@ public class MyUtil {
                 //.videoQuality()// 视频录制质量 0 or 1
                 //.forResult(PictureConfig.CHOOSE_REQUEST);//结果回调onActivityResult code
                 .forResult(requestCode);
+    }
+
+    /**
+     * 对话框类型
+     */
+    public @interface DIALOG_TYPE {
+        int SUCCESS = DIALOG_SUCCESS;
+        int FAILED = DIALOG_FAILED;
+    }
+
+    public static final int DIALOG_SUCCESS = 123;
+    public static final int DIALOG_FAILED = 321;
+
+    /**
+     * 在屏幕中央显示消息提示对话框
+     *
+     * @param type one of {@link DIALOG_TYPE#DIALOG_SUCCESS} {@link DIALOG_TYPE#DIALOG_FAILED}
+     */
+    public static void showCenterDialog(Context context, @DIALOG_TYPE int type) {
+        new XPopup.Builder(context).asCustom(new BasePopupView(context) {
+            @Override
+            protected int getPopupLayoutId() {
+                switch (type) {
+                    case DIALOG_TYPE.SUCCESS:
+                        return R.layout.dialog_center_success;
+                    case DIALOG_TYPE.FAILED:
+                        return R.layout.dialog_center_failed;
+                    default:
+                        return R.layout.dialog_center_attention;
+                }
+            }
+        }).show().delayDismiss(200);
+//        ToastUtils.setGravity(Gravity.CENTER, 0, 0);
+//
+//        switch (type) {
+//            case DIALOG_TYPE.SUCCESS:
+//                ToastUtils.showCustomShort(R.layout.dialog_center_success);
+//                break;
+//            case DIALOG_TYPE.FAILED:
+//                ToastUtils.showCustomShort(R.layout.dialog_center_failed);
+//                break;
+//            default:
+//                break;
+//        }
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IUserAvatarPresenter;
@@ -13,7 +14,6 @@ import java.net.HttpURLConnection;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -33,25 +33,25 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
                 file.getName(),
                 RequestBody.create(MediaType.parse("image/*"), file));
 
-        retrofit2.Call<ResponseBody> task = api.updateAvatar(token, photo);
-        task.enqueue(new Callback<ResponseBody>() {
+        retrofit2.Call<DomainAvatarUpdateResult> task = api.updateAvatar(token, photo);
+        task.enqueue(new Callback<DomainAvatarUpdateResult>() {
             @Override
-            public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(retrofit2.Call<DomainAvatarUpdateResult> call, Response<DomainAvatarUpdateResult> response) {
                 int code = response.code();
                 if (code == HttpURLConnection.HTTP_OK) {
-                    ResponseBody body = response.body();
+                    DomainAvatarUpdateResult body = response.body();
                     if (body != null)
-//                        if (body.isSuccess()) {
+                        if (body.isSuccess()) {
 
-                    {
-                        try {
-                            LogUtils.d(body.string());
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
+//                        try {
+//                            LogUtils.d(body.string());
+//                        } catch (IOException e) {
+//                            e.printStackTrace();
+//                        }
 
-//                            mCallback.onUpdateSuccess(body);
+                            mCallback.onUpdateSuccess(body);
+                        } else
+                            mCallback.onError();
 //                        } else mCallback.onError();
                 } else {
                     try {
@@ -64,7 +64,7 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<DomainAvatarUpdateResult> call, Throwable t) {
                 LogUtils.d(t.toString());
                 mCallback.onError();
             }

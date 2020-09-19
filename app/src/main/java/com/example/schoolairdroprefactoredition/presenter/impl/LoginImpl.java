@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import android.util.Log;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.cache.UserInfoCache;
 import com.example.schoolairdroprefactoredition.cache.UserTokenCache;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
@@ -98,7 +99,9 @@ public class LoginImpl implements ILoginPresenter {
                 int code = response.code();
                 if (code == HttpURLConnection.HTTP_OK) {
                     DomainAuthorize authorization = response.body();
-                    UserLoginCacheUtils.saveUserToken(authorization);
+
+                    // token 有效期为一小时
+                    UserLoginCacheUtils.saveUserToken(authorization, 3600_000);
 
 //                    try {
 //                        Log.d("postAlipayIDRSA", "response.body.string -- > " + authorization.string());
@@ -121,7 +124,7 @@ public class LoginImpl implements ILoginPresenter {
 
             @Override
             public void onFailure(Call<DomainAuthorize> call, Throwable t) {
-                Log.e("postAlipayIDRSA", "请求失败 -- > " + t);
+                LogUtils.d(t);
                 mCallback.onError();
             }
         });

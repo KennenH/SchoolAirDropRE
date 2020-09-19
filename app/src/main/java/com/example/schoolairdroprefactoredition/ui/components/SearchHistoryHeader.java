@@ -64,14 +64,14 @@ public class SearchHistoryHeader extends ConstraintLayout implements View.OnClic
     /**
      * 装填对象的历史记录
      */
-    public void updateHistories(List<String> histories) {
+    private void updateHistories(List<String> histories) {
         mHistories = histories;
     }
 
     /**
      * 显示历史记录
      */
-    public void showHistories() {
+    private void showHistories() {
         mFlex.removeAllViews();
         for (String history : mHistories) {
             SearchHistoryItem item = new SearchHistoryItem(getContext(), history.trim());

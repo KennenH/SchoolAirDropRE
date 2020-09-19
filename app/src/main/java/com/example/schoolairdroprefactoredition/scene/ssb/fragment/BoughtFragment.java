@@ -29,6 +29,7 @@ public class BoughtFragment extends SSBBaseFragment {
 
     @Override
     protected void init(FragmentSsbBinding binding) {
+        setHasOptionsMenu(false);
         if (token != null) {
             mLoading.setVisibility(View.VISIBLE);
             viewModel.getBought(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {

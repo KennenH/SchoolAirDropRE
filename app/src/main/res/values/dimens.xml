@@ -44,4 +44,5 @@
     <dimen name="textSizeMin">12dp</dimen>
     <dimen name="textSizeLarger">20dp</dimen>
     <dimen name="textSizeLarge">16dp</dimen>
+    <dimen name="general_dialog_center">120dp</dimen>
 </resources>

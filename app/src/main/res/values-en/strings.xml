@@ -176,4 +176,7 @@
     <string name="imageSaved">Image Saved</string>
     <string name="errorUpdatingName">Error updating name</string>
     <string name="nothingThere">Nothing…</string>
+    <string name="operationSuccess">Success</string>
+    <string name="operationFailed">Failed</string>
+    <string name="operationUnknown">Unknown Error</string>
 </resources>

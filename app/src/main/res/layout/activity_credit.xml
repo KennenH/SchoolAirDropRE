@@ -63,7 +63,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/general_padding"
                     android:layout_marginBottom="@dimen/general_padding_bit_larger"
-                    android:drawableStart="@drawable/ic_attention"
+                    android:drawableStart="@drawable/ic_attention_nowrap"
                     android:drawablePadding="@dimen/general_padding_small"
                     android:ellipsize="end"
                     android:gravity="center"

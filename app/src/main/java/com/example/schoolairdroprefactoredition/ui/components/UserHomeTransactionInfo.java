@@ -12,7 +12,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 
-public class UserHomeMoreInfo extends ConstraintLayout implements View.OnClickListener {
+public class UserHomeTransactionInfo extends ConstraintLayout implements View.OnClickListener {
 
     private static final int CREDIT1 = R.drawable.ic_credit1;
     private static final int CREDIT2 = R.drawable.ic_credit2;
@@ -25,15 +25,15 @@ public class UserHomeMoreInfo extends ConstraintLayout implements View.OnClickLi
 
     private OnMoreInfoActionListener mOnMoreInfoActionListener;
 
-    public UserHomeMoreInfo(Context context) {
+    public UserHomeTransactionInfo(Context context) {
         this(context, null);
     }
 
-    public UserHomeMoreInfo(Context context, AttributeSet attrs) {
+    public UserHomeTransactionInfo(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public UserHomeMoreInfo(Context context, AttributeSet attrs, int defStyleAttr) {
+    public UserHomeTransactionInfo(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.component_user_more_info, this, true);
 

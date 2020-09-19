@@ -46,8 +46,6 @@ public class UserActivity extends TransactionBaseActivity implements FragmentMan
         if (resultCode == Activity.RESULT_OK) {
             if (data != null)
                 if (requestCode == REQUEST_UPDATE) {
-                    LogUtils.d("user info modified");
-
                     data.putExtra(ConstantUtil.KEY_UPDATED, true);
                     setResult(Activity.RESULT_OK, data);
 

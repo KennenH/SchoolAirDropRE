@@ -35,11 +35,11 @@ public class JsonCacheUtil {
     }
 
     /**
-     * 保存键值对，有效时间位duration
+     * 保存键值对，有效时间duration
      *
      * @param key      键
      * @param value    值
-     * @param duration 有效时间
+     * @param duration 有效时间 ms
      */
     public void saveCache(String key, Object value, long duration) {
         SharedPreferences.Editor editor = mSharePreferences.edit();

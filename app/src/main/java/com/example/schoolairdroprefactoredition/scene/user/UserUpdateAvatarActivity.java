@@ -1,12 +1,12 @@
 package com.example.schoolairdroprefactoredition.scene.user;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -81,7 +81,6 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
         mAvatar = findViewById(R.id.avatar);
         mAvatar.setOnLongClickListener(this);
 
-
         init();
     }
 
@@ -154,7 +153,6 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
 
                     showLoading();
                     viewModel.updateAvatar(token.getAccess_token(), photo.getPath()).observe(this, bean -> {
-                        dismissLoading();
                         updateAvatar(bean.getUser_img_path());
                     });
                 }
@@ -163,9 +161,8 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
                     LocalMedia photo = PictureSelector.obtainMultipleResult(data).get(0);
 
                     showLoading();
-                    LogUtils.d(photo.getAndroidQToPath());
-                    viewModel.updateAvatar(token.getAccess_token(), photo.getPath()).observe(this, bean -> {
-                        dismissLoading();
+                    String qPath = photo.getAndroidQToPath();
+                    viewModel.updateAvatar(token.getAccess_token(), qPath == null ? photo.getPath() : qPath).observe(this, bean -> {
                         updateAvatar(bean.getUser_img_path());
                     });
                 }
@@ -174,9 +171,18 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
     }
 
     private void updateAvatar(String avatarUrl) {
-        mAvatar.setImageURI(avatarUrl);
-        info.setUser_img_path(avatarUrl);
-        bundle.putSerializable(ConstantUtil.KEY_USER_INFO, info);
+        dismissLoading();
+        MyUtil.showCenterDialog(this,MyUtil.DIALOG_TYPE.SUCCESS);
+        try {
+            mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + avatarUrl);
+            info.setUser_img_path(avatarUrl);
+            bundle.putSerializable(ConstantUtil.KEY_USER_INFO, info);
+        } catch (NullPointerException e) {
+            LogUtils.d(avatarUrl);
+        }
+        Intent intent = new Intent();
+        intent.putExtras(bundle);
+        setResult(Activity.RESULT_OK, intent);
     }
 
     @Override
@@ -184,17 +190,17 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
         int id = v.getId();
         switch (id) {
             case R.id.take_photo:
-                MyUtil.takePhoto(this, REQUEST_CAMERA);
+                MyUtil.takePhoto(this, REQUEST_CAMERA, true);
                 mDialog.dismiss();
                 break;
             case R.id.select_from_album:
-                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, new ArrayList<>(), 1, true);
+                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, new ArrayList<>(), 1, true, true);
                 mDialog.dismiss();
                 break;
             case R.id.save_to_album:
                 // todo 保存图片至相册
 
-                Toast.makeText(this, R.string.imageSaved, Toast.LENGTH_SHORT).show();
+                MyUtil.showCenterDialog(this,MyUtil.DIALOG_TYPE.SUCCESS);
                 mDialog.dismiss();
                 break;
             case R.id.cancel:
@@ -208,7 +214,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
     @Override
     public void onError() {
         runOnUiThread(this::dismissLoading);
-        Toast.makeText(this, R.string.errorUpdateAvatar, Toast.LENGTH_SHORT).show();
+        MyUtil.showCenterDialog(this,MyUtil.DIALOG_TYPE.FAILED);
     }
 
     private void showLoading() {

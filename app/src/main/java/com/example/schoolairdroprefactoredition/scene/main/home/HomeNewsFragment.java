@@ -56,11 +56,13 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mFragmentNum = getArguments() != null ? getArguments().getInt(ConstantUtil.FRAGMENT_NUM) : 0;
-        if (getActivity() != null && getActivity() instanceof MainActivity)
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setOnLoginActivityListener(this);
 
+        }
+
         // todo 此处没必要通过父fragment来接受main activity的回调
-        //  可以直接监听main activity获取定位，就像上面的监听一样
+        //  可以直接监听main activity获取定位，就像上面的接口监听一样
         if (getParentFragment() instanceof BaseParentFragment)
             ((BaseParentFragment) getParentFragment()).setOnLocationCallbackListener(this);
     }

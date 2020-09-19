@@ -6,7 +6,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 
@@ -24,6 +23,7 @@ public class SoldFragment extends SSBBaseFragment {
 
     @Override
     protected void init(FragmentSsbBinding binding) {
+        setHasOptionsMenu(false);
         if (token != null) {
             mLoading.setVisibility(View.VISIBLE);
             viewModel.getSold(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
@@ -32,7 +32,6 @@ public class SoldFragment extends SSBBaseFragment {
                 mList = data.getData();
                 mAdapter.setList(mList);
 
-                LogUtils.d(mList.size());
                 if (mList.size() == 0)
                     binding.nothing.setVisibility(View.VISIBLE);
                 else

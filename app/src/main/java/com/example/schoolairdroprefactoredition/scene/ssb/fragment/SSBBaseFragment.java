@@ -41,7 +41,6 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(false);
         bundle = getArguments();
         if (bundle == null)
             bundle = new Bundle();

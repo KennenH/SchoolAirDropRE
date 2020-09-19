@@ -86,6 +86,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
             if (requestCode == UserActivity.REQUEST_UPDATE) {
                 if (data != null) {
                     info = (DomainUserInfo.DataBean) data.getSerializableExtra(ConstantUtil.KEY_USER_INFO);
+                    bundle.putSerializable(ConstantUtil.KEY_USER_INFO, info);
                     setUserInfo();
                     setResult(Activity.RESULT_OK, data);
                 }

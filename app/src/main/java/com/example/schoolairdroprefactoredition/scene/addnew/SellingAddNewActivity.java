@@ -158,9 +158,9 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     protected void albumGranted() {
         super.albumGranted();
         if (request == REQUEST_CODE_COVER)
-            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_COVER, new ArrayList<>(), 1, false);
+            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_COVER, new ArrayList<>(), 1, false, false);
         else if (request == REQUEST_CODE_PIC_SET)
-            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_PIC_SET, selected, 6, false);
+            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_PIC_SET, selected, 6, false, false);
     }
 
     @Override

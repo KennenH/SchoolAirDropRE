@@ -27,12 +27,12 @@ import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.scene.user.UserModifyInfoActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderOnlyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.UserHomeBaseInfo;
-import com.example.schoolairdroprefactoredition.ui.components.UserHomeMoreInfo;
+import com.example.schoolairdroprefactoredition.ui.components.UserHomeTransactionInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.XPopup;
 
-public class UserFragment extends TransactionBaseFragment implements UserHomeBaseInfo.OnBaseInfoActionListener, UserHomeMoreInfo.OnMoreInfoActionListener, UserActivity.OnUserInfoUpdatedListener {
+public class UserFragment extends TransactionBaseFragment implements UserHomeBaseInfo.OnBaseInfoActionListener, UserHomeTransactionInfo.OnMoreInfoActionListener, UserActivity.OnUserInfoUpdatedListener {
 
     private UserViewModel viewModel;
 
@@ -42,7 +42,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
 
     private RecyclerView mRecycler;
     private UserHomeBaseInfo mBaseInfo;
-    private UserHomeMoreInfo mMoreInfo;
+    private UserHomeTransactionInfo mTransactionInfo;
 
     private FragmentManager manager;
 
@@ -95,14 +95,14 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mBaseInfo = new UserHomeBaseInfo(getContext());
-        mMoreInfo = new UserHomeMoreInfo(getContext());
+        mTransactionInfo = new UserHomeTransactionInfo(getContext());
 
         mBaseInfo.setOnBaseInfoActionListener(this);
-        mMoreInfo.setOnMoreInfoActionListener(this);
+        mTransactionInfo.setOnMoreInfoActionListener(this);
 
         HeaderOnlyRecyclerAdapter adapter = new HeaderOnlyRecyclerAdapter();
         adapter.addHeaderView(mBaseInfo);
-        adapter.addHeaderView(mMoreInfo);
+        adapter.addHeaderView(mTransactionInfo);
 
         mRecycler.setAdapter(adapter);
 
@@ -117,7 +117,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
      */
     private void setUserInfo() {
         mBaseInfo.setUserBaseInfo(info);
-        mMoreInfo.setUserMoreInfo(info);
+        mTransactionInfo.setUserMoreInfo(info);
     }
 
     @Override
@@ -140,6 +140,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
      */
     @Override
     public void onUpdated(DomainUserInfo.DataBean info) {
+        bundle.putSerializable(ConstantUtil.KEY_USER_INFO, info);
         this.info = info;
         setUserInfo();
     }

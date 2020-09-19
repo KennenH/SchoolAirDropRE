@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="@dimen/general_dialog_center"
+    android:layout_height="@dimen/general_dialog_center"
+    android:layout_gravity="center">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:background="@drawable/button_rounded_primary8"
+        android:backgroundTint="@color/darkTranslucent"
+        android:gravity="center"
+        android:text="@string/operationUnknown"
+        android:textColor="@color/white"
+        android:textSize="@dimen/textSizeLarge"
+        app:drawableTopCompat="@drawable/ic_attention_nowrap" />
+
+</LinearLayout>

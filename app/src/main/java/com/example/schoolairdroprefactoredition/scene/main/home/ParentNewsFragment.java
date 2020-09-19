@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.main.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,12 @@ public class ParentNewsFragment extends BaseParentFragment
         ParentNewsFragment fragment = new ParentNewsFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater,

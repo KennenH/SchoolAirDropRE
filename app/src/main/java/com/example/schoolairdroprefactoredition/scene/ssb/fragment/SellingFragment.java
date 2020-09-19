@@ -10,6 +10,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
@@ -32,6 +33,7 @@ public class SellingFragment extends SSBBaseFragment {
 
     @Override
     protected void init(FragmentSsbBinding binding) {
+        setHasOptionsMenu(true);
         if (token != null) {
             mLoading.setVisibility(View.VISIBLE);
             viewModel.getSelling(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
@@ -51,6 +53,7 @@ public class SellingFragment extends SSBBaseFragment {
             }
         });
     }
+
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -78,10 +81,10 @@ public class SellingFragment extends SSBBaseFragment {
     @Override
     public void onFilterTimeAsc() {
         // 将data按时间正序排列
-        /**
+        /*
          * Sort(mList);
          * mAdapter.setList(mList);
-         **/
+         */
     }
 
     @Override

@@ -139,11 +139,11 @@ class UserAvatarFragment : Fragment(), OnLongClickListener, View.OnClickListener
         val id = v.id
         when (id) {
             R.id.take_photo -> {
-                MyUtil.takePhoto(this, REQUEST_CAMERA)
+                MyUtil.takePhoto(this, REQUEST_CAMERA, true)
                 mDialog!!.dismiss()
             }
             R.id.select_from_album -> {
-                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, ArrayList(), 1, false)
+                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, ArrayList(), 1, false, true)
                 mDialog!!.dismiss()
             }
             R.id.save_to_album -> {
@@ -171,7 +171,7 @@ class UserAvatarFragment : Fragment(), OnLongClickListener, View.OnClickListener
         Toast.makeText(context, R.string.errorUpdateAvatar, Toast.LENGTH_SHORT).show()
     }
 
-    override fun onLoading() {}
+    fun onLoading() {}
 
     companion object {
         const val REQUEST_ALBUM = 99

@@ -24,6 +24,22 @@ public class UserLoginCacheUtils {
     }
 
     /**
+     * 保存用户上一次登录获取的用户token
+     * 以便下次用户在token有效期内登录时自动登录
+     *
+     * @param token    本次登录获取到的token
+     * @param duration token持续时间
+     */
+    public static void saveUserToken(DomainAuthorize token, long duration) {
+        UserTokenCache userTokenCache = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache.class);
+
+        if (userTokenCache == null) userTokenCache = new UserTokenCache();
+
+        userTokenCache.setToken(token);
+        mJsonCacheUtil.saveCache(UserTokenCache.USER_TOKEN, userTokenCache, duration);
+    }
+
+    /**
      * 保存上次登录后获取的用户信息
      * 以便下次打开app时即时加载
      *

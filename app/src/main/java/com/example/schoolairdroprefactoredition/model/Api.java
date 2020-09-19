@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.model;
 
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
+import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainModifyResult;
 import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
@@ -10,7 +11,6 @@ import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean
 import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 
 import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -54,6 +54,31 @@ public interface Api {
     @POST("goods/getUserBought")
     Call<DomainGoodsInfo> getMyBoughtGoods(@Header("Authorization") String token);
 
+//    /**
+//     * 上传新的物品
+//     *
+//     * @param token       token
+//     * @param cover       封面
+//     * @param picSet      图片集
+//     * @param title       标题
+//     * @param price       价格
+//     * @param location    地点
+//     * @param negotiable  是否可议价
+//     * @param secondHand  是否二手
+//     * @param description 物品描述
+//     */
+//    @Multipart
+//    @POST("goods/")
+//    Call<> postNewItem(@Header("Authorization") String token,
+//                       @Part MultipartBody.Part cover,
+//                       @Part MultipartBody.Part picSet,
+//                       @Part MultipartBody.Part title,
+//                       @Part MultipartBody.Part price,
+//                       @Part MultipartBody.Part location,
+//                       @Part MultipartBody.Part negotiable,
+//                       @Part MultipartBody.Part secondHand,
+//                       @Part MultipartBody.Part description);
+
     /**
      * 搜索关键字物品
      */
@@ -64,13 +89,12 @@ public interface Api {
                                       @Field("latitude") Double latitude,
                                       @Field("keyWords") String keyWord);
 
-
     /**
      * 上传用户头像
      */
     @Multipart
-    @POST("user/uploadAvatars")
-    Call<ResponseBody> updateAvatar(@Header("Authorization") String token, @Part MultipartBody.Part photo);
+    @POST("user/uploadAvatar")
+    Call<DomainAvatarUpdateResult> updateAvatar(@Header("Authorization") String token, @Part MultipartBody.Part photo);
 
     /**
      * 修改用户名字

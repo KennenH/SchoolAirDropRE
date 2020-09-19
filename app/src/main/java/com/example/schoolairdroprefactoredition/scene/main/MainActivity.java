@@ -18,6 +18,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.cache.UserInfoCache;
 import com.example.schoolairdroprefactoredition.cache.UserTokenCache;
@@ -59,6 +60,8 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     private Bundle bundle = new Bundle();
 
     private JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
+
+    private static boolean autoLogged = false; // 标识是否已自动登录，防止多个子fragment多次调用
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
@@ -109,16 +112,21 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     /**
      * 在有本地用户token时自动登录
      * 如果获取本地token为空而用户基本信息仍有缓存则代表用户token已过期，将自动重新登录
+     * <p>
+     * token 有效时间在LoginImpl中修改，否则与服务器过期时间不同会导致用户自动登录失败
      */
     public void autoLogin() {
-        UserTokenCache userTokenCache = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache.class);
-        UserInfoCache userInfoCache = mJsonCacheUtil.getValue(UserInfoCache.USER_INFO, UserInfoCache.class);
+        if (!autoLogged) {
+            autoLogged = true; // 已自动登录标识，防止多个子fragment调用此方法
+            UserTokenCache userTokenCache = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache.class);
+            UserInfoCache userInfoCache = mJsonCacheUtil.getValue(UserInfoCache.USER_INFO, UserInfoCache.class);
 
-        if (userTokenCache != null) // token 仍有效 直接使用token获取用户信息
-            autoLoginWithToken();
-        else if (userInfoCache != null) // token 已无效 使用本地缓存重新获取token后登录
-            autoReLoginWithCache();
-        else {// 从未登录 do nothing
+            if (userTokenCache != null) // token 仍有效 直接使用token获取用户信息
+                autoLoginWithToken();
+            else if (userInfoCache != null) // token 已无效 使用本地缓存重新获取token后登录
+                autoReLoginWithCache();
+            else {// 从未登录
+            }
         }
     }
 
@@ -264,7 +272,7 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
      */
     private void autoReLoginWithCache() {
 
-        Toast.makeText(this, "token 已过期 正在尝试登录", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "token 已过期 正在尝试重新登录", Toast.LENGTH_SHORT).show();
 
         DomainUserInfo.DataBean info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
         if (info != null) // 判断本地缓存是否存在
@@ -291,6 +299,9 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
      * 在用户修改信息后调用
      */
     private void autoLoginWithToken() {
+
+        LogUtils.d("token 仍有效 自动登录");
+
         DomainAuthorize token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
         if (token != null && token.getAccess_token() != null) {
             viewModel.getUserInfo(token.getAccess_token()).observe(this, data -> {
