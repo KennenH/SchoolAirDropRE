@@ -4,11 +4,13 @@ import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.domain.DomainModifyResult;
+import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
 import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
+
+import java.util.List;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -54,30 +56,32 @@ public interface Api {
     @POST("goods/getUserBought")
     Call<DomainGoodsInfo> getMyBoughtGoods(@Header("Authorization") String token);
 
-//    /**
-//     * 上传新的物品
-//     *
-//     * @param token       token
-//     * @param cover       封面
-//     * @param picSet      图片集
-//     * @param title       标题
-//     * @param price       价格
-//     * @param location    地点
-//     * @param negotiable  是否可议价
-//     * @param secondHand  是否二手
-//     * @param description 物品描述
-//     */
-//    @Multipart
-//    @POST("goods/")
-//    Call<> postNewItem(@Header("Authorization") String token,
-//                       @Part MultipartBody.Part cover,
-//                       @Part MultipartBody.Part picSet,
-//                       @Part MultipartBody.Part title,
-//                       @Part MultipartBody.Part price,
-//                       @Part MultipartBody.Part location,
-//                       @Part MultipartBody.Part negotiable,
-//                       @Part MultipartBody.Part secondHand,
-//                       @Part MultipartBody.Part description);
+    /**
+     * 上传新的物品
+     *
+     * @param token       token
+     * @param cover       封面
+     * @param picSet      图片集
+     * @param title       标题
+     * @param price       价格
+     * @param longitude   经度
+     * @param latitude    纬度
+     * @param negotiable  是否可议价
+     * @param brandNew    是否全新
+     * @param description 物品描述
+     */
+    @Multipart
+    @POST("goods/upload")
+    Call<DomainResult> postNewItem(@Header("Authorization") String token,
+                                   @Part MultipartBody.Part cover,
+                                   @Part List<MultipartBody.Part> picSet,
+                                   @Part MultipartBody.Part title,
+                                   @Part MultipartBody.Part description,
+                                   @Part MultipartBody.Part longitude,
+                                   @Part MultipartBody.Part latitude,
+                                   @Part MultipartBody.Part negotiable,
+                                   @Part MultipartBody.Part brandNew,
+                                   @Part MultipartBody.Part price);
 
     /**
      * 搜索关键字物品
@@ -101,14 +105,14 @@ public interface Api {
      */
     @FormUrlEncoded
     @POST("user/updateUserInfo")
-    Call<DomainModifyResult> updateUserName(@Header("Authorization") String token, @Field("uname") String name);
+    Call<DomainResult> updateUserName(@Header("Authorization") String token, @Field("uname") String name);
 
     /**
      * 修改用户性别
      */
     @FormUrlEncoded
     @POST("user/updateUserInfo")
-    Call<DomainModifyResult> updateUserSex(@Header("Authorization") String token, @Field("ugender") String gender);
+    Call<DomainResult> updateUserSex(@Header("Authorization") String token, @Field("ugender") String gender);
 
     /**
      * 用access_token换取用户基本信息

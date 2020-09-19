@@ -12,7 +12,7 @@ import com.example.schoolairdroprefactoredition.R;
 
 public class QuoteStatus extends AppCompatTextView {
     private static final int IC_ACCEPTED = R.drawable.ic_pass;
-    private static final int IC_REJECTED = R.drawable.ic_attention_nowrap;
+    private static final int IC_REJECTED = R.drawable.ic_attention_normal;
     private static final int IC_EXPIRED = R.drawable.ic_expired;
     private static final int IC_PENDING = R.drawable.ic_waiting;
 

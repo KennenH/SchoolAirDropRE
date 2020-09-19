@@ -34,8 +34,10 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getActivity() != null && getActivity() instanceof MainActivity)
+        if (getActivity() != null && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setOnLocationListener(ParentPurchasingFragment.this);
+            ((MainActivity) getActivity()).autoLogin();
+        }
     }
 
     @Nullable

@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
@@ -26,8 +28,8 @@ public class AddNewResultActivity extends ImmersionStatusBarActivity {
         Intent intent = new Intent(context, AddNewResultActivity.class);
         intent.putExtra(IS_SUCCESS, success);
         context.startActivity(intent);
-        if (context instanceof AddNewResultActivity)
-            MyUtil.startAnimUp((AddNewResultActivity) context);
+        if (context instanceof AppCompatActivity)
+            MyUtil.startAnimUp((AppCompatActivity) context);
     }
 
     @Override

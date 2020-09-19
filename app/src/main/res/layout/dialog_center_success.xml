@@ -6,15 +6,8 @@
     android:layout_gravity="center">
 
     <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:background="@drawable/button_rounded_primary8"
-        android:backgroundTint="@color/darkTranslucent"
-        android:gravity="center"
+        style="@style/DialogText"
         android:text="@string/operationSuccess"
-        android:textColor="@color/white"
-        android:textSize="@dimen/textSizeLarge"
         app:drawableTopCompat="@drawable/ic_success_nowrap" />
 
 </LinearLayout>

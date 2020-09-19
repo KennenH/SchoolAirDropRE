@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import android.util.Log;
-
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
@@ -88,8 +87,8 @@ public class SSBImpl implements ISSBPresenter {
 
             @Override
             public void onFailure(@NotNull Call<DomainGoodsInfo> call, Throwable t) {
+                LogUtils.d(t.toString());
                 mCallback.onError();
-                Log.d("SellingImpl", t.toString());
             }
         });
     }

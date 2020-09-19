@@ -1,7 +1,7 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import com.blankj.utilcode.util.LogUtils;
-import com.example.schoolairdroprefactoredition.domain.DomainModifyResult;
+import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IUserNamePresenter;
@@ -22,12 +22,12 @@ public class UserNameImpl implements IUserNamePresenter {
     public void rename(String token, String name) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainModifyResult> task = api.updateUserName(token, name);
-        task.enqueue(new Callback<DomainModifyResult>() {
+        Call<DomainResult> task = api.updateUserName(token, name);
+        task.enqueue(new Callback<DomainResult>() {
             @Override
-            public void onResponse(Call<DomainModifyResult> call, Response<DomainModifyResult> response) {
+            public void onResponse(Call<DomainResult> call, Response<DomainResult> response) {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
-                    DomainModifyResult body = response.body();
+                    DomainResult body = response.body();
                     if (body != null) {
                         mCallback.onResult(body.isSuccess());
                     } else mCallback.onResult(false);
@@ -35,7 +35,7 @@ public class UserNameImpl implements IUserNamePresenter {
             }
 
             @Override
-            public void onFailure(Call<DomainModifyResult> call, Throwable t) {
+            public void onFailure(Call<DomainResult> call, Throwable t) {
                 mCallback.onResult(false);
                 LogUtils.d("请求失败 -- > " + t.toString());
             }

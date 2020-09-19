@@ -10,7 +10,6 @@ import android.view.View;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
@@ -72,7 +71,7 @@ public class SellingFragment extends SSBBaseFragment {
                 getActivity().getSupportFragmentManager().popBackStack();
         } else if (id == R.id.ssb_selling_add) {
             if (getActivity() != null) {
-                SellingAddNewActivity.start(getContext());
+                SellingAddNewActivity.start(getContext(), bundle);
             }
         }
         return super.onOptionsItemSelected(item);

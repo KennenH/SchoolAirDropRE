@@ -1,10 +1,6 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
 import android.net.Uri;
-import android.os.Build;
-
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;

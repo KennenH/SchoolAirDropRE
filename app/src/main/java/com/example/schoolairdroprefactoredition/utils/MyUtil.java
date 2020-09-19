@@ -112,6 +112,9 @@ public class MyUtil {
         PictureSelector.create(fragment)
                 .openCamera(PictureMimeType.ofImage())
                 .isEnableCrop(true)
+                .compressQuality(80)
+                .isCompress(true)
+                .minimumCompressSize(100)// 小于多少kb的图片不压缩
                 .theme(R.style.picture_white_style)
                 .imageEngine(GlideEngine.createGlideEngine())
                 .setPictureWindowAnimationStyle(animStyle)//相册启动退出动画
@@ -126,6 +129,9 @@ public class MyUtil {
                 .openCamera(PictureMimeType.ofImage())
                 .isEnableCrop(true)
                 .circleDimmedLayer(isCircle)
+                .compressQuality(80)
+                .isCompress(true)
+                .minimumCompressSize(100)// 小于多少kb的图片不压缩
                 .theme(R.style.picture_white_style)
                 .imageEngine(GlideEngine.createGlideEngine())
                 .setPictureWindowAnimationStyle(animStyle)//相册启动退出动画
@@ -169,8 +175,8 @@ public class MyUtil {
                 //.imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg,Android Q使用PictureMimeType.PNG_Q
                 .isEnableCrop(isCrop)// 是否裁剪
                 //.basicUCropConfig()//对外提供所有UCropOptions参数配制，但如果PictureSelector原本支持设置的还是会使用原有的设置
-                .isCompress(false)// 是否压缩
-                //.compressQuality(80)// 图片压缩后输出质量 0~ 100
+                .isCompress(true)// 是否压缩
+                .compressQuality(80)// 图片压缩后输出质量 0~ 100
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
                 //.queryMaxFileSize(10)// 只查多少M以内的图片、视频、音频  单位M
                 //.compressSavePath(getPath())//压缩图片保存地址
@@ -242,8 +248,8 @@ public class MyUtil {
                 //.imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg,Android Q使用PictureMimeType.PNG_Q
                 .isEnableCrop(isCrop)// 是否裁剪
                 //.basicUCropConfig()//对外提供所有UCropOptions参数配制，但如果PictureSelector原本支持设置的还是会使用原有的设置
-                .isCompress(false)// 是否压缩
-                //.compressQuality(80)// 图片压缩后输出质量 0~ 100
+                .isCompress(true)// 是否压缩
+                .compressQuality(60)// 图片压缩后输出质量 0~ 100
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
                 //.queryMaxFileSize(10)// 只查多少M以内的图片、视频、音频  单位M
                 //.compressSavePath(getPath())//压缩图片保存地址
@@ -307,19 +313,7 @@ public class MyUtil {
                         return R.layout.dialog_center_attention;
                 }
             }
-        }).show().delayDismiss(200);
-//        ToastUtils.setGravity(Gravity.CENTER, 0, 0);
-//
-//        switch (type) {
-//            case DIALOG_TYPE.SUCCESS:
-//                ToastUtils.showCustomShort(R.layout.dialog_center_success);
-//                break;
-//            case DIALOG_TYPE.FAILED:
-//                ToastUtils.showCustomShort(R.layout.dialog_center_failed);
-//                break;
-//            default:
-//                break;
-//        }
+        }).show().delayDismiss(300);
     }
 
     /**

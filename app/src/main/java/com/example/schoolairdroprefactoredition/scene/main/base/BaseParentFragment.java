@@ -127,7 +127,8 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
      */
     @Override
     public void onPostMyItem(View view) {
-        SellingAddNewActivity.startForResult(getContext());
+        if (getActivity() instanceof MainActivity)
+            SellingAddNewActivity.start(getContext(), ((MainActivity) getActivity()).getBundle());
     }
 
 

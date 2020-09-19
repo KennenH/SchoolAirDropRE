@@ -152,7 +152,8 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
                     LocalMedia photo = PictureSelector.obtainMultipleResult(data).get(0);
 
                     showLoading();
-                    viewModel.updateAvatar(token.getAccess_token(), photo.getPath()).observe(this, bean -> {
+                    String qPath = photo.getAndroidQToPath();
+                    viewModel.updateAvatar(token.getAccess_token(), qPath == null ? photo.getPath() : qPath).observe(this, bean -> {
                         updateAvatar(bean.getUser_img_path());
                     });
                 }
@@ -172,7 +173,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
 
     private void updateAvatar(String avatarUrl) {
         dismissLoading();
-        MyUtil.showCenterDialog(this,MyUtil.DIALOG_TYPE.SUCCESS);
+        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.SUCCESS);
         try {
             mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + avatarUrl);
             info.setUser_img_path(avatarUrl);
@@ -199,8 +200,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
                 break;
             case R.id.save_to_album:
                 // todo 保存图片至相册
-
-                MyUtil.showCenterDialog(this,MyUtil.DIALOG_TYPE.SUCCESS);
+                MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.SUCCESS);
                 mDialog.dismiss();
                 break;
             case R.id.cancel:
@@ -214,7 +214,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
     @Override
     public void onError() {
         runOnUiThread(this::dismissLoading);
-        MyUtil.showCenterDialog(this,MyUtil.DIALOG_TYPE.FAILED);
+        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.FAILED);
     }
 
     private void showLoading() {

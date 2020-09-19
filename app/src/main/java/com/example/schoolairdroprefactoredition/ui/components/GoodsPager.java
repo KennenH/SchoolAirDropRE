@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,8 +13,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.bumptech.glide.Glide;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.facebook.drawee.view.SimpleDraweeView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,17 +92,18 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            ImageView view = new ImageView(getContext());
-            Glide.with(getContext())
-                    .load(mData.get(position))
-                    .centerCrop()
-                    .placeholder(R.drawable.logo_placeholder)
-                    .into(view);
-            if (view.getParent() instanceof ViewGroup)
-                ((ViewGroup) view.getParent()).removeView(view);
+            SimpleDraweeView pic = new SimpleDraweeView(getContext());
+            pic.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + mData.get(position));
+//            Glide.with(getContext())
+//                    .load(mData.get(position))
+//                    .centerCrop()
+//                    .placeholder(R.drawable.logo_placeholder)
+//                    .into(pic);
+            if (pic.getParent() instanceof ViewGroup)
+                ((ViewGroup) pic.getParent()).removeView(pic);
 
-            container.addView(view);
-            return view;
+            container.addView(pic);
+            return pic;
         }
 
         @Override

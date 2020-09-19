@@ -5,18 +5,18 @@ import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 public class SellingOption extends ConstraintLayout {
 
     private TextView mTitle;
     private TextView mDescription;
-    private Switch mSwitch;
+    private SwitchMaterial mSwitch;
     private ImageView mArrow;
 
     private boolean isSwitch = false;

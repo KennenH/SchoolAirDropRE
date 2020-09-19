@@ -17,6 +17,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,9 +28,12 @@ import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SellingOption;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DecimalFilter;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.HorizontalItemMarginDecoration;
@@ -41,29 +45,32 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SellingAddNewActivity extends PermissionBaseActivity implements View.OnClickListener, AMapLocationListener {
+public class SellingAddNewActivity extends PermissionBaseActivity implements View.OnClickListener, AMapLocationListener, BaseStateViewModel.OnRequestListener {
 
-    public static void start(Context context) {
+    public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, SellingAddNewActivity.class);
+        intent.putExtras(bundle);
         context.startActivity(intent);
         if (context instanceof AppCompatActivity)
             MyUtil.startAnimUp((AppCompatActivity) context);
     }
 
-    public static void startForResult(Context context) {
-        Intent intent = new Intent(context, SellingAddNewActivity.class);
-        if (context instanceof AppCompatActivity) {
-            AppCompatActivity activity = (AppCompatActivity) context;
-            activity.startActivityForResult(intent, REQUEST_ADD_NEW);
-            MyUtil.startAnimUp((AppCompatActivity) context);
-        }
-    }
+//    public static void startForResult(Context context) {
+//        Intent intent = new Intent(context, SellingAddNewActivity.class);
+//        if (context instanceof AppCompatActivity) {
+//            AppCompatActivity activity = (AppCompatActivity) context;
+//            activity.startActivityForResult(intent, REQUEST_ADD_NEW);
+//            MyUtil.startAnimUp((AppCompatActivity) context);
+//        }
+//    }
 
     public static final int REQUEST_ADD_NEW = 888;// 请求码 表单提交
     public static final String ADD_KEY = "AddNew";// 键 表单提交
 
     public static final int REQUEST_CODE_COVER = 219;// 请求码 封面
     public static final int REQUEST_CODE_PIC_SET = 11;// 请求码 图片集
+
+    private SellingAddNewViewModel viewModel;
 
     private SimpleDraweeView mCover;
     private RecyclerView mPicRecycler;
@@ -84,11 +91,19 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
 
     private int request;
 
+    private String mCoverPath;
+
+    private DomainAuthorize token;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selling_add_new);
         setSupportActionBar(findViewById(R.id.toolbar));
+        viewModel = new ViewModelProvider(this).get(SellingAddNewViewModel.class);
+        viewModel.setOnRequestListener(this);
+
+        token = (DomainAuthorize) getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
 
         mAdapter = new HorizontalImageRecyclerAdapter();
 
@@ -184,7 +199,8 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                 if (data != null) {
                     LocalMedia cover = PictureSelector.obtainMultipleResult(data).get(0);
                     String qPath = cover.getAndroidQToPath();
-                    mCover.setImageURI(Uri.fromFile(new File(qPath == null ? cover.getPath() : qPath)));
+                    mCoverPath = qPath == null ? cover.getPath() : qPath;
+                    mCover.setImageURI(Uri.fromFile(new File(mCoverPath)));
                 }
             } else if (requestCode == REQUEST_CODE_PIC_SET) {
                 if (data != null) {
@@ -218,14 +234,29 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
      * 提交物品表单
      */
     private void submit() {
-//if (success)
-//        AddNewResultActivity.start(this, true);
+        List<String> mPicSetPaths = new ArrayList<>();
+        for (LocalMedia localMedia : selected) {
+            String qPath = localMedia.getAndroidQToPath();
+            mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
+        }
 
-//        finish();
-        MyUtil.exitAnimDown(this);
-//else
-        AddNewResultActivity.start(this, false);
+        if (token != null) {
+            showLoading();
+            viewModel.submit(token.getAccess_token(), mCoverPath, mPicSetPaths,
+                    mTitle.getText().toString(), mDescription.getText().toString(),
+                    120.31219, 30.124445,
+                    isSecondHand.getIsSelected(), !isNegotiable.getIsSelected(),
+                    Float.parseFloat(mPrice.getText().toString()))
+                    .observe(this, result -> {
+                        dismissLoading();
+                        AddNewResultActivity.start(this, result.isSuccess());
 
+                        if (result.isSuccess()) {
+                            finish();
+                            MyUtil.exitAnimDown(this);
+                        }
+                    });
+        }
     }
 
     /**
@@ -276,7 +307,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
-            overridePendingTransition(0, R.anim.popexit_y_fragment);
+            MyUtil.exitAnimDown(this);
         } else if (id == R.id.add_submit) {
             submit();
         }
@@ -347,5 +378,11 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
             mClient = null;
             mOption = null;
         }
+    }
+
+    @Override
+    public void onError() {
+        dismissLoading();
+        AddNewResultActivity.start(this, false);
     }
 }

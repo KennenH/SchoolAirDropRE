@@ -2,12 +2,13 @@ package com.example.schoolairdroprefactoredition.ui.components;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.TextView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -55,11 +56,11 @@ public class GoodsInfo extends ShimmerFrameLayout {
                     mGoodsName.setText(data.getGoods_name());
 
                 mPrice.setPrice(data.getGoods_price());
-                mAvatar.setImageURI(data.getSeller_info().getUser_img_path());
+                mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path());
                 mUserName.setText(data.getSeller_info().getUname());
                 mDescription.setText(data.getGoods_description());
             } catch (NullPointerException e) {
-                Log.d("GoodsInfo", "null pointer exception");
+                LogUtils.d("goods info null");
             } finally {
                 stopShimmer();
                 hideShimmer();

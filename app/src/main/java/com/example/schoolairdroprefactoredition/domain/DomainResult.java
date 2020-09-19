@@ -1,6 +1,6 @@
 package com.example.schoolairdroprefactoredition.domain;
 
-public class DomainModifyResult {
+public class DomainResult {
 
     /**
      * success : true

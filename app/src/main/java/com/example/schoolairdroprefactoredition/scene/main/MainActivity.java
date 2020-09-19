@@ -18,7 +18,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.cache.UserInfoCache;
 import com.example.schoolairdroprefactoredition.cache.UserTokenCache;
@@ -285,13 +284,14 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
                         , info.getUalipay()
                         , key.getPublic_key())
                         .observe(this, token -> {
-
-                            Toast.makeText(this, "自动登录成功", Toast.LENGTH_SHORT).show();
-
                             bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, token);
                             autoLoginWithToken();
                         });
             });
+    }
+
+    public Bundle getBundle() {
+        return bundle;
     }
 
     /**
@@ -299,12 +299,12 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
      * 在用户修改信息后调用
      */
     private void autoLoginWithToken() {
-
-        LogUtils.d("token 仍有效 自动登录");
-
         DomainAuthorize token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
         if (token != null && token.getAccess_token() != null) {
             viewModel.getUserInfo(token.getAccess_token()).observe(this, data -> {
+
+                Toast.makeText(this, "获取用户信息成功", Toast.LENGTH_SHORT).show();
+
                 DomainUserInfo.DataBean userInfo = data.getData().get(0);
                 bundle.putSerializable(ConstantUtil.KEY_USER_INFO, userInfo);
                 if (mOnLoginStateChangedListener != null) {

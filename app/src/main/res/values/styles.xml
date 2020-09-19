@@ -120,4 +120,15 @@
     <style name="NormalTabText" parent="TextAppearance.Design.Tab">
         <item name="android:textSize">@dimen/textSizeNormal</item>
     </style>
+
+    <style name="DialogText" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:background">@drawable/button_rounded_primary8</item>
+        <item name="android:backgroundTint">@color/darkerTranslucent</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textSizeLarge</item>
+    </style>
 </resources>

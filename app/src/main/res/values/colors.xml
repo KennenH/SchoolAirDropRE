@@ -22,6 +22,7 @@
 
     <color name="translucent">#E6FFFFFF</color>
     <color name="darkTranslucent">#E6808080</color>
+    <color name="darkerTranslucent">#E65E5E5E</color>
 
 
     <color name="orangeLight">#F56C0F</color>
