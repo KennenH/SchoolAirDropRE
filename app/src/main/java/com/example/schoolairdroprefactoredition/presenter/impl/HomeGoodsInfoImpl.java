@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import android.util.Log;
-
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
@@ -23,10 +22,10 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
      * 请求附近在售的数据
      */
     @Override
-    public void getNearbyGoods(int page, double longitude, double latitude) {
+    public void getNearbyGoods(String token, int page, double longitude, double latitude) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainGoodsInfo> task = api.getGoodsInfo( longitude, latitude);
+        Call<DomainGoodsInfo> task = api.getGoodsInfo(token, 120.31219 , 30.124445);
         task.enqueue(new Callback<DomainGoodsInfo>() {
             @Override
             public void onResponse(Call<DomainGoodsInfo> call, Response<DomainGoodsInfo> response) {
@@ -34,12 +33,12 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
                 DomainGoodsInfo info = response.body();
 
 //                try {
-//                    Log.d("HomeGoodsInfoImpl", info.string());
+//                    LogUtils.d(info.string());
 //                } catch (IOException e) {
 //                    e.printStackTrace();
 //                }
 
-//                Log.d("getNearbyGoods", "longitude -- > " + longitude + " latitude -- > " + latitude);
+//                LogUtils.d("longitude -- > " + longitude + " latitude -- > " + latitude);
                 if (code == HttpURLConnection.HTTP_OK) {
                     if (info != null && info.isSuccess()) {
                         mCallback.onNearbyGoodsLoaded(info.getData());
@@ -51,7 +50,7 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
 
             @Override
             public void onFailure(Call<DomainGoodsInfo> call, Throwable t) {
-                Log.e("HomeImpl", "请求失败 -- > " + t);
+                LogUtils.d(t.toString());
                 mCallback.onError();
             }
         });

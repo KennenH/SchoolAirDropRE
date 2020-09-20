@@ -47,4 +47,8 @@ public class ConstantUtil {
      * 使用token请求获取的用户信息键
      */
     public static final String KEY_USER_INFO = "UserInfo";
+    /**
+     * 获取物品信息键
+     */
+    public static final String KEY_GOODS_INFO = "GoodsInfo";
 }

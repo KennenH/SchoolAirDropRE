@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -222,6 +223,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         }
         if (mOption == null)
             mOption = new AMapLocationClientOption();
+
         mLocation.setDescription(getString(R.string.locating));
         mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         mOption.setOnceLocation(true);
@@ -234,28 +236,30 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
      * 提交物品表单
      */
     private void submit() {
-        List<String> mPicSetPaths = new ArrayList<>();
-        for (LocalMedia localMedia : selected) {
-            String qPath = localMedia.getAndroidQToPath();
-            mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
-        }
+        if (checkFormIsLegal()) {
+            List<String> mPicSetPaths = new ArrayList<>();
+            for (LocalMedia localMedia : selected) {
+                String qPath = localMedia.getAndroidQToPath();
+                mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
+            }
 
-        if (token != null) {
-            showLoading();
-            viewModel.submit(token.getAccess_token(), mCoverPath, mPicSetPaths,
-                    mTitle.getText().toString(), mDescription.getText().toString(),
-                    120.31219, 30.124445,
-                    isSecondHand.getIsSelected(), !isNegotiable.getIsSelected(),
-                    Float.parseFloat(mPrice.getText().toString()))
-                    .observe(this, result -> {
-                        dismissLoading();
-                        AddNewResultActivity.start(this, result.isSuccess());
+            if (token != null) {
+                showLoading();
+                viewModel.submit(token.getAccess_token(), mCoverPath, mPicSetPaths,
+                        mTitle.getText().toString(), mDescription.getText().toString(),
+                        120.31219, 30.124445,
+                        isSecondHand.getIsSelected(), !isNegotiable.getIsSelected(),
+                        Float.parseFloat(mPrice.getText().toString()))
+                        .observe(this, result -> {
+                            dismissLoading();
+                            AddNewResultActivity.start(this, result.isSuccess());
 
-                        if (result.isSuccess()) {
-                            finish();
-                            MyUtil.exitAnimDown(this);
-                        }
-                    });
+                            if (result.isSuccess()) {
+                                finish();
+                                MyUtil.exitAnimDown(this);
+                            }
+                        });
+            }
         }
     }
 
@@ -263,13 +267,13 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
      * 检查表单填写是否完整
      */
     private boolean checkFormIsLegal() {
-        if (mTitle.getDescription().length() < 6) {
-
+        if (mTitle.getText().length() < 3) {
+            Toast.makeText(this, "请输入不少于3个字的标题", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        if (mDescription.getDescription().length() < 11) {
-
+        if (mDescription.getText().length() < 11) {
+            Toast.makeText(this, "请输入不少于11个字的描述", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -337,6 +341,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                 mPrice.clearFocus();
                 break;
             case R.id.option_location:
+                mLocation.setDescription(getString(R.string.locating));
                 requestPermission(PermissionConstants.LOCATION, RequestType.MANUAL);
                 break;
             case R.id.option_negotiable:

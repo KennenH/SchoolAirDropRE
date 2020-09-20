@@ -66,17 +66,33 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.9" />
 
-    <TextView
-        android:id="@+id/map_relocate"
+
+    <FrameLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_rounded_translucent"
-        android:gravity="center"
-        android:padding="@dimen/general_padding_large"
-        android:text="@string/relocate"
-        android:textColor="@color/white"
-        android:textSize="@dimen/textSizeLarge"
         app:layout_constraintBottom_toTopOf="@id/guideline"
         app:layout_constraintEnd_toStartOf="@+id/right"
-        app:layout_constraintStart_toStartOf="@+id/left" />
+        app:layout_constraintStart_toStartOf="@+id/left">
+
+        <TextView
+            android:id="@+id/map_relocate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/button_rounded_translucent"
+            android:gravity="center"
+            android:padding="@dimen/general_padding_large"
+            android:text="@string/relocate"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSizeLarge"
+            />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/relocating"
+            style="@style/SpinKitView.Small.FadingCircle"
+            android:layout_width="match_parent"
+            android:visibility="gone"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/button_rounded_translucent" />
+    </FrameLayout>
 </com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>

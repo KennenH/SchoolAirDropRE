@@ -307,9 +307,8 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
 
                 DomainUserInfo.DataBean userInfo = data.getData().get(0);
                 bundle.putSerializable(ConstantUtil.KEY_USER_INFO, userInfo);
-                if (mOnLoginStateChangedListener != null) {
+                if (mOnLoginStateChangedListener != null)
                     mOnLoginStateChangedListener.onLoginStateChanged(bundle);
-                }
             });
         }
     }

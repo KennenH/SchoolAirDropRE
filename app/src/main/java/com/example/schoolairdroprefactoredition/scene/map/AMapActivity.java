@@ -4,13 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
@@ -18,11 +18,11 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps2d.AMap;
 import com.amap.api.maps2d.LocationSource;
-import com.amap.api.maps2d.MapView;
 import com.amap.api.maps2d.model.MyLocationStyle;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.BarUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.ActivityAmapBinding;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
 
@@ -37,11 +37,9 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
     private AMapLocationClientOption mOption;
     private AMapLocation mLocation;
 
-    private MapView mMapView;
     private AMap mMap;
 
-    private TextView mAddress;
-    private TextView mRelocate;
+    private ActivityAmapBinding binding;
 
     private MyLocationStyle mLocationStyle;
 
@@ -55,38 +53,72 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_amap);
+        binding = ActivityAmapBinding.inflate(getLayoutInflater());
+        setContentView(binding.root);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-        Toolbar mToolbar = findViewById(R.id.toolbar);
-        StatusBarUtil.setTranslucentForImageView(this, mToolbar);
+        StatusBarUtil.setTranslucentForImageView(this, binding.toolbar);
         BarUtils.setNavBarColor(this, getColor(R.color.darkTranslucent));
         BarUtils.setNavBarLightMode(this, false);
+        setSupportActionBar(binding.toolbar);
 
-        setSupportActionBar(mToolbar);
+        binding.mapLocation.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
-        mMapView = findViewById(R.id.map);
-        mMapView.onCreate(savedInstanceState);
-        mAddress = findViewById(R.id.map_location);
-        mRelocate = findViewById(R.id.map_relocate);
-        mAddress.setOnClickListener(this);
-        mRelocate.setOnClickListener(this);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.toString().equals(""))
+                    binding.mapLocation.setVisibility(View.GONE);
+                else
+                    binding.mapLocation.setVisibility(View.VISIBLE);
+            }
+        });
+        binding.mapLocation.setOnClickListener(this);
+        binding.mapRelocate.setOnClickListener(this);
+        binding.relocating.setOnClickListener(this);
+        binding.map.onCreate(savedInstanceState);
 
         displayMap();
 
+        locating();
         requestPermission(PermissionConstants.LOCATION, RequestType.AUTO);
+    }
+
+    /**
+     * 正在定位
+     */
+    private void locating() {
+        binding.mapRelocate.setVisibility(View.INVISIBLE);
+        binding.relocating.setVisibility(View.VISIBLE);
+        binding.mapLocation.setText(getString(R.string.locating));
+    }
+
+    /**
+     * 定位完成
+     */
+    private void locateDone() {
+        binding.mapRelocate.setVisibility(View.VISIBLE);
+        binding.relocating.setVisibility(View.GONE);
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.map_relocate) {
+            locating();
             requestPermission(PermissionConstants.LOCATION, RequestType.MANUAL);
         }
     }
 
     @Override
     protected void setStatusBar() {
+        // do nothing
     }
 
     @Override
@@ -98,12 +130,12 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
     @Override
     protected void locationDenied() {
         super.locationDenied();
-        mAddress.setText(getString(R.string.permissionDenied));
+        binding.mapLocation.setText(getString(R.string.permissionDenied));
     }
 
     private void displayMap() {
         if (mMap == null)
-            mMap = mMapView.getMap();
+            mMap = binding.map.getMap();
 
         if (mLocationStyle == null)
             mLocationStyle = new MyLocationStyle();
@@ -118,8 +150,10 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
 
     @Override
     public void onLocationChanged(AMapLocation aMapLocation) {
+        locateDone();
         if (aMapLocation != null && mOnLocationChangedListener != null) {
             if (aMapLocation.getErrorCode() == 0) {
+                binding.mapLocation.setText(aMapLocation.getAddress());
                 mOnLocationChangedListener.onLocationChanged(aMapLocation);
                 mLocation = aMapLocation;
 //                Log.d("AMapActivity", aMapLocation.getAddress());
@@ -132,12 +166,15 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
 //                    public void onCancel() {
 //                    }
 //                });
+            } else {
+                binding.mapLocation.setText(getString(R.string.errorNetLocation));
             }
         }
     }
 
     @Override
     public void activate(OnLocationChangedListener onLocationChangedListener) {
+        locating();
         mOnLocationChangedListener = onLocationChangedListener;
         if (mClient == null) mClient = new AMapLocationClient(this);
         if (mOption == null) mOption = new AMapLocationClientOption();
@@ -188,7 +225,7 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
             mClient.onDestroy();
             mClient = null;
         }
-        mMapView.onDestroy();
+        binding.map.onDestroy();
         if (mOnLocationChangedListener != null)
             mOnLocationChangedListener = null;
     }
@@ -197,20 +234,20 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
     protected void onResume() {
         super.onResume();
         // 重新绘制加载地图
-        mMapView.onResume();
+        binding.map.onResume();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         // 暂停地图的绘制
-        mMapView.onPause();
+        binding.map.onPause();
     }
 
     @Override
     protected void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         // 保存地图当前的状态
-        mMapView.onSaveInstanceState(outState);
+        binding.map.onSaveInstanceState(outState);
     }
 }

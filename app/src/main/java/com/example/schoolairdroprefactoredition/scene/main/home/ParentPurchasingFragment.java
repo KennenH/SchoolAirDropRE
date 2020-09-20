@@ -45,6 +45,7 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
         HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, HomePagerAdapter.PURCHASING);
+        homePagerAdapter.setBundle(getArguments());
         setUpPlaceHolderHAndGoodsContainer(binding.placeholder, binding.homeViewpager);
         MagicIndicator indicator = binding.homeIndicator;
         ViewPager viewPager = binding.homeViewpager;

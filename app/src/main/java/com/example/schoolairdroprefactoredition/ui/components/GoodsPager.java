@@ -14,6 +14,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsPagerBinding;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 
@@ -25,6 +26,7 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
     private ViewPager mViewPager;
     private List<String> mData = new ArrayList<>();
 
+    private ComponentGoodsPagerBinding binding;
     private LinearLayout mIndicatorContainer;
     private TextView mCurrent;
     private TextView mTotal;
@@ -39,7 +41,7 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
 
     public GoodsPager(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater.from(context).inflate(R.layout.component_goods_pager, this, true);
+        binding = ComponentGoodsPagerBinding.inflate(LayoutInflater.from(context), this, true);
         mIndicatorContainer = findViewById(R.id.goods_pager_indicator);
         mViewPager = findViewById(R.id.goods_pager_pager);
         mCurrent = findViewById(R.id.goods_pager_current);

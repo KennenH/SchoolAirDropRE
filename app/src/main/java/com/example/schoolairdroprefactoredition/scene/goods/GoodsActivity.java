@@ -36,7 +36,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
 
     public static void start(Context context, DomainGoodsInfo.DataBean info) {
         Intent intent = new Intent(context, GoodsActivity.class);
-        intent.putExtra(ConstantUtil.KEY_USER_INFO, info);
+        intent.putExtra(ConstantUtil.KEY_GOODS_INFO, info);
         context.startActivity(intent);
     }
 
@@ -56,20 +56,18 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
         BarUtils.setNavBarColor(this, getColor(R.color.primary));
         setSupportActionBar(mToolbar);
 
-        mInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_USER_INFO);
+        mInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
 
         ButtonSingle mLeft = findViewById(R.id.goods_button_left);
         ButtonDouble mRight = findViewById(R.id.goods_button_right);
         GoodsInfo goodsInfo = findViewById(R.id.goods_info_container);
         GoodsPager goodsPager = findViewById(R.id.goods_pager);
 
-        if (mInfo != null) {
-            try {
-                goodsInfo.setData(mInfo);
-                goodsPager.setData(MyUtil.getArrayFromString(mInfo.getGoods_img_set()));
-            } catch (NullPointerException e) {
-                LogUtils.d("user info null");
-            }
+        try {
+            goodsInfo.setData(mInfo);
+            goodsPager.setData(MyUtil.getArrayFromString(mInfo.getGoods_img_set()));
+        } catch (NullPointerException e) {
+            LogUtils.d("goods info null");
         }
 
         mLeft.setOnButtonClickListener(this);

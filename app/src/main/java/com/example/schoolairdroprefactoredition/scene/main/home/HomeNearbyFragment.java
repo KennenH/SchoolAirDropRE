@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amap.api.location.AMapLocation;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
@@ -25,8 +26,10 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
+import org.jetbrains.annotations.NotNull;
+
 public class HomeNearbyFragment extends BaseChildFragment
-        implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseStateViewModel.OnRequestListener {
+        implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseStateViewModel.OnRequestListener, MainActivity.OnLoginStateChangedListener {
     private HomeNearbyFragmentViewModel homeContentFragmentViewModel;
 
     private SmartRefreshLayout mRefresh;
@@ -48,13 +51,17 @@ public class HomeNearbyFragment extends BaseChildFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFragmentNum = getArguments() != null ? getArguments().getInt(ConstantUtil.FRAGMENT_NUM) : 0;
         bundle = getArguments();
-        if (bundle != null)
-            token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        if (bundle == null)
+            bundle = new Bundle();
+
+        mFragmentNum = bundle.getInt(ConstantUtil.FRAGMENT_NUM, 0);
+        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
 
         if (getParentFragment() instanceof BaseParentFragment)
             ((BaseParentFragment) getParentFragment()).setOnLocationCallbackListener(this);
+        if (getActivity() instanceof MainActivity)
+            ((MainActivity) getActivity()).setOnLoginActivityListener(this);
     }
 
     @Nullable
@@ -85,6 +92,15 @@ public class HomeNearbyFragment extends BaseChildFragment
     }
 
     /**
+     * 来自{@link MainActivity}的登录状态回调
+     */
+    @Override
+    public void onLoginStateChanged(@NotNull Bundle bundle) {
+        this.bundle = bundle;
+        token = (DomainAuthorize) this.bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+    }
+
+    /**
      * 来自父Fragment {@link ParentPurchasingFragment}的定位回调
      */
     @Override
@@ -94,14 +110,15 @@ public class HomeNearbyFragment extends BaseChildFragment
                 showContentContainer();
                 mLocation = aMapLocation;
 
-                homeContentFragmentViewModel.getGoodsInfo(1, aMapLocation.getLongitude(), aMapLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
-                    if (data == null || data.size() == 0) {
-                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
-                    } else {
-                        mHomeNearbyRecyclerAdapter.setList(data);
-                        showContentContainer();
-                    }
-                });
+                if (token != null)
+                    homeContentFragmentViewModel.getGoodsInfo(token.getAccess_token(), 1, aMapLocation.getLongitude(), aMapLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+                        if (data == null || data.size() == 0) {
+                            showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
+                        } else {
+                            mHomeNearbyRecyclerAdapter.setList(data);
+                            showContentContainer();
+                        }
+                    });
             } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
         } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
@@ -114,15 +131,16 @@ public class HomeNearbyFragment extends BaseChildFragment
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (mLocation != null) { // 定位信息不为null时
-            homeContentFragmentViewModel.getGoodsInfo(1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
-                if (data.size() == 0) {
-                    showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
-                } else {
-                    mHomeNearbyRecyclerAdapter.setList(data);
-                    showContentContainer();
-                }
-                refreshLayout.finishRefresh();
-            });
+            if (token != null)
+                homeContentFragmentViewModel.getGoodsInfo(token.getAccess_token(), 1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+                    if (data.size() == 0) {
+                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
+                    } else {
+                        mHomeNearbyRecyclerAdapter.setList(data);
+                        showContentContainer();
+                    }
+                    refreshLayout.finishRefresh();
+                });
         } else { // 定位失败时通知父Fragment显示PlaceHolder
             refreshLayout.finishRefresh();
             showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
@@ -132,21 +150,21 @@ public class HomeNearbyFragment extends BaseChildFragment
 
     @Override
     public void autoLoadMore(EndlessRecyclerView recycler) {
-        if (mLocation != null) {
-            homeContentFragmentViewModel.getGoodsInfo(1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
-                mHomeNearbyRecyclerAdapter.addData(data);
-                showContentContainer();
-                recycler.finishLoading();
-            });
-        } else {
-            showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
-            recycler.finishLoading();
-        }
+//        if (mLocation != null) {
+//            if (token != null)
+//                homeContentFragmentViewModel.getGoodsInfo(token.getAccess_token(), 1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+//                    mHomeNearbyRecyclerAdapter.addData(data);
+//                    showContentContainer();
+//                    recycler.finishLoading();
+//                });
+//        } else {
+//            showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+//            recycler.finishLoading();
+//        }
     }
 
     @Override
     public void onError() {
         showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
-
 }

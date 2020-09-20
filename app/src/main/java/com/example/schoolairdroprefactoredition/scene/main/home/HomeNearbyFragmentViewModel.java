@@ -31,8 +31,8 @@ public class HomeNearbyFragmentViewModel extends BaseStateViewModel implements I
         mOnRequestListener.onError();
     }
 
-    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo( int page, double longitude, double latitude) {
-        mHomeImpl.getNearbyGoods( page, longitude, latitude);
+    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo(String token, int page, double longitude, double latitude) {
+        mHomeImpl.getNearbyGoods(token, page, longitude, latitude);
         return mGoodsInfo;
     }
 
