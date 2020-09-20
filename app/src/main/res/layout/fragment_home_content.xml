@@ -24,7 +24,6 @@
         android:background="@color/white"
         android:clipToPadding="false"
         android:overScrollMode="never"
-        android:padding="5dp"
         android:splitMotionEvents="false"
         tools:listitem="@layout/item_home_goods_info" />
 

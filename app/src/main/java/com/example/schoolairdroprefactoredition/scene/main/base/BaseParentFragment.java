@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.scene.main.base;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -8,30 +7,22 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
-import com.amap.api.location.AMapLocation;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
-import com.example.schoolairdroprefactoredition.scene.map.AMapActivity;
-import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 
-import static android.app.Activity.RESULT_OK;
-
-public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnPlaceHolderActionListener, MainActivity.OnLocationListener {
+public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnPlaceHolderActionListener{
 
     private StatePlaceHolder mPlaceHolder;
     private ViewPager mContentContainer;
 
-    protected OnLocationCallbackListener mOnLocationCallbackListener;
     protected OnSearchBarClickedListener mOnSearchBarClickedListener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getActivity() != null && getActivity() instanceof MainActivity)
-            ((MainActivity) getActivity()).setOnLocationListener(this);
     }
 
     protected void setUpPlaceHolderHAndGoodsContainer(StatePlaceHolder placeHolder, ViewPager goodsContainer) {
@@ -39,49 +30,6 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
         mContentContainer = goodsContainer;
 
         mPlaceHolder.setOnPlaceHolderActionListener(this);
-    }
-
-    /**
-     * 来自
-     * {@link AMapActivity}的定位回调结果
-     * {@link AMapActivity#LOCATION_KEY}
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == AMapActivity.REQUEST_CODE) {
-                if (data != null) {
-                    if (mOnLocationCallbackListener != null)
-                        mOnLocationCallbackListener.onLocated(data.getParcelableExtra(AMapActivity.LOCATION_KEY));
-                }
-            }
-        }
-    }
-
-    /**
-     * 来自{@link MainActivity}的定位回调
-     * 将结果回调至所有子fragment
-     *
-     * @param aMapLocation
-     */
-    @Override
-    public void onLocated(AMapLocation aMapLocation) {
-        if (aMapLocation != null) {
-            if (aMapLocation.getErrorCode() == 0) {
-                if (mOnLocationCallbackListener != null)
-                    mOnLocationCallbackListener.onLocated(aMapLocation);
-            } else
-                mOnLocationCallbackListener.onLocationError();
-        }
-    }
-
-    /**
-     * 来自{@link MainActivity}的定位回调
-     * 定位权限已被拒绝
-     */
-    @Override
-    public void onPermissionDenied() {
-        showPlaceholder(StatePlaceHolder.TYPE_DENIED);
     }
 
     /**
@@ -131,25 +79,6 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
             SellingAddNewActivity.start(getContext(), ((MainActivity) getActivity()).getBundle());
     }
 
-
-    /**
-     * {@// TODO: 2020/9/18  没必要将main activity定位回调至此后再将此结果回调至该fragment的子fragment可以让子fragment直接监听main activity}
-     *
-     * @deprecated <p>
-     * 定位回调时的回调
-     * 多源单一去向，来自{@link MainActivity}{@link AMapActivity}
-     * 去向{@link HomePagerAdapter}
-     */
-    public interface OnLocationCallbackListener {
-        void onLocated(AMapLocation aMapLocation);
-
-        void onLocationError();
-    }
-
-    public void setOnLocationCallbackListener(OnLocationCallbackListener listener) {
-        mOnLocationCallbackListener = listener;
-    }
-
     /**
      * 搜索框点击时的回调
      */
@@ -159,11 +88,5 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
 
     public void setOnSearchBarClickedListener(OnSearchBarClickedListener listener) {
         mOnSearchBarClickedListener = listener;
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mOnLocationCallbackListener = null;
     }
 }

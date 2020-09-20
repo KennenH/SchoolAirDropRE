@@ -24,6 +24,7 @@ import androidx.transition.TransitionManager;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSearchPrelayoutBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderFooterOnlyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
@@ -59,6 +60,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     private SearchHistoryHeader mHistoryHeader;
 
+    private DomainUserInfo.DataBean info;
     private DomainAuthorize token;
     private double longitude;
     private double latitude;
@@ -78,6 +80,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         super.onCreate(savedInstanceState);
         Bundle bundle = getArguments();
         if (bundle != null) {
+            info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
             token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
             try {
                 longitude = (double) bundle.getSerializable(ConstantUtil.LONGITUDE);
@@ -124,7 +127,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     private void init() {
         mHistoryAdapter = new HeaderFooterOnlyRecyclerAdapter();
         mSuggestionAdapter = new SearchSuggestionRecyclerAdapter();
-        mResultAdapter = new HomeNearbyRecyclerAdapter();
+        mResultAdapter = new HomeNearbyRecyclerAdapter(info);
         mHistoryHeader = new SearchHistoryHeader(getContext());
         mHistory.setLayoutManager(new LinearLayoutManager(getContext()));
         mSuggestion.setLayoutManager(new LinearLayoutManager(getContext()));

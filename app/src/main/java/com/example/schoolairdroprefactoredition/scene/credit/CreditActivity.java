@@ -85,7 +85,6 @@ public class CreditActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_credit);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         viewModel = new ViewModelProvider(this).get(CreditViewModel.class);
 
         bundle = getIntent().getExtras();
@@ -110,7 +109,7 @@ public class CreditActivity extends AppCompatActivity {
         viewModel.getCreditHistory().observe(this, data -> {
             mAdapter.setList(data);
             mAdapter.notifyDataSetChanged();
-            mRecycler.smoothScrollToPosition(0);
+            mRecycler.scrollToPosition(0);
         });
 
         init();

@@ -6,7 +6,6 @@ import android.util.AttributeSet;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
@@ -83,30 +82,6 @@ public class EndlessRecyclerView extends RecyclerView {
     }
 
     /**
-     * 平滑滚动
-     *
-     * @param position 为0时即滑动至最顶部
-     */
-    public void smoothScrollToPosition(int position) {
-        if (mLayoutManager != null) {
-            FasterSmoothScroller mSmoothScroller = new FasterSmoothScroller(getContext());
-
-            if (mLayoutManager instanceof StaggeredGridLayoutManager) {
-                int[] temp = new int[100];
-                ((StaggeredGridLayoutManager) mLayoutManager).findFirstVisibleItemPositions(temp);
-                if (temp[0] == 0)
-                    return;
-            } else if (mLayoutManager instanceof LinearLayoutManager) {
-                if (((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition() == 0)
-                    return;
-            }
-
-            mSmoothScroller.setTargetPosition(position);
-            mLayoutManager.startSmoothScroll(mSmoothScroller);
-        }
-    }
-
-    /**
      * 数据加载完毕时必须调用此方法,否则之后不会自动加载数据
      * {@link #onScrolled}
      */
@@ -129,27 +104,6 @@ public class EndlessRecyclerView extends RecyclerView {
      */
     public void setOnLoadMoreListener(OnLoadMoreListener onLoadMoreListener) {
         this.mOnLoadMoreListener = onLoadMoreListener;
-    }
-
-    static class FasterSmoothScroller extends LinearSmoothScroller {
-
-        FasterSmoothScroller(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected int calculateTimeForScrolling(int dx) {
-            // 此函数计算滚动dx的距离需要多久，当要滚动的距离很大时，比如说52000，
-            // 经测试，系统会多次调用此函数，每10000距离调一次，所以总的滚动时间
-            // 是多次调用此函数返回的时间的和，所以修改每次调用该函数时返回的时间的
-            // 大小就可以影响滚动需要的总时间，可以直接修改些函数的返回值，也可以修改
-            // dx的值
-            if (dx == 10000) {
-                return 200;
-            } else if (dx > 5000)
-                dx = 5000;
-            return super.calculateTimeForScrolling(dx);
-        }
     }
 }
 

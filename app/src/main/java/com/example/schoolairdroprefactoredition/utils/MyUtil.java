@@ -87,7 +87,7 @@ public class MyUtil {
     public static class ImageLoader implements XPopupImageLoader {
         @Override
         public void loadImage(int position, @NonNull Object url, @NonNull ImageView imageView) {
-            Glide.with(imageView).load(url).apply(new RequestOptions().placeholder(R.mipmap.ic_launcher_round).override(Target.SIZE_ORIGINAL)).into(imageView);
+            Glide.with(imageView).load(url).apply(new RequestOptions().placeholder(R.drawable.logo_placeholder).override(Target.SIZE_ORIGINAL)).into(imageView);
         }
 
         @Override

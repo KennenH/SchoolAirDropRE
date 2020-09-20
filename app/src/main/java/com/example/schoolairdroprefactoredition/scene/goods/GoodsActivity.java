@@ -11,67 +11,84 @@ import android.view.View;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.ActivityGoodsBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonDouble;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonSingle;
-import com.example.schoolairdroprefactoredition.ui.components.GoodsInfo;
-import com.example.schoolairdroprefactoredition.ui.components.GoodsPager;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DecimalFilter;
-import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaeger.library.StatusBarUtil;
 
 public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonSingle.OnButtonClickListener, ButtonDouble.OnButtonClickListener {
 
-    public static void start(Context context, DomainGoodsInfo.DataBean info) {
+    /**
+     * @param goodsInfo 当其中的seller_info为空时表明为在售列表，隐藏bottom
+     * @param myInfo    当为空时无法判断，因此不隐藏bottom
+     */
+    public static void start(Context context, DomainGoodsInfo.DataBean goodsInfo, DomainUserInfo.DataBean myInfo) {
         Intent intent = new Intent(context, GoodsActivity.class);
-        intent.putExtra(ConstantUtil.KEY_GOODS_INFO, info);
+        intent.putExtra(ConstantUtil.KEY_GOODS_INFO, goodsInfo);
+        intent.putExtra(ConstantUtil.KEY_USER_INFO, myInfo);
         context.startActivity(intent);
     }
 
+    private ActivityGoodsBinding binding;
+
     private BottomSheetDialog dialog;
 
-    private DomainGoodsInfo.DataBean mInfo;
+    private DomainGoodsInfo.DataBean mGoodsInfo;
+    private DomainUserInfo.DataBean mMyInfo;
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_goods);
+        binding = ActivityGoodsBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
 
-        Toolbar mToolbar = findViewById(R.id.goods_toolbar);
-        StatusBarUtil.setTranslucentForImageView(this, 0, mToolbar);
+        StatusBarUtil.setTranslucentForImageView(this, 0, binding.goodsToolbar);
         BarUtils.setNavBarLightMode(this, true);
         BarUtils.setNavBarColor(this, getColor(R.color.primary));
-        setSupportActionBar(mToolbar);
+        setSupportActionBar(binding.goodsToolbar);
 
-        mInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
+        mGoodsInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
+        mMyInfo = (DomainUserInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_USER_INFO);
 
-        ButtonSingle mLeft = findViewById(R.id.goods_button_left);
-        ButtonDouble mRight = findViewById(R.id.goods_button_right);
-        GoodsInfo goodsInfo = findViewById(R.id.goods_info_container);
-        GoodsPager goodsPager = findViewById(R.id.goods_pager);
+        hideActionButtonsIfMyGoods();
 
-        try {
-            goodsInfo.setData(mInfo);
-            goodsPager.setData(MyUtil.getArrayFromString(mInfo.getGoods_img_set()));
-        } catch (NullPointerException e) {
-            LogUtils.d("goods info null");
+        binding.goodsInfoContainer.setData(mGoodsInfo);
+        binding.goodsButtonLeft.setOnButtonClickListener(this);
+        binding.goodsButtonRight.setOnButtonClickListener(this);
+    }
+
+    /**
+     * 判断是否为自己的物品
+     * 若是，则隐藏三个按钮以及下面的留白
+     * <p>
+     * 不隐藏的情况:
+     * 页面个人信息为空
+     * 卖家与个人信息不为空 但 卖家信息uid与个人信息uid不一致
+     */
+    private void hideActionButtonsIfMyGoods() {
+        if (mGoodsInfo != null && mMyInfo != null) {
+            DomainGoodsInfo.DataBean.SellerInfoBean seller = mGoodsInfo.getSeller_info();
+            if (seller == null || seller.getUid() == mMyInfo.getUid()) {
+                binding.goodsButtonLeft.setVisibility(View.GONE);
+                binding.goodsButtonRight.setVisibility(View.GONE);
+                binding.goodsInfoContainer.hideBottom();
+            }
         }
-
-        mLeft.setOnButtonClickListener(this);
-        mRight.setOnButtonClickListener(this);
     }
 
     /**

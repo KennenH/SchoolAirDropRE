@@ -33,7 +33,7 @@ public class HomeNewsRecyclerAdapter extends BaseMultiItemQuickAdapter<BaseHomeN
         View item = holder.itemView;
         ClickUtils.applyPressedViewScale(item);
         item.setOnClickListener(v -> {
-            GoodsActivity.start(getContext(), null);
+            GoodsActivity.start(getContext(), null, null);
         });
     }
 }

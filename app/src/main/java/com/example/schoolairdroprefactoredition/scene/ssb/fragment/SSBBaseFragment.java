@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
@@ -36,6 +37,7 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
 
     protected Bundle bundle;
 
+    protected DomainUserInfo.DataBean info;
     protected DomainAuthorize token;
 
     @Override
@@ -45,6 +47,7 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
         if (bundle == null)
             bundle = new Bundle();
 
+        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
     }
 
@@ -61,7 +64,7 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
 
         mFilter = new SSBFilter(getContext());
-        mAdapter = new SSBAdapter();
+        mAdapter = new SSBAdapter(info);
 
         mFilter.setOnFilterListener(this);
         mAdapter.addHeaderView(mFilter);

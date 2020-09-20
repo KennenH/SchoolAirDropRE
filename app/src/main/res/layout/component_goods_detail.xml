@@ -3,22 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingBottom="96dp">
+    android:layout_height="match_parent">
 
     <com.example.schoolairdroprefactoredition.ui.components.GoodsPager
         android:id="@+id/goods_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent" />
-
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.75" />
 
     <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
         android:id="@+id/goods_name"
@@ -36,7 +27,6 @@
         app:layout_constraintTop_toBottomOf="@+id/goods_pager"
         tools:text="[img src=ic_negotiable/] [img src=ic_secondhand/] 哈哈哈哈哈哈哈哈哈哈哈哈 三全食品" />
 
-
     <com.example.schoolairdroprefactoredition.ui.components.GoodsPopularity
         android:id="@+id/goods_popularity"
         android:layout_width="0dp"
@@ -53,55 +43,54 @@
         app:layout_constraintEnd_toEndOf="@+id/goods_name"
         app:layout_constraintTop_toBottomOf="@+id/goods_name" />
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline1"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/goods_seller_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.099236645" />
-
-    <View
-        android:id="@+id/view"
-        android:layout_width="0dp"
-        android:layout_height="0.8dp"
-        android:background="@color/colorLine"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@+id/goods_popularity" />
-
-    <com.facebook.drawee.view.SimpleDraweeView
-        android:id="@+id/goods_avatar"
-        android:layout_width="@dimen/toolbar_icon_even_larger"
-        android:layout_height="@dimen/toolbar_icon_even_larger"
-        android:layout_marginTop="@dimen/general_padding_larger"
-        android:scaleType="centerCrop"
-        android:src="@drawable/brvah_sample_footer_loading"
         app:layout_constraintStart_toStartOf="@+id/goods_name"
-        app:layout_constraintTop_toBottomOf="@+id/view"
-        app:placeholderImage="@drawable/logo_placeholder"
-        app:placeholderImageScaleType="centerInside"
-        app:roundedCornerRadius="@dimen/general_rounded_rect" />
+        app:layout_constraintTop_toBottomOf="@+id/goods_popularity">
 
-    <TextView
-        android:id="@+id/goods_user_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/general_padding_large"
-        android:textSize="14dp"
-        app:layout_constraintBottom_toBottomOf="@+id/goods_avatar"
-        app:layout_constraintStart_toEndOf="@+id/goods_avatar"
-        app:layout_constraintTop_toTopOf="@+id/goods_avatar"
-        tools:text="李伟" />
+        <View
+            android:id="@+id/view"
+            android:layout_width="0dp"
+            android:layout_height="0.8dp"
+            android:background="@color/colorLine"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <View
-        android:id="@+id/view2"
-        android:layout_width="0dp"
-        android:layout_height="0.8dp"
-        android:layout_marginTop="@dimen/general_padding_larger"
-        android:background="@color/colorLine"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@id/goods_avatar" />
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/goods_avatar"
+            android:layout_width="@dimen/toolbar_icon_even_larger"
+            android:layout_height="@dimen/toolbar_icon_even_larger"
+            android:scaleType="centerCrop"
+            android:src="@drawable/brvah_sample_footer_loading"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/view"
+            app:placeholderImage="@drawable/logo_placeholder"
+            app:placeholderImageScaleType="centerInside"
+            app:roundedCornerRadius="@dimen/general_rounded_rect" />
+
+        <TextView
+            android:id="@+id/goods_user_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/general_padding_large"
+            android:textSize="14dp"
+            app:layout_constraintBottom_toBottomOf="@+id/goods_avatar"
+            app:layout_constraintStart_toEndOf="@+id/goods_avatar"
+            app:layout_constraintTop_toTopOf="@+id/goods_avatar"
+            tools:text="李伟" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="0dp"
+            android:layout_height="0.8dp"
+            android:layout_marginTop="@dimen/general_padding_larger"
+            android:background="@color/colorLine"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/goods_avatar" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView
         android:id="@+id/goods_description_header"
@@ -109,7 +98,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/general_padding_large"
         android:gravity="center"
-        android:paddingBottom="@dimen/general_padding_large"
         android:text="@string/goods_description"
         android:textColor="@color/colorAccent"
         android:textSize="18dp"
@@ -117,12 +105,13 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        app:layout_constraintTop_toBottomOf="@+id/goods_seller_info" />
 
     <TextView
         android:id="@+id/goods_description"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
         android:background="@drawable/recycler_header"
         android:letterSpacing="0.03"
         android:lineSpacingExtra="@dimen/general_padding_tiny"
@@ -133,5 +122,10 @@
         app:layout_constraintTop_toBottomOf="@id/goods_description_header"
         tools:text="出售二手烟，拍下即面对面交货，无需动嘴，无需打火机，只需闭上双眼，深吸一口气，即可享受到中华二手烟的雄浑烤烟气息，荡气回肠，心动不如行动" />
 
+    <View
+        android:id="@+id/goods_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        app:layout_constraintTop_toBottomOf="@+id/goods_description" />
 
 </com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>

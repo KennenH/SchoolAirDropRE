@@ -17,7 +17,6 @@ import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentB
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
@@ -30,7 +29,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import org.jetbrains.annotations.NotNull;
 
-public class HomeNewsFragment extends BaseChildFragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseStateViewModel.OnRequestListener, MainActivity.OnLoginStateChangedListener {
+public class HomeNewsFragment extends BaseChildFragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseStateViewModel.OnRequestListener, MainActivity.OnLoginStateChangedListener, MainActivity.OnLocationListener {
     private HomeNewsFragmentViewModel homeContentFragmentViewModel;
 
     private SmartRefreshLayout mRefresh;
@@ -56,15 +55,10 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         mFragmentNum = getArguments() != null ? getArguments().getInt(ConstantUtil.FRAGMENT_NUM) : 0;
-        if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setOnLoginActivityListener(this);
 
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setOnLocationListener(this);
         }
-
-        // todo 此处没必要通过父fragment来接受main activity的回调
-        //  可以直接监听main activity获取定位，就像上面的接口监听一样
-        if (getParentFragment() instanceof BaseParentFragment)
-            ((BaseParentFragment) getParentFragment()).setOnLocationCallbackListener(this);
     }
 
     @Nullable
@@ -93,6 +87,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
 
         mManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        mEndlessRecyclerView.setPadding(SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f));
         mEndlessRecyclerView.setLayoutManager(mManager);
         mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(1f)));
         mHomeNewsRecyclerAdapter = new HomeNewsRecyclerAdapter();
@@ -107,15 +102,6 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         mManager.invalidateSpanAssignments();
         mEndlessRecyclerView.invalidateItemDecorations();
         mHomeNewsRecyclerAdapter.notifyDataSetChanged();
-    }
-
-
-    /**
-     * main activity 登录回调
-     */
-    @Override
-    public void onLoginStateChanged(@NotNull Bundle bundle) {
-
     }
 
     /**
@@ -138,7 +124,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     }
 
     @Override
-    public void onLocationError() {
+    public void onPermissionDenied() {
         showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 
@@ -167,5 +153,10 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     @Override
     public void onError() {
         showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+    }
+
+    @Override
+    public void onLoginStateChanged(@NotNull Bundle bundle) {
+
     }
 }

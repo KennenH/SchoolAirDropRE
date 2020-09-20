@@ -14,9 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.amap.api.location.AMapLocation;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
@@ -26,10 +26,8 @@ import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
-import org.jetbrains.annotations.NotNull;
-
 public class HomeNearbyFragment extends BaseChildFragment
-        implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseParentFragment.OnLocationCallbackListener, BaseStateViewModel.OnRequestListener, MainActivity.OnLoginStateChangedListener {
+        implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseStateViewModel.OnRequestListener, MainActivity.OnLocationListener {
     private HomeNearbyFragmentViewModel homeContentFragmentViewModel;
 
     private SmartRefreshLayout mRefresh;
@@ -40,6 +38,7 @@ public class HomeNearbyFragment extends BaseChildFragment
 
     private int mFragmentNum;
     private Bundle bundle;
+    private DomainUserInfo.DataBean info;
     private DomainAuthorize token;
 
     public static HomeNearbyFragment newInstance(Bundle bundle) {
@@ -57,11 +56,10 @@ public class HomeNearbyFragment extends BaseChildFragment
 
         mFragmentNum = bundle.getInt(ConstantUtil.FRAGMENT_NUM, 0);
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
 
-        if (getParentFragment() instanceof BaseParentFragment)
-            ((BaseParentFragment) getParentFragment()).setOnLocationCallbackListener(this);
         if (getActivity() instanceof MainActivity)
-            ((MainActivity) getActivity()).setOnLoginActivityListener(this);
+            ((MainActivity) getActivity()).setOnLocationListener(this);
     }
 
     @Nullable
@@ -87,17 +85,8 @@ public class HomeNearbyFragment extends BaseChildFragment
         mEndlessRecyclerView.setLayoutManager(manager);
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 
-        mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter();
+        mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter(info);
         mEndlessRecyclerView.setAdapter(mHomeNearbyRecyclerAdapter);
-    }
-
-    /**
-     * 来自{@link MainActivity}的登录状态回调
-     */
-    @Override
-    public void onLoginStateChanged(@NotNull Bundle bundle) {
-        this.bundle = bundle;
-        token = (DomainAuthorize) this.bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
     }
 
     /**
@@ -124,7 +113,7 @@ public class HomeNearbyFragment extends BaseChildFragment
     }
 
     @Override
-    public void onLocationError() {
+    public void onPermissionDenied() {
         showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 

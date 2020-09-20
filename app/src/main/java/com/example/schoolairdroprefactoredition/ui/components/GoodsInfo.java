@@ -9,6 +9,7 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsDetailBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 public class GoodsInfo extends ShimmerFrameLayout {
@@ -28,6 +29,14 @@ public class GoodsInfo extends ShimmerFrameLayout {
         binding = ComponentGoodsDetailBinding.inflate(LayoutInflater.from(context), this, true);
     }
 
+    /**
+     * 是否隐藏页面最底部为三个按钮的留白
+     * 当为自己的物品时，三个按钮隐藏，留白也应该隐藏
+     */
+    public void hideBottom() {
+        binding.goodsBottom.setVisibility(GONE);
+    }
+
     public void setData(DomainGoodsInfo.DataBean data) {
         if (data != null) {
             try {
@@ -43,9 +52,13 @@ public class GoodsInfo extends ShimmerFrameLayout {
                     binding.goodsName.setText(data.getGoods_name());
 
                 binding.goodsPrice.setPrice(data.getGoods_price());
-                binding.goodsAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path());
-                binding.goodsUserName.setText(data.getSeller_info().getUname());
                 binding.goodsDescription.setText(data.getGoods_description());
+                binding.goodsPager.setData(MyUtil.getArrayFromString(data.getGoods_img_set()));
+
+                if (data.getSeller_info() != null) {
+                    binding.goodsAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path());
+                    binding.goodsUserName.setText(data.getSeller_info().getUname());
+                } else binding.goodsSellerInfo.setVisibility(GONE);
             } catch (NullPointerException e) {
                 LogUtils.d("goods info null");
             } finally {

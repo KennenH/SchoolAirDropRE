@@ -37,7 +37,6 @@ public class SellingFragment extends SSBBaseFragment {
             mLoading.setVisibility(View.VISIBLE);
             viewModel.getSelling(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
                 mLoading.setVisibility(View.GONE);
-
                 mList = data.getData();
                 mAdapter.setList(mList);
             });

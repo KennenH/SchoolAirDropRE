@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
 import com.example.schoolairdroprefactoredition.ui.components.GoodsPrice;
 import com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages;
@@ -19,8 +20,12 @@ import org.jetbrains.annotations.NotNull;
  * 附近在售列表的adapter
  */
 public class HomeNearbyRecyclerAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseViewHolder> {
-    public HomeNearbyRecyclerAdapter() {
+
+    private DomainUserInfo.DataBean myInfo;
+
+    public HomeNearbyRecyclerAdapter(DomainUserInfo.DataBean myInfo) {
         super(R.layout.item_home_goods_info);
+        this.myInfo = myInfo;
     }
 
     @Override
@@ -35,7 +40,8 @@ public class HomeNearbyRecyclerAdapter extends BaseQuickAdapter<DomainGoodsInfo.
                 holder.setText(R.id.item_seller, data.getSeller_info().getUname());
                 TextViewWithImages title = holder.findView(R.id.item_title);
                 ImageView credit = holder.findView(R.id.item_credit);
-                holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), data));
+
+                holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), data, myInfo));
 
                 if (negotiable && secondHand)
                     title.setText(getContext().getResources().getString(R.string.itemNSs, data.getGoods_name()));

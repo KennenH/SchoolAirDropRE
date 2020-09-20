@@ -4,8 +4,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
-import com.example.schoolairdroprefactoredition.model.databean.TestSSBItemBean;
 import com.example.schoolairdroprefactoredition.ui.components.GoodsPrice;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -13,8 +13,12 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import org.jetbrains.annotations.NotNull;
 
 public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseViewHolder> {
-    public SSBAdapter() {
+
+    private DomainUserInfo.DataBean myInfo;
+
+    public SSBAdapter(DomainUserInfo.DataBean myInfo) {
         super(R.layout.item_ssb);
+        this.myInfo = myInfo;
     }
 
     @Override
@@ -34,8 +38,7 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
             ((GoodsPrice) holder.itemView.findViewById(R.id.ssb_item_price)).setPrice(bean.getGoods_price());
         }
 
-
-        holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), bean));
+        holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), bean, myInfo));
 
         holder.itemView.findViewById(R.id.ssb_item_more_action).setOnClickListener(v -> {
             // pop up more action window

@@ -5,31 +5,30 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsPagerBinding;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.lxj.xpopup.XPopup;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChangeListener {
 
-    private ViewPager mViewPager;
-    private List<String> mData = new ArrayList<>();
+    private List<Object> mData = new ArrayList<>();
 
     private ComponentGoodsPagerBinding binding;
-    private LinearLayout mIndicatorContainer;
-    private TextView mCurrent;
-    private TextView mTotal;
 
     public GoodsPager(Context context) {
         this(context, null);
@@ -42,25 +41,23 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
     public GoodsPager(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         binding = ComponentGoodsPagerBinding.inflate(LayoutInflater.from(context), this, true);
-        mIndicatorContainer = findViewById(R.id.goods_pager_indicator);
-        mViewPager = findViewById(R.id.goods_pager_pager);
-        mCurrent = findViewById(R.id.goods_pager_current);
-        mTotal = findViewById(R.id.goods_pager_total);
 
-        mViewPager.addOnPageChangeListener(this);
         GoodsPagerAdapter mAdapter = new GoodsPagerAdapter();
-        mViewPager.setAdapter(mAdapter);
+        binding.goodsPagerPager.addOnPageChangeListener(this);
+        binding.goodsPagerPager.setAdapter(mAdapter);
     }
 
     public void setData(List<String> data) {
         if (data.size() < 2)
-            mIndicatorContainer.setVisibility(GONE);
+            binding.goodsPagerIndicator.setVisibility(GONE);
         else
-            mIndicatorContainer.setVisibility(VISIBLE);
+            binding.goodsPagerIndicator.setVisibility(VISIBLE);
 
-        mData = data;
-        if (mViewPager.getAdapter() != null)
-            mViewPager.getAdapter().notifyDataSetChanged();
+        for (String pic : data)
+            mData.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + pic);
+
+        if (binding.goodsPagerPager.getAdapter() != null)
+            binding.goodsPagerPager.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -70,7 +67,7 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
 
     @Override
     public void onPageSelected(int position) {
-        mCurrent.setText(String.valueOf(position + 1));
+        binding.goodsPagerCurrent.setText(String.valueOf(position + 1));
     }
 
     @Override
@@ -82,7 +79,7 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
         @Override
         public int getCount() {
             int size = mData.size();
-            mTotal.setText(getContext().getString(R.string.indicator, size));
+            binding.goodsPagerTotal.setText(getContext().getString(R.string.indicator, size));
             return size;
         }
 
@@ -94,13 +91,21 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            SimpleDraweeView pic = new SimpleDraweeView(getContext());
-            pic.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + mData.get(position));
-//            Glide.with(getContext())
-//                    .load(mData.get(position))
-//                    .centerCrop()
-//                    .placeholder(R.drawable.logo_placeholder)
-//                    .into(pic);
+            final ImageView pic = new ImageView(getContext());
+            pic.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+            Glide.with(pic)
+                    .load((String) mData.get(position))
+                    .apply(new RequestOptions().placeholder(R.drawable.logo_placeholder).override(Target.SIZE_ORIGINAL))
+                    .into(pic);
+
+            pic.setOnClickListener(v -> new XPopup.Builder(getContext())
+                    .asImageViewer(pic, position, mData, false, false, -1, -1, -1, true, (popupView, position1) -> {
+                        binding.goodsPagerPager.setCurrentItem(position1, false);
+                        popupView.updateSrcView((ImageView) binding.goodsPagerPager.getChildAt(position1));
+                    }, new MyUtil.ImageLoader())
+                    .show());
+
             if (pic.getParent() instanceof ViewGroup)
                 ((ViewGroup) pic.getParent()).removeView(pic);
 

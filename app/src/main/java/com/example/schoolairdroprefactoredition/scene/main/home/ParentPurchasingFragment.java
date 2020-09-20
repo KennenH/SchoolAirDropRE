@@ -23,7 +23,7 @@ import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 
-public class ParentPurchasingFragment extends BaseParentFragment implements View.OnClickListener, MainActivity.OnLocationListener {
+public class ParentPurchasingFragment extends BaseParentFragment implements View.OnClickListener {
 
     public static ParentPurchasingFragment newInstance(Bundle bundle) {
         ParentPurchasingFragment fragment = new ParentPurchasingFragment();
@@ -35,7 +35,6 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getActivity() != null && getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).setOnLocationListener(ParentPurchasingFragment.this);
             ((MainActivity) getActivity()).autoLogin();
         }
     }
@@ -64,9 +63,6 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
         return binding.getRoot();
     }
 
-    /**
-     * {@link BaseParentFragment#mOnLocationCallbackListener}
-     */
     @Override
     public void onClick(View v) {
         int id = v.getId();
