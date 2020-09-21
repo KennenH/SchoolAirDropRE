@@ -13,31 +13,10 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.github.ybq.android.spinkit.SpinKitView
-                android:id="@+id/loading"
-                style="@style/SpinKitView.FadingCircle"
-                android:layout_width="@dimen/home_item_image"
-                android:layout_height="@dimen/home_item_image"
-                app:SpinKit_Color="@color/primaryText"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/nothing"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawablePadding="@dimen/general_padding_larger"
-                android:gravity="center"
-                android:text="@string/nothingThere"
-                android:textSize="@dimen/textSizeLarge"
-                android:visibility="gone"
-                app:drawableTopCompat="@drawable/ic_empty"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
+                android:id="@+id/place_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/ssb_recycler"

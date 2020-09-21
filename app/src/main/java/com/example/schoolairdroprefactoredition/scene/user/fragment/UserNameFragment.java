@@ -19,13 +19,13 @@ import androidx.lifecycle.ViewModelProvider;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
-import com.example.schoolairdroprefactoredition.scene.user.UserNameViewModel;
+import com.example.schoolairdroprefactoredition.scene.user.ResultViewModel;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 @Deprecated
 public class UserNameFragment extends Fragment implements View.OnClickListener, TextWatcher {
 
-    private UserNameViewModel viewModel;
+    private ResultViewModel viewModel;
 
     private String name = "";
 
@@ -59,7 +59,7 @@ public class UserNameFragment extends Fragment implements View.OnClickListener, 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_user_name, container, false);
-        viewModel = new ViewModelProvider(this).get(UserNameViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ResultViewModel.class);
 
         mClear = root.findViewById(R.id.user_name_clear);
         mEditor = root.findViewById(R.id.user_name_editor);

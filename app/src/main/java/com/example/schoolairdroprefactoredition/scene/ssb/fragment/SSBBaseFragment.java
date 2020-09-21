@@ -20,7 +20,8 @@ import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewMod
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.github.ybq.android.spinkit.SpinKitView;
+import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.lxj.xpopup.impl.LoadingPopupView;
 
 import java.util.List;
 
@@ -28,10 +29,9 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
 
     protected SSBViewModel viewModel;
 
-    protected RecyclerView mRecycler;
     protected SSBAdapter mAdapter;
     protected SSBFilter mFilter;
-    protected SpinKitView mLoading;
+    protected LoadingPopupView mLoading;
 
     protected List<DomainGoodsInfo.DataBean> mList;
 
@@ -59,29 +59,40 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
         viewModel = new ViewModelProvider(this).get(SSBViewModel.class);
         viewModel.setOnRequestListener(this);
 
-        mLoading = binding.loading;
-        mRecycler = binding.ssbRecycler;
-        mRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        binding.ssbRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
 
+        mLoading = MyUtil.loading(getContext());
         mFilter = new SSBFilter(getContext());
-        mAdapter = new SSBAdapter(info);
+        mAdapter = new SSBAdapter(bundle);
 
         mFilter.setOnFilterListener(this);
         mAdapter.addHeaderView(mFilter);
-        mRecycler.setAdapter(mAdapter);
+        binding.ssbRecycler.setAdapter(mAdapter);
 
         init(binding);
 
         return binding.getRoot();
     }
 
-    protected void init(FragmentSsbBinding binding) {
+    protected void showLoading() {
+        if (mLoading == null)
+            mLoading = MyUtil.loading(getContext());
+        mLoading.show();
+    }
 
+    protected void dismissLoading() {
+        if (mLoading != null)
+            mLoading.dismiss();
+    }
+
+    /**
+     * 子fragment初始化方法
+     */
+    protected void init(FragmentSsbBinding binding) {
     }
 
     @Override
     public void onError() {
-        mLoading.setVisibility(View.GONE);
     }
 
     @Override

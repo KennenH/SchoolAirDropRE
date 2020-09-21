@@ -2,7 +2,6 @@ package com.example.schoolairdroprefactoredition.scene.ssb.fragment;
 
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -31,21 +30,18 @@ public class BoughtFragment extends SSBBaseFragment {
     protected void init(FragmentSsbBinding binding) {
         setHasOptionsMenu(false);
         if (token != null) {
-            mLoading.setVisibility(View.VISIBLE);
             viewModel.getBought(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
-                mLoading.setVisibility(View.GONE);
-
                 mList = data.getData();
                 mAdapter.setList(data.getData());
 
-                if (mList.size() == 0)
-                    binding.nothing.setVisibility(View.VISIBLE);
-                else
-                    binding.nothing.setVisibility(View.GONE);
+                if (mList.size() == 0) {
+
+                } else {
+                }
             });
         }
 
-        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.ssbRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (getActivity() instanceof SSBActivity)

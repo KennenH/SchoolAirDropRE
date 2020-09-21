@@ -130,8 +130,9 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
         bundle = intent.getExtras();
         if (bundle != null) {
             userInfo = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
-            if (userInfo != null)
-                mAlipay.setDescription(getString(R.string.loggedIn, userInfo.getUname()));
+            if (userInfo != null) {
+                validateState();
+            }
         }
     }
 

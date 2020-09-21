@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.scene.main.home;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.amap.api.location.AMapLocation;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
@@ -45,6 +46,10 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
 
     private static boolean requested = false; // 只在第一个新闻页加载时询问权限
 
+    private Bundle bundle;
+    private DomainUserInfo.DataBean info;
+    private DomainAuthorize token;
+
     public static HomeNewsFragment newInstance(Bundle bundle) {
         HomeNewsFragment fragment = new HomeNewsFragment();
         fragment.setArguments(bundle);
@@ -52,13 +57,16 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     }
 
     @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        mFragmentNum = getArguments() != null ? getArguments().getInt(ConstantUtil.FRAGMENT_NUM) : 0;
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bundle = getArguments();
+        if (bundle == null) bundle = new Bundle();
+        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        mFragmentNum = bundle.getInt(ConstantUtil.FRAGMENT_NUM, 0);
 
-        if (getActivity() instanceof MainActivity) {
+        if (getActivity() instanceof MainActivity)
             ((MainActivity) getActivity()).setOnLocationListener(this);
-        }
     }
 
     @Nullable
@@ -98,12 +106,6 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         });
     }
 
-    private void invalidateDecoration() {
-        mManager.invalidateSpanAssignments();
-        mEndlessRecyclerView.invalidateItemDecorations();
-        mHomeNewsRecyclerAdapter.notifyDataSetChanged();
-    }
-
     /**
      * 来自父Fragment{@link ParentNewsFragment}的定位回调
      */
@@ -115,9 +117,12 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
 
                 // 定位成功时才设置观察者
                 homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
-                    showContentContainer();
-                    mHomeNewsRecyclerAdapter.setList(data);
-                    invalidateDecoration();
+                    if (data == null || data.size() == 0) {
+                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
+                    } else {
+                        mHomeNewsRecyclerAdapter.setList(data);
+                        showContentContainer();
+                    }
                 });
             } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
         } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
@@ -125,7 +130,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
 
     @Override
     public void onPermissionDenied() {
-        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+        showPlaceHolder(StatePlaceHolder.TYPE_DENIED);
     }
 
     @Override
@@ -133,7 +138,6 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         if (mLocation != null) {
             homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
                 mHomeNewsRecyclerAdapter.setList(data);
-                invalidateDecoration();
                 showContentContainer();
                 refreshLayout.finishRefresh();
             });
@@ -144,7 +148,6 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     public void autoLoadMore(EndlessRecyclerView recycler) {
         homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
             mHomeNewsRecyclerAdapter.addData(data);
-            invalidateDecoration();
             showContentContainer();
             recycler.finishLoading();
         });

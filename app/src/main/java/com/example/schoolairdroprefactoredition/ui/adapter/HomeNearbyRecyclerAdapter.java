@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
@@ -7,7 +8,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
 import com.example.schoolairdroprefactoredition.ui.components.GoodsPrice;
 import com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages;
@@ -21,11 +21,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class HomeNearbyRecyclerAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseViewHolder> {
 
-    private DomainUserInfo.DataBean myInfo;
+    private Bundle bundle;
 
-    public HomeNearbyRecyclerAdapter(DomainUserInfo.DataBean myInfo) {
+    public HomeNearbyRecyclerAdapter(Bundle bundle) {
         super(R.layout.item_home_goods_info);
-        this.myInfo = myInfo;
+        this.bundle = bundle;
     }
 
     @Override
@@ -41,7 +41,7 @@ public class HomeNearbyRecyclerAdapter extends BaseQuickAdapter<DomainGoodsInfo.
                 TextViewWithImages title = holder.findView(R.id.item_title);
                 ImageView credit = holder.findView(R.id.item_credit);
 
-                holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), data, myInfo));
+                holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), bundle, data));
 
                 if (negotiable && secondHand)
                     title.setText(getContext().getResources().getString(R.string.itemNSs, data.getGoods_name()));

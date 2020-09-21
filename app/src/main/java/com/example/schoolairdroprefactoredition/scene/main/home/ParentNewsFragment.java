@@ -64,10 +64,6 @@ public class ParentNewsFragment extends BaseParentFragment
         return binding.getRoot();
     }
 
-
-    /**
-     * {@link BaseParentFragment#mOnLocationCallbackListener}
-     */
     @Override
     public void onClick(View v) {
         int id = v.getId();

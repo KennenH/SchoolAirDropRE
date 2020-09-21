@@ -84,6 +84,25 @@ public interface Api {
                                    @Part MultipartBody.Part price);
 
     /**
+     * 发起一个报价请求
+     *
+     * @param goodsID    物品id
+     * @param quotePrice 报价价格
+     */
+    @FormUrlEncoded
+    @POST("goods/quoteRequest")
+    Call<DomainResult> quoteRequest(@Header("Authorization") String token, @Field("goods_id") String goodsID, @Field("quote_price") String quotePrice);
+
+    /**
+     * 收藏物品
+     *
+     * @param goodsID 物品id
+     */
+    @FormUrlEncoded
+    @POST("goods/favorite")
+    Call<DomainResult> favorite(@Header("Authorization") String token, @Field("goods_id") int goodsID);
+
+    /**
      * 搜索关键字物品
      */
     @FormUrlEncoded

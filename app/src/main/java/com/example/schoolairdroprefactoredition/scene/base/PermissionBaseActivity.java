@@ -1,18 +1,15 @@
 package com.example.schoolairdroprefactoredition.scene.base;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
-import android.util.Log;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 
 import com.blankj.utilcode.constant.PermissionConstants;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.lxj.xpopup.XPopup;
@@ -224,59 +221,6 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
         }
     }
 
-//
-//    /**
-//     * 检查是否拥有定位权限
-//     * 若无则请求权限
-//     *
-//     * @param type 请求类型 one of {@link RequestType#AUTO} {@link RequestType#MANUAL}
-//     */
-//    public void requestLocationPermission(@RequestType int type) {
-//        int request = type == RequestType.AUTO ? Automatically.LOCATION : Manually.LOCATION;
-//        int finalPermission = checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION);
-//        int coarsePermission = checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION);
-//        if (finalPermission != PERMISSION_GRANTED
-//                || coarsePermission != PERMISSION_GRANTED) {
-//            requestPermissions(new String[]
-//                    {Manifest.permission.ACCESS_FINE_LOCATION
-//                            , Manifest.permission.ACCESS_COARSE_LOCATION}, request);
-//        } else locationGranted();
-//    }
-//
-//
-//    /**
-//     * {@link Automatically}
-//     * 检查是否有相机权限
-//     *
-//     * @param type 请求类型 one of {@link RequestType#AUTO} {@link RequestType#MANUAL}
-//     */
-//    public void requestCameraPermission(@RequestType int type) {
-//        int request = type == RequestType.AUTO ? Automatically.LOCATION : Manually.LOCATION;
-//        int permission = checkSelfPermission(Manifest.permission.CAMERA);
-//        if (permission != PERMISSION_GRANTED) {
-//            requestPermissions(new String[]
-//                    {Manifest.permission.CAMERA}, request);
-//        } else cameraGranted();
-//    }
-//
-//    /**
-//     * {@link Automatically}
-//     * 检查是否有相册权限
-//     *
-//     * @param type 请求类型 one of {@link RequestType#AUTO} {@link RequestType#MANUAL}
-//     */
-//    public void requestAlbumPermission(@RequestType int type) {
-//        int request = type == RequestType.AUTO ? Automatically.LOCATION : Manually.LOCATION;
-//        int readPermission = checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE);
-//        int writePermission = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-//        if (readPermission != PERMISSION_GRANTED
-//                || writePermission != PERMISSION_GRANTED) {
-//            requestPermissions(new String[]
-//                    {Manifest.permission.READ_EXTERNAL_STORAGE
-//                            , Manifest.permission.WRITE_EXTERNAL_STORAGE}, request);
-//        } else albumGranted();
-//    }
-
     /**
      * 请求码类型
      * {@link Automatically} 自动
@@ -340,32 +284,4 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
      */
     protected void albumDenied() {
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-//                                           @NonNull int[] grantResults) {
-//        // 定位权限
-//        if (requestCode == Automatically.LOCATION || requestCode == Manually.LOCATION) {
-//            if (grantResults.length > 0) {
-//                if (grantResults[0] == PERMISSION_GRANTED) locationGranted();
-//                else locationDenied();
-//            }
-//        }
-//
-//        // 相机权限
-//        else if (requestCode == Automatically.CAMERA || requestCode == Manually.CAMERA) {
-//            if (grantResults.length > 0) {
-//                if (grantResults[0] == PERMISSION_GRANTED) cameraGranted();
-//                else cameraDenied();
-//            }
-//        }
-//
-//        // 相册权限
-//        else if (requestCode == Automatically.ALBUM || requestCode == Manually.ALBUM) {
-//            if (grantResults.length > 0) {
-//                if (grantResults[0] == PERMISSION_GRANTED) albumGranted();
-//                else albumDenied();
-//            }
-//        }
-//    }
 }

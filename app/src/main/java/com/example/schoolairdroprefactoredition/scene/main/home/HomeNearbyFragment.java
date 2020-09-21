@@ -85,7 +85,7 @@ public class HomeNearbyFragment extends BaseChildFragment
         mEndlessRecyclerView.setLayoutManager(manager);
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 
-        mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter(info);
+        mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter(bundle);
         mEndlessRecyclerView.setAdapter(mHomeNearbyRecyclerAdapter);
     }
 
@@ -96,25 +96,25 @@ public class HomeNearbyFragment extends BaseChildFragment
     public void onLocated(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
-                showContentContainer();
                 mLocation = aMapLocation;
 
-                if (token != null)
+                if (token != null) {
                     homeContentFragmentViewModel.getGoodsInfo(token.getAccess_token(), 1, aMapLocation.getLongitude(), aMapLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
-                        if (data == null || data.size() == 0) {
+                        if (data.size() == 0) {
                             showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
                         } else {
                             mHomeNearbyRecyclerAdapter.setList(data);
                             showContentContainer();
                         }
                     });
+                } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
             } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
         } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 
     @Override
     public void onPermissionDenied() {
-        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+        showPlaceHolder(StatePlaceHolder.TYPE_DENIED);
     }
 
     @Override
@@ -122,14 +122,15 @@ public class HomeNearbyFragment extends BaseChildFragment
         if (mLocation != null) { // 定位信息不为null时
             if (token != null)
                 homeContentFragmentViewModel.getGoodsInfo(token.getAccess_token(), 1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+                    refreshLayout.finishRefresh();
                     if (data.size() == 0) {
                         showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
                     } else {
                         mHomeNearbyRecyclerAdapter.setList(data);
                         showContentContainer();
                     }
-                    refreshLayout.finishRefresh();
                 });
+            else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
         } else { // 定位失败时通知父Fragment显示PlaceHolder
             refreshLayout.finishRefresh();
             showPlaceHolder(StatePlaceHolder.TYPE_ERROR);

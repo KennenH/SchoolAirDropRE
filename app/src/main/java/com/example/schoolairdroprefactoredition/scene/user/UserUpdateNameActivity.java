@@ -33,7 +33,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
         }
     }
 
-    private UserNameViewModel viewModel;
+    private ResultViewModel viewModel;
 
     private EditText mInput;
     private TextView mTitle;
@@ -50,7 +50,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_selling_add_set);
-        viewModel = new ViewModelProvider(this).get(UserNameViewModel.class);
+        viewModel = new ViewModelProvider(this).get(ResultViewModel.class);
 
         setSupportActionBar(findViewById(R.id.toolbar));
 

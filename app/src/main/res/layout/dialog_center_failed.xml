@@ -7,6 +7,6 @@
 
     <TextView
         style="@style/DialogText"
-        android:text="@string/operationFailed"
+        android:text="@string/dialogFailed"
         app:drawableTopCompat="@drawable/ic_failed_nowrap" />
 </LinearLayout>

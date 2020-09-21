@@ -3,17 +3,17 @@ package com.example.schoolairdroprefactoredition.scene.user;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.schoolairdroprefactoredition.presenter.callback.IUserNameCallback;
+import com.example.schoolairdroprefactoredition.presenter.callback.IResultCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.UserNameImpl;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 
-public class UserNameViewModel extends BaseStateViewModel implements IUserNameCallback {
+public class ResultViewModel extends BaseStateViewModel implements IResultCallback {
 
     private MutableLiveData<Boolean> mRenameResult = new MutableLiveData<>();
 
     private UserNameImpl userNameImpl;
 
-    public UserNameViewModel() {
+    public ResultViewModel() {
         userNameImpl = new UserNameImpl();
         userNameImpl.registerCallback(this);
     }
@@ -24,8 +24,8 @@ public class UserNameViewModel extends BaseStateViewModel implements IUserNameCa
     }
 
     @Override
-    public void onResult(boolean success) {
-        mRenameResult.postValue(success);
+    public void onSuccess() {
+        mRenameResult.postValue(true);
     }
 
     @Override

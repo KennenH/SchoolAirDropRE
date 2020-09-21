@@ -4,8 +4,8 @@ import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
-import com.example.schoolairdroprefactoredition.presenter.IUserNamePresenter;
-import com.example.schoolairdroprefactoredition.presenter.callback.IResultCallback;
+import com.example.schoolairdroprefactoredition.presenter.IGoodsPresenter;
+import com.example.schoolairdroprefactoredition.presenter.callback.IGoodsCallback;
 
 import java.net.HttpURLConnection;
 
@@ -14,22 +14,21 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class UserNameImpl implements IUserNamePresenter {
-
-    private IResultCallback mCallback;
+public class GoodsImpl implements IGoodsPresenter {
+    private IGoodsCallback mCallback;
 
     @Override
-    public void rename(String token, String name) {
+    public void quoteRequest(String token, String goodsID, String quotePrice) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainResult> task = api.updateUserName(token, name);
+        Call<DomainResult> task = api.quoteRequest(token, goodsID, quotePrice);
         task.enqueue(new Callback<DomainResult>() {
             @Override
             public void onResponse(Call<DomainResult> call, Response<DomainResult> response) {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
-                    DomainResult body = response.body();
-                    if (body != null && body.isSuccess())
-                        mCallback.onSuccess();
+                    DomainResult result = response.body();
+                    if (result != null && result.isSuccess())
+                        mCallback.onQuoteSuccess();
                     else
                         mCallback.onError();
                 }
@@ -38,20 +37,25 @@ public class UserNameImpl implements IUserNamePresenter {
             @Override
             public void onFailure(Call<DomainResult> call, Throwable t) {
                 mCallback.onError();
-                LogUtils.d("请求失败 -- > " + t.toString());
+                LogUtils.d(t.toString());
             }
         });
+    }
+
+    @Override
+    public void favorite(String token, int goodsID) {
+        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+        Api api = retrofit.create(Api.class);
 
     }
 
     @Override
-    public void registerCallback(IResultCallback callback) {
+    public void registerCallback(IGoodsCallback callback) {
         mCallback = callback;
     }
 
     @Override
-    public void unregisterCallback(IResultCallback callback) {
+    public void unregisterCallback(IGoodsCallback callback) {
         mCallback = null;
     }
-
 }

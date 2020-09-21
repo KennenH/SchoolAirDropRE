@@ -7,7 +7,7 @@
 
     <TextView
         style="@style/DialogText"
-        android:text="@string/operationUnknown"
+        android:text="@string/errorUnknown"
         app:drawableTopCompat="@drawable/ic_attention_nowrap" />
 
 </LinearLayout>

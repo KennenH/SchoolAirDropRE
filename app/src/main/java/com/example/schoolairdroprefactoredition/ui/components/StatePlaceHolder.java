@@ -20,15 +20,17 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
     public static final int TYPE_ERROR = 88;//状态 类型 错误
     public static final int TYPE_EMPTY = 99;//状态 类型 没有物品
     public static final int TYPE_DENIED = 11;//状态 类型 权限被拒
-    public static final int TYPE_NULL = 22;//状态 类型 空
+    public static final int TYPE_UNKNOWN = 22;//状态 类型 未知错误
 
     private static final int ICON_ERROR = R.drawable.ic_location_error;// 状态 图标 错误
     private static final int ICON_EMPTY = R.drawable.ic_empty;// 状态 图标 空
     private static final int ICON_DENIED = R.drawable.ic_reject;// 状态 图标 权限被拒
+    private static final int ICON_UNKNOWN = R.drawable.ic_error_unknown;// 状态 图标 未知错误
 
     private static final int TIP_ERROR = R.string.errorNetLocation;// 状态 提示 错误
     private static final int TIP_EMPTY = R.string.errorEmpty;// 状态 提示 空
     private static final int TIP_DENIED = R.string.permissionDenied;// 状态 提示 权限被拒
+    private static final int TIP_UNKNOWN = R.string.errorUnknown;// 状态 提示 未知错误
 
     private ImageView mIcon;
     private TextView mTip;
@@ -61,7 +63,7 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
         mRefresh.setOnClickListener(this);
         mAction.setOnClickListener(this);
 
-        setPlaceHolderType(TYPE_NULL);
+        setPlaceHolderType(TYPE_LOADING);
     }
 
     /**
@@ -70,6 +72,8 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
      * @param type {@link StatePlaceHolder#TYPE_EMPTY}
      *             {@link StatePlaceHolder#TYPE_LOADING}
      *             {@link StatePlaceHolder#TYPE_ERROR}
+     *             {@link StatePlaceHolder#TYPE_DENIED}
+     *             {@link StatePlaceHolder#TYPE_UNKNOWN}
      */
     public void setPlaceHolderType(int type) {
         this.type = type;
@@ -102,13 +106,22 @@ public class StatePlaceHolder extends ConstrainLayoutAuto implements View.OnClic
             mRefresh.setVisibility(GONE);
             mAction.setText(R.string.errorRetry);
             mAction.setVisibility(VISIBLE);
-        } else {
+        } else if (type == TYPE_LOADING) {
             // 正在加载
             mLoading.setVisibility(VISIBLE);
             mIcon.setVisibility(GONE);
             mTip.setVisibility(GONE);
             mRefresh.setVisibility(GONE);
             mAction.setVisibility(GONE);
+        } else {
+            // 未知错误
+            mLoading.setVisibility(GONE);
+            mIcon.setImageResource(ICON_UNKNOWN);
+            mIcon.setVisibility(VISIBLE);
+            mTip.setText(TIP_UNKNOWN);
+            mTip.setVisibility(VISIBLE);
+            mRefresh.setVisibility(VISIBLE);
+            mAction.setVisibility(INVISIBLE);
         }
     }
 

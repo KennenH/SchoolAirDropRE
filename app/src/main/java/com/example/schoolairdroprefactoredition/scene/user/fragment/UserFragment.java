@@ -148,7 +148,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
     @Override
     public void onAvatarClick(ImageView src) {
         new XPopup.Builder(getContext())
-                .asImageViewer(src, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), false, -1, -1, 50, false, new MyUtil.ImageLoader())
+                .asImageViewer(src, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), false, -1, -1, 50, true, new MyUtil.ImageLoader())
                 .show();
     }
 

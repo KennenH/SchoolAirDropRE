@@ -207,9 +207,9 @@
     <string name="unLogged">未登录</string>
     <string name="emptyOops">啊哦…\n还没有相似物品哦</string>
     <string name="nothingThere">空空如也…</string>
-    <string name="operationSuccess">操作成功</string>
-    <string name="operationFailed">出错啦</string>
-    <string name="operationUnknown">未知错误</string>
 
+    <string name="dialogSuccess">成功</string>
+    <string name="dialogFailed">出错啦</string>
+    <string name="errorUnknown">未知错误</string>
 
 </resources>

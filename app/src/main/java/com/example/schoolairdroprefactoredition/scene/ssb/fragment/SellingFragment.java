@@ -5,7 +5,6 @@ import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,15 +33,13 @@ public class SellingFragment extends SSBBaseFragment {
     protected void init(FragmentSsbBinding binding) {
         setHasOptionsMenu(true);
         if (token != null) {
-            mLoading.setVisibility(View.VISIBLE);
             viewModel.getSelling(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
-                mLoading.setVisibility(View.GONE);
                 mList = data.getData();
                 mAdapter.setList(mList);
             });
         }
 
-        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.ssbRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (getActivity() instanceof SSBActivity) {

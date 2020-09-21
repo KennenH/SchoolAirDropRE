@@ -7,7 +7,7 @@
 
     <TextView
         style="@style/DialogText"
-        android:text="@string/operationSuccess"
+        android:text="@string/dialogSuccess"
         app:drawableTopCompat="@drawable/ic_success_nowrap" />
 
 </LinearLayout>

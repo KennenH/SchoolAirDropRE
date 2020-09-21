@@ -60,6 +60,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     private SearchHistoryHeader mHistoryHeader;
 
+    private Bundle bundle;
     private DomainUserInfo.DataBean info;
     private DomainAuthorize token;
     private double longitude;
@@ -78,7 +79,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Bundle bundle = getArguments();
+        bundle = getArguments();
         if (bundle != null) {
             info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
             token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
@@ -127,7 +128,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     private void init() {
         mHistoryAdapter = new HeaderFooterOnlyRecyclerAdapter();
         mSuggestionAdapter = new SearchSuggestionRecyclerAdapter();
-        mResultAdapter = new HomeNearbyRecyclerAdapter(info);
+        mResultAdapter = new HomeNearbyRecyclerAdapter(bundle);
         mHistoryHeader = new SearchHistoryHeader(getContext());
         mHistory.setLayoutManager(new LinearLayoutManager(getContext()));
         mSuggestion.setLayoutManager(new LinearLayoutManager(getContext()));

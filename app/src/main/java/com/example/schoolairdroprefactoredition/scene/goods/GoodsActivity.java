@@ -12,48 +12,54 @@ import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivityGoodsBinding;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonDouble;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonSingle;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DecimalFilter;
+import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaeger.library.StatusBarUtil;
 
-public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonSingle.OnButtonClickListener, ButtonDouble.OnButtonClickListener {
+public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonSingle.OnButtonClickListener, ButtonDouble.OnButtonClickListener, BaseStateViewModel.OnRequestListener {
 
-    /**
-     * @param goodsInfo 当其中的seller_info为空时表明为在售列表，隐藏bottom
-     * @param myInfo    当为空时无法判断，因此不隐藏bottom
-     */
-    public static void start(Context context, DomainGoodsInfo.DataBean goodsInfo, DomainUserInfo.DataBean myInfo) {
+    public static void start(Context context, Bundle bundle, DomainGoodsInfo.DataBean goodsInfo) {
         Intent intent = new Intent(context, GoodsActivity.class);
+        intent.putExtras(bundle);
         intent.putExtra(ConstantUtil.KEY_GOODS_INFO, goodsInfo);
-        intent.putExtra(ConstantUtil.KEY_USER_INFO, myInfo);
         context.startActivity(intent);
     }
+
+    private GoodsViewModel viewModel;
 
     private ActivityGoodsBinding binding;
 
     private BottomSheetDialog dialog;
 
-    private DomainGoodsInfo.DataBean mGoodsInfo;
-    private DomainUserInfo.DataBean mMyInfo;
+    private Bundle bundle;
+    private DomainAuthorize token;
+    private DomainGoodsInfo.DataBean goodsInfo;
+    private DomainUserInfo.DataBean info;
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        viewModel = new ViewModelProvider(this).get(GoodsViewModel.class);
+        viewModel.setOnRequestListener(this);
         binding = ActivityGoodsBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
 
@@ -62,12 +68,15 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
         BarUtils.setNavBarColor(this, getColor(R.color.primary));
         setSupportActionBar(binding.goodsToolbar);
 
-        mGoodsInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
-        mMyInfo = (DomainUserInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_USER_INFO);
+        bundle = getIntent().getExtras();
+        if (bundle == null) bundle = new Bundle();
+        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        goodsInfo = (DomainGoodsInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_GOODS_INFO);
+        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
 
         hideActionButtonsIfMyGoods();
 
-        binding.goodsInfoContainer.setData(mGoodsInfo);
+        binding.goodsInfoContainer.setData(goodsInfo);
         binding.goodsButtonLeft.setOnButtonClickListener(this);
         binding.goodsButtonRight.setOnButtonClickListener(this);
     }
@@ -81,9 +90,9 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      * 卖家与个人信息不为空 但 卖家信息uid与个人信息uid不一致
      */
     private void hideActionButtonsIfMyGoods() {
-        if (mGoodsInfo != null && mMyInfo != null) {
-            DomainGoodsInfo.DataBean.SellerInfoBean seller = mGoodsInfo.getSeller_info();
-            if (seller == null || seller.getUid() == mMyInfo.getUid()) {
+        if (goodsInfo != null && info != null) {
+            DomainGoodsInfo.DataBean.SellerInfoBean seller = goodsInfo.getSeller_info();
+            if (seller == null || seller.getUid() == info.getUid()) {
                 binding.goodsButtonLeft.setVisibility(View.GONE);
                 binding.goodsButtonRight.setVisibility(View.GONE);
                 binding.goodsInfoContainer.hideBottom();
@@ -126,23 +135,29 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
 
                         @Override
                         public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
                         }
                     });
                 }
-
-            } catch (NullPointerException ignored) {
+            } catch (NullPointerException e) {
+                LogUtils.d("dialog null");
             }
         }
         dialog.show();
-
     }
 
     /**
      * 发起报价
      */
     private void quote(String input) {
-        LogUtils.d(input);
+        if (token != null && goodsInfo != null) {
+            showLoading();
+            viewModel.quoteRequest(token.getAccess_token(), goodsInfo.getGoods_id(), input)
+                    .observe(this, result -> {
+                        dismissLoading();
+                        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.SUCCESS);
+                    });
+        } else
+            MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.FAILED);
     }
 
     @Override
@@ -161,13 +176,16 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
 
     @Override
     public void onSecondButtonClick() {
-        // todo quote
         showQuoteDialog();
     }
 
     @Override
     public void onButtonClick() {
-        // todo chat with seller
         ChatActivity.start(this);
+    }
+
+    @Override
+    public void onError() {
+        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.FAILED);
     }
 }

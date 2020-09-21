@@ -1,12 +1,13 @@
 package com.example.schoolairdroprefactoredition.scene.ssb.fragment;
 
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
+import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 
 /**
@@ -23,23 +24,25 @@ public class SoldFragment extends SSBBaseFragment {
 
     @Override
     protected void init(FragmentSsbBinding binding) {
+
+        if (getActivity() instanceof MainActivity)
+            LogUtils.d("instanceof main");
+
         setHasOptionsMenu(false);
         if (token != null) {
-            mLoading.setVisibility(View.VISIBLE);
             viewModel.getSold(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
-                mLoading.setVisibility(View.GONE);
-
                 mList = data.getData();
                 mAdapter.setList(mList);
 
-                if (mList.size() == 0)
-                    binding.nothing.setVisibility(View.VISIBLE);
-                else
-                    binding.nothing.setVisibility(View.GONE);
+                if (mList.size() == 0) {
+
+                } else {
+                }
+
             });
         }
 
-        mRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.ssbRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (getActivity() instanceof SSBActivity) {
