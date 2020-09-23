@@ -7,8 +7,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.Transformation;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
@@ -288,17 +286,16 @@ public class MyUtil {
      * 对话框类型
      */
     public @interface DIALOG_TYPE {
-        int SUCCESS = DIALOG_SUCCESS;
-        int FAILED = DIALOG_FAILED;
+        int SUCCESS = 123;
+        int FAILED = 234;
+        int ERROR_UNKNOWN = 345;
+        int ERROR_NETWORK = 456;
     }
-
-    public static final int DIALOG_SUCCESS = 123;
-    public static final int DIALOG_FAILED = 321;
 
     /**
      * 在屏幕中央显示消息提示对话框
      *
-     * @param type one of {@link DIALOG_TYPE#DIALOG_SUCCESS} {@link DIALOG_TYPE#DIALOG_FAILED}
+     * @param type one of {@link DIALOG_TYPE}
      */
     public static void showCenterDialog(Context context, @DIALOG_TYPE int type) {
         new XPopup.Builder(context).asCustom(new BasePopupView(context) {
@@ -309,6 +306,8 @@ public class MyUtil {
                         return R.layout.dialog_center_success;
                     case DIALOG_TYPE.FAILED:
                         return R.layout.dialog_center_failed;
+                    case DIALOG_TYPE.ERROR_NETWORK:
+                        return R.layout.dialog_center_error_network;
                     default:
                         return R.layout.dialog_center_attention;
                 }
@@ -347,71 +346,4 @@ public class MyUtil {
     public static void exitAnimDown(Activity activity) {
         activity.overridePendingTransition(0, R.anim.popexit_y_fragment);
     }
-
-
-    /**
-     * View 从上至下展开动画
-     *
-     * @param v
-     */
-    public static void expand(final View v) {
-        int matchParentMeasureSpec = View.MeasureSpec.makeMeasureSpec(((View) v.getParent()).getWidth(), View.MeasureSpec.EXACTLY);
-        int wrapContentMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-        v.measure(matchParentMeasureSpec, wrapContentMeasureSpec);
-        final int targetHeight = v.getMeasuredHeight();
-
-        // Older versions of android (pre API 21) cancel animations for views with a height of 0.
-        v.getLayoutParams().height = 1;
-        v.setVisibility(View.VISIBLE);
-        Animation a = new Animation() {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                v.getLayoutParams().height = interpolatedTime == 1
-                        ? ViewGroup.LayoutParams.WRAP_CONTENT
-                        : (int) (targetHeight * interpolatedTime);
-                v.requestLayout();
-            }
-
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-//        a.setDuration((int)(targetHeight / v.getContext().getResources().getDisplayMetrics().density)); //Expansion speed of 1dp/ms
-        a.setDuration(300);
-        v.startAnimation(a);
-    }
-
-    /**
-     * View 由下至上折叠动画
-     *
-     * @param v
-     */
-    public static void collapse(final View v) {
-        final int initialHeight = v.getMeasuredHeight();
-
-        Animation a = new Animation() {
-            @Override
-            protected void applyTransformation(float interpolatedTime, Transformation t) {
-                if (interpolatedTime == 1) {
-                    v.setVisibility(View.GONE);
-                } else {
-                    v.getLayoutParams().height = initialHeight - (int) (initialHeight * interpolatedTime);
-                    v.requestLayout();
-                }
-            }
-
-            @Override
-            public boolean willChangeBounds() {
-                return true;
-            }
-        };
-
-        // Collapse speed of 1dp/ms
-//        a.setDuration((int)(initialHeight / v.getContext().getResources().getDisplayMetrics().density));
-        a.setDuration(300);
-        v.startAnimation(a);
-    }
-
 }

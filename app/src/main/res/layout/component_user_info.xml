@@ -57,7 +57,7 @@
         app:layout_constraintTop_toTopOf="@+id/user_name" />
 
     <TextView
-        android:id="@+id/user_description"
+        android:id="@+id/description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/general_padding_larger"
@@ -80,6 +80,6 @@
         android:textSize="12dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
-        app:layout_constraintTop_toBottomOf="@+id/user_description" />
+        app:layout_constraintTop_toBottomOf="@+id/description" />
 
 </com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>

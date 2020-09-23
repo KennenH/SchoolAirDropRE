@@ -26,6 +26,14 @@ public class ConstantUtil {
      */
     public static String SOB_API_BASE_URL = "https://api.sunofbeach.net/shop/";
 
+
+    /**
+     * 移动端接口密码
+     */
+    public static String CLIENT_GRANT_TYPE = "client_credentials";
+    public static String CLIENT_ID = "testclient";
+    public static String CLIENT_SECRET = "123456";
+
     /**
      * 校园空投 网络接口base url
      */

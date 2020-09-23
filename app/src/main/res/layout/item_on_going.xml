@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardCornerRadius="@dimen/general_padding"
@@ -11,15 +12,27 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button_rounded_white">
 
+        <TextView
+            android:id="@+id/on_going_header_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/general_padding_large"
+            android:layout_marginTop="@dimen/general_padding_bit_larger"
+            android:text="等待交付"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSizeNormal"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/on_going_img"
             android:layout_width="85dp"
             android:layout_height="85dp"
-            android:layout_marginStart="@dimen/general_padding"
-            android:layout_marginTop="@dimen/general_padding"
+            android:layout_marginStart="@dimen/general_padding_large"
+            android:layout_marginTop="@dimen/general_padding_bit_larger"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/on_going_header_title"
             app:placeholderImage="@drawable/bg_item_img_placeholder"
             app:roundedCornerRadius="@dimen/general_padding_tiny" />
 
@@ -27,8 +40,8 @@
             android:id="@+id/on_going_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/general_padding"
-            android:layout_marginEnd="@dimen/general_padding"
+            android:layout_marginStart="@dimen/general_padding_large"
+            android:layout_marginEnd="@dimen/general_padding_large"
             android:ellipsize="end"
             android:gravity="center_vertical|start"
             android:lines="2"
@@ -43,10 +56,10 @@
             android:id="@+id/on_going_price_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="成交价"
+            android:text="@string/finalPrice"
             android:textSize="@dimen/textSizeMin"
             app:layout_constraintBottom_toTopOf="@id/on_going_price"
-            app:layout_constraintStart_toStartOf="@id/on_going_title"
+            app:layout_constraintEnd_toEndOf="@+id/on_going_title"
             app:layout_constraintTop_toBottomOf="@+id/on_going_title"
             app:layout_constraintVertical_chainStyle="spread" />
 
@@ -55,7 +68,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/on_going_img"
-            app:layout_constraintStart_toStartOf="@+id/on_going_title"
+            app:layout_constraintEnd_toEndOf="@+id/on_going_price_text"
             app:layout_constraintTop_toBottomOf="@+id/on_going_price_text" />
 
         <TextView
@@ -69,52 +82,40 @@
             android:paddingBottom="@dimen/general_padding_tiny"
             android:text="@string/remainingTime"
             android:textColor="@color/black"
-            android:textSize="@dimen/textSizeMin"
-            app:layout_constraintBottom_toBottomOf="@id/on_going_price"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/on_going_price_text" />
+            android:textSize="@dimen/textSizeNormal"
+            android:textStyle="bold"
+            app:layout_constraintBaseline_toBaselineOf="@id/on_going_header_title"
+            app:layout_constraintEnd_toEndOf="@+id/on_going_title" />
 
-        <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/on_going_user_avatar"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="@dimen/general_padding"
-            android:layout_marginBottom="@dimen/general_padding"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@id/on_going_img"
-            app:layout_constraintTop_toBottomOf="@+id/on_going_img"
-            app:placeholderImage="@drawable/bg_item_img_placeholder"
-            app:roundedCornerRadius="@dimen/general_padding_tiny" />
 
         <TextView
             android:id="@+id/on_going_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/general_padding_small"
-            android:text="校园空投"
+            android:text="@string/app_name"
             android:textSize="@dimen/textSizeNormal"
-            app:layout_constraintBottom_toBottomOf="@+id/on_going_user_avatar"
-            app:layout_constraintStart_toEndOf="@+id/on_going_user_avatar"
-            app:layout_constraintTop_toTopOf="@+id/on_going_user_avatar" />
+            app:layout_constraintBottom_toBottomOf="@+id/on_going_contact"
+            app:layout_constraintStart_toStartOf="@+id/on_going_img"
+            app:layout_constraintTop_toTopOf="@+id/on_going_contact" />
 
 
         <TextView
             android:id="@+id/on_going_contact"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/general_padding"
-            android:layout_marginBottom="@dimen/general_padding"
-            android:background="@drawable/button_rounded_theme_dark"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:layout_marginBottom="@dimen/general_padding_large"
+            android:background="@drawable/button_rounded_theme"
             android:paddingStart="@dimen/general_padding"
             android:paddingTop="@dimen/general_padding_small"
             android:paddingEnd="@dimen/general_padding"
             android:paddingBottom="@dimen/general_padding_small"
-            android:text="发送消息"
+            android:text="@string/SendMessage"
             android:textColor="@color/white"
             android:textSize="@dimen/textSizeNormal"
-            app:layout_constraintBottom_toBottomOf="@id/on_going_user_avatar"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/on_going_title"
-            app:layout_constraintTop_toTopOf="@id/on_going_user_avatar" />
+            app:layout_constraintTop_toBottomOf="@+id/on_going_img" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

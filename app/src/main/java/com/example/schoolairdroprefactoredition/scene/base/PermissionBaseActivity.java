@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.base;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
@@ -61,11 +60,9 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                         return;
                     }
 
-//                     拒绝并不再提醒
-                    if (deniedForever.size() != 0) {
-                        if (type == RequestType.MANUAL)
-                            popUpToSettingsForPermission(finalRes, permission);
-                    } else if (denied.size() != 0) {
+                    if (deniedForever.size() != 0 && type == RequestType.MANUAL) {// 拒绝并不再提醒
+                        popUpToSettingsForPermission(finalRes, permission);
+                    } else if (denied.size() != 0) { // 拒绝但未勾选不再提醒
                         popUpForRequestPermission(finalRes, permission);
                     }
 
@@ -84,27 +81,6 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                     }
                 })
                 .request();
-    }
-
-    private void popUpForRequestPermission(Activity activity, @StringRes int res, PermissionUtils.OnRationaleListener.ShouldRequest shouldRequest) {
-//        int request = 0;
-//        switch (permission) {
-//            case PermissionConstants.LOCATION:
-//                request = Automatically.LOCATION;
-//                break;
-//            case PermissionConstants.CAMERA:
-//                request = Automatically.CAMERA;
-//                break;
-//            case PermissionConstants.STORAGE:
-//                request = Automatically.ALBUM;
-//                break;
-//            default:
-//                break;
-//        }
-        new XPopup.Builder(activity).asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
-                , () -> shouldRequest.again(true),
-                () -> shouldRequest.again(false), false)
-                .show();
     }
 
     private void popUpForRequestPermission(@StringRes int res, @PermissionConstants.Permission String permission) {

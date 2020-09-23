@@ -24,7 +24,13 @@ public class QuoteRecyclerAdapter extends BaseQuickAdapter<TestQuoteSectionItemB
         holder.itemView.findViewById(R.id.user_name).setOnClickListener(v -> {
             // todo 以用户唯一标识号为参数开启用户个人信息页面
         });
-        holder.itemView.findViewById(R.id.detail).setOnClickListener(v -> {
+        holder.itemView.findViewById(R.id.quote_accept).setOnClickListener(v -> {
+
+        });
+        holder.itemView.findViewById(R.id.quote_refuse).setOnClickListener(v -> {
+
+        });
+        holder.itemView.setOnClickListener(v -> {
             // todo 以报价单唯一标识号为参数开启报价详情页面
             QuoteDetailActivity.start(getContext());
         });

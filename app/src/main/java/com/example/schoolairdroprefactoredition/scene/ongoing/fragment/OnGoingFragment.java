@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.databinding.FragmentRecyclerBinding;
 import com.example.schoolairdroprefactoredition.model.databean.TestOnGoingBean;
 import com.example.schoolairdroprefactoredition.ui.adapter.OnGoingRecyclerAdapter;
@@ -58,13 +59,13 @@ public class OnGoingFragment extends Fragment {
         if (index == PAGE_UNPAID) {
             viewModel.getUnPaid().observe(getViewLifecycleOwner(), unpaid -> {
                 mAdapter.setList(unpaid);
-                mRecycler.addItemDecoration(new MarginItemDecoration());
+                mRecycler.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(8), false));
                 mAdapter.notifyDataSetChanged();
             });
         } else {
             viewModel.getUnDelivered().observe(getViewLifecycleOwner(), undelivered -> {
                 mAdapter.setList(undelivered);
-                mRecycler.addItemDecoration(new MarginItemDecoration());
+                mRecycler.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(8), false));
                 mAdapter.notifyDataSetChanged();
             });
         }

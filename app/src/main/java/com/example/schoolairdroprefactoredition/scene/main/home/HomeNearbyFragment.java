@@ -13,15 +13,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.location.AMapLocation;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
@@ -36,27 +33,13 @@ public class HomeNearbyFragment extends BaseChildFragment
 
     private AMapLocation mLocation = null;
 
-    private int mFragmentNum;
-    private Bundle bundle;
-    private DomainUserInfo.DataBean info;
-    private DomainAuthorize token;
-
-    public static HomeNearbyFragment newInstance(Bundle bundle) {
-        HomeNearbyFragment fragment = new HomeNearbyFragment();
-        fragment.setArguments(bundle);
-        return fragment;
+    public static HomeNearbyFragment newInstance() {
+        return new HomeNearbyFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bundle = getArguments();
-        if (bundle == null)
-            bundle = new Bundle();
-
-        mFragmentNum = bundle.getInt(ConstantUtil.FRAGMENT_NUM, 0);
-        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
 
         if (getActivity() instanceof MainActivity)
             ((MainActivity) getActivity()).setOnLocationListener(this);
@@ -81,33 +64,30 @@ public class HomeNearbyFragment extends BaseChildFragment
 
     private void initRecycler() {
         mRefresh.setOnRefreshListener(this);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, mFragmentNum == ConstantUtil.FRAGMENT_NUM_NEWS);
+        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         mEndlessRecyclerView.setLayoutManager(manager);
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 
-        mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter(bundle);
+        mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter(getBundle());
         mEndlessRecyclerView.setAdapter(mHomeNearbyRecyclerAdapter);
     }
 
     /**
-     * 来自父Fragment {@link ParentPurchasingFragment}的定位回调
+     * 来自 {@link MainActivity}的定位回调
      */
     @Override
     public void onLocated(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
                 mLocation = aMapLocation;
-
-                if (token != null) {
-                    homeContentFragmentViewModel.getGoodsInfo(token.getAccess_token(), 1, aMapLocation.getLongitude(), aMapLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
-                        if (data.size() == 0) {
-                            showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
-                        } else {
-                            mHomeNearbyRecyclerAdapter.setList(data);
-                            showContentContainer();
-                        }
-                    });
-                } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+                homeContentFragmentViewModel.getGoodsInfo(1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+                    if (data.size() == 0)
+                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME);
+                    else {
+                        mHomeNearbyRecyclerAdapter.setList(data);
+                        showContentContainer();
+                    }
+                });
             } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
         } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
@@ -120,17 +100,15 @@ public class HomeNearbyFragment extends BaseChildFragment
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (mLocation != null) { // 定位信息不为null时
-            if (token != null)
-                homeContentFragmentViewModel.getGoodsInfo(token.getAccess_token(), 1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
-                    refreshLayout.finishRefresh();
-                    if (data.size() == 0) {
-                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
-                    } else {
-                        mHomeNearbyRecyclerAdapter.setList(data);
-                        showContentContainer();
-                    }
-                });
-            else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+            homeContentFragmentViewModel.getGoodsInfo(1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+                refreshLayout.finishRefresh();
+                if (data.size() == 0) {
+                    showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME);
+                } else {
+                    mHomeNearbyRecyclerAdapter.setList(data);
+                    showContentContainer();
+                }
+            });
         } else { // 定位失败时通知父Fragment显示PlaceHolder
             refreshLayout.finishRefresh();
             showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
@@ -155,6 +133,6 @@ public class HomeNearbyFragment extends BaseChildFragment
 
     @Override
     public void onError() {
-        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+        showPlaceHolder(StatePlaceHolder.TYPE_UNKNOWN);
     }
 }

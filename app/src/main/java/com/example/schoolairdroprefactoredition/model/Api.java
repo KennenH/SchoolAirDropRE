@@ -32,7 +32,7 @@ public interface Api {
      */
     @FormUrlEncoded
     @POST("goods/getNearByGoods")
-    Call<DomainGoodsInfo> getGoodsInfo(@Header("Authorization") String token, @Field("longitude") Double longitude, @Field("latitude") Double latitude);
+    Call<DomainGoodsInfo> getGoodsInfo(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("longitude") Double longitude, @Field("latitude") Double latitude);
 
 //    @FormUrlEncoded
 //    @POST("paster/getGroundPaster")

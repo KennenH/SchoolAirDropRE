@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.os.Build;
 import android.view.View;
 
 import androidx.annotation.NonNull;
@@ -26,9 +25,8 @@ public class QuoteDecoration extends RecyclerView.ItemDecoration {
 
     private static final float WIDTH_PERCENT = 0.75f;
     private float headerHeight;
-    private float padding;
-    private final float fontSize = SizeUtils.sp2px(12);
-    private final float gap = SizeUtils.dp2px(8f);
+    private final float fontSize = SizeUtils.dp2px(14);
+    private final float gap = SizeUtils.dp2px(8);
 
     private String unprocessed;
     private String processed;
@@ -43,17 +41,15 @@ public class QuoteDecoration extends RecyclerView.ItemDecoration {
 
         unprocessed = context.getResources().getString(R.string.unprocessedSub, unhandled);
         processed = context.getResources().getString(R.string.processedSub, handled);
-        headerHeight = context.getResources().getDimension(R.dimen.toolbar_icon_bit_larger);
-        padding = context.getResources().getDimension(R.dimen.general_padding);
-        mHeaderPaint.setColor(context.getResources().getColor(R.color.primary));
+        headerHeight = context.getResources().getDimension(R.dimen.icon_normal);
+        mHeaderPaint.setColor(context.getResources().getColor(R.color.primary, context.getTheme()));
         mDecorationPaint.setStrokeWidth(gap);
         mDecorationPaint.setColor(Color.WHITE);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            mTextPaint.setColor(context.getResources().getColor(R.color.primaryText, context.getTheme()));
-        else
-            mTextPaint.setColor(context.getResources().getColor(R.color.primaryText));
+        mTextPaint.setColor(context.getResources().getColor(R.color.primaryText, context.getTheme()));
         mTextPaint.setTextSize(fontSize);
+        mTextPaint.setColor(Color.BLACK);
+        mTextPaint.setFakeBoldText(true);
         mTextPaint.setAntiAlias(true);
     }
 
@@ -64,13 +60,14 @@ public class QuoteDecoration extends RecyclerView.ItemDecoration {
         if (pos == 0 || pos == unhandled)
             outRect.top = (int) headerHeight;
         else
-            outRect.top = (int) gap;
+            outRect.top = (int) gap * 2;
 
-        if (pos == parent.getChildCount() - 1)
-            outRect.bottom = (int) gap;
+        if (parent.getAdapter() != null &&
+                pos == parent.getAdapter().getItemCount() - 1)
+            outRect.bottom = (int) gap * 2;
 
-        outRect.right = (int) gap;
-        outRect.left = (int) gap;
+        outRect.right = (int) gap * 2;
+        outRect.left = (int) gap * 2;
     }
 
     @Override
@@ -84,7 +81,7 @@ public class QuoteDecoration extends RecyclerView.ItemDecoration {
                 float top = child.getTop();
                 String curText = pos == 0 ? unprocessed : processed;
                 c.drawRect(parent.getLeft(), top - headerHeight, parent.getRight(), top, mHeaderPaint);
-                c.drawText(curText, parent.getLeft() + padding, top - headerHeight / 2f + fontSize / 2f, mTextPaint);
+                c.drawText(curText, parent.getLeft() + gap * 2, top - headerHeight / 2f + fontSize / 2f, mTextPaint);
             }
         }
     }

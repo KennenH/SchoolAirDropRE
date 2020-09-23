@@ -6,6 +6,7 @@ import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IHomeGoodsInfoPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeGoodsInfoCallback;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 import java.net.HttpURLConnection;
 
@@ -22,10 +23,10 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
      * 请求附近在售的数据
      */
     @Override
-    public void getNearbyGoods(String token, int page, double longitude, double latitude) {
+    public void getNearbyGoods(int page, double longitude, double latitude) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainGoodsInfo> task = api.getGoodsInfo(token, 120.31219 , 30.124445);
+        Call<DomainGoodsInfo> task = api.getGoodsInfo(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, longitude, latitude);
         task.enqueue(new Callback<DomainGoodsInfo>() {
             @Override
             public void onResponse(Call<DomainGoodsInfo> call, Response<DomainGoodsInfo> response) {
@@ -38,14 +39,14 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
 //                    e.printStackTrace();
 //                }
 
-//                LogUtils.d("longitude -- > " + longitude + " latitude -- > " + latitude);
                 if (code == HttpURLConnection.HTTP_OK) {
                     if (info != null && info.isSuccess()) {
                         mCallback.onNearbyGoodsLoaded(info.getData());
                     } else
                         mCallback.onError();
-                } else
+                } else {
                     mCallback.onError();
+                }
             }
 
             @Override

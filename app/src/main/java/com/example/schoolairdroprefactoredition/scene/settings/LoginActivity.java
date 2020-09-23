@@ -5,12 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.ImageView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
@@ -19,17 +16,16 @@ import com.blankj.utilcode.util.ClickUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.NetworkUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.ActivityLoggedInBinding;
+import com.example.schoolairdroprefactoredition.databinding.ActivityLoginBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
-import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.impl.LoadingPopupView;
 
 public class LoginActivity extends ImmersionStatusBarActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, BaseStateViewModel.OnRequestListener {
-
     public static final int LOGIN = 1212;// 请求码 网络登录请求
 
     /**
@@ -54,28 +50,11 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
             MyUtil.startAnimUp((AppCompatActivity) context);
     }
 
-    private CheckBox mCheck;
-    private TextView mLogin;
-    private TextView mCancel;
+    private ActivityLoginBinding binding;
 
     private LoginViewModel viewModel;
 
-    private LoadingPopupView mLoading;
-
     private Intent intent;
-
-    private NetworkUtils.OnNetworkStatusChangedListener networkStatusListener = new NetworkUtils.OnNetworkStatusChangedListener() {
-        @Override
-        public void onDisconnected() {
-            showToast(getString(R.string.connectionLost));
-            dismissPopup();
-        }
-
-        @Override
-        public void onConnected(NetworkUtils.NetworkType networkType) {
-
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,46 +65,39 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
 
         // 已登录时
         if (info != null) {
-            setContentView(R.layout.activity_logged_in);
-
-            final TextView alipay = findViewById(R.id.user_name);
-            final ImageView close = findViewById(R.id.close);
+            final ActivityLoggedInBinding binding = ActivityLoggedInBinding.inflate(LayoutInflater.from(this));
+            setContentView(binding.getRoot());
 
             final String phone = info.getUalipay();
             final String priPhone = phone.substring(0, 3).concat("****").concat(phone.substring(7));
 
             final boolean[] isPri = {true};
 
-            alipay.setText(priPhone);
-            alipay.setOnClickListener(v -> {
-                alipay.setText(isPri[0] ? phone : priPhone);
+            binding.userName.setText(priPhone);
+            binding.userName.setOnClickListener(v -> {
+                binding.userName.setText(isPri[0] ? phone : priPhone);
                 isPri[0] = !isPri[0];
             });
 
-            close.setOnClickListener(v -> {
+            binding.close.setOnClickListener(v -> {
                 finish();
                 MyUtil.exitAnimDown(this);
             });
 
-            ClickUtils.applyPressedViewAlpha(close, 0.6f);
+            ClickUtils.applyPressedViewAlpha(binding.close, 0.6f);
         }
         // 尚未登录
         else {
-            setContentView(R.layout.activity_login);
+            binding = ActivityLoginBinding.inflate(LayoutInflater.from(this));
+            setContentView(binding.getRoot());
             viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
             viewModel.setOnRequestListener(this);
 
-            mCheck = findViewById(R.id.checkbox);
-            mLogin = findViewById(R.id.login_with_alipay);
-            mCancel = findViewById(R.id.cancel);
-
-            mLogin.setEnabled(false);
-            mCancel.setOnClickListener(this);
-            mCheck.setOnCheckedChangeListener(this);
-            mCheck.setSelected(false);
-            mLogin.setOnClickListener(this);
-
-            mLoading = new XPopup.Builder(this).asLoading();
+            binding.loginWithAlipay.setEnabled(false);
+            binding.cancel.setOnClickListener(this);
+            binding.checkbox.setOnCheckedChangeListener(this);
+            binding.checkbox.setSelected(false);
+            binding.loginWithAlipay.setOnClickListener(this);
 
             intent = getIntent();
         }
@@ -143,14 +115,12 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
         int id = v.getId();
         if (id == R.id.login_with_alipay) {
             // 请求公钥与sessionID
-            showPopup();
-
+            showLoading();
             if (NetworkUtils.isConnected()) {
-                NetworkUtils.registerNetworkStatusChangedListener(networkStatusListener);
                 loginWithAlipay();
             } else {
-                showToast(getString(R.string.networkUnavailable));
-                dismissPopup();
+                MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.ERROR_NETWORK);
+                dismissLoading();
             }
 
         } else if (id == R.id.cancel) {
@@ -169,13 +139,11 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
         viewModel.getPublicKey().observe(this, key -> {
             // 将加密的数据post回去请求token
             viewModel.authorizeWithAlipayID(key.getCookie()
-                    , "client_credentials"
-                    , "testclient"
-                    , "123456"
                     , "19858120611"
                     , key.getPublic_key()).observe(this, token -> {
-                dismissPopup();
+                dismissLoading();
 
+                // todo comment this when release
                 LogUtils.d("token -- > " + token.toString());
 
                 // token
@@ -191,50 +159,29 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
     private void getUserInfoWithToken() {
         DomainAuthorize token = (DomainAuthorize) getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
         if (token != null) {
-            showPopup();
-
+            showLoading();
             viewModel.getUserInfo(token.getAccess_token()).observe(this, info -> {
                 DomainUserInfo.DataBean userInfo = info.getData().get(0);
                 // token换取的user info
                 intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo);
 
                 setResult(Activity.RESULT_OK, intent);
-                NetworkUtils.unregisterNetworkStatusChangedListener(networkStatusListener);
-
-                dismissPopup();
+                dismissLoading();
 
                 finish();
                 MyUtil.exitAnimDown(this);
             });
-        }
-    }
-
-    private void showToast(String info) {
-        Toast.makeText(this, info, Toast.LENGTH_SHORT).show();
-    }
-
-    /**
-     * 取消加载动画
-     */
-    private void dismissPopup() {
-        if (mLoading != null) mLoading.dismiss();
-    }
-
-    /**
-     * 加载动画
-     */
-    private void showPopup() {
-        if (mLoading != null) mLoading.show();
+        } else MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.ERROR_UNKNOWN);
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        mLogin.setEnabled(isChecked);
+        binding.loginWithAlipay.setEnabled(isChecked);
     }
 
     @Override
     public void onError() {
-        dismissPopup();
+        dismissLoading();
     }
 
 }

@@ -7,17 +7,17 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.google.android.material.switchmaterial.SwitchMaterial;
+import com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto;
 
-public class SellingOption extends ConstraintLayout {
+public class SellingOption extends ConstrainLayoutAuto {
 
     private TextView mTitle;
     private TextView mDescription;
-    private SwitchMaterial mSwitch;
     private ImageView mArrow;
+    private SwitchCompat mSwitch;
 
     private boolean isSwitch = false;
     private boolean isShowArrow = false;
@@ -36,6 +36,11 @@ public class SellingOption extends ConstraintLayout {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.component_selling_add_new, this, true);
 
+        mTitle = findViewById(R.id.title);
+        mDescription = findViewById(R.id.description);
+        mArrow = findViewById(R.id.arrow);
+        mSwitch = findViewById(R.id.swi);
+
         initAttrs(context, attrs);
         init();
     }
@@ -53,11 +58,6 @@ public class SellingOption extends ConstraintLayout {
     }
 
     private void init() {
-        mTitle = findViewById(R.id.title);
-        mDescription = findViewById(R.id.user_description);
-        mArrow = findViewById(R.id.arrow);
-        mSwitch = findViewById(R.id.swi);
-
         if (isSwitch) {
             mSwitch.setVisibility(VISIBLE);
             mDescription.setVisibility(GONE);
@@ -74,8 +74,8 @@ public class SellingOption extends ConstraintLayout {
         }
 
         if (title != null && !title.equals("")) mTitle.setText(title);
-        if (description != null && !description.equals("")) mDescription.setText(description);
-
+        if (description != null && !description.equals(""))
+            mDescription.setText(description);
     }
 
     public CharSequence getText() {

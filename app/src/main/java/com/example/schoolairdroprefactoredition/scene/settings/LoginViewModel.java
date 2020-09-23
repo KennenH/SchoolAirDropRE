@@ -16,6 +16,8 @@ public class LoginViewModel extends BaseStateViewModel implements ILoginCallback
     private MutableLiveData<DomainAuthorize> mAuthorizedSession = new MutableLiveData<>();
     private MutableLiveData<DomainUserInfo> mUserInfo = new MutableLiveData<>();
 
+    private OnLoginErrorListener mOnLoginErrorListener;
+
     private LoginImpl loginImpl;
 
     public LoginViewModel() {
@@ -32,8 +34,8 @@ public class LoginViewModel extends BaseStateViewModel implements ILoginCallback
         return mAuthorizationKey;
     }
 
-    public LiveData<DomainAuthorize> authorizeWithAlipayID(String cookie, String grantType, String clientID, String clientSecret, String rawAlipay, String publicKey) {
-        loginImpl.postAlipayIDRSA(cookie, grantType, clientID, clientSecret, rawAlipay, publicKey);
+    public LiveData<DomainAuthorize> authorizeWithAlipayID(String cookie, String rawAlipay, String publicKey) {
+        loginImpl.postAlipayIDRSA(cookie, rawAlipay, publicKey);
         return mAuthorizedSession;
     }
 
@@ -63,14 +65,23 @@ public class LoginViewModel extends BaseStateViewModel implements ILoginCallback
     }
 
     @Override
+    public void onLoginError() {
+        if (mOnLoginErrorListener != null)
+            mOnLoginErrorListener.onLoginError();
+    }
+
+    public interface OnLoginErrorListener {
+        void onLoginError();
+    }
+
+    public void setOnLoginErrorListener(OnLoginErrorListener listener) {
+        mOnLoginErrorListener = listener;
+    }
+
+    @Override
     protected void onCleared() {
         loginImpl.unregisterCallback(this);
     }
 
-
-    @Override
-    public void onError() {
-
-    }
 
 }

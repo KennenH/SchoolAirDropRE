@@ -1,12 +1,12 @@
 package com.example.schoolairdroprefactoredition.scene.main.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -32,9 +32,17 @@ public class ParentNewsFragment extends BaseParentFragment
         return fragment;
     }
 
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (getActivity() instanceof MainActivity) {
+//            ((MainActivity) getActivity()).autoLogin();
+//        }
+//    }
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).autoLogin();
         }

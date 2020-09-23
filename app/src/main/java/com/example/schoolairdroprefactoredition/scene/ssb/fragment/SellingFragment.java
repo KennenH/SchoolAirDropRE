@@ -5,21 +5,21 @@ import android.os.SystemClock;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
-import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
+import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 /**
  * {@link SoldFragment}
  * {@link BoughtFragment}
  */
-public class SellingFragment extends SSBBaseFragment {
+public class SellingFragment extends SSBBaseFragment implements StatePlaceHolder.OnPlaceHolderRefreshListener {
 
     public static SellingFragment newInstance(Bundle bundle) {
         SellingFragment fragment = new SellingFragment();
@@ -32,23 +32,19 @@ public class SellingFragment extends SSBBaseFragment {
     @Override
     protected void init(FragmentSsbBinding binding) {
         setHasOptionsMenu(true);
-        if (token != null) {
-            viewModel.getSelling(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
-                mList = data.getData();
-                mAdapter.setList(mList);
-            });
-        }
-
-        binding.ssbRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (getActivity() instanceof SSBActivity) {
-                    ((SSBActivity) getActivity()).hideSearchBar();
-                }
-            }
-        });
+        getSelling();
     }
 
+    /**
+     * 网络请求在售物品
+     */
+    private void getSelling() {
+        if (token != null) { // 已登录
+            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
+            viewModel.getSelling(token.getAccess_token()).observe(getViewLifecycleOwner(), this::loadData);
+        } else // 未登录时
+            showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
+    }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
@@ -74,6 +70,11 @@ public class SellingFragment extends SSBBaseFragment {
     }
 
     @Override
+    public void onRetry(View view) {
+        getSelling();
+    }
+
+    @Override
     public void onFilterTimeAsc() {
         // 将data按时间正序排列
         /*
@@ -91,4 +92,5 @@ public class SellingFragment extends SSBBaseFragment {
     public void onFilterWatches() {
         // 将data按浏览量排序
     }
+
 }

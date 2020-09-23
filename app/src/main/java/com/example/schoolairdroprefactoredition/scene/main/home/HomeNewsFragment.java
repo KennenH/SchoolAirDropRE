@@ -13,8 +13,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.amap.api.location.AMapLocation;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
@@ -22,7 +20,6 @@ import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewMod
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
@@ -42,29 +39,15 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
 
     private AMapLocation mLocation;
 
-    private int mFragmentNum;
-
     private static boolean requested = false; // 只在第一个新闻页加载时询问权限
 
-    private Bundle bundle;
-    private DomainUserInfo.DataBean info;
-    private DomainAuthorize token;
-
-    public static HomeNewsFragment newInstance(Bundle bundle) {
-        HomeNewsFragment fragment = new HomeNewsFragment();
-        fragment.setArguments(bundle);
-        return fragment;
+    public static HomeNewsFragment newInstance() {
+        return new HomeNewsFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bundle = getArguments();
-        if (bundle == null) bundle = new Bundle();
-        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
-        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-        mFragmentNum = bundle.getInt(ConstantUtil.FRAGMENT_NUM, 0);
-
         if (getActivity() instanceof MainActivity)
             ((MainActivity) getActivity()).setOnLocationListener(this);
     }
@@ -97,7 +80,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         mManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         mEndlessRecyclerView.setPadding(SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f));
         mEndlessRecyclerView.setLayoutManager(mManager);
-        mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(1f)));
+        mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(1f),true));
         mHomeNewsRecyclerAdapter = new HomeNewsRecyclerAdapter();
         mEndlessRecyclerView.setAdapter(mHomeNewsRecyclerAdapter);
 
@@ -107,22 +90,20 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     }
 
     /**
-     * 来自父Fragment{@link ParentNewsFragment}的定位回调
+     * 来自{@link MainActivity}的定位回调
      */
     @Override
     public void onLocated(AMapLocation aMapLocation) {
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
                 mLocation = aMapLocation;
-
-                // 定位成功时才设置观察者
                 homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
-                    if (data == null || data.size() == 0) {
-                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
-                    } else {
-                        mHomeNewsRecyclerAdapter.setList(data);
-                        showContentContainer();
-                    }
+//                        if (data == null || data.size() == 0) {
+//                            showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME);
+//                        } else {
+                    mHomeNewsRecyclerAdapter.setList(data);
+                    showContentContainer();
+//                        }
                 });
             } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
         } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
@@ -155,7 +136,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
 
     @Override
     public void onError() {
-        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+        showPlaceHolder(StatePlaceHolder.TYPE_UNKNOWN);
     }
 
     @Override

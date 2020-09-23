@@ -17,8 +17,10 @@ import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
+import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
+import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.impl.LoadingPopupView;
@@ -33,6 +35,7 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
     protected SSBFilter mFilter;
     protected LoadingPopupView mLoading;
 
+    protected com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding;
     protected List<DomainGoodsInfo.DataBean> mList;
 
     protected Bundle bundle;
@@ -54,8 +57,7 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding
-                = com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding.inflate(inflater, container, false);
+        binding = com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(SSBViewModel.class);
         viewModel.setOnRequestListener(this);
 
@@ -68,21 +70,52 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
         mFilter.setOnFilterListener(this);
         mAdapter.addHeaderView(mFilter);
         binding.ssbRecycler.setAdapter(mAdapter);
+        binding.ssbRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (getActivity() instanceof SSBActivity)
+                    ((SSBActivity) getActivity()).hideSearchBar();
+            }
+        });
 
         init(binding);
-
         return binding.getRoot();
     }
 
-    protected void showLoading() {
-        if (mLoading == null)
-            mLoading = MyUtil.loading(getContext());
-        mLoading.show();
+    /**
+     * 子fragment在获取网络数据之后调用
+     */
+    protected void loadData(DomainGoodsInfo data) {
+        mList = data.getData();
+        if (mList.size() == 0)
+            showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
+        else {
+            mAdapter.setList(mList);
+            showContentContainer();
+        }
     }
 
-    protected void dismissLoading() {
-        if (mLoading != null)
-            mLoading.dismiss();
+    /**
+     * 显示placeholder
+     *
+     * @param type one of
+     *             {@link StatePlaceHolder#TYPE_LOADING}
+     *             {@link StatePlaceHolder#TYPE_EMPTY}
+     *             {@link StatePlaceHolder#TYPE_ERROR}
+     *             {@link StatePlaceHolder#TYPE_UNKNOWN}
+     */
+    protected void showPlaceHolder(int type) {
+        binding.placeHolder.setPlaceHolderType(type);
+        binding.placeHolder.setVisibility(View.VISIBLE);
+        binding.ssbRecycler.setVisibility(View.INVISIBLE);
+    }
+
+    /**
+     * 显示物品列表
+     */
+    protected void showContentContainer() {
+        binding.placeHolder.setVisibility(View.INVISIBLE);
+        binding.ssbRecycler.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -93,6 +126,7 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
 
     @Override
     public void onError() {
+        showPlaceHolder(StatePlaceHolder.TYPE_UNKNOWN);
     }
 
     @Override

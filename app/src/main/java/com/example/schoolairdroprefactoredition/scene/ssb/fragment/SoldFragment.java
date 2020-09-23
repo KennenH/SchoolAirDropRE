@@ -1,20 +1,16 @@
 package com.example.schoolairdroprefactoredition.scene.ssb.fragment;
 
 import android.os.Bundle;
+import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
-import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
-import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
+import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 
 /**
  * {@link SellingFragment}
  * {@link BoughtFragment}
  */
-public class SoldFragment extends SSBBaseFragment {
+public class SoldFragment extends SSBBaseFragment implements StatePlaceHolder.OnPlaceHolderRefreshListener {
 
     public static SoldFragment newInstance(Bundle bundle) {
         SoldFragment fragment = new SoldFragment();
@@ -24,32 +20,25 @@ public class SoldFragment extends SSBBaseFragment {
 
     @Override
     protected void init(FragmentSsbBinding binding) {
-
-        if (getActivity() instanceof MainActivity)
-            LogUtils.d("instanceof main");
-
         setHasOptionsMenu(false);
-        if (token != null) {
-            viewModel.getSold(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
-                mList = data.getData();
-                mAdapter.setList(mList);
+        binding.placeHolder.setOnPlaceHolderActionListener(this);
+        getSold();
+    }
 
-                if (mList.size() == 0) {
+    /**
+     * 网络请求已售物品
+     */
+    private void getSold() {
+        if (token != null) { // 已登录
+            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
+            viewModel.getSold(token.getAccess_token()).observe(getViewLifecycleOwner(), this::loadData);
+        } else // 未登录时
+            showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
+    }
 
-                } else {
-                }
-
-            });
-        }
-
-        binding.ssbRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (getActivity() instanceof SSBActivity) {
-                    ((SSBActivity) getActivity()).hideSearchBar();
-                }
-            }
-        });
+    @Override
+    public void onRetry(View view) {
+        getSold();
     }
 
     @Override
@@ -66,4 +55,5 @@ public class SoldFragment extends SSBBaseFragment {
     public void onFilterWatches() {
 
     }
+
 }

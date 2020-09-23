@@ -29,9 +29,9 @@ public class MarginItemDecoration extends RecyclerView.ItemDecoration {
 
     }
 
-    public MarginItemDecoration(int space) {
+    public MarginItemDecoration(int space, boolean isHome) {
         this.space = space;
-        isHome = true;
+        this.isHome = isHome;
     }
 
     @Override

@@ -39,7 +39,7 @@ public class UserHomeBaseInfo extends ConstraintLayout implements View.OnClickLi
         mAvatar = findViewById(R.id.user_avatar);
         mUserName = findViewById(R.id.user_name);
         mVerified = findViewById(R.id.verifyInfo);
-        mDescription = findViewById(R.id.user_description);
+        mDescription = findViewById(R.id.description);
         mJoinTime = findViewById(R.id.user_join_time);
 
         mAvatar.setOnClickListener(this);

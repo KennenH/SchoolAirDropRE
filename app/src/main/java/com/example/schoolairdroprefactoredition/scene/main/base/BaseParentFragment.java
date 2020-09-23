@@ -14,7 +14,7 @@ import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 
-public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnPlaceHolderActionListener {
+public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnPlaceHolderRefreshListener, StatePlaceHolder.OnHomePostItemListener {
 
     private StatePlaceHolder mPlaceHolder;
     private ViewPager mContentContainer;
@@ -37,13 +37,14 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
         mContentContainer = goodsContainer;
 
         mPlaceHolder.setOnPlaceHolderActionListener(this);
+        mPlaceHolder.setOnHomePostItemListener(this);
     }
 
     /**
      * 显示placeholder 隐藏recycler list
      *
      * @param type {@link StatePlaceHolder#TYPE_ERROR}
-     *             {@link StatePlaceHolder#TYPE_EMPTY}
+     *             {@link StatePlaceHolder#TYPE_EMPTY_HOME}
      */
     public void showPlaceholder(int type) {
         if (mPlaceHolder == null || mContentContainer == null)
@@ -70,7 +71,7 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
     }
 
     /**
-     * PlaceHolder动作回调{@link StatePlaceHolder.OnPlaceHolderActionListener}
+     * PlaceHolder动作回调{@link StatePlaceHolder.OnPlaceHolderRefreshListener}
      * 重试
      */
     @Override
@@ -82,11 +83,11 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
     }
 
     /**
-     * PlaceHolder动作回调{@link StatePlaceHolder.OnPlaceHolderActionListener}
+     * PlaceHolder动作回调{@link StatePlaceHolder.OnPlaceHolderRefreshListener}
      * 发布我的物品
      */
     @Override
-    public void onPostMyItem(View view) {
+    public void onHomePostMyItem(View view) {
         if (getActivity() instanceof MainActivity) {
             SellingAddNewActivity.start(getContext(), ((MainActivity) getActivity()).getBundle());
         } else MyUtil.showCenterDialog(getContext(), MyUtil.DIALOG_TYPE.FAILED);

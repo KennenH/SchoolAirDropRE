@@ -28,10 +28,7 @@ public class HomeNewsFragmentViewModel extends BaseStateViewModel implements IHo
 
     @Override
     public void onNewsLoaded(List<TestNewsItemBean> data) {
-        if (mHomeNews == null)
-            mHomeNews = new MutableLiveData<>();
-
-        mHomeNews.setValue(data);
+        mHomeNews.postValue(data);
     }
 
     @Override

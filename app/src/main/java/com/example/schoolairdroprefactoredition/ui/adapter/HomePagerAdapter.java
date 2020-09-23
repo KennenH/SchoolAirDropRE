@@ -18,24 +18,18 @@ public class HomePagerAdapter extends FragmentPagerAdapter {
 
     private int mIndex;
 
-    private Bundle bundle;
-
     public HomePagerAdapter(@NonNull FragmentManager fm, int behavior, int page) {
         super(fm, behavior);
         mIndex = page;
-    }
-
-    public void setBundle(Bundle bundle) {
-        this.bundle = bundle;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
         if (mIndex == HOME)
-            return HomeNewsFragment.newInstance(bundle);
+            return HomeNewsFragment.newInstance();
         else
-            return HomeNearbyFragment.newInstance(bundle);
+            return HomeNearbyFragment.newInstance();
     }
 
     @Override

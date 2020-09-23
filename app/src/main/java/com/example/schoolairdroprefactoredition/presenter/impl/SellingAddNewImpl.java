@@ -6,6 +6,9 @@ import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ISellingAddNewPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISellingAddNewCallback;
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewDraftCache;
+import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
+import com.luck.picture.lib.entity.LocalMedia;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,6 +27,7 @@ import retrofit2.Retrofit;
 public class SellingAddNewImpl implements ISellingAddNewPresenter {
 
     private ISellingAddNewCallback mCallback;
+    private JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
 
     @Override
     public void submit(String token, String cover, List<String> picSet,
@@ -77,7 +81,7 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
 //                            e.printStackTrace();
 //                        }
 
-                        mCallback.onResult(body);
+                        mCallback.onSubmitResult(body);
                 } else {
                     try {
                         LogUtils.d(response.errorBody().string());
@@ -94,6 +98,31 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
                 mCallback.onError();
             }
         });
+    }
+
+    @Override
+    public void save(String cover, List<LocalMedia> picSet, String title, String description, String price, boolean isQuotable, boolean isSecondHand) {
+        AddNewDraftCache draft = mJsonCacheUtil.getValue(AddNewDraftCache.ADD_NEW_DRAFT, AddNewDraftCache.class);
+        if (draft == null) draft = new AddNewDraftCache();
+        draft.setCover(cover);
+        draft.setPicSet(picSet);
+        draft.setTitle(title);
+        draft.setDescription(description);
+        draft.setPrice(price);
+        draft.setNegotiable(isQuotable);
+        draft.setSecondHand(isSecondHand);
+        mJsonCacheUtil.saveCache(AddNewDraftCache.ADD_NEW_DRAFT, draft);
+    }
+
+    @Override
+    public void deleteDraft() {
+        mJsonCacheUtil.saveCache(AddNewDraftCache.ADD_NEW_DRAFT, null);
+    }
+
+    @Override
+    public void recoverDraft() {
+        AddNewDraftCache draft = mJsonCacheUtil.getValue(AddNewDraftCache.ADD_NEW_DRAFT, AddNewDraftCache.class);
+        mCallback.onDraftRecovered(draft);
     }
 
     /**

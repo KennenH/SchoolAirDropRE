@@ -12,6 +12,7 @@ import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ILoginPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ILoginCallback;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.RSACoder;
 import com.example.schoolairdroprefactoredition.utils.UserLoginCacheUtils;
 
@@ -55,9 +56,11 @@ public class LoginImpl implements ILoginPresenter {
 
                     if (authorization != null)
                         authorization.setCookie(session);
+                    else {
+                        if (mCallback != null)
+                            mCallback.onLoginError();
+                    }
 //
-//                    Log.d("getPublicKey", authorization.toString());
-
                     if (mCallback != null)
                         mCallback.onPublicKeyGot(authorization);
                 } else {
@@ -67,13 +70,13 @@ public class LoginImpl implements ILoginPresenter {
 //                        e.printStackTrace();
 //                    }
 
-                    mCallback.onError();
+                    mCallback.onLoginError();
                 }
             }
 
             @Override
             public void onFailure(Call<DomainAuthorizeGet> call, Throwable t) {
-                mCallback.onError();
+                mCallback.onLoginError();
             }
         });
     }
@@ -81,18 +84,18 @@ public class LoginImpl implements ILoginPresenter {
     /**
      * 获取的公钥将Alipay id 加密后携带一系列参数post回去请求token
      *
-     * @param cookie       Header
-     * @param grantType    Field
-     * @param clientID     Field
-     * @param clientSecret Field
-     * @param rawAlipay    未加密的Alipay id
-     * @param publicKey    公钥
+     * @param cookie    Header
+     * @param rawAlipay 未加密的Alipay id
+     * @param publicKey 公钥
      */
     @Override
-    public void postAlipayIDRSA(String cookie, String grantType, String clientID, String clientSecret, String rawAlipay, String publicKey) {
+    public void postAlipayIDRSA(String cookie, String rawAlipay, String publicKey) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainAuthorize> task = api.authorize(cookie, grantType, clientID, clientSecret, RSACoder.encryptWithPublicKey(publicKey, rawAlipay));
+
+//        LogUtils.d(RSACoder.encryptWithPublicKey(publicKey, rawAlipay));
+
+        Call<DomainAuthorize> task = api.authorize(cookie, ConstantUtil.CLIENT_GRANT_TYPE, ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, RSACoder.encryptWithPublicKey(publicKey, rawAlipay));
         task.enqueue(new Callback<DomainAuthorize>() {
             @Override
             public void onResponse(Call<DomainAuthorize> call, Response<DomainAuthorize> response) {
@@ -101,8 +104,12 @@ public class LoginImpl implements ILoginPresenter {
                     DomainAuthorize authorization = response.body();
 
                     // token 有效期为一小时
-                    UserLoginCacheUtils.saveUserToken(authorization, 3600_000);
-
+                    if (authorization != null)
+                        UserLoginCacheUtils.saveUserToken(authorization, 3600_000);
+                    else {
+                        if (mCallback != null)
+                            mCallback.onLoginError();
+                    }
 //                    try {
 //                        Log.d("postAlipayIDRSA", "response.body.string -- > " + authorization.string());
 //                    } catch (IOException e) {
@@ -114,18 +121,18 @@ public class LoginImpl implements ILoginPresenter {
                     }
                 } else {
                     try {
-                        Log.d("postAlipayIDRSA", "请求错误 " + code + " response -- > " + response.errorBody().string());
+                        LogUtils.d(response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    mCallback.onError();
+                    mCallback.onLoginError();
                 }
             }
 
             @Override
             public void onFailure(Call<DomainAuthorize> call, Throwable t) {
                 LogUtils.d(t);
-                mCallback.onError();
+                mCallback.onLoginError();
             }
         });
     }
@@ -151,21 +158,21 @@ public class LoginImpl implements ILoginPresenter {
                         mCallback.onUserInfoLoaded(info);
                         UserLoginCacheUtils.saveUserInfo(info.getData().get(0));
                     } else
-                        mCallback.onError();
+                        mCallback.onLoginError();
                 } else {
                     try {
                         Log.d("getUserInfo", response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    mCallback.onError();
+                    mCallback.onLoginError();
                 }
             }
 
             @Override
             public void onFailure(Call<DomainUserInfo> call, Throwable t) {
                 Log.e("getUserInfo", "请求失败 -- > " + t);
-                mCallback.onError();
+                mCallback.onLoginError();
             }
         });
     }

@@ -17,20 +17,20 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
-import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
-import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
+import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginViewModel;
+import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
 
 /**
  * 设置的主页面
  */
-public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, BaseStateViewModel.OnRequestListener, SettingsActivity.OnLoginListener {
+public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, SettingsActivity.OnLoginListener, LoginViewModel.OnLoginErrorListener {
     public static final int LOGOUT = 1205; // 请求码 退出本地登录
 
     private LoginViewModel loginViewModel;
@@ -97,7 +97,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_home, container, false);
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-        loginViewModel.setOnRequestListener(this);
+        loginViewModel.setOnLoginErrorListener(this);
 
         mAlipay = root.findViewById(R.id.settings_home_alipay);
         mPrivacy = root.findViewById(R.id.settings_home_privacy);
@@ -201,8 +201,10 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     }
 
     @Override
-    public void onError() {
+    public void onLoginError() {
         if (mLoading != null)
             mLoading.dismiss();
+
+        MyUtil.showCenterDialog(getContext(), MyUtil.DIALOG_TYPE.FAILED);
     }
 }

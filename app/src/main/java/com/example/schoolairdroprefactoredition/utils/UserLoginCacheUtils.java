@@ -7,22 +7,6 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 
 public class UserLoginCacheUtils {
     private static JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
-
-    /**
-     * 保存用户上一次登录获取的用户token
-     * 以便下次用户在token有效期内登录时自动登录
-     *
-     * @param token 本次登录获取到的token
-     */
-    public static void saveUserToken(DomainAuthorize token) {
-        UserTokenCache userTokenCache = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache.class);
-
-        if (userTokenCache == null) userTokenCache = new UserTokenCache();
-
-        userTokenCache.setToken(token);
-        mJsonCacheUtil.saveCache(UserTokenCache.USER_TOKEN, userTokenCache);
-    }
-
     /**
      * 保存用户上一次登录获取的用户token
      * 以便下次用户在token有效期内登录时自动登录

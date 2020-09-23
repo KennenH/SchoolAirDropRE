@@ -19,8 +19,6 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.cache.UserInfoCache;
-import com.example.schoolairdroprefactoredition.cache.UserTokenCache;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
@@ -34,15 +32,16 @@ import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
+import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
 
 import me.jessyan.autosize.AutoSizeCompat;
 
-public class MainActivity extends PermissionBaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, AMapLocationListener {
-    private LoginViewModel viewModel;
+public class MainActivity extends PermissionBaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, AMapLocationListener, LoginViewModel.OnLoginErrorListener {
+    private LoginViewModel loginViewModel;
+    private TokenViewModel tokenViewModel;
 
     private FragmentManager mFragmentManager = getSupportFragmentManager();
 
@@ -58,8 +57,6 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
 
     private Bundle bundle = new Bundle();
 
-    private JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
-
     private static boolean autoLogged = false; // 标识是否已自动登录，防止多个子fragment多次调用
 
     @Override
@@ -67,9 +64,13 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        tokenViewModel = new ViewModelProvider(this).get(TokenViewModel.class);
+        loginViewModel.setOnLoginErrorListener(this);
 
-        initCache();
+        // 获取本地用户信息缓存
+        tokenViewModel.getTokenCaChe().observe(this, token -> bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, token));
+        tokenViewModel.getUserInfoCache().observe(this, info -> bundle.putSerializable(ConstantUtil.KEY_USER_INFO, info));
 
         // 添加新的tab时在此添加
         if (mHome == null) {
@@ -95,20 +96,6 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     }
 
     /**
-     * 检查是否存在用户信息缓存
-     */
-    private void initCache() {
-        UserTokenCache userTokenCache = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache.class);
-        UserInfoCache userInfoCache = mJsonCacheUtil.getValue(UserInfoCache.USER_INFO, UserInfoCache.class);
-
-        if (userTokenCache == null) userTokenCache = new UserTokenCache();
-        if (userInfoCache == null) userInfoCache = new UserInfoCache();
-
-        bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, userTokenCache.getToken());
-        bundle.putSerializable(ConstantUtil.KEY_USER_INFO, userInfoCache.getInfo());
-    }
-
-    /**
      * 在有本地用户token时自动登录
      * 如果获取本地token为空而用户基本信息仍有缓存则代表用户token已过期，将自动重新登录
      * <p>
@@ -117,15 +104,17 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     public void autoLogin() {
         if (!autoLogged) {
             autoLogged = true; // 已自动登录标识，防止多个子fragment调用此方法
-            UserTokenCache userTokenCache = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache.class);
-            UserInfoCache userInfoCache = mJsonCacheUtil.getValue(UserInfoCache.USER_INFO, UserInfoCache.class);
 
-            if (userTokenCache != null) // token 仍有效 直接使用token获取用户信息
-                autoLoginWithToken();
-            else if (userInfoCache != null) // token 已无效 使用本地缓存重新获取token后登录
-                autoReLoginWithCache();
-            else {// 从未登录
-            }
+            tokenViewModel.getTokenCaChe().observe(this, tokenCache -> {
+                if (tokenCache != null) { // token 仍有效 使用本地缓存重新获取token后登录
+                    autoLoginWithToken();
+                } else {
+                    tokenViewModel.getUserInfoCache().observe(this, infoCache -> {
+                        if (infoCache != null) // token 已无效 使用本地缓存重新获取token后登录
+                            autoReLoginWithCache();
+                    });
+                }
+            });
         }
     }
 
@@ -159,7 +148,8 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     @Override
     protected void locationDenied() {
         super.locationDenied();
-        mOnLocationListener.onPermissionDenied();
+        if (mOnLocationListener != null)
+            mOnLocationListener.onPermissionDenied();
     }
 
     private void showFragment(Fragment fragment) {
@@ -219,6 +209,12 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
         }
     }
 
+    @Override
+    public void onLoginError() {
+        dismissLoading();
+        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.FAILED);
+    }
+
     /**
      * 定位成功后的回调监听
      */
@@ -234,6 +230,8 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
 
 
     /**
+     * todo 可以将所有登录回调获取登录信息的地方都换成在缓存中获取，统一数据的可信来源是解决页面状态不一致的最佳办法
+     * <p>
      * 登录状态改变后的后的回调监听 登录 退登 都会回到此处
      * SettingsActivity中登录流程为:
      * .                  监听
@@ -274,13 +272,10 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
         Toast.makeText(this, "token 已过期 正在尝试重新登录", Toast.LENGTH_SHORT).show();
 
         DomainUserInfo.DataBean info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
-        if (info != null) // 判断本地缓存是否存在
-            viewModel.getPublicKey().observe(this, key -> {
-                viewModel.authorizeWithAlipayID(
+        if (info != null)
+            loginViewModel.getPublicKey().observe(this, key -> {
+                loginViewModel.authorizeWithAlipayID(
                         key.getCookie()
-                        , "client_credentials"
-                        , "testclient"
-                        , "123456"
                         , info.getUalipay()
                         , key.getPublic_key())
                         .observe(this, token -> {
@@ -301,9 +296,9 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     private void autoLoginWithToken() {
         DomainAuthorize token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
         if (token != null && token.getAccess_token() != null) {
-            viewModel.getUserInfo(token.getAccess_token()).observe(this, data -> {
+            loginViewModel.getUserInfo(token.getAccess_token()).observe(this, data -> {
 
-                Toast.makeText(this, "获取用户信息成功", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "登录成功", Toast.LENGTH_SHORT).show();
 
                 DomainUserInfo.DataBean userInfo = data.getData().get(0);
                 bundle.putSerializable(ConstantUtil.KEY_USER_INFO, userInfo);
@@ -355,5 +350,4 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
         AutoSizeCompat.autoConvertDensityOfGlobal((super.getResources()));
         return super.getResources();
     }
-
 }

@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.main.home;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,9 +32,17 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
         return fragment;
     }
 
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (getActivity() != null && getActivity() instanceof MainActivity) {
+//            ((MainActivity) getActivity()).autoLogin();
+//        }
+//    }
+
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
         if (getActivity() != null && getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).autoLogin();
         }
@@ -44,7 +53,6 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
         HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, HomePagerAdapter.PURCHASING);
-        homePagerAdapter.setBundle(getArguments());
         setUpPlaceHolderHAndGoodsContainer(binding.placeholder, binding.homeViewpager);
         MagicIndicator indicator = binding.homeIndicator;
         ViewPager viewPager = binding.homeViewpager;

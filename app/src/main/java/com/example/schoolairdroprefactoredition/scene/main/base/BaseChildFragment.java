@@ -1,11 +1,13 @@
 package com.example.schoolairdroprefactoredition.scene.main.base;
 
+import android.os.Bundle;
+
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
-import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 
 public class BaseChildFragment extends Fragment {
 
@@ -13,7 +15,7 @@ public class BaseChildFragment extends Fragment {
      * 显示PlaceHolder
      *
      * @param type {@link com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder#TYPE_ERROR}
-     *             {@link com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder#TYPE_EMPTY}
+     *             {@link com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder#TYPE_EMPTY_HOME}
      */
     protected void showPlaceHolder(int type) {
         if (getParentFragment() instanceof BaseParentFragment) {
@@ -35,7 +37,6 @@ public class BaseChildFragment extends Fragment {
      */
     protected void locate(@PermissionBaseActivity.RequestType int type) {
         if (getActivity() instanceof PermissionBaseActivity) {
-            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
             ((PermissionBaseActivity) getActivity()).requestPermission(PermissionConstants.LOCATION, type);
         }
     }
@@ -45,9 +46,19 @@ public class BaseChildFragment extends Fragment {
      */
     protected void locateWithoutRequest() {
         if (getActivity() instanceof PermissionBaseActivity) {
-            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
             ((PermissionBaseActivity) getActivity()).checkPermissionWithoutRequest(PermissionBaseActivity.Automatically.LOCATION);
         }
+    }
+
+    /**
+     * 获取主页面的token
+     */
+    @Nullable
+    protected Bundle getBundle() {
+        if (getActivity() instanceof MainActivity) {
+            return ((MainActivity) getActivity()).getBundle();
+        }
+        return null;
     }
 
 }

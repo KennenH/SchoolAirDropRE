@@ -17,6 +17,7 @@
         app:navigationIcon="@drawable/ic_close">
 
         <TextView
+            android:id="@+id/draft_tip_toggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/toolbar_2_center_margin"
@@ -26,13 +27,64 @@
 
     </androidx.appcompat.widget.Toolbar>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/saved_draft"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        android:visibility="gone"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <TextView
+            android:id="@+id/draft_tip"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/general_padding_bit_larger"
+            android:drawablePadding="@dimen/general_padding"
+            android:ellipsize="end"
+            android:text="@string/draftCleared"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSizeNormal"
+            app:drawableStartCompat="@drawable/ic_attention_small"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/draft_action"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/draft_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/general_padding_small"
+            android:padding="@dimen/general_padding"
+            android:text="@string/restoreDraft"
+            android:textColor="@color/white"
+            android:textSize="@dimen/textSizeNormal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/saved_close"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/saved_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/general_padding_small"
+            android:padding="@dimen/general_padding"
+            android:src="@drawable/ic_close"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/white" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
         android:id="@+id/overDragLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/saved_draft">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_view"
@@ -44,81 +96,116 @@
             app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
             <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/scroll_direct_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingBottom="@dimen/toolbar_icon_large">
+                android:paddingBottom="@dimen/general_padding_large">
 
                 <TextView
                     android:id="@+id/cover_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/general_padding_bit_larger"
+                    android:layout_margin="@dimen/general_padding_bit_larger"
+                    android:ellipsize="end"
                     android:text="@string/cover"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <com.facebook.drawee.view.SimpleDraweeView
-                    android:id="@+id/cover"
-                    android:layout_width="@dimen/home_item_image"
-                    android:layout_height="@dimen/home_item_image"
-                    android:layout_marginStart="@dimen/general_padding_large"
+                <LinearLayout
+                    android:id="@+id/cover_wrapper"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/general_padding_small"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:padding="@dimen/general_padding_large"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/cover_title"
-                    app:placeholderImage="@drawable/bg_add_pic"
-                    app:roundedCornerRadius="@dimen/general_padding_small" />
+                    app:layout_constraintTop_toBottomOf="@+id/cover_title">
+
+                    <com.facebook.drawee.view.SimpleDraweeView
+                        android:id="@+id/cover"
+                        android:layout_width="@dimen/home_item_image"
+                        android:layout_height="@dimen/home_item_image"
+                        app:placeholderImage="@drawable/bg_add_pic"
+                        app:roundedCornerRadius="@dimen/general_padding_small" />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/pic_set_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/general_padding_bit_larger"
+                    android:layout_marginStart="@dimen/general_padding_bit_larger"
+                    android:layout_marginTop="@dimen/general_padding_small"
+                    android:layout_marginEnd="@dimen/general_padding_bit_larger"
+                    android:layout_marginBottom="@dimen/general_padding_small"
+                    android:ellipsize="end"
                     android:text="@string/picSet"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
-                    app:layout_constraintTop_toBottomOf="@id/cover" />
+                    app:layout_constraintTop_toBottomOf="@id/cover_wrapper" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/pic_set"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/home_item_image"
+                    android:layout_marginTop="@dimen/general_padding_bit_larger"
+                    android:clipChildren="false"
+                    android:clipToPadding="false"
                     android:overScrollMode="never"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/pic_set_title" />
 
                 <TextView
                     android:id="@+id/title_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/general_padding_bit_larger"
+                    android:layout_margin="@dimen/general_padding_bit_larger"
+                    android:ellipsize="end"
                     android:text="@string/title"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
                     app:layout_constraintTop_toBottomOf="@id/pic_set" />
 
-                <com.example.schoolairdroprefactoredition.ui.components.SellingOption
-                    android:id="@+id/option_title"
+                <LinearLayout
+                    android:id="@+id/option_title_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_padding_large"
-                    android:layout_marginEnd="@dimen/general_padding_large"
-                    app:layout_constraintTop_toBottomOf="@id/title_title" />
+                    android:layout_marginTop="@dimen/general_padding_small"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:padding="@dimen/general_padding_large"
+                    app:layout_constraintTop_toBottomOf="@id/title_title">
+
+                    <com.example.schoolairdroprefactoredition.ui.components.SellingOption
+                        android:id="@+id/option_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/price_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/general_padding_bit_larger"
+                    android:layout_marginStart="@dimen/general_padding_bit_larger"
+                    android:layout_marginTop="@dimen/general_padding_small"
+                    android:ellipsize="end"
                     android:text="@string/price"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
-                    app:layout_constraintTop_toBottomOf="@id/option_title" />
+                    app:layout_constraintTop_toBottomOf="@id/option_title_wrapper" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/option_price"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_padding_large"
-                    android:layout_marginEnd="@dimen/general_padding_large"
+                    android:layout_marginTop="@dimen/general_padding_small"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:padding="@dimen/general_padding_large"
                     app:layout_constraintTop_toBottomOf="@id/price_title">
 
                     <TextView
@@ -172,7 +259,9 @@
                     android:id="@+id/option_title_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/general_padding_bit_larger"
+                    android:layout_marginStart="@dimen/general_padding_bit_larger"
+                    android:layout_marginTop="@dimen/general_padding_small"
+                    android:ellipsize="end"
                     android:text="@string/options"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
@@ -184,6 +273,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/general_padding_large"
+                    android:layout_marginTop="@dimen/general_padding_bit_larger"
                     android:layout_marginEnd="@dimen/general_padding_large"
                     app:layout_constraintTop_toBottomOf="@+id/option_title_title" />
 
@@ -213,19 +303,28 @@
                     android:id="@+id/detail_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:padding="@dimen/general_padding_bit_larger"
+                    android:layout_margin="@dimen/general_padding_bit_larger"
+                    android:ellipsize="end"
                     android:text="@string/detailDescription"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
                     app:layout_constraintTop_toBottomOf="@+id/option_secondHand" />
 
-                <com.example.schoolairdroprefactoredition.ui.components.SellingOption
-                    android:id="@+id/option_description"
+                <LinearLayout
+                    android:id="@+id/option_description_wrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_padding_large"
-                    android:layout_marginEnd="@dimen/general_padding_large"
-                    app:layout_constraintTop_toBottomOf="@+id/detail_title" />
+                    android:layout_marginTop="@dimen/general_padding_small"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:padding="@dimen/general_padding_large"
+                    app:layout_constraintTop_toBottomOf="@+id/detail_title">
+
+                    <com.example.schoolairdroprefactoredition.ui.components.SellingOption
+                        android:id="@+id/option_description"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>

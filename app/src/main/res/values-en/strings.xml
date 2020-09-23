@@ -56,7 +56,7 @@
     <string name="male">Male</string>
     <string name="hermaphrodite">Hermaphrodite</string>
     <string name="clear">Clear</string>
-    <string name="noMoreData">No More Data...</string>
+    <string name="noMoreData">No More Data…</string>
     <string name="noMoreOlderData">You Are Up To Date</string>
     <string name="searchHistory">Search History</string>
     <string name="deleteAll">Delete All</string>
@@ -92,9 +92,9 @@
     <string name="sortBy">Order by</string>
     <string name="add">Add New</string>
     <string name="offShelf">Remove the item</string>
-    <string name="modifyInfo">Modify information</string>
-    <string name="addNewSelling">Add new item</string>
-    <string name="submit">Submit</string>
+    <string name="modifyInfo">Modify Information</string>
+    <string name="addNewSelling">Add New Item</string>
+    <string name="submit">Done</string>
     <string name="clickable">Clickable</string>
     <string name="options">Options</string>
     <string name="detailDescription">Detailed Description</string>
@@ -146,7 +146,7 @@
     <string name="monthlyAssessmentDes">Credit monthly evaluation based on your transactions in the most recent month</string>
     <string name="reportAssessmentDes">Credit feedback evaluation based on user feedback and review verification</string>
     <string name="textRemainCount">Up to %d characters can be entered</string>
-    <string name="remainingTime">$1%d:$2%d:$3%d \\n Remaining</string>
+    <string name="remainingTime">$1%d:$2%d:$3%d</string>
     <string name="warningForSeller">If the countdown ends and the seller fails to complete the delivery, the seller\'s credit score will be deducted.</string>
     <string name="receivingCode">[img src=ic_qr/] Receiving QR Code</string>
     <string name="notMatchDescription">Item not match the description</string>
@@ -170,13 +170,29 @@
     <string name="submitSuccessTip">The item enters the review stage, and the result will be notified to you via app station letter within 72 hours</string>
     <string name="submitFailedTip">It may be because the network is unstable or the server is too busy, please try again later</string>
     <string name="OK">OK</string>
-    <string name="mapNoPermission">Location Obtain Failed</string>
+    <string name="errorLocation">Location Obtain Failed</string>
     <string name="errorUpdateAvatar">Error Updating Avatar</string>
-    <string name="emptyOops">Oh…\nThere is no similar item yet</string>
     <string name="imageSaved">Image Saved</string>
     <string name="errorUpdatingName">Error updating name</string>
     <string name="nothingThere">Nothing…</string>
     <string name="dialogSuccess">Success</string>
     <string name="dialogFailed">Failed</string>
     <string name="errorUnknown">Unknown Error</string>
+    <string name="finalPrice">Final Price</string>
+    <string name="goodsIsSecondHand">Item Is Second-hand</string>
+    <string name="originPrice">Original Price</string>
+    <string name="emptyOops">Oh… there is no similar item yet</string>
+    <string name="unLogged">Not Logged</string>
+    <string name="InitiateQuote">Initiate A Quote</string>
+    <string name="SendMessage">Send Message</string>
+    <string name="detailDescriptionError">* Enter at least 11 characters of description</string>
+    <string name="titleError">* Enter at least 3 characters of title</string>
+    <string name="priceError">* Please enter a valid price</string>
+    <string name="coverError">* Please select a pic as the cover</string>
+    <string name="picSetError">* Please select at least one picture as the pic set</string>
+    <string name="draftRecovered">Draft has been restored</string>
+    <string name="clearInput">Clear input</string>
+    <string name="dialogNetWorkError">Network Error</string>
+    <string name="restoreDraft">Restore Draft</string>
+    <string name="draftCleared">Input Cleared, Can Be Restored Before Closing</string>
 </resources>

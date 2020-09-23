@@ -4,7 +4,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 
-public interface ILoginCallback extends IBaseCallback {
+public interface ILoginCallback {
     void onPublicKeyGot(DomainAuthorizeGet authorization);
 
     void onAuthorizationSuccess(DomainAuthorize authorization);
@@ -12,4 +12,6 @@ public interface ILoginCallback extends IBaseCallback {
     void onUserInfoLoaded(DomainUserInfo info);
 
     void onLogout();
+
+    void onLoginError();
 }

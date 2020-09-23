@@ -4,11 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -16,6 +15,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.ActivitySsbBinding;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBPagerAdapter;
 
@@ -34,37 +34,31 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
         context.startActivity(intent);
     }
 
-    private EditText mSearch;
-    private TextView mTitle;
-
-    private ViewPager mPager;
+    private ActivitySsbBinding binding;
     private SSBPagerAdapter mPagerAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_ssb);
+        binding = ActivitySsbBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setSupportActionBar(findViewById(R.id.toolbar));
 
-        findViewById(R.id.ssb_search).setOnClickListener(this);
-        findViewById(R.id.ssb_title).setOnClickListener(this);
-
-        mPager = findViewById(R.id.ssb_pager);
-        mSearch = findViewById(R.id.ssb_search);
-        mTitle = findViewById(R.id.ssb_title);
+        binding.ssbSearch.setOnClickListener(this);
+        binding.ssbTitle.setOnClickListener(this);
 
         Intent intent = getIntent();
         int index = intent.getIntExtra(PAGE_INDEX, 0);
         mPagerAdapter = new SSBPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getIntent().getExtras());
 
-        mSearch.setOnFocusChangeListener((v, hasFocus) -> {
+        binding.ssbSearch.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
                 KeyboardUtils.showSoftInput(v);
             else
                 KeyboardUtils.hideSoftInput(v);
         });
-        mPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        binding.ssbPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 invalidateOptionsMenu();
@@ -73,30 +67,30 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
             @Override
             public void onPageSelected(int position) {
                 if (position == 0)
-                    mTitle.setText(SELLING);
+                    binding.ssbTitle.setText(SELLING);
                 else if (position == 1)
-                    mTitle.setText(SOLD);
+                    binding.ssbTitle.setText(SOLD);
                 else
-                    mTitle.setText(BOUGHT);
+                    binding.ssbTitle.setText(BOUGHT);
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
             }
         });
-        mPager.setOffscreenPageLimit(3);
-        mPager.setAdapter(mPagerAdapter);
-        mPager.setCurrentItem(index);
+        binding.ssbPager.setOffscreenPageLimit(3);
+        binding.ssbPager.setAdapter(mPagerAdapter);
+        binding.ssbPager.setCurrentItem(index);
     }
 
     public void hideSearchBar() {
-        mTitle.requestFocus();
-        mSearch.clearFocus();
+        binding.ssbTitle.requestFocus();
+        binding.ssbSearch.clearFocus();
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        int now = mPager.getCurrentItem();
+        int now = binding.ssbPager.getCurrentItem();
         final MenuItem add = menu.findItem(R.id.ssb_selling_add);
         if (add != null) {
             if (now == 0)

@@ -160,6 +160,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
     @Override
     public void onCreditsClick() {
         // 信用界面
+
         CreditActivity.start(getContext(), bundle);
     }
 }
