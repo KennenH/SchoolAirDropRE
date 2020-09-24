@@ -18,7 +18,7 @@ public class DecimalFilter implements InputFilter {
     public DecimalFilter(Integer digitsBeforeZero , Integer digitsAfterZero) {
         this.mDigitsBeforeZero = (digitsBeforeZero != null ? digitsBeforeZero : DIGITS_BEFORE_ZERO_DEFAULT);
         this.mDigitsAfterZero = (digitsAfterZero != null ? digitsAfterZero : DIGITS_AFTER_ZERO_DEFAULT);
-        mPattern = Pattern.compile("-?[0-9]{0," + (mDigitsBeforeZero) + "}+((\\.[0-9]{0," + (mDigitsAfterZero)
+        mPattern = Pattern.compile("[0-9]{0," + (mDigitsBeforeZero) + "}+((\\.[0-9]{0," + (mDigitsAfterZero)
                 + "})?)||(\\.)?");
     }
 

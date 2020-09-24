@@ -28,7 +28,6 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.KeyboardUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivitySellingAddNewBinding;
@@ -295,7 +294,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
             pass = false;
         }
 
-        if (mCoverPath == null) {
+        if (mCoverPath == null || mCoverPath.trim().equals("")) {
             AnimUtil.blink(this, binding.coverWrapper);
             focusView = binding.coverWrapper;
             pass = false;
@@ -338,7 +337,6 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
      * 在用户清除草稿之后再次恢复
      */
     private void restoreDraft() {
-        showLoading();
         viewModel.recoverDraft().observe(this, draftCache -> {
             if (draftCache != null) {
                 if (binding.savedDraft.getVisibility() != View.VISIBLE)
@@ -357,17 +355,8 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                 if (draftCache.isSecondHand())
                     if (!binding.optionSecondHand.getIsSelected())
                         binding.optionSecondHand.toggle();
-
-                LogUtils.d(mCoverPath + "\n" +
-                        mPicSetSelected.size() + "\n" +
-                        binding.optionTitle.getText() + "\n" +
-                        binding.optionDescription.getText() + "\n" +
-                        binding.priceInput.getText() + "\n" +
-                        draftCache.isNegotiable() + "\n" +
-                        draftCache.isSecondHand());
             }
 
-            dismissLoading();
             binding.draftTip.setText(getString(R.string.draftRecovered));
             binding.draftAction.setText(getString(R.string.clearInput));
             isDraftRestored = true;

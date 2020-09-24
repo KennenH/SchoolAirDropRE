@@ -94,7 +94,7 @@
     <string name="offShelf">Remove the item</string>
     <string name="modifyInfo">Modify Information</string>
     <string name="addNewSelling">Add New Item</string>
-    <string name="submit">Done</string>
+    <string name="submit">Submit</string>
     <string name="clickable">Clickable</string>
     <string name="options">Options</string>
     <string name="detailDescription">Detailed Description</string>
@@ -168,7 +168,7 @@
     <string name="submitSuccess">Success</string>
     <string name="submitFailed">Failed</string>
     <string name="submitSuccessTip">The item enters the review stage, and the result will be notified to you via app station letter within 72 hours</string>
-    <string name="submitFailedTip">It may be because the network is unstable or the server is too busy, please try again later</string>
+    <string name="submitFailedTip">It may be due to unstable network or busy maintenance of the server. The form has been automatically saved, it is recommended to retry later</string>
     <string name="OK">OK</string>
     <string name="errorLocation">Location Obtain Failed</string>
     <string name="errorUpdateAvatar">Error Updating Avatar</string>
@@ -185,14 +185,9 @@
     <string name="unLogged">Not Logged</string>
     <string name="InitiateQuote">Initiate A Quote</string>
     <string name="SendMessage">Send Message</string>
-    <string name="detailDescriptionError">* Enter at least 11 characters of description</string>
-    <string name="titleError">* Enter at least 3 characters of title</string>
-    <string name="priceError">* Please enter a valid price</string>
-    <string name="coverError">* Please select a pic as the cover</string>
-    <string name="picSetError">* Please select at least one picture as the pic set</string>
-    <string name="draftRecovered">Draft has been restored</string>
-    <string name="clearInput">Clear input</string>
+    <string name="draftRecovered">Saved draft has been restored</string>
+    <string name="clearInput">Clear Input</string>
     <string name="dialogNetWorkError">Network Error</string>
-    <string name="restoreDraft">Restore Draft</string>
-    <string name="draftCleared">Input Cleared, Can Be Restored Before Closing</string>
+    <string name="restoreDraft">Restore</string>
+    <string name="draftCleared">Input cleared, Can be restored before page closed</string>
 </resources>

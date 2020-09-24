@@ -32,7 +32,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <TextView
@@ -58,7 +57,8 @@
             android:layout_marginEnd="@dimen/general_padding_small"
             android:padding="@dimen/general_padding"
             android:text="@string/restoreDraft"
-            android:textColor="@color/white"
+            android:background="@drawable/button_round_stroke_primary"
+            android:textColor="@color/colorAccent"
             android:textSize="@dimen/textSizeNormal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/saved_close"

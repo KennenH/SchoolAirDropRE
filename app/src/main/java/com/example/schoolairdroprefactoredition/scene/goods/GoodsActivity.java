@@ -112,12 +112,14 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                 EditText quote = dialog.findViewById(R.id.quote_price);
                 quote.setOnEditorActionListener((v, actionId, event) -> {
                     quote.clearFocus();
-                    KeyboardUtils.hideSoftInput(this);
+                    KeyboardUtils.hideSoftInput(v);
                     return true;
                 });
                 quote.setFilters(new InputFilter[]{new DecimalFilter(5, 2)});
                 dialog.findViewById(R.id.cancel).setOnClickListener(v -> dialog.dismiss());
-                dialog.findViewById(R.id.confirm).setOnClickListener(v -> quote(quote.getText().toString()));
+                dialog.findViewById(R.id.confirm).setOnClickListener(v -> {
+                    quote(quote.getText().toString());
+                });
 
                 {
                     View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
