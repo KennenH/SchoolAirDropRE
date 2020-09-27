@@ -7,7 +7,7 @@
     app:cardCornerRadius="@dimen/general_padding"
     app:cardElevation="1dp">
 
-    <com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto
+    <com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/button_sheet_white">
@@ -174,5 +174,5 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="@+id/quote_price" />
 
-    </com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>
+    </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>
 </androidx.cardview.widget.CardView>

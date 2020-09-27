@@ -1,8 +1,8 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.model.Api;
+import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IUserNamePresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IResultCallback;
@@ -10,7 +10,6 @@ import com.example.schoolairdroprefactoredition.presenter.callback.IResultCallba
 import java.net.HttpURLConnection;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
@@ -23,7 +22,7 @@ public class UserNameImpl implements IUserNamePresenter {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
         Call<DomainResult> task = api.updateUserName(token, name);
-        task.enqueue(new Callback<DomainResult>() {
+        task.enqueue(new CallBackWithRetry<DomainResult>(task) {
             @Override
             public void onResponse(Call<DomainResult> call, Response<DomainResult> response) {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
@@ -36,9 +35,8 @@ public class UserNameImpl implements IUserNamePresenter {
             }
 
             @Override
-            public void onFailure(Call<DomainResult> call, Throwable t) {
+            public void onFailureAllRetries() {
                 mCallback.onError();
-                LogUtils.d("请求失败 -- > " + t.toString());
             }
         });
 

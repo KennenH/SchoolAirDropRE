@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -27,6 +28,7 @@ import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonDouble;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonSingle;
+import com.example.schoolairdroprefactoredition.utils.AnimUtil;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DecimalFilter;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
@@ -101,24 +103,83 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
     }
 
     /**
-     * 显示发起报价底部弹窗
+     * 发起报价
      */
-    private void showQuoteDialog() {
+    private void quote(String input) {
+        if (token != null && goodsInfo != null) {
+            showLoading();
+            viewModel.quoteRequest(token.getAccess_token(), goodsInfo.getGoods_id(), input)
+                    .observe(this, result -> {
+                        dismissLoading();
+                        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.SUCCESS);
+                    });
+        } else
+            MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.ERROR_UNKNOWN);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == android.R.id.home)
+            finish();
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 收藏物品
+     */
+    @Override
+    public void onFirstButtonClick() {
+        if (token != null && goodsInfo != null) {
+            showLoading();
+            viewModel.favoriteItem(token.getAccess_token(), goodsInfo.getGoods_id())
+                    .observe(this, result -> {
+                        dismissLoading();
+                        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.SUCCESS);
+                    });
+        } else
+            MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.ERROR_UNKNOWN);
+    }
+
+    /**
+     * 发起报价
+     */
+    @Override
+    public void onSecondButtonClick() {
         if (dialog == null) {
             dialog = new BottomSheetDialog(this);
             dialog.setContentView(LayoutInflater.from(this).inflate(R.layout.sheet_quote, null));
 
             try {
                 EditText quote = dialog.findViewById(R.id.quote_price);
+                TextView tip = dialog.findViewById(R.id.warning);
+                dialog.findViewById(R.id.title).setOnClickListener(v -> {
+                    quote.clearFocus();
+                    KeyboardUtils.hideSoftInput(v);
+                });
+                dialog.findViewById(R.id.second_hand_tip).setOnClickListener(v -> {
+                    quote.clearFocus();
+                    KeyboardUtils.hideSoftInput(v);
+                });
                 quote.setOnEditorActionListener((v, actionId, event) -> {
                     quote.clearFocus();
                     KeyboardUtils.hideSoftInput(v);
                     return true;
                 });
                 quote.setFilters(new InputFilter[]{new DecimalFilter(5, 2)});
+                quote.setOnFocusChangeListener((v, hasFocus) -> {
+                    if (hasFocus && tip.getVisibility() == View.VISIBLE)
+                        AnimUtil.collapse(tip);
+                });
                 dialog.findViewById(R.id.cancel).setOnClickListener(v -> dialog.dismiss());
                 dialog.findViewById(R.id.confirm).setOnClickListener(v -> {
-                    quote(quote.getText().toString());
+                    if (quote.getText().toString().equals("")) {
+                        if (tip.getVisibility() != View.VISIBLE)
+                            AnimUtil.expand(tip);
+                        else
+                            AnimUtil.viewBlink(this, tip, R.color.colorPrimaryRed, R.color.white);
+                    } else
+                        quote(quote.getText().toString());
                 });
 
                 {
@@ -132,6 +193,9 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                             if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                                 dialog.dismiss();
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                            } else if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                                quote.clearFocus();
+                                KeyboardUtils.hideSoftInput(bottomSheet);
                             }
                         }
 
@@ -148,39 +212,8 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
     }
 
     /**
-     * 发起报价
+     * 发送消息
      */
-    private void quote(String input) {
-        if (token != null && goodsInfo != null) {
-            showLoading();
-            viewModel.quoteRequest(token.getAccess_token(), goodsInfo.getGoods_id(), input)
-                    .observe(this, result -> {
-                        dismissLoading();
-                        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.SUCCESS);
-                    });
-        } else
-            MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.FAILED);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home)
-            finish();
-
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onFirstButtonClick() {
-        // todo favorite this goods
-
-    }
-
-    @Override
-    public void onSecondButtonClick() {
-        showQuoteDialog();
-    }
-
     @Override
     public void onButtonClick() {
         ChatActivity.start(this);

@@ -7,16 +7,16 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import me.jessyan.autosize.AutoSizeCompat;
 
-public class ConstrainLayoutAuto extends ConstraintLayout {
-    public ConstrainLayoutAuto(Context context) {
+public class ConstraintLayoutAuto extends ConstraintLayout {
+    public ConstraintLayoutAuto(Context context) {
         super(context);
     }
 
-    public ConstrainLayoutAuto(Context context, AttributeSet attrs) {
+    public ConstraintLayoutAuto(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public ConstrainLayoutAuto(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ConstraintLayoutAuto(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 

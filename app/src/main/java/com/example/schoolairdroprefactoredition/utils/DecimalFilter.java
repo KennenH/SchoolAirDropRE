@@ -10,16 +10,18 @@ import java.util.regex.Pattern;
 public class DecimalFilter implements InputFilter {
     private int mDigitsBeforeZero;
     private int mDigitsAfterZero;
-    private Pattern mPattern;
+    private Pattern mPattern0;
+    private Pattern mPattern1;
 
     private static final int DIGITS_BEFORE_ZERO_DEFAULT = 100;
     private static final int DIGITS_AFTER_ZERO_DEFAULT = 100;
 
-    public DecimalFilter(Integer digitsBeforeZero , Integer digitsAfterZero) {
+    public DecimalFilter(Integer digitsBeforeZero, Integer digitsAfterZero) {
         this.mDigitsBeforeZero = (digitsBeforeZero != null ? digitsBeforeZero : DIGITS_BEFORE_ZERO_DEFAULT);
         this.mDigitsAfterZero = (digitsAfterZero != null ? digitsAfterZero : DIGITS_AFTER_ZERO_DEFAULT);
-        mPattern = Pattern.compile("[0-9]{0," + (mDigitsBeforeZero) + "}+((\\.[0-9]{0," + (mDigitsAfterZero)
-                + "})?)||(\\.)?");
+        mPattern0 = Pattern.compile("[1-9][0-9]{0," + (mDigitsBeforeZero - 1) + "}+((\\.[0-9]{0," + (mDigitsAfterZero)
+                + "})?)||(\\.)?"); // 匹配非零开头的输入，小数点前最多5个数字，除第一个数字非零外其余都可为零
+        mPattern1 = Pattern.compile("0((\\.[0-9]{0,2})?)||(\\.)?"); // 匹配以零开头的输入，小数点前不可有其他数字
     }
 
     @Override
@@ -27,8 +29,9 @@ public class DecimalFilter implements InputFilter {
         String replacement = source.subSequence(start, end).toString();
         String newVal = dest.subSequence(0, dstart).toString() + replacement
                 + dest.subSequence(dend, dest.length()).toString();
-        Matcher matcher = mPattern.matcher(newVal);
-        if (matcher.matches())
+        Matcher matcher = mPattern0.matcher(newVal);
+        Matcher matcher1 = mPattern1.matcher(newVal);
+        if (matcher.matches() || matcher1.matches())
             return null;
 
         if (TextUtils.isEmpty(source))

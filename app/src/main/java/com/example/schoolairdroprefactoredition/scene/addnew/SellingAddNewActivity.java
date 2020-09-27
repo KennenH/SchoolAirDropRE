@@ -13,7 +13,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -85,6 +84,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     private DomainAuthorize token;
 
     private boolean isDraftRestored = true;
+    private boolean isSubmit = false;
 
     private static void startForLogin(Context context) {
         Intent intent = new Intent(context, SellingAddNewActivity.class);
@@ -106,6 +106,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
 
         token = (DomainAuthorize) getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
 
+        binding.savedDraft.setVisibility(View.GONE);
         binding.draftTipToggle.setOnClickListener(this);
         binding.draftAction.setOnClickListener(this);
         binding.savedClose.setOnClickListener(this);
@@ -132,7 +133,6 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         add.setOnClickListener(v -> {
             binding.picSetTitle.setText(getString(R.string.picSet));
             binding.picSetTitle.setTextColor(Color.BLACK);
-
             request = REQUEST_CODE_PIC_SET;
             requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL);
         });
@@ -253,9 +253,10 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                             Float.parseFloat(binding.priceInput.getText().toString()))
                             .observe(this, result -> {
                                 dismissLoading();
+
                                 AddNewResultActivity.start(this, result.isSuccess());
                                 if (result.isSuccess()) {
-                                    viewModel.deleteDraft();
+                                    isSubmit = true;// 发送已完毕标志
 
                                     finish();
                                     MyUtil.exitAnimDown(this);
@@ -264,8 +265,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                 } else {
                     LoginActivity.startForLogin(this);
                 }
-            } catch (NullPointerException e) {
-                Toast.makeText(this, "NullPointerException", Toast.LENGTH_SHORT).show();
+            } catch (NullPointerException ignored) {
             }
         }
     }
@@ -277,25 +277,25 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         boolean pass = true;
         View focusView = null;
         if (binding.optionDescription.getText().length() < 1) {
-            AnimUtil.blink(this, binding.optionDescriptionWrapper);
+            AnimUtil.whiteBackgroundViewBlinkRed(this, binding.optionDescriptionWrapper);
             focusView = binding.optionDescriptionWrapper;
             pass = false;
         }
 
         if (binding.priceInput.getText().toString().trim().equals("")) {
-            AnimUtil.blink(this, binding.optionPrice);
+            AnimUtil.whiteBackgroundViewBlinkRed(this, binding.optionPrice);
             focusView = binding.optionPrice;
             pass = false;
         }
 
         if (binding.optionTitle.getText().length() < 1) {
-            AnimUtil.blink(this, binding.optionTitleWrapper);
+            AnimUtil.whiteBackgroundViewBlinkRed(this, binding.optionTitleWrapper);
             focusView = binding.optionTitleWrapper;
             pass = false;
         }
 
         if (mCoverPath == null || mCoverPath.trim().equals("")) {
-            AnimUtil.blink(this, binding.coverWrapper);
+            AnimUtil.whiteBackgroundViewBlinkRed(this, binding.coverWrapper);
             focusView = binding.coverWrapper;
             pass = false;
         }
@@ -315,13 +315,14 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     protected void onPause() {
         super.onPause();
 
-        if (!mCoverPath.trim().equals("")
+        // 若未提交成功且输入不为空则保存草稿
+        if (!isSubmit && (!mCoverPath.trim().equals("")
                 || mPicSetSelected.size() > 0
                 || !binding.optionTitle.getText().toString().trim().equals("")
                 || !binding.optionDescription.getText().toString().trim().equals("")
                 || !binding.priceInput.getText().toString().equals("")
                 || binding.optionNegotiable.getIsSelected()
-                || binding.optionSecondHand.getIsSelected()) {
+                || binding.optionSecondHand.getIsSelected())) {
             viewModel.save(mCoverPath,
                     mPicSetSelected,
                     binding.optionTitle.getText().toString(),
@@ -339,8 +340,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     private void restoreDraft() {
         viewModel.recoverDraft().observe(this, draftCache -> {
             if (draftCache != null) {
-                if (binding.savedDraft.getVisibility() != View.VISIBLE)
-                    binding.savedDraft.setVisibility(View.VISIBLE);
+                binding.savedDraft.setVisibility(View.VISIBLE);// 显示草稿恢复提示
 
                 mCoverPath = draftCache.getCover();
                 mPicSetSelected = draftCache.getPicSet();

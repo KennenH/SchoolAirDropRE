@@ -1,7 +1,9 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
 import android.os.Bundle;
+import android.view.View;
 
+import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
@@ -9,11 +11,13 @@ import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
 import com.example.schoolairdroprefactoredition.ui.components.GoodsPrice;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 
 import org.jetbrains.annotations.NotNull;
 
 public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseViewHolder> {
+
+    private OnSSBItemActionListener mOnSSBItemActionListener;
 
     private Bundle bundle;
 
@@ -35,7 +39,7 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
             else
                 holder.setText(R.id.ssb_item_title, getContext().getString(R.string.itemSs, bean.getGoods_name()));
 
-            ((SimpleDraweeView) holder.itemView.findViewById(R.id.ssb_item_img)).setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + bean.getGoods_img_cover());
+            ImageUtil.scaledImageLoad(holder.itemView.findViewById(R.id.ssb_item_img), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + bean.getGoods_img_cover(), SizeUtils.dp2px(85));
             ((GoodsPrice) holder.itemView.findViewById(R.id.ssb_item_price)).setPrice(bean.getGoods_price());
         }
 
@@ -43,8 +47,16 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
 
         holder.itemView.findViewById(R.id.ssb_item_more_action).setOnClickListener(v -> {
             // pop up more action window
+            if (mOnSSBItemActionListener != null)
+                mOnSSBItemActionListener.onItemActionButtonClick(v, bean);
         });
+    }
 
+    public interface OnSSBItemActionListener {
+        void onItemActionButtonClick(View view, DomainGoodsInfo.DataBean bean);
+    }
 
+    public void setOnSSBItemActionListener(OnSSBItemActionListener listener) {
+        mOnSSBItemActionListener = listener;
     }
 }

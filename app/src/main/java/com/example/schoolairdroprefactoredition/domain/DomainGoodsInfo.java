@@ -4,7 +4,8 @@ package com.example.schoolairdroprefactoredition.domain;
 import java.io.Serializable;
 import java.util.List;
 
-public class DomainGoodsInfo {
+public class DomainGoodsInfo implements Serializable {
+
     @Override
     public String toString() {
         return "DomainGoodsInfo{" +
@@ -15,26 +16,7 @@ public class DomainGoodsInfo {
 
     /**
      * success : true
-     * data : [
-     * {"goods_name":"哈士奇",
-     * "goods_img_cover":"",
-     * "goods_img_set":"",
-     * "goods_id":"3",
-     * "goods_price":2,
-     * "goods_is_quotable":0,
-     * "goods_is_brandNew":1,
-     * "goods_description":"114",
-     * "seller_info":{"uid":15,"uname":"user_15","credit_num":2,"user_img_path":"http://106.54.110.46/public/assets/user/avatars/default.jpg"}},
-     * <p>
-     * {"goods_name":"金毛",
-     * "goods_img_cover":"",
-     * "goods_img_set":"",
-     * "goods_id":"2",
-     * "goods_price":11,
-     * "goods_is_quotable":0,
-     * "goods_is_brandNew":1,
-     * "goods_description":"111",
-     * "seller_info":{"uid":15,"uname":"user_15","credit_num":2,"user_img_path":"http://106.54.110.46/public/assets/user/avatars/default.jpg"}}]
+     * data : [{"goods_name":"就好哈哈哈哈","goods_img_cover":"assets/goods/img/1600834532433_0.jpg","goods_img_set":"assets/goods/img/1600834532433_1.jpg&assets/goods/img/1600834532433_2.jpg","goods_id":1024,"goods_price":466,"goods_longitude":120.360638,"goods_latitude":30.317723,"goods_is_quotable":1,"goods_is_brandNew":0,"goods_description":"就好像将心比心吧你下班","seller_info":{"uid":15,"uname":"iken","credit_num":2,"user_img_path":"/assets/user/avatars/15_20200923145227.jpg"}}]
      */
 
     private boolean success;
@@ -64,8 +46,10 @@ public class DomainGoodsInfo {
                     "goods_name='" + goods_name + '\'' +
                     ", goods_img_cover='" + goods_img_cover + '\'' +
                     ", goods_img_set='" + goods_img_set + '\'' +
-                    ", goods_id='" + goods_id + '\'' +
+                    ", goods_id=" + goods_id +
                     ", goods_price=" + goods_price +
+                    ", goods_longitude=" + goods_longitude +
+                    ", goods_latitude=" + goods_latitude +
                     ", goods_is_quotable=" + goods_is_quotable +
                     ", goods_is_brandNew=" + goods_is_brandNew +
                     ", goods_description='" + goods_description + '\'' +
@@ -74,15 +58,17 @@ public class DomainGoodsInfo {
         }
 
         /**
-         * goods_name : 哈士奇
-         * goods_img_cover :
-         * goods_img_set :
-         * goods_id : 3
-         * goods_price : 2
-         * goods_is_quotable : 0
-         * goods_is_brandNew : 1
-         * goods_description : 114
-         * seller_info : {"uid":15,"uname":"user_15","credit_num":2,"user_img_path":"http://106.54.110.46/public/assets/user/avatars/default.jpg"}
+         * goods_name : 就好哈哈哈哈
+         * goods_img_cover : assets/goods/img/1600834532433_0.jpg
+         * goods_img_set : assets/goods/img/1600834532433_1.jpg&assets/goods/img/1600834532433_2.jpg
+         * goods_id : 1024
+         * goods_price : 466
+         * goods_longitude : 120.360638
+         * goods_latitude : 30.317723
+         * goods_is_quotable : 1
+         * goods_is_brandNew : 0
+         * goods_description : 就好像将心比心吧你下班
+         * seller_info : {"uid":15,"uname":"iken","credit_num":2,"user_img_path":"/assets/user/avatars/15_20200923145227.jpg"}
          */
 
         private String goods_name;
@@ -90,6 +76,8 @@ public class DomainGoodsInfo {
         private String goods_img_set;
         private String goods_id;
         private String goods_price;
+        private String goods_longitude;
+        private String goods_latitude;
         private int goods_is_quotable;
         private int goods_is_brandNew;
         private String goods_description;
@@ -135,6 +123,22 @@ public class DomainGoodsInfo {
             this.goods_price = goods_price;
         }
 
+        public String getGoods_longitude() {
+            return goods_longitude;
+        }
+
+        public void setGoods_longitude(String goods_longitude) {
+            this.goods_longitude = goods_longitude;
+        }
+
+        public String getGoods_latitude() {
+            return goods_latitude;
+        }
+
+        public void setGoods_latitude(String goods_latitude) {
+            this.goods_latitude = goods_latitude;
+        }
+
         public int getGoods_is_quotable() {
             return goods_is_quotable;
         }
@@ -170,9 +174,9 @@ public class DomainGoodsInfo {
         public static class SellerInfoBean implements Serializable {
             /**
              * uid : 15
-             * uname : user_15
+             * uname : iken
              * credit_num : 2
-             * user_img_path : http://106.54.110.46/public/assets/user/avatars/default.jpg
+             * user_img_path : /assets/user/avatars/15_20200923145227.jpg
              */
 
             private int uid;

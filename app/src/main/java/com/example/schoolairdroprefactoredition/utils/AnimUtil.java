@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
+import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
 
 import com.example.schoolairdroprefactoredition.R;
@@ -15,18 +16,32 @@ import com.example.schoolairdroprefactoredition.R;
 public class AnimUtil {
 
     /**
-     * 使view高亮闪烁以引起用户注意
+     * 使白色背景的view高亮闪烁红色以引起用户注意
      */
-    public static void blink(Context context, final View view) {
+    public static void whiteBackgroundViewBlinkRed(Context context, final View view) {
         int colorTo = ContextCompat.getColor(context, R.color.colorPrimaryRedLight);
         ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(), Color.WHITE, colorTo);
-
-        anim.setDuration(250); // milliseconds
-        anim.setRepeatCount(1);
+        anim.setDuration(180); // milliseconds
+        anim.setRepeatCount(1); // repeat count must be ood to recover original color of view
         anim.setRepeatMode(ValueAnimator.REVERSE);
         anim.addUpdateListener(animator -> {
             view.setBackgroundColor((int) animator.getAnimatedValue());
         });
+        anim.start();
+    }
+
+    /**
+     * 使view高亮闪烁以引起用户注意
+     *
+     * @param fromColor 起始颜色
+     * @param toColor   结束颜色
+     */
+    public static void viewBlink(Context context, final View view, @ColorRes int fromColor, @ColorRes int toColor) {
+        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(), ContextCompat.getColor(context, fromColor), ContextCompat.getColor(context, toColor));
+        anim.setDuration(180);
+        anim.setRepeatCount(1);
+        anim.setRepeatMode(ValueAnimator.REVERSE);
+        anim.addUpdateListener(animation -> view.setBackgroundColor((int) animation.getAnimatedValue()));
         anim.start();
     }
 

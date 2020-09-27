@@ -16,11 +16,12 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
  */
 public class EndlessRecyclerView extends RecyclerView {
 
-    int pastVisibleItem, visibleItemCount, totalItemCount;
+    int pastVisibleItem, totalItemCount;
 
     int[] pastVisibleItems = new int[100];
 
-    private boolean loading = false;// 正在加载标志
+    private boolean isLoading = false;// 正在加载标志
+    private boolean isNoMoreData = false; // 标志是否已经没有更多数据
 
     private LayoutManager mLayoutManager;
     private OnLoadMoreListener mOnLoadMoreListener;
@@ -44,8 +45,8 @@ public class EndlessRecyclerView extends RecyclerView {
     }
 
     /**
-     * 当向下滑动时检测剩余已加载的item数量是否小于一个定值
-     * 并加载新数据，以loading为加载标志，防止同时重复加载
+     * 当向下滑动时
+     * 加载新数据，以loading为加载标志，防止同时重复加载
      * 加载完毕后外部必须调用 {@link #finishLoading()}
      *
      * @param dy 垂直方向的滑动
@@ -53,9 +54,9 @@ public class EndlessRecyclerView extends RecyclerView {
     @Override
     public void onScrolled(int dx, int dy) {
         super.onScrolled(dx, dy);
-        if (dy > 0) //check for scroll down
+        if (!isNoMoreData && !isLoading && dy > 0) //check for scroll down
         {
-            visibleItemCount = mLayoutManager.getChildCount();// 当前可见的item数量
+//            visibleItemCount = mLayoutManager.getChildCount();// 当前可见的item数量
             totalItemCount = mLayoutManager.getItemCount();// adapter中目前装填的item总数
 
             // pastVisibleItem 为当前第一个可见item的位置
@@ -67,18 +68,23 @@ public class EndlessRecyclerView extends RecyclerView {
                 pastVisibleItem = pastVisibleItems[0];
             }
 
-            // 是否正在加载
-            if (!loading) {
-                // 是否需要加载新数据
-                if (totalItemCount - pastVisibleItem < ConstantUtil.DATA_FETCH_DEFAULT_SIZE / 2) {
-                    // 正在加载标志，防止重复加载
-                    loading = true;
-                    // 加载新数据
-                    if (mOnLoadMoreListener != null)
-                        mOnLoadMoreListener.autoLoadMore(this);
-                }
+            // 是否需要加载新数据
+            if (!isLoading && totalItemCount - pastVisibleItem < ConstantUtil.DATA_FETCH_DEFAULT_SIZE) {
+                // 正在加载标志，防止重复加载
+                isLoading = true;
+                // 加载新数据
+                if (mOnLoadMoreListener != null)
+                    mOnLoadMoreListener.autoLoadMore(this);
             }
         }
+    }
+
+    /**
+     * true 此时若非手动加载，就不再自动加载
+     * false 开启自动加载
+     */
+    public void setIsNoMoreData(boolean noMoreData) {
+        isNoMoreData = noMoreData;
     }
 
     /**
@@ -86,7 +92,7 @@ public class EndlessRecyclerView extends RecyclerView {
      * {@link #onScrolled}
      */
     public void finishLoading() {
-        loading = false;
+        isLoading = false;
     }
 
     /**

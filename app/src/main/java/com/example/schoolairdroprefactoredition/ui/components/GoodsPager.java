@@ -92,8 +92,6 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             final ImageView pic = new ImageView(getContext());
-            pic.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
             Glide.with(pic)
                     .load((String) mData.get(position))
                     .apply(new RequestOptions().placeholder(R.drawable.logo_placeholder).override(Target.SIZE_ORIGINAL))

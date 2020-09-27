@@ -7,6 +7,7 @@ import android.view.View;
 import androidx.annotation.NonNull;
 
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 
 /**
@@ -27,9 +28,14 @@ public class BoughtFragment extends SSBBaseFragment implements StatePlaceHolder.
     }
 
     @Override
-    protected void init(FragmentSsbBinding binding) {
+    public void init(FragmentSsbBinding binding) {
         setHasOptionsMenu(false);
         binding.placeHolder.setOnPlaceHolderActionListener(this);
+        getBought();
+    }
+
+    @Override
+    public void retryGrabOnlineData() {
         getBought();
     }
 
@@ -45,7 +51,7 @@ public class BoughtFragment extends SSBBaseFragment implements StatePlaceHolder.
     }
 
     @Override
-    public void onRetry(View view) {
+    public void onPlaceHolderRetry(View view) {
         getBought();
     }
 
@@ -61,6 +67,11 @@ public class BoughtFragment extends SSBBaseFragment implements StatePlaceHolder.
 
     @Override
     public void onFilterWatches() {
+
+    }
+
+    @Override
+    public void onItemAction(View view, DomainGoodsInfo.DataBean bean) {
 
     }
 }

@@ -21,17 +21,14 @@ import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapt
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
-import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import org.jetbrains.annotations.NotNull;
 
-public class HomeNewsFragment extends BaseChildFragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseStateViewModel.OnRequestListener, MainActivity.OnLoginStateChangedListener, MainActivity.OnLocationListener {
+public class HomeNewsFragment extends BaseChildFragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseStateViewModel.OnRequestListener, MainActivity.OnLoginStateChangedListener, MainActivity.OnLocationListener, HomeNewsRecyclerAdapter.OnNoMoreDataListener {
+    private FragmentHomeContentBinding binding;
     private HomeNewsFragmentViewModel homeContentFragmentViewModel;
-
-    private SmartRefreshLayout mRefresh;
-    private EndlessRecyclerView mEndlessRecyclerView;
 
     private HomeNewsRecyclerAdapter mHomeNewsRecyclerAdapter;
 
@@ -55,16 +52,14 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        FragmentHomeContentBinding binding = FragmentHomeContentBinding.inflate(inflater, container, false);
+        binding = FragmentHomeContentBinding.inflate(inflater, container, false);
         homeContentFragmentViewModel = new ViewModelProvider(this).get(HomeNewsFragmentViewModel.class);
         homeContentFragmentViewModel.setOnRequestListener(this);
-
-        mRefresh = binding.homeRefresh;
-        mEndlessRecyclerView = binding.homeRecycler;
 
         initRecycler();
 
         if (mLocation == null && !requested) {
+            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
             locate(PermissionBaseActivity.RequestType.AUTO);// 自动请求MainActivity的定位}
             requested = true;
         }
@@ -73,20 +68,17 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     }
 
     private void initRecycler() {
-        mRefresh.setOnRefreshListener(this);
-        mEndlessRecyclerView.setOnLoadMoreListener(this);
+        binding.homeRefresh.setOnRefreshListener(this);
+        binding.homeRecycler.setOnLoadMoreListener(this);
 
         mManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
-        mEndlessRecyclerView.setPadding(SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f));
-        mEndlessRecyclerView.setLayoutManager(mManager);
-        mEndlessRecyclerView.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(1f),true));
+        binding.homeRecycler.setPadding(SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f));
+        binding.homeRecycler.setLayoutManager(mManager);
+        binding.homeRecycler.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(1f), true));
         mHomeNewsRecyclerAdapter = new HomeNewsRecyclerAdapter();
-        mEndlessRecyclerView.setAdapter(mHomeNewsRecyclerAdapter);
-
-        homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
-            mHomeNewsRecyclerAdapter.setList(data);
-        });
+        mHomeNewsRecyclerAdapter.setOnNoMoreDataListener(this);
+        binding.homeRecycler.setAdapter(mHomeNewsRecyclerAdapter);
     }
 
     /**
@@ -98,15 +90,15 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
             if (aMapLocation.getErrorCode() == 0) {
                 mLocation = aMapLocation;
                 homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
-//                        if (data == null || data.size() == 0) {
-//                            showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME);
-//                        } else {
-                    mHomeNewsRecyclerAdapter.setList(data);
-                    showContentContainer();
-//                        }
+                    if (data.size() < 1) {
+                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_NEWS_HOME);
+                    } else {
+                        mHomeNewsRecyclerAdapter.setList(data);
+                        showContentContainer();
+                    }
                 });
-            } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
-        } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+            } else showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
+        } else showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
     }
 
     @Override
@@ -118,9 +110,13 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (mLocation != null) {
             homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
-                mHomeNewsRecyclerAdapter.setList(data);
-                showContentContainer();
                 refreshLayout.finishRefresh();
+                if (data.size() < 1) {
+                    showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_NEWS_HOME);
+                } else {
+                    mHomeNewsRecyclerAdapter.setList(data);
+                    showContentContainer();
+                }
             });
         }
     }
@@ -136,11 +132,21 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
 
     @Override
     public void onError() {
-        showPlaceHolder(StatePlaceHolder.TYPE_UNKNOWN);
+        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 
     @Override
     public void onLoginStateChanged(@NotNull Bundle bundle) {
 
+    }
+
+    @Override
+    public void onNoMoreData() {
+        binding.homeRecycler.setIsNoMoreData(true);
+    }
+
+    @Override
+    public void onNoMoreDataRefresh() {
+        binding.homeRecycler.setIsNoMoreData(false);
     }
 }

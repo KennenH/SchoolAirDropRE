@@ -70,6 +70,11 @@ public class LoginViewModel extends BaseStateViewModel implements ILoginCallback
             mOnLoginErrorListener.onLoginError();
     }
 
+    @Override
+    public void onTokenInvalid() {
+
+    }
+
     public interface OnLoginErrorListener {
         void onLoginError();
     }

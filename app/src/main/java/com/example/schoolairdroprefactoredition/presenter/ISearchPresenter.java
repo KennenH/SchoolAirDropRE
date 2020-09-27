@@ -6,7 +6,7 @@ public interface ISearchPresenter extends IBasePresenter<ISearchCallback> {
     /**
      * 获取搜索结果
      */
-    void getSearchResult(String token, double longitude, double latitude, String key, boolean isLoadMore);
+    void getSearchResult(int page, double longitude, double latitude, String key, boolean isLoadMore);
 
     /**
      * 获取搜索历史

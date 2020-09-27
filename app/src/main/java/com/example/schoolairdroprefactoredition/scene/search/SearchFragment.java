@@ -6,12 +6,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
@@ -26,33 +23,23 @@ import com.example.schoolairdroprefactoredition.databinding.FragmentSearchPrelay
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
+import com.example.schoolairdroprefactoredition.ui.adapter.BaseFooterAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderFooterOnlyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.SearchSuggestionRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.SearchBar;
 import com.example.schoolairdroprefactoredition.ui.components.SearchHistoryHeader;
+import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.github.ybq.android.spinkit.SpinKitView;
-import com.scwang.smart.refresh.layout.SmartRefreshLayout;
 
 import java.util.ArrayList;
 
-public class SearchFragment extends Fragment implements SearchBar.OnSearchActionListener, EndlessRecyclerView.OnLoadMoreListener, BaseStateViewModel.OnRequestListener {
+public class SearchFragment extends Fragment implements SearchBar.OnSearchActionListener, EndlessRecyclerView.OnLoadMoreListener, BaseStateViewModel.OnRequestListener, BaseFooterAdapter.OnNoMoreDataListener {
     private SearchViewModel searchViewModel;
 
-    private ConstraintSet constraintSet;
-    private ConstraintLayout root;
-
-    private SearchBar mSearchBar;
-    private TextView mCancel;
-    private SmartRefreshLayout mOverDrag;
-
-    private RecyclerView mHistory;
-    private RecyclerView mSuggestion;
-    private EndlessRecyclerView mResult;
-    private LinearLayout mTip;
-    private SpinKitView mLoading;
+    private FragmentSearchPrelayoutBinding binding;
+    private ConstraintSet constraintSet = new ConstraintSet();
 
     private HeaderFooterOnlyRecyclerAdapter mHistoryAdapter;
     private SearchSuggestionRecyclerAdapter mSuggestionAdapter;
@@ -69,6 +56,8 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     private boolean isHistoryShowing = false;
     private boolean isSuggestionShowing = false;
     private boolean isResultShowing = false;
+
+    private int searchPage = 1;
 
     public static SearchFragment newInstance(Bundle bundle) {
         SearchFragment fragment = new SearchFragment();
@@ -94,25 +83,14 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final FragmentSearchPrelayoutBinding binding = FragmentSearchPrelayoutBinding.inflate(inflater, container, false);
+        binding = FragmentSearchPrelayoutBinding.inflate(inflater, container, false);
         searchViewModel = new ViewModelProvider(this).get(SearchViewModel.class);
         searchViewModel.setOnRequestListener(this);
 
-        constraintSet = new ConstraintSet();
-        root = binding.root;
-        mSearchBar = binding.search;
-        mCancel = binding.searchCancel;
-        mOverDrag = binding.refresh;
-        mHistory = binding.searchHistory;
-        mSuggestion = binding.searchSuggestion;
-        mResult = binding.searchResult;
-        mTip = binding.searchTip;
-        mLoading = binding.loading;
-
         init();
 
-        mOverDrag.setVisibility(View.INVISIBLE);
-        root.post(this::startAnimation);
+        binding.refresh.setVisibility(View.INVISIBLE);
+        binding.root.post(this::startAnimation);
 
         return binding.getRoot();
     }
@@ -129,20 +107,21 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         mHistoryAdapter = new HeaderFooterOnlyRecyclerAdapter();
         mSuggestionAdapter = new SearchSuggestionRecyclerAdapter();
         mResultAdapter = new HomeNearbyRecyclerAdapter(bundle);
+        mResultAdapter.setOnNoMoreDataListener(this);
         mHistoryHeader = new SearchHistoryHeader(getContext());
-        mHistory.setLayoutManager(new LinearLayoutManager(getContext()));
-        mSuggestion.setLayoutManager(new LinearLayoutManager(getContext()));
-        mResult.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.searchHistory.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.searchSuggestion.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.searchResult.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mHistoryAdapter.addHeaderView(mHistoryHeader);
-        mHistory.setAdapter(mHistoryAdapter);
-        mSuggestion.setAdapter(mSuggestionAdapter);
-        mResult.setAdapter(mResultAdapter);
+        binding.searchHistory.setAdapter(mHistoryAdapter);
+        binding.searchSuggestion.setAdapter(mSuggestionAdapter);
+        binding.searchResult.setAdapter(mResultAdapter);
 
         searchViewModel.getSearchHistories().observe(getViewLifecycleOwner(), histories -> mHistoryHeader.showAfterUpdate(histories.getHistoryList()));
 
-        mSearchBar.setOnSearchActionListener(this);
-        mCancel.setOnClickListener(v -> {
+        binding.search.setOnSearchActionListener(this);
+        binding.searchCancel.setOnClickListener(v -> {
             if (getActivity() != null)
                 getActivity().getSupportFragmentManager().popBackStack();
         });
@@ -155,35 +134,35 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
             @Override
             public void onSearchHistory(String key) {
-                mSearchBar.setInputKey(key);
+                binding.search.setInputKey(key);
                 performSearch(key);
             }
         });
-        mHistory.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.searchHistory.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
-                    mSearchBar.closeSearch();
+                    binding.search.closeSearch();
             }
         });
-        mSuggestion.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.searchSuggestion.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
-                    mSearchBar.closeSearch();
+                    binding.search.closeSearch();
             }
         });
-        mResult.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        binding.searchResult.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING)
-                    mSearchBar.closeSearch();
+                    binding.search.closeSearch();
             }
         });
 
-        mResult.setOnLoadMoreListener(this);
+        binding.searchResult.setOnLoadMoreListener(this);
         showHistory();
-        mSearchBar.openSearch();
+        binding.search.openSearch();
     }
 
     /**
@@ -193,18 +172,20 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
      * @param key 搜索关键词
      */
     private void performSearch(String key) {
-        if (token != null) {
-            showLoading();
-            searchViewModel.getSearchResult(token.getAccess_token(), longitude, latitude, key).observe(getViewLifecycleOwner(), data -> {
-                mSearchBar.closeSearch();
-                mResultAdapter.setList(data);
-
-                showResult();
-                if (data.size() < 1) {
-                    showTip();
-                }
-            });
-            searchViewModel.getSearchHistories().observe(getViewLifecycleOwner(), histories -> mHistoryHeader.showAfterUpdate(histories.getHistoryList()));
+        if (!key.trim().equals("")) {
+            binding.search.closeSearch();
+            if (token != null) {
+                showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
+                searchViewModel.getSearchResult(longitude, latitude, key).observe(getViewLifecycleOwner(), data -> {
+                    if (data.size() < 1) {
+                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_SEARCH);
+                    } else {
+                        mResultAdapter.setList(data);
+                        showResult();
+                    }
+                });
+                searchViewModel.getSearchHistories().observe(getViewLifecycleOwner(), histories -> mHistoryHeader.showAfterUpdate(histories.getHistoryList()));
+            }
         }
     }
 
@@ -221,7 +202,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
             @Override
             public void onTransitionEnd(@NonNull Transition transition) {
-                mOverDrag.setVisibility(View.VISIBLE);
+                binding.refresh.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -239,69 +220,55 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
             }
         });
-        TransitionManager.beginDelayedTransition(root, transition);
-        constraintSet.applyTo(root);
+        TransitionManager.beginDelayedTransition(binding.root, transition);
+        constraintSet.applyTo(binding.root);
     }
 
     private void showHistory() {
         isHistoryShowing = true;
         isSuggestionShowing = false;
         isResultShowing = false;
-        mSuggestion.setVisibility(View.GONE);
-        mResult.setVisibility(View.GONE);
-        mTip.setVisibility(View.GONE);
-        mLoading.setVisibility(View.GONE);
-        mHistory.setVisibility(View.VISIBLE);
+        binding.searchSuggestion.setVisibility(View.GONE);
+        binding.searchResult.setVisibility(View.GONE);
+        binding.searchHistory.setVisibility(View.VISIBLE);
+        binding.searchPlaceHolder.setVisibility(View.GONE);
     }
 
     private void showSuggestion() {
         isHistoryShowing = false;
         isSuggestionShowing = true;
         isResultShowing = false;
-        mHistory.setVisibility(View.GONE);
-        mResult.setVisibility(View.GONE);
-        mTip.setVisibility(View.GONE);
-        mLoading.setVisibility(View.GONE);
-        mSuggestion.setVisibility(View.VISIBLE);
+        binding.searchHistory.setVisibility(View.GONE);
+        binding.searchResult.setVisibility(View.GONE);
+        binding.searchSuggestion.setVisibility(View.VISIBLE);
+        binding.searchPlaceHolder.setVisibility(View.GONE);
     }
 
     private void showResult() {
         isHistoryShowing = false;
         isSuggestionShowing = false;
         isResultShowing = true;
-        mHistory.setVisibility(View.GONE);
-        mSuggestion.setVisibility(View.GONE);
-        mTip.setVisibility(View.GONE);
-        mLoading.setVisibility(View.GONE);
-        mResult.setVisibility(View.VISIBLE);
+        binding.searchHistory.setVisibility(View.GONE);
+        binding.searchSuggestion.setVisibility(View.GONE);
+        binding.searchResult.setVisibility(View.VISIBLE);
+        binding.searchPlaceHolder.setVisibility(View.GONE);
     }
 
-    private void showTip() {
+    private void showPlaceHolder(int type) {
         isHistoryShowing = false;
         isSuggestionShowing = false;
         isResultShowing = false;
-        mHistory.setVisibility(View.GONE);
-        mSuggestion.setVisibility(View.GONE);
-        mResult.setVisibility(View.GONE);
-        mLoading.setVisibility(View.GONE);
-        mTip.setVisibility(View.VISIBLE);
-    }
-
-    private void showLoading() {
-        isHistoryShowing = false;
-        isSuggestionShowing = false;
-        isResultShowing = false;
-        mHistory.setVisibility(View.GONE);
-        mSuggestion.setVisibility(View.GONE);
-        mResult.setVisibility(View.GONE);
-        mTip.setVisibility(View.GONE);
-        mLoading.setVisibility(View.VISIBLE);
+        binding.searchHistory.setVisibility(View.GONE);
+        binding.searchSuggestion.setVisibility(View.GONE);
+        binding.searchResult.setVisibility(View.GONE);
+        binding.searchPlaceHolder.setVisibility(View.VISIBLE);
+        binding.searchPlaceHolder.setPlaceHolderType(type);
     }
 
     @Override
     public void autoLoadMore(EndlessRecyclerView recycler) {
         if (token != null)
-            searchViewModel.getLastSearchedResult(token.getAccess_token(), longitude, latitude).observe(getViewLifecycleOwner(), data -> {
+            searchViewModel.getSearchResult().observe(getViewLifecycleOwner(), data -> {
                 mResultAdapter.addData(data);
                 recycler.finishLoading();
             });
@@ -328,7 +295,16 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     @Override
     public void onError() {
-        mLoading.setVisibility(View.GONE);
+        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 
+    @Override
+    public void onNoMoreData() {
+        binding.searchResult.setIsNoMoreData(true);
+    }
+
+    @Override
+    public void onNoMoreDataRefresh() {
+        binding.searchResult.setIsNoMoreData(false);
+    }
 }

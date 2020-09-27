@@ -1,22 +1,20 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import android.util.Log;
-
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.cache.SearchHistories;
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.model.Api;
+import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ISearchPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISearchCallback;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
@@ -57,42 +55,42 @@ public class SearchImpl implements ISearchPresenter {
     }
 
     @Override
-    public void getSearchResult(String token, double longitude, double latitude, String key, boolean isLoadMore) {
+    public void getSearchResult(int page,double longitude, double latitude, String key, boolean isLoadMore) {
         if (!isLoadMore)
             saveHistory(key);
 
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainGoodsInfo> task = api.searchGoods(token, 120.31219, 30.124445, key);
-        task.enqueue(new Callback<DomainGoodsInfo>() {
+        Call<DomainGoodsInfo> task = api.searchGoods(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET,page, longitude, latitude, key);
+        task.enqueue(new CallBackWithRetry<DomainGoodsInfo>(task) {
             @Override
             public void onResponse(Call<DomainGoodsInfo> call, Response<DomainGoodsInfo> response) {
                 int code = response.code();
                 if (code == HttpURLConnection.HTTP_OK) {
                     DomainGoodsInfo info = response.body();
+
 //                    try {
-//                        Log.d("SearchImpl", "请求成功 -- > " + info.string());
+//                        Log.d("SearchImpl", "请求成功 -- > " + response.body().string());
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
+
                     if (mCallback != null) {
-                        mCallback.onSearchResultLoaded(info.getData());
+                        if (info != null) {
+                            mCallback.onSearchResultLoaded(info.getData());
+                        } else {
+                            mCallback.onError();
+                        }
                     }
 
                 } else {
                     mCallback.onError();
-                    try {
-                        Log.d("SearchImpl", "请求错误 -- > " + response.errorBody().string() + " token -- > " + token);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
             }
 
             @Override
-            public void onFailure(Call<DomainGoodsInfo> call, Throwable t) {
+            public void onFailureAllRetries() {
                 mCallback.onError();
-                Log.e("SearchImpl", "请求失败 " + t);
             }
         });
     }

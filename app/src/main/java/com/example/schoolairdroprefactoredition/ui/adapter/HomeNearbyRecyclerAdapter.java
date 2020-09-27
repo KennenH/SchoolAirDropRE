@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
@@ -12,14 +12,14 @@ import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
 import com.example.schoolairdroprefactoredition.ui.components.GoodsPrice;
 import com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 
 import org.jetbrains.annotations.NotNull;
 
 /**
  * 附近在售列表的adapter
  */
-public class HomeNearbyRecyclerAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseViewHolder> {
+public class HomeNearbyRecyclerAdapter extends BaseFooterAdapter<DomainGoodsInfo.DataBean, BaseViewHolder> {
 
     private Bundle bundle;
 
@@ -35,12 +35,12 @@ public class HomeNearbyRecyclerAdapter extends BaseQuickAdapter<DomainGoodsInfo.
                 boolean negotiable = data.getGoods_is_quotable() == 1;
                 boolean secondHand = data.getGoods_is_brandNew() == 0;
 
-                ((SimpleDraweeView) holder.findView(R.id.item_image)).setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getGoods_img_cover());
+                TextViewWithImages title = holder.itemView.findViewById(R.id.item_title);
+                ImageView credit = holder.itemView.findViewById(R.id.item_credit);
+
+                ImageUtil.scaledImageLoad(holder.itemView.findViewById(R.id.item_image), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getGoods_img_cover(), SizeUtils.dp2px(120));
                 ((GoodsPrice) holder.findView(R.id.item_price)).setPrice(data.getGoods_price());
                 holder.setText(R.id.item_seller, data.getSeller_info().getUname());
-                TextViewWithImages title = holder.findView(R.id.item_title);
-                ImageView credit = holder.findView(R.id.item_credit);
-
                 holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), bundle, data));
 
                 if (negotiable && secondHand)

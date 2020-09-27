@@ -16,6 +16,7 @@ import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentB
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
+import com.example.schoolairdroprefactoredition.ui.adapter.BaseFooterAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
@@ -24,7 +25,7 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 public class HomeNearbyFragment extends BaseChildFragment
-        implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseStateViewModel.OnRequestListener, MainActivity.OnLocationListener {
+        implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseStateViewModel.OnRequestListener, MainActivity.OnLocationListener, BaseFooterAdapter.OnNoMoreDataListener {
     private HomeNearbyFragmentViewModel homeContentFragmentViewModel;
 
     private SmartRefreshLayout mRefresh;
@@ -56,8 +57,11 @@ public class HomeNearbyFragment extends BaseChildFragment
         mEndlessRecyclerView = binding.homeRecycler;
 
         initRecycler();
-        if (mLocation == null)
-            locateWithoutRequest();// 自动请求MainActivity的定位
+
+        if (mLocation == null) {
+            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
+            locateWithoutRequest();// 自动请求MainActivity的定位}
+        }
 
         return binding.getRoot();
     }
@@ -69,7 +73,25 @@ public class HomeNearbyFragment extends BaseChildFragment
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 
         mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter(getBundle());
+        mHomeNearbyRecyclerAdapter.setOnNoMoreDataListener(this);
         mEndlessRecyclerView.setAdapter(mHomeNearbyRecyclerAdapter);
+
+    }
+
+    /**
+     * 没有更多数据
+     */
+    @Override
+    public void onNoMoreData() {
+        mEndlessRecyclerView.setIsNoMoreData(true);
+    }
+
+    /**
+     * 刷新列表后
+     */
+    @Override
+    public void onNoMoreDataRefresh() {
+        mEndlessRecyclerView.setIsNoMoreData(false);
     }
 
     /**
@@ -80,16 +102,16 @@ public class HomeNearbyFragment extends BaseChildFragment
         if (aMapLocation != null) {
             if (aMapLocation.getErrorCode() == 0) {
                 mLocation = aMapLocation;
-                homeContentFragmentViewModel.getGoodsInfo(1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+                homeContentFragmentViewModel.getGoodsInfo(mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
                     if (data.size() == 0)
-                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME);
+                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_GOODS_HOME);
                     else {
                         mHomeNearbyRecyclerAdapter.setList(data);
                         showContentContainer();
                     }
                 });
-            } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
-        } else showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+            } else showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
+        } else showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
     }
 
     @Override
@@ -100,10 +122,10 @@ public class HomeNearbyFragment extends BaseChildFragment
     @Override
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         if (mLocation != null) { // 定位信息不为null时
-            homeContentFragmentViewModel.getGoodsInfo(1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
+            homeContentFragmentViewModel.getGoodsInfo(mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
                 refreshLayout.finishRefresh();
                 if (data.size() == 0) {
-                    showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME);
+                    showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_GOODS_HOME);
                 } else {
                     mHomeNearbyRecyclerAdapter.setList(data);
                     showContentContainer();
@@ -111,28 +133,27 @@ public class HomeNearbyFragment extends BaseChildFragment
             });
         } else { // 定位失败时通知父Fragment显示PlaceHolder
             refreshLayout.finishRefresh();
-            showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+            showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
             locateWithoutRequest();// 自动请求MainActivity的定位
         }
     }
 
     @Override
     public void autoLoadMore(EndlessRecyclerView recycler) {
-//        if (mLocation != null) {
-//            if (token != null)
-//                homeContentFragmentViewModel.getGoodsInfo(token.getAccess_token(), 1, mLocation.getLongitude(), mLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
-//                    mHomeNearbyRecyclerAdapter.addData(data);
-//                    showContentContainer();
-//                    recycler.finishLoading();
-//                });
-//        } else {
-//            showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
-//            recycler.finishLoading();
-//        }
+        if (mLocation != null) {
+            homeContentFragmentViewModel.getGoodsInfo().observe(getViewLifecycleOwner(), data -> {
+                recycler.finishLoading();
+                mHomeNearbyRecyclerAdapter.addData(data);
+                showContentContainer();
+            });
+        } else {
+            showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+            recycler.finishLoading();
+        }
     }
 
     @Override
     public void onError() {
-        showPlaceHolder(StatePlaceHolder.TYPE_UNKNOWN);
+        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
 }

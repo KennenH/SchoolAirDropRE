@@ -1,72 +1,54 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
-import android.os.Bundle;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.blankj.utilcode.util.ClickUtils;
-import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
-import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
-import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity;
 import com.example.schoolairdroprefactoredition.ui.components.RecyclerFooter;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
+import java.util.List;
 
-public class HomeNewsRecyclerAdapter extends BaseMultiItemQuickAdapter<BaseHomeNewsEntity, BaseViewHolder> {
+public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends BaseQuickAdapter<T, VH> {
 
     private OnNoMoreDataListener mOnNoMoreDataListener;
 
-    public static final int TYPE_ONE = 0;
-    public static final int TYPE_TWO = 1;
+    public BaseFooterAdapter(int layoutResId) {
+        super(layoutResId);
+    }
 
-    public HomeNewsRecyclerAdapter() {
-        addItemType(TYPE_ONE, R.layout.item_home_news_1);
-        addItemType(TYPE_TWO, R.layout.item_home_news_2);
+    public BaseFooterAdapter(int layoutResId, @org.jetbrains.annotations.Nullable List<T> data) {
+        super(layoutResId, data);
     }
 
     @Override
-    protected void convert(@NotNull BaseViewHolder holder, BaseHomeNewsEntity data) {
-        if (holder.getItemViewType() == TYPE_ONE) {
-            // holder.setImage(news_image,data.getUrl())
-            holder.setText(R.id.news_title, data.getTitle());
-        } else {
-            holder.setText(R.id.news_title, data.getTitle());
-        }
-
-        View item = holder.itemView;
-        ClickUtils.applyPressedViewScale(item);
-        item.setOnClickListener(v -> {
-            GoodsActivity.start(getContext(), new Bundle(), null);
-        });
-    }
-
-    @Override
-    public void setList(@Nullable Collection<? extends BaseHomeNewsEntity> list) {
+    public void setList(@org.jetbrains.annotations.Nullable Collection<? extends T> list) {
         super.setList(list);
         if (mOnNoMoreDataListener != null)
             mOnNoMoreDataListener.onNoMoreDataRefresh();
 
         removeAllFooterView();
         if (list != null && list.size() < ConstantUtil.DATA_FETCH_DEFAULT_SIZE) {
-            addFooter();
+            addNoMoreFooter();
         }
     }
 
     @Override
-    public void addData(@NotNull Collection<? extends BaseHomeNewsEntity> newData) {
+    public void addData(@NotNull Collection<? extends T> newData) {
         super.addData(newData);
+        removeAllFooterView();
         if (newData.size() < ConstantUtil.DATA_FETCH_DEFAULT_SIZE) {
-            addFooter();
+            addNoMoreFooter();
         }
     }
 
-    private void addFooter() {
+    /**
+     * 在没有更多数据时添加尾巴
+     */
+    private void addNoMoreFooter() {
         if (mOnNoMoreDataListener != null)
             mOnNoMoreDataListener.onNoMoreData();
 
@@ -90,4 +72,5 @@ public class HomeNewsRecyclerAdapter extends BaseMultiItemQuickAdapter<BaseHomeN
     public void setOnNoMoreDataListener(OnNoMoreDataListener listener) {
         mOnNoMoreDataListener = listener;
     }
+
 }

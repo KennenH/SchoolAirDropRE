@@ -14,8 +14,8 @@ public class BaseChildFragment extends Fragment {
     /**
      * 显示PlaceHolder
      *
-     * @param type {@link com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder#TYPE_ERROR}
-     *             {@link com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder#TYPE_EMPTY_HOME}
+     * @param type {@link com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder#TYPE_NETWORK_OR_LOCATION_ERROR_HOME}
+     *             {@link com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder#TYPE_EMPTY_GOODS_HOME}
      */
     protected void showPlaceHolder(int type) {
         if (getParentFragment() instanceof BaseParentFragment) {

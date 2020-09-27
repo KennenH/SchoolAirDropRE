@@ -5,10 +5,12 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsDetailBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
@@ -56,7 +58,7 @@ public class GoodsInfo extends ShimmerFrameLayout {
                 binding.goodsPager.setData(MyUtil.getArrayFromString(data.getGoods_img_set()));
 
                 if (data.getSeller_info() != null) {
-                    binding.goodsAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path());
+                    ImageUtil.scaledImageLoad(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path(), SizeUtils.dp2px(55));
                     binding.goodsUserName.setText(data.getSeller_info().getUname());
                 } else binding.goodsSellerInfo.setVisibility(GONE);
             } catch (NullPointerException e) {

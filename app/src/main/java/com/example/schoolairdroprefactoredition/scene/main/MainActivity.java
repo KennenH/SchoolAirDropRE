@@ -32,7 +32,6 @@ import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -104,17 +103,17 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     public void autoLogin() {
         if (!autoLogged) {
             autoLogged = true; // 已自动登录标识，防止多个子fragment调用此方法
-
-            tokenViewModel.getTokenCaChe().observe(this, tokenCache -> {
-                if (tokenCache != null) { // token 仍有效 使用本地缓存重新获取token后登录
-                    autoLoginWithToken();
-                } else {
-                    tokenViewModel.getUserInfoCache().observe(this, infoCache -> {
-                        if (infoCache != null) // token 已无效 使用本地缓存重新获取token后登录
-                            autoReLoginWithCache();
-                    });
-                }
-            });
+            if (tokenViewModel != null)
+                tokenViewModel.getTokenCaChe().observe(this, tokenCache -> {
+                    if (tokenCache != null) { // token 仍有效 使用本地缓存重新获取token后登录
+                        autoLoginWithToken();
+                    } else {
+                        tokenViewModel.getUserInfoCache().observe(this, infoCache -> {
+                            if (infoCache != null) // token 已无效 使用本地缓存重新获取token后登录
+                                autoReLoginWithCache();
+                        });
+                    }
+                });
         }
     }
 
@@ -212,7 +211,6 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     @Override
     public void onLoginError() {
         dismissLoading();
-        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.FAILED);
     }
 
     /**

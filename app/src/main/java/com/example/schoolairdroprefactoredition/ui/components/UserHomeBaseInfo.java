@@ -5,22 +5,18 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
 
-import androidx.constraintlayout.widget.ConstraintLayout;
-
+import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.ComponentUserInfoBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.facebook.drawee.view.SimpleDraweeView;
+import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 
-public class UserHomeBaseInfo extends ConstraintLayout implements View.OnClickListener {
+public class UserHomeBaseInfo extends ConstraintLayoutAuto implements View.OnClickListener {
 
-    private SimpleDraweeView mAvatar;
-    private TextView mUserName;
-    private ImageView mVerified;
-    private TextView mDescription;
-    private TextView mJoinTime;
+    private ComponentUserInfoBinding binding;
 
     private OnBaseInfoActionListener mOnBaseInfoActionListener;
 
@@ -34,20 +30,13 @@ public class UserHomeBaseInfo extends ConstraintLayout implements View.OnClickLi
 
     public UserHomeBaseInfo(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        LayoutInflater.from(context).inflate(R.layout.component_user_info, this, true);
-
-        mAvatar = findViewById(R.id.user_avatar);
-        mUserName = findViewById(R.id.user_name);
-        mVerified = findViewById(R.id.verifyInfo);
-        mDescription = findViewById(R.id.description);
-        mJoinTime = findViewById(R.id.user_join_time);
-
-        mAvatar.setOnClickListener(this);
+        binding = ComponentUserInfoBinding.bind(LayoutInflater.from(context).inflate(R.layout.component_user_info, this, true));
+        binding.userAvatar.setOnClickListener(this);
     }
 
     public void setUserBaseInfo(DomainUserInfo.DataBean info) {
-        mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
-        mUserName.setText(info.getUname());
+        ImageUtil.scaledImageLoad(binding.userAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), SizeUtils.dp2px(80));
+        binding.userName.setText(info.getUname());
     }
 
     public interface OnBaseInfoActionListener {
@@ -61,7 +50,7 @@ public class UserHomeBaseInfo extends ConstraintLayout implements View.OnClickLi
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.user_avatar) {
-            mOnBaseInfoActionListener.onAvatarClick(mAvatar);
+            mOnBaseInfoActionListener.onAvatarClick(binding.userAvatar);
         }
     }
 }

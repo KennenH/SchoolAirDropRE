@@ -19,7 +19,6 @@
     <string name="itemNs" translatable="false">"[img src=ic_negotiable_small/] %s"</string>
     <string name="itemS" translatable="false">"[img src=ic_secondhand/] %s"</string>
     <string name="itemSs" translatable="false">"[img src=ic_secondhand_small/] %s"</string>
-    <string name="recyclerFooter" translatable="false">[img src=ic_line/]     [img src=ic_logo/]     [img src=ic_line/]</string>
 
 
     <!--  substitutions  -->
@@ -163,7 +162,8 @@
     <string name="picSet">图片集</string>
     <string name="locating">正在获取定位…</string>
     <string name="errorNetLocation">网络或定位出错啦</string>
-    <string name="errorEmpty">附近还没有人发布过物品 快去发布你自己的物品吧</string>
+    <string name="errorGoodsEmptyHome">附近还没有人发布过物品 快去发布你自己的物品吧</string>
+    <string name="errorNewsEmptyHome">没有附近话题</string>
     <string name="postMyItem">去发布我的物品</string>
     <string name="errorRetry">重试</string>
     <string name="trash">回收站</string>
@@ -173,7 +173,7 @@
     <string name="relocate">重新定位</string>
     <string name="refuse">拒绝</string>
     <string name="accept">接受</string>
-    <string name="permissionTitle">注意</string>
+    <string name="permissionTitle">需要权限</string>
     <string name="waitingForBuyerPayment">等待买家付款</string>
     <string name="WaitingForSellerToDeliver">等待卖家交付</string>
     <string name="warningForSeller">如果倒计时结束，卖家未完成交付，将会扣除卖家信用分数。</string>
@@ -195,7 +195,7 @@
     <string name="connectionLost">连接中断 请重试</string>
     <string name="submitSuccess">提交成功</string>
     <string name="submitFailed">提交失败</string>
-    <string name="submitSuccessTip">物品进入审核阶段，结果将会于72小时内通过站内信通知你</string>
+    <string name="submitSuccessTip">物品表单提交成功，我们将在每日18点左右对物品进行统一审核，你可以在这个时间点之后登录查看物品审核结果</string>
     <string name="submitFailedTip">可能是网络不稳定或者服务器忙碌维护。表单已自动保存，建议稍后重试提交</string>
     <string name="OK">好</string>
     <string name="errorUpdateAvatar">上传头像出错</string>
@@ -205,11 +205,11 @@
     <string name="goodsIsSecondHand">物品为二手</string>
     <string name="originPrice">原价</string>
     <string name="unLogged">未登录</string>
-    <string name="emptyOops">啊哦… 还没有相似物品</string>
+    <string name="emptySearch">啊哦… 附近似乎没有相似物品</string>
     <string name="nothingThere">空空如也…</string>
     <string name="dialogSuccess">成功</string>
     <string name="dialogFailed">出错啦</string>
-    <string name="errorUnknown">未知错误</string>
+    <string name="errorLoading">加载出错啦…</string>
     <string name="finalPrice">成交价</string>
     <string name="SendMessage">发送消息</string>
     <string name="draftRecovered">已恢复上次保存的草稿</string>
@@ -217,5 +217,10 @@
     <string name="dialogNetWorkError">网络错误</string>
     <string name="restoreDraft">恢复草稿</string>
     <string name="draftCleared">已清除输入，在关闭之前仍可恢复</string>
+    <string name="plsEnterQuotePrice">请输入报价</string>
+    <string name="recyclerFooter" translatable="false">[img src=ic_line/]&#160;&#160;&#160;&#160;[img src=ic_logo/]&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
+    <string name="postMyTopic">发布我的话题</string>
+    <string name="unListItem">确定下架该物品?</string>
+    <string name="attention">注意</string>
 
 </resources>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -63,4 +63,4 @@
         android:src="@drawable/ic_credit5"
         app:layout_constraintBottom_toBottomOf="@+id/item_image"
         app:layout_constraintEnd_toEndOf="@+id/item_title" />
-</com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>
+</com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

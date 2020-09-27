@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/root"
     android:layout_width="match_parent"
@@ -85,6 +85,10 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
 
+            <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
+                android:id="@+id/search_place_holder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
         </FrameLayout>
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
-</com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>
+</com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

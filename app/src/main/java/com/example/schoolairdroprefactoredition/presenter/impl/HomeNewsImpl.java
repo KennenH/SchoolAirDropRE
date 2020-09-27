@@ -1,10 +1,9 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
+import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 import com.example.schoolairdroprefactoredition.presenter.IHomeNewsPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeNewsCallback;
-import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
-import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity;
 
 import java.util.Arrays;
 
@@ -16,7 +15,8 @@ public class HomeNewsImpl implements IHomeNewsPresenter {
      * 请求最新消息的数据
      */
     @Override
-    public void getNews() {
+    public void getNews(int page) {
+
         TestNewsItemBean[] data = new TestNewsItemBean[12];
         for (int i = 0; i < 12; i++) {
             data[i] = new TestNewsItemBean();

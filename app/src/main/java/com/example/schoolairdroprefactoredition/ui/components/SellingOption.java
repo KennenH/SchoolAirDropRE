@@ -10,9 +10,9 @@ import android.widget.TextView;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto;
+import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 
-public class SellingOption extends ConstrainLayoutAuto {
+public class SellingOption extends ConstraintLayoutAuto {
 
     private TextView mTitle;
     private TextView mDescription;

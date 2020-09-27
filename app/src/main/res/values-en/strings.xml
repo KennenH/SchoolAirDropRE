@@ -129,7 +129,7 @@
     <string name="toBeAgreedPosition">Items to be agreed upon with %s</string>
     <string name="waitingForDelivery">Waiting To Deliver</string>
     <string name="waitingForPay">Waiting For Payment</string>
-    <string name="errorEmpty">No one nearby has posted an item yet, go post your own</string>
+    <string name="errorGoodsEmptyHome">No one nearby has posted an item yet, go post your own</string>
     <string name="selectPosition">Choose Location</string>
     <string name="permissionTitle">Permission Required</string>
     <string name="waitingForBuyerPayment">Waiting For Buyer Payment</string>
@@ -167,7 +167,7 @@
     <string name="connectionLost">Connection lost, please try again</string>
     <string name="submitSuccess">Success</string>
     <string name="submitFailed">Failed</string>
-    <string name="submitSuccessTip">The item enters the review stage, and the result will be notified to you via app station letter within 72 hours</string>
+    <string name="submitSuccessTip">The form is submitted successfully. We will conduct a unified review of the items at around 18:00 every day. You can view the item review results in app after this time.</string>
     <string name="submitFailedTip">It may be due to unstable network or busy maintenance of the server. The form has been automatically saved, it is recommended to retry later</string>
     <string name="OK">OK</string>
     <string name="errorLocation">Location Obtain Failed</string>
@@ -177,11 +177,11 @@
     <string name="nothingThere">Nothing…</string>
     <string name="dialogSuccess">Success</string>
     <string name="dialogFailed">Failed</string>
-    <string name="errorUnknown">Unknown Error</string>
+    <string name="errorLoading">Error Loading Data…</string>
     <string name="finalPrice">Final Price</string>
     <string name="goodsIsSecondHand">Item Is Second-hand</string>
     <string name="originPrice">Original Price</string>
-    <string name="emptyOops">Oh… there is no similar item yet</string>
+    <string name="emptySearch">Ah oh… There seems to be no similar items nearby</string>
     <string name="unLogged">Not Logged</string>
     <string name="InitiateQuote">Initiate A Quote</string>
     <string name="SendMessage">Send Message</string>
@@ -190,4 +190,9 @@
     <string name="dialogNetWorkError">Network Error</string>
     <string name="restoreDraft">Restore</string>
     <string name="draftCleared">Input cleared, Can be restored before page closed</string>
+    <string name="plsEnterQuotePrice">Please Enter Quote Price</string>
+    <string name="errorNewsEmptyHome">No nearby topic</string>
+    <string name="postMyTopic">Post My Topic</string>
+    <string name="unListItem">Are You Sure You Want To Off-Shelf This Item?</string>
+    <string name="attention">Attention</string>
 </resources>

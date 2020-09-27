@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.mob.MobSDK;
 
 import me.jessyan.autosize.AutoSize;
 import me.jessyan.autosize.AutoSizeConfig;
@@ -11,6 +12,7 @@ public class Application extends android.app.Application {
         super.onCreate();
         Fresco.initialize(this);
         initAdapt();
+        initMobPush();
     }
 
     private void initAdapt() {
@@ -31,5 +33,9 @@ public class Application extends android.app.Application {
         } else {
             config.setBaseOnWidth(true);
         }
+    }
+
+    private void initMobPush() {
+        MobSDK.init(this);
     }
 }

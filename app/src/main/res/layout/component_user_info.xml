@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -26,11 +26,10 @@
         android:id="@+id/user_avatar"
         android:layout_width="80dp"
         android:layout_height="80dp"
+        app:actualImageResource="@drawable/logo_180x"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:placeholderImage="@drawable/logo"
-        app:placeholderImageScaleType="centerInside"
         app:roundAsCircle="true" />
 
     <TextView
@@ -62,8 +61,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/general_padding_larger"
         android:gravity="center"
-        android:textSize="14dp"
         android:text="校园空投官方账号\nwww.schoolairdrop.com"
+        android:textSize="14dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toBottomOf="@+id/user_name" />
@@ -82,4 +81,4 @@
         app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toBottomOf="@+id/description" />
 
-</com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>
+</com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

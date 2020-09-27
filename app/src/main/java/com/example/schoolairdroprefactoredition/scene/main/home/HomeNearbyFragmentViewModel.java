@@ -11,6 +11,9 @@ import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewMod
 import java.util.List;
 
 public class HomeNearbyFragmentViewModel extends BaseStateViewModel implements IHomeGoodsInfoCallback {
+    private int nowPage;
+    private double longitude;
+    private double latitude;
 
     private HomeGoodsInfoImpl mHomeImpl;
 
@@ -31,8 +34,17 @@ public class HomeNearbyFragmentViewModel extends BaseStateViewModel implements I
         mOnRequestListener.onError();
     }
 
-    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo(int page, double longitude, double latitude) {
-        mHomeImpl.getNearbyGoods(page, longitude, latitude);
+    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo(double longitude, double latitude) {
+        nowPage = 0;
+        this.longitude = longitude;
+        this.latitude = latitude;
+
+        mHomeImpl.getNearbyGoods(nowPage++, longitude, latitude);
+        return mGoodsInfo;
+    }
+
+    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo() {
+        mHomeImpl.getNearbyGoods(nowPage, longitude, latitude);
         return mGoodsInfo;
     }
 

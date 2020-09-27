@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
@@ -26,6 +27,7 @@ import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.ui.components.SSBInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
@@ -108,7 +110,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
             mSSBInfo.setBought(0);
             mSSBInfo.setSold(0);
         } else if (info != null) { // 设置页面数据
-            mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
+            ImageUtil.scaledImageLoad(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), SizeUtils.dp2px(80));
             mName.setText(info.getUname());
             // set selling sold bought number
         }

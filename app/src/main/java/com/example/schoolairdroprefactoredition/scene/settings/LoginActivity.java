@@ -182,6 +182,7 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
     @Override
     public void onError() {
         dismissLoading();
+        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.ERROR_UNKNOWN);
     }
 
 }

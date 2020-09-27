@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
+<com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -32,6 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
+        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <TextView
@@ -55,9 +56,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/general_padding_small"
+            android:background="@drawable/button_round_stroke_primary"
             android:padding="@dimen/general_padding"
             android:text="@string/restoreDraft"
-            android:background="@drawable/button_round_stroke_primary"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/textSizeNormal"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -329,4 +330,4 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.core.widget.NestedScrollView>
     </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
-</com.example.schoolairdroprefactoredition.ui.auto.ConstrainLayoutAuto>
+</com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

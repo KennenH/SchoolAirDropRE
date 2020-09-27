@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -25,7 +24,6 @@ import com.luck.picture.lib.animators.AnimationType;
 import com.luck.picture.lib.config.PictureConfig;
 import com.luck.picture.lib.config.PictureMimeType;
 import com.luck.picture.lib.entity.LocalMedia;
-import com.luck.picture.lib.language.LanguageConfig;
 import com.luck.picture.lib.style.PictureWindowAnimationStyle;
 import com.luck.picture.lib.tools.SdkVersionUtils;
 import com.lxj.xpopup.XPopup;
@@ -36,7 +34,6 @@ import com.lxj.xpopup.interfaces.XPopupImageLoader;
 import java.io.File;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Locale;
 
 public class MyUtil {
     /**
@@ -100,7 +97,7 @@ public class MyUtil {
     }
 
     public static LoadingPopupView loading(Context context) {
-        return new XPopup.Builder(context).asLoading();
+        return new XPopup.Builder(context).dismissOnTouchOutside(false).isDarkTheme(false).asLoading();
     }
 
 
@@ -148,7 +145,7 @@ public class MyUtil {
                 .setRecyclerAnimationMode(AnimationType.ALPHA_IN_ANIMATION)// 列表动画效果
                 .isMaxSelectEnabledMask(true)// 选择数到了最大阀值列表是否启用蒙层效果
                 .maxSelectNum(max)// 最大图片选择数量
-                .minSelectNum(1)// 最小选择数量
+//                .minSelectNum(1)// 最小选择数量
                 .imageSpanCount(3)// 每行显示个数
                 .isReturnEmpty(false)// 未选择数据时点击按钮是否可以返回
                 .closeAndroidQChangeWH(true)//如果图片有旋转角度则对换宽高,默认为true
@@ -312,7 +309,7 @@ public class MyUtil {
                         return R.layout.dialog_center_attention;
                 }
             }
-        }).show().delayDismiss(300);
+        }).show().delayDismiss(500);
     }
 
     /**
@@ -320,17 +317,6 @@ public class MyUtil {
      */
     public static List<String> getArrayFromString(String picSet) {
         return Arrays.asList(picSet.split("&"));
-    }
-
-
-    /**
-     * 图片选择器语言
-     *
-     * @return 中文或英文
-     */
-    public static int getImagePickerLanguage() {
-        Log.d("Language == > ", Locale.getDefault().getLanguage());
-        return Locale.getDefault().getLanguage().equals("cn") ? LanguageConfig.CHINESE : LanguageConfig.ENGLISH;
     }
 
     /**

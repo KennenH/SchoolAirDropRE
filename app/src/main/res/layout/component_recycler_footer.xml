@@ -4,5 +4,5 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_horizontal"
     android:gravity="center"
-    android:padding="@dimen/general_padding"
+    android:padding="@dimen/general_padding_large"
     android:text="@string/recyclerFooter" />

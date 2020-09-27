@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult;
 import com.example.schoolairdroprefactoredition.model.Api;
+import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IUserAvatarPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IUserAvatarCallback;
@@ -14,8 +15,6 @@ import java.net.HttpURLConnection;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
@@ -34,7 +33,7 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
                 RequestBody.create(MediaType.parse("image/*"), file));
 
         retrofit2.Call<DomainAvatarUpdateResult> task = api.updateAvatar(token, photo);
-        task.enqueue(new Callback<DomainAvatarUpdateResult>() {
+        task.enqueue(new CallBackWithRetry<DomainAvatarUpdateResult>(task) {
             @Override
             public void onResponse(retrofit2.Call<DomainAvatarUpdateResult> call, Response<DomainAvatarUpdateResult> response) {
                 int code = response.code();
@@ -64,8 +63,7 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
             }
 
             @Override
-            public void onFailure(Call<DomainAvatarUpdateResult> call, Throwable t) {
-                LogUtils.d(t.toString());
+            public void onFailureAllRetries() {
                 mCallback.onError();
             }
         });

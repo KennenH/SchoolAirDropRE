@@ -27,12 +27,13 @@ import com.lxj.xpopup.impl.LoadingPopupView;
 
 import java.util.List;
 
-public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRequestListener, SSBFilter.OnFilterListener {
+public abstract class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRequestListener, SSBFilter.OnFilterListener, StatePlaceHolder.OnPlaceHolderRefreshListener, SSBViewModel.OnSSBActionListener, SSBAdapter.OnSSBItemActionListener {
 
     protected SSBViewModel viewModel;
 
     protected SSBAdapter mAdapter;
     protected SSBFilter mFilter;
+
     protected LoadingPopupView mLoading;
 
     protected com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding;
@@ -60,13 +61,15 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
         binding = com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(SSBViewModel.class);
         viewModel.setOnRequestListener(this);
-
-        binding.ssbRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        viewModel.setOnSSBActionListener(this);
 
         mLoading = MyUtil.loading(getContext());
+        binding.ssbRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
+        binding.placeHolder.setOnPlaceHolderActionListener(this);
+
         mFilter = new SSBFilter(getContext());
         mAdapter = new SSBAdapter(bundle);
-
+        mAdapter.setOnSSBItemActionListener(this);
         mFilter.setOnFilterListener(this);
         mAdapter.addHeaderView(mFilter);
         binding.ssbRecycler.setAdapter(mAdapter);
@@ -79,7 +82,17 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
         });
 
         init(binding);
+
         return binding.getRoot();
+    }
+
+    protected void showLoading() {
+        if (mLoading == null) mLoading = MyUtil.loading(getContext());
+        mLoading.show();
+    }
+
+    protected void dismissLoading() {
+        if (mLoading != null) mLoading.dismiss();
     }
 
     /**
@@ -101,8 +114,8 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
      * @param type one of
      *             {@link StatePlaceHolder#TYPE_LOADING}
      *             {@link StatePlaceHolder#TYPE_EMPTY}
+     *             {@link StatePlaceHolder#TYPE_NETWORK_OR_LOCATION_ERROR_HOME}
      *             {@link StatePlaceHolder#TYPE_ERROR}
-     *             {@link StatePlaceHolder#TYPE_UNKNOWN}
      */
     protected void showPlaceHolder(int type) {
         binding.placeHolder.setPlaceHolderType(type);
@@ -118,29 +131,41 @@ public class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRe
         binding.ssbRecycler.setVisibility(View.VISIBLE);
     }
 
-    /**
-     * 子fragment初始化方法
-     */
-    protected void init(FragmentSsbBinding binding) {
+    public abstract void init(FragmentSsbBinding binding);
+
+    public abstract void retryGrabOnlineData();
+
+    @Override
+    public void onPlaceHolderRetry(View view) {
+        retryGrabOnlineData();
     }
 
     @Override
     public void onError() {
-        showPlaceHolder(StatePlaceHolder.TYPE_UNKNOWN);
+        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+    }
+
+    @Override
+    public void onActionFailed() {
+        MyUtil.showCenterDialog(getContext(), MyUtil.DIALOG_TYPE.ERROR_UNKNOWN);
     }
 
     @Override
     public void onFilterTimeAsc() {
-
     }
 
     @Override
     public void onFilterTimeDesc() {
-
     }
 
     @Override
     public void onFilterWatches() {
+    }
 
+    public abstract void onItemAction(View view, DomainGoodsInfo.DataBean bean);
+
+    @Override
+    public void onItemActionButtonClick(View view, DomainGoodsInfo.DataBean bean) {
+        onItemAction(view, bean);
     }
 }

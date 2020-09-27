@@ -32,14 +32,6 @@ public class ParentNewsFragment extends BaseParentFragment
         return fragment;
     }
 
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (getActivity() instanceof MainActivity) {
-//            ((MainActivity) getActivity()).autoLogin();
-//        }
-//    }
-
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);

@@ -14,10 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.FragmentUserEditBinding;
+import com.example.schoolairdroprefactoredition.databinding.SheetSexBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
-import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
@@ -31,10 +32,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
     private String male;
     private String hermaphrodite;
 
-    private PageItem mAvatar;
-    private PageItem mName;
-    private PageItem mSex;
-
+    private FragmentUserEditBinding binding;
     private BottomSheetDialog dialog;
 
     private Bundle bundle;
@@ -53,16 +51,13 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_user_edit);
+        binding = FragmentUserEditBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
         setSupportActionBar(findViewById(R.id.toolbar));
 
-        mAvatar = findViewById(R.id.user_avatar);
-        mName = findViewById(R.id.user_name);
-        mSex = findViewById(R.id.user_sex);
-
-        mAvatar.setOnClickListener(this);
-        mName.setOnClickListener(this);
-        mSex.setOnClickListener(this);
+        binding.userAvatar.setOnClickListener(this);
+        binding.userName.setOnClickListener(this);
+        binding.userSex.setOnClickListener(this);
 
         userAvatar = getResources().getString(R.string.avatar);
         userName = getResources().getString(R.string.setName);
@@ -108,15 +103,15 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
      */
     private void setUserInfo() {
         if (info != null) {
-            mAvatar.setIconImage(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
-            mName.setDescription(info.getUname());
+            binding.userAvatar.setIconImage(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
+            binding.userName.setDescription(info.getUname());
             String gender = info.getUgender();
             if (gender.equals("m"))
-                mSex.setDescription(male);
+                binding.userSex.setDescription(male);
             else if (gender.equals("f"))
-                mSex.setDescription(female);
+                binding.userSex.setDescription(female);
             else
-                mSex.setDescription(hermaphrodite);
+                binding.userSex.setDescription(hermaphrodite);
         }
     }
 
@@ -135,22 +130,23 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
     private void showSexDialog() {
         if (dialog == null) {
             dialog = new BottomSheetDialog(this);
-            dialog.setContentView(LayoutInflater.from(this).inflate(R.layout.sheet_sex, null));
+            SheetSexBinding binding = SheetSexBinding.inflate(LayoutInflater.from(this));
+            dialog.setContentView(binding.getRoot());
 
             try {
-                dialog.findViewById(R.id.female).setOnClickListener(v -> {
-                    mSex.setDescription(female);
+                binding.female.setOnClickListener(v -> {
+                    this.binding.userSex.setDescription(female);
                     dialog.dismiss();
                 });
-                dialog.findViewById(R.id.male).setOnClickListener(v -> {
-                    mSex.setDescription(male);
+                binding.male.setOnClickListener(v -> {
+                    this.binding.userSex.setDescription(male);
                     dialog.dismiss();
                 });
-                dialog.findViewById(R.id.hermaphrodite).setOnClickListener(v -> {
-                    mSex.setDescription(hermaphrodite);
+                binding.hermaphrodite.setOnClickListener(v -> {
+                    this.binding.userSex.setDescription(hermaphrodite);
                     dialog.dismiss();
                 });
-                dialog.findViewById(R.id.cancel).setOnClickListener(v -> {
+                binding.cancel.setOnClickListener(v -> {
                     dialog.dismiss();
                 });
 

@@ -9,6 +9,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.model.Api;
+import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ILoginPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ILoginCallback;
@@ -20,7 +21,6 @@ import java.io.IOException;
 import java.net.HttpURLConnection;
 
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
@@ -42,7 +42,12 @@ public class LoginImpl implements ILoginPresenter {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
         Call<DomainAuthorizeGet> task = api.getAuthorizePublicKey();
-        task.enqueue(new Callback<DomainAuthorizeGet>() {
+        task.enqueue(new CallBackWithRetry<DomainAuthorizeGet>(task) {
+            @Override
+            public void onFailureAllRetries() {
+                mCallback.onLoginError();
+            }
+
             @Override
             public void onResponse(Call<DomainAuthorizeGet> call, Response<DomainAuthorizeGet> response) {
                 int code = response.code();
@@ -63,20 +68,16 @@ public class LoginImpl implements ILoginPresenter {
 //
                     if (mCallback != null)
                         mCallback.onPublicKeyGot(authorization);
-                } else {
+                } else if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                    mCallback.onTokenInvalid();
+                } else
+                    mCallback.onLoginError();
 //                    try {
 //                        Log.d("SettingsImpl", "请求错误 " + response.errorBody().string());
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
 
-                    mCallback.onLoginError();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<DomainAuthorizeGet> call, Throwable t) {
-                mCallback.onLoginError();
             }
         });
     }
@@ -96,7 +97,7 @@ public class LoginImpl implements ILoginPresenter {
 //        LogUtils.d(RSACoder.encryptWithPublicKey(publicKey, rawAlipay));
 
         Call<DomainAuthorize> task = api.authorize(cookie, ConstantUtil.CLIENT_GRANT_TYPE, ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, RSACoder.encryptWithPublicKey(publicKey, rawAlipay));
-        task.enqueue(new Callback<DomainAuthorize>() {
+        task.enqueue(new CallBackWithRetry<DomainAuthorize>(task) {
             @Override
             public void onResponse(Call<DomainAuthorize> call, Response<DomainAuthorize> response) {
                 int code = response.code();
@@ -130,8 +131,7 @@ public class LoginImpl implements ILoginPresenter {
             }
 
             @Override
-            public void onFailure(Call<DomainAuthorize> call, Throwable t) {
-                LogUtils.d(t);
+            public void onFailureAllRetries() {
                 mCallback.onLoginError();
             }
         });
@@ -142,7 +142,7 @@ public class LoginImpl implements ILoginPresenter {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
         Call<DomainUserInfo> task = api.getUserInfo(token);
-        task.enqueue(new Callback<DomainUserInfo>() {
+        task.enqueue(new CallBackWithRetry<DomainUserInfo>(task) {
             @Override
             public void onResponse(Call<DomainUserInfo> call, Response<DomainUserInfo> response) {
                 int code = response.code();
@@ -170,8 +170,7 @@ public class LoginImpl implements ILoginPresenter {
             }
 
             @Override
-            public void onFailure(Call<DomainUserInfo> call, Throwable t) {
-                Log.e("getUserInfo", "请求失败 -- > " + t);
+            public void onFailureAllRetries() {
                 mCallback.onLoginError();
             }
         });

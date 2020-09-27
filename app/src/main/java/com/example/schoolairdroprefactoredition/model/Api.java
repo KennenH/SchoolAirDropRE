@@ -32,7 +32,7 @@ public interface Api {
      */
     @FormUrlEncoded
     @POST("goods/getNearByGoods")
-    Call<DomainGoodsInfo> getGoodsInfo(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("longitude") Double longitude, @Field("latitude") Double latitude);
+    Call<DomainGoodsInfo> getGoodsInfo(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("page") int page, @Field("longitude") Double longitude, @Field("latitude") Double latitude);
 
 //    @FormUrlEncoded
 //    @POST("paster/getGroundPaster")
@@ -41,20 +41,37 @@ public interface Api {
     /**
      * 获取本人在售物品列表
      */
+    @FormUrlEncoded
     @POST("goods/getGoodsOnSale")
-    Call<DomainGoodsInfo> getMySellingGoods(@Header("Authorization") String token);
+    Call<DomainGoodsInfo> getMySellingGoods(@Header("Authorization") String token, @Field("page") int page);
 
     /**
      * 获取本人已售物品列表
      */
+    @FormUrlEncoded
     @POST("goods/getUserSell")
-    Call<DomainGoodsInfo> getMySoldGoods(@Header("Authorization") String token);
+    Call<DomainGoodsInfo> getMySoldGoods(@Header("Authorization") String token, @Field("page") int page);
 
     /**
      * 获取本人已购物品列表
      */
+    @FormUrlEncoded
     @POST("goods/getUserBought")
-    Call<DomainGoodsInfo> getMyBoughtGoods(@Header("Authorization") String token);
+    Call<DomainGoodsInfo> getMyBoughtGoods(@Header("Authorization") String token, @Field("page") int page);
+
+    /**
+     * 下架物品
+     */
+    @FormUrlEncoded
+    @POST("goods/deleteGoods")
+    Call<DomainResult> unListItem(@Header("Authorization") String token, @Field("goods_id") String goodsID);
+
+    /**
+     * 收藏物品
+     */
+    @FormUrlEncoded
+    @POST("goods/updateFavor")
+    Call<DomainResult> favoriteItem(@Header("Authorization") String token, @Field("goods_id") String goodsID);
 
     /**
      * 上传新的物品
@@ -100,14 +117,16 @@ public interface Api {
      */
     @FormUrlEncoded
     @POST("goods/favorite")
-    Call<DomainResult> favorite(@Header("Authorization") String token, @Field("goods_id") int goodsID);
+    Call<DomainResult> favorite(@Header("Authorization") String token, @Field("goods_id") String goodsID);
 
     /**
      * 搜索关键字物品
      */
     @FormUrlEncoded
     @POST("goods/searchGoods")
-    Call<DomainGoodsInfo> searchGoods(@Header("Authorization") String token,
+    Call<DomainGoodsInfo> searchGoods(@Field("client_id") String clientID,
+                                      @Field("client_secret") String clientSecret,
+                                      @Field("page") int page,
                                       @Field("longitude") Double longitude,
                                       @Field("latitude") Double latitude,
                                       @Field("keyWords") String keyWord);

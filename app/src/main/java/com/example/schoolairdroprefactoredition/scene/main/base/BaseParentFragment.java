@@ -14,7 +14,7 @@ import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 
-public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnPlaceHolderRefreshListener, StatePlaceHolder.OnHomePostItemListener {
+public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnPlaceHolderRefreshListener, StatePlaceHolder.OnHomePlaceHolderActionListener {
 
     private StatePlaceHolder mPlaceHolder;
     private ViewPager mContentContainer;
@@ -43,18 +43,16 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
     /**
      * 显示placeholder 隐藏recycler list
      *
-     * @param type {@link StatePlaceHolder#TYPE_ERROR}
-     *             {@link StatePlaceHolder#TYPE_EMPTY_HOME}
+     * @param type {@link StatePlaceHolder#TYPE_NETWORK_OR_LOCATION_ERROR_HOME}
+     *             {@link StatePlaceHolder#TYPE_EMPTY_GOODS_HOME}
      */
     public void showPlaceholder(int type) {
         if (mPlaceHolder == null || mContentContainer == null)
             throw new NullPointerException("mPlaceHolder or mGoodsContainer can not be null");
 
         mPlaceHolder.setPlaceHolderType(type);
-        if (mPlaceHolder.getVisibility() != View.VISIBLE)
-            mPlaceHolder.setVisibility(View.VISIBLE);
-        if (mContentContainer.getVisibility() != View.GONE)
-            mContentContainer.setVisibility(View.GONE);
+        mPlaceHolder.setVisibility(View.VISIBLE);
+        mContentContainer.setVisibility(View.GONE);
     }
 
     /**
@@ -64,10 +62,8 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
         if (mPlaceHolder == null || mContentContainer == null)
             throw new NullPointerException("mPlaceHolder or mGoodsContainer can not be null");
 
-        if (mPlaceHolder.getVisibility() != View.GONE)
-            mPlaceHolder.setVisibility(View.GONE);
-        if (mContentContainer.getVisibility() != View.VISIBLE)
-            mContentContainer.setVisibility(View.VISIBLE);
+        mPlaceHolder.setVisibility(View.GONE);
+        mContentContainer.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -75,7 +71,7 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
      * 重试
      */
     @Override
-    public void onRetry(View view) {
+    public void onPlaceHolderRetry(View view) {
         if (getActivity() instanceof MainActivity) {
             showPlaceholder(StatePlaceHolder.TYPE_LOADING);
             ((MainActivity) getActivity()).requestPermission(PermissionConstants.LOCATION, PermissionBaseActivity.RequestType.MANUAL);
@@ -91,6 +87,11 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
         if (getActivity() instanceof MainActivity) {
             SellingAddNewActivity.start(getContext(), ((MainActivity) getActivity()).getBundle());
         } else MyUtil.showCenterDialog(getContext(), MyUtil.DIALOG_TYPE.FAILED);
+    }
+
+    @Override
+    public void onHomePostMyTopic(View view) {
+
     }
 
     /**

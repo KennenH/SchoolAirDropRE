@@ -16,6 +16,6 @@ public interface IGoodsPresenter extends IBasePresenter<IGoodsCallback> {
      *
      * @param goodsID 物品id
      */
-    void favorite(String token, int goodsID);
+    void favorite(String token, String goodsID);
 }
 

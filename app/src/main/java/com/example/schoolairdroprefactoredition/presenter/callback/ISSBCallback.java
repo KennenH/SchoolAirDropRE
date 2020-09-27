@@ -11,4 +11,10 @@ public interface ISSBCallback extends IBaseCallback {
 
     // 已购
     void onBoughtListLoaded(DomainGoodsInfo bought);
+
+    // 下架物品
+    void onUnListItemSuccess();
+
+    // 操作失败
+    void onActionFailed();
 }

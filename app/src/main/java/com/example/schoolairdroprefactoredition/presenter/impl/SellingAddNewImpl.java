@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.model.Api;
+import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ISellingAddNewPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISellingAddNewCallback;
@@ -19,8 +20,6 @@ import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
@@ -67,7 +66,7 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
         retrofit2.Call<DomainResult> task = api.postNewItem(
                 token, goodsCover, goodsSet, goodsName, goodsDes, goodsLongitude, goodsLatitude, goodsQuotable, goodsBrandNew, goodsPrice);
 
-        task.enqueue(new Callback<DomainResult>() {
+        task.enqueue(new CallBackWithRetry<DomainResult>(task) {
             @Override
             public void onResponse(retrofit2.Call<DomainResult> call, Response<DomainResult> response) {
                 int code = response.code();
@@ -93,8 +92,7 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
             }
 
             @Override
-            public void onFailure(Call<DomainResult> call, Throwable t) {
-                LogUtils.d(t.toString());
+            public void onFailureAllRetries() {
                 mCallback.onError();
             }
         });

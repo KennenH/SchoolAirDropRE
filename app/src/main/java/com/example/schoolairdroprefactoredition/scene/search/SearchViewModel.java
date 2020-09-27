@@ -14,6 +14,9 @@ import java.util.List;
 
 public class SearchViewModel extends BaseStateViewModel implements ISearchCallback {
     private String lastSearchedKey;
+    private double lastLongitude;
+    private double lastLatitude;
+    private int page = 0;
 
     private SearchImpl mSearchImpl;
 
@@ -24,11 +27,6 @@ public class SearchViewModel extends BaseStateViewModel implements ISearchCallba
     public SearchViewModel() {
         mSearchImpl = new SearchImpl();
         mSearchImpl.registerCallback(this);
-    }
-
-    @Override
-    public void onSearchResultLoading() {
-        //todo 正在加载
     }
 
     @Override
@@ -46,23 +44,22 @@ public class SearchViewModel extends BaseStateViewModel implements ISearchCallba
         mSearchSuggestions.postValue(domainSearchItems);
     }
 
-    @Override
-    public void onResultEmpty() {
-        //todo 没有更多
-    }
-
     public void deleteHistories() {
         mSearchImpl.deleteHistories();
     }
 
-    public LiveData<List<DomainGoodsInfo.DataBean>> getLastSearchedResult(String token, double longitude, double latitude) {
-        mSearchImpl.getSearchResult(token, longitude, latitude, lastSearchedKey, true);
+    public LiveData<List<DomainGoodsInfo.DataBean>> getSearchResult() {
+        mSearchImpl.getSearchResult(page++, lastLongitude, lastLatitude, lastSearchedKey, true);
         return mSearchResults;
     }
 
-    public LiveData<List<DomainGoodsInfo.DataBean>> getSearchResult(String token, double longitude, double latitude, String key) {
+    public LiveData<List<DomainGoodsInfo.DataBean>> getSearchResult(double longitude, double latitude, String key) {
+        page = 0;
         lastSearchedKey = key;
-        mSearchImpl.getSearchResult(token, longitude, latitude, key, false);
+        lastLongitude = longitude;
+        lastLatitude = latitude;
+
+        mSearchImpl.getSearchResult(page++, longitude, latitude, key, false);
         return mSearchResults;
     }
 

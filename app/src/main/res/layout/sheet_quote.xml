@@ -6,13 +6,12 @@
     android:layout_gravity="bottom"
     android:background="@drawable/sheet_first">
 
-
     <TextView
         android:id="@+id/title"
         style="@style/SheetNormal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_sheet_white"
+        android:background="@color/white"
         android:gravity="center"
         android:text="@string/InitiateQuote"
         android:textSize="@dimen/textSizeLarge"
@@ -22,10 +21,28 @@
         app:layout_constraintTop_toBottomOf="@+id/header" />
 
     <TextView
+        android:id="@+id/warning"
+        style="@style/SheetNormal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryRed"
+        android:drawablePadding="@dimen/general_padding_larger"
+        android:gravity="center_vertical"
+        android:paddingStart="@dimen/general_padding_even_larger"
+        android:paddingEnd="@dimen/general_padding_even_larger"
+        android:text="@string/plsEnterQuotePrice"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/ic_attention_normal"
+        app:drawableTint="@color/white"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
+
+    <TextView
         android:id="@+id/second_hand_tip"
         style="@style/SheetNormal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/white"
         android:drawablePadding="@dimen/general_padding_larger"
         android:gravity="center_vertical"
         android:paddingStart="@dimen/general_padding_even_larger"
@@ -37,7 +54,7 @@
         app:drawableTint="@color/orangeLight"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/title" />
+        app:layout_constraintTop_toBottomOf="@+id/warning" />
 
     <TextView
         android:id="@+id/origin_title"
@@ -82,7 +99,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/origin_title" />
 
-
     <EditText
         android:id="@+id/quote_price"
         android:layout_width="0dp"
@@ -93,7 +109,6 @@
         android:inputType="numberDecimal"
         android:paddingStart="@dimen/general_padding_even_larger"
         android:paddingEnd="@dimen/general_padding_even_larger"
-        android:text="12345.22"
         android:textSize="@dimen/textSizeLarger"
         app:layout_constraintBottom_toBottomOf="@id/quote_title"
         app:layout_constraintEnd_toEndOf="parent"

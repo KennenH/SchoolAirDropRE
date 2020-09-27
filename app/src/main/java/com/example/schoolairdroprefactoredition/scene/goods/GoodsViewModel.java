@@ -11,7 +11,8 @@ public class GoodsViewModel extends BaseStateViewModel implements IGoodsCallback
 
     private GoodsImpl goodsImpl;
 
-    private MutableLiveData<Boolean> mResult = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mQuoteResult = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mFavoriteResult = new MutableLiveData<>();
 
     public GoodsViewModel() {
         goodsImpl = new GoodsImpl();
@@ -20,12 +21,17 @@ public class GoodsViewModel extends BaseStateViewModel implements IGoodsCallback
 
     public LiveData<Boolean> quoteRequest(String token, String goodsID, String quotePrice) {
         goodsImpl.quoteRequest(token, goodsID, quotePrice);
-        return mResult;
+        return mQuoteResult;
+    }
+
+    public LiveData<Boolean> favoriteItem(String token, String goodsID) {
+        goodsImpl.favorite(token, goodsID);
+        return mFavoriteResult;
     }
 
     @Override
     public void onQuoteSuccess() {
-        mResult.postValue(true);
+        mQuoteResult.postValue(true);
     }
 
     @Override

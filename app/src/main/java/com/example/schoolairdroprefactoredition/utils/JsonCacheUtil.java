@@ -1,26 +1,40 @@
 package com.example.schoolairdroprefactoredition.utils;
 
-import android.content.Context;
 import android.content.SharedPreferences;
+
+import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKeys;
 
 import com.blankj.utilcode.util.Utils;
 import com.example.schoolairdroprefactoredition.cache.CacheWithDuration;
 import com.google.gson.Gson;
+
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 
 /**
  * 使用SP保存数据
  */
 public class JsonCacheUtil {
 
-    public static final String SHARED_PREFERENCE_NAME = "share_preference_name";
+    public static final String ENCRYPTED_SHARED_PREFERENCE_NAME = "share_preference_name";
 
     private static JsonCacheUtil jsonCacheUtil = null;
-    private final SharedPreferences mSharePreferences;
+    private SharedPreferences mSharePreferences;
     private Gson mGson;
 
-
     private JsonCacheUtil() {
-        mSharePreferences = Utils.getApp().getSharedPreferences(SHARED_PREFERENCE_NAME, Context.MODE_PRIVATE);
+        try {
+            mSharePreferences = EncryptedSharedPreferences
+                    .create(
+                            ENCRYPTED_SHARED_PREFERENCE_NAME,
+                            MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
+                            Utils.getApp().getApplicationContext(),
+                            EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
+                            EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
+        } catch (GeneralSecurityException | IOException e) {
+            e.printStackTrace();
+        }
         mGson = new Gson();
     }
 

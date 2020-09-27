@@ -10,11 +10,18 @@ import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewMod
 
 public class SSBViewModel extends BaseStateViewModel implements ISSBCallback {
 
+    private int sellingPage = 0;
+    private int soldPage = 0;
+    private int boughtPage = 0;
+
     private SSBImpl ssbImpl;
 
     private MutableLiveData<DomainGoodsInfo> mSellingBeans = new MutableLiveData<>();
     private MutableLiveData<DomainGoodsInfo> mBoughtBeans = new MutableLiveData<>();
     private MutableLiveData<DomainGoodsInfo> mSoldBeans = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mUnListItemResult = new MutableLiveData<>();
+
+    private OnSSBActionListener mOnSSBActionListener;
 
     public SSBViewModel() {
         ssbImpl = new SSBImpl();
@@ -22,18 +29,23 @@ public class SSBViewModel extends BaseStateViewModel implements ISSBCallback {
     }
 
     public LiveData<DomainGoodsInfo> getSelling(String token) {
-        ssbImpl.getSellingList(token);
+        ssbImpl.getSellingList(token, 1);
         return mSellingBeans;
     }
 
     public LiveData<DomainGoodsInfo> getBought(String token) {
-        ssbImpl.getBoughtList(token);
+        ssbImpl.getBoughtList(token, 1);
         return mBoughtBeans;
     }
 
     public LiveData<DomainGoodsInfo> getSold(String token) {
-        ssbImpl.getSoldList(token);
+        ssbImpl.getSoldList(token, 1);
         return mSoldBeans;
+    }
+
+    public LiveData<Boolean> unListItem(String token, String goodsID) {
+        ssbImpl.unListItem(token, goodsID);
+        return mUnListItemResult;
     }
 
     @Override
@@ -52,7 +64,27 @@ public class SSBViewModel extends BaseStateViewModel implements ISSBCallback {
     }
 
     @Override
+    public void onUnListItemSuccess() {
+        mUnListItemResult.postValue(true);
+    }
+
+    @Override
+    public void onActionFailed() {
+        if (mOnSSBActionListener != null)
+            mOnSSBActionListener.onActionFailed();
+    }
+
+    @Override
     public void onError() {
         mOnRequestListener.onError();
     }
+
+    public interface OnSSBActionListener {
+        void onActionFailed();
+    }
+
+    public void setOnSSBActionListener(OnSSBActionListener listener) {
+        mOnSSBActionListener = listener;
+    }
+
 }

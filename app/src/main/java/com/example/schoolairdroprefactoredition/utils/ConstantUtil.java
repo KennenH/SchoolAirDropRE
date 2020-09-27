@@ -10,9 +10,9 @@ public class ConstantUtil {
 
 
     /**
-     * home fragment data fetch num
+     * data fetch num
      */
-    public static final int DATA_FETCH_DEFAULT_SIZE = 40;
+    public static final int DATA_FETCH_DEFAULT_SIZE = 15;
 
     /**
      * home fragment singleton
