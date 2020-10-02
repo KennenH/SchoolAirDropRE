@@ -20,6 +20,7 @@ import com.example.schoolairdroprefactoredition.databinding.ActivityTransactionS
 import com.example.schoolairdroprefactoredition.scene.arrangeplace.ArrangePositionActivity;
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
+import com.google.zxing.client.android.CaptureActivity;
 
 public class TransactionStateActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -83,7 +84,8 @@ public class TransactionStateActivity extends AppCompatActivity implements View.
 
                 break;
             case R.id.QR_code:
-
+                Intent intent = new Intent(this, CaptureActivity.class);
+                startActivity(intent);
                 break;
             case R.id.avatar:
 
