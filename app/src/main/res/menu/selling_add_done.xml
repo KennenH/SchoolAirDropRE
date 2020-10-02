@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/add_submit"
+        android:icon="@drawable/ic_submit"
         android:title="@string/submit"
         app:showAsAction="always" />
 </menu>

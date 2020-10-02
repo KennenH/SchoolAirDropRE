@@ -12,6 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:elevation="0dp"
+        app:contentInsetEnd="@dimen/toolbar_center_margin"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/selling_add_done"
         app:navigationIcon="@drawable/ic_close">
@@ -20,7 +21,6 @@
             android:id="@+id/draft_tip_toggle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/toolbar_2_center_margin"
             android:gravity="center"
             android:text="@string/addNewSelling"
             android:textSize="@dimen/textSizeNormal" />
@@ -104,13 +104,16 @@
 
                 <TextView
                     android:id="@+id/cover_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/general_padding_bit_larger"
+                    android:drawablePadding="@dimen/general_padding_small"
                     android:ellipsize="end"
                     android:text="@string/cover"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
+                    app:drawableEndCompat="@drawable/ic_importance"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <LinearLayout
@@ -161,13 +164,16 @@
 
                 <TextView
                     android:id="@+id/title_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/general_padding_bit_larger"
+                    android:drawablePadding="@dimen/general_padding_small"
                     android:ellipsize="end"
                     android:text="@string/title"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
+                    app:drawableEndCompat="@drawable/ic_importance"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/pic_set" />
 
                 <LinearLayout
@@ -189,14 +195,17 @@
 
                 <TextView
                     android:id="@+id/price_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/general_padding_bit_larger"
                     android:layout_marginTop="@dimen/general_padding_small"
+                    android:drawablePadding="@dimen/general_padding_small"
                     android:ellipsize="end"
                     android:text="@string/price"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
+                    app:drawableEndCompat="@drawable/ic_importance"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/option_title_wrapper" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -302,13 +311,16 @@
 
                 <TextView
                     android:id="@+id/detail_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/general_padding_bit_larger"
+                    android:drawablePadding="@dimen/general_padding_small"
                     android:ellipsize="end"
                     android:text="@string/detailDescription"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
+                    app:drawableEndCompat="@drawable/ic_importance"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/option_secondHand" />
 
                 <LinearLayout

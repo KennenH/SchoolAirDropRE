@@ -195,8 +195,8 @@
     <string name="connectionLost">连接中断 请重试</string>
     <string name="submitSuccess">提交成功</string>
     <string name="submitFailed">提交失败</string>
-    <string name="submitSuccessTip">物品表单提交成功，我们将在每日18点左右对物品进行统一审核，你可以在这个时间点之后登录查看物品审核结果</string>
-    <string name="submitFailedTip">可能是网络不稳定或者服务器忙碌维护。表单已自动保存，建议稍后重试提交</string>
+    <string name="submitSuccessTip">我们将在每日18点左右对物品进行统一审核，你可以在这个时间点之后登录App来查看物品审核结果。</string>
+    <string name="submitFailedTip">可能是网络不稳定或者服务器正在维护。表单已自动保存，建议稍后重试提交。</string>
     <string name="OK">好</string>
     <string name="errorUpdateAvatar">上传头像出错</string>
     <string name="imageSaved">图片已保存至相册</string>

@@ -44,10 +44,11 @@
 
     <LinearLayout
         android:id="@+id/state_wrapper"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@+id/state_progress_bar"
+        app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
@@ -55,16 +56,19 @@
             android:id="@+id/state"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="2"
             android:text="@string/waitingForBuyerPayment"
             android:textColor="@color/white"
-            android:textSize="@dimen/textSizeLarger" />
+            android:textSize="30dp" />
 
         <TextView
             android:id="@+id/remaining"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:ellipsize="end"
             android:text="23:59:59"
-            android:textColor="@color/colorPrimaryLight"
+            android:textColor="@color/white"
             android:textSize="@dimen/textSizeLarger" />
 
     </LinearLayout>
@@ -105,13 +109,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+                <TextView
+                    android:id="@+id/location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_rounded_white"
+                    android:drawablePadding="@dimen/general_padding_large"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/general_padding_bit_larger"
+                    android:text="浙江省杭州市江干区学源街258号"
+                    app:drawableEndCompat="@drawable/ic_right_arrow"
+                    app:drawableStartCompat="@drawable/ic_aim"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/constraintLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/general_padding_large"
                     android:background="@drawable/bg_rounded_white"
                     android:padding="@dimen/general_padding_bit_larger"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/location">
 
                     <TextView
                         android:id="@+id/tip"

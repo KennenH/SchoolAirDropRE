@@ -13,6 +13,7 @@ import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 import java.util.List;
 
 import okhttp3.MultipartBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -74,6 +75,18 @@ public interface Api {
     Call<DomainResult> favoriteItem(@Header("Authorization") String token, @Field("goods_id") String goodsID);
 
     /**
+     * 获取用户收藏的物品
+     */
+    @POST("goods/getUserFavor")
+    Call<DomainGoodsInfo> getFavorites(@Header("Authorization") String token);
+
+    /**
+     * 获取用户收到的以及发出的报价
+     */
+    @POST("goods/getUserQuote")
+    Call<DomainGoodsInfo> getQuote(@Header("Authorization") String token);
+
+    /**
      * 上传新的物品
      *
      * @param token       token
@@ -89,7 +102,7 @@ public interface Api {
      */
     @Multipart
     @POST("goods/upload")
-    Call<DomainResult> postNewItem(@Header("Authorization") String token,
+    Call<ResponseBody> postNewItem(@Header("Authorization") String token,
                                    @Part MultipartBody.Part cover,
                                    @Part List<MultipartBody.Part> picSet,
                                    @Part MultipartBody.Part title,

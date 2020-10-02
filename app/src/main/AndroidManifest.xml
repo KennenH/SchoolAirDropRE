@@ -49,7 +49,7 @@
             android:name=".scene.arrangeplace.UnArrangePositionTransactionActivity"
             android:label="" />
         <activity
-            android:name=".scene.arrangeplace.arrangePositionActivity"
+            android:name=".scene.arrangeplace.ArrangePositionActivity"
             android:label="" />
         <activity
             android:name=".scene.settings.LoginActivity"

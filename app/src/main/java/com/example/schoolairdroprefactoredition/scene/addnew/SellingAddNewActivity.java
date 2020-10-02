@@ -63,8 +63,8 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         }
     }
 
-    public static final int REQUEST_CODE_COVER = 219;// 请求码 封面
-    public static final int REQUEST_CODE_PIC_SET = 11;// 请求码 图片集
+    public static final int REQUEST_CODE_COVER = 219;// 请求码 封面选择
+    public static final int REQUEST_CODE_PIC_SET = 11;// 请求码 图片集选择
 
     private SellingAddNewViewModel viewModel;
 
@@ -252,14 +252,18 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                             binding.optionSecondHand.getIsSelected(), !binding.optionNegotiable.getIsSelected(),
                             Float.parseFloat(binding.priceInput.getText().toString()))
                             .observe(this, result -> {
-                                dismissLoading();
+                                // 这里有一个bug 当提交响应失败后 再在同一个页面重试之后成功 将会多次弹出成功提示页面 但实际只提交成功了一次
+                                // 所以这里加一个标志变量 打开一次页面最多只能成功一次 因此成功后即不再弹出
+                                if (!isSubmit) {
+                                    dismissLoading();
 
-                                AddNewResultActivity.start(this, result.isSuccess());
-                                if (result.isSuccess()) {
-                                    isSubmit = true;// 发送已完毕标志
+                                    AddNewResultActivity.start(this, result.isSuccess());
+                                    if (result.isSuccess()) {
+                                        isSubmit = true;// 发送已完毕标志
 
-                                    finish();
-                                    MyUtil.exitAnimDown(this);
+                                        finish();
+                                        MyUtil.exitAnimDown(this);
+                                    }
                                 }
                             });
                 } else {

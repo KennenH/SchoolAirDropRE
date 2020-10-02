@@ -54,7 +54,7 @@ public class EndlessRecyclerView extends RecyclerView {
     @Override
     public void onScrolled(int dx, int dy) {
         super.onScrolled(dx, dy);
-        if (!isNoMoreData && !isLoading && dy > 0) //check for scroll down
+        if (mOnLoadMoreListener != null && !isNoMoreData && !isLoading && dy > 0) //check for scroll down
         {
 //            visibleItemCount = mLayoutManager.getChildCount();// 当前可见的item数量
             totalItemCount = mLayoutManager.getItemCount();// adapter中目前装填的item总数
@@ -73,8 +73,7 @@ public class EndlessRecyclerView extends RecyclerView {
                 // 正在加载标志，防止重复加载
                 isLoading = true;
                 // 加载新数据
-                if (mOnLoadMoreListener != null)
-                    mOnLoadMoreListener.autoLoadMore(this);
+                mOnLoadMoreListener.autoLoadMore(this);
             }
         }
     }

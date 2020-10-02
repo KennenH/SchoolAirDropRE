@@ -53,7 +53,6 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
 
     public static final int TAKE_PHOTO = 111; // requestCode take photo
     public static final int PICK_PHOTO = 222; // requestCode select from album
-    public static final int SELECT_POSITION = 333; // requestCode arrange transaction position
 
     private PanelSwitchHelper mHelper;
 
@@ -162,10 +161,6 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) finish();
-        else if (id == R.id.more) {
-
-        }
-
         return super.onOptionsItemSelected(item);
     }
 

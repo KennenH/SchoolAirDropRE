@@ -19,8 +19,14 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
 
     /**
      * 请求获取权限
-     * 在{@link RequestType#MANUAL}时若不再提醒，则弹窗引导用户手动设置
-     * 否则不弹窗
+     * 在执行需要权限的方法之前必须先执行此方法来判断是否有权限
+     * 在{@link #albumGranted()} {@link #locationGranted()} {@link #cameraGranted()}三个方法中执行需要权限的操作
+     * 在{@link #albumDenied()} {@link #locationDenied()}  {@link #cameraDenied()} 三个方法中执行权限拒绝的操作
+     * <p>
+     * 在类型为{@link RequestType#MANUAL}时若已勾选不再提醒，则弹窗引导用户手动设置 (适用于用户手动重试时)
+     * 反之若类型为{@link RequestType#AUTO}时若权限被拒绝则不会询问  (适用于页面打开时自动检查权限)
+     *
+     * @param type one of {@link RequestType#MANUAL} or {@link RequestType#AUTO}
      */
     public void requestPermission(@PermissionConstants.Permission String permission, @RequestType int type) {
         int res = 0;
@@ -82,6 +88,95 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                 })
                 .request();
     }
+
+
+    /**
+     * 仅检查是否有某个权限，不请求权限，即权限被拒绝时保持完全沉默
+     * 是否有权限仍旧在 granted 方法和 denied 方法中判断
+     */
+    public void checkPermissionWithoutRequest(int requestCode) {
+        switch (requestCode) {
+            case Automatically.LOCATION:
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED)
+                    locationGranted();
+                else locationDenied();
+                break;
+            case Automatically.CAMERA:
+                if (checkSelfPermission(Manifest.permission.CAMERA) == PERMISSION_GRANTED)
+                    cameraGranted();
+                else cameraDenied();
+                break;
+            case Automatically.ALBUM:
+                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED)
+                    albumGranted();
+                else albumDenied();
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 请求码类型
+     * {@link Automatically} 自动
+     * {@link Manually} 手动
+     */
+    public @interface RequestType {
+        int AUTO = 100;
+        int MANUAL = 200;
+    }
+
+    /**
+     * 自动请求码，在检测到权限被拒绝时保持沉默
+     */
+    public @interface Automatically {
+        int LOCATION = 999; // requestCode 自动定位权限请求码
+        int CAMERA = 888; // requestCode 自动相机权限请求码
+        int ALBUM = 777; // requestCode 自动相册权限请求码
+    }
+
+    /**
+     * 手动请求码，在检测到权限被拒绝时会弹窗引导用户手动设置
+     */
+    public @interface Manually {
+    }
+
+    /**
+     * 定位权限获取
+     */
+    protected void locationGranted() {
+    }
+
+    /**
+     * 定位权限拒绝
+     */
+    protected void locationDenied() {
+    }
+
+    /**
+     * 相机权限获取
+     */
+    protected void cameraGranted() {
+    }
+
+    /**
+     * 相机权限拒绝
+     */
+    protected void cameraDenied() {
+    }
+
+    /**
+     * 相册权限获取
+     */
+    protected void albumGranted() {
+    }
+
+    /**
+     * 相册权限拒绝
+     */
+    protected void albumDenied() {
+    }
+
 
     private void popUpForRequestPermission(@StringRes int res, @PermissionConstants.Permission String permission) {
         int request = 0;
@@ -172,92 +267,4 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
         startActivityForResult(intent, requestCode);
     }
 
-    /**
-     * 仅检查是否有定位权限，不请求权限
-     */
-    public void checkPermissionWithoutRequest(int requestCode) {
-        switch (requestCode) {
-            case Automatically.LOCATION:
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED)
-                    locationGranted();
-                else locationDenied();
-                break;
-            case Automatically.CAMERA:
-                if (checkSelfPermission(Manifest.permission.CAMERA) == PERMISSION_GRANTED)
-                    cameraGranted();
-                else cameraDenied();
-                break;
-            case Automatically.ALBUM:
-                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED)
-                    albumGranted();
-                else albumDenied();
-                break;
-            default:
-                break;
-        }
-    }
-
-    /**
-     * 请求码类型
-     * {@link Automatically} 自动
-     * {@link Manually} 手动
-     */
-    public @interface RequestType {
-        int AUTO = 100;
-        int MANUAL = 200;
-    }
-
-    /**
-     * 自动请求码，在检测到权限被拒绝时不再弹窗提示
-     */
-    public @interface Automatically {
-        int LOCATION = 999; // requestCode 自动定位权限请求码
-        int CAMERA = 888; // requestCode 自动相机权限请求码
-        int ALBUM = 777; // requestCode 自动相册权限请求码
-    }
-
-    /**
-     * 手动请求码，在检测到权限被拒绝时会弹窗引导用户手动设置
-     */
-    public @interface Manually {
-        int LOCATION = 99; // requestCode 手动定位权限请求码
-        int CAMERA = 88; // requestCode 手动相机权限请求码
-        int ALBUM = 77; // requestCode 手动相册权限请求码
-    }
-
-    /**
-     * 定位权限获取
-     */
-    protected void locationGranted() {
-    }
-
-    /**
-     * 定位权限拒绝
-     */
-    protected void locationDenied() {
-    }
-
-    /**
-     * 相机权限获取
-     */
-    protected void cameraGranted() {
-    }
-
-    /**
-     * 相机权限拒绝
-     */
-    protected void cameraDenied() {
-    }
-
-    /**
-     * 相册权限获取
-     */
-    protected void albumGranted() {
-    }
-
-    /**
-     * 相册权限拒绝
-     */
-    protected void albumDenied() {
-    }
 }
