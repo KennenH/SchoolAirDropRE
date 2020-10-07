@@ -35,8 +35,11 @@ public class UserHomeBaseInfo extends ConstraintLayoutAuto implements View.OnCli
     }
 
     public void setUserBaseInfo(DomainUserInfo.DataBean info) {
-        ImageUtil.scaledImageLoad(binding.userAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), SizeUtils.dp2px(80));
-        binding.userName.setText(info.getUname());
+        try {
+            ImageUtil.scaledImageLoad(binding.userAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), SizeUtils.dp2px(80));
+            binding.userName.setText(info.getUname());
+        } catch (NullPointerException e) {
+        }
     }
 
     public interface OnBaseInfoActionListener {

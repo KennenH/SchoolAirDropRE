@@ -34,7 +34,11 @@ public class SSBPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
+        // 若查看自己的则返回3，否则仅返回在售的1
+        // if mine
         return 3;
+        // else
+        // return 1
     }
 
     @Override

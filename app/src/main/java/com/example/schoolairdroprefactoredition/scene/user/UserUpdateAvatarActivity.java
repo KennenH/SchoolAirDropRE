@@ -17,11 +17,13 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.user.fragment.UserAvatarViewModel;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -112,12 +114,13 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
         if (mDialog == null) {
             try {
                 mDialog = new BottomSheetDialog(this);
-                mDialog.setContentView(LayoutInflater.from(this).inflate(R.layout.sheet_avatar, null));
+                SheetAvatarBinding binding = SheetAvatarBinding.inflate(LayoutInflater.from(this));
+                mDialog.setContentView(binding.getRoot());
 
-                mDialog.findViewById(R.id.take_photo).setOnClickListener(this);
-                mDialog.findViewById(R.id.select_from_album).setOnClickListener(this);
-                mDialog.findViewById(R.id.save_to_album).setOnClickListener(this);
-                mDialog.findViewById(R.id.cancel).setOnClickListener(this);
+                binding.takePhoto.setOnClickListener(this);
+                binding.selectFromAlbum.setOnClickListener(this);
+                binding.saveToAlbum.setOnClickListener(this);
+                binding.cancel.setOnClickListener(this);
 
                 View view1 = mDialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
                 view1.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.transparent, this.getTheme()));
@@ -173,7 +176,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
 
     private void updateAvatar(String avatarUrl) {
         dismissLoading();
-        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.SUCCESS);
+        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successAvatar);
         try {
             mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + avatarUrl);
             info.setUser_img_path(avatarUrl);
@@ -200,7 +203,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
                 break;
             case R.id.save_to_album:
                 // todo 保存图片至相册
-                MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.SUCCESS);
+                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successSave);
                 mDialog.dismiss();
                 break;
             case R.id.cancel:
@@ -214,7 +217,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
     @Override
     public void onError() {
         runOnUiThread(this::dismissLoading);
-        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.FAILED);
+        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
     }
 
     private void showLoading() {

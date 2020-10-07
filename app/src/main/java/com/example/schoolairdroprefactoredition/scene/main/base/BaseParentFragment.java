@@ -4,17 +4,18 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.blankj.utilcode.constant.PermissionConstants;
+import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
+import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
-import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 
-public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnPlaceHolderRefreshListener, StatePlaceHolder.OnHomePlaceHolderActionListener {
+public class BaseParentFragment extends StatePlaceholderFragment implements StatePlaceHolder.OnPlaceHolderRefreshListener, StatePlaceHolder.OnHomePlaceHolderActionListener {
 
     private StatePlaceHolder mPlaceHolder;
     private ViewPager mContentContainer;
@@ -41,32 +42,6 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
     }
 
     /**
-     * 显示placeholder 隐藏recycler list
-     *
-     * @param type {@link StatePlaceHolder#TYPE_NETWORK_OR_LOCATION_ERROR_HOME}
-     *             {@link StatePlaceHolder#TYPE_EMPTY_GOODS_HOME}
-     */
-    public void showPlaceholder(int type) {
-        if (mPlaceHolder == null || mContentContainer == null)
-            throw new NullPointerException("mPlaceHolder or mGoodsContainer can not be null");
-
-        mPlaceHolder.setPlaceHolderType(type);
-        mPlaceHolder.setVisibility(View.VISIBLE);
-        mContentContainer.setVisibility(View.GONE);
-    }
-
-    /**
-     * 显示recycler list 隐藏placeholder
-     */
-    public void showContentContainer() {
-        if (mPlaceHolder == null || mContentContainer == null)
-            throw new NullPointerException("mPlaceHolder or mGoodsContainer can not be null");
-
-        mPlaceHolder.setVisibility(View.GONE);
-        mContentContainer.setVisibility(View.VISIBLE);
-    }
-
-    /**
      * PlaceHolder动作回调{@link StatePlaceHolder.OnPlaceHolderRefreshListener}
      * 重试
      */
@@ -75,7 +50,8 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
         if (getActivity() instanceof MainActivity) {
             showPlaceholder(StatePlaceHolder.TYPE_LOADING);
             ((MainActivity) getActivity()).requestPermission(PermissionConstants.LOCATION, PermissionBaseActivity.RequestType.MANUAL);
-        } else MyUtil.showCenterDialog(getContext(), MyUtil.DIALOG_TYPE.FAILED);
+        } else
+            DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
     }
 
     /**
@@ -86,12 +62,19 @@ public class BaseParentFragment extends Fragment implements StatePlaceHolder.OnP
     public void onHomePostMyItem(View view) {
         if (getActivity() instanceof MainActivity) {
             SellingAddNewActivity.start(getContext(), ((MainActivity) getActivity()).getBundle());
-        } else MyUtil.showCenterDialog(getContext(), MyUtil.DIALOG_TYPE.FAILED);
+        } else
+            DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
     }
 
     @Override
     public void onHomePostMyTopic(View view) {
 
+    }
+
+    @Override
+    public void setContainerAndPlaceholder() {
+        mStatePlaceholderFragmentPlaceholder = mPlaceHolder;
+        mStatePlaceholderFragmentContainer = mContentContainer;
     }
 
     /**

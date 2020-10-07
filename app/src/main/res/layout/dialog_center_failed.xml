@@ -6,7 +6,8 @@
     android:layout_gravity="center">
 
     <TextView
+        android:id="@+id/dialog_txt"
         style="@style/DialogText"
-        android:text="@string/dialogFailed"
+        android:text="@string/errorUnknown"
         app:drawableTopCompat="@drawable/ic_failed_nowrap" />
 </LinearLayout>

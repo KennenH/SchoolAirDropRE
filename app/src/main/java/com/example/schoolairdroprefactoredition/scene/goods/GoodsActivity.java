@@ -8,8 +8,6 @@ import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -17,26 +15,28 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivityGoodsBinding;
+import com.example.schoolairdroprefactoredition.databinding.SheetQuoteBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
+import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonDouble;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonSingle;
+import com.example.schoolairdroprefactoredition.ui.components.GoodsInfo;
 import com.example.schoolairdroprefactoredition.utils.AnimUtil;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DecimalFilter;
-import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaeger.library.StatusBarUtil;
 
-public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonSingle.OnButtonClickListener, ButtonDouble.OnButtonClickListener, BaseStateViewModel.OnRequestListener {
+public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonSingle.OnButtonClickListener, ButtonDouble.OnButtonClickListener, BaseStateViewModel.OnRequestListener, GoodsInfo.OnUserInfoClickListener {
 
     public static void start(Context context, Bundle bundle, DomainGoodsInfo.DataBean goodsInfo) {
         Intent intent = new Intent(context, GoodsActivity.class);
@@ -66,8 +66,9 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
         setContentView(binding.getRoot());
 
         StatusBarUtil.setTranslucentForImageView(this, 0, binding.goodsToolbar);
+        BarUtils.setStatusBarLightMode(this, true);
         BarUtils.setNavBarLightMode(this, true);
-        BarUtils.setNavBarColor(this, getColor(R.color.primary));
+        BarUtils.setNavBarColor(this, getColor(R.color.white));
         setSupportActionBar(binding.goodsToolbar);
 
         bundle = getIntent().getExtras();
@@ -76,9 +77,14 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
         goodsInfo = (DomainGoodsInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_GOODS_INFO);
         info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
 
-        hideActionButtonsIfMyGoods();
+        if (isMine()) {
+            binding.goodsButtonLeft.setVisibility(View.GONE);
+            binding.goodsButtonRight.setVisibility(View.GONE);
+            binding.goodsInfoContainer.hideBottom();
+        }
 
         binding.goodsInfoContainer.setData(goodsInfo);
+        binding.goodsInfoContainer.setOnUserInfoClickListener(this);
         binding.goodsButtonLeft.setOnButtonClickListener(this);
         binding.goodsButtonRight.setOnButtonClickListener(this);
     }
@@ -91,30 +97,28 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      * 页面个人信息为空
      * 卖家与个人信息不为空 但 卖家信息uid与个人信息uid不一致
      */
-    private void hideActionButtonsIfMyGoods() {
+    private boolean isMine() {
         if (goodsInfo != null && info != null) {
             DomainGoodsInfo.DataBean.SellerInfoBean seller = goodsInfo.getSeller_info();
-            if (seller == null || seller.getUid() == info.getUid()) {
-                binding.goodsButtonLeft.setVisibility(View.GONE);
-                binding.goodsButtonRight.setVisibility(View.GONE);
-                binding.goodsInfoContainer.hideBottom();
-            }
+            if (seller == null || seller.getUid() == info.getUid())
+                return true;
         }
+        return false;
     }
 
     /**
      * 发起报价
      */
     private void quote(String input) {
-        if (token != null && goodsInfo != null) {
+        if (token != null && goodsInfo != null && !isMine()) {
             showLoading();
             viewModel.quoteRequest(token.getAccess_token(), goodsInfo.getGoods_id(), input)
                     .observe(this, result -> {
                         dismissLoading();
-                        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.SUCCESS);
+                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successQuote);
                     });
         } else
-            MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.ERROR_UNKNOWN);
+            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
     }
 
     @Override
@@ -129,57 +133,56 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      * 收藏物品
      */
     @Override
-    public void onFirstButtonClick() {
-        if (token != null && goodsInfo != null) {
+    public void onLeftButtonClick() {
+        if (token != null && goodsInfo != null && !isMine()) {
             showLoading();
             viewModel.favoriteItem(token.getAccess_token(), goodsInfo.getGoods_id())
                     .observe(this, result -> {
                         dismissLoading();
-                        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.SUCCESS);
+                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successFavorite);
                     });
         } else
-            MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.ERROR_UNKNOWN);
+            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
     }
 
     /**
      * 发起报价
      */
     @Override
-    public void onSecondButtonClick() {
+    public void onRightButtonClick() {
         if (dialog == null) {
             dialog = new BottomSheetDialog(this);
-            dialog.setContentView(LayoutInflater.from(this).inflate(R.layout.sheet_quote, null));
+            SheetQuoteBinding binding = SheetQuoteBinding.inflate(LayoutInflater.from(this));
+            dialog.setContentView(binding.getRoot());
 
             try {
-                EditText quote = dialog.findViewById(R.id.quote_price);
-                TextView tip = dialog.findViewById(R.id.warning);
-                dialog.findViewById(R.id.title).setOnClickListener(v -> {
-                    quote.clearFocus();
+                binding.title.setOnClickListener(v -> {
+                    binding.quotePrice.clearFocus();
                     KeyboardUtils.hideSoftInput(v);
                 });
-                dialog.findViewById(R.id.second_hand_tip).setOnClickListener(v -> {
-                    quote.clearFocus();
+                binding.secondHandTip.setOnClickListener(v -> {
+                    binding.quotePrice.clearFocus();
                     KeyboardUtils.hideSoftInput(v);
                 });
-                quote.setOnEditorActionListener((v, actionId, event) -> {
-                    quote.clearFocus();
+                binding.quotePrice.setOnEditorActionListener((v, actionId, event) -> {
+                    binding.quotePrice.clearFocus();
                     KeyboardUtils.hideSoftInput(v);
                     return true;
                 });
-                quote.setFilters(new InputFilter[]{new DecimalFilter(5, 2)});
-                quote.setOnFocusChangeListener((v, hasFocus) -> {
-                    if (hasFocus && tip.getVisibility() == View.VISIBLE)
-                        AnimUtil.collapse(tip);
+                binding.quotePrice.setFilters(new InputFilter[]{new DecimalFilter(5, 2)});
+                binding.quotePrice.setOnFocusChangeListener((v, hasFocus) -> {
+                    if (hasFocus && binding.warning.getVisibility() == View.VISIBLE)
+                        AnimUtil.collapse(binding.warning);
                 });
-                dialog.findViewById(R.id.cancel).setOnClickListener(v -> dialog.dismiss());
-                dialog.findViewById(R.id.confirm).setOnClickListener(v -> {
-                    if (quote.getText().toString().equals("")) {
-                        if (tip.getVisibility() != View.VISIBLE)
-                            AnimUtil.expand(tip);
+                binding.cancel.setOnClickListener(v -> dialog.dismiss());
+                binding.confirm.setOnClickListener(v -> {
+                    if (binding.quotePrice.getText().toString().equals("")) {
+                        if (binding.warning.getVisibility() != View.VISIBLE)
+                            AnimUtil.expand(binding.warning);
                         else
-                            AnimUtil.viewBlink(this, tip, R.color.colorPrimaryRed, R.color.white);
+                            AnimUtil.viewBlink(this, binding.warning, R.color.colorPrimaryRed, R.color.white);
                     } else
-                        quote(quote.getText().toString());
+                        quote(binding.quotePrice.getText().toString());
                 });
 
                 {
@@ -194,7 +197,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                                 dialog.dismiss();
                                 bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                             } else if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                                quote.clearFocus();
+                                binding.quotePrice.clearFocus();
                                 KeyboardUtils.hideSoftInput(bottomSheet);
                             }
                         }
@@ -205,7 +208,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                     });
                 }
             } catch (NullPointerException e) {
-                LogUtils.d("dialog null");
+                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
             }
         }
         dialog.show();
@@ -221,6 +224,14 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
 
     @Override
     public void onError() {
-        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.FAILED);
+        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
+    }
+
+    /**
+     * 查看卖家信息
+     */
+    @Override
+    public void onUserInfoClick(View view) {
+        UserActivity.startForResult(this, bundle);
     }
 }

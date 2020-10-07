@@ -22,7 +22,9 @@ import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
+import com.example.schoolairdroprefactoredition.utils.AnimUtil;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 
 public class LoginActivity extends ImmersionStatusBarActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, BaseStateViewModel.OnRequestListener {
@@ -35,7 +37,7 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
         Intent intent = new Intent(context, LoginActivity.class);
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).startActivityForResult(intent, LOGIN);
-            MyUtil.startAnimUp((AppCompatActivity) context);
+            AnimUtil.activityStartAnimUp((AppCompatActivity) context);
         }
     }
 
@@ -47,7 +49,7 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
         intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo);
         context.startActivity(intent);
         if (context instanceof AppCompatActivity)
-            MyUtil.startAnimUp((AppCompatActivity) context);
+            AnimUtil.activityStartAnimUp((AppCompatActivity) context);
     }
 
     private ActivityLoginBinding binding;
@@ -81,7 +83,7 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
 
             binding.close.setOnClickListener(v -> {
                 finish();
-                MyUtil.exitAnimDown(this);
+                AnimUtil.activityExitAnimDown(this);
             });
 
             ClickUtils.applyPressedViewAlpha(binding.close, 0.6f);
@@ -107,7 +109,7 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
     public void onBackPressed() {
         setResult(Activity.RESULT_CANCELED);
         super.onBackPressed();
-        MyUtil.exitAnimDown(this);
+        AnimUtil.activityExitAnimDown(this);
     }
 
     @Override
@@ -119,14 +121,14 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
             if (NetworkUtils.isConnected()) {
                 loginWithAlipay();
             } else {
-                MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.ERROR_NETWORK);
+                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_NETWORK, R.string.dialogNetWorkError);
                 dismissLoading();
             }
 
         } else if (id == R.id.cancel) {
             setResult(Activity.RESULT_CANCELED);
             finish();
-            MyUtil.exitAnimDown(this);
+            AnimUtil.activityExitAnimDown(this);
         }
     }
 
@@ -169,9 +171,10 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
                 dismissLoading();
 
                 finish();
-                MyUtil.exitAnimDown(this);
+                AnimUtil.activityExitAnimDown(this);
             });
-        } else MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.ERROR_UNKNOWN);
+        } else
+            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
     }
 
     @Override
@@ -182,7 +185,7 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
     @Override
     public void onError() {
         dismissLoading();
-        MyUtil.showCenterDialog(this, MyUtil.DIALOG_TYPE.ERROR_UNKNOWN);
+        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
     }
 
 }

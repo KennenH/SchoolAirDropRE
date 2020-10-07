@@ -2,15 +2,15 @@ package com.example.schoolairdroprefactoredition.scene.ongoing.fragment;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
 import com.example.schoolairdroprefactoredition.model.databean.TestOnGoingBean;
 import com.example.schoolairdroprefactoredition.presenter.callback.IOnGoingCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.OnGoingImpl;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 
 import java.util.List;
 
-public class OnGoingViewModel extends ViewModel implements IOnGoingCallback {
+public class OnGoingViewModel extends BaseStateViewModel implements IOnGoingCallback {
 
     private OnGoingImpl onGoingImpl;
 
@@ -47,5 +47,12 @@ public class OnGoingViewModel extends ViewModel implements IOnGoingCallback {
     protected void onCleared() {
         super.onCleared();
         onGoingImpl.unregisterCallback(this);
+    }
+
+    @Override
+    public void onError() {
+        if (mOnRequestListener != null) {
+            mOnRequestListener.onError();
+        }
     }
 }

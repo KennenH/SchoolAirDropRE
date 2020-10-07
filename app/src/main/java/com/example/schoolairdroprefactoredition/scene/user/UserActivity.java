@@ -34,8 +34,8 @@ public class UserActivity extends TransactionBaseActivity implements FragmentMan
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bundle = getIntent().getExtras();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        bundle = getIntent().getExtras();
 
         firstTransact(UserFragment.newInstance(bundle));
     }

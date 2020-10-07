@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.ui.components;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
@@ -14,9 +15,11 @@ import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
-public class GoodsInfo extends ShimmerFrameLayout {
+public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListener {
 
     private ComponentGoodsDetailBinding binding;
+
+    private OnUserInfoClickListener mOnUserInfoClickListener;
 
     public GoodsInfo(Context context) {
         this(context, null);
@@ -29,6 +32,9 @@ public class GoodsInfo extends ShimmerFrameLayout {
     public GoodsInfo(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         binding = ComponentGoodsDetailBinding.inflate(LayoutInflater.from(context), this, true);
+
+        binding.goodsAvatar.setOnClickListener(this);
+        binding.goodsUserName.setOnClickListener(this);
     }
 
     /**
@@ -55,7 +61,7 @@ public class GoodsInfo extends ShimmerFrameLayout {
 
                 binding.goodsPrice.setPrice(data.getGoods_price());
                 binding.goodsDescription.setText(data.getGoods_description());
-                binding.goodsPager.setData(MyUtil.getArrayFromString(data.getGoods_img_set()));
+                binding.goodsPager.setData(MyUtil.getArrayFromString(data.getGoods_img_cover().concat("&" + data.getGoods_img_set())));
 
                 if (data.getSeller_info() != null) {
                     ImageUtil.scaledImageLoad(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path(), SizeUtils.dp2px(55));
@@ -68,5 +74,22 @@ public class GoodsInfo extends ShimmerFrameLayout {
                 hideShimmer();
             }
         }
+    }
+
+    @Override
+    public void onClick(View v) {
+        int id = v.getId();
+        if (id == R.id.goods_avatar || id == R.id.goods_user_name) {
+            if (mOnUserInfoClickListener != null)
+                mOnUserInfoClickListener.onUserInfoClick(v);
+        }
+    }
+
+    public interface OnUserInfoClickListener {
+        void onUserInfoClick(View view);
+    }
+
+    public void setOnUserInfoClickListener(OnUserInfoClickListener listener) {
+        mOnUserInfoClickListener = listener;
     }
 }

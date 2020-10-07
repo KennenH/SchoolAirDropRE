@@ -10,6 +10,7 @@
         android:id="@+id/smartRefreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -23,7 +24,8 @@
             <com.example.schoolairdroprefactoredition.ui.components.GoodsInfo
                 android:id="@+id/goods_info_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:layout_marginBottom="@dimen/general_padding" />
         </androidx.core.widget.NestedScrollView>
     </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
 
@@ -49,6 +51,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="@id/smartRefreshLayout"
-        app:navigationIcon="@drawable/ic_left_fill"
+        app:navigationIcon="@drawable/ic_left_dark_fill"
         app:title="" />
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

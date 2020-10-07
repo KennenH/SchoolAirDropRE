@@ -6,7 +6,9 @@
     android:layout_gravity="center">
 
     <TextView
+        android:id="@+id/dialog_txt"
         style="@style/DialogText"
+        android:paddingTop="17dp"
         android:text="@string/errorLoading"
         app:drawableTopCompat="@drawable/ic_attention_nowrap" />
 

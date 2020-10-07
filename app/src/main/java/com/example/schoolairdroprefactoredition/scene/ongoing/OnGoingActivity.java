@@ -1,24 +1,24 @@
 package com.example.schoolairdroprefactoredition.scene.ongoing;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.ActivityTabBinding;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.OnGoingPagerAdapter;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.google.android.material.tabs.TabLayout;
 
 public class OnGoingActivity extends ImmersionStatusBarActivity {
+
+    private ActivityTabBinding binding;
 
     public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, OnGoingActivity.class);
@@ -26,32 +26,29 @@ public class OnGoingActivity extends ImmersionStatusBarActivity {
         context.startActivity(intent);
     }
 
-    private ViewPager mPager;
-    private TabLayout mTab;
-
     private Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = getIntent().getExtras();
-        setContentView(R.layout.activity_tab);
+        binding = ActivityTabBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setSupportActionBar(findViewById(R.id.toolbar));
-        ((TextView) findViewById(R.id.name)).setText(R.string.onGoing);
+        binding.name.setText(R.string.onGoing);
 
-        mPager = findViewById(R.id.pager);
-        mTab = findViewById(R.id.tab);
-
-        mPager.setAdapter(new OnGoingPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, this));
-        mTab.setTabIndicatorFullWidth(false);
-        mTab.setupWithViewPager(mPager);
+        binding.pager.setAdapter(new OnGoingPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, this));
+        binding.tab.setTabIndicatorFullWidth(false);
+        binding.tab.setupWithViewPager(binding.pager);
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == android.R.id.home)
+        if (item.getItemId() == android.R.id.home) {
             finish();
+            return true;
+        }
         return super.onOptionsItemSelected(item);
     }
 }

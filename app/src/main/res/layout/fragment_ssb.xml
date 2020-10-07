@@ -6,7 +6,8 @@
 
     <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/white">
 
         <FrameLayout
             android:layout_width="match_parent"
@@ -15,7 +16,8 @@
             <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
                 android:id="@+id/place_holder"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:visibility="gone" />
 
             <com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
                 android:id="@+id/ssb_recycler"

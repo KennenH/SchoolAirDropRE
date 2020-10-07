@@ -72,6 +72,33 @@ public class DomainUserInfo implements Serializable {
         private String uphone;
         private int credit_num;
         private String device_token;
+        private int count_on_sale;
+        private int count_sold;
+        private int count_bought;
+
+        public int getSelling() {
+            return count_on_sale;
+        }
+
+        public void setSelling(int selling) {
+            this.count_on_sale = selling;
+        }
+
+        public int getSold() {
+            return count_sold;
+        }
+
+        public void setSold(int sold) {
+            this.count_sold = sold;
+        }
+
+        public int getBought() {
+            return count_bought;
+        }
+
+        public void setBought(int bought) {
+            this.count_bought = bought;
+        }
 
         public int getUid() {
             return uid;

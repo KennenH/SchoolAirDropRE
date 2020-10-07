@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
+import com.example.schoolairdroprefactoredition.utils.AnimUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 
 public class AddNewResultActivity extends ImmersionStatusBarActivity {
@@ -29,7 +30,7 @@ public class AddNewResultActivity extends ImmersionStatusBarActivity {
         intent.putExtra(IS_SUCCESS, success);
         context.startActivity(intent);
         if (context instanceof AppCompatActivity)
-            MyUtil.startAnimUp((AppCompatActivity) context);
+            AnimUtil.activityStartAnimUp((AppCompatActivity) context);
     }
 
     @Override
@@ -54,13 +55,13 @@ public class AddNewResultActivity extends ImmersionStatusBarActivity {
 
         findViewById(R.id.result_confirm).setOnClickListener((v) -> {
             finish();
-            MyUtil.exitAnimDown(this);
+            AnimUtil.activityExitAnimDown(this);
         });
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        MyUtil.exitAnimDown(this);
+        AnimUtil.activityExitAnimDown(this);
     }
 }

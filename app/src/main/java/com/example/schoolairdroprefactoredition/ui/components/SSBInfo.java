@@ -9,17 +9,12 @@ import android.widget.TextView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.utils.NumberUtil;
+import com.example.schoolairdroprefactoredition.databinding.ComponentSsbBinding;
+import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 
-public class SSBInfo extends ConstraintLayout implements View.OnClickListener {
+public class SSBInfo extends ConstraintLayoutAuto implements View.OnClickListener {
 
-    private TextView mSelling;
-    private TextView mSold;
-    private TextView mBought;
-
-    private TextView mSellingT;
-    private TextView mSoldT;
-    private TextView mBoughtT;
+    private ComponentSsbBinding binding;
 
     private OnSSBActionListener mOnSSBActionListener;
 
@@ -33,38 +28,11 @@ public class SSBInfo extends ConstraintLayout implements View.OnClickListener {
 
     public SSBInfo(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        LayoutInflater.from(context).inflate(R.layout.component_ssb, this, true);
-        mSelling = findViewById(R.id.my_selling);
-        mSold = findViewById(R.id.my_sold);
-        mBought = findViewById(R.id.my_bought);
-        mSellingT = findViewById(R.id.my_selling_t);
-        mSoldT = findViewById(R.id.my_sold_t);
-        mBoughtT = findViewById(R.id.my_bought_t);
-
-//        mSelling.setOnClickListener(this);
-//        mSold.setOnClickListener(this);
-//        mBought.setOnClickListener(this);
-//        mSellingT.setOnClickListener(this);
-//        mSoldT.setOnClickListener(this);
-//        mBoughtT.setOnClickListener(this);
-        findViewById(R.id.my_selling_wrapper).setOnClickListener(this);
-        findViewById(R.id.my_sold_wrapper).setOnClickListener(this);
-        findViewById(R.id.my_bought_wrapper).setOnClickListener(this);
+        binding = ComponentSsbBinding.bind(LayoutInflater.from(context).inflate(R.layout.component_ssb, this, true));
+        binding.mySellingWrapper.setOnClickListener(this);
+        binding.mySoldWrapper.setOnClickListener(this);
+        binding.myBoughtWrapper.setOnClickListener(this);
     }
-
-    public void setSelling(int selling) {
-        mSelling.setText(NumberUtil.num2StringWithUnit(selling));
-    }
-
-    public void setSold(int sold) {
-        mSold.setText(NumberUtil.num2StringWithUnit(sold));
-    }
-
-    public void setBought(int bought) {
-        mBought.setText(NumberUtil.num2StringWithUnit(bought));
-    }
-
 
     public interface OnSSBActionListener {
         void onSellingClick(View view);
@@ -77,6 +45,18 @@ public class SSBInfo extends ConstraintLayout implements View.OnClickListener {
     public void setOnSSBActionListener(OnSSBActionListener listener) {
         this.mOnSSBActionListener = listener;
     }
+
+//    public void setSelling(int selling) {
+//        binding.mySelling.setText(String.valueOf(selling));
+//    }
+//
+//    public void setSold(int sold) {
+//        binding.mySold.setText(String.valueOf(sold));
+//    }
+//
+//    public void setBought(int bought) {
+//        binding.myBought.setText(String.valueOf(bought));
+//    }
 
     @Override
     public void onClick(View v) {

@@ -76,7 +76,6 @@ public class QuoteDecoration extends RecyclerView.ItemDecoration {
         for (int i = 0; i < count; i++) {
             View child = parent.getChildAt(i);
             final int pos = parent.getChildAdapterPosition(child);
-//            final float startY = parent.getChildAt(i).getTop() - lineWidth;
             if (pos == 0 || pos == unhandled) {
                 float top = child.getTop();
                 String curText = pos == 0 ? unprocessed : processed;

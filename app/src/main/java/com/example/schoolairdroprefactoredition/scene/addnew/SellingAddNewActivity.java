@@ -59,7 +59,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
             intent.putExtras(bundle);
             context.startActivity(intent);
             if (context instanceof AppCompatActivity)
-                MyUtil.startAnimUp((AppCompatActivity) context);
+                AnimUtil.activityStartAnimUp((AppCompatActivity) context);
         }
     }
 
@@ -91,7 +91,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         if (context instanceof AppCompatActivity) {
             AppCompatActivity activity = (AppCompatActivity) context;
             activity.startActivityForResult(intent, LoginActivity.LOGIN);
-            MyUtil.startAnimUp((AppCompatActivity) context);
+            AnimUtil.activityStartAnimUp((AppCompatActivity) context);
         }
     }
 
@@ -262,7 +262,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                                         isSubmit = true;// 发送已完毕标志
 
                                         finish();
-                                        MyUtil.exitAnimDown(this);
+                                        AnimUtil.activityExitAnimDown(this);
                                     }
                                 }
                             });
@@ -403,7 +403,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         int id = item.getItemId();
         if (id == android.R.id.home) {
             finish();
-            MyUtil.exitAnimDown(this);
+            AnimUtil.activityExitAnimDown(this);
         } else if (id == R.id.add_submit) {
             submit();
         }
@@ -414,7 +414,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        MyUtil.exitAnimDown(this);
+        AnimUtil.activityExitAnimDown(this);
     }
 
     @Override
@@ -484,6 +484,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     public void onDestroy() {
         super.onDestroy();
         if (mClient != null) {
+            mClient.stopAssistantLocation();
             mClient.unRegisterLocationListener(this);
             mClient.onDestroy();
             mClient = null;

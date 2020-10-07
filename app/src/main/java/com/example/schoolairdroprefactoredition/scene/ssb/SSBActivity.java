@@ -27,9 +27,8 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
 
     public static final String PAGE_INDEX = "SSBPageIndex";
 
-    public static void start(Context context, Bundle bundle, int index) {
+    public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, SSBActivity.class);
-        intent.putExtra(PAGE_INDEX, index);
         intent.putExtras(bundle);
         context.startActivity(intent);
     }

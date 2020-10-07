@@ -105,8 +105,8 @@
     <string name="send">发送</string>
     <string name="quote">报价</string>
     <string name="quoteDetail">报价详情</string>
-    <string name="received">待我处理</string>
-    <string name="sent">待对方处理</string>
+    <string name="received">我收到的</string>
+    <string name="sent">我发出的</string>
     <string name="agree">同意</string>
     <string name="loginTip">使用支付宝登陆将获取你的账号信息,查看服务条款以了解更多</string>
     <string name="loginWithAlipay">支付宝登录</string>
@@ -207,7 +207,7 @@
     <string name="unLogged">未登录</string>
     <string name="emptySearch">啊哦… 附近似乎没有相似物品</string>
     <string name="nothingThere">空空如也…</string>
-    <string name="dialogSuccess">成功</string>
+    <string name="dialogSuccess">完成</string>
     <string name="dialogFailed">出错啦</string>
     <string name="errorLoading">加载出错啦…</string>
     <string name="finalPrice">成交价</string>
@@ -218,9 +218,17 @@
     <string name="restoreDraft">恢复草稿</string>
     <string name="draftCleared">已清除输入，在关闭之前仍可恢复</string>
     <string name="plsEnterQuotePrice">请输入报价</string>
-    <string name="recyclerFooter" translatable="false">[img src=ic_line/]&#160;&#160;&#160;&#160;[img src=ic_logo/]&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
+    <string name="recyclerFooter" translatable="false">[img src=ic_line/]&#160;&#160;&#160;&#160;没有啦&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
     <string name="postMyTopic">发布我的话题</string>
     <string name="unListItem">确定下架该物品?</string>
     <string name="attention">注意</string>
+    <string name="favorite">收藏</string>
+    <string name="successQuote">报价发起成功</string>
+    <string name="errorUnknown">未知错误</string>
+    <string name="successFavorite">物品已收藏</string>
+    <string name="errorLogin">登录失败</string>
+    <string name="successUnlist">物品已下架</string>
+    <string name="successAvatar">头像已更新</string>
+    <string name="successSave">图片已保存</string>
 
 </resources>

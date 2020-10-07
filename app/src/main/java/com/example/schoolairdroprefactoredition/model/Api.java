@@ -81,10 +81,34 @@ public interface Api {
     Call<DomainGoodsInfo> getFavorites(@Header("Authorization") String token);
 
     /**
+     * 发起一个报价请求
+     *
+     * @param goodsID    物品id
+     * @param quotePrice 报价价格
+     */
+    @FormUrlEncoded
+    @POST("goods/quoteRequest")
+    Call<DomainResult> quoteRequest(@Header("Authorization") String token, @Field("goods_id") String goodsID, @Field("quote_price") String quotePrice);
+
+    /**
      * 获取用户收到的以及发出的报价
      */
     @POST("goods/getUserQuote")
     Call<DomainGoodsInfo> getQuote(@Header("Authorization") String token);
+
+    /**
+     * 接受报价
+     */
+    @FormUrlEncoded
+    @POST("goods/acceptQuote")
+    Call<DomainResult> acceptQuote(@Header("Authorization") String token, @Field("goods_id") String goodsID);
+
+    /**
+     * 拒绝报价
+     */
+    @FormUrlEncoded
+    @POST("goods/refuseQuote")
+    Call<DomainResult> refuseQuote(@Header("Authorization") String token, @Field("goods_id") String goodsID);
 
     /**
      * 上传新的物品
@@ -114,22 +138,12 @@ public interface Api {
                                    @Part MultipartBody.Part price);
 
     /**
-     * 发起一个报价请求
-     *
-     * @param goodsID    物品id
-     * @param quotePrice 报价价格
-     */
-    @FormUrlEncoded
-    @POST("goods/quoteRequest")
-    Call<DomainResult> quoteRequest(@Header("Authorization") String token, @Field("goods_id") String goodsID, @Field("quote_price") String quotePrice);
-
-    /**
      * 收藏物品
      *
      * @param goodsID 物品id
      */
     @FormUrlEncoded
-    @POST("goods/favorite")
+    @POST("goods/updateFavor")
     Call<DomainResult> favorite(@Header("Authorization") String token, @Field("goods_id") String goodsID);
 
     /**

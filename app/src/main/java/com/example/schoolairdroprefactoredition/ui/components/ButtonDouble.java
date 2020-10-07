@@ -31,11 +31,11 @@ public class ButtonDouble extends LinearLayout {
         mButtonTwo = findViewById(R.id.button_two);
         mButtonOne.setOnClickListener(v -> {
             if (mOnButtonClickListener != null)
-                mOnButtonClickListener.onFirstButtonClick();
+                mOnButtonClickListener.onLeftButtonClick();
         });
         mButtonTwo.setOnClickListener(v -> {
             if (mOnButtonClickListener != null)
-                mOnButtonClickListener.onSecondButtonClick();
+                mOnButtonClickListener.onRightButtonClick();
         });
     }
 
@@ -43,7 +43,7 @@ public class ButtonDouble extends LinearLayout {
      * must be drawable
      * @param res drawable
      */
-    public void setImageOne(int res) {
+    public void setImageLeft(int res) {
         mButtonOne.setImageResource(res);
     }
 
@@ -51,14 +51,14 @@ public class ButtonDouble extends LinearLayout {
      * must be drawable
      * @param res drawable
      */
-    public void setImageTwo(int res) {
+    public void setImageRight(int res) {
         mButtonTwo.setImageResource(res);
     }
 
     public interface OnButtonClickListener {
-        void onFirstButtonClick();
+        void onLeftButtonClick();
 
-        void onSecondButtonClick();
+        void onRightButtonClick();
     }
 
     public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {

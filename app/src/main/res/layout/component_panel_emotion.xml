@@ -10,7 +10,6 @@
         android:id="@+id/emoji_recycler"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:clipToPadding="false"
         android:overScrollMode="never" />
 </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>

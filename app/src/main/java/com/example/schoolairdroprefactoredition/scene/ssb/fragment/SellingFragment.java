@@ -18,14 +18,15 @@ import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
-import com.lxj.xpopup.XPopup;
 
 /**
  * {@link SoldFragment}
  * {@link BoughtFragment}
+ * <p>
+ * todo 若查看的为他人的页面，则检查该用户是否开放其他用户查看其在售列表，不允许则显示被拒绝
  */
 public class SellingFragment extends SSBBaseFragment implements StatePlaceHolder.OnPlaceHolderRefreshListener {
 
@@ -55,12 +56,18 @@ public class SellingFragment extends SSBBaseFragment implements StatePlaceHolder
      */
     private void getSelling() {
         if (token != null) { // 已登录
-            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
+            showPlaceholder(StatePlaceHolder.TYPE_LOADING);
             viewModel.getSelling(token.getAccess_token()).observe(getViewLifecycleOwner(), this::loadData);
         } else // 未登录时
-            showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
+            showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
     }
 
+    /**
+     * todo 检查是否是我自己的页面
+     */
+    private boolean isMine() {
+        return true;
+    }
 
     /**
      * 在售物品更多设置
@@ -68,62 +75,60 @@ public class SellingFragment extends SSBBaseFragment implements StatePlaceHolder
      */
     @Override
     public void onItemAction(View view, DomainGoodsInfo.DataBean bean) {
-        if (dialog == null) {
-            dialog = new BottomSheetDialog(getContext());
-            SheetSsbItemMoreBinding binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(getContext()));
-            dialog.setContentView(binding.getRoot());
-            try {
-                binding.modify.setOnClickListener(v -> {
-
-                    dialog.dismiss();
-                });
-
-                binding.offShelf.setOnClickListener(v -> {
-                    new XPopup.Builder(getContext()).asConfirm(getString(R.string.attention), getString(R.string.unListItem), getString(android.R.string.cancel), getString(android.R.string.ok)
-                            , () -> {
-                                if (token != null && bean != null) {
-                                    viewModel.unListItem(token.getAccess_token(), bean.getGoods_id())
-                                            .observe(getViewLifecycleOwner(), result -> {
-                                                getSelling();
-                                                MyUtil.showCenterDialog(getContext(), MyUtil.DIALOG_TYPE.SUCCESS);
-                                            });
-                                }
-                            }, () -> {
-                            }, false).show();
-                    dialog.dismiss();
-                });
-
-                binding.cancel.setOnClickListener(v -> dialog.dismiss());
-
-                {
-                    View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
-                    view1.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.transparent, getContext().getTheme()));
-                    final BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(view1);
-                    bottomSheetBehavior.setSkipCollapsed(true);
-                    bottomSheetBehavior.setDraggable(false);
-                    bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                        @Override
-                        public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                                dialog.dismiss();
-                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                            }
-                        }
-
-                        @Override
-                        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                        }
+        if (isMine()) {
+            if (dialog == null) {
+                dialog = new BottomSheetDialog(getContext());
+                SheetSsbItemMoreBinding binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(getContext()));
+                dialog.setContentView(binding.getRoot());
+                try {
+                    binding.modify.setOnClickListener(v -> dialog.dismiss());
+                    binding.offShelf.setOnClickListener(v -> {
+                        DialogUtil.showConfirm(getContext(), getString(R.string.attention), getString(R.string.unListItem),
+                                () -> {
+                                    if (token != null && bean != null) {
+                                        viewModel.unListItem(token.getAccess_token(), bean.getGoods_id())
+                                                .observe(getViewLifecycleOwner(), result -> {
+                                                    getSelling();
+                                                    DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successUnlist);
+                                                });
+                                    } else
+                                        DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
+                                });
+                        dialog.dismiss();
                     });
+                    binding.cancel.setOnClickListener(v -> dialog.dismiss());
+
+                    {
+                        View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                        view1.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.transparent, getContext().getTheme()));
+                        final BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(view1);
+                        bottomSheetBehavior.setSkipCollapsed(true);
+                        bottomSheetBehavior.setDraggable(false);
+                        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                            @Override
+                            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                                    dialog.dismiss();
+                                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                }
+                            }
+
+                            @Override
+                            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                            }
+                        });
+                    }
+                } catch (NullPointerException ignored) {
                 }
-            } catch (NullPointerException ignored) {
             }
+            dialog.show();
         }
-        dialog.show();
     }
 
     @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
-        inflater.inflate(R.menu.ssb, menu);
+        if (isMine())
+            inflater.inflate(R.menu.ssb, menu);
     }
 
     @Override
@@ -152,10 +157,6 @@ public class SellingFragment extends SSBBaseFragment implements StatePlaceHolder
     @Override
     public void onFilterTimeAsc() {
         // 将data按时间正序排列
-        /*
-         * Sort(mList);
-         * mAdapter.setList(mList);
-         */
     }
 
     @Override

@@ -27,7 +27,6 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.luck.picture.lib.style.PictureWindowAnimationStyle;
 import com.luck.picture.lib.tools.SdkVersionUtils;
 import com.lxj.xpopup.XPopup;
-import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.impl.LoadingPopupView;
 import com.lxj.xpopup.interfaces.XPopupImageLoader;
 
@@ -107,7 +106,7 @@ public class MyUtil {
         PictureSelector.create(fragment)
                 .openCamera(PictureMimeType.ofImage())
                 .isEnableCrop(true)
-                .compressQuality(80)
+                .compressQuality(60)
                 .isCompress(true)
                 .minimumCompressSize(100)// 小于多少kb的图片不压缩
                 .theme(R.style.picture_white_style)
@@ -124,7 +123,7 @@ public class MyUtil {
                 .openCamera(PictureMimeType.ofImage())
                 .isEnableCrop(true)
                 .circleDimmedLayer(isCircle)
-                .compressQuality(80)
+                .compressQuality(60)
                 .isCompress(true)
                 .minimumCompressSize(100)// 小于多少kb的图片不压缩
                 .theme(R.style.picture_white_style)
@@ -145,7 +144,7 @@ public class MyUtil {
                 .setRecyclerAnimationMode(AnimationType.ALPHA_IN_ANIMATION)// 列表动画效果
                 .isMaxSelectEnabledMask(true)// 选择数到了最大阀值列表是否启用蒙层效果
                 .maxSelectNum(max)// 最大图片选择数量
-//                .minSelectNum(1)// 最小选择数量
+                .minSelectNum(0)// 最小选择数量
                 .imageSpanCount(3)// 每行显示个数
                 .isReturnEmpty(false)// 未选择数据时点击按钮是否可以返回
                 .closeAndroidQChangeWH(true)//如果图片有旋转角度则对换宽高,默认为true
@@ -171,7 +170,7 @@ public class MyUtil {
                 .isEnableCrop(isCrop)// 是否裁剪
                 //.basicUCropConfig()//对外提供所有UCropOptions参数配制，但如果PictureSelector原本支持设置的还是会使用原有的设置
                 .isCompress(true)// 是否压缩
-                .compressQuality(80)// 图片压缩后输出质量 0~ 100
+                .compressQuality(60)// 图片压缩后输出质量 0~ 100
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
                 //.queryMaxFileSize(10)// 只查多少M以内的图片、视频、音频  单位M
                 //.compressSavePath(getPath())//压缩图片保存地址
@@ -218,7 +217,7 @@ public class MyUtil {
                 .setRecyclerAnimationMode(AnimationType.ALPHA_IN_ANIMATION)// 列表动画效果
                 .isMaxSelectEnabledMask(true)// 选择数到了最大阀值列表是否启用蒙层效果
                 .maxSelectNum(max)// 最大图片选择数量
-                .minSelectNum(1)// 最小选择数量
+                .minSelectNum(0)// 最小选择数量
                 .imageSpanCount(3)// 每行显示个数
                 .isReturnEmpty(false)// 未选择数据时点击按钮是否可以返回
                 .closeAndroidQChangeWH(true)//如果图片有旋转角度则对换宽高,默认为true
@@ -280,56 +279,9 @@ public class MyUtil {
     }
 
     /**
-     * 对话框类型
-     */
-    public @interface DIALOG_TYPE {
-        int SUCCESS = 123;
-        int FAILED = 234;
-        int ERROR_UNKNOWN = 345;
-        int ERROR_NETWORK = 456;
-    }
-
-    /**
-     * 在屏幕中央显示消息提示对话框
-     *
-     * @param type one of {@link DIALOG_TYPE}
-     */
-    public static void showCenterDialog(Context context, @DIALOG_TYPE int type) {
-        new XPopup.Builder(context).asCustom(new BasePopupView(context) {
-            @Override
-            protected int getPopupLayoutId() {
-                switch (type) {
-                    case DIALOG_TYPE.SUCCESS:
-                        return R.layout.dialog_center_success;
-                    case DIALOG_TYPE.FAILED:
-                        return R.layout.dialog_center_failed;
-                    case DIALOG_TYPE.ERROR_NETWORK:
-                        return R.layout.dialog_center_error_network;
-                    default:
-                        return R.layout.dialog_center_attention;
-                }
-            }
-        }).show().delayDismiss(500);
-    }
-
-    /**
      * 从picSet字符串中获取图片集
      */
     public static List<String> getArrayFromString(String picSet) {
         return Arrays.asList(picSet.split("&"));
-    }
-
-    /**
-     * 在Activity将要被打开时调用，使Activity开启动画变为自下而上弹起
-     */
-    public static void startAnimUp(Activity activity) {
-        activity.overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
-    }
-
-    /**
-     * 在Activity将要结束时调用，使Activity退出动画变为自上而下隐藏
-     */
-    public static void exitAnimDown(Activity activity) {
-        activity.overridePendingTransition(0, R.anim.popexit_y_fragment);
     }
 }

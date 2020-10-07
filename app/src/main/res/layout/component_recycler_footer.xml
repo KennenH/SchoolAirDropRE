@@ -5,4 +5,5 @@
     android:layout_gravity="center_horizontal"
     android:gravity="center"
     android:padding="@dimen/general_padding_large"
-    android:text="@string/recyclerFooter" />
+    android:text="@string/recyclerFooter"
+    android:textSize="@dimen/textSizeMin" />

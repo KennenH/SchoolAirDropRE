@@ -7,19 +7,24 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.databinding.FragmentRecyclerBinding;
-import com.example.schoolairdroprefactoredition.model.databean.TestQuoteSectionItemBean;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.QuoteRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.QuoteDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class QuoteFragment extends Fragment {
+public class QuoteFragment extends StatePlaceholderFragment implements BaseStateViewModel.OnRequestListener {
     private static final String ARG_SECTION_NUMBER = "section_number";
     private static final int PAGE_RECEIVED = 0;
     private static final int PAGE_SENT = 1;
@@ -28,7 +33,7 @@ public class QuoteFragment extends Fragment {
 
     private int index;
 
-    private RecyclerView mRecycler;
+    private FragmentRecyclerBinding binding;
 
     private QuoteRecyclerAdapter mAdapter;
 
@@ -43,41 +48,77 @@ public class QuoteFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final FragmentRecyclerBinding binding = FragmentRecyclerBinding.inflate(inflater, container, false);
+        binding = FragmentRecyclerBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(QuoteViewModel.class);
+        viewModel.setOnRequestListener(this);
+
         index = PAGE_RECEIVED;
-        if (getArguments() != null) {
+        if (getArguments() != null)
             index = getArguments().getInt(ARG_SECTION_NUMBER);
-        }
 
-        mRecycler = binding.recycler;
-        mAdapter = new QuoteRecyclerAdapter();
+        if (getActivity() != null)
+            mAdapter = new QuoteRecyclerAdapter(getActivity().getIntent().getExtras());
+        else
+            mAdapter = new QuoteRecyclerAdapter(new Bundle());
+
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        mRecycler.setLayoutManager(manager);
+        binding.recycler.setLayoutManager(manager);
 
-        if (index == PAGE_RECEIVED) {
-            viewModel.getQuoteReceived().observe(getViewLifecycleOwner(), received -> {
-                // 将排序后的报价列表分成两类
-                mAdapter.setList(received);// 此处还未排序
-                mRecycler.addItemDecoration(new QuoteDecoration(getContext(), received.size(), 2));
-
-                mAdapter.notifyDataSetChanged();
-            });
-        } else {
-            viewModel.getQuoteSent().observe(getViewLifecycleOwner(), sent -> {
-                // 同上
-                mAdapter.setList(sent);
-                mRecycler.addItemDecoration(new QuoteDecoration(getContext(), sent.size(), 5));
-
-                mAdapter.notifyDataSetChanged();
-            });
-        }
-        mRecycler.setAdapter(mAdapter);
+        showPlaceholder(StatePlaceHolder.TYPE_LOADING);
+        getQuote();
 
         return binding.getRoot();
     }
 
-    private void sortData(List<TestQuoteSectionItemBean> data) {
+    /**
+     * 获取报价数据
+     */
+    private void getQuote() {
+        Bundle bundle = null;
+        DomainAuthorize token;
 
+        if (getActivity() != null)
+            bundle = getActivity().getIntent().getExtras();
+
+        if (bundle != null)
+            token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        else {
+            showPlaceholder(StatePlaceHolder.TYPE_ERROR);
+            return;
+        }
+
+        if (token != null) {
+            if (index == PAGE_RECEIVED) {
+                viewModel.getQuoteReceived(token.getAccess_token()).observe(getViewLifecycleOwner(), received -> {
+                    // 将排序后的报价列表分成两类
+                    mAdapter.setList(sortData(received));// 此处还未排序,排序使用sortData方法
+                    binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), received.size(), 2));
+                    binding.recycler.setAdapter(mAdapter);
+                });
+            } else {
+                viewModel.getQuoteSent(token.getAccess_token()).observe(getViewLifecycleOwner(), sent -> {
+                    // 同上
+                    mAdapter.setList(sortData(sent));
+                    binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), sent.size(), 5));
+                    binding.recycler.setAdapter(mAdapter);
+                });
+            }
+            showContentContainer();
+        } else showPlaceholder(StatePlaceHolder.TYPE_ERROR);
+    }
+
+    private List<DomainGoodsInfo.DataBean> sortData(List<DomainGoodsInfo.DataBean> data) {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public void onError() {
+        showPlaceholder(StatePlaceHolder.TYPE_ERROR);
+    }
+
+    @Override
+    public void setContainerAndPlaceholder() {
+        mStatePlaceholderFragmentContainer = binding.recycler;
+        mStatePlaceholderFragmentPlaceholder = binding.placeholder;
     }
 }

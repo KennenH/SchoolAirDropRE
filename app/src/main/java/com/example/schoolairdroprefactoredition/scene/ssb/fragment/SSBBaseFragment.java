@@ -7,34 +7,32 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.example.schoolairdroprefactoredition.utils.MyUtil;
-import com.lxj.xpopup.impl.LoadingPopupView;
+import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 
 import java.util.List;
 
-public abstract class SSBBaseFragment extends Fragment implements BaseStateViewModel.OnRequestListener, SSBFilter.OnFilterListener, StatePlaceHolder.OnPlaceHolderRefreshListener, SSBViewModel.OnSSBActionListener, SSBAdapter.OnSSBItemActionListener {
+public abstract class SSBBaseFragment extends StatePlaceholderFragment implements BaseStateViewModel.OnRequestListener, SSBFilter.OnFilterListener, StatePlaceHolder.OnPlaceHolderRefreshListener, SSBViewModel.OnSSBActionListener, SSBAdapter.OnSSBItemActionListener {
 
     protected SSBViewModel viewModel;
 
     protected SSBAdapter mAdapter;
     protected SSBFilter mFilter;
-
-    protected LoadingPopupView mLoading;
 
     protected com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding;
     protected List<DomainGoodsInfo.DataBean> mList;
@@ -63,7 +61,6 @@ public abstract class SSBBaseFragment extends Fragment implements BaseStateViewM
         viewModel.setOnRequestListener(this);
         viewModel.setOnSSBActionListener(this);
 
-        mLoading = MyUtil.loading(getContext());
         binding.ssbRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         binding.placeHolder.setOnPlaceHolderActionListener(this);
 
@@ -86,13 +83,10 @@ public abstract class SSBBaseFragment extends Fragment implements BaseStateViewM
         return binding.getRoot();
     }
 
-    protected void showLoading() {
-        if (mLoading == null) mLoading = MyUtil.loading(getContext());
-        mLoading.show();
-    }
-
-    protected void dismissLoading() {
-        if (mLoading != null) mLoading.dismiss();
+    @Override
+    public void setContainerAndPlaceholder() {
+        mStatePlaceholderFragmentContainer = binding.ssbRecycler;
+        mStatePlaceholderFragmentPlaceholder = binding.placeHolder;
     }
 
     /**
@@ -101,35 +95,35 @@ public abstract class SSBBaseFragment extends Fragment implements BaseStateViewM
     protected void loadData(DomainGoodsInfo data) {
         mList = data.getData();
         if (mList.size() == 0)
-            showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
+            showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
         else {
             mAdapter.setList(mList);
             showContentContainer();
         }
     }
-
-    /**
-     * 显示placeholder
-     *
-     * @param type one of
-     *             {@link StatePlaceHolder#TYPE_LOADING}
-     *             {@link StatePlaceHolder#TYPE_EMPTY}
-     *             {@link StatePlaceHolder#TYPE_NETWORK_OR_LOCATION_ERROR_HOME}
-     *             {@link StatePlaceHolder#TYPE_ERROR}
-     */
-    protected void showPlaceHolder(int type) {
-        binding.placeHolder.setPlaceHolderType(type);
-        binding.placeHolder.setVisibility(View.VISIBLE);
-        binding.ssbRecycler.setVisibility(View.INVISIBLE);
-    }
-
-    /**
-     * 显示物品列表
-     */
-    protected void showContentContainer() {
-        binding.placeHolder.setVisibility(View.INVISIBLE);
-        binding.ssbRecycler.setVisibility(View.VISIBLE);
-    }
+//
+//    /**
+//     * 显示placeholder
+//     *
+//     * @param type one of
+//     *             {@link StatePlaceHolder#TYPE_LOADING}
+//     *             {@link StatePlaceHolder#TYPE_EMPTY}
+//     *             {@link StatePlaceHolder#TYPE_NETWORK_OR_LOCATION_ERROR_HOME}
+//     *             {@link StatePlaceHolder#TYPE_ERROR}
+//     */
+//    protected void showPlaceHolder(int type) {
+//        binding.placeHolder.setPlaceHolderType(type);
+//        binding.placeHolder.setVisibility(View.VISIBLE);
+//        binding.ssbRecycler.setVisibility(View.INVISIBLE);
+//    }
+//
+//    /**
+//     * 显示物品列表
+//     */
+//    protected void showContentContainer() {
+//        binding.placeHolder.setVisibility(View.INVISIBLE);
+//        binding.ssbRecycler.setVisibility(View.VISIBLE);
+//    }
 
     public abstract void init(FragmentSsbBinding binding);
 
@@ -142,12 +136,12 @@ public abstract class SSBBaseFragment extends Fragment implements BaseStateViewM
 
     @Override
     public void onError() {
-        showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+        showPlaceholder(StatePlaceHolder.TYPE_ERROR);
     }
 
     @Override
     public void onActionFailed() {
-        MyUtil.showCenterDialog(getContext(), MyUtil.DIALOG_TYPE.ERROR_UNKNOWN);
+        DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
     }
 
     @Override

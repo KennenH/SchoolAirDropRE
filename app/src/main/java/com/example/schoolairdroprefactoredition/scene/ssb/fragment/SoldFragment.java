@@ -36,10 +36,10 @@ public class SoldFragment extends SSBBaseFragment implements StatePlaceHolder.On
      */
     private void getSold() {
         if (token != null) { // 已登录
-            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
+            showPlaceholder(StatePlaceHolder.TYPE_LOADING);
             viewModel.getSold(token.getAccess_token()).observe(getViewLifecycleOwner(), this::loadData);
         } else // 未登录时
-            showPlaceHolder(StatePlaceHolder.TYPE_EMPTY);
+            showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
     }
 
     @Override
@@ -62,6 +62,9 @@ public class SoldFragment extends SSBBaseFragment implements StatePlaceHolder.On
 
     }
 
+    /**
+     * item上动作按钮按下的回调
+     */
     @Override
     public void onItemAction(View view, DomainGoodsInfo.DataBean bean) {
 

@@ -16,7 +16,7 @@
         app:layout_constraintGuide_percent="0.5" />
 
     <TextView
-        android:id="@+id/user_more_transactions"
+        android:id="@+id/user_more_selling"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -25,18 +25,18 @@
         android:textColor="@color/black"
         android:textSize="23dp"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@+id/user_more_transactions_text"
+        app:layout_constraintBottom_toTopOf="@+id/user_selling_text"
         app:layout_constraintEnd_toStartOf="@id/guideline"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/user_more_transactions_text"
+        android:id="@+id/user_selling_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:gravity="center"
-        android:text="@string/transactions"
+        android:text="@string/selling"
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline"
@@ -61,10 +61,10 @@
         android:gravity="center"
         android:text="@string/credits"
         android:textSize="14dp"
-        app:layout_constraintBaseline_toBaselineOf="@id/user_more_transactions_text"
+        app:layout_constraintBaseline_toBaselineOf="@id/user_selling_text"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline"
-        app:layout_constraintTop_toBottomOf="@+id/user_more_transactions" />
+        app:layout_constraintTop_toBottomOf="@+id/user_more_selling" />
 
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.ActivityTabBinding;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.QuotePagerAdapter;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -26,26 +28,18 @@ public class QuoteActivity extends ImmersionStatusBarActivity {
         context.startActivity(intent);
     }
 
-    private TabLayout mTabLayout;
-    private ViewPager mPager;
-
-    private Bundle bundle;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bundle = getIntent().getExtras();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        setContentView(R.layout.activity_tab);
-        setSupportActionBar(findViewById(R.id.toolbar));
-        ((TextView) findViewById(R.id.name)).setText(R.string.quote);
+        ActivityTabBinding binding = ActivityTabBinding.inflate(LayoutInflater.from(this));
+        setContentView(binding.getRoot());
+        setSupportActionBar(binding.toolbar);
+        binding.name.setText(R.string.quote);
 
-        mTabLayout = findViewById(R.id.tab);
-        mPager = findViewById(R.id.pager);
-
-        mPager.setAdapter(new QuotePagerAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, this));
-        mTabLayout.setTabIndicatorFullWidth(false);
-        mTabLayout.setupWithViewPager(mPager);
+        binding.pager.setAdapter(new QuotePagerAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, this));
+        binding.tab.setTabIndicatorFullWidth(false);
+        binding.tab.setupWithViewPager(binding.pager);
     }
 
     @Override

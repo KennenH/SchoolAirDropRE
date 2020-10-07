@@ -6,6 +6,7 @@
     android:layout_gravity="center">
 
     <TextView
+        android:id="@+id/dialog_txt"
         style="@style/DialogText"
         android:paddingTop="20dp"
         android:text="@string/dialogNetWorkError"

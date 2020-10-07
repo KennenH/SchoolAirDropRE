@@ -76,7 +76,8 @@ public class SSBViewModel extends BaseStateViewModel implements ISSBCallback {
 
     @Override
     public void onError() {
-        mOnRequestListener.onError();
+        if (mOnRequestListener != null)
+            mOnRequestListener.onError();
     }
 
     public interface OnSSBActionListener {

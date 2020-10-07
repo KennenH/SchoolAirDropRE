@@ -21,7 +21,7 @@ public class OverDragLayout extends SmartRefreshLayout {
     }
 
     private void init() {
-        setBackgroundColor(getContext().getResources().getColor(R.color.primary, getContext().getTheme()));
+//        setBackgroundColor(getContext().getResources().getColor(R.color.primary, getContext().getTheme()));
         setEnableRefresh(false);
         setFooterMaxDragRate(1.2f);
         setHeaderMaxDragRate(1.4f);

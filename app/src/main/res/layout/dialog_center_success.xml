@@ -6,8 +6,9 @@
     android:layout_gravity="center">
 
     <TextView
+        android:id="@+id/dialog_txt"
         style="@style/DialogText"
-        android:text="@string/dialogSuccess"
+        android:text="@string/successFavorite"
         app:drawableTopCompat="@drawable/ic_success_nowrap" />
 
 </LinearLayout>

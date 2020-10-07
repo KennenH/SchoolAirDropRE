@@ -23,6 +23,7 @@ import com.example.schoolairdroprefactoredition.scene.settings.LoginViewModel;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
@@ -205,6 +206,6 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
         if (mLoading != null)
             mLoading.dismiss();
 
-        MyUtil.showCenterDialog(getContext(), MyUtil.DIALOG_TYPE.FAILED);
+        DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED,R.string.errorLogin);
     }
 }

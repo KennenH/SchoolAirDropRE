@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.utils;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.view.View;
@@ -108,5 +109,18 @@ public class AnimUtil {
         v.startAnimation(a);
     }
 
+    /**
+     * 在Activity将要被打开时调用，使Activity开启动画变为自下而上弹起
+     */
+    public static void activityStartAnimUp(Activity activity) {
+        activity.overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
+    }
+
+    /**
+     * 在Activity将要结束时调用，使Activity退出动画变为自上而下隐藏
+     */
+    public static void activityExitAnimDown(Activity activity) {
+        activity.overridePendingTransition(0, R.anim.popexit_y_fragment);
+    }
 
 }

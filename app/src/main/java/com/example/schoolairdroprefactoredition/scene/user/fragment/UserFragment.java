@@ -20,36 +20,35 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentUserBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.scene.credit.CreditActivity;
+import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.scene.user.UserModifyInfoActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderOnlyRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.UserHomeBaseInfo;
-import com.example.schoolairdroprefactoredition.ui.components.UserHomeTransactionInfo;
+import com.example.schoolairdroprefactoredition.ui.components.UserHomeSellingInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.XPopup;
 
-public class UserFragment extends TransactionBaseFragment implements UserHomeBaseInfo.OnBaseInfoActionListener, UserHomeTransactionInfo.OnMoreInfoActionListener, UserActivity.OnUserInfoUpdatedListener {
+public class UserFragment extends TransactionBaseFragment implements UserHomeBaseInfo.OnBaseInfoActionListener, UserHomeSellingInfo.OnMoreInfoActionListener, UserActivity.OnUserInfoUpdatedListener {
 
     private UserViewModel viewModel;
 
-    private String userInfoModify;
-    private String userCredits;
-    private String userTransactionsHistory;
-
     private RecyclerView mRecycler;
     private UserHomeBaseInfo mBaseInfo;
-    private UserHomeTransactionInfo mTransactionInfo;
+    private UserHomeSellingInfo mSellingInfo;
 
     private FragmentManager manager;
 
     private Bundle bundle;
 
-    private DomainUserInfo.DataBean info;
+    private DomainUserInfo.DataBean myInfo;
     private DomainAuthorize token;
+    private DomainGoodsInfo.DataBean sellerInfo;
 
     public static UserFragment newInstance(Bundle bundle) {
         UserFragment fragment = new UserFragment();
@@ -60,27 +59,22 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
-        userInfoModify = getResources().getString(R.string.modifyInfo);
-        userCredits = getResources().getString(R.string.credits);
-        userTransactionsHistory = getResources().getString(R.string.transactionsHistory);
-
         if (getActivity() != null) manager = getActivity().getSupportFragmentManager();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getActivity() instanceof UserActivity) {
+        if (getActivity() instanceof UserActivity)
             ((UserActivity) getActivity()).setOnUserInfoUpdateListener(this);
-        }
 
         bundle = getArguments();
         if (bundle == null) {
             bundle = new Bundle();
         } else {
-            info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+            myInfo = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
             token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+            sellerInfo = (DomainGoodsInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_GOODS_INFO);
         }
     }
 
@@ -89,20 +83,23 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final FragmentUserBinding binding = FragmentUserBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(UserViewModel.class);
-        setHasOptionsMenu(true);
+
+        // 若查看自己的个人信息页面则显示新增
+        if (isMine())
+            setHasOptionsMenu(true);
 
         mRecycler = binding.userRecycler;
         mRecycler.setLayoutManager(new LinearLayoutManager(getContext()));
 
         mBaseInfo = new UserHomeBaseInfo(getContext());
-        mTransactionInfo = new UserHomeTransactionInfo(getContext());
+        mSellingInfo = new UserHomeSellingInfo(getContext());
 
         mBaseInfo.setOnBaseInfoActionListener(this);
-        mTransactionInfo.setOnMoreInfoActionListener(this);
+        mSellingInfo.setOnMoreInfoActionListener(this);
 
         HeaderOnlyRecyclerAdapter adapter = new HeaderOnlyRecyclerAdapter();
         adapter.addHeaderView(mBaseInfo);
-        adapter.addHeaderView(mTransactionInfo);
+        adapter.addHeaderView(mSellingInfo);
 
         mRecycler.setAdapter(adapter);
 
@@ -112,12 +109,24 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
     }
 
     /**
+     * 是否查看的是自己的页面
+     */
+    private boolean isMine() {
+        if (token != null) {
+            if (sellerInfo != null)
+                return sellerInfo.getSeller_info().getUid() == myInfo.getUid();
+            else return true;
+        }
+        return false;
+    }
+
+    /**
      * 使用用户信息装填ui界面
      * 在用户第一次进入页面时以及用户修改信息后返回时调用
      */
     private void setUserInfo() {
-        mBaseInfo.setUserBaseInfo(info);
-        mTransactionInfo.setUserMoreInfo(info);
+        mBaseInfo.setUserBaseInfo(myInfo);
+        mSellingInfo.setUserMoreInfo(myInfo);
     }
 
     @Override
@@ -135,32 +144,29 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
 
     /**
      * {@link UserActivity} 收到用户信息修改的回调
-     *
-     * @param info
      */
     @Override
     public void onUpdated(DomainUserInfo.DataBean info) {
         bundle.putSerializable(ConstantUtil.KEY_USER_INFO, info);
-        this.info = info;
+        this.myInfo = info;
         setUserInfo();
     }
 
     @Override
     public void onAvatarClick(ImageView src) {
         new XPopup.Builder(getContext())
-                .asImageViewer(src, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), false, -1, -1, 50, true, new MyUtil.ImageLoader())
+                .asImageViewer(src, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + myInfo.getUser_img_path(), false, -1, -1, 50, true, new MyUtil.ImageLoader())
                 .show();
     }
 
     @Override
-    public void onTransactionClick() {
-        // 交易记录
+    public void onSellingClick() {
+//        SSBActivity.start(getContext(), bundle);
     }
 
     @Override
     public void onCreditsClick() {
         // 信用界面
-
         CreditActivity.start(getContext(), bundle);
     }
 }

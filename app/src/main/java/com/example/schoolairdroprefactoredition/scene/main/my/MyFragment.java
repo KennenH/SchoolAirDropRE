@@ -35,13 +35,14 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
 
+import static com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity.PAGE_INDEX;
+
 public class MyFragment extends Fragment implements View.OnClickListener, MainActivity.OnLoginStateChangedListener, BaseStateViewModel.OnRequestListener, SSBInfo.OnSSBActionListener {
 
     private MyViewModel viewModel;
 
     private SimpleDraweeView mAvatar;
     private TextView mName;
-    private SSBInfo mSSBInfo;
 
     private LoadingPopupView mLoading;
 
@@ -74,13 +75,12 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FragmentMyBinding binding = FragmentMyBinding.inflate(inflater, container, false);
+        FragmentMyBinding binding = FragmentMyBinding.inflate(LayoutInflater.from(getContext()));
         viewModel = new ViewModelProvider(this).get(MyViewModel.class);
         viewModel.setOnRequestListener(this);
 
         mAvatar = binding.myAvatar;
         mName = binding.myName;
-        mSSBInfo = binding.myBoughtSold;
         mLoading = new XPopup.Builder(getContext()).asLoading();
 
         binding.myInfo.setOnClickListener(this);
@@ -90,7 +90,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
         binding.myLikes.setOnClickListener(this);
         binding.mySettings.setOnClickListener(this);
         binding.rootLayout.setOnRefreshListener(RefreshLayout::finishRefresh);
-        mSSBInfo.setOnSSBActionListener(this);
+        binding.myBoughtSold.setOnSSBActionListener(this);
 
         setUserData();
 
@@ -106,13 +106,15 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
         if (token == null) { // 无token认证信息，显示默认值
             mAvatar.setActualImageResource(R.drawable.logo);
             mName.setText(getString(R.string.pleaseLogin));
-            mSSBInfo.setSelling(0);
-            mSSBInfo.setBought(0);
-            mSSBInfo.setSold(0);
+//            mSSBInfo.setSelling(0);
+//            mSSBInfo.setSold(0);
+//            mSSBInfo.setBought(0);
         } else if (info != null) { // 设置页面数据
             ImageUtil.scaledImageLoad(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), SizeUtils.dp2px(80));
             mName.setText(info.getUname());
-            // set selling sold bought number
+//            mSSBInfo.setSelling(info.getSelling());
+//            mSSBInfo.setSold(info.getSold());
+//            mSSBInfo.setBought(info.getBought());
         }
     }
 
@@ -174,17 +176,20 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
      */
     @Override
     public void onSellingClick(View view) {
-        SSBActivity.start(getContext(), bundle, 0);
+        bundle.putSerializable(PAGE_INDEX, 0);
+        SSBActivity.start(getContext(), bundle);
     }
 
     @Override
     public void onSoldClick(View view) {
-        SSBActivity.start(getContext(), bundle, 1);
+        bundle.putSerializable(PAGE_INDEX, 1);
+        SSBActivity.start(getContext(), bundle);
     }
 
     @Override
     public void onBoughtClick(View view) {
-        SSBActivity.start(getContext(), bundle, 2);
+        bundle.putSerializable(PAGE_INDEX, 2);
+        SSBActivity.start(getContext(), bundle);
     }
 
     @Override
