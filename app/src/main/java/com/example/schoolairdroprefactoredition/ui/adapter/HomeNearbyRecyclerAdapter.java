@@ -9,6 +9,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
+import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.ui.components.GoodsPrice;
 import com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -21,11 +22,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class HomeNearbyRecyclerAdapter extends BaseFooterAdapter<DomainGoodsInfo.DataBean, BaseViewHolder> {
 
-    private Bundle bundle;
-
-    public HomeNearbyRecyclerAdapter(Bundle bundle) {
+    public HomeNearbyRecyclerAdapter() {
         super(R.layout.item_home_goods_info);
-        this.bundle = bundle;
     }
 
     @Override
@@ -41,7 +39,11 @@ public class HomeNearbyRecyclerAdapter extends BaseFooterAdapter<DomainGoodsInfo
                 ImageUtil.scaledImageLoad(holder.itemView.findViewById(R.id.item_image), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getGoods_img_cover(), SizeUtils.dp2px(120));
                 ((GoodsPrice) holder.findView(R.id.item_price)).setPrice(data.getGoods_price());
                 holder.setText(R.id.item_seller, data.getSeller_info().getUname());
-                holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), bundle, data));
+
+                if (getContext() instanceof MainActivity) {
+                    Bundle bundle = ((MainActivity) getContext()).getBundle();
+                    holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), bundle, data));
+                }
 
                 if (negotiable && secondHand)
                     title.setText(getContext().getResources().getString(R.string.itemNSs, data.getGoods_name()));

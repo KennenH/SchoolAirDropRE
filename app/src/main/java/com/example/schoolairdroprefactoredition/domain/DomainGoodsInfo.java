@@ -172,12 +172,24 @@ public class DomainGoodsInfo implements Serializable {
         }
 
         public static class SellerInfoBean implements Serializable {
+            @Override
+            public String toString() {
+                return "SellerInfoBean{" +
+                        "uid=" + uid +
+                        ", uname='" + uname + '\'' +
+                        ", credit_num=" + credit_num +
+                        ", user_img_path='" + user_img_path + '\'' +
+                        '}';
+            }
+
             /**
              * uid : 15
              * uname : iken
              * credit_num : 2
              * user_img_path : /assets/user/avatars/15_20200923145227.jpg
              */
+
+
 
             private int uid;
             private String uname;

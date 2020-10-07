@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.scene.goods;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,11 +11,14 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivityGoodsBinding;
 import com.example.schoolairdroprefactoredition.databinding.SheetQuoteBinding;
@@ -24,6 +28,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
+import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonDouble;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonSingle;
@@ -42,7 +47,11 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
         Intent intent = new Intent(context, GoodsActivity.class);
         intent.putExtras(bundle);
         intent.putExtra(ConstantUtil.KEY_GOODS_INFO, goodsInfo);
-        context.startActivity(intent);
+
+        if (context instanceof AppCompatActivity)
+            ((AppCompatActivity) context).startActivityForResult(intent, LoginActivity.LOGIN);
+        else
+            context.startActivity(intent);
     }
 
     private GoodsViewModel viewModel;
@@ -54,7 +63,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
     private Bundle bundle;
     private DomainAuthorize token;
     private DomainGoodsInfo.DataBean goodsInfo;
-    private DomainUserInfo.DataBean info;
+    private DomainUserInfo.DataBean myInfo;
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
@@ -73,20 +82,47 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
 
         bundle = getIntent().getExtras();
         if (bundle == null) bundle = new Bundle();
+        validateInfo();
+
+        binding.goodsInfoContainer.setData(goodsInfo);
+        binding.goodsInfoContainer.setOnUserInfoClickListener(this);
+        binding.goodsButtonLeft.setOnButtonClickListener(this);
+        binding.goodsButtonRight.setOnButtonClickListener(this);
+    }
+
+    // 若为自己的物品则将按钮隐藏
+    private void validateInfo() {
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
         goodsInfo = (DomainGoodsInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_GOODS_INFO);
-        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        myInfo = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
 
         if (isMine()) {
             binding.goodsButtonLeft.setVisibility(View.GONE);
             binding.goodsButtonRight.setVisibility(View.GONE);
             binding.goodsInfoContainer.hideBottom();
         }
+    }
 
-        binding.goodsInfoContainer.setData(goodsInfo);
-        binding.goodsInfoContainer.setOnUserInfoClickListener(this);
-        binding.goodsButtonLeft.setOnButtonClickListener(this);
-        binding.goodsButtonRight.setOnButtonClickListener(this);
+    /**
+     * 登录
+     */
+    public void login() {
+        LoginActivity.startForLogin(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == LoginActivity.LOGIN) {
+                if (data != null) {
+                    bundle = data.getExtras();
+
+                    validateInfo();
+                    setResult(Activity.RESULT_OK, data);
+                }
+            }
+        }
     }
 
     /**
@@ -98,10 +134,12 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      * 卖家与个人信息不为空 但 卖家信息uid与个人信息uid不一致
      */
     private boolean isMine() {
-        if (goodsInfo != null && info != null) {
-            DomainGoodsInfo.DataBean.SellerInfoBean seller = goodsInfo.getSeller_info();
-            if (seller == null || seller.getUid() == info.getUid())
-                return true;
+        LogUtils.d(token);
+        if (token != null) {
+            if (myInfo != null)
+                return goodsInfo == null ||
+                        goodsInfo.getSeller_info() == null ||
+                        goodsInfo.getSeller_info().getUid() == myInfo.getUid();
         }
         return false;
     }
@@ -110,15 +148,19 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      * 发起报价
      */
     private void quote(String input) {
-        if (token != null && goodsInfo != null && !isMine()) {
-            showLoading();
-            viewModel.quoteRequest(token.getAccess_token(), goodsInfo.getGoods_id(), input)
-                    .observe(this, result -> {
-                        dismissLoading();
-                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successQuote);
-                    });
-        } else
-            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
+        if (token == null) {
+            login();
+        } else {
+            if (goodsInfo != null && !isMine()) {
+                showLoading();
+                viewModel.quoteRequest(token.getAccess_token(), goodsInfo.getGoods_id(), input)
+                        .observe(this, result -> {
+                            dismissLoading();
+                            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successQuote);
+                        });
+            } else
+                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
+        }
     }
 
     @Override
@@ -134,15 +176,19 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      */
     @Override
     public void onLeftButtonClick() {
-        if (token != null && goodsInfo != null && !isMine()) {
-            showLoading();
-            viewModel.favoriteItem(token.getAccess_token(), goodsInfo.getGoods_id())
-                    .observe(this, result -> {
-                        dismissLoading();
-                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successFavorite);
-                    });
-        } else
-            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
+        if (token == null) {
+            login();
+        } else {
+            if (goodsInfo != null) {
+                showLoading();
+                viewModel.favoriteItem(token.getAccess_token(), goodsInfo.getGoods_id())
+                        .observe(this, result -> {
+                            dismissLoading();
+                            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successFavorite);
+                        });
+            } else
+                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
+        }
     }
 
     /**
@@ -150,68 +196,72 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      */
     @Override
     public void onRightButtonClick() {
-        if (dialog == null) {
-            dialog = new BottomSheetDialog(this);
-            SheetQuoteBinding binding = SheetQuoteBinding.inflate(LayoutInflater.from(this));
-            dialog.setContentView(binding.getRoot());
+        if (token == null) {
+            login();
+        } else {
+            if (dialog == null) {
+                dialog = new BottomSheetDialog(this);
+                SheetQuoteBinding binding = SheetQuoteBinding.inflate(LayoutInflater.from(this));
+                dialog.setContentView(binding.getRoot());
 
-            try {
-                binding.title.setOnClickListener(v -> {
-                    binding.quotePrice.clearFocus();
-                    KeyboardUtils.hideSoftInput(v);
-                });
-                binding.secondHandTip.setOnClickListener(v -> {
-                    binding.quotePrice.clearFocus();
-                    KeyboardUtils.hideSoftInput(v);
-                });
-                binding.quotePrice.setOnEditorActionListener((v, actionId, event) -> {
-                    binding.quotePrice.clearFocus();
-                    KeyboardUtils.hideSoftInput(v);
-                    return true;
-                });
-                binding.quotePrice.setFilters(new InputFilter[]{new DecimalFilter(5, 2)});
-                binding.quotePrice.setOnFocusChangeListener((v, hasFocus) -> {
-                    if (hasFocus && binding.warning.getVisibility() == View.VISIBLE)
-                        AnimUtil.collapse(binding.warning);
-                });
-                binding.cancel.setOnClickListener(v -> dialog.dismiss());
-                binding.confirm.setOnClickListener(v -> {
-                    if (binding.quotePrice.getText().toString().equals("")) {
-                        if (binding.warning.getVisibility() != View.VISIBLE)
-                            AnimUtil.expand(binding.warning);
-                        else
-                            AnimUtil.viewBlink(this, binding.warning, R.color.colorPrimaryRed, R.color.white);
-                    } else
-                        quote(binding.quotePrice.getText().toString());
-                });
-
-                {
-                    View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
-                    view1.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.transparent, this.getTheme()));
-                    final BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(view1);
-                    bottomSheetBehavior.setSkipCollapsed(true);
-                    bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                        @Override
-                        public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                                dialog.dismiss();
-                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                            } else if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-                                binding.quotePrice.clearFocus();
-                                KeyboardUtils.hideSoftInput(bottomSheet);
-                            }
-                        }
-
-                        @Override
-                        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                        }
+                try {
+                    binding.title.setOnClickListener(v -> {
+                        binding.quotePrice.clearFocus();
+                        KeyboardUtils.hideSoftInput(v);
                     });
+                    binding.secondHandTip.setOnClickListener(v -> {
+                        binding.quotePrice.clearFocus();
+                        KeyboardUtils.hideSoftInput(v);
+                    });
+                    binding.quotePrice.setOnEditorActionListener((v, actionId, event) -> {
+                        binding.quotePrice.clearFocus();
+                        KeyboardUtils.hideSoftInput(v);
+                        return true;
+                    });
+                    binding.quotePrice.setFilters(new InputFilter[]{new DecimalFilter(5, 2)});
+                    binding.quotePrice.setOnFocusChangeListener((v, hasFocus) -> {
+                        if (hasFocus && binding.warning.getVisibility() == View.VISIBLE)
+                            AnimUtil.collapse(binding.warning);
+                    });
+                    binding.cancel.setOnClickListener(v -> dialog.dismiss());
+                    binding.confirm.setOnClickListener(v -> {
+                        if (binding.quotePrice.getText().toString().equals("")) {
+                            if (binding.warning.getVisibility() != View.VISIBLE)
+                                AnimUtil.expand(binding.warning);
+                            else
+                                AnimUtil.viewBlink(this, binding.warning, R.color.colorPrimaryRed, R.color.white);
+                        } else
+                            quote(binding.quotePrice.getText().toString());
+                    });
+
+                    {
+                        View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                        view1.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.transparent, this.getTheme()));
+                        final BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(view1);
+                        bottomSheetBehavior.setSkipCollapsed(true);
+                        bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                            @Override
+                            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                                if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                                    dialog.dismiss();
+                                    bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                                } else if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                                    binding.quotePrice.clearFocus();
+                                    KeyboardUtils.hideSoftInput(bottomSheet);
+                                }
+                            }
+
+                            @Override
+                            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                            }
+                        });
+                    }
+                } catch (NullPointerException e) {
+                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
                 }
-            } catch (NullPointerException e) {
-                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
             }
+            dialog.show();
         }
-        dialog.show();
     }
 
     /**
@@ -219,7 +269,10 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      */
     @Override
     public void onButtonClick() {
-        ChatActivity.start(this);
+        if (token == null) {
+            login();
+        } else
+            ChatActivity.start(this);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.ssb;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -10,6 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentPagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -17,6 +20,8 @@ import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivitySsbBinding;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
+import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
+import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBPagerAdapter;
 
 public class SSBActivity extends ImmersionStatusBarActivity implements View.OnClickListener {
@@ -30,7 +35,11 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
     public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, SSBActivity.class);
         intent.putExtras(bundle);
-        context.startActivity(intent);
+
+        if (context instanceof AppCompatActivity)
+            ((MainActivity) context).startActivityForResult(intent, LoginActivity.LOGIN);
+        else
+            context.startActivity(intent);
     }
 
     private ActivitySsbBinding binding;
@@ -49,8 +58,8 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
 
         Intent intent = getIntent();
         int index = intent.getIntExtra(PAGE_INDEX, 0);
-        mPagerAdapter = new SSBPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, getIntent().getExtras());
-
+        mPagerAdapter = new SSBPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        mPagerAdapter.setBundle(intent.getExtras());
         binding.ssbSearch.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
                 KeyboardUtils.showSoftInput(v);
@@ -80,6 +89,19 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
         binding.ssbPager.setOffscreenPageLimit(3);
         binding.ssbPager.setAdapter(mPagerAdapter);
         binding.ssbPager.setCurrentItem(index);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == LoginActivity.LOGIN) {
+                if (data != null) {
+                    setResult(Activity.RESULT_OK, data);
+                    mPagerAdapter.setBundle(data.getExtras());
+                }
+            }
+        }
     }
 
     public void hideSearchBar() {

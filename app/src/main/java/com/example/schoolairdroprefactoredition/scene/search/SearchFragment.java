@@ -89,9 +89,6 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
         init();
 
-        binding.refresh.setVisibility(View.INVISIBLE);
-        binding.root.post(this::startAnimation);
-
         return binding.getRoot();
     }
 
@@ -106,7 +103,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     private void init() {
         mHistoryAdapter = new HeaderFooterOnlyRecyclerAdapter();
         mSuggestionAdapter = new SearchSuggestionRecyclerAdapter();
-        mResultAdapter = new HomeNearbyRecyclerAdapter(bundle);
+        mResultAdapter = new HomeNearbyRecyclerAdapter();
         mResultAdapter.setOnNoMoreDataListener(this);
         mHistoryHeader = new SearchHistoryHeader(getContext());
         binding.searchHistory.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -160,9 +157,11 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
             }
         });
 
+//        showHistory();
         binding.searchResult.setOnLoadMoreListener(this);
-        showHistory();
         binding.search.openSearch();
+        binding.refresh.setVisibility(View.INVISIBLE);
+        binding.root.post(this::startAnimation);
     }
 
     /**
@@ -174,18 +173,16 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     private void performSearch(String key) {
         if (!key.trim().equals("")) {
             binding.search.closeSearch();
-            if (token != null) {
-                showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
-                searchViewModel.getSearchResult(longitude, latitude, key).observe(getViewLifecycleOwner(), data -> {
-                    if (data.size() < 1) {
-                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_SEARCH);
-                    } else {
-                        mResultAdapter.setList(data);
-                        showResult();
-                    }
-                });
-                searchViewModel.getSearchHistories().observe(getViewLifecycleOwner(), histories -> mHistoryHeader.showAfterUpdate(histories.getHistoryList()));
-            }
+            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
+            searchViewModel.getSearchResult(longitude, latitude, key).observe(getViewLifecycleOwner(), data -> {
+                if (data.size() < 1) {
+                    showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_SEARCH);
+                } else {
+                    mResultAdapter.setList(data);
+                    showResult();
+                }
+            });
+            searchViewModel.getSearchHistories().observe(getViewLifecycleOwner(), histories -> mHistoryHeader.showAfterUpdate(histories.getHistoryList()));
         }
     }
 

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding;
@@ -28,8 +29,8 @@ import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.ui.components.SSBInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
+import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
@@ -46,11 +47,6 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
 
     private LoadingPopupView mLoading;
 
-    private Bundle bundle = new Bundle();
-
-    private DomainUserInfo.DataBean info;
-    private DomainAuthorize token;
-
     public static MyFragment newInstance(Bundle bundle) {
         MyFragment fragment = new MyFragment();
         fragment.setArguments(bundle);
@@ -60,13 +56,6 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-
-        bundle = getArguments();
-        if (bundle == null)
-            bundle = new Bundle();
-
-        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
-        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
 
         if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).setOnLoginActivityListener(this);
@@ -81,7 +70,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
 
         mAvatar = binding.myAvatar;
         mName = binding.myName;
-        mLoading = new XPopup.Builder(getContext()).asLoading();
+        mLoading = MyUtil.loading(getContext());
 
         binding.myInfo.setOnClickListener(this);
         binding.myQuote.setOnClickListener(this);
@@ -97,30 +86,40 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
         return binding.getRoot();
     }
 
+    private Bundle getBundle() {
+        if (getActivity() instanceof MainActivity)
+            return ((MainActivity) getActivity()).getBundle();
+        return new Bundle();
+    }
+
+    private DomainUserInfo.DataBean getInfo() {
+        return (DomainUserInfo.DataBean) getBundle().getSerializable(ConstantUtil.KEY_USER_INFO);
+    }
+
+    private DomainAuthorize getToken() {
+        return (DomainAuthorize) getBundle().getSerializable(ConstantUtil.KEY_AUTHORIZE);
+    }
+
     /**
      * 使用当前页面保存的bundle来显示用户信息
      * 若用户token与info都存在 则使用服务器数据填充页面
      * 否则使用页面默认值填充
      */
     private void setUserData() {
-        if (token == null) { // 无token认证信息，显示默认值
+        DomainUserInfo.DataBean info = getInfo();
+        if (getToken() == null) { // 无token认证信息，显示默认值
             mAvatar.setActualImageResource(R.drawable.logo);
             mName.setText(getString(R.string.pleaseLogin));
-//            mSSBInfo.setSelling(0);
-//            mSSBInfo.setSold(0);
-//            mSSBInfo.setBought(0);
         } else if (info != null) { // 设置页面数据
             ImageUtil.scaledImageLoad(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), SizeUtils.dp2px(80));
             mName.setText(info.getUname());
-//            mSSBInfo.setSelling(info.getSelling());
-//            mSSBInfo.setSold(info.getSold());
-//            mSSBInfo.setBought(info.getBought());
         }
     }
 
     @Override
     public void onClick(View v) {
         int id = v.getId();
+        Bundle bundle = getBundle();
         switch (id) {
             case R.id.my_info:
                 if (bundle != null && bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE) != null
@@ -140,7 +139,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
                 // list trash
                 break;
             case R.id.my_settings:
-                if (token == null)
+                if (getToken() == null)
                     SettingsActivity.startForResultLogin(getContext(), bundle);
                 else
                     SettingsActivity.startForResultLogout(getContext(), bundle);
@@ -157,15 +156,12 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
      */
     @Override
     public void onLoginStateChanged(@NotNull Bundle bundle) {
-        this.bundle = bundle;
+        LogUtils.d("on login state changed");
 
-        this.info = (DomainUserInfo.DataBean) this.bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
-        this.token = (DomainAuthorize) this.bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-
+        DomainAuthorize token = getToken();
         setUserData();
         if (token != null)
             viewModel.getUserInfo(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {
-                this.info = data.getData().get(0);
                 setUserData();
             });
     }
@@ -176,18 +172,21 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
      */
     @Override
     public void onSellingClick(View view) {
+        Bundle bundle = getBundle();
         bundle.putSerializable(PAGE_INDEX, 0);
         SSBActivity.start(getContext(), bundle);
     }
 
     @Override
     public void onSoldClick(View view) {
+        Bundle bundle = getBundle();
         bundle.putSerializable(PAGE_INDEX, 1);
         SSBActivity.start(getContext(), bundle);
     }
 
     @Override
     public void onBoughtClick(View view) {
+        Bundle bundle = getBundle();
         bundle.putSerializable(PAGE_INDEX, 2);
         SSBActivity.start(getContext(), bundle);
     }

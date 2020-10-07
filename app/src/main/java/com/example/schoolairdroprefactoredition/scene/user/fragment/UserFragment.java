@@ -24,7 +24,6 @@ import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.scene.credit.CreditActivity;
-import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.scene.user.UserModifyInfoActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderOnlyRecyclerAdapter;
@@ -48,7 +47,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
 
     private DomainUserInfo.DataBean myInfo;
     private DomainAuthorize token;
-    private DomainGoodsInfo.DataBean sellerInfo;
+    private DomainGoodsInfo.DataBean goodsInfo;
 
     public static UserFragment newInstance(Bundle bundle) {
         UserFragment fragment = new UserFragment();
@@ -74,7 +73,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
         } else {
             myInfo = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
             token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-            sellerInfo = (DomainGoodsInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_GOODS_INFO);
+            goodsInfo = (DomainGoodsInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_GOODS_INFO);
         }
     }
 
@@ -113,9 +112,10 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
      */
     private boolean isMine() {
         if (token != null) {
-            if (sellerInfo != null)
-                return sellerInfo.getSeller_info().getUid() == myInfo.getUid();
-            else return true;
+            if (myInfo != null)
+                return goodsInfo == null ||
+                        goodsInfo.getSeller_info() == null ||
+                        goodsInfo.getSeller_info().getUid() == myInfo.getUid();
         }
         return false;
     }
@@ -125,8 +125,13 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
      * 在用户第一次进入页面时以及用户修改信息后返回时调用
      */
     private void setUserInfo() {
-        mBaseInfo.setUserBaseInfo(myInfo);
-        mSellingInfo.setUserMoreInfo(myInfo);
+        if (isMine()) {
+            mBaseInfo.setUserBaseInfo(myInfo);
+            mSellingInfo.setUserMoreInfo(myInfo);
+        } else {
+            mBaseInfo.setUserBaseInfo(goodsInfo);
+            mSellingInfo.setUserMoreInfo(goodsInfo);
+        }
     }
 
     @Override
@@ -154,9 +159,14 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
 
     @Override
     public void onAvatarClick(ImageView src) {
-        new XPopup.Builder(getContext())
-                .asImageViewer(src, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + myInfo.getUser_img_path(), false, -1, -1, 50, true, new MyUtil.ImageLoader())
-                .show();
+        if (isMine() && myInfo != null)
+            new XPopup.Builder(getContext())
+                    .asImageViewer(src, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + myInfo.getUser_img_path(), false, -1, -1, 50, true, new MyUtil.ImageLoader())
+                    .show();
+        else if (goodsInfo != null && goodsInfo.getSeller_info() != null)
+            new XPopup.Builder(getContext())
+                    .asImageViewer(src, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + goodsInfo.getSeller_info().getUser_img_path(), false, -1, -1, 50, true, new MyUtil.ImageLoader())
+                    .show();
     }
 
     @Override
@@ -166,7 +176,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
 
     @Override
     public void onCreditsClick() {
-        // 信用界面
-        CreditActivity.start(getContext(), bundle);
+        if (isMine())
+            CreditActivity.start(getContext(), bundle);
     }
 }

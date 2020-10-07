@@ -16,8 +16,11 @@ public class SSBPagerAdapter extends FragmentPagerAdapter {
 
     private Bundle bundle;
 
-    public SSBPagerAdapter(@NonNull FragmentManager fm, int behavior, Bundle bundle) {
+    public SSBPagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
+    }
+
+    public void setBundle(Bundle bundle) {
         this.bundle = bundle;
     }
 

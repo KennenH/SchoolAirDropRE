@@ -52,7 +52,9 @@ public class SettingsActivity extends TransactionBaseActivity implements Fragmen
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == LoginActivity.LOGIN) {
                 setResult(Activity.RESULT_OK, data); // 将登录结果返回至MainActivity
-                mOnLoginListener.onLogged(data);
+
+                if (mOnLoginListener != null)
+                    mOnLoginListener.onLogged(data);
             }
         }
     }

@@ -72,10 +72,9 @@ public class HomeNearbyFragment extends BaseChildFragment
         mEndlessRecyclerView.setLayoutManager(manager);
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 
-        mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter(getBundle());
+        mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter();
         mHomeNearbyRecyclerAdapter.setOnNoMoreDataListener(this);
         mEndlessRecyclerView.setAdapter(mHomeNearbyRecyclerAdapter);
-
     }
 
     /**

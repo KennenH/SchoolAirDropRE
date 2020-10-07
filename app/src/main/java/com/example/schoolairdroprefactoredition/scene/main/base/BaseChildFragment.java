@@ -1,8 +1,5 @@
 package com.example.schoolairdroprefactoredition.scene.main.base;
 
-import android.os.Bundle;
-
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.constant.PermissionConstants;
@@ -49,16 +46,4 @@ public class BaseChildFragment extends Fragment {
             ((PermissionBaseActivity) getActivity()).checkPermissionWithoutRequest(PermissionBaseActivity.Automatically.LOCATION);
         }
     }
-
-    /**
-     * 获取主页面的token
-     */
-    @Nullable
-    protected Bundle getBundle() {
-        if (getActivity() instanceof MainActivity) {
-            return ((MainActivity) getActivity()).getBundle();
-        }
-        return null;
-    }
-
 }

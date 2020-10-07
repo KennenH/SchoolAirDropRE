@@ -230,5 +230,6 @@
     <string name="successUnlist">物品已下架</string>
     <string name="successAvatar">头像已更新</string>
     <string name="successSave">图片已保存</string>
+    <string name="sellingHideByUser">已隐藏</string>
 
 </resources>

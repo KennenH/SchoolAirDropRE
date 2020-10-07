@@ -4,14 +4,10 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
-
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.databinding.ComponentSsbBinding;
 import com.example.schoolairdroprefactoredition.databinding.ComponentUserMoreInfoBinding;
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 
@@ -44,9 +40,29 @@ public class UserHomeSellingInfo extends ConstraintLayoutAuto implements View.On
     }
 
     public void setUserMoreInfo(DomainUserInfo.DataBean info) {
-
         binding.userMoreSelling.setText(String.valueOf(info.getSelling()));
         switch (info.getCredit_num()) {
+            case 1:
+                binding.userMoreCredits.setImageResource(CREDIT1);
+                break;
+            case 2:
+                binding.userMoreCredits.setImageResource(CREDIT2);
+                break;
+            case 3:
+                binding.userMoreCredits.setImageResource(CREDIT3);
+                break;
+            case 4:
+                binding.userMoreCredits.setImageResource(CREDIT4);
+                break;
+            case 5:
+                binding.userMoreCredits.setImageResource(CREDIT5);
+                break;
+        }
+    }
+
+    public void setUserMoreInfo(DomainGoodsInfo.DataBean info) {
+        binding.userMoreSelling.setText(R.string.sellingHideByUser); // todo 用户应该可以查看其他用户在售物品的个数
+        switch (info.getSeller_info().getCredit_num()) {
             case 1:
                 binding.userMoreCredits.setImageResource(CREDIT1);
                 break;

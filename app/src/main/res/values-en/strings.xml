@@ -195,7 +195,13 @@
     <string name="postMyTopic">Post My Topic</string>
     <string name="unListItem">Are You Sure You Want To Off-Shelf This Item?</string>
     <string name="attention">Attention</string>
-    <string name="favorite">Star</string>
+    <string name="favorite">Favorite</string>
     <string name="errorUnknown">Unknown Error</string>
     <string name="successQuote">Success</string>
+    <string name="successSave">Saved</string>
+    <string name="successAvatar">Avatar Updated</string>
+    <string name="successUnlist">Unlisted</string>
+    <string name="errorLogin">Error Logging</string>
+    <string name="successFavorite">Item Favorited</string>
+    <string name="sellingHideByUser">Hidden</string>
 </resources>

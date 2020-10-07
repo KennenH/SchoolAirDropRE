@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ComponentUserInfoBinding;
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -38,6 +39,14 @@ public class UserHomeBaseInfo extends ConstraintLayoutAuto implements View.OnCli
         try {
             ImageUtil.scaledImageLoad(binding.userAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), SizeUtils.dp2px(80));
             binding.userName.setText(info.getUname());
+        } catch (NullPointerException e) {
+        }
+    }
+
+    public void setUserBaseInfo(DomainGoodsInfo.DataBean info) {
+        try {
+            ImageUtil.scaledImageLoad(binding.userAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getSeller_info().getUser_img_path(), SizeUtils.dp2px(80));
+            binding.userName.setText(info.getSeller_info().getUname());
         } catch (NullPointerException e) {
         }
     }

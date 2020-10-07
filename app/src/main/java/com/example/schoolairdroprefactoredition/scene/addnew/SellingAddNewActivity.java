@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.addnew;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -55,7 +56,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
             // 若未登录则带着登录请求打开页面
             startForLogin(context);
         } else {
-            // 若以登录则直接打开页面
+            // 若已登录则直接打开页面
             intent.putExtras(bundle);
             context.startActivity(intent);
             if (context instanceof AppCompatActivity)
@@ -206,6 +207,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                 }
             } else if (requestCode == LoginActivity.LOGIN) { // 在本页面打开登录页面登录并返回
                 if (data != null) {
+                    setResult(Activity.RESULT_OK, data);
                     token = (DomainAuthorize) data.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
                     submit();
                 }
