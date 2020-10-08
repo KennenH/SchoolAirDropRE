@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.ssb.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,6 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
@@ -27,7 +27,10 @@ import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 
 import java.util.List;
 
-public abstract class SSBBaseFragment extends StatePlaceholderFragment implements BaseStateViewModel.OnRequestListener, SSBFilter.OnFilterListener, StatePlaceHolder.OnPlaceHolderRefreshListener, SSBViewModel.OnSSBActionListener, SSBAdapter.OnSSBItemActionListener {
+public abstract class SSBBaseFragment extends StatePlaceholderFragment
+        implements BaseStateViewModel.OnRequestListener, SSBFilter.OnFilterListener,
+        StatePlaceHolder.OnPlaceHolderRefreshListener, SSBViewModel.OnSSBActionListener,
+        SSBAdapter.OnSSBItemActionListener{
 
     protected SSBViewModel viewModel;
 
@@ -37,20 +40,9 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment implement
     protected com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding;
     protected List<DomainGoodsInfo.DataBean> mList;
 
-    protected Bundle bundle;
-
-    protected DomainUserInfo.DataBean info;
-    protected DomainAuthorize token;
-
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        bundle = getArguments();
-        if (bundle == null)
-            bundle = new Bundle();
-
-        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
-        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
     }
 
     @Nullable
@@ -65,7 +57,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment implement
         binding.placeHolder.setOnPlaceHolderActionListener(this);
 
         mFilter = new SSBFilter(getContext());
-        mAdapter = new SSBAdapter(bundle);
+        mAdapter = new SSBAdapter();
         mAdapter.setOnSSBItemActionListener(this);
         mFilter.setOnFilterListener(this);
         mAdapter.addHeaderView(mFilter);
@@ -77,9 +69,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment implement
                     ((SSBActivity) getActivity()).hideSearchBar();
             }
         });
-
         init(binding);
-
         return binding.getRoot();
     }
 
@@ -101,32 +91,26 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment implement
             showContentContainer();
         }
     }
-//
-//    /**
-//     * 显示placeholder
-//     *
-//     * @param type one of
-//     *             {@link StatePlaceHolder#TYPE_LOADING}
-//     *             {@link StatePlaceHolder#TYPE_EMPTY}
-//     *             {@link StatePlaceHolder#TYPE_NETWORK_OR_LOCATION_ERROR_HOME}
-//     *             {@link StatePlaceHolder#TYPE_ERROR}
-//     */
-//    protected void showPlaceHolder(int type) {
-//        binding.placeHolder.setPlaceHolderType(type);
-//        binding.placeHolder.setVisibility(View.VISIBLE);
-//        binding.ssbRecycler.setVisibility(View.INVISIBLE);
-//    }
-//
-//    /**
-//     * 显示物品列表
-//     */
-//    protected void showContentContainer() {
-//        binding.placeHolder.setVisibility(View.INVISIBLE);
-//        binding.ssbRecycler.setVisibility(View.VISIBLE);
-//    }
 
+    /**
+     * 获取{@link SSBActivity}的登录信息
+     */
+    protected DomainAuthorize getToken() {
+        try {
+            return (DomainAuthorize) getActivity().getIntent().getExtras().getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        } catch (NullPointerException ignored) {
+        }
+        return null;
+    }
+
+    /**
+     * 初始化
+     */
     public abstract void init(FragmentSsbBinding binding);
 
+    /**
+     * 重试网络数据获取
+     */
     public abstract void retryGrabOnlineData();
 
     @Override
@@ -156,6 +140,11 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment implement
     public void onFilterWatches() {
     }
 
+    /**
+     * item上右下角的三个点按钮的操作
+     * 在售列表中为 {修改物品信息} 和 {下架物品}
+     * 已售和已购列表中的按钮动作待定
+     */
     public abstract void onItemAction(View view, DomainGoodsInfo.DataBean bean);
 
     @Override

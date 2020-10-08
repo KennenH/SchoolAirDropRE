@@ -71,6 +71,7 @@ public class SellingAddNewViewModel extends BaseStateViewModel implements ISelli
 
     @Override
     public void onError() {
-        mOnRequestListener.onError();
+        if (mOnRequestListener != null)
+            mOnRequestListener.onError();
     }
 }

@@ -48,6 +48,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
     private DomainUserInfo.DataBean myInfo;
     private DomainAuthorize token;
     private DomainGoodsInfo.DataBean goodsInfo;
+    private boolean isModifiable = false;
 
     public static UserFragment newInstance(Bundle bundle) {
         UserFragment fragment = new UserFragment();
@@ -71,6 +72,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
         if (bundle == null) {
             bundle = new Bundle();
         } else {
+            isModifiable = bundle.getBoolean(ConstantUtil.KEY_INFO_MODIFIABLE);
             myInfo = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
             token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
             goodsInfo = (DomainGoodsInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_GOODS_INFO);
@@ -83,8 +85,8 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
         final FragmentUserBinding binding = FragmentUserBinding.inflate(inflater, container, false);
         viewModel = new ViewModelProvider(this).get(UserViewModel.class);
 
-        // 若查看自己的个人信息页面则显示新增
-        if (isMine())
+        // 若查看自己的个人信息页面且是从MyFragment中进入的则显示修改按钮，否则不显示
+        if (isModifiable && isMine())
             setHasOptionsMenu(true);
 
         mRecycler = binding.userRecycler;
@@ -159,7 +161,7 @@ public class UserFragment extends TransactionBaseFragment implements UserHomeBas
 
     @Override
     public void onAvatarClick(ImageView src) {
-        if (isMine() && myInfo != null)
+        if (isMine())
             new XPopup.Builder(getContext())
                     .asImageViewer(src, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + myInfo.getUser_img_path(), false, -1, -1, 50, true, new MyUtil.ImageLoader())
                     .show();

@@ -1,7 +1,8 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
-import android.os.Bundle;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -19,11 +20,8 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
 
     private OnSSBItemActionListener mOnSSBItemActionListener;
 
-    private Bundle bundle;
-
-    public SSBAdapter(Bundle bundle) {
+    public SSBAdapter() {
         super(R.layout.item_ssb);
-        this.bundle = bundle;
     }
 
     @Override
@@ -43,10 +41,11 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
             ((GoodsPrice) holder.itemView.findViewById(R.id.ssb_item_price)).setPrice(bean.getGoods_price());
         }
 
-        holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), bundle, bean));
+        if (getContext() instanceof AppCompatActivity)
+            holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), ((AppCompatActivity) getContext()).getIntent().getExtras(), bean));
 
         holder.itemView.findViewById(R.id.ssb_item_more_action).setOnClickListener(v -> {
-            // pop up more action window
+            // 弹出更多动作的弹窗
             if (mOnSSBItemActionListener != null)
                 mOnSSBItemActionListener.onItemActionButtonClick(v, bean);
         });

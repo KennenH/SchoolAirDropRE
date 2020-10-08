@@ -264,11 +264,11 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     @Override
     public void autoLoadMore(EndlessRecyclerView recycler) {
-        if (token != null)
-            searchViewModel.getSearchResult().observe(getViewLifecycleOwner(), data -> {
-                mResultAdapter.addData(data);
-                recycler.finishLoading();
-            });
+//        if (token != null)
+//            searchViewModel.getSearchResult().observe(getViewLifecycleOwner(), data -> {
+//                mResultAdapter.addData(data);
+//                recycler.finishLoading();
+//            });
     }
 
     @Override

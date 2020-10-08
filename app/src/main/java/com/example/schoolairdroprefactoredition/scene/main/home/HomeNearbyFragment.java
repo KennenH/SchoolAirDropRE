@@ -139,16 +139,16 @@ public class HomeNearbyFragment extends BaseChildFragment
 
     @Override
     public void autoLoadMore(EndlessRecyclerView recycler) {
-        if (mLocation != null) {
-            homeContentFragmentViewModel.getGoodsInfo().observe(getViewLifecycleOwner(), data -> {
-                recycler.finishLoading();
-                mHomeNearbyRecyclerAdapter.addData(data);
-                showContentContainer();
-            });
-        } else {
-            showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
-            recycler.finishLoading();
-        }
+//        if (mLocation != null) {
+//            homeContentFragmentViewModel.getGoodsInfo().observe(getViewLifecycleOwner(), data -> {
+//                recycler.finishLoading();
+//                mHomeNearbyRecyclerAdapter.addData(data);
+//                showContentContainer();
+//            });
+//        } else {
+//            showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
+//            recycler.finishLoading();
+//        }
     }
 
     @Override

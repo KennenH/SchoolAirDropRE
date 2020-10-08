@@ -1,6 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.ssb.fragment;
 
-import android.os.Bundle;
+import android.content.Context;
 import android.view.Menu;
 import android.view.View;
 
@@ -8,18 +8,24 @@ import androidx.annotation.NonNull;
 
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 
 /**
  * {@link SellingFragment}
  * {@link SoldFragment}
  */
-public class BoughtFragment extends SSBBaseFragment implements StatePlaceHolder.OnPlaceHolderRefreshListener {
-
-    public static BoughtFragment newInstance(Bundle bundle) {
+public class BoughtFragment extends SSBBaseFragment implements SSBActivity.OnLoginStateChangeListener {
+    public static BoughtFragment newInstance() {
         BoughtFragment fragment = new BoughtFragment();
-        fragment.setArguments(new Bundle(bundle));
         return fragment;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (getActivity() instanceof SSBActivity)
+            ((SSBActivity) getActivity()).setOnLoginStateChangeListener(this);
     }
 
     @Override
@@ -43,16 +49,11 @@ public class BoughtFragment extends SSBBaseFragment implements StatePlaceHolder.
      * 网络请求已购数据
      */
     private void getBought() {
-        if (token != null) { // 未登录
+        if (getToken() != null) { // 未登录
             showPlaceholder(StatePlaceHolder.TYPE_LOADING);
-            viewModel.getBought(token.getAccess_token()).observe(getViewLifecycleOwner(), this::loadData);
+            viewModel.getBought(getToken().getAccess_token()).observe(getViewLifecycleOwner(), this::loadData);
         } else // 未登录时
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
-    }
-
-    @Override
-    public void onPlaceHolderRetry(View view) {
-        getBought();
     }
 
     @Override
@@ -76,5 +77,10 @@ public class BoughtFragment extends SSBBaseFragment implements StatePlaceHolder.
     @Override
     public void onItemAction(View view, DomainGoodsInfo.DataBean bean) {
 
+    }
+
+    @Override
+    public void onLoginSSB() {
+        getBought();
     }
 }

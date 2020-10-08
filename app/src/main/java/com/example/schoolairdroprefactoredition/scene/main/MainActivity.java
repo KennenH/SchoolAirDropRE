@@ -18,7 +18,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
@@ -199,9 +198,6 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
                         autoLoginWithToken();
                     break;
                 case SettingsFragment.LOGOUT: // 退出登录返回:
-
-                    LogUtils.d("log out");
-
                     bundle.clear();
                     if (mOnLoginStateChangedListener != null)
                         mOnLoginStateChangedListener.onLoginStateChanged(bundle);

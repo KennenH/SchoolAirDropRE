@@ -123,11 +123,11 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
 
     @Override
     public void autoLoadMore(EndlessRecyclerView recycler) {
-        homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
-            mHomeNewsRecyclerAdapter.addData(data);
-            showContentContainer();
-            recycler.finishLoading();
-        });
+//        homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
+//            mHomeNewsRecyclerAdapter.addData(data);
+//            showContentContainer();
+//            recycler.finishLoading();
+//        });
     }
 
     @Override

@@ -126,7 +126,7 @@ public interface Api {
      */
     @Multipart
     @POST("goods/upload")
-    Call<ResponseBody> postNewItem(@Header("Authorization") String token,
+    Call<DomainResult> postNewItem(@Header("Authorization") String token,
                                    @Part MultipartBody.Part cover,
                                    @Part List<MultipartBody.Part> picSet,
                                    @Part MultipartBody.Part title,

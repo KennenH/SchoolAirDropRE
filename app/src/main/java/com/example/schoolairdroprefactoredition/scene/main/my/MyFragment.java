@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding;
@@ -124,7 +123,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
             case R.id.my_info:
                 if (bundle != null && bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE) != null
                         && bundle.getSerializable(ConstantUtil.KEY_USER_INFO) != null) {
-                    UserActivity.startForResult(getActivity(), bundle);
+                    UserActivity.startForResult(getActivity(), bundle,true);
                 } else {
                     LoginActivity.startForLogin(getContext());
                 }
@@ -156,8 +155,6 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
      */
     @Override
     public void onLoginStateChanged(@NotNull Bundle bundle) {
-        LogUtils.d("on login state changed");
-
         DomainAuthorize token = getToken();
         setUserData();
         if (token != null)

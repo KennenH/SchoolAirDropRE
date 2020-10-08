@@ -59,4 +59,8 @@ public class ConstantUtil {
      * 获取物品信息键
      */
     public static final String KEY_GOODS_INFO = "GoodsInfo";
+    /**
+     * 打开用户个人信息页面时是否可修改信息
+     */
+    public static final String KEY_INFO_MODIFIABLE = "modifiableOrNot?";
 }

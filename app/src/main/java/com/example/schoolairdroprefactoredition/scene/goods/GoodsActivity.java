@@ -18,7 +18,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.blankj.utilcode.util.BarUtils;
 import com.blankj.utilcode.util.KeyboardUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivityGoodsBinding;
 import com.example.schoolairdroprefactoredition.databinding.SheetQuoteBinding;
@@ -42,7 +41,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaeger.library.StatusBarUtil;
 
 public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonSingle.OnButtonClickListener, ButtonDouble.OnButtonClickListener, BaseStateViewModel.OnRequestListener, GoodsInfo.OnUserInfoClickListener {
-
     public static void start(Context context, Bundle bundle, DomainGoodsInfo.DataBean goodsInfo) {
         Intent intent = new Intent(context, GoodsActivity.class);
         intent.putExtras(bundle);
@@ -84,13 +82,14 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
         if (bundle == null) bundle = new Bundle();
         validateInfo();
 
-        binding.goodsInfoContainer.setData(goodsInfo);
         binding.goodsInfoContainer.setOnUserInfoClickListener(this);
         binding.goodsButtonLeft.setOnButtonClickListener(this);
         binding.goodsButtonRight.setOnButtonClickListener(this);
     }
 
-    // 若为自己的物品则将按钮隐藏
+    /**
+     * 若为自己的物品则将页面底部的三个按钮隐藏
+     */
     private void validateInfo() {
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
         goodsInfo = (DomainGoodsInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_GOODS_INFO);
@@ -101,6 +100,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
             binding.goodsButtonRight.setVisibility(View.GONE);
             binding.goodsInfoContainer.hideBottom();
         }
+        binding.goodsInfoContainer.setData(goodsInfo);
     }
 
     /**
@@ -117,6 +117,8 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
             if (requestCode == LoginActivity.LOGIN) {
                 if (data != null) {
                     bundle = data.getExtras();
+                    if (bundle != null)
+                        bundle.putSerializable(ConstantUtil.KEY_GOODS_INFO, goodsInfo);
 
                     validateInfo();
                     setResult(Activity.RESULT_OK, data);
@@ -134,7 +136,6 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      * 卖家与个人信息不为空 但 卖家信息uid与个人信息uid不一致
      */
     private boolean isMine() {
-        LogUtils.d(token);
         if (token != null) {
             if (myInfo != null)
                 return goodsInfo == null ||
@@ -285,6 +286,6 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      */
     @Override
     public void onUserInfoClick(View view) {
-        UserActivity.startForResult(this, bundle);
+        UserActivity.startForResult(this, bundle, false);
     }
 }

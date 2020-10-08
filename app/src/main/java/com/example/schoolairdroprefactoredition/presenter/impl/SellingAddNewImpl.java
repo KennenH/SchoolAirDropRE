@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.model.Api;
 import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
@@ -19,7 +20,6 @@ import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
@@ -52,24 +52,24 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
         MultipartBody.Part goodsQuotable = MultipartBody.Part.createFormData("goods_is_quotable", isQuotable ? "1" : "0");
         MultipartBody.Part goodsPrice = MultipartBody.Part.createFormData("goods_price", String.valueOf(price));
 
-        retrofit2.Call<ResponseBody> task = api.postNewItem(
+        retrofit2.Call<DomainResult> task = api.postNewItem(
                 token, goodsCover, goodsSet, goodsName, goodsDes, goodsLongitude, goodsLatitude, goodsQuotable, goodsBrandNew, goodsPrice);
 
-        task.enqueue(new CallBackWithRetry<ResponseBody>(task) {
+        task.enqueue(new CallBackWithRetry<DomainResult>(task) {
             @Override
-            public void onResponse(retrofit2.Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(retrofit2.Call<DomainResult> call, Response<DomainResult> response) {
                 int code = response.code();
                 if (code == HttpURLConnection.HTTP_OK) {
-                    ResponseBody body = response.body();
-//                    if (body != null)
+                    DomainResult body = response.body();
+                    if (body != null)
 
-                    try {
-                        LogUtils.d(body.string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
+//                    try {
+//                        LogUtils.d(body.string());
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
 
-//                        mCallback.onSubmitResult(body);
+                        mCallback.onSubmitResult(body);
                 } else {
                     try {
                         LogUtils.d(response.errorBody().string());

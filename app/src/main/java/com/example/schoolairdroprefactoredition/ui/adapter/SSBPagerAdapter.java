@@ -1,7 +1,5 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -14,25 +12,19 @@ import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SoldFragment;
 
 public class SSBPagerAdapter extends FragmentPagerAdapter {
 
-    private Bundle bundle;
-
     public SSBPagerAdapter(@NonNull FragmentManager fm, int behavior) {
         super(fm, behavior);
-    }
-
-    public void setBundle(Bundle bundle) {
-        this.bundle = bundle;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
         if (position == 0)
-            return SellingFragment.newInstance(bundle);
+            return SellingFragment.newInstance();
         else if (position == 1)
-            return SoldFragment.newInstance(bundle);
+            return SoldFragment.newInstance();
         else
-            return BoughtFragment.newInstance(bundle);
+            return BoughtFragment.newInstance();
     }
 
     @Override

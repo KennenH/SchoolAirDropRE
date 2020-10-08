@@ -284,25 +284,25 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         View focusView = null;
         if (binding.optionDescription.getText().length() < 1) {
             AnimUtil.whiteBackgroundViewBlinkRed(this, binding.optionDescriptionWrapper);
-            focusView = binding.optionDescriptionWrapper;
+            focusView = binding.detailTitle;
             pass = false;
         }
 
         if (binding.priceInput.getText().toString().trim().equals("")) {
             AnimUtil.whiteBackgroundViewBlinkRed(this, binding.optionPrice);
-            focusView = binding.optionPrice;
+            focusView = binding.priceTitle;
             pass = false;
         }
 
         if (binding.optionTitle.getText().length() < 1) {
             AnimUtil.whiteBackgroundViewBlinkRed(this, binding.optionTitleWrapper);
-            focusView = binding.optionTitleWrapper;
+            focusView = binding.titleTitle;
             pass = false;
         }
 
         if (mCoverPath == null || mCoverPath.trim().equals("")) {
             AnimUtil.whiteBackgroundViewBlinkRed(this, binding.coverWrapper);
-            focusView = binding.coverWrapper;
+            focusView = binding.coverTitle;
             pass = false;
         }
 

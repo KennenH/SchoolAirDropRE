@@ -11,7 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.user.fragment.UserFragment;
@@ -20,9 +19,15 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 public class UserActivity extends TransactionBaseActivity implements FragmentManager.OnBackStackChangedListener {
     public static final int REQUEST_UPDATE = 520;
 
-    public static void startForResult(Context context, Bundle bundle) {
+    /**
+     * @param isModifiable 信息是否可修改 只有在
+     *                     {@link com.example.schoolairdroprefactoredition.scene.main.my.MyFragment}
+     *                     中进入自己的个人信息页才可修改
+     */
+    public static void startForResult(Context context, Bundle bundle, boolean isModifiable) {
         Intent intent = new Intent(context, UserActivity.class);
         intent.putExtras(bundle);
+        intent.putExtra(ConstantUtil.KEY_INFO_MODIFIABLE, isModifiable);
         ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_UPDATE);
     }
 

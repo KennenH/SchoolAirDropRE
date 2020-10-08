@@ -7,8 +7,6 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
-import com.example.schoolairdroprefactoredition.scene.quote.QuoteDetailActivity;
-import com.example.schoolairdroprefactoredition.model.databean.TestQuoteSectionItemBean;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
@@ -48,7 +46,7 @@ public class QuoteRecyclerAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataB
 
         if (userInfo != null && userInfo.getUid() == bean.getSeller_info().getUid()) {
             bundle.putSerializable(ConstantUtil.KEY_GOODS_INFO, bean);
-            UserActivity.startForResult(getContext(), bundle);
+            UserActivity.startForResult(getContext(), bundle,false);
         }
     }
 }

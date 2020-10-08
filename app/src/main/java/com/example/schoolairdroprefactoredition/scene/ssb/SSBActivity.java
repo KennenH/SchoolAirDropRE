@@ -32,6 +32,8 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
 
     public static final String PAGE_INDEX = "SSBPageIndex";
 
+    private OnLoginStateChangeListener mOnLoginStateChangeListener;
+
     public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, SSBActivity.class);
         intent.putExtras(bundle);
@@ -59,7 +61,6 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
         Intent intent = getIntent();
         int index = intent.getIntExtra(PAGE_INDEX, 0);
         mPagerAdapter = new SSBPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        mPagerAdapter.setBundle(intent.getExtras());
         binding.ssbSearch.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
                 KeyboardUtils.showSoftInput(v);
@@ -97,11 +98,25 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == LoginActivity.LOGIN) {
                 if (data != null) {
+                    getIntent().putExtras(data);
+                    if (mOnLoginStateChangeListener != null)
+                        mOnLoginStateChangeListener.onLoginSSB();
                     setResult(Activity.RESULT_OK, data);
-                    mPagerAdapter.setBundle(data.getExtras());
                 }
             }
         }
+    }
+
+    /**
+     * 在{@link com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity}中登录后
+     * 将登录结果回调至ssb三个子fragment中
+     */
+    public interface OnLoginStateChangeListener {
+        void onLoginSSB();
+    }
+
+    public void setOnLoginStateChangeListener(OnLoginStateChangeListener listener) {
+        mOnLoginStateChangeListener = listener;
     }
 
     public void hideSearchBar() {
