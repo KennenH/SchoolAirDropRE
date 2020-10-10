@@ -69,9 +69,12 @@ public class LoginImpl implements ILoginPresenter {
                     if (mCallback != null)
                         mCallback.onPublicKeyGot(authorization);
                 } else if (code == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                    mCallback.onTokenInvalid();
-                } else
-                    mCallback.onLoginError();
+                    if (mCallback != null)
+                        mCallback.onTokenInvalid();
+                } else {
+                    if (mCallback != null)
+                        mCallback.onLoginError();
+                }
 //                    try {
 //                        Log.d("SettingsImpl", "请求错误 " + response.errorBody().string());
 //                    } catch (IOException e) {
@@ -90,13 +93,16 @@ public class LoginImpl implements ILoginPresenter {
      * @param publicKey 公钥
      */
     @Override
-    public void postAlipayIDRSA(String cookie, String rawAlipay, String publicKey) {
+    public void postAlipayIDRSA(String cookie, String rawAlipay, String publicKey, String registrationID) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
 
-//        LogUtils.d(RSACoder.encryptWithPublicKey(publicKey, rawAlipay));
-
-        Call<DomainAuthorize> task = api.authorize(cookie, ConstantUtil.CLIENT_GRANT_TYPE, ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, RSACoder.encryptWithPublicKey(publicKey, rawAlipay));
+        Call<DomainAuthorize> task = api.authorize(cookie,
+                ConstantUtil.CLIENT_GRANT_TYPE,
+                ConstantUtil.CLIENT_ID,
+                ConstantUtil.CLIENT_SECRET,
+                RSACoder.encryptWithPublicKey(publicKey, rawAlipay),
+                registrationID);
         task.enqueue(new CallBackWithRetry<DomainAuthorize>(task) {
             @Override
             public void onResponse(Call<DomainAuthorize> call, Response<DomainAuthorize> response) {
@@ -126,13 +132,15 @@ public class LoginImpl implements ILoginPresenter {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    mCallback.onLoginError();
+                    if (mCallback != null)
+                        mCallback.onLoginError();
                 }
             }
 
             @Override
             public void onFailureAllRetries() {
-                mCallback.onLoginError();
+                if (mCallback != null)
+                    mCallback.onLoginError();
             }
         });
     }
@@ -154,24 +162,27 @@ public class LoginImpl implements ILoginPresenter {
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
-                    if (info != null && info.isSuccess()) {
-                        mCallback.onUserInfoLoaded(info);
-                        UserLoginCacheUtils.saveUserInfo(info.getData().get(0));
-                    } else
-                        mCallback.onLoginError();
+                    if (mCallback != null)
+                        if (info != null && info.isSuccess()) {
+                            mCallback.onUserInfoLoaded(info);
+                            UserLoginCacheUtils.saveUserInfo(info.getData().get(0));
+                        } else
+                            mCallback.onLoginError();
                 } else {
                     try {
                         Log.d("getUserInfo", response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    mCallback.onLoginError();
+                    if (mCallback != null)
+                        mCallback.onLoginError();
                 }
             }
 
             @Override
             public void onFailureAllRetries() {
-                mCallback.onLoginError();
+                if (mCallback != null)
+                    mCallback.onLoginError();
             }
         });
     }

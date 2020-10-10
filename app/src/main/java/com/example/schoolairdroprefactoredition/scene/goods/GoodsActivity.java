@@ -219,7 +219,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                         KeyboardUtils.hideSoftInput(v);
                         return true;
                     });
-                    binding.quotePrice.setFilters(new InputFilter[]{new DecimalFilter(5, 2)});
+                    binding.quotePrice.setFilters(new InputFilter[]{new DecimalFilter()});
                     binding.quotePrice.setOnFocusChangeListener((v, hasFocus) -> {
                         if (hasFocus && binding.warning.getVisibility() == View.VISIBLE)
                             AnimUtil.collapse(binding.warning);

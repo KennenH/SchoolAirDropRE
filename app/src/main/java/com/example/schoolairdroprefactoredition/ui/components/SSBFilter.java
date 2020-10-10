@@ -35,6 +35,13 @@ public class SSBFilter extends ConstraintLayout {
 
     }
 
+    /**
+     * 设置当前数据总长度
+     */
+    public void setDataStatistics(int total) {
+        mStatistics.setText(getContext().getString(R.string.statistics, total));
+    }
+
     public interface OnFilterListener {
         void onFilterTimeAsc();
 

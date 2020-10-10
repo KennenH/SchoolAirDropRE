@@ -84,13 +84,15 @@ public class SearchImpl implements ISearchPresenter {
                     }
 
                 } else {
-                    mCallback.onError();
+                    if (mCallback != null)
+                        mCallback.onError();
                 }
             }
 
             @Override
             public void onFailureAllRetries() {
-                mCallback.onError();
+                if (mCallback != null)
+                    mCallback.onError();
             }
         });
     }

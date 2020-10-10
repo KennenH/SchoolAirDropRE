@@ -7,9 +7,9 @@
 
     <ImageView
         android:id="@+id/location_icon"
-        android:layout_width="@dimen/toolbar_icon_bit_large"
-        android:layout_height="@dimen/toolbar_icon_bit_large"
-        android:src="@drawable/ic_location"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:src="@drawable/anchor_fill"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -18,13 +18,14 @@
         android:id="@+id/location_area"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/general_padding"
+        android:layout_marginStart="@dimen/general_padding_large"
         android:ellipsize="end"
-        android:maxEms="5"
-        android:textSize="14dp"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizeNormal"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/location_icon"
         app:layout_constraintStart_toEndOf="@+id/location_icon"
         app:layout_constraintTop_toTopOf="@+id/location_icon"
-        tools:text="定位" />
+        tools:text="杭州市 江干区" />
 
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

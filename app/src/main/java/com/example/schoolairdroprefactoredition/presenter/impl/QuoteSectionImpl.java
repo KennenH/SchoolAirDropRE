@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.presenter.IQuoteSectionsPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IQuoteSectionsCallback;
 
@@ -12,12 +11,14 @@ public class QuoteSectionImpl implements IQuoteSectionsPresenter {
 
     @Override
     public void getReceivedQuote(String token) {
-        mCallback.onQuoteReceivedLoaded(new ArrayList<>());
+        if (mCallback != null)
+            mCallback.onQuoteReceivedLoaded(new ArrayList<>());
     }
 
     @Override
     public void getSentQuote(String token) {
-        mCallback.onQuoteSentLoaded(new ArrayList<>());
+        if (mCallback != null)
+            mCallback.onQuoteSentLoaded(new ArrayList<>());
     }
 
     @Override

@@ -152,7 +152,7 @@
     <string name="notMatchDescription">Item not match the description</string>
     <string name="NEXTTIME">NEXT TIME</string>
     <string name="GOSETTING">GO SETTING</string>
-    <string name="purchasing">Purchasing</string>
+    <string name="purchasing">Goods</string>
     <string name="obtainLocationInfo">Obtain Location Information</string>
     <string name="permissionDenied">Permission denied</string>
     <string name="locationPermissionContent">Location will be used to obtain information on the Home page, nearby items, transaction locations, and item release locations.</string>
@@ -204,4 +204,17 @@
     <string name="errorLogin">Error Logging</string>
     <string name="successFavorite">Item Favorited</string>
     <string name="sellingHideByUser">Hidden</string>
+    <string name="ic_credit1">[img src=ic_credit1en/]</string>
+    <string name="ic_credit2">[img src=ic_credit2en/]</string>
+    <string name="ic_credit3">[img src=ic_credit3en/]</string>
+    <string name="ic_credit4">[img src=ic_credit4en/]</string>
+    <string name="ic_credit5">[img src=ic_credit5en/]</string>
+    <string name="editGoods">Edit</string>
+    <string name="itemNS">[img src=ic_negotiable_en/] [img src=ic_secondhand_en/] %s</string>
+    <string name="itemNSs">[img src=ic_negotiable_en_small/] [img src=ic_secondhand_en_small/] %s</string>
+    <string name="itemN">[img src=ic_negotiable_en/] %s</string>
+    <string name="itemNs">[img src=ic_negotiable_en_small/] %s</string>
+    <string name="itemS">[img src=ic_secondhand_en/] %s</string>
+    <string name="itemSs">[img src=ic_secondhand_en_small/] %s</string>
+    <string name="loading">Loading…</string>
 </resources>

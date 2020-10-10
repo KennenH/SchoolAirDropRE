@@ -20,8 +20,8 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     /**
      * 请求获取权限
      * 在执行需要权限的方法之前必须先执行此方法来判断是否有权限
-     * 在{@link #albumGranted()} {@link #locationGranted()} {@link #cameraGranted()}三个方法中执行需要权限的操作
-     * 在{@link #albumDenied()} {@link #locationDenied()}  {@link #cameraDenied()} 三个方法中执行权限拒绝的操作
+     * 在 granted 方法中执行需要权限的操作
+     * 在 denied 方法中执行权限拒绝后的操作
      * <p>
      * 在类型为{@link RequestType#MANUAL}时若已勾选不再提醒，则弹窗引导用户手动设置 (适用于用户手动重试时)
      * 反之若类型为{@link RequestType#AUTO}时若权限被拒绝则不会询问  (适用于页面打开时自动检查权限)
@@ -41,6 +41,9 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
             case PermissionConstants.STORAGE:
                 res = R.string.albumPermissionContent;
                 break;
+            case PermissionConstants.PHONE:
+                res = R.string.phonePermissionContent;
+                break;
             default:
                 break;
         }
@@ -59,6 +62,9 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                                 break;
                             case PermissionConstants.STORAGE:
                                 albumGranted();
+                                break;
+                            case PermissionConstants.PHONE:
+                                phoneGranted();
                                 break;
                             default:
                                 break;
@@ -81,6 +87,9 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                             break;
                         case PermissionConstants.STORAGE:
                             albumDenied();
+                            break;
+                        case PermissionConstants.PHONE:
+                            phoneDenied();
                             break;
                         default:
                             break;
@@ -111,6 +120,10 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                     albumGranted();
                 else albumDenied();
                 break;
+            case Automatically.PHONE:
+                if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PERMISSION_GRANTED)
+                    phoneGranted();
+                else phoneDenied();
             default:
                 break;
         }
@@ -130,9 +143,10 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
      * 自动请求码，在检测到权限被拒绝时保持沉默
      */
     public @interface Automatically {
-        int LOCATION = 999; // requestCode 自动定位权限请求码
-        int CAMERA = 888; // requestCode 自动相机权限请求码
-        int ALBUM = 777; // requestCode 自动相册权限请求码
+        int LOCATION = 999;
+        int CAMERA = 888;
+        int ALBUM = 777;
+        int PHONE = 666;
     }
 
     /**
@@ -177,6 +191,17 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     protected void albumDenied() {
     }
 
+    /**
+     * 电话权限获取
+     */
+    protected void phoneGranted() {
+    }
+
+    /**
+     * 电话权限拒绝
+     */
+    protected void phoneDenied() {
+    }
 
     private void popUpForRequestPermission(@StringRes int res, @PermissionConstants.Permission String permission) {
         int request = 0;
@@ -189,6 +214,9 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                 break;
             case PermissionConstants.STORAGE:
                 request = Automatically.ALBUM;
+                break;
+            case PermissionConstants.PHONE:
+                request = Automatically.PHONE;
                 break;
             default:
                 break;
@@ -206,6 +234,9 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                         case PermissionConstants.STORAGE:
                             requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, finalRequest);
                             break;
+                        case PermissionConstants.PHONE:
+                            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, finalRequest);
+                            break;
                         default:
                             break;
                     }
@@ -220,6 +251,9 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                             break;
                         case PermissionConstants.STORAGE:
                             albumDenied();
+                            break;
+                        case PermissionConstants.PHONE:
+                            phoneDenied();
                             break;
                         default:
                             break;
@@ -240,6 +274,9 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                         case PermissionConstants.STORAGE:
                             goSettings(Automatically.ALBUM);
                             break;
+                        case PermissionConstants.PHONE:
+                            goSettings(Automatically.PHONE);
+                            break;
                         default:
                             break;
                     }
@@ -252,7 +289,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // 设置返回时检查自动权限
+        // 设置返回时检查自动权限,不申请
         checkPermissionWithoutRequest(requestCode);
     }
 
@@ -266,5 +303,4 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
         intent.setData(uri);
         startActivityForResult(intent, requestCode);
     }
-
 }

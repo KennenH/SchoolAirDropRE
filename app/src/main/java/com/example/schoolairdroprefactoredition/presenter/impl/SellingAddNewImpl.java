@@ -69,14 +69,16 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
 //                        e.printStackTrace();
 //                    }
 
-                        mCallback.onSubmitResult(body);
+                        if (mCallback != null)
+                            mCallback.onSubmitResult(body);
                 } else {
                     try {
                         LogUtils.d(response.errorBody().string());
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    mCallback.onError();
+                    if (mCallback != null)
+                        mCallback.onError();
                 }
             }
 

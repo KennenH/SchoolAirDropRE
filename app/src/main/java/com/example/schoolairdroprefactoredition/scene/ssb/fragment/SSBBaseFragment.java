@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.scene.ssb.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,30 +19,31 @@ import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragm
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
-import com.example.schoolairdroprefactoredition.ui.components.SSBFilter;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
+import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
 
 import java.util.List;
 
 public abstract class SSBBaseFragment extends StatePlaceholderFragment
-        implements BaseStateViewModel.OnRequestListener, SSBFilter.OnFilterListener,
+        implements BaseStateViewModel.OnRequestListener,
         StatePlaceHolder.OnPlaceHolderRefreshListener, SSBViewModel.OnSSBActionListener,
-        SSBAdapter.OnSSBItemActionListener{
+        SSBAdapter.OnSSBItemActionListener {
+
+    public static final int SELLING_POS = 0;
+    public static final int SOLD_POS = 1;
+    public static final int BOUGHT_POS = 2;
+
 
     protected SSBViewModel viewModel;
 
     protected SSBAdapter mAdapter;
-    protected SSBFilter mFilter;
 
     protected com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding;
     protected List<DomainGoodsInfo.DataBean> mList;
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-    }
+    protected OnSSBDataLenChangedListener mOnSSBDataLenChangedListener;
 
     @Nullable
     @Override
@@ -56,11 +56,9 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         binding.ssbRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         binding.placeHolder.setOnPlaceHolderActionListener(this);
 
-        mFilter = new SSBFilter(getContext());
         mAdapter = new SSBAdapter();
         mAdapter.setOnSSBItemActionListener(this);
-        mFilter.setOnFilterListener(this);
-        mAdapter.addHeaderView(mFilter);
+        binding.ssbRecycler.addItemDecoration(new MarginItemDecoration());
         binding.ssbRecycler.setAdapter(mAdapter);
         binding.ssbRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
@@ -77,6 +75,24 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     public void setContainerAndPlaceholder() {
         mStatePlaceholderFragmentContainer = binding.ssbRecycler;
         mStatePlaceholderFragmentPlaceholder = binding.placeHolder;
+    }
+
+    /**
+     * 当页面数据长度改变时
+     * 包括
+     * 1、子fragment切换
+     * 2、添加或删除数据
+     * 重新统计当前子fragment的数据条数并显示
+     */
+    public interface OnSSBDataLenChangedListener {
+        /**
+         * 数据长度改变
+         */
+        void onSSBDataLenChanged(int total, int page);
+    }
+
+    public void setOnSSBDataLenChangedListener(OnSSBDataLenChangedListener listener) {
+        mOnSSBDataLenChangedListener = listener;
     }
 
     /**
@@ -104,6 +120,14 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     }
 
     /**
+     * validate mList's size
+     */
+    protected void dataLenOnChange(int page) {
+        if (mOnSSBDataLenChangedListener != null && mList != null)
+            mOnSSBDataLenChangedListener.onSSBDataLenChanged(mList.size(), page);
+    }
+
+    /**
      * 初始化
      */
     public abstract void init(FragmentSsbBinding binding);
@@ -126,18 +150,6 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     @Override
     public void onActionFailed() {
         DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
-    }
-
-    @Override
-    public void onFilterTimeAsc() {
-    }
-
-    @Override
-    public void onFilterTimeDesc() {
-    }
-
-    @Override
-    public void onFilterWatches() {
     }
 
     /**

@@ -27,7 +27,8 @@ public class HomeNewsImpl implements IHomeNewsPresenter {
                 data[i].setTitle("校园空投校园内测开始啦!进来解锁新姿势!");
             }
         }
-        mCallback.onNewsLoaded(Arrays.asList(data));
+        if (mCallback != null)
+            mCallback.onNewsLoaded(Arrays.asList(data));
     }
 
     @Override

@@ -13,12 +13,12 @@
     <string name="userProtocol" translatable="false">《用户许可协议》</string>
     <string name="serviceProtocol" translatable="false">《校园空投服务条款》</string>
     <string name="fraction0" translatable="false">.00</string>
-    <string name="itemNS" translatable="false">"[img src=ic_negotiable/] [img src=ic_secondhand/] %s"</string>
-    <string name="itemNSs" translatable="false">"[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] %s"</string>
-    <string name="itemN" translatable="false">"[img src=ic_negotiable/] %s"</string>
-    <string name="itemNs" translatable="false">"[img src=ic_negotiable_small/] %s"</string>
-    <string name="itemS" translatable="false">"[img src=ic_secondhand/] %s"</string>
-    <string name="itemSs" translatable="false">"[img src=ic_secondhand_small/] %s"</string>
+    <string name="itemNS">"[img src=ic_negotiable/] [img src=ic_secondhand/] %s"</string>
+    <string name="itemNSs">"[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] %s"</string>
+    <string name="itemN">"[img src=ic_negotiable/] %s"</string>
+    <string name="itemNs">"[img src=ic_negotiable_small/] %s"</string>
+    <string name="itemS">"[img src=ic_secondhand/] %s"</string>
+    <string name="itemSs">"[img src=ic_secondhand_small/] %s"</string>
 
 
     <!--  substitutions  -->
@@ -186,7 +186,8 @@
     <string name="errorLocation">定位信息获取失败</string>
     <string name="locationPermissionContent">定位将用于获取首页信息、淘物附近在售、交易地点以及物品发布位置。若不允许，校园空投核心功能将不可用。</string>
     <string name="cameraPermissionContent">相机将用于即时拍照，在上传头像以及物品发布时可能需要此功能。若不允许，上述功能将不可用。</string>
-    <string name="albumPermissionContent">相册将用于选择图片，上传头像以及物品发布时可能需要此功能。若不允许，上述功能将不可用。</string>
+    <string name="albumPermissionContent">读写存储在接受消息通知、上传头像以及物品发布时可能需要此功能。若不允许，你将无法接受重要通知且部分重要功能不可用。</string>
+    <string name="phonePermissionContent">在接受消息通知时需要此功能。若不允许，你将无法接受重要通知。</string>
     <string name="REJECT">拒绝</string>
     <string name="RETRY">重试</string>
     <string name="GRANTPERMISSION">给予权限</string>
@@ -231,5 +232,13 @@
     <string name="successAvatar">头像已更新</string>
     <string name="successSave">图片已保存</string>
     <string name="sellingHideByUser">已隐藏</string>
+    <string name="editGoods">编辑</string>
+    <string name="recyclerHeader" translatable="false">recycler_header</string>
+    <string name="ic_credit1">[img src=ic_credit1/]</string>
+    <string name="ic_credit2">[img src=ic_credit2/]</string>
+    <string name="ic_credit3">[img src=ic_credit3/]</string>
+    <string name="ic_credit4">[img src=ic_credit4/]</string>
+    <string name="ic_credit5">[img src=ic_credit5/]</string>
+    <string name="loading">正在加载…</string>
 
 </resources>

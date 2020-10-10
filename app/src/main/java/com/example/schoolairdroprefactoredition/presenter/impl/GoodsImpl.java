@@ -31,10 +31,11 @@ public class GoodsImpl implements IGoodsPresenter {
             public void onResponse(Call<DomainResult> call, Response<DomainResult> response) {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     DomainResult result = response.body();
-                    if (result != null && result.isSuccess())
-                        mCallback.onQuoteSuccess();
-                    else
-                        mCallback.onError();
+                    if (mCallback != null)
+                        if (result != null && result.isSuccess())
+                            mCallback.onQuoteSuccess();
+                        else
+                            mCallback.onError();
                 }
             }
         });

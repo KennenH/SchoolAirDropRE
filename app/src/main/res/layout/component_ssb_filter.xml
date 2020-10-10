@@ -7,20 +7,21 @@
     android:paddingStart="@dimen/general_padding_larger"
     android:paddingTop="@dimen/general_padding_bit_larger"
     android:paddingEnd="@dimen/general_padding_larger"
-    android:paddingBottom="@dimen/general_padding_bit_larger">
+    android:paddingBottom="@dimen/general_padding_bit_larger"
+    android:tag="@string/recyclerHeader">
 
     <TextView
         android:id="@+id/ssb_header_total"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_statistics"
         android:drawablePadding="@dimen/general_padding"
         android:gravity="center_vertical"
+        android:text="@string/loading"
         android:textSize="14dp"
-        android:text="@string/statistics"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:drawableStartCompat="@drawable/ic_statistics" />
 
     <ImageView
         android:id="@+id/ssb_header_filter"

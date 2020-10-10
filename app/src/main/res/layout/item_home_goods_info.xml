@@ -48,19 +48,22 @@
 
     <TextView
         android:id="@+id/item_seller"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:ellipsize="end"
         android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="@+id/item_credit"
+        android:layout_marginEnd="@dimen/general_padding_small"
+        app:layout_constraintEnd_toStartOf="@+id/item_credit"
         app:layout_constraintStart_toStartOf="@+id/item_price"
         app:layout_constraintTop_toTopOf="@+id/item_credit"
         tools:text="校园空投官方" />
 
-    <ImageView
+    <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
         android:id="@+id/item_credit"
-        android:layout_width="78dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_credit5"
+        android:text="@string/ic_credit2"
         app:layout_constraintBottom_toBottomOf="@+id/item_image"
         app:layout_constraintEnd_toEndOf="@+id/item_title" />
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

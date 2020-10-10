@@ -81,266 +81,264 @@
 48-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:43:9-33
 49
 50    <application
-50-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:45:5-174:19
+50-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:45:5-173:19
 51        android:allowBackup="true"
 51-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:46:9-35
-52        android:label="@string/app_name"
-52-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:47:9-41
-53        android:logo="@drawable/launcher_icon" >
-53-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:48:9-47
-54        <activity
-54-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:49:9-113:20
-55            android:name="com.google.zxing.client.android.CaptureActivity"
-55-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:50:13-44
-56            android:clearTaskOnLaunch="true"
-56-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:51:13-45
-57            android:label=""
-57-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:52:13-29
-58            android:screenOrientation="portrait"
-58-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:53:13-49
-59            android:stateNotNeeded="true"
-59-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:54:13-42
-60            android:theme="@style/CaptureTheme"
-60-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:55:13-48
-61            android:windowSoftInputMode="stateAlwaysHidden" >
-61-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:56:13-60
-62
-63            <!-- <intent-filter> -->
-64            <!-- <action android:name="android.intent.action.MAIN"/> -->
-65            <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
-66            <!-- </intent-filter> -->
-67            <intent-filter>
-67-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:61:13-64:29
-68                <action android:name="com.google.zxing.client.android.SCAN" />
-68-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:17-79
-68-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:25-76
-69
-70                <category android:name="android.intent.category.DEFAULT" />
-70-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:17-76
-70-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:27-73
-71            </intent-filter>
-72            <!-- Allow web apps to launch Barcode Scanner by linking to http://zxing.appspot.com/scan. -->
-73            <intent-filter>
-73-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:66:13-76:29
-74                <action android:name="android.intent.action.VIEW" />
-74-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:67:17-69
-74-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:67:25-66
-75
-76                <category android:name="android.intent.category.DEFAULT" />
-76-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:17-76
-76-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:27-73
-77                <category android:name="android.intent.category.BROWSABLE" />
-77-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:70:17-78
-77-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:70:27-75
-78
-79                <data
-79-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:72:17-75:45
-80                    android:host="zxing.appspot.com"
-80-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:73:21-53
-81                    android:path="/scan"
-81-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:74:21-41
-82                    android:scheme="http" />
-82-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:75:21-42
-83            </intent-filter>
-84            <!-- We also support a Google Product Search URL. -->
-85            <intent-filter>
-85-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:78:13-88:29
-86                <action android:name="android.intent.action.VIEW" />
-86-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:67:17-69
-86-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:67:25-66
-87
-88                <category android:name="android.intent.category.DEFAULT" />
-88-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:17-76
-88-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:27-73
-89                <category android:name="android.intent.category.BROWSABLE" />
-89-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:70:17-78
-89-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:70:27-75
-90
-91                <data
-91-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:72:17-75:45
-92                    android:host="www.google.com"
-92-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:73:21-53
-93                    android:path="/m/products/scan"
-93-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:74:21-41
-94                    android:scheme="http" />
-94-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:75:21-42
-95            </intent-filter>
-96            <!-- And the UK version. -->
-97            <intent-filter>
-97-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:90:13-100:29
-98                <action android:name="android.intent.action.VIEW" />
-98-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:67:17-69
-98-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:67:25-66
-99
-100                <category android:name="android.intent.category.DEFAULT" />
-100-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:17-76
-100-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:27-73
-101                <category android:name="android.intent.category.BROWSABLE" />
-101-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:70:17-78
-101-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:70:27-75
-102
-103                <data
-103-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:72:17-75:45
-104                    android:host="www.google.co.uk"
-104-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:73:21-53
-105                    android:path="/m/products/scan"
-105-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:74:21-41
-106                    android:scheme="http" />
-106-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:75:21-42
-107            </intent-filter>
-108            <!-- Support zxing://scan/?... like iPhone app -->
-109            <intent-filter>
-109-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:102:13-112:29
-110                <action android:name="android.intent.action.VIEW" />
-110-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:67:17-69
-110-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:67:25-66
-111
-112                <category android:name="android.intent.category.DEFAULT" />
-112-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:17-76
-112-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:27-73
-113                <category android:name="android.intent.category.BROWSABLE" />
-113-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:70:17-78
-113-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:70:27-75
-114
-115                <data
-115-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:72:17-75:45
-116                    android:host="scan"
-116-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:73:21-53
-117                    android:path="/"
-117-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:74:21-41
-118                    android:scheme="zxing" />
-118-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:75:21-42
-119            </intent-filter>
-120        </activity>
-121        <activity
-121-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:114:9-117:45
-122            android:name="com.google.zxing.client.android.PreferencesActivity"
-122-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:115:13-48
-123            android:label="@string/preferences_name"
-123-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:116:13-53
-124            android:stateNotNeeded="true" />
-124-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:117:13-42
-125        <activity
-125-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:118:9-137:20
-126            android:name="com.google.zxing.client.android.encode.EncodeActivity"
-126-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:119:13-50
-127            android:stateNotNeeded="true" >
-127-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:120:13-42
-128            <intent-filter>
-128-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:121:13-124:29
-129                <action android:name="com.google.zxing.client.android.ENCODE" />
-129-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:122:17-81
-129-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:122:25-78
-130
-131                <category android:name="android.intent.category.DEFAULT" />
-131-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:17-76
-131-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:27-73
-132            </intent-filter>
-133            <!-- This allows us to handle the Share button in Contacts. -->
-134            <intent-filter>
-134-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:126:13-130:29
-135                <action android:name="android.intent.action.SEND" />
-135-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:127:17-69
-135-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:127:25-66
-136
-137                <category android:name="android.intent.category.DEFAULT" />
-137-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:17-76
-137-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:27-73
-138
-139                <data android:mimeType="text/x-vcard" />
-139-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:72:17-75:45
-139-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:129:23-54
-140            </intent-filter>
-141            <!-- This allows us to handle sharing any plain text . -->
-142            <intent-filter>
-142-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:132:13-136:29
-143                <action android:name="android.intent.action.SEND" />
-143-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:127:17-69
-143-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:127:25-66
-144
-145                <category android:name="android.intent.category.DEFAULT" />
-145-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:17-76
-145-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:27-73
-146
-147                <data android:mimeType="text/plain" />
-147-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:72:17-75:45
-147-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:129:23-54
-148            </intent-filter>
-149        </activity>
-150        <activity
-150-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:138:9-147:20
-151            android:name="com.google.zxing.client.android.book.SearchBookContentsActivity"
-151-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:139:13-60
-152            android:label="@string/sbc_name"
-152-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:140:13-45
-153            android:screenOrientation="sensorLandscape"
-153-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:141:13-56
-154            android:stateNotNeeded="true" >
-154-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:142:13-42
-155            <intent-filter>
-155-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:143:13-146:29
-156                <action android:name="com.google.zxing.client.android.SEARCH_BOOK_CONTENTS" />
-156-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:144:17-95
-156-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:144:25-92
-157
-158                <category android:name="android.intent.category.DEFAULT" />
-158-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:17-76
-158-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:27-73
-159            </intent-filter>
-160        </activity>
-161        <activity
-161-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:148:9-156:20
-162            android:name="com.google.zxing.client.android.share.ShareActivity"
-162-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:149:13-48
-163            android:screenOrientation="user"
-163-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:150:13-45
-164            android:stateNotNeeded="true" >
-164-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:151:13-42
-165            <intent-filter>
-165-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:152:13-155:29
-166                <action android:name="com.google.zxing.client.android.SHARE" />
-166-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:153:17-80
-166-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:153:25-77
-167
-168                <category android:name="android.intent.category.DEFAULT" />
-168-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:17-76
-168-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:63:27-73
-169            </intent-filter>
-170        </activity>
-171        <activity
-171-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:157:9-160:45
-172            android:name="com.google.zxing.client.android.history.HistoryActivity"
-172-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:158:13-52
-173            android:label="@string/history_title"
-173-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:159:13-50
-174            android:stateNotNeeded="true" />
-174-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:160:13-42
-175        <activity
-175-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:161:9-164:45
-176            android:name="com.google.zxing.client.android.share.BookmarkPickerActivity"
+52        android:logo="@drawable/launcher_icon" >
+52-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:47:9-47
+53        <activity
+53-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:48:9-112:20
+54            android:name="com.google.zxing.client.android.CaptureActivity"
+54-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:49:13-44
+55            android:clearTaskOnLaunch="true"
+55-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:50:13-45
+56            android:label=""
+56-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:51:13-29
+57            android:screenOrientation="portrait"
+57-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:52:13-49
+58            android:stateNotNeeded="true"
+58-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:53:13-42
+59            android:theme="@style/CaptureTheme"
+59-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:54:13-48
+60            android:windowSoftInputMode="stateAlwaysHidden" >
+60-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:55:13-60
+61
+62            <!-- <intent-filter> -->
+63            <!-- <action android:name="android.intent.action.MAIN"/> -->
+64            <!-- <category android:name="android.intent.category.LAUNCHER"/> -->
+65            <!-- </intent-filter> -->
+66            <intent-filter>
+66-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:60:13-63:29
+67                <action android:name="com.google.zxing.client.android.SCAN" />
+67-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:61:17-79
+67-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:61:25-76
+68
+69                <category android:name="android.intent.category.DEFAULT" />
+69-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:17-76
+69-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:27-73
+70            </intent-filter>
+71            <!-- Allow web apps to launch Barcode Scanner by linking to http://zxing.appspot.com/scan. -->
+72            <intent-filter>
+72-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:65:13-75:29
+73                <action android:name="android.intent.action.VIEW" />
+73-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:66:17-69
+73-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:66:25-66
+74
+75                <category android:name="android.intent.category.DEFAULT" />
+75-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:17-76
+75-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:27-73
+76                <category android:name="android.intent.category.BROWSABLE" />
+76-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:69:17-78
+76-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:69:27-75
+77
+78                <data
+78-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:71:17-74:45
+79                    android:host="zxing.appspot.com"
+79-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:72:21-53
+80                    android:path="/scan"
+80-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:73:21-41
+81                    android:scheme="http" />
+81-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:74:21-42
+82            </intent-filter>
+83            <!-- We also support a Google Product Search URL. -->
+84            <intent-filter>
+84-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:77:13-87:29
+85                <action android:name="android.intent.action.VIEW" />
+85-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:66:17-69
+85-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:66:25-66
+86
+87                <category android:name="android.intent.category.DEFAULT" />
+87-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:17-76
+87-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:27-73
+88                <category android:name="android.intent.category.BROWSABLE" />
+88-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:69:17-78
+88-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:69:27-75
+89
+90                <data
+90-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:71:17-74:45
+91                    android:host="www.google.com"
+91-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:72:21-53
+92                    android:path="/m/products/scan"
+92-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:73:21-41
+93                    android:scheme="http" />
+93-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:74:21-42
+94            </intent-filter>
+95            <!-- And the UK version. -->
+96            <intent-filter>
+96-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:89:13-99:29
+97                <action android:name="android.intent.action.VIEW" />
+97-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:66:17-69
+97-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:66:25-66
+98
+99                <category android:name="android.intent.category.DEFAULT" />
+99-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:17-76
+99-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:27-73
+100                <category android:name="android.intent.category.BROWSABLE" />
+100-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:69:17-78
+100-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:69:27-75
+101
+102                <data
+102-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:71:17-74:45
+103                    android:host="www.google.co.uk"
+103-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:72:21-53
+104                    android:path="/m/products/scan"
+104-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:73:21-41
+105                    android:scheme="http" />
+105-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:74:21-42
+106            </intent-filter>
+107            <!-- Support zxing://scan/?... like iPhone app -->
+108            <intent-filter>
+108-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:101:13-111:29
+109                <action android:name="android.intent.action.VIEW" />
+109-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:66:17-69
+109-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:66:25-66
+110
+111                <category android:name="android.intent.category.DEFAULT" />
+111-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:17-76
+111-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:27-73
+112                <category android:name="android.intent.category.BROWSABLE" />
+112-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:69:17-78
+112-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:69:27-75
+113
+114                <data
+114-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:71:17-74:45
+115                    android:host="scan"
+115-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:72:21-53
+116                    android:path="/"
+116-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:73:21-41
+117                    android:scheme="zxing" />
+117-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:74:21-42
+118            </intent-filter>
+119        </activity>
+120        <activity
+120-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:113:9-116:45
+121            android:name="com.google.zxing.client.android.PreferencesActivity"
+121-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:114:13-48
+122            android:label="@string/preferences_name"
+122-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:115:13-53
+123            android:stateNotNeeded="true" />
+123-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:116:13-42
+124        <activity
+124-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:117:9-136:20
+125            android:name="com.google.zxing.client.android.encode.EncodeActivity"
+125-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:118:13-50
+126            android:stateNotNeeded="true" >
+126-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:119:13-42
+127            <intent-filter>
+127-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:120:13-123:29
+128                <action android:name="com.google.zxing.client.android.ENCODE" />
+128-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:121:17-81
+128-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:121:25-78
+129
+130                <category android:name="android.intent.category.DEFAULT" />
+130-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:17-76
+130-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:27-73
+131            </intent-filter>
+132            <!-- This allows us to handle the Share button in Contacts. -->
+133            <intent-filter>
+133-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:125:13-129:29
+134                <action android:name="android.intent.action.SEND" />
+134-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:126:17-69
+134-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:126:25-66
+135
+136                <category android:name="android.intent.category.DEFAULT" />
+136-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:17-76
+136-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:27-73
+137
+138                <data android:mimeType="text/x-vcard" />
+138-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:71:17-74:45
+138-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:128:23-54
+139            </intent-filter>
+140            <!-- This allows us to handle sharing any plain text . -->
+141            <intent-filter>
+141-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:131:13-135:29
+142                <action android:name="android.intent.action.SEND" />
+142-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:126:17-69
+142-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:126:25-66
+143
+144                <category android:name="android.intent.category.DEFAULT" />
+144-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:17-76
+144-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:27-73
+145
+146                <data android:mimeType="text/plain" />
+146-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:71:17-74:45
+146-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:128:23-54
+147            </intent-filter>
+148        </activity>
+149        <activity
+149-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:137:9-146:20
+150            android:name="com.google.zxing.client.android.book.SearchBookContentsActivity"
+150-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:138:13-60
+151            android:label="@string/sbc_name"
+151-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:139:13-45
+152            android:screenOrientation="sensorLandscape"
+152-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:140:13-56
+153            android:stateNotNeeded="true" >
+153-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:141:13-42
+154            <intent-filter>
+154-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:142:13-145:29
+155                <action android:name="com.google.zxing.client.android.SEARCH_BOOK_CONTENTS" />
+155-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:143:17-95
+155-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:143:25-92
+156
+157                <category android:name="android.intent.category.DEFAULT" />
+157-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:17-76
+157-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:27-73
+158            </intent-filter>
+159        </activity>
+160        <activity
+160-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:147:9-155:20
+161            android:name="com.google.zxing.client.android.share.ShareActivity"
+161-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:148:13-48
+162            android:screenOrientation="user"
+162-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:149:13-45
+163            android:stateNotNeeded="true" >
+163-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:150:13-42
+164            <intent-filter>
+164-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:151:13-154:29
+165                <action android:name="com.google.zxing.client.android.SHARE" />
+165-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:152:17-80
+165-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:152:25-77
+166
+167                <category android:name="android.intent.category.DEFAULT" />
+167-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:17-76
+167-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:62:27-73
+168            </intent-filter>
+169        </activity>
+170        <activity
+170-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:156:9-159:45
+171            android:name="com.google.zxing.client.android.history.HistoryActivity"
+171-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:157:13-52
+172            android:label="@string/history_title"
+172-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:158:13-50
+173            android:stateNotNeeded="true" />
+173-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:159:13-42
+174        <activity
+174-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:160:9-163:45
+175            android:name="com.google.zxing.client.android.share.BookmarkPickerActivity"
+175-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:161:13-57
+176            android:label="@string/bookmark_picker_name"
 176-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:162:13-57
-177            android:label="@string/bookmark_picker_name"
-177-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:163:13-57
-178            android:stateNotNeeded="true" />
-178-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:164:13-42
-179        <activity
-179-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:165:9-168:45
-180            android:name="com.google.zxing.client.android.share.AppPickerActivity"
+177            android:stateNotNeeded="true" />
+177-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:163:13-42
+178        <activity
+178-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:164:9-167:45
+179            android:name="com.google.zxing.client.android.share.AppPickerActivity"
+179-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:165:13-52
+180            android:label="@string/app_picker_name"
 180-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:166:13-52
-181            android:label="@string/app_picker_name"
-181-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:167:13-52
-182            android:stateNotNeeded="true" />
-182-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:168:13-42
-183        <activity
-183-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:169:9-173:45
-184            android:name="com.google.zxing.client.android.HelpActivity"
-184-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:170:13-41
-185            android:label="@string/menu_help"
-185-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:171:13-46
-186            android:screenOrientation="user"
-186-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:172:13-45
-187            android:stateNotNeeded="true" />
-187-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:173:13-42
-188    </application>
-189
-190</manifest>
+181            android:stateNotNeeded="true" />
+181-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:167:13-42
+182        <activity
+182-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:168:9-172:45
+183            android:name="com.google.zxing.client.android.HelpActivity"
+183-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:169:13-41
+184            android:label="@string/menu_help"
+184-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:170:13-46
+185            android:screenOrientation="user"
+185-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:171:13-45
+186            android:stateNotNeeded="true" />
+186-->D:\hkn\github\SchoolAirDropRE-master\SchoolAirDropRE-master\zxing\src\main\AndroidManifest.xml:172:13-42
+187    </application>
+188
+189</manifest>

@@ -59,7 +59,7 @@ public class TextViewWithImages extends androidx.appcompat.widget.AppCompatTextV
                             matcher.end(),
                             Spannable.SPAN_EXCLUSIVE_INCLUSIVE);
                 } else {
-                    spannable.setSpan(new ImageSpan(context, id, DynamicDrawableSpan.ALIGN_BOTTOM),
+                    spannable.setSpan(new ImageSpan(context, id, DynamicDrawableSpan.ALIGN_BASELINE),
                             matcher.start(),
                             matcher.end(),
                             Spannable.SPAN_EXCLUSIVE_INCLUSIVE);

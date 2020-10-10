@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/general_padding"
+    app:cardElevation="1dp">
+
+    <com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_sheet_white">
+
+        <com.example.schoolairdroprefactoredition.ui.components.Location
+            android:id="@+id/goods_location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:contentDescription="@string/avatar"
+            android:scaleType="centerCrop"
+            app:layout_constraintEnd_toEndOf="@+id/goods_title"
+            app:layout_constraintStart_toStartOf="@+id/goods_avatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/handle_waiting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/general_padding_large"
+            android:text="@string/pending"
+            android:textSize="@dimen/textSizeNormal"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="@+id/goods_location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/goods_location" />
+
+        <View
+            android:id="@+id/line0"
+            android:layout_width="0dp"
+            android:layout_height="2px"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:background="@color/colorLine"
+            app:layout_constraintEnd_toEndOf="@+id/goods_title"
+            app:layout_constraintStart_toStartOf="@+id/goods_location"
+            app:layout_constraintTop_toBottomOf="@id/goods_location" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/goods_avatar"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_marginStart="@dimen/general_padding_bit_larger"
+            android:layout_marginTop="@dimen/general_padding_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line0"
+            app:placeholderImage="@drawable/bg_item_img_placeholder"
+            app:roundedCornerRadius="@dimen/general_padding_tiny" />
+
+        <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
+            android:id="@+id/goods_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/general_padding_large"
+            android:layout_marginEnd="@dimen/general_padding_bit_larger"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:lines="2"
+            android:text="[img src=ic_negotiable_en_small/] [img src=ic_secondhand_en_small/] 华为 MateBookX "
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSizeNormal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/goods_avatar"
+            app:layout_constraintTop_toTopOf="@+id/goods_avatar" />
+
+
+        <com.example.schoolairdroprefactoredition.ui.components.GoodsPrice
+            android:id="@+id/goods_origin_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$109.0"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/textSizeNormal"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/goods_avatar"
+            app:layout_constraintStart_toStartOf="@+id/goods_title" />
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="0dp"
+            android:layout_height="2px"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:background="@color/colorLine"
+            app:layout_constraintEnd_toEndOf="@+id/goods_title"
+            app:layout_constraintStart_toStartOf="@id/goods_location"
+            app:layout_constraintTop_toBottomOf="@id/goods_avatar" />
+
+        <TextView
+            android:id="@+id/goods_watches"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:layout_marginBottom="@dimen/general_padding_bit_larger"
+            android:background="@drawable/bg_round_theme"
+            android:drawablePadding="@dimen/general_padding_small"
+            android:gravity="center"
+            android:paddingStart="@dimen/general_padding"
+            android:paddingTop="@dimen/general_padding_tiny"
+            android:paddingEnd="@dimen/general_padding"
+            android:paddingBottom="@dimen/general_padding_tiny"
+            android:text="0"
+            android:textColor="@color/white"
+            app:drawableStartCompat="@drawable/eye_green"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/goods_location"
+            app:layout_constraintTop_toBottomOf="@+id/line1" />
+
+        <TextView
+            android:id="@+id/goods_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/general_padding_large"
+            android:background="@drawable/button_round_stroke_primary"
+            android:gravity="center"
+            android:paddingStart="@dimen/general_padding_bit_larger"
+            android:paddingTop="@dimen/general_padding_tiny"
+            android:paddingEnd="@dimen/general_padding_bit_larger"
+            android:paddingBottom="@dimen/general_padding_tiny"
+            android:text="@string/editGoods"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="@+id/goods_watches"
+            app:layout_constraintEnd_toStartOf="@+id/goods_more_action"
+            app:layout_constraintTop_toTopOf="@+id/goods_watches" />
+
+        <ImageView
+            android:id="@+id/goods_more_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_more_action"
+            app:layout_constraintBottom_toBottomOf="@+id/goods_watches"
+            app:layout_constraintEnd_toEndOf="@+id/goods_title"
+            app:layout_constraintTop_toTopOf="@+id/goods_watches" />
+
+    </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>
+</androidx.cardview.widget.CardView>

@@ -16,23 +16,33 @@
             android:id="@+id/on_going_header_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/general_padding_large"
             android:layout_marginTop="@dimen/general_padding_bit_larger"
-            android:text="等待交付"
+            android:text="1/4 等待交付"
             android:textColor="@color/black"
             android:textSize="@dimen/textSizeNormal"
-            app:layout_constraintStart_toStartOf="parent"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/on_going_img"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/line0"
+            android:layout_width="0dp"
+            android:layout_height="2px"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:background="@color/colorLine"
+            app:layout_constraintEnd_toEndOf="@+id/on_going_title"
+            app:layout_constraintStart_toStartOf="@+id/on_going_img"
+            app:layout_constraintTop_toBottomOf="@id/on_going_header_title" />
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/on_going_img"
             android:layout_width="85dp"
             android:layout_height="85dp"
-            android:layout_marginStart="@dimen/general_padding_large"
+            android:layout_marginStart="@dimen/general_padding_bit_larger"
             android:layout_marginTop="@dimen/general_padding_bit_larger"
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/on_going_header_title"
+            app:layout_constraintTop_toBottomOf="@+id/line0"
             app:placeholderImage="@drawable/bg_item_img_placeholder"
             app:roundedCornerRadius="@dimen/general_padding_tiny" />
 
@@ -41,7 +51,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/general_padding_large"
-            android:layout_marginEnd="@dimen/general_padding_large"
+            android:layout_marginEnd="@dimen/general_padding_bit_larger"
             android:ellipsize="end"
             android:gravity="center_vertical|start"
             android:lines="2"
@@ -68,7 +78,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="@+id/on_going_img"
-            app:layout_constraintEnd_toEndOf="@+id/on_going_price_text"
+            app:layout_constraintEnd_toEndOf="@+id/on_going_title"
             app:layout_constraintTop_toBottomOf="@+id/on_going_price_text" />
 
         <TextView
@@ -98,6 +108,15 @@
             app:layout_constraintStart_toStartOf="@+id/on_going_img"
             app:layout_constraintTop_toTopOf="@+id/on_going_contact" />
 
+        <View
+            android:id="@+id/line1"
+            android:layout_width="0dp"
+            android:layout_height="2px"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:background="@color/colorLine"
+            app:layout_constraintEnd_toEndOf="@+id/on_going_title"
+            app:layout_constraintStart_toStartOf="@+id/on_going_img"
+            app:layout_constraintTop_toBottomOf="@id/on_going_img" />
 
         <TextView
             android:id="@+id/on_going_contact"
@@ -115,7 +134,7 @@
             android:textSize="@dimen/textSizeNormal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="@+id/on_going_title"
-            app:layout_constraintTop_toBottomOf="@+id/on_going_img" />
+            app:layout_constraintTop_toBottomOf="@+id/line1" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

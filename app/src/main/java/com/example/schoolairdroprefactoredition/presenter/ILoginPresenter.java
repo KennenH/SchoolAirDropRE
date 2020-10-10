@@ -5,7 +5,7 @@ import com.example.schoolairdroprefactoredition.presenter.callback.ILoginCallbac
 public interface ILoginPresenter extends IBasePresenter<ILoginCallback> {
     void getPublicKey();
 
-    void postAlipayIDRSA(String cookie, String rawAlipay, String publicKey) throws Exception;
+    void postAlipayIDRSA(String cookie, String rawAlipay, String publicKey, String registrationID) throws Exception;
 
     void getUserInfo(String token);
 

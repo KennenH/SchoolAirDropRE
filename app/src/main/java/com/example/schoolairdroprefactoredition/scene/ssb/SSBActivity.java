@@ -22,9 +22,10 @@ import com.example.schoolairdroprefactoredition.databinding.ActivitySsbBinding;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
+import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SSBBaseFragment;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBPagerAdapter;
 
-public class SSBActivity extends ImmersionStatusBarActivity implements View.OnClickListener {
+public class SSBActivity extends ImmersionStatusBarActivity implements View.OnClickListener, SSBPagerAdapter.OnSSBDataLenChangedIntermediaryListener {
 
     public static final int SELLING = R.string.selling;
     public static final int SOLD = R.string.sold;
@@ -33,6 +34,10 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
     public static final String PAGE_INDEX = "SSBPageIndex";
 
     private OnLoginStateChangeListener mOnLoginStateChangeListener;
+
+    private OnChangedToSellingListener mOnChangedToSellingListener;
+    private OnChangedToSoldListener mOnChangedToSoldListener;
+    private OnChangedToBoughtListener mOnChangedToBoughtListener;
 
     public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, SSBActivity.class);
@@ -60,7 +65,8 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
 
         Intent intent = getIntent();
         int index = intent.getIntExtra(PAGE_INDEX, 0);
-        mPagerAdapter = new SSBPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        mPagerAdapter = new SSBPagerAdapter(this,getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        mPagerAdapter.setOnSSBDataLenChangedIntermediaryListener(this);
         binding.ssbSearch.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
                 KeyboardUtils.showSoftInput(v);
@@ -75,21 +81,34 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
 
             @Override
             public void onPageSelected(int position) {
-                if (position == 0)
-                    binding.ssbTitle.setText(SELLING);
-                else if (position == 1)
-                    binding.ssbTitle.setText(SOLD);
-                else
-                    binding.ssbTitle.setText(BOUGHT);
+                switch (position) {
+                    case SSBBaseFragment.SELLING_POS:
+                        if (mOnChangedToSellingListener != null)
+                            mOnChangedToSellingListener.OnChangedToSelling();
+                        binding.ssbTitle.setText(SELLING);
+                        break;
+                    case SSBBaseFragment.SOLD_POS:
+                        if (mOnChangedToSoldListener != null)
+                            mOnChangedToSoldListener.onChangedToSold();
+                        binding.ssbTitle.setText(SOLD);
+                        break;
+                    case SSBBaseFragment.BOUGHT_POS:
+                        if (mOnChangedToBoughtListener != null)
+                            mOnChangedToBoughtListener.onChangedToBought();
+                        binding.ssbTitle.setText(BOUGHT);
+                        break;
+                    default:
+                        break;
+                }
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
             }
         });
-        binding.ssbPager.setOffscreenPageLimit(3);
+        binding.ssbPager.setOffscreenPageLimit(2);
         binding.ssbPager.setAdapter(mPagerAdapter);
-        binding.ssbPager.setCurrentItem(index);
+        binding.ssbPager.post(() -> binding.ssbPager.setCurrentItem(index));
     }
 
     @Override
@@ -101,11 +120,58 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
                     getIntent().putExtras(data);
                     if (mOnLoginStateChangeListener != null)
                         mOnLoginStateChangeListener.onLoginSSB();
+
                     setResult(Activity.RESULT_OK, data);
                 }
             }
         }
     }
+
+    public int getCurrentItem() {
+        return binding.ssbPager.getCurrentItem();
+    }
+
+    @Override
+    public void onSSBDataLenChangedIntermediary(int total) {
+        binding.ssbFilter.setDataStatistics(total);
+    }
+
+    /**
+     * 页面切换至Selling
+     */
+    public interface OnChangedToSellingListener {
+        /**
+         * 通知子fragment当前在哪个页面，以便对应的页面往activity发送数据，便于activity更新ui
+         */
+        void OnChangedToSelling();
+    }
+
+    public void setOnChangedToSellingListener(OnChangedToSellingListener listener) {
+        mOnChangedToSellingListener = listener;
+    }
+
+    /**
+     * 页面切换至Sold
+     */
+    public interface OnChangedToSoldListener {
+        void onChangedToSold();
+    }
+
+    public void setOnChangedToSoldListener(OnChangedToSoldListener listener) {
+        mOnChangedToSoldListener = listener;
+    }
+
+    /**
+     * 页面切换至Bought
+     */
+    public interface OnChangedToBoughtListener {
+        void onChangedToBought();
+    }
+
+    public void setOnChangedToBoughtListener(OnChangedToBoughtListener listener) {
+        mOnChangedToBoughtListener = listener;
+    }
+
 
     /**
      * 在{@link com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity}中登录后

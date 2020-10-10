@@ -14,14 +14,16 @@ public class OnGoingImpl implements IOnGoingPresenter {
     public void getUnPaid() {
         TestOnGoingBean[] beans = new TestOnGoingBean[5];
         for (int i = 0; i < 5; i++) beans[i] = new TestOnGoingBean();
-        mCallback.onUnPaidLoaded(Arrays.asList(beans));
+        if (mCallback != null)
+            mCallback.onUnPaidLoaded(Arrays.asList(beans));
     }
 
     @Override
     public void getUnDelivered() {
         TestOnGoingBean[] beans = new TestOnGoingBean[5];
         for (int i = 0; i < 5; i++) beans[i] = new TestOnGoingBean();
-        mCallback.onUnDeliveredLoaded(Arrays.asList(beans));
+        if (mCallback != null)
+            mCallback.onUnDeliveredLoaded(Arrays.asList(beans));
     }
 
     @Override

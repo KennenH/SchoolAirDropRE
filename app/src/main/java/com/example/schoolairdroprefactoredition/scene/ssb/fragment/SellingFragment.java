@@ -29,7 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
  * <p>
  * todo 若查看的为他人的页面，则检查该用户是否开放其他用户查看其在售列表，不允许则显示被拒绝
  */
-public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLoginStateChangeListener {
+public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLoginStateChangeListener, SSBActivity.OnChangedToSellingListener {
 
     private BottomSheetDialog dialog;
 
@@ -43,8 +43,10 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (getActivity() instanceof SSBActivity)
+        if (getActivity() instanceof SSBActivity) {
             ((SSBActivity) getActivity()).setOnLoginStateChangeListener(this);
+            ((SSBActivity) getActivity()).setOnChangedToSellingListener(this);
+        }
     }
 
     /**
@@ -70,7 +72,10 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
     private void getSelling() {
         if (getToken() != null) { // 已登录
             showPlaceholder(StatePlaceHolder.TYPE_LOADING);
-            viewModel.getSelling(getToken().getAccess_token()).observe(getViewLifecycleOwner(), this::loadData);
+            viewModel.getSelling(getToken().getAccess_token()).observe(getViewLifecycleOwner(), data -> {
+                loadData(data);
+                dataLenOnChange(SSBBaseFragment.SELLING_POS);
+            });
         } else // 未登录时
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
     }
@@ -81,50 +86,48 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
      */
     @Override
     public void onItemAction(View view, DomainGoodsInfo.DataBean bean) {
-        if (dialog == null) {
-            dialog = new BottomSheetDialog(getContext());
-            SheetSsbItemMoreBinding binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(getContext()));
-            dialog.setContentView(binding.getRoot());
-            try {
-                binding.modify.setOnClickListener(v -> dialog.dismiss());
-                binding.offShelf.setOnClickListener(v -> {
-                    DialogUtil.showConfirm(getContext(), getString(R.string.attention), getString(R.string.unListItem),
-                            () -> {
-                                if (getToken() != null && bean != null) {
-                                    viewModel.unListItem(getToken().getAccess_token(), bean.getGoods_id())
-                                            .observe(getViewLifecycleOwner(), result -> {
-                                                getSelling();
-                                                DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successUnlist);
-                                            });
-                                } else
-                                    DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
-                            });
-                    dialog.dismiss();
+        dialog = new BottomSheetDialog(getContext());
+        SheetSsbItemMoreBinding binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(getContext()));
+        dialog.setContentView(binding.getRoot());
+        try {
+            binding.modify.setOnClickListener(v -> dialog.dismiss());
+            binding.offShelf.setOnClickListener(v -> {
+                DialogUtil.showConfirm(getContext(), getString(R.string.attention), getString(R.string.unListItem),
+                        () -> {
+                            if (getToken() != null && bean != null) {
+                                viewModel.unListItem(getToken().getAccess_token(), bean.getGoods_id())
+                                        .observe(getViewLifecycleOwner(), result -> {
+                                            getSelling();
+                                            DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successUnlist);
+                                        });
+                            } else
+                                DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
+                        });
+                dialog.dismiss();
+            });
+            binding.cancel.setOnClickListener(v -> dialog.dismiss());
+
+            {
+                View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                view1.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.transparent, getContext().getTheme()));
+                final BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(view1);
+                bottomSheetBehavior.setSkipCollapsed(true);
+                bottomSheetBehavior.setDraggable(false);
+                bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                    @Override
+                    public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                            dialog.dismiss();
+                            bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+                        }
+                    }
+
+                    @Override
+                    public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+                    }
                 });
-                binding.cancel.setOnClickListener(v -> dialog.dismiss());
-
-                {
-                    View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
-                    view1.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.transparent, getContext().getTheme()));
-                    final BottomSheetBehavior<View> bottomSheetBehavior = BottomSheetBehavior.from(view1);
-                    bottomSheetBehavior.setSkipCollapsed(true);
-                    bottomSheetBehavior.setDraggable(false);
-                    bottomSheetBehavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
-                        @Override
-                        public void onStateChanged(@NonNull View bottomSheet, int newState) {
-                            if (newState == BottomSheetBehavior.STATE_HIDDEN) {
-                                dialog.dismiss();
-                                bottomSheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
-                            }
-                        }
-
-                        @Override
-                        public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-                        }
-                    });
-                }
-            } catch (NullPointerException ignored) {
             }
+        } catch (NullPointerException ignored) {
         }
         dialog.show();
     }
@@ -153,22 +156,12 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
     }
 
     @Override
-    public void onFilterTimeAsc() {
-        // 将data按时间正序排列
-    }
-
-    @Override
-    public void onFilterTimeDesc() {
-        // 将data按时间倒序排列
-    }
-
-    @Override
-    public void onFilterWatches() {
-        // 将data按浏览量排序
-    }
-
-    @Override
     public void onLoginSSB() {
         getSelling();
+    }
+
+    @Override
+    public void OnChangedToSelling() {
+        dataLenOnChange(SSBBaseFragment.SELLING_POS);
     }
 }

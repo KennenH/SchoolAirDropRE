@@ -125,7 +125,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
             return true;
         });
 
-        binding.priceInput.setFilters(new InputFilter[]{new DecimalFilter(5, 2)});
+        binding.priceInput.setFilters(new InputFilter[]{new DecimalFilter()});
         binding.picSet.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
         binding.picSet.addItemDecoration(new HorizontalItemMarginDecoration(SizeUtils.dp2px(5)));
         ImageView add = new ImageView(this);
@@ -284,7 +284,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         View focusView = null;
         if (binding.optionDescription.getText().length() < 1) {
             AnimUtil.whiteBackgroundViewBlinkRed(this, binding.optionDescriptionWrapper);
-            focusView = binding.detailTitle;
+            focusView = binding.optionDescriptionWrapper;
             pass = false;
         }
 

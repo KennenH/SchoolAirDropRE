@@ -13,6 +13,16 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+//        // jpush
+//        ndk {
+//            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'
+//        }
+//        manifestPlaceholders = [
+//                JPUSH_PKGNAME: applicationId,
+//                JPUSH_APPKEY : "0be8a191e7105451ad38441f",
+//                JPUSH_CHANNEL: "developer-default",
+//        ]
     }
     allprojects {
         repositories {
@@ -36,28 +46,37 @@ android {
     }
 }
 
+// mob push
 MobSDK {
     appKey "m30ee3143c3177"
     appSecret "623fe181e3b3aa8193abae9a3477dec2"
 
-    MobPush {}
+    gui true
+
+    // 调用MobPush
+    MobPush {
+        FCM {
+            iconRes "@drawable/logo_180x"
+        }
+    }
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.2'
     implementation 'androidx.navigation:navigation-fragment:2.3.0'
     implementation 'androidx.navigation:navigation-ui:2.3.0'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference:1.1.1'
-    implementation 'androidx.security:security-crypto:1.0.0-alpha02'
+    implementation 'androidx.security:security-crypto:1.1.0-alpha02'
     implementation project(path: ':zxing')
+    implementation files('..\\lib\\libs\\MiPush_SDK_Client_3_8_0.jar')
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     //base recycler view
@@ -70,7 +89,7 @@ dependencies {
     //flex box
     implementation 'com.google.android:flexbox:2.0.1'
     //smart refresh layout
-    implementation  'com.scwang.smart:refresh-layout-kernel:2.0.1'
+    implementation 'com.scwang.smart:refresh-layout-kernel:2.0.1'
     // glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'

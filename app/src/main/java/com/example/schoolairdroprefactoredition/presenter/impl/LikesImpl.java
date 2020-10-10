@@ -31,9 +31,10 @@ public class LikesImpl implements ILikesPresenter {
             public void onResponse(Call<DomainGoodsInfo> call, Response<DomainGoodsInfo> response) {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     DomainGoodsInfo info = response.body();
-                    if (info != null && info.isSuccess()) {
-                        mCallback.onLikesLoaded(info);
-                    } else mCallback.onError();
+                    if (mCallback != null)
+                        if (info != null && info.isSuccess()) {
+                            mCallback.onLikesLoaded(info);
+                        } else mCallback.onError();
                 }
             }
         });

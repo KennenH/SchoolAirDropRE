@@ -13,7 +13,6 @@ import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 import java.util.List;
 
 import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -219,5 +218,6 @@ public interface Api {
             , @Field("grant_type") String grantType
             , @Field("client_id") String clientID
             , @Field("client_secret") String clientSecret
-            , @Field("alipay_id") String encryptedAlipayID);
+            , @Field("alipay_id") String encryptedAlipayID
+            , @Field("registration_id") String registrationID);
 }

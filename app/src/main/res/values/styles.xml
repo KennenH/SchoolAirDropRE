@@ -11,6 +11,20 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--    启动页面-->
+    <style name="splashScreenTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowBackground">@drawable/splash</item>
+        <item name="android:statusBarColor">@color/colorAccentDark</item>
+        <item name="android:navigationBarColor">@color/colorAccentDark</item>
+        <!--        <item name="android:statusBarColor">@color/white</item>-->
+        <!--        <item name="android:navigationBarColor">@color/white</item>-->
+    </style>
+
+    <!--    BottomSheetDialog-->
+    <style name="Widget.AppTheme.BottomSheet" parent="Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>

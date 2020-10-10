@@ -30,17 +30,19 @@ public class SSBImpl implements ISSBPresenter {
             @Override
             public void onResponse(@NotNull Call<DomainGoodsInfo> call, @NotNull Response<DomainGoodsInfo> response) {
                 int code = response.code();
-                if (code == HttpURLConnection.HTTP_OK) {
-                    DomainGoodsInfo info = response.body();
-                    if (info != null && info.isSuccess()) {
-                        mCallback.onSoldListLoaded(info);
+                if (mCallback != null)
+                    if (code == HttpURLConnection.HTTP_OK) {
+                        DomainGoodsInfo info = response.body();
+                        if (info != null && info.isSuccess()) {
+                            mCallback.onSoldListLoaded(info);
+                        } else mCallback.onError();
                     } else mCallback.onError();
-                } else mCallback.onError();
             }
 
             @Override
             public void onFailureAllRetries() {
-                mCallback.onError();
+                if (mCallback != null)
+                    mCallback.onError();
             }
         });
     }
@@ -54,17 +56,19 @@ public class SSBImpl implements ISSBPresenter {
             @Override
             public void onResponse(@NotNull Call<DomainGoodsInfo> call, @NotNull Response<DomainGoodsInfo> response) {
                 int code = response.code();
-                if (code == HttpURLConnection.HTTP_OK) {
-                    DomainGoodsInfo info = response.body();
-                    if (info != null && info.isSuccess()) {
-                        mCallback.onBoughtListLoaded(info);
+                if (mCallback != null)
+                    if (code == HttpURLConnection.HTTP_OK) {
+                        DomainGoodsInfo info = response.body();
+                        if (info != null && info.isSuccess()) {
+                            mCallback.onBoughtListLoaded(info);
+                        } else mCallback.onError();
                     } else mCallback.onError();
-                } else mCallback.onError();
             }
 
             @Override
             public void onFailure(@NotNull Call<DomainGoodsInfo> call, Throwable t) {
-                mCallback.onError();
+                if (mCallback != null)
+                    mCallback.onError();
             }
         });
     }
@@ -78,17 +82,19 @@ public class SSBImpl implements ISSBPresenter {
             @Override
             public void onResponse(@NotNull Call<DomainGoodsInfo> call, @NotNull Response<DomainGoodsInfo> response) {
                 int code = response.code();
-                if (code == HttpURLConnection.HTTP_OK) {
-                    DomainGoodsInfo info = response.body();
-                    if (info != null && info.isSuccess()) {
-                        mCallback.onSellingListLoaded(info);
+                if (mCallback != null)
+                    if (code == HttpURLConnection.HTTP_OK) {
+                        DomainGoodsInfo info = response.body();
+                        if (info != null && info.isSuccess()) {
+                            mCallback.onSellingListLoaded(info);
+                        } else mCallback.onError();
                     } else mCallback.onError();
-                } else mCallback.onError();
             }
 
             @Override
             public void onFailureAllRetries() {
-                mCallback.onError();
+                if (mCallback != null)
+                    mCallback.onError();
             }
         });
     }
@@ -102,19 +108,21 @@ public class SSBImpl implements ISSBPresenter {
             @Override
             public void onResponse(Call<DomainResult> call, Response<DomainResult> response) {
                 int code = response.code();
-                if (code == HttpURLConnection.HTTP_OK) {
-                    DomainResult result = response.body();
-                    if (result != null && result.isSuccess())
-                        mCallback.onUnListItemSuccess();
-                    else
+                if (mCallback != null)
+                    if (code == HttpURLConnection.HTTP_OK) {
+                        DomainResult result = response.body();
+                        if (result != null && result.isSuccess())
+                            mCallback.onUnListItemSuccess();
+                        else
+                            mCallback.onActionFailed();
+                    } else
                         mCallback.onActionFailed();
-                } else
-                    mCallback.onActionFailed();
             }
 
             @Override
             public void onFailureAllRetries() {
-                mCallback.onError();
+                if (mCallback != null)
+                    mCallback.onError();
             }
         });
     }

@@ -9,18 +9,15 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment;
 import com.example.schoolairdroprefactoredition.scene.map.AMapActivity;
-import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNavigatorAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
-import com.example.schoolairdroprefactoredition.ui.components.Location;
 
-import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 
@@ -46,19 +43,16 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
         final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
         HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, HomePagerAdapter.PURCHASING);
         setUpPlaceHolderHAndGoodsContainer(binding.placeholder, binding.homeViewpager);
-        MagicIndicator indicator = binding.homeIndicator;
-        ViewPager viewPager = binding.homeViewpager;
-        Location mLocation = binding.homeLocation;
 
         CommonNavigator commonNavigator = new CommonNavigator(getContext());
-        HomeNavigatorAdapter adapter = new HomeNavigatorAdapter(getContext(), viewPager, HomeNavigatorAdapter.PURCHASING);
+        HomeNavigatorAdapter adapter = new HomeNavigatorAdapter(getContext(), binding.homeViewpager, HomeNavigatorAdapter.PURCHASING);
         commonNavigator.setAdapter(adapter);
-        viewPager.setAdapter(homePagerAdapter);
-        indicator.setNavigator(commonNavigator);
-        ViewPagerHelper.bind(indicator, viewPager);
+        binding.homeViewpager.setAdapter(homePagerAdapter);
+        binding.homeIndicator.setNavigator(commonNavigator);
+        ViewPagerHelper.bind(binding.homeIndicator, binding.homeViewpager);
 
         binding.homeSearchBar.setOnClickListener(this);
-        mLocation.setOnClickListener(this);
+        binding.homeLocation.setOnClickListener(this);
 
         return binding.getRoot();
     }

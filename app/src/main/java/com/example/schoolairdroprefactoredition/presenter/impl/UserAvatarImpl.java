@@ -48,8 +48,9 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
 //                            e.printStackTrace();
 //                        }
 
-                            mCallback.onUpdateSuccess(body);
-                        } else
+                            if (mCallback != null)
+                                mCallback.onUpdateSuccess(body);
+                        } else if (mCallback != null)
                             mCallback.onError();
 //                        } else mCallback.onError();
                 } else {
@@ -58,13 +59,15 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    mCallback.onError();
+                    if (mCallback != null)
+                        mCallback.onError();
                 }
             }
 
             @Override
             public void onFailureAllRetries() {
-                mCallback.onError();
+                if (mCallback != null)
+                    mCallback.onError();
             }
         });
     }

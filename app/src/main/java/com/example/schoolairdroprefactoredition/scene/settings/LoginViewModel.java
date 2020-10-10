@@ -1,26 +1,32 @@
 package com.example.schoolairdroprefactoredition.scene.settings;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.presenter.callback.ILoginCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.LoginImpl;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
-public class LoginViewModel extends BaseStateViewModel implements ILoginCallback {
+public class LoginViewModel extends AndroidViewModel implements ILoginCallback {
 
     private MutableLiveData<DomainAuthorizeGet> mAuthorizationKey = new MutableLiveData<>();
     private MutableLiveData<DomainAuthorize> mAuthorizedSession = new MutableLiveData<>();
     private MutableLiveData<DomainUserInfo> mUserInfo = new MutableLiveData<>();
+    private MutableLiveData<String> mRegistrationID = new MutableLiveData<>();
 
     private OnLoginErrorListener mOnLoginErrorListener;
 
     private LoginImpl loginImpl;
 
-    public LoginViewModel() {
+    public LoginViewModel(@NonNull Application application) {
+        super(application);
         loginImpl = new LoginImpl();
         loginImpl.registerCallback(this);
     }
@@ -35,7 +41,7 @@ public class LoginViewModel extends BaseStateViewModel implements ILoginCallback
     }
 
     public LiveData<DomainAuthorize> authorizeWithAlipayID(String cookie, String rawAlipay, String publicKey) {
-        loginImpl.postAlipayIDRSA(cookie, rawAlipay, publicKey);
+        loginImpl.postAlipayIDRSA(cookie, rawAlipay, publicKey, MiPushClient.getRegId(getApplication()));
         return mAuthorizedSession;
     }
 
@@ -87,6 +93,4 @@ public class LoginViewModel extends BaseStateViewModel implements ILoginCallback
     protected void onCleared() {
         loginImpl.unregisterCallback(this);
     }
-
-
 }

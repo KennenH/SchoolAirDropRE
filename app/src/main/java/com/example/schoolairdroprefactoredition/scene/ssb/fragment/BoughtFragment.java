@@ -15,7 +15,7 @@ import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
  * {@link SellingFragment}
  * {@link SoldFragment}
  */
-public class BoughtFragment extends SSBBaseFragment implements SSBActivity.OnLoginStateChangeListener {
+public class BoughtFragment extends SSBBaseFragment implements SSBActivity.OnLoginStateChangeListener, SSBActivity.OnChangedToBoughtListener {
     public static BoughtFragment newInstance() {
         BoughtFragment fragment = new BoughtFragment();
         return fragment;
@@ -24,8 +24,10 @@ public class BoughtFragment extends SSBBaseFragment implements SSBActivity.OnLog
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (getActivity() instanceof SSBActivity)
+        if (getActivity() instanceof SSBActivity) {
             ((SSBActivity) getActivity()).setOnLoginStateChangeListener(this);
+            ((SSBActivity) getActivity()).setOnChangedToBoughtListener(this);
+        }
     }
 
     @Override
@@ -51,24 +53,12 @@ public class BoughtFragment extends SSBBaseFragment implements SSBActivity.OnLog
     private void getBought() {
         if (getToken() != null) { // 未登录
             showPlaceholder(StatePlaceHolder.TYPE_LOADING);
-            viewModel.getBought(getToken().getAccess_token()).observe(getViewLifecycleOwner(), this::loadData);
+            viewModel.getBought(getToken().getAccess_token()).observe(getViewLifecycleOwner(), data -> {
+                loadData(data);
+                dataLenOnChange(SSBBaseFragment.BOUGHT_POS);
+            });
         } else // 未登录时
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
-    }
-
-    @Override
-    public void onFilterTimeAsc() {
-
-    }
-
-    @Override
-    public void onFilterTimeDesc() {
-
-    }
-
-    @Override
-    public void onFilterWatches() {
-
     }
 
     /**
@@ -82,5 +72,10 @@ public class BoughtFragment extends SSBBaseFragment implements SSBActivity.OnLog
     @Override
     public void onLoginSSB() {
         getBought();
+    }
+
+    @Override
+    public void onChangedToBought() {
+        dataLenOnChange(SSBBaseFragment.BOUGHT_POS);
     }
 }

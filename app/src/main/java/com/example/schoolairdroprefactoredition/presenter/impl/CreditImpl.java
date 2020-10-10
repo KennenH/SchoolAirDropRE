@@ -17,7 +17,8 @@ public class CreditImpl implements ICreditPresenter {
     public void getCredit() {
         TestCreditBean bean = new TestCreditBean();
         bean.setCredits(CreditActivity.CREDIT4);
-        mCallback.onCreditLoaded(bean);
+        if (mCallback != null)
+            mCallback.onCreditLoaded(bean);
     }
 
     @Override
@@ -40,7 +41,8 @@ public class CreditImpl implements ICreditPresenter {
         data[4].setType(CreditAssessment.TYPE_MONTHLY);
         data[4].setUp(true);
 
-        mCallback.onCreditHistoryLoaded(Arrays.asList(data));
+        if (mCallback != null)
+            mCallback.onCreditHistoryLoaded(Arrays.asList(data));
 
     }
 

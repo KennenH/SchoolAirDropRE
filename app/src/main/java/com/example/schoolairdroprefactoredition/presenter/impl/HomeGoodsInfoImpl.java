@@ -38,14 +38,15 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
 //                    e.printStackTrace();
 //                }
 
-                if (code == HttpURLConnection.HTTP_OK) {
-                    if (info != null && info.isSuccess()) {
-                        mCallback.onNearbyGoodsLoaded(info.getData());
-                    } else
+                if (mCallback != null)
+                    if (code == HttpURLConnection.HTTP_OK) {
+                        if (info != null && info.isSuccess()) {
+                            mCallback.onNearbyGoodsLoaded(info.getData());
+                        } else
+                            mCallback.onError();
+                    } else {
                         mCallback.onError();
-                } else {
-                    mCallback.onError();
-                }
+                    }
             }
 
             @Override

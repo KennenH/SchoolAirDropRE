@@ -27,10 +27,11 @@ public class UserNameImpl implements IUserNamePresenter {
             public void onResponse(Call<DomainResult> call, Response<DomainResult> response) {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
                     DomainResult body = response.body();
-                    if (body != null && body.isSuccess())
-                        mCallback.onSuccess();
-                    else
-                        mCallback.onError();
+                    if (mCallback != null)
+                        if (body != null && body.isSuccess())
+                            mCallback.onSuccess();
+                        else
+                            mCallback.onError();
                 }
             }
 

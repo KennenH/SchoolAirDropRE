@@ -14,7 +14,7 @@ import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
  * {@link SellingFragment}
  * {@link BoughtFragment}
  */
-public class SoldFragment extends SSBBaseFragment implements SSBActivity.OnLoginStateChangeListener {
+public class SoldFragment extends SSBBaseFragment implements SSBActivity.OnLoginStateChangeListener, SSBActivity.OnChangedToSoldListener {
 
     public static SoldFragment newInstance() {
         SoldFragment fragment = new SoldFragment();
@@ -24,8 +24,10 @@ public class SoldFragment extends SSBBaseFragment implements SSBActivity.OnLogin
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (getActivity() instanceof SSBActivity)
+        if (getActivity() instanceof SSBActivity) {
             ((SSBActivity) getActivity()).setOnLoginStateChangeListener(this);
+            ((SSBActivity) getActivity()).setOnChangedToSoldListener(this);
+        }
     }
 
     @Override
@@ -46,24 +48,12 @@ public class SoldFragment extends SSBBaseFragment implements SSBActivity.OnLogin
     private void getSold() {
         if (getToken() != null) { // 已登录
             showPlaceholder(StatePlaceHolder.TYPE_LOADING);
-            viewModel.getSold(getToken().getAccess_token()).observe(getViewLifecycleOwner(), this::loadData);
+            viewModel.getSold(getToken().getAccess_token()).observe(getViewLifecycleOwner(), data -> {
+                loadData(data);
+                dataLenOnChange(SSBBaseFragment.SOLD_POS);
+            });
         } else // 未登录时
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
-    }
-
-    @Override
-    public void onFilterTimeAsc() {
-
-    }
-
-    @Override
-    public void onFilterTimeDesc() {
-
-    }
-
-    @Override
-    public void onFilterWatches() {
-
     }
 
     /**
@@ -77,5 +67,10 @@ public class SoldFragment extends SSBBaseFragment implements SSBActivity.OnLogin
     @Override
     public void onLoginSSB() {
         getSold();
+    }
+
+    @Override
+    public void onChangedToSold() {
+        dataLenOnChange(SSBBaseFragment.SOLD_POS);
     }
 }

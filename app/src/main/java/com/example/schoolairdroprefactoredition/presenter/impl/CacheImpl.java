@@ -15,14 +15,16 @@ public class CacheImpl implements ICachePresenter {
     public void getUserInfoCache() {
         UserInfoCache userInfoCache = mJsonCacheUtil.getValue(UserInfoCache.USER_INFO, UserInfoCache.class);
         if (userInfoCache == null) userInfoCache = new UserInfoCache();
-        mCallback.onUserInfoCacheLoaded(userInfoCache.getInfo());
+        if (mCallback != null)
+            mCallback.onUserInfoCacheLoaded(userInfoCache.getInfo());
     }
 
     @Override
     public void getTokenCache() {
         UserTokenCache userTokenCache = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache.class);
         if (userTokenCache == null) userTokenCache = new UserTokenCache();
-        mCallback.onTokenCacheLoaded(userTokenCache.getToken());
+        if (mCallback != null)
+            mCallback.onTokenCacheLoaded(userTokenCache.getToken());
     }
 
     @Override

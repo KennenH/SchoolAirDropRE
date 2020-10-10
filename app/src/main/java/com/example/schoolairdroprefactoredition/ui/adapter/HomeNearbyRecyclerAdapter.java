@@ -2,7 +2,7 @@ package com.example.schoolairdroprefactoredition.ui.adapter;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
@@ -34,7 +34,7 @@ public class HomeNearbyRecyclerAdapter extends BaseFooterAdapter<DomainGoodsInfo
                 boolean secondHand = data.getGoods_is_brandNew() == 0;
 
                 TextViewWithImages title = holder.itemView.findViewById(R.id.item_title);
-                ImageView credit = holder.itemView.findViewById(R.id.item_credit);
+                TextView credit = holder.itemView.findViewById(R.id.item_credit);
 
                 ImageUtil.scaledImageLoad(holder.itemView.findViewById(R.id.item_image), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getGoods_img_cover(), SizeUtils.dp2px(120));
                 ((GoodsPrice) holder.findView(R.id.item_price)).setPrice(data.getGoods_price());
@@ -58,15 +58,15 @@ public class HomeNearbyRecyclerAdapter extends BaseFooterAdapter<DomainGoodsInfo
 
                 if (creditNum != 0)
                     if (creditNum == 5)
-                        credit.setImageResource(R.drawable.ic_credit5);
+                        credit.setText(R.string.ic_credit5);
                     else if (creditNum == 4)
-                        credit.setImageResource(R.drawable.ic_credit4);
+                        credit.setText(R.string.ic_credit4);
                     else if (creditNum == 3)
-                        credit.setImageResource(R.drawable.ic_credit3);
+                        credit.setText(R.string.ic_credit3);
                     else if (creditNum == 2)
-                        credit.setImageResource(R.drawable.ic_credit2);
+                        credit.setText(R.string.ic_credit2);
                     else if (creditNum == 1)
-                        credit.setImageResource(R.drawable.ic_credit1);
+                        credit.setText(R.string.ic_credit1);
             } catch (NullPointerException e) {
                 Log.d("NeaByRecyclerAdapter", "null pointer exception" + e.toString());
             }

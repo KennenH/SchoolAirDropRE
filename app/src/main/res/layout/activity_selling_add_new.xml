@@ -109,6 +109,8 @@
                     android:layout_margin="@dimen/general_padding_bit_larger"
                     android:drawablePadding="@dimen/general_padding_small"
                     android:ellipsize="end"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:text="@string/cover"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
@@ -121,8 +123,6 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/general_padding_small"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:padding="@dimen/general_padding_large"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -169,6 +169,8 @@
                     android:layout_margin="@dimen/general_padding_bit_larger"
                     android:drawablePadding="@dimen/general_padding_small"
                     android:ellipsize="end"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:text="@string/title"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
@@ -181,8 +183,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/general_padding_small"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:padding="@dimen/general_padding_large"
                     app:layout_constraintTop_toBottomOf="@id/title_title">
 
@@ -201,6 +201,8 @@
                     android:layout_marginTop="@dimen/general_padding_small"
                     android:drawablePadding="@dimen/general_padding_small"
                     android:ellipsize="end"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:text="@string/price"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
@@ -213,8 +215,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/general_padding_small"
-                    android:focusable="true"
-                    android:focusableInTouchMode="true"
                     android:padding="@dimen/general_padding_large"
                     app:layout_constraintTop_toBottomOf="@id/price_title">
 

@@ -11,6 +11,7 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
 import com.example.schoolairdroprefactoredition.ui.components.GoodsPrice;
+import com.example.schoolairdroprefactoredition.ui.components.Location;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 
@@ -21,7 +22,7 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
     private OnSSBItemActionListener mOnSSBItemActionListener;
 
     public SSBAdapter() {
-        super(R.layout.item_ssb);
+        super(R.layout.item_ssb_selling);
     }
 
     @Override
@@ -31,23 +32,28 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
             final boolean isSecondHand = bean.getGoods_is_brandNew() == 0;
 
             if (isQuotable && isSecondHand)
-                holder.setText(R.id.ssb_item_title, getContext().getString(R.string.itemNSs, bean.getGoods_name()));
+                holder.setText(R.id.goods_title, getContext().getString(R.string.itemNSs, bean.getGoods_name()));
             else if (isQuotable)
-                holder.setText(R.id.ssb_item_title, getContext().getString(R.string.itemNs, bean.getGoods_name()));
+                holder.setText(R.id.goods_title, getContext().getString(R.string.itemNs, bean.getGoods_name()));
             else
-                holder.setText(R.id.ssb_item_title, getContext().getString(R.string.itemSs, bean.getGoods_name()));
+                holder.setText(R.id.goods_title, getContext().getString(R.string.itemSs, bean.getGoods_name()));
 
-            ImageUtil.scaledImageLoad(holder.itemView.findViewById(R.id.ssb_item_img), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + bean.getGoods_img_cover(), SizeUtils.dp2px(85));
-            ((GoodsPrice) holder.itemView.findViewById(R.id.ssb_item_price)).setPrice(bean.getGoods_price());
+            ((Location) holder.itemView.findViewById(R.id.goods_location)).setLocationName("杭州市 江干区");
+            ImageUtil.scaledImageLoad(holder.itemView.findViewById(R.id.goods_avatar), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + bean.getGoods_img_cover(), SizeUtils.dp2px(85));
+            ((GoodsPrice) holder.itemView.findViewById(R.id.goods_origin_price)).setPrice(bean.getGoods_price());
         }
 
         if (getContext() instanceof AppCompatActivity)
             holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(), ((AppCompatActivity) getContext()).getIntent().getExtras(), bean));
 
-        holder.itemView.findViewById(R.id.ssb_item_more_action).setOnClickListener(v -> {
+        holder.itemView.findViewById(R.id.goods_more_action).setOnClickListener(v -> {
             // 弹出更多动作的弹窗
             if (mOnSSBItemActionListener != null)
                 mOnSSBItemActionListener.onItemActionButtonClick(v, bean);
+        });
+
+        holder.itemView.findViewById(R.id.goods_edit).setOnClickListener(v -> {
+
         });
     }
 

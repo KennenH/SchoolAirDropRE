@@ -13,11 +13,11 @@ import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 
 public class UserHomeSellingInfo extends ConstraintLayoutAuto implements View.OnClickListener {
 
-    private static final int CREDIT1 = R.drawable.ic_credit1;
-    private static final int CREDIT2 = R.drawable.ic_credit2;
-    private static final int CREDIT3 = R.drawable.ic_credit3;
-    private static final int CREDIT4 = R.drawable.ic_credit4;
-    private static final int CREDIT5 = R.drawable.ic_credit5;
+    private static final int CREDIT1 = R.string.ic_credit1;
+    private static final int CREDIT2 = R.string.ic_credit2;
+    private static final int CREDIT3 = R.string.ic_credit3;
+    private static final int CREDIT4 = R.string.ic_credit4;
+    private static final int CREDIT5 = R.string.ic_credit5;
 
     private ComponentUserMoreInfoBinding binding;
 
@@ -43,19 +43,19 @@ public class UserHomeSellingInfo extends ConstraintLayoutAuto implements View.On
         binding.userMoreSelling.setText(String.valueOf(info.getSelling()));
         switch (info.getCredit_num()) {
             case 1:
-                binding.userMoreCredits.setImageResource(CREDIT1);
+                binding.userMoreCredits.setText(CREDIT1);
                 break;
             case 2:
-                binding.userMoreCredits.setImageResource(CREDIT2);
+                binding.userMoreCredits.setText(CREDIT2);
                 break;
             case 3:
-                binding.userMoreCredits.setImageResource(CREDIT3);
+                binding.userMoreCredits.setText(CREDIT3);
                 break;
             case 4:
-                binding.userMoreCredits.setImageResource(CREDIT4);
+                binding.userMoreCredits.setText(CREDIT4);
                 break;
             case 5:
-                binding.userMoreCredits.setImageResource(CREDIT5);
+                binding.userMoreCredits.setText(CREDIT5);
                 break;
         }
     }
@@ -64,19 +64,19 @@ public class UserHomeSellingInfo extends ConstraintLayoutAuto implements View.On
         binding.userMoreSelling.setText(R.string.sellingHideByUser); // todo 用户应该可以查看其他用户在售物品的个数
         switch (info.getSeller_info().getCredit_num()) {
             case 1:
-                binding.userMoreCredits.setImageResource(CREDIT1);
+                binding.userMoreCredits.setText(CREDIT1);
                 break;
             case 2:
-                binding.userMoreCredits.setImageResource(CREDIT2);
+                binding.userMoreCredits.setText(CREDIT2);
                 break;
             case 3:
-                binding.userMoreCredits.setImageResource(CREDIT3);
+                binding.userMoreCredits.setText(CREDIT3);
                 break;
             case 4:
-                binding.userMoreCredits.setImageResource(CREDIT4);
+                binding.userMoreCredits.setText(CREDIT4);
                 break;
             case 5:
-                binding.userMoreCredits.setImageResource(CREDIT5);
+                binding.userMoreCredits.setText(CREDIT5);
                 break;
         }
     }

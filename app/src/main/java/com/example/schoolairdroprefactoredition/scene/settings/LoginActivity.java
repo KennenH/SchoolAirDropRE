@@ -21,13 +21,11 @@ import com.example.schoolairdroprefactoredition.databinding.ActivityLoginBinding
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.utils.AnimUtil;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
-import com.example.schoolairdroprefactoredition.utils.MyUtil;
 
-public class LoginActivity extends ImmersionStatusBarActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, BaseStateViewModel.OnRequestListener {
+public class LoginActivity extends ImmersionStatusBarActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, LoginViewModel.OnLoginErrorListener {
     public static final int LOGIN = 1212;// 请求码 网络登录请求
 
     /**
@@ -93,7 +91,7 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
             binding = ActivityLoginBinding.inflate(LayoutInflater.from(this));
             setContentView(binding.getRoot());
             viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-            viewModel.setOnRequestListener(this);
+            viewModel.setOnLoginErrorListener(this);
 
             binding.loginWithAlipay.setEnabled(false);
             binding.cancel.setOnClickListener(this);
@@ -139,19 +137,20 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
      */
     private void loginWithAlipay() {
         viewModel.getPublicKey().observe(this, key -> {
-            // 将加密的数据post回去请求token
-            viewModel.authorizeWithAlipayID(key.getCookie()
+            viewModel.authorizeWithAlipayID(
+                    key.getCookie()
                     , "19858120611"
-                    , key.getPublic_key()).observe(this, token -> {
-                dismissLoading();
+                    , key.getPublic_key())
+                    .observe(this, token -> {
+                        dismissLoading();
 
-                // todo comment this when release
-                LogUtils.d("token -- > " + token.toString());
+                        // todo comment this when release
+                        LogUtils.d("token -- > " + token.toString());
 
-                // token
-                intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
-                getUserInfoWithToken();
-            });
+                        // token
+                        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
+                        getUserInfoWithToken();
+                    });
         });
     }
 
@@ -183,9 +182,8 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
     }
 
     @Override
-    public void onError() {
+    public void onLoginError() {
         dismissLoading();
         DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
     }
-
 }

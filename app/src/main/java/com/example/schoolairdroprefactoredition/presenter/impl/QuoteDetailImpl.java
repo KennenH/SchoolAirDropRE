@@ -26,7 +26,8 @@ public class QuoteDetailImpl implements IQuoteDetailPresenter {
         now.add(Calendar.DAY_OF_YEAR, 1);
         bean.setExpirationTime(now);
 
-        mCallback.onQuoteDetailLoaded(bean);
+        if (mCallback != null)
+            mCallback.onQuoteDetailLoaded(bean);
     }
 
     @Override

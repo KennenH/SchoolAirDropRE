@@ -28,18 +28,20 @@ public class MyImpl implements IMyPresenter {
                 int code = response.code();
                 Response<DomainUserInfo> respond = response;
                 DomainUserInfo info = respond.body();
-                if (code == HttpURLConnection.HTTP_OK) {
-                    if (info != null && info.isSuccess()) {
-                        mCallback.onUserInfoLoaded(info);
-                    } else
+                if (mCallback != null)
+                    if (code == HttpURLConnection.HTTP_OK) {
+                        if (info != null && info.isSuccess()) {
+                            mCallback.onUserInfoLoaded(info);
+                        } else
+                            mCallback.onError();
+                    } else if (code == HttpURLConnection.HTTP_UNAUTHORIZED)
                         mCallback.onError();
-                } else if (code == HttpURLConnection.HTTP_UNAUTHORIZED)
-                    mCallback.onError();
             }
 
             @Override
             public void onFailureAllRetries() {
-                mCallback.onError();
+                if (mCallback != null)
+                    mCallback.onError();
             }
         });
     }
