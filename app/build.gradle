@@ -56,7 +56,7 @@ MobSDK {
     // 调用MobPush
     MobPush {
         FCM {
-            iconRes "@drawable/logo_180x"
+            iconRes "@drawable/logo_218x"
         }
     }
 }

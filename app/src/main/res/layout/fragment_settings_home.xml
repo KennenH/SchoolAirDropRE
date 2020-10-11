@@ -68,7 +68,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/general_padding_large"
                 app:PI_description="Version beta 0.0.1 "
-                app:PI_icon="@drawable/logo"
+                app:PI_icon="@drawable/ic_logo_alpha"
                 app:PI_title="@string/about"
                 app:layout_constraintTop_toBottomOf="@+id/settings_home_general" />
 

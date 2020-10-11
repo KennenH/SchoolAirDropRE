@@ -54,7 +54,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/line0"
             app:placeholderImage="@drawable/bg_item_img_placeholder"
-            app:roundedCornerRadius="@dimen/general_padding_tiny" />
+            app:roundedCornerRadius="@dimen/general_padding" />
 
         <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
             android:id="@+id/goods_title"

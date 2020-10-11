@@ -13,10 +13,10 @@
         android:layout_marginStart="@dimen/general_padding_bit_larger"
         android:layout_marginTop="@dimen/general_padding_bit_larger"
         android:layout_marginBottom="@dimen/general_padding_bit_larger"
-        android:src="@drawable/logo"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:placeholderImage="@drawable/logo_placeholder"
         app:roundedCornerRadius="@dimen/general_padding" />
 
     <TextView

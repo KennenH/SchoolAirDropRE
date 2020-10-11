@@ -64,7 +64,7 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
                 binding.goodsPager.setData(MyUtil.getArrayFromString(data.getGoods_img_cover().concat("&" + data.getGoods_img_set())));
 
                 if (data.getSeller_info() != null) {
-                    ImageUtil.scaledImageLoad(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path(), SizeUtils.dp2px(55));
+                    ImageUtil.roundedImageLoad(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path(), SizeUtils.dp2px(8));
                     binding.goodsUserName.setText(data.getSeller_info().getUname());
                 } else binding.goodsSellerInfo.setVisibility(GONE);
             } catch (NullPointerException e) {

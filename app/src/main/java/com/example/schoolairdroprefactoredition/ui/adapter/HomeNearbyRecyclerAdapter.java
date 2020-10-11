@@ -36,7 +36,7 @@ public class HomeNearbyRecyclerAdapter extends BaseFooterAdapter<DomainGoodsInfo
                 TextViewWithImages title = holder.itemView.findViewById(R.id.item_title);
                 TextView credit = holder.itemView.findViewById(R.id.item_credit);
 
-                ImageUtil.scaledImageLoad(holder.itemView.findViewById(R.id.item_image), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getGoods_img_cover(), SizeUtils.dp2px(120));
+                ImageUtil.roundedImageLoad(holder.itemView.findViewById(R.id.item_image), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getGoods_img_cover(), SizeUtils.dp2px(8));
                 ((GoodsPrice) holder.findView(R.id.item_price)).setPrice(data.getGoods_price());
                 holder.setText(R.id.item_seller, data.getSeller_info().getUname());
 

@@ -189,7 +189,7 @@
     <string name="clearInput">Clear Input</string>
     <string name="dialogNetWorkError">Network Error</string>
     <string name="restoreDraft">Restore</string>
-    <string name="draftCleared">Input cleared, Can be restored before page closed</string>
+    <string name="draftCleared">Input cleared, Can be restored before the page closed</string>
     <string name="plsEnterQuotePrice">Please Enter Quote Price</string>
     <string name="errorNewsEmptyHome">No nearby topic</string>
     <string name="postMyTopic">Post My Topic</string>

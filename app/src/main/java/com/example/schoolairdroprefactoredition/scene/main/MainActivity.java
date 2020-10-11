@@ -61,7 +61,6 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
-        setTheme(R.style.splashScreenTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
@@ -93,7 +92,6 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(this);
         navView.setSelectedItemId(R.id.navigation_box);
-//        showFragment(mPurchase);
     }
 
     /**

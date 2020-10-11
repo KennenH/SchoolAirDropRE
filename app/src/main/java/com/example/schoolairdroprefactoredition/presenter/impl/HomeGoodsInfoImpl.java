@@ -25,7 +25,7 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
     public void getNearbyGoods(int page, double longitude, double latitude) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainGoodsInfo> task = api.getGoodsInfo(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page, longitude, latitude);
+        Call<DomainGoodsInfo> task = api.getGoodsInfo(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page, 120.36055, 30.31747);
         task.enqueue(new CallBackWithRetry<DomainGoodsInfo>(task) {
             @Override
             public void onResponse(Call<DomainGoodsInfo> call, Response<DomainGoodsInfo> response) {

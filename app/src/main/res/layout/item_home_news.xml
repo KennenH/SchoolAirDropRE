@@ -75,6 +75,6 @@
         app:layout_constraintBottom_toBottomOf="@+id/news_sender"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/news_title"
-        tools:src="@drawable/logo_180x" />
+        tools:src="@drawable/logo_218x" />
 
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

@@ -54,7 +54,7 @@
         android:layout_width="@dimen/toolbar_icon_bit_larger"
         android:layout_height="@dimen/toolbar_icon_bit_larger"
         android:longClickable="false"
-        android:src="@drawable/logo"
+        android:src="@drawable/ic_logo_alpha"
         app:layout_constraintBottom_toTopOf="@+id/guideline4"
         app:layout_constraintEnd_toStartOf="@id/title"
         app:layout_constraintHorizontal_chainStyle="packed"

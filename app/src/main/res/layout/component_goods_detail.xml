@@ -68,7 +68,7 @@
             app:layout_constraintTop_toBottomOf="@+id/view"
             app:placeholderImage="@drawable/logo_placeholder"
             app:placeholderImageScaleType="centerInside"
-            app:roundedCornerRadius="@dimen/general_rounded_rect" />
+            app:roundedCornerRadius="@dimen/general_padding" />
 
         <TextView
             android:id="@+id/goods_user_name"

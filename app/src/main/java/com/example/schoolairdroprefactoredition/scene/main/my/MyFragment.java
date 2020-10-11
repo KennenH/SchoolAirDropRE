@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +30,6 @@ import com.example.schoolairdroprefactoredition.ui.components.SSBInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
-import com.facebook.drawee.view.SimpleDraweeView;
 import com.lxj.xpopup.impl.LoadingPopupView;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
@@ -41,7 +41,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
 
     private MyViewModel viewModel;
 
-    private SimpleDraweeView mAvatar;
+    private ImageView mAvatar;
     private TextView mName;
 
     private LoadingPopupView mLoading;
@@ -107,10 +107,10 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
     private void setUserData() {
         DomainUserInfo.DataBean info = getInfo();
         if (getToken() == null) { // 无token认证信息，显示默认值
-            mAvatar.setActualImageResource(R.drawable.logo);
+            mAvatar.setImageResource(R.drawable.ic_logo_alpha);
             mName.setText(getString(R.string.pleaseLogin));
         } else if (info != null) { // 设置页面数据
-            ImageUtil.scaledImageLoad(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), SizeUtils.dp2px(80));
+            ImageUtil.roundedImageLoad(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), SizeUtils.dp2px(8));
             mName.setText(info.getUname());
         }
     }
@@ -123,7 +123,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
             case R.id.my_info:
                 if (bundle != null && bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE) != null
                         && bundle.getSerializable(ConstantUtil.KEY_USER_INFO) != null) {
-                    UserActivity.startForResult(getActivity(), bundle,true);
+                    UserActivity.startForResult(getActivity(), bundle, true);
                 } else {
                     LoginActivity.startForLogin(getContext());
                 }

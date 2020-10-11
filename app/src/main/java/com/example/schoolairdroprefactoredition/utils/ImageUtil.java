@@ -1,25 +1,26 @@
 package com.example.schoolairdroprefactoredition.utils;
 
-import android.net.Uri;
+import android.widget.ImageView;
 
-import com.facebook.drawee.backends.pipeline.Fresco;
-import com.facebook.drawee.view.SimpleDraweeView;
-import com.facebook.imagepipeline.common.ResizeOptions;
-import com.facebook.imagepipeline.request.ImageRequest;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 public class ImageUtil {
     /**
-     * 加载固定大小的图片
+     * Glide 加载圆角图片
+     *
+     * @param imageView      目标
+     * @param uri            完整的图片地址 包括了base url
+     * @param roundedCorners 圆角 in px
      */
-    public static void scaledImageLoad(SimpleDraweeView simpleDraweeView, String uri, int sideLen) {
-        ImageRequest request = ImageRequestBuilder.newBuilderWithSource(Uri.parse(uri))
-                .setResizeOptions(new ResizeOptions(sideLen, sideLen))
-                .build();
-        simpleDraweeView.setController(
-                Fresco.newDraweeControllerBuilder()
-                        .setOldController(simpleDraweeView.getController())
-                        .setImageRequest(request)
-                        .build());
+    public static void roundedImageLoad(ImageView imageView, String uri, int roundedCorners) {
+        RequestOptions requestOptions = new RequestOptions();
+        requestOptions = requestOptions.transform(new CenterCrop(), new RoundedCorners(roundedCorners));
+        Glide.with(imageView).load(uri)
+                .apply(requestOptions)
+                .encodeQuality(80)
+                .into(imageView);
     }
 }

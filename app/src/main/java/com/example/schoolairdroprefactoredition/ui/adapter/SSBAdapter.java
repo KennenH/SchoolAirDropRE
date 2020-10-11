@@ -39,7 +39,7 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
                 holder.setText(R.id.goods_title, getContext().getString(R.string.itemSs, bean.getGoods_name()));
 
             ((Location) holder.itemView.findViewById(R.id.goods_location)).setLocationName("杭州市 江干区");
-            ImageUtil.scaledImageLoad(holder.itemView.findViewById(R.id.goods_avatar), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + bean.getGoods_img_cover(), SizeUtils.dp2px(85));
+            ImageUtil.roundedImageLoad(holder.itemView.findViewById(R.id.goods_avatar), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + bean.getGoods_img_cover(), SizeUtils.dp2px(8));
             ((GoodsPrice) holder.itemView.findViewById(R.id.goods_origin_price)).setPrice(bean.getGoods_price());
         }
 

@@ -39,7 +39,7 @@
                 android:id="@+id/user_avatar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:PI_icon="@drawable/logo_120x"
+                app:PI_icon="@drawable/ic_logo_alpha"
                 app:PI_isIconLarge="true"
                 app:PI_title="@string/avatar"
                 app:layout_constraintTop_toTopOf="parent" />
