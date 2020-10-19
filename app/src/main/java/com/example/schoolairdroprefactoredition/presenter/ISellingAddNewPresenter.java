@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.presenter;
 
+import android.content.Context;
+
 import com.example.schoolairdroprefactoredition.presenter.callback.ISellingAddNewCallback;
 import com.luck.picture.lib.entity.LocalMedia;
 
@@ -29,7 +31,8 @@ public interface ISellingAddNewPresenter extends IBasePresenter<ISellingAddNewCa
                 double latitude,
                 boolean isBrandNew,
                 boolean isQuotable,
-                float price);
+                float price,
+                Context context);
 
     /**
      * 保存用户草稿

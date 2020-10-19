@@ -2,10 +2,8 @@ package com.example.schoolairdroprefactoredition.scene.quote.fragment;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
-import androidx.lifecycle.ViewModel;
 
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.model.databean.TestQuoteSectionItemBean;
+import com.example.schoolairdroprefactoredition.domain.DomainQuote;
 import com.example.schoolairdroprefactoredition.presenter.callback.IQuoteSectionsCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.QuoteSectionImpl;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
@@ -15,17 +13,29 @@ import java.util.List;
 public class QuoteViewModel extends BaseStateViewModel implements IQuoteSectionsCallback {
     private QuoteSectionImpl quoteImpl;
 
-    private MutableLiveData<List<DomainGoodsInfo.DataBean>> mQuoteReceived;
-    private MutableLiveData<List<DomainGoodsInfo.DataBean>> mQuoteSent;
+    private MutableLiveData<List<DomainQuote.DataBean>> mQuoteReceived = new MutableLiveData<>();
+    private MutableLiveData<List<DomainQuote.DataBean>> mQuoteSent = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mAcceptResult = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mRefuseResult = new MutableLiveData<>();
 
-    public LiveData<List<DomainGoodsInfo.DataBean>> getQuoteReceived(String token) {
+    public LiveData<List<DomainQuote.DataBean>> getQuoteReceived(String token) {
         quoteImpl.getReceivedQuote(token);
         return mQuoteReceived;
     }
 
-    public LiveData<List<DomainGoodsInfo.DataBean>> getQuoteSent(String token) {
+    public LiveData<List<DomainQuote.DataBean>> getQuoteSent(String token) {
         quoteImpl.getSentQuote(token);
         return mQuoteSent;
+    }
+
+    public LiveData<Boolean> acceptQuote(String token, int goodsID) {
+        quoteImpl.acceptQuote(token, goodsID);
+        return mAcceptResult;
+    }
+
+    public LiveData<Boolean> refuseQuote(String token, int goodsID) {
+        quoteImpl.refuseQuote(token, goodsID);
+        return mRefuseResult;
     }
 
     public QuoteViewModel() {
@@ -34,15 +44,23 @@ public class QuoteViewModel extends BaseStateViewModel implements IQuoteSections
     }
 
     @Override
-    public void onQuoteReceivedLoaded(List<DomainGoodsInfo.DataBean> received) {
-        mQuoteReceived = new MutableLiveData<>();
+    public void onQuoteReceivedLoaded(List<DomainQuote.DataBean> received) {
         mQuoteReceived.postValue(received);
     }
 
     @Override
-    public void onQuoteSentLoaded(List<DomainGoodsInfo.DataBean> sent) {
-        mQuoteSent = new MutableLiveData<>();
+    public void onQuoteSentLoaded(List<DomainQuote.DataBean> sent) {
         mQuoteSent.postValue(sent);
+    }
+
+    @Override
+    public void onAcceptQuoteSuccess() {
+        mAcceptResult.postValue(true);
+    }
+
+    @Override
+    public void onRefuseQuoteSuccess() {
+        mRefuseResult.postValue(true);
     }
 
     @Override

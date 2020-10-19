@@ -162,7 +162,7 @@ public class GlideEngine implements ImageEngine {
                 .override(180, 180)
                 .centerCrop()
                 .sizeMultiplier(0.5f)
-                .apply(new RequestOptions().placeholder(R.drawable.bg_item_img_placeholder))
+                .apply(new RequestOptions().placeholder(R.drawable.placeholder_rounded))
                 .into(new BitmapImageViewTarget(imageView) {
                     @Override
                     protected void setResource(Bitmap resource) {

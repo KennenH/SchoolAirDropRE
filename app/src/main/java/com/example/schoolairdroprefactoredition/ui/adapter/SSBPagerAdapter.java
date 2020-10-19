@@ -19,9 +19,12 @@ public class SSBPagerAdapter extends FragmentPagerAdapter implements SSBBaseFrag
     private Context mContext;
     private OnSSBDataLenChangedIntermediaryListener mOnSSBDataLenChangedIntermediaryListener;
 
-    public SSBPagerAdapter(Context context, @NonNull FragmentManager fm, int behavior) {
+    private boolean isMine;
+
+    public SSBPagerAdapter(Context context, @NonNull FragmentManager fm, int behavior, boolean isMine) {
         super(fm, behavior);
         mContext = context;
+        this.isMine = isMine;
     }
 
     @NonNull
@@ -29,7 +32,7 @@ public class SSBPagerAdapter extends FragmentPagerAdapter implements SSBBaseFrag
     public Fragment getItem(int position) {
         switch (position) {
             case SSBBaseFragment.SELLING_POS:
-                SellingFragment fragmentSelling = SellingFragment.newInstance();
+                SellingFragment fragmentSelling = SellingFragment.newInstance(isMine);
                 fragmentSelling.setOnSSBDataLenChangedListener(this);
                 return fragmentSelling;
             case SSBBaseFragment.SOLD_POS:
@@ -41,16 +44,12 @@ public class SSBPagerAdapter extends FragmentPagerAdapter implements SSBBaseFrag
                 fragmentBought.setOnSSBDataLenChangedListener(this);
                 return fragmentBought;
         }
-        return SellingFragment.newInstance();
+        return SellingFragment.newInstance(false);
     }
 
     @Override
     public int getCount() {
-        // 若查看自己的则返回3，否则仅返回在售的1
-        // if mine
-        return 3;
-        // else
-        // return 1
+        return isMine ? 3 : 1;
     }
 
     @Override

@@ -6,6 +6,7 @@ import android.os.Process;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.mob.pushsdk.MobPush;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
 import com.xiaomi.mipush.sdk.Logger;
 import com.xiaomi.mipush.sdk.MiPushClient;

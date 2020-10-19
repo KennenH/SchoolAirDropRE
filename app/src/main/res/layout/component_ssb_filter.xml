@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:drawablePadding="@dimen/general_padding"
         android:gravity="center_vertical"
-        android:text="@string/loading"
+        android:text="@string/statistic"
         android:textSize="14dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

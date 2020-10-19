@@ -15,6 +15,7 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
@@ -24,7 +25,10 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+
+import javadz.beanutils.BeanUtils;
 
 public abstract class SSBBaseFragment extends StatePlaceholderFragment
         implements BaseStateViewModel.OnRequestListener,
@@ -34,7 +38,6 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     public static final int SELLING_POS = 0;
     public static final int SOLD_POS = 1;
     public static final int BOUGHT_POS = 2;
-
 
     protected SSBViewModel viewModel;
 
@@ -56,7 +59,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         binding.ssbRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         binding.placeHolder.setOnPlaceHolderActionListener(this);
 
-        mAdapter = new SSBAdapter();
+        mAdapter = new SSBAdapter(getActivity().getIntent().getBooleanExtra(ConstantUtil.KEY_IS_MINE, false));
         mAdapter.setOnSSBItemActionListener(this);
         binding.ssbRecycler.addItemDecoration(new MarginItemDecoration());
         binding.ssbRecycler.setAdapter(mAdapter);
@@ -119,8 +122,21 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         return null;
     }
 
+    protected DomainBaseUserInfo getBaseUserInfo() {
+        DomainBaseUserInfo info = new DomainBaseUserInfo();
+        try {
+            BeanUtils.copyProperties(info, getActivity().getIntent().getExtras().getSerializable(ConstantUtil.KEY_USER_INFO));
+        } catch (IllegalAccessException | InvocationTargetException | NullPointerException e) {
+            e.printStackTrace();
+            info = null;
+        }
+        return info;
+    }
+
     /**
-     * validate mList's size
+     * 当某个页面数据组改变时要通知Adapter是哪个页面的数据发生了改变
+     * 便于{@link SSBActivity}即时通知{@link com.example.schoolairdroprefactoredition.ui.components.SSBFilter}
+     * 重新统计页面数据总数
      */
     protected void dataLenOnChange(int page) {
         if (mOnSSBDataLenChangedListener != null && mList != null)

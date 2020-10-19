@@ -45,7 +45,8 @@ public class LoginImpl implements ILoginPresenter {
         task.enqueue(new CallBackWithRetry<DomainAuthorizeGet>(task) {
             @Override
             public void onFailureAllRetries() {
-                mCallback.onLoginError();
+                if (mCallback != null)
+                    mCallback.onLoginError();
             }
 
             @Override

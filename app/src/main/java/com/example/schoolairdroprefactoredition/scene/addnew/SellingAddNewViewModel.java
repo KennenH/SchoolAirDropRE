@@ -1,24 +1,30 @@
 package com.example.schoolairdroprefactoredition.scene.addnew;
 
+import android.app.Application;
+
+import androidx.annotation.NonNull;
+import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISellingAddNewCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.SellingAddNewImpl;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.luck.picture.lib.entity.LocalMedia;
 
 import java.util.List;
 
-public class SellingAddNewViewModel extends BaseStateViewModel implements ISellingAddNewCallback {
+public class SellingAddNewViewModel extends AndroidViewModel implements ISellingAddNewCallback {
 
     private MutableLiveData<DomainResult> mSubmitResult = new MutableLiveData<>();
     private MutableLiveData<AddNewDraftCache> mRecoveredDraft = new MutableLiveData<>();
 
     private SellingAddNewImpl sellingAddNewImpl;
 
-    public SellingAddNewViewModel() {
+    private OnRequestListener mOnRequestListener;
+
+    public SellingAddNewViewModel(@NonNull Application application) {
+        super(application);
         sellingAddNewImpl = new SellingAddNewImpl();
         sellingAddNewImpl.registerCallback(this);
     }
@@ -33,7 +39,7 @@ public class SellingAddNewViewModel extends BaseStateViewModel implements ISelli
         sellingAddNewImpl.submit(token, cover, picSet,
                 name, description,
                 longitude, latitude,
-                isBrandNew, isQuotable, price);
+                isBrandNew, isQuotable, price, getApplication());
         return mSubmitResult;
     }
 
@@ -70,8 +76,25 @@ public class SellingAddNewViewModel extends BaseStateViewModel implements ISelli
     }
 
     @Override
-    public void onError() {
+    public void onAddNewItemError() {
         if (mOnRequestListener != null)
-            mOnRequestListener.onError();
+            mOnRequestListener.onAddNewItemError();
     }
+
+    @Override
+    public void onModifyInfoError() {
+        if (mOnRequestListener != null)
+            mOnRequestListener.onModifyInfoError();
+    }
+
+    public interface OnRequestListener {
+        void onAddNewItemError();
+
+        void onModifyInfoError();
+    }
+
+    public void setOnRequestListener(OnRequestListener listener) {
+        mOnRequestListener = listener;
+    }
+
 }

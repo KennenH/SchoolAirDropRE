@@ -53,23 +53,6 @@
                 app:PI_title="@string/name"
                 app:layout_constraintTop_toBottomOf="@+id/user_avatar" />
 
-            <View
-                android:id="@+id/view3"
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginStart="50dp"
-                android:background="@color/colorLine"
-                app:layout_constraintBottom_toBottomOf="@+id/user_name"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <com.example.schoolairdroprefactoredition.ui.components.PageItem
-                android:id="@+id/user_sex"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:PI_description="雌雄同体"
-                app:PI_title="@string/sex"
-                app:layout_constraintTop_toBottomOf="@+id/user_name" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

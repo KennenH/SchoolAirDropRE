@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.ui.components;
 
 import android.content.Context;
+import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
     private List<Object> mData = new ArrayList<>();
 
     private ComponentGoodsPagerBinding binding;
+    private long lastClickTime = 0;
 
     public GoodsPager(Context context) {
         this(context, null);
@@ -94,15 +96,23 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
             final ImageView pic = new ImageView(getContext());
             Glide.with(pic)
                     .load((String) mData.get(position))
+                    .encodeQuality(ConstantUtil.ORIGIN)
                     .apply(new RequestOptions().placeholder(R.drawable.logo_placeholder).override(Target.SIZE_ORIGINAL))
                     .into(pic);
 
-            pic.setOnClickListener(v -> new XPopup.Builder(getContext())
-                    .asImageViewer(pic, position, mData, false, false, -1, -1, -1, true, (popupView, position1) -> {
-                        binding.goodsPagerPager.setCurrentItem(position1, false);
-                        popupView.updateSrcView((ImageView) binding.goodsPagerPager.getChildAt(position1));
-                    }, new MyUtil.ImageLoader())
-                    .show());
+            pic.setOnClickListener(v -> {
+                if (SystemClock.elapsedRealtime() - lastClickTime < ConstantUtil.MENU_CLICK_GAP)
+                    return;
+                lastClickTime = SystemClock.elapsedRealtime();
+
+                new XPopup.Builder(getContext())
+                        .hasStatusBar(false)
+                        .isDestroyOnDismiss(true)
+                        .asImageViewer(pic, position, mData, false, false, -1, -1, -1, true, (popupView, position1) -> {
+                            popupView.updateSrcView((ImageView) binding.goodsPagerPager.getChildAt(position1));
+                        }, new MyUtil.ImageLoader())
+                        .show();
+            });
 
             if (pic.getParent() instanceof ViewGroup)
                 ((ViewGroup) pic.getParent()).removeView(pic);

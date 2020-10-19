@@ -13,6 +13,8 @@ public class GoodsViewModel extends BaseStateViewModel implements IGoodsCallback
 
     private MutableLiveData<Boolean> mQuoteResult = new MutableLiveData<>();
     private MutableLiveData<Boolean> mFavoriteResult = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mUnFavorResult = new MutableLiveData<>();
+    private MutableLiveData<Boolean> mIsFavoredResult = new MutableLiveData<>();
 
     public GoodsViewModel() {
         goodsImpl = new GoodsImpl();
@@ -20,13 +22,23 @@ public class GoodsViewModel extends BaseStateViewModel implements IGoodsCallback
     }
 
     public LiveData<Boolean> quoteRequest(String token, String goodsID, String quotePrice) {
-        goodsImpl.quoteRequest(token, goodsID, quotePrice);
+        goodsImpl.quoteItem(token, goodsID, quotePrice);
         return mQuoteResult;
     }
 
     public LiveData<Boolean> favoriteItem(String token, String goodsID) {
-        goodsImpl.favorite(token, goodsID);
+        goodsImpl.favoriteItem(token, goodsID);
         return mFavoriteResult;
+    }
+
+    public LiveData<Boolean> isItemFavored(String token, String goodsID) {
+        goodsImpl.isItemFavored(token, goodsID);
+        return mIsFavoredResult;
+    }
+
+    public LiveData<Boolean> unFavorItem(String token, String goodsID) {
+        goodsImpl.unFavorItem(token, goodsID);
+        return mUnFavorResult;
     }
 
     @Override
@@ -36,11 +48,23 @@ public class GoodsViewModel extends BaseStateViewModel implements IGoodsCallback
 
     @Override
     public void onFavoriteSuccess() {
-
+        mFavoriteResult.postValue(true);
     }
 
     @Override
+    public void onIsFavorGet(boolean isFavor) {
+        mIsFavoredResult.postValue(isFavor);
+    }
+
+    @Override
+    public void onUnFavorSuccess() {
+        mUnFavorResult.postValue(true);
+    }
+
+
+    @Override
     public void onError() {
-        mOnRequestListener.onError();
+        if (mOnRequestListener != null)
+            mOnRequestListener.onError();
     }
 }

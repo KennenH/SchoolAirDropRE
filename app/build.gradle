@@ -13,16 +13,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-//        // jpush
-//        ndk {
-//            abiFilters 'armeabi', 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64', 'mips', 'mips64'
-//        }
-//        manifestPlaceholders = [
-//                JPUSH_PKGNAME: applicationId,
-//                JPUSH_APPKEY : "0be8a191e7105451ad38441f",
-//                JPUSH_CHANNEL: "developer-default",
-//        ]
     }
     allprojects {
         repositories {
@@ -51,13 +41,27 @@ MobSDK {
     appKey "m30ee3143c3177"
     appSecret "623fe181e3b3aa8193abae9a3477dec2"
 
-    gui true
-
-    // 调用MobPush
     MobPush {
-        FCM {
-            iconRes "@drawable/logo_218x"
+        devInfo {
+            FCM {
+                iconRes "@drawable/logo_218x"
+            }
+
+            HUAWEI {
+                appId "102961603"
+            }
+
+            XIAOMI {
+                appId "2882303761518719324"
+                appKey "5561871983324"
+            }
+
+            OPPO {
+                appKey "9bfaa7f61ecb46e8b26b712894f5007b"
+                appSecret "95c989ddeb1641ecb36c1fab0604588c"
+            }
         }
+
     }
 }
 
@@ -73,7 +77,8 @@ dependencies {
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.security:security-crypto:1.1.0-alpha02'
     implementation project(path: ':zxing')
-    implementation files('..\\lib\\libs\\MiPush_SDK_Client_3_8_0.jar')
+//    implementation files('../lib/libs/MiPush_SDK_Client_3_8_0.jar')
+    implementation files('../lib/libs/android-java-air-bridge.jar')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'

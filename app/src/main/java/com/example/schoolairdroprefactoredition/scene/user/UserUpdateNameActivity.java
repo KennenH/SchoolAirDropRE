@@ -19,15 +19,33 @@ import androidx.lifecycle.ViewModelProvider;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
+import java.lang.reflect.InvocationTargetException;
+
+import javadz.beanutils.BeanUtils;
+
 public class UserUpdateNameActivity extends ImmersionStatusBarActivity implements View.OnClickListener {
 
-    public static void startForResult(Context context, Bundle bundle) {
+    /**
+     * @param token 验证信息
+     * @param info  我的信息
+     */
+    public static void start(Context context, DomainAuthorize token, Object info) {
+        if (token == null) return;
+
+        DomainBaseUserInfo my = new DomainBaseUserInfo();
+
+        try {
+            BeanUtils.copyProperties(my, info);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
         Intent intent = new Intent(context, UserUpdateNameActivity.class);
-        intent.putExtras(bundle);
+        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
+        intent.putExtra(ConstantUtil.KEY_USER_INFO, my);
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).startActivityForResult(intent, UserActivity.REQUEST_UPDATE);
         }
@@ -44,7 +62,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
     private Bundle bundle;
 
     private DomainAuthorize token;
-    private DomainUserInfo.DataBean info;
+    private DomainBaseUserInfo info;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +85,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
             bundle = new Bundle();
 
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
 
         init();
     }
@@ -98,7 +116,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
             bundle = new Bundle();
 
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-        info = ((DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO));
+        info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
         if (info != null) name = info.getUname();
         mInput.setText(name);
         mInput.setSelection(name.length());

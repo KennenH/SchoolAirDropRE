@@ -19,11 +19,12 @@ import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.user.fragment.UserAvatarViewModel;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
+import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
@@ -33,7 +34,10 @@ import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.lxj.xpopup.impl.LoadingPopupView;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+
+import javadz.beanutils.BeanUtils;
 
 import static com.example.schoolairdroprefactoredition.scene.user.UserActivity.REQUEST_UPDATE;
 
@@ -42,6 +46,27 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
     public static void startForResult(Context context, Bundle bundle) {
         Intent intent = new Intent(context, UserUpdateAvatarActivity.class);
         intent.putExtras(bundle);
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_UPDATE);
+        }
+    }
+
+    /**
+     * @param token 验证信息
+     * @param info  我的用户信息
+     */
+    public static void start(Context context, DomainAuthorize token, Object info) {
+        if (token == null) return;
+
+        DomainBaseUserInfo my = new DomainBaseUserInfo();
+        try {
+            BeanUtils.copyProperties(my, info);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        Intent intent = new Intent(context, UserUpdateAvatarActivity.class);
+        intent.putExtra(ConstantUtil.KEY_USER_INFO, my);
+        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_UPDATE);
         }
@@ -58,7 +83,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
 
     private Bundle bundle;
 
-    private DomainUserInfo.DataBean info;
+    private DomainBaseUserInfo info;
     private DomainAuthorize token;
 
 
@@ -78,7 +103,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
             bundle = new Bundle();
 
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
 
         mAvatar = findViewById(R.id.avatar);
         mAvatar.setOnLongClickListener(this);
@@ -89,6 +114,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
     private void init() {
         try {
             mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
+            ImageUtil.loadImage(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
         } catch (NullPointerException e) {
             LogUtils.d("info null");
         }
@@ -175,8 +201,8 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
     }
 
     private void updateAvatar(String avatarUrl) {
-        dismissLoading();
-        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successAvatar);
+        dismissLoading(() ->
+                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successAvatar));
         try {
             mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + avatarUrl);
             info.setUser_img_path(avatarUrl);
@@ -198,7 +224,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
                 mDialog.dismiss();
                 break;
             case R.id.select_from_album:
-                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, new ArrayList<>(), 1, true, true);
+                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, 1, true, true);
                 mDialog.dismiss();
                 break;
             case R.id.save_to_album:
@@ -216,8 +242,9 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
 
     @Override
     public void onError() {
-        runOnUiThread(this::dismissLoading);
-        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
+        runOnUiThread(() -> dismissLoading(() ->
+                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
+        ));
     }
 
     private void showLoading() {
@@ -227,8 +254,8 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
         mLoading.show();
     }
 
-    private void dismissLoading() {
+    private void dismissLoading(Runnable task) {
         if (mLoading != null)
-            mLoading.dismiss();
+            mLoading.dismissWith(task);
     }
 }

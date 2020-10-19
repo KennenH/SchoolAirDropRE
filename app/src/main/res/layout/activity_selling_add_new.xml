@@ -118,42 +118,44 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <LinearLayout
+                <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cover_wrapper"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/general_padding_small"
-                    android:padding="@dimen/general_padding_large"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cover_title">
 
-                    <com.facebook.drawee.view.SimpleDraweeView
+                    <com.example.schoolairdroprefactoredition.ui.components.AddPicItem
                         android:id="@+id/cover"
-                        android:layout_width="@dimen/home_item_image"
-                        android:layout_height="@dimen/home_item_image"
-                        app:placeholderImage="@drawable/bg_add_pic"
-                        app:roundedCornerRadius="@dimen/general_padding_small" />
-                </LinearLayout>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
 
                 <TextView
                     android:id="@+id/pic_set_title"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_padding_bit_larger"
                     android:layout_marginTop="@dimen/general_padding_small"
-                    android:layout_marginEnd="@dimen/general_padding_bit_larger"
-                    android:layout_marginBottom="@dimen/general_padding_small"
+                    android:drawablePadding="@dimen/general_padding_small"
                     android:ellipsize="end"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
                     android:text="@string/picSet"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
+                    app:drawableEndCompat="@drawable/ic_importance"
+                    app:layout_constraintStart_toStartOf="@+id/cover_title"
                     app:layout_constraintTop_toBottomOf="@id/cover_wrapper" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/pic_set"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/home_item_image"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/general_padding_bit_larger"
                     android:clipChildren="false"
                     android:clipToPadding="false"

@@ -11,24 +11,43 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.user.fragment.UserFragment;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+
+import java.lang.reflect.InvocationTargetException;
+
+import javadz.beanutils.BeanUtils;
 
 public class UserActivity extends TransactionBaseActivity implements FragmentManager.OnBackStackChangedListener {
     public static final int REQUEST_UPDATE = 520;
 
     /**
-     * @param isModifiable 信息是否可修改 只有在
-     *                     {@link com.example.schoolairdroprefactoredition.scene.main.my.MyFragment}
-     *                     中进入自己的个人信息页才可修改
+     * 两个参数的Bean类需要 直接 包含用户基本信息的域和get set方法
+     *
+     * @param isMyOwnPageAndModifiable 是否可修改
+     *                                 只有在{@link com.example.schoolairdroprefactoredition.scene.main.my.MyFragment}
+     *                                 中进入自己的个人信息页才可修改
+     * @param token                    验证信息
+     * @param thisPersonInfo           这个人的信息
      */
-    public static void startForResult(Context context, Bundle bundle, boolean isModifiable) {
+    public static void start(Context context, boolean isMyOwnPageAndModifiable, DomainAuthorize token, Object thisPersonInfo) {
+        if (thisPersonInfo == null) return;
+
+        DomainBaseUserInfo thisPerson = new DomainBaseUserInfo();
+        try {
+            BeanUtils.copyProperties(thisPerson, thisPersonInfo);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
         Intent intent = new Intent(context, UserActivity.class);
-        intent.putExtras(bundle);
-        intent.putExtra(ConstantUtil.KEY_INFO_MODIFIABLE, isModifiable);
-        ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_UPDATE);
+        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
+        intent.putExtra(ConstantUtil.KEY_USER_INFO, thisPerson);
+        intent.putExtra(ConstantUtil.KEY_INFO_MODIFIABLE, isMyOwnPageAndModifiable);
+        if (context instanceof AppCompatActivity)
+            ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_UPDATE);
     }
 
     private OnUserInfoUpdatedListener mOnUserInfoUpdatedListener;
@@ -57,14 +76,14 @@ public class UserActivity extends TransactionBaseActivity implements FragmentMan
                     bundle = data.getExtras();
                     if (bundle != null) {
                         mOnUserInfoUpdatedListener
-                                .onUpdated((DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO));
+                                .onUpdated(bundle.getSerializable(ConstantUtil.KEY_USER_INFO));
                     }
                 }
         }
     }
 
     public interface OnUserInfoUpdatedListener {
-        void onUpdated(DomainUserInfo.DataBean info);
+        void onUpdated(Object info);
     }
 
     public void setOnUserInfoUpdateListener(OnUserInfoUpdatedListener listener) {

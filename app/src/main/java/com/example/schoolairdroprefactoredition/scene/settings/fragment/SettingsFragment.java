@@ -202,7 +202,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     @Override
     public void onLoginError() {
         if (mLoading != null)
-            mLoading.dismiss();
+            mLoading.smartDismiss();
 
         DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLogin);
     }

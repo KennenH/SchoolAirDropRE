@@ -162,7 +162,7 @@
     <string name="GRANTPERMISSION">GRANT PERMISSION</string>
     <string name="RETRY">RE-TRY</string>
     <string name="logged">Logged</string>
-    <string name="app_name_with_icon">[img src=ic_logo/] SchoolAirDrop</string>
+    <string name="app_name_with_icon">[img src=ic_logo_alpha_24/] SchoolAirDrop</string>
     <string name="networkUnavailable">Network connection is unavailable\\nPlease check network connection</string>
     <string name="connectionLost">Connection lost, please try again</string>
     <string name="submitSuccess">Success</string>
@@ -217,4 +217,8 @@
     <string name="itemS">[img src=ic_secondhand_en/] %s</string>
     <string name="itemSs">[img src=ic_secondhand_en_small/] %s</string>
     <string name="loading">Loading…</string>
+    <string name="statistic">Total</string>
+    <string name="modifySuccess">Success</string>
+    <string name="modifyFailed">Failed</string>
+    <string name="gettingGoodsLocation">Locating item</string>
 </resources>

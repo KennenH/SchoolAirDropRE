@@ -7,10 +7,10 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ComponentUserInfoBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
@@ -34,26 +34,14 @@ public class UserHomeBaseInfo extends ConstraintLayoutAuto implements View.OnCli
         binding.userAvatar.setOnClickListener(this);
     }
 
-    public void setUserBaseInfo(DomainUserInfo.DataBean info) {
+    public void setUserBaseInfo(DomainBaseUserInfo info) {
         try {
             Glide.with(getContext())
                     .load(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path())
                     .circleCrop()
-                    .encodeQuality(80)
+                    .apply(new RequestOptions().placeholder(R.drawable.placeholder_round).override(200, 200))
                     .into(binding.userAvatar);
             binding.userName.setText(info.getUname());
-        } catch (NullPointerException e) {
-        }
-    }
-
-    public void setUserBaseInfo(DomainGoodsInfo.DataBean info) {
-        try {
-            Glide.with(getContext())
-                    .load(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getSeller_info().getUser_img_path())
-                    .circleCrop()
-                    .encodeQuality(80)
-                    .into(binding.userAvatar);
-            binding.userName.setText(info.getSeller_info().getUname());
         } catch (NullPointerException e) {
         }
     }

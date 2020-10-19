@@ -48,6 +48,11 @@ public class SSBViewModel extends BaseStateViewModel implements ISSBCallback {
         return mUnListItemResult;
     }
 
+    public LiveData<DomainGoodsInfo> getSellingByID(int userID) {
+        ssbImpl.getSellingByUID(userID);
+        return mSellingBeans;
+    }
+
     @Override
     public void onSellingListLoaded(DomainGoodsInfo selling) {
         mSellingBeans.postValue(selling);

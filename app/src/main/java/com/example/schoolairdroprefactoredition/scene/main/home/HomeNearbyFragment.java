@@ -58,11 +58,6 @@ public class HomeNearbyFragment extends BaseChildFragment
 
         initRecycler();
 
-        if (mLocation == null) {
-            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
-            locateWithoutRequest();// 自动请求MainActivity的定位}
-        }
-
         return binding.getRoot();
     }
 

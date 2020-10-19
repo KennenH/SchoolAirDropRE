@@ -109,6 +109,7 @@
         android:inputType="numberDecimal"
         android:paddingStart="@dimen/general_padding_even_larger"
         android:paddingEnd="@dimen/general_padding_even_larger"
+        android:textColor="@color/colorAccentDark"
         android:textSize="@dimen/textSizeLarger"
         app:layout_constraintBottom_toBottomOf="@id/quote_title"
         app:layout_constraintEnd_toEndOf="parent"

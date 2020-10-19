@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.amap.api.location.AMapLocation;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
-import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
@@ -24,9 +23,10 @@ import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecor
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
-import org.jetbrains.annotations.NotNull;
-
-public class HomeNewsFragment extends BaseChildFragment implements OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener, BaseStateViewModel.OnRequestListener, MainActivity.OnLoginStateChangedListener, MainActivity.OnLocationListener, HomeNewsRecyclerAdapter.OnNoMoreDataListener {
+public class HomeNewsFragment extends BaseChildFragment implements
+        OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener,
+        BaseStateViewModel.OnRequestListener, MainActivity.OnLoginStateChangedListener,
+        MainActivity.OnLocationListener, HomeNewsRecyclerAdapter.OnNoMoreDataListener {
     private FragmentHomeContentBinding binding;
     private HomeNewsFragmentViewModel homeContentFragmentViewModel;
 
@@ -35,8 +35,6 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     private StaggeredGridLayoutManager mManager;
 
     private AMapLocation mLocation;
-
-    private static boolean requested = false; // 只在第一个新闻页加载时询问权限
 
     public static HomeNewsFragment newInstance() {
         return new HomeNewsFragment();
@@ -57,12 +55,6 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
         homeContentFragmentViewModel.setOnRequestListener(this);
 
         initRecycler();
-
-        if (mLocation == null && !requested) {
-            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
-            locate(PermissionBaseActivity.RequestType.AUTO);// 自动请求MainActivity的定位}
-            requested = true;
-        }
 
         return binding.getRoot();
     }
@@ -136,7 +128,7 @@ public class HomeNewsFragment extends BaseChildFragment implements OnRefreshList
     }
 
     @Override
-    public void onLoginStateChanged(@NotNull Bundle bundle) {
+    public void onLoginStateChanged() {
 
     }
 

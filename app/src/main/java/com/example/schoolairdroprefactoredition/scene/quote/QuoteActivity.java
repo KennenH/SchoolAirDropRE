@@ -6,17 +6,13 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.viewpager.widget.ViewPager;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivityTabBinding;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.QuotePagerAdapter;
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.google.android.material.tabs.TabLayout;
 
 import static androidx.fragment.app.FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT;
 
@@ -24,7 +20,7 @@ public class QuoteActivity extends ImmersionStatusBarActivity {
 
     public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, QuoteActivity.class);
-        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, bundle);
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 
@@ -36,7 +32,6 @@ public class QuoteActivity extends ImmersionStatusBarActivity {
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
         binding.name.setText(R.string.quote);
-
         binding.pager.setAdapter(new QuotePagerAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, this));
         binding.tab.setTabIndicatorFullWidth(false);
         binding.tab.setupWithViewPager(binding.pager);

@@ -19,9 +19,9 @@
             android:layout_marginTop="@dimen/general_padding_large"
             android:contentDescription="@string/avatar"
             android:scaleType="centerCrop"
+            app:actualImageResource="@drawable/ic_user"
             app:layout_constraintStart_toStartOf="@+id/goods_avatar"
             app:layout_constraintTop_toTopOf="parent"
-            app:placeholderImage="@drawable/user_3x"
             app:roundedCornerRadius="@dimen/general_padding_small" />
 
         <TextView
@@ -43,7 +43,6 @@
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/pending"
             android:textColor="@color/black"
             app:layout_constraintBottom_toBottomOf="@+id/user_name"
             app:layout_constraintEnd_toEndOf="@+id/goods_title"
@@ -67,7 +66,7 @@
             android:layout_marginTop="@dimen/general_padding_large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/line0"
-            app:placeholderImage="@drawable/bg_item_img_placeholder"
+            app:placeholderImage="@drawable/placeholder_rounded"
             app:roundedCornerRadius="@dimen/general_padding_tiny" />
 
         <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
@@ -77,14 +76,14 @@
             android:layout_marginStart="@dimen/general_padding_large"
             android:layout_marginEnd="@dimen/general_padding_bit_larger"
             android:ellipsize="end"
-            android:gravity="center_vertical|start"
+            android:gravity="start"
             android:lines="2"
-            android:text="[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] 华为 MateBookX 一年 7成新 物美价廉 买不了吃亏买不了上当"
             android:textColor="@color/black"
             android:textSize="@dimen/textSizeNormal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/goods_avatar"
-            app:layout_constraintTop_toTopOf="@+id/goods_avatar" />
+            app:layout_constraintTop_toTopOf="@+id/goods_avatar"
+            tools:text="[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] 华为 MateBookX " />
 
         <TextView
             android:id="@+id/goods_price_text"
@@ -101,7 +100,6 @@
             android:id="@+id/goods_origin_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="$109.0"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/textSizeNormal"
             android:textStyle="bold"
@@ -127,7 +125,6 @@
             android:layout_marginTop="@dimen/general_padding_large"
             android:layout_marginBottom="@dimen/general_padding_bit_larger"
             android:autoSizeMaxTextSize="@dimen/textSizeLarge"
-            android:text="$1024.0"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/textSizeLarge"
             android:textStyle="bold"

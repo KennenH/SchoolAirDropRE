@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.BarUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.ui.adapter.CreditRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -30,6 +30,9 @@ import com.jaeger.library.StatusBarUtil;
 
 public class CreditActivity extends AppCompatActivity {
 
+    /**
+     * @deprecated
+     */
     public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, CreditActivity.class);
         intent.putExtra(ConstantUtil.KEY_USER_INFO, bundle.getSerializable(ConstantUtil.KEY_USER_INFO));
@@ -77,7 +80,7 @@ public class CreditActivity extends AppCompatActivity {
     private CreditRecyclerAdapter mAdapter;
 
     private Bundle bundle;
-    private DomainUserInfo.DataBean info;
+    private DomainBaseUserInfo info;
     private DomainAuthorize token;
 
     @Override
@@ -89,7 +92,7 @@ public class CreditActivity extends AppCompatActivity {
 
         bundle = getIntent().getExtras();
         if (bundle == null) bundle = new Bundle();
-        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
 
         Toolbar toolbar = findViewById(R.id.toolbar);

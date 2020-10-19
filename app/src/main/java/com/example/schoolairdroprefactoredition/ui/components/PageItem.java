@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.CheckBox;
 import android.widget.ImageView;
-import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.appcompat.widget.SwitchCompat;
@@ -16,6 +15,7 @@ import androidx.core.content.res.ResourcesCompat;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 
 public class PageItem extends ConstraintLayout {
@@ -145,7 +145,10 @@ public class PageItem extends ConstraintLayout {
     }
 
     public void setIconImage(String url) {
-        mIconView.setImageURI(url);
+        if (isIconLarge)
+            ImageUtil.loadRoundedImage(mIconView, url);
+        else
+            mIconView.setImageURI(url);
     }
 
     public void setDescription(String description) {

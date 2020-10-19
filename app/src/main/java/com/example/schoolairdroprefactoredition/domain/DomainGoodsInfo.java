@@ -83,6 +83,11 @@ public class DomainGoodsInfo implements Serializable {
         private String goods_description;
         private SellerInfoBean seller_info;
 
+        private int quote_id;
+        private String sender_id;
+        private String quote_price;
+        private int state;
+
         public String getGoods_name() {
             return goods_name;
         }
@@ -163,6 +168,38 @@ public class DomainGoodsInfo implements Serializable {
             this.goods_description = goods_description;
         }
 
+        public int getQuote_id() {
+            return quote_id;
+        }
+
+        public void setQuote_id(int quote_id) {
+            this.quote_id = quote_id;
+        }
+
+        public String getSender_id() {
+            return sender_id;
+        }
+
+        public void setSender_id(String sender_id) {
+            this.sender_id = sender_id;
+        }
+
+        public String getQuote_price() {
+            return quote_price;
+        }
+
+        public void setQuote_price(String quote_price) {
+            this.quote_price = quote_price;
+        }
+
+        public int getState() {
+            return state;
+        }
+
+        public void setState(int state) {
+            this.state = state;
+        }
+
         public SellerInfoBean getSeller_info() {
             return seller_info;
         }
@@ -188,7 +225,6 @@ public class DomainGoodsInfo implements Serializable {
              * credit_num : 2
              * user_img_path : /assets/user/avatars/15_20200923145227.jpg
              */
-
 
 
             private int uid;

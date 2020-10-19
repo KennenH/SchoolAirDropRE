@@ -19,11 +19,17 @@ import androidx.viewpager.widget.ViewPager;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivitySsbBinding;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
-import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SSBBaseFragment;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBPagerAdapter;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+
+import java.lang.reflect.InvocationTargetException;
+
+import javadz.beanutils.BeanUtils;
 
 public class SSBActivity extends ImmersionStatusBarActivity implements View.OnClickListener, SSBPagerAdapter.OnSSBDataLenChangedIntermediaryListener {
 
@@ -31,26 +37,42 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
     public static final int SOLD = R.string.sold;
     public static final int BOUGHT = R.string.purchased;
 
-    public static final String PAGE_INDEX = "SSBPageIndex";
+    public static final String PAGE_INDEX = "SSBPage?Index";
 
     private OnLoginStateChangeListener mOnLoginStateChangeListener;
-
     private OnChangedToSellingListener mOnChangedToSellingListener;
     private OnChangedToSoldListener mOnChangedToSoldListener;
     private OnChangedToBoughtListener mOnChangedToBoughtListener;
 
-    public static void start(Context context, Bundle bundle) {
+    /**
+     * 三种页面进入方式
+     * 1、未登录 没有token
+     * 2、登录查看自己的页面 有token
+     * 3、登录查看他人的页面 有token
+     */
+    public static void start(Context context, DomainAuthorize token, Object info, int page, boolean isMine) {
+        if (info == null) return;
+        DomainBaseUserInfo userInfo = new DomainBaseUserInfo();
+        try {
+            BeanUtils.copyProperties(userInfo, info);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
         Intent intent = new Intent(context, SSBActivity.class);
-        intent.putExtras(bundle);
+        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
+        intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo);
+        intent.putExtra(PAGE_INDEX, page);
+        intent.putExtra(ConstantUtil.KEY_IS_MINE, isMine);
 
         if (context instanceof AppCompatActivity)
-            ((MainActivity) context).startActivityForResult(intent, LoginActivity.LOGIN);
+            ((AppCompatActivity) context).startActivityForResult(intent, LoginActivity.LOGIN);
         else
             context.startActivity(intent);
     }
 
     private ActivitySsbBinding binding;
     private SSBPagerAdapter mPagerAdapter;
+    private boolean isMine = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +86,8 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
         binding.ssbTitle.setOnClickListener(this);
 
         Intent intent = getIntent();
+        isMine = intent.getBooleanExtra(ConstantUtil.KEY_IS_MINE, isMine);
         int index = intent.getIntExtra(PAGE_INDEX, 0);
-        mPagerAdapter = new SSBPagerAdapter(this,getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        mPagerAdapter.setOnSSBDataLenChangedIntermediaryListener(this);
         binding.ssbSearch.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus)
                 KeyboardUtils.showSoftInput(v);
@@ -106,9 +127,17 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
             public void onPageScrollStateChanged(int state) {
             }
         });
+
+        mPagerAdapter = new SSBPagerAdapter(this,
+                getSupportFragmentManager(),
+                FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, isMine);
+        mPagerAdapter.setOnSSBDataLenChangedIntermediaryListener(this);
+
         binding.ssbPager.setOffscreenPageLimit(2);
         binding.ssbPager.setAdapter(mPagerAdapter);
-        binding.ssbPager.post(() -> binding.ssbPager.setCurrentItem(index));
+        binding.ssbPager.post(() -> {
+            if (!isMine) binding.ssbPager.setCurrentItem(index);
+        });
     }
 
     @Override

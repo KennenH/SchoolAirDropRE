@@ -6,4 +6,8 @@ public interface IQuoteSectionsPresenter extends IBasePresenter<IQuoteSectionsCa
     void getReceivedQuote(String token);
 
     void getSentQuote(String token);
+
+    void acceptQuote(String token, int quoteID);
+
+    void refuseQuote(String token, int quoteID);
 }

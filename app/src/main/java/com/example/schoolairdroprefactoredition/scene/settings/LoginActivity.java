@@ -56,6 +56,8 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
 
     private Intent intent;
 
+    private boolean isLogging; // 正在进行登录请求
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -117,10 +119,13 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
             // 请求公钥与sessionID
             showLoading();
             if (NetworkUtils.isConnected()) {
-                loginWithAlipay();
+                if (!isLogging) {
+                    isLogging = true;
+                    loginWithAlipay();
+                }
             } else {
-                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_NETWORK, R.string.dialogNetWorkError);
-                dismissLoading();
+                dismissLoading(() ->
+                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_NETWORK, R.string.dialogNetWorkError));
             }
 
         } else if (id == R.id.cancel) {
@@ -162,15 +167,16 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
         if (token != null) {
             showLoading();
             viewModel.getUserInfo(token.getAccess_token()).observe(this, info -> {
+                isLogging = false;
                 DomainUserInfo.DataBean userInfo = info.getData().get(0);
                 // token换取的user info
                 intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo);
 
                 setResult(Activity.RESULT_OK, intent);
-                dismissLoading();
-
-                finish();
-                AnimUtil.activityExitAnimDown(this);
+                dismissLoading(() -> {
+                    finish();
+                    AnimUtil.activityExitAnimDown(this);
+                });
             });
         } else
             DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
@@ -183,7 +189,8 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
 
     @Override
     public void onLoginError() {
-        dismissLoading();
-        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
+        isLogging = false;
+        dismissLoading(() ->
+                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLogin));
     }
 }

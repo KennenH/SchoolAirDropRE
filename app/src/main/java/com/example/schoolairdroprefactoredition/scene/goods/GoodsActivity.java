@@ -23,10 +23,10 @@ import com.example.schoolairdroprefactoredition.databinding.ActivityGoodsBinding
 import com.example.schoolairdroprefactoredition.databinding.SheetQuoteBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
+import com.example.schoolairdroprefactoredition.scene.main.my.MyViewModel;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.ui.components.ButtonDouble;
@@ -41,10 +41,25 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaeger.library.StatusBarUtil;
 
 public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonSingle.OnButtonClickListener, ButtonDouble.OnButtonClickListener, BaseStateViewModel.OnRequestListener, GoodsInfo.OnUserInfoClickListener {
-    public static void start(Context context, Bundle bundle, DomainGoodsInfo.DataBean goodsInfo) {
+
+    public static final String KEY_IS_FROM_SELLING = "fromSelling?";
+
+    /**
+     * 本页面中不存在KEY_USER_INFO
+     * 1、账号本人信息由KEY_AUTHORIZE从服务器获取，但是它可为空即在未登录状态查看物品信息
+     * 2、物品以及卖家信息由KEY_GOODS_INFO持有，不可以为空
+     *
+     * @param token         验证信息
+     * @param goodsInfo     物品信息,包含卖家信息
+     * @param isFromSelling 详见{@link GoodsInfo#hideSellerInfo()}
+     */
+    public static void start(Context context, DomainAuthorize token, DomainGoodsInfo.DataBean goodsInfo, boolean isFromSelling) {
+        if (goodsInfo == null) return;
+
         Intent intent = new Intent(context, GoodsActivity.class);
-        intent.putExtras(bundle);
         intent.putExtra(ConstantUtil.KEY_GOODS_INFO, goodsInfo);
+        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
+        intent.putExtra(KEY_IS_FROM_SELLING, isFromSelling);
 
         if (context instanceof AppCompatActivity)
             ((AppCompatActivity) context).startActivityForResult(intent, LoginActivity.LOGIN);
@@ -52,7 +67,8 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
             context.startActivity(intent);
     }
 
-    private GoodsViewModel viewModel;
+    private MyViewModel myViewModel;
+    private GoodsViewModel goodsViewModel;
 
     private ActivityGoodsBinding binding;
 
@@ -61,14 +77,18 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
     private Bundle bundle;
     private DomainAuthorize token;
     private DomainGoodsInfo.DataBean goodsInfo;
-    private DomainUserInfo.DataBean myInfo;
+
+    private boolean isNotMine = false;
+    private boolean isFavored = false;
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(this).get(GoodsViewModel.class);
-        viewModel.setOnRequestListener(this);
+        goodsViewModel = new ViewModelProvider(this).get(GoodsViewModel.class);
+        goodsViewModel.setOnRequestListener(this);
+        myViewModel = new ViewModelProvider(this).get(MyViewModel.class);
+
         binding = ActivityGoodsBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
 
@@ -80,27 +100,56 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
 
         bundle = getIntent().getExtras();
         if (bundle == null) bundle = new Bundle();
-        validateInfo();
+
+        binding.goodsButtonLeft.setVisibility(View.GONE);
+        binding.goodsButtonRight.setVisibility(View.GONE);
 
         binding.goodsInfoContainer.setOnUserInfoClickListener(this);
         binding.goodsButtonLeft.setOnButtonClickListener(this);
         binding.goodsButtonRight.setOnButtonClickListener(this);
+
+        validateInfo();
     }
 
     /**
-     * 若为自己的物品则将页面底部的三个按钮隐藏
+     * 有效化登录状态等页面信息
      */
     private void validateInfo() {
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
         goodsInfo = (DomainGoodsInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_GOODS_INFO);
-        myInfo = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        if (bundle.getBoolean(KEY_IS_FROM_SELLING))
+            binding.goodsInfoContainer.hideSellerInfo();
 
-        if (isMine()) {
-            binding.goodsButtonLeft.setVisibility(View.GONE);
-            binding.goodsButtonRight.setVisibility(View.GONE);
-            binding.goodsInfoContainer.hideBottom();
-        }
+        if (token != null && goodsInfo.getSeller_info() != null) {
+            checkIfItemFavored();
+            myViewModel.getUserInfo(token.getAccess_token()).observe(this, data -> {
+                isNotMine = data.getData().get(0).getUid() != goodsInfo.getSeller_info().getUid();
+
+                if (isNotMine) {
+                    binding.goodsButtonLeft.setVisibility(View.VISIBLE);
+                    binding.goodsButtonRight.setVisibility(View.VISIBLE);
+                    binding.goodsInfoContainer.showBottom();
+                }
+                binding.goodsInfoContainer.stopShimming();
+            });
+        } else binding.goodsInfoContainer.stopShimming();
+
         binding.goodsInfoContainer.setData(goodsInfo);
+    }
+
+    /**
+     * 检查物品是否被收藏
+     */
+    private void checkIfItemFavored() {
+        if (token != null && goodsInfo != null)
+            goodsViewModel.isItemFavored(token.getAccess_token(), goodsInfo.getGoods_id()).observe(this, isItemFavored -> {
+                isFavored = isItemFavored;
+                if (isItemFavored)
+                    binding.goodsButtonRight.setFavor(true);
+                else
+                    binding.goodsButtonRight.setFavor(false);
+            });
+        binding.goodsInfoContainer.stopShimming();
     }
 
     /**
@@ -128,39 +177,25 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
     }
 
     /**
-     * 判断是否为自己的物品
-     * 若是，则隐藏三个按钮以及下面的留白
-     * <p>
-     * 不隐藏的情况:
-     * 页面个人信息为空
-     * 卖家与个人信息不为空 但 卖家信息uid与个人信息uid不一致
-     */
-    private boolean isMine() {
-        if (token != null) {
-            if (myInfo != null)
-                return goodsInfo == null ||
-                        goodsInfo.getSeller_info() == null ||
-                        goodsInfo.getSeller_info().getUid() == myInfo.getUid();
-        }
-        return false;
-    }
-
-    /**
      * 发起报价
      */
     private void quote(String input) {
         if (token == null) {
             login();
         } else {
-            if (goodsInfo != null && !isMine()) {
+            if (goodsInfo != null && isNotMine) {
                 showLoading();
-                viewModel.quoteRequest(token.getAccess_token(), goodsInfo.getGoods_id(), input)
-                        .observe(this, result -> {
-                            dismissLoading();
+                goodsViewModel.quoteRequest(token.getAccess_token(), goodsInfo.getGoods_id(), input)
+                        .observe(this, result -> dismissLoading(() -> {
+                            if (dialog != null)
+                                dialog.dismiss();
                             DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successQuote);
-                        });
-            } else
+                        }));
+            } else {
+                if (dialog != null)
+                    dialog.dismiss();
                 DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
+            }
         }
     }
 
@@ -173,7 +208,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
     }
 
     /**
-     * 收藏物品
+     * 收藏或取消收藏物品
      */
     @Override
     public void onLeftButtonClick() {
@@ -181,14 +216,8 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
             login();
         } else {
             if (goodsInfo != null) {
-                showLoading();
-                viewModel.favoriteItem(token.getAccess_token(), goodsInfo.getGoods_id())
-                        .observe(this, result -> {
-                            dismissLoading();
-                            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successFavorite);
-                        });
-            } else
-                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
+                binding.goodsButtonRight.toggleFavor();
+            }
         }
     }
 
@@ -206,6 +235,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                 dialog.setContentView(binding.getRoot());
 
                 try {
+                    binding.originPrice.setText(goodsInfo.getGoods_price());
                     binding.title.setOnClickListener(v -> {
                         binding.quotePrice.clearFocus();
                         KeyboardUtils.hideSoftInput(v);
@@ -265,6 +295,22 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
         }
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        try {
+            if (isFavored != binding.goodsButtonRight.getIsFavored()) {
+                if (binding.goodsButtonRight.getIsFavored()) {
+                    goodsViewModel.favoriteItem(token.getAccess_token(), goodsInfo.getGoods_id());
+                } else {
+                    goodsViewModel.unFavorItem(token.getAccess_token(), goodsInfo.getGoods_id());
+                }
+            }
+        } catch (NullPointerException ignored) {
+        }
+    }
+
     /**
      * 发送消息
      */
@@ -278,7 +324,8 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
 
     @Override
     public void onError() {
-        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
+        binding.goodsInfoContainer.stopShimming();
+        dismissLoading(() -> DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed));
     }
 
     /**
@@ -286,6 +333,6 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      */
     @Override
     public void onUserInfoClick(View view) {
-        UserActivity.startForResult(this, bundle, false);
+        UserActivity.start(this, false, token, goodsInfo.getSeller_info());
     }
 }

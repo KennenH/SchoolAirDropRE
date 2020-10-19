@@ -1,5 +1,9 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
+import android.content.Context;
+
+import androidx.annotation.Nullable;
+
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.model.Api;
@@ -8,6 +12,7 @@ import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ISellingAddNewPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISellingAddNewCallback;
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewDraftCache;
+import com.example.schoolairdroprefactoredition.utils.FileUtil;
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
 import com.luck.picture.lib.entity.LocalMedia;
 
@@ -20,8 +25,12 @@ import java.util.List;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import retrofit2.Call;
+import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+
+import static com.example.schoolairdroprefactoredition.utils.FileUtil.createFileWithPath;
 
 public class SellingAddNewImpl implements ISellingAddNewPresenter {
 
@@ -33,17 +42,20 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
                        String name, String description,
                        double longitude, double latitude,
                        boolean isBrandNew, boolean isQuotable,
-                       float price) {
+                       float price, Context context) {
 
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
 
         List<MultipartBody.Part> goodsSet = new ArrayList<>();
         int i = 0;
-        goodsSet.add(createFileWithPath("goods_img_set" + i++, cover));
         for (String pic : picSet)
-            if (!cover.equals(pic)) goodsSet.add(createFileWithPath("goods_img_set" + i++, pic));
-        MultipartBody.Part goodsCover = createFileWithPath("goods_img_cover", cover);
+            goodsSet.add(createFileWithPath(context, "goods_img_set" + i++, pic, true));
+
+        MultipartBody.Part goodsCover = createFileWithPath(context, "goods_img_cover", cover, true);
+        if (goodsCover == null && mCallback != null)
+            mCallback.onAddNewItemError();
+
         MultipartBody.Part goodsName = MultipartBody.Part.createFormData("goods_name", name);
         MultipartBody.Part goodsDes = MultipartBody.Part.createFormData("goods_description", description);
         MultipartBody.Part goodsLongitude = MultipartBody.Part.createFormData("goods_longitude", String.valueOf(longitude));
@@ -61,16 +73,19 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
                 int code = response.code();
                 if (code == HttpURLConnection.HTTP_OK) {
                     DomainResult body = response.body();
-                    if (body != null)
 
 //                    try {
-//                        LogUtils.d(body.string());
+//                        LogUtils.d(response.body().string());
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
 
-                        if (mCallback != null)
+                    if (mCallback != null)
+                        if (body != null) {
                             mCallback.onSubmitResult(body);
+                        } else {
+                            mCallback.onAddNewItemError();
+                        }
                 } else {
                     try {
                         LogUtils.d(response.errorBody().string());
@@ -78,13 +93,14 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
                         e.printStackTrace();
                     }
                     if (mCallback != null)
-                        mCallback.onError();
+                        mCallback.onAddNewItemError();
                 }
             }
 
             @Override
             public void onFailureAllRetries() {
-                mCallback.onError();
+                if (mCallback != null)
+                    mCallback.onAddNewItemError();
             }
         });
     }
@@ -114,14 +130,14 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
         mCallback.onDraftRecovered(draft);
     }
 
-    /**
-     * 创建文件类型的Part
-     */
-    private MultipartBody.Part createFileWithPath(String key, String path) {
-        File file = new File(path);
-        RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
-        return MultipartBody.Part.createFormData(key, file.getName(), body);
-    }
+//    /**
+//     * 创建文件类型的Part
+//     */
+//    private MultipartBody.Part createFileWithPath(String key, String path) {
+//        File file = new File(path);
+//        RequestBody body = RequestBody.create(MediaType.parse("image/*"), file);
+//        return MultipartBody.Part.createFormData(key, file.getName(), body);
+//    }
 
     @Override
     public void registerCallback(ISellingAddNewCallback callback) {

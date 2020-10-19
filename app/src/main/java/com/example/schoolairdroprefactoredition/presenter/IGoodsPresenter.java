@@ -9,13 +9,23 @@ public interface IGoodsPresenter extends IBasePresenter<IGoodsCallback> {
      * @param goodsID    物品id
      * @param quotePrice 报价价格
      */
-    void quoteRequest(String token, String goodsID, String quotePrice);
+    void quoteItem(String token, String goodsID, String quotePrice);
 
     /**
      * 收藏物品
      *
      * @param goodsID 物品id
      */
-    void favorite(String token, String goodsID);
+    void favoriteItem(String token, String goodsID);
+
+    /**
+     * 查询物品是否被收藏
+     */
+    void isItemFavored(String token, String goodsID);
+
+    /**
+     * 取消收藏物品
+     */
+    void unFavorItem(String token, String goodsID);
 }
 

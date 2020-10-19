@@ -8,8 +8,8 @@
     <TextView
         android:id="@+id/dialog_txt"
         style="@style/DialogText"
+        android:drawablePadding="15dp"
         android:paddingTop="20dp"
         android:text="@string/dialogNetWorkError"
-        android:drawablePadding="15dp"
         app:drawableTopCompat="@drawable/ic_globle" />
 </LinearLayout>

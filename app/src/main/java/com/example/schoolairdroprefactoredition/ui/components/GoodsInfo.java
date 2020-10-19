@@ -5,8 +5,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 
-import com.blankj.utilcode.util.LogUtils;
-import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsDetailBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
@@ -35,14 +33,27 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
 
         binding.goodsAvatar.setOnClickListener(this);
         binding.goodsUserName.setOnClickListener(this);
+
+        binding.goodsBottom.setVisibility(GONE);
     }
 
     /**
      * 是否隐藏页面最底部为三个按钮的留白
      * 当为自己的物品时，三个按钮隐藏，留白也应该隐藏
      */
-    public void hideBottom() {
-        binding.goodsBottom.setVisibility(GONE);
+    public void showBottom() {
+        binding.goodsBottom.setVisibility(VISIBLE);
+    }
+
+    /**
+     * 隐藏卖家信息
+     * 从在售页面进入的物品界面要隐藏卖家信息
+     * 防止在查看他人在售列表时
+     * 点击物品 -> 点击用户 -> 点击在售 -> 再点击物品……
+     * 无限套娃访问
+     */
+    public void hideSellerInfo() {
+        binding.goodsSellerInfo.setVisibility(GONE);
     }
 
     public void setData(DomainGoodsInfo.DataBean data) {
@@ -61,18 +72,24 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
 
                 binding.goodsPrice.setPrice(data.getGoods_price());
                 binding.goodsDescription.setText(data.getGoods_description());
-                binding.goodsPager.setData(MyUtil.getArrayFromString(data.getGoods_img_cover().concat("&" + data.getGoods_img_set())));
+                binding.goodsPager.setData(MyUtil.getArrayFromString(data.getGoods_img_set()));
 
                 if (data.getSeller_info() != null) {
-                    ImageUtil.roundedImageLoad(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path(), SizeUtils.dp2px(8));
+                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path());
                     binding.goodsUserName.setText(data.getSeller_info().getUname());
                 } else binding.goodsSellerInfo.setVisibility(GONE);
-            } catch (NullPointerException e) {
-                LogUtils.d("goods info null");
-            } finally {
-                stopShimmer();
-                hideShimmer();
+            } catch (NullPointerException ignored) {
             }
+        }
+    }
+
+    /**
+     * 若仍在闪烁则停止闪烁
+     */
+    public void stopShimming() {
+        if (isShimmerVisible() || isShimmerStarted()) {
+            stopShimmer();
+            hideShimmer();
         }
     }
 

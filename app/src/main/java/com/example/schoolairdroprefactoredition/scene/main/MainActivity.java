@@ -18,6 +18,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
@@ -33,8 +34,7 @@ import com.example.schoolairdroprefactoredition.scene.settings.fragment.Settings
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-
-import org.jetbrains.annotations.NotNull;
+import com.mob.pushsdk.MobPush;
 
 import me.jessyan.autosize.AutoSizeCompat;
 
@@ -92,6 +92,8 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(this);
         navView.setSelectedItemId(R.id.navigation_box);
+
+        MobPush.getRegistrationId(LogUtils::d);
     }
 
     /**
@@ -155,7 +157,6 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
         if (fragment.isHidden() || !fragment.isAdded()) {
             mFragmentManager
                     .beginTransaction()
-                    // 添加新的tab时添加
                     .hide(mHome)
                     .hide(mMy)
                     .hide(mPurchase)
@@ -190,7 +191,7 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
                     if (data != null) {
                         bundle.putAll(data.getExtras());
                         if (mOnLoginStateChangedListener != null)
-                            mOnLoginStateChangedListener.onLoginStateChanged(bundle);
+                            mOnLoginStateChangedListener.onLoginStateChanged();
                     }
                     break;
                 case UserActivity.REQUEST_UPDATE: // 用户信息修改返回:
@@ -200,7 +201,7 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
                 case SettingsFragment.LOGOUT: // 退出登录返回:
                     bundle.clear();
                     if (mOnLoginStateChangedListener != null)
-                        mOnLoginStateChangedListener.onLoginStateChanged(bundle);
+                        mOnLoginStateChangedListener.onLoginStateChanged();
                     break;
                 default:
                     break;
@@ -246,7 +247,7 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
      * 退出登录后将本地token清除 同时清除页面用户信息
      */
     public interface OnLoginStateChangedListener {
-        void onLoginStateChanged(@NotNull Bundle bundle);
+        void onLoginStateChanged();
     }
 
     public void setOnLoginActivityListener(OnLoginStateChangedListener listener) {
@@ -266,9 +267,6 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
      * 使用既有的用户基本信息缓存获取token
      */
     private void autoReLoginWithCache() {
-
-        Toast.makeText(this, "token 已过期 正在尝试重新登录", Toast.LENGTH_SHORT).show();
-
         DomainUserInfo.DataBean info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
         if (info != null)
             loginViewModel.getPublicKey().observe(this, key -> {
@@ -301,7 +299,7 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
                 DomainUserInfo.DataBean userInfo = data.getData().get(0);
                 bundle.putSerializable(ConstantUtil.KEY_USER_INFO, userInfo);
                 if (mOnLoginStateChangedListener != null)
-                    mOnLoginStateChangedListener.onLoginStateChanged(bundle);
+                    mOnLoginStateChangedListener.onLoginStateChanged();
             });
         }
     }

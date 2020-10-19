@@ -11,23 +11,26 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentRecyclerBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainQuote;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.QuoteRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.QuoteDecoration;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
-public class QuoteFragment extends StatePlaceholderFragment implements BaseStateViewModel.OnRequestListener {
+public class QuoteFragment extends StatePlaceholderFragment implements BaseStateViewModel.OnRequestListener, QuoteRecyclerAdapter.OnQuoteActionListener {
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private static final int PAGE_RECEIVED = 0;
-    private static final int PAGE_SENT = 1;
+    public static final int PAGE_RECEIVED = 0;
+    public static final int PAGE_SENT = 1;
 
     private QuoteViewModel viewModel;
 
@@ -36,6 +39,8 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
     private FragmentRecyclerBinding binding;
 
     private QuoteRecyclerAdapter mAdapter;
+
+    private int unHandled;
 
     public static QuoteFragment newInstance(int index) {
         QuoteFragment fragment = new QuoteFragment();
@@ -56,15 +61,20 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
         if (getArguments() != null)
             index = getArguments().getInt(ARG_SECTION_NUMBER);
 
-        if (getActivity() != null)
-            mAdapter = new QuoteRecyclerAdapter(getActivity().getIntent().getExtras());
-        else
-            mAdapter = new QuoteRecyclerAdapter(new Bundle());
+        if (getActivity() != null) {
+            Bundle bundle = getActivity().getIntent().getExtras();
+            if (bundle != null)
+                bundle.putInt(ConstantUtil.FRAGMENT_NUM, index);
+            else
+                bundle = new Bundle();
+            mAdapter = new QuoteRecyclerAdapter(bundle);
+        }
 
+        mAdapter.setOnQuoteActionListener(this);
         LinearLayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         binding.recycler.setLayoutManager(manager);
+        binding.recycler.setAdapter(mAdapter);
 
-        showPlaceholder(StatePlaceHolder.TYPE_LOADING);
         getQuote();
 
         return binding.getRoot();
@@ -74,41 +84,47 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
      * 获取报价数据
      */
     private void getQuote() {
-        Bundle bundle = null;
-        DomainAuthorize token;
+        unHandled = 0;
 
-        if (getActivity() != null)
-            bundle = getActivity().getIntent().getExtras();
-
-        if (bundle != null)
-            token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-        else {
-            showPlaceholder(StatePlaceHolder.TYPE_ERROR);
-            return;
+        DomainAuthorize token = null;
+        try {
+            token = (DomainAuthorize) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
+        } catch (NullPointerException ignored) {
         }
 
         if (token != null) {
+            showPlaceholder(StatePlaceHolder.TYPE_LOADING);
             if (index == PAGE_RECEIVED) {
                 viewModel.getQuoteReceived(token.getAccess_token()).observe(getViewLifecycleOwner(), received -> {
-                    // 将排序后的报价列表分成两类
-                    mAdapter.setList(sortData(received));// 此处还未排序,排序使用sortData方法
-                    binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), received.size(), 2));
-                    binding.recycler.setAdapter(mAdapter);
+                    mAdapter.setList(sortDataByPrecess(received));
+                    binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), received.size(), unHandled));
+                    showContentContainer();
                 });
             } else {
                 viewModel.getQuoteSent(token.getAccess_token()).observe(getViewLifecycleOwner(), sent -> {
-                    // 同上
-                    mAdapter.setList(sortData(sent));
-                    binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), sent.size(), 5));
-                    binding.recycler.setAdapter(mAdapter);
+                    mAdapter.setList(sortDataByPrecess(sent));
+                    binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), sent.size(), unHandled));
+                    showContentContainer();
                 });
             }
-            showContentContainer();
         } else showPlaceholder(StatePlaceHolder.TYPE_ERROR);
     }
 
-    private List<DomainGoodsInfo.DataBean> sortData(List<DomainGoodsInfo.DataBean> data) {
-        return new ArrayList<>();
+    /**
+     * 将未处理的item至于列表最前
+     */
+    private List<DomainQuote.DataBean> sortDataByPrecess(List<DomainQuote.DataBean> data) {
+        List<DomainQuote.DataBean> unhandledList = new ArrayList<>();
+        for (Iterator<DomainQuote.DataBean> iterator = data.iterator(); iterator.hasNext(); ) {
+            DomainQuote.DataBean DataBean = iterator.next();
+            if (DataBean.getState() == ConstantUtil.QUOTE_STATE_UNHANDLED) {
+                unhandledList.add(DataBean);
+                iterator.remove();
+            }
+        }
+        data.addAll(0, unhandledList);
+        unHandled = unhandledList.size();
+        return data;
     }
 
     @Override
@@ -120,5 +136,47 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
     public void setContainerAndPlaceholder() {
         mStatePlaceholderFragmentContainer = binding.recycler;
         mStatePlaceholderFragmentPlaceholder = binding.placeholder;
+    }
+
+    @Override
+    public void onQuoteAccept(int quoteID) {
+        DomainAuthorize token = null;
+        try {
+            token = (DomainAuthorize) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
+        } catch (NullPointerException ignored) {
+        }
+
+        if (token != null) {
+            showLoading();
+            viewModel.acceptQuote(token.getAccess_token(), quoteID).observe(getViewLifecycleOwner(), success -> {
+                dismissLoading(() -> {
+                    DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.SUCCESS, R.string.accepted);
+                    getQuote();
+                });
+            });
+        } else {
+            DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
+        }
+    }
+
+    @Override
+    public void onQuoteRefuse(int quoteID) {
+        DomainAuthorize token = null;
+        try {
+            token = (DomainAuthorize) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
+        } catch (NullPointerException ignored) {
+        }
+
+        if (token != null) {
+            showLoading();
+            viewModel.refuseQuote(token.getAccess_token(), quoteID).observe(getViewLifecycleOwner(), success -> {
+                dismissLoading(() -> {
+                    DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.SUCCESS, R.string.rejected);
+                    getQuote();
+                });
+            });
+        } else {
+            DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
+        }
     }
 }

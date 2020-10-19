@@ -56,10 +56,7 @@ public class DomainUserInfo implements Serializable {
         /**
          * uid : 15
          * uname : user_15
-         * ugender : m
          * user_img_path : http://106.54.110.46/public/assets/user/avatars/default.jpg
-         * ualipay : 19858120611
-         * uphone : null
          * credit_num : 2
          * device_token : null
          */

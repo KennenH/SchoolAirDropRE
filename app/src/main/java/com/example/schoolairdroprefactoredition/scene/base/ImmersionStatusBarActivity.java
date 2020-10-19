@@ -43,6 +43,11 @@ public class ImmersionStatusBarActivity extends AppCompatActivity {
 
     protected void dismissLoading() {
         if (mLoading != null)
-            mLoading.dismiss();
+            mLoading.smartDismiss();
+    }
+
+    protected void dismissLoading(Runnable task) {
+        if (mLoading != null)
+            mLoading.dismissWith(task);
     }
 }

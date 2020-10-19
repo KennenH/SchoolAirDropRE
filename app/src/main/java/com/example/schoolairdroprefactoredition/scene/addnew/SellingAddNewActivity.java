@@ -3,8 +3,6 @@ package com.example.schoolairdroprefactoredition.scene.addnew;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -12,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -28,27 +27,30 @@ import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.KeyboardUtils;
-import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivitySellingAddNewBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.components.AddPicItem;
 import com.example.schoolairdroprefactoredition.utils.AnimUtil;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DecimalFilter;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
-import com.example.schoolairdroprefactoredition.utils.decoration.HorizontalItemMarginDecoration;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
+import com.lxj.xpopup.XPopup;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SellingAddNewActivity extends PermissionBaseActivity implements View.OnClickListener, AMapLocationListener, BaseStateViewModel.OnRequestListener {
+import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.TIP_ADD_NEW_FAILED;
+import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.TIP_ADD_NEW_SUCCESS;
+import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.TIP_MODIFY_FAILED;
+
+public class SellingAddNewActivity extends PermissionBaseActivity implements View.OnClickListener, AMapLocationListener, HorizontalImageRecyclerAdapter.OnPicSetClickListener, SellingAddNewViewModel.OnRequestListener {
 
     public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, SellingAddNewActivity.class);
@@ -63,6 +65,9 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                 AnimUtil.activityStartAnimUp((AppCompatActivity) context);
         }
     }
+
+    public static final String PAGE_CONVERT_TO_MODIFY = "?NOTAddNewBUTModify";
+    public static final int REQUEST_PAGE_CONVERT_TO_MODIFY = 666;// 请求码 修改信息而非新增
 
     public static final int REQUEST_CODE_COVER = 219;// 请求码 封面选择
     public static final int REQUEST_CODE_PIC_SET = 11;// 请求码 图片集选择
@@ -86,6 +91,9 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
 
     private boolean isDraftRestored = true;
     private boolean isSubmit = false;
+    private boolean hasDraft = false;
+
+    private boolean isAddNewMode; // 是否是新增而不是修改物品
 
     private static void startForLogin(Context context) {
         Intent intent = new Intent(context, SellingAddNewActivity.class);
@@ -106,12 +114,13 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         viewModel.setOnRequestListener(this);
 
         token = (DomainAuthorize) getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
+        isAddNewMode = getIntent().getIntExtra(SellingAddNewActivity.PAGE_CONVERT_TO_MODIFY, -1) != REQUEST_PAGE_CONVERT_TO_MODIFY;
 
+        binding.draftTipToggle.setText(isAddNewMode ? R.string.addNewSelling : R.string.modifyInfo);
         binding.savedDraft.setVisibility(View.GONE);
         binding.draftTipToggle.setOnClickListener(this);
         binding.draftAction.setOnClickListener(this);
         binding.savedClose.setOnClickListener(this);
-        binding.cover.setOnClickListener(this);
         binding.picSet.setOnClickListener(this);
         binding.optionTitle.setOnClickListener(this);
         binding.priceConfirm.setOnClickListener(this);
@@ -127,22 +136,56 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
 
         binding.priceInput.setFilters(new InputFilter[]{new DecimalFilter()});
         binding.picSet.setLayoutManager(new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false));
-        binding.picSet.addItemDecoration(new HorizontalItemMarginDecoration(SizeUtils.dp2px(5)));
-        ImageView add = new ImageView(this);
-        add.setLayoutParams(new LinearLayout.LayoutParams((int) getResources().getDimension(R.dimen.home_item_image), (int) getResources().getDimension(R.dimen.home_item_image)));
-        add.setImageResource(R.drawable.bg_add_pic);
-        add.setOnClickListener(v -> {
-            binding.picSetTitle.setText(getString(R.string.picSet));
-            binding.picSetTitle.setTextColor(Color.BLACK);
-            request = REQUEST_CODE_PIC_SET;
-            requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL);
+
+        //封面
+        binding.cover.setOnItemAddPicActionListener(new AddPicItem.OnItemAddPicActionListener() {
+            @Override
+            public void onClose() {
+                mCoverPath = "";
+                binding.cover.clearImage(true);
+            }
+
+            @Override
+            public void onItemClick() {
+                if (binding.cover.getImagePath() != null && !binding.cover.getImagePath().equals("")) {
+                    new XPopup.Builder(SellingAddNewActivity.this)
+                            .isDarkTheme(true)
+                            .isDestroyOnDismiss(true)
+                            .asImageViewer(binding.cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, new MyUtil.ImageLoader())
+                            .show();
+                } else {
+                    request = REQUEST_CODE_COVER;
+                    requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL);
+                }
+            }
         });
+        // 这是footer 不显示图片，仅作为相册选择图片的按钮
+        AddPicItem add = new AddPicItem(this);
+        add.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        add.setOnItemAddPicActionListener(new AddPicItem.OnItemAddPicActionListener() {
+            @Override
+            public void onClose() {
+                // do nothing
+            }
+
+            @Override
+            public void onItemClick() {
+                request = REQUEST_CODE_PIC_SET;
+                requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL);
+            }
+        });
+
         mAdapter = new HorizontalImageRecyclerAdapter();
+        mAdapter.setOnPicSetClickListener(this);
         mAdapter.addFooterView(add);
         binding.picSet.setAdapter(mAdapter);
 
         requestPermission(PermissionConstants.LOCATION, RequestType.AUTO);
-        restoreDraft();
+
+        if (isAddNewMode) // 若为新增物品则恢复上次草稿，否则初始化给进来的物品信息
+            restoreDraft();
+        else
+            initGoodsInfo();
     }
 
     @Override
@@ -171,9 +214,9 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     protected void albumGranted() {
         super.albumGranted();
         if (request == REQUEST_CODE_COVER)
-            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_COVER, new ArrayList<>(), 1, false, false);
+            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_COVER,  1, true, false);
         else if (request == REQUEST_CODE_PIC_SET)
-            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_PIC_SET, mPicSetSelected, 6, false, false);
+            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_PIC_SET, 8, false, false);
     }
 
     @Override
@@ -198,11 +241,11 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                     LocalMedia cover = PictureSelector.obtainMultipleResult(data).get(0);
                     String qPath = cover.getAndroidQToPath();
                     mCoverPath = qPath == null ? cover.getPath() : qPath;
-                    binding.cover.setImageURI(Uri.fromFile(new File(mCoverPath)));
+                    binding.cover.setImageLocalPath(mCoverPath);
                 }
             } else if (requestCode == REQUEST_CODE_PIC_SET) { // 图片集选择返回
                 if (data != null) {
-                    mPicSetSelected = PictureSelector.obtainMultipleResult(data);
+                    mPicSetSelected.addAll(PictureSelector.obtainMultipleResult(data));
                     mAdapter.setList(mPicSetSelected);
                 }
             } else if (requestCode == LoginActivity.LOGIN) { // 在本页面打开登录页面登录并返回
@@ -240,37 +283,45 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     private void submit() {
         if (checkFormIsLegal()) {
             try {
-                List<String> mPicSetPaths = new ArrayList<>();
-                for (LocalMedia localMedia : mPicSetSelected) {
-                    String qPath = localMedia.getAndroidQToPath();
-                    mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
-                }
+                if (isAddNewMode) { // 新增物品
+                    List<String> mPicSetPaths = new ArrayList<>();
+                    for (LocalMedia localMedia : mPicSetSelected) {
+                        String qPath = localMedia.getAndroidQToPath();
+                        mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
+                    }
 
-                if (token != null) {
-                    showLoading();
-                    viewModel.submit(token.getAccess_token(), mCoverPath, mPicSetPaths,
-                            binding.optionTitle.getText().toString(), binding.optionDescription.getText().toString(),
-                            mAmapLocation.getLongitude(), mAmapLocation.getLatitude(),
-                            binding.optionSecondHand.getIsSelected(), !binding.optionNegotiable.getIsSelected(),
-                            Float.parseFloat(binding.priceInput.getText().toString()))
-                            .observe(this, result -> {
-                                // 这里有一个bug 当提交响应失败后 再在同一个页面重试之后成功 将会多次弹出成功提示页面 但实际只提交成功了一次
-                                // 所以这里加一个标志变量 打开一次页面最多只能成功一次 因此成功后即不再弹出
-                                if (!isSubmit) {
-                                    dismissLoading();
+                    if (token != null) {
+                        if (mAmapLocation == null) {
+//                            dismissLoading(() ->
+                            AddNewResultActivity.start(this, false, AddNewResultActivity.TIP_ADD_NEW_LOCATION_FAILED);
+                        } else {
+                            showLoading();
+                            viewModel.submit(token.getAccess_token(), mCoverPath, mPicSetPaths,
+                                    binding.optionTitle.getText().toString(), binding.optionDescription.getText().toString(),
+                                    mAmapLocation.getLongitude(), mAmapLocation.getLatitude(),
+                                    binding.optionSecondHand.getIsSelected(), !binding.optionNegotiable.getIsSelected(),
+                                    Float.parseFloat(binding.priceInput.getText().toString()))
+                                    .observe(this, result -> {
+                                        // 这里有一个bug 当提交响应失败后 再在同一个页面重试之后成功 将会多次弹出成功提示页面 但实际只提交成功了一次
+                                        // 所以这里加一个标志变量 打开一次页面最多只能成功一次 因此成功后即不再弹出
+                                        if (!isSubmit) {
+                                            dismissLoading(() -> {
+                                                AddNewResultActivity.start(this, result.isSuccess(), result.isSuccess() ? TIP_ADD_NEW_SUCCESS : TIP_ADD_NEW_FAILED);
+                                                if (result.isSuccess()) {
+                                                    isSubmit = true;// 发送已完毕标志
 
-                                    AddNewResultActivity.start(this, result.isSuccess());
-                                    if (result.isSuccess()) {
-                                        isSubmit = true;// 发送已完毕标志
-
-                                        finish();
-                                        AnimUtil.activityExitAnimDown(this);
-                                    }
-                                }
-                            });
-                } else {
-                    LoginActivity.startForLogin(this);
-                }
+                                                    finish();
+                                                    AnimUtil.activityExitAnimDown(this);
+                                                }
+                                            });
+                                        }
+                                    });
+                        }
+                    } else {
+                        LoginActivity.startForLogin(this);
+                    }
+                } else // 修改物品
+                    AddNewResultActivity.start(this, true, TIP_MODIFY_FAILED);
             } catch (NullPointerException ignored) {
             }
         }
@@ -278,6 +329,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
 
     /**
      * 检查表单填写是否完整
+     * 若有必填项未填，则将页面跳至未填项目并高亮显示提示用户填写
      */
     private boolean checkFormIsLegal() {
         boolean pass = true;
@@ -300,6 +352,12 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
             pass = false;
         }
 
+        if (mAdapter.getData().size() < 1) {
+            AnimUtil.whiteBackgroundViewBlinkRed(this, binding.picSet);
+            focusView = binding.picSetTitle;
+            pass = false;
+        }
+
         if (mCoverPath == null || mCoverPath.trim().equals("")) {
             AnimUtil.whiteBackgroundViewBlinkRed(this, binding.coverWrapper);
             focusView = binding.coverTitle;
@@ -316,27 +374,29 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
 
     /**
      * 保存用户本次输入
+     * 若未提交成功且输入不为空则保存草稿
+     * 若为修改物品则无需保存草稿
      */
     @Override
     protected void onPause() {
         super.onPause();
 
-        // 若未提交成功且输入不为空则保存草稿
-        if (!isSubmit && (!mCoverPath.trim().equals("")
-                || mPicSetSelected.size() > 0
-                || !binding.optionTitle.getText().toString().trim().equals("")
-                || !binding.optionDescription.getText().toString().trim().equals("")
-                || !binding.priceInput.getText().toString().equals("")
-                || binding.optionNegotiable.getIsSelected()
-                || binding.optionSecondHand.getIsSelected())) {
-            viewModel.save(mCoverPath,
-                    mPicSetSelected,
-                    binding.optionTitle.getText().toString(),
-                    binding.optionDescription.getText().toString(),
-                    binding.priceInput.getText().toString(),
-                    binding.optionNegotiable.getIsSelected(),
-                    binding.optionSecondHand.getIsSelected());
-        } else viewModel.deleteDraft();
+        if (isAddNewMode)
+            if (!isSubmit && (!mCoverPath.trim().equals("")
+                    || mPicSetSelected.size() > 0
+                    || !binding.optionTitle.getText().toString().trim().equals("")
+                    || !binding.optionDescription.getText().toString().trim().equals("")
+                    || !binding.priceInput.getText().toString().equals("")
+                    || binding.optionNegotiable.getIsSelected()
+                    || binding.optionSecondHand.getIsSelected())) {
+                viewModel.save(mCoverPath,
+                        mPicSetSelected,
+                        binding.optionTitle.getText().toString(),
+                        binding.optionDescription.getText().toString(),
+                        binding.priceInput.getText().toString(),
+                        binding.optionNegotiable.getIsSelected(),
+                        binding.optionSecondHand.getIsSelected());
+            } else viewModel.deleteDraft();
     }
 
     /**
@@ -346,11 +406,13 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     private void restoreDraft() {
         viewModel.recoverDraft().observe(this, draftCache -> {
             if (draftCache != null) {
+                hasDraft = true;
                 binding.savedDraft.setVisibility(View.VISIBLE);// 显示草稿恢复提示
 
                 mCoverPath = draftCache.getCover();
                 mPicSetSelected = draftCache.getPicSet();
-                binding.cover.setImageURI(Uri.fromFile(new File(mCoverPath)));
+                if (mCoverPath != null && !mCoverPath.equals(""))
+                    binding.cover.setImageLocalPath(mCoverPath);
                 mAdapter.setList(mPicSetSelected);
                 binding.optionTitle.setText(draftCache.getTitle());
                 binding.optionDescription.setText(draftCache.getDescription());
@@ -370,15 +432,43 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     }
 
     /**
+     * 用给进来的物品信息填充页面
+     */
+    private void initGoodsInfo() {
+        DomainGoodsInfo.DataBean goodsInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
+        try {
+            mCoverPath = ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + goodsInfo.getGoods_img_cover();
+            binding.cover.setImageRemotePath(mCoverPath);
+            List<String> picSet = goodsInfo.getGoods_img_set() == null || goodsInfo.getGoods_img_set().trim().equals("") ?
+                    new ArrayList<>()
+                    : MyUtil.getArrayFromString(goodsInfo.getGoods_img_set());
+
+            for (int i = 0; i < picSet.size(); i++) {
+                LocalMedia media = new LocalMedia();
+                media.setPath(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + picSet.get(i));
+                mPicSetSelected.add(media);
+            }
+            mAdapter.setList(mPicSetSelected);
+            binding.optionTitle.setText(goodsInfo.getGoods_name());
+            binding.priceInput.setText(goodsInfo.getGoods_price());
+            if (goodsInfo.getGoods_is_brandNew() == 0)
+                binding.optionSecondHand.toggle();
+            if (goodsInfo.getGoods_is_quotable() == 1)
+                binding.optionNegotiable.toggle();
+            binding.optionDescription.setText(goodsInfo.getGoods_description());
+        } catch (NullPointerException ignored) {
+        }
+    }
+
+    /**
      * 清除输入
      */
     private void clearDraft() {
         mCoverPath = "";
         mPicSetSelected = new ArrayList<>();
-        binding.cover.setImageResource(R.drawable.bg_add_pic);
         mAdapter.setList(new ArrayList<>());
+        binding.cover.clearImage(true);
         binding.optionTitle.setText("");
-        binding.optionDescription.setText("");
         binding.priceInput.setText("");
         if (binding.optionNegotiable.getIsSelected())
             binding.optionNegotiable.toggle();
@@ -423,10 +513,6 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case R.id.cover:
-                request = REQUEST_CODE_COVER;
-                requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL);
-                break;
             case R.id.option_title:
                 InputSetActivity.start(this, InputSetActivity.TYPE_TITLE, binding.optionTitle.getText().toString(), getString(R.string.title));
                 break;
@@ -451,13 +537,14 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                 AnimUtil.collapse(binding.savedDraft);
                 break;
             case R.id.draft_action:
-                if (isDraftRestored)
-                    clearDraft();
-                else
-                    restoreDraft();
+                if (isAddNewMode)
+                    if (isDraftRestored)
+                        clearDraft();
+                    else
+                        restoreDraft();
                 break;
             case R.id.draft_tip_toggle:
-                if (binding.savedDraft.getVisibility() != View.VISIBLE)
+                if (hasDraft && binding.savedDraft.getVisibility() != View.VISIBLE)
                     AnimUtil.expand(binding.savedDraft);
                 break;
             default:
@@ -494,9 +581,45 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         }
     }
 
+    /**
+     * 在已选的图片集中删除一张图片
+     *
+     * @param pos 删除的位置
+     */
     @Override
-    public void onError() {
-        dismissLoading();
-        AddNewResultActivity.start(this, false);
+    public void onPicSetDeleteAt(int pos) {
+        mPicSetSelected.remove(pos);
+    }
+
+    /**
+     * 点击已选的图片集
+     * 查看图片
+     *
+     * @param pos 点击的位置
+     */
+    @Override
+    public void onPicSetClick(ImageView source, int pos) {
+        List<Object> data = new ArrayList<>();
+        List<LocalMedia> adapterData = mAdapter.getData();
+        for (LocalMedia pic : adapterData)
+            data.add(pic.getPath() == null ? pic.getAndroidQToPath() : pic.getPath());
+
+        new XPopup.Builder(this)
+                .isDarkTheme(true)
+                .isDestroyOnDismiss(true)
+                .asImageViewer(source, pos, data, false, false, -1, -1, -1, true, (popupView, position1) -> {
+                    popupView.updateSrcView(binding.picSet.getChildAt(position1).findViewById(R.id.image));
+                }, new MyUtil.ImageLoader())
+                .show();
+    }
+
+    @Override
+    public void onAddNewItemError() {
+        dismissLoading(() -> AddNewResultActivity.start(this, false, TIP_ADD_NEW_FAILED));
+    }
+
+    @Override
+    public void onModifyInfoError() {
+        dismissLoading(() -> AddNewResultActivity.start(this, false, TIP_MODIFY_FAILED));
     }
 }

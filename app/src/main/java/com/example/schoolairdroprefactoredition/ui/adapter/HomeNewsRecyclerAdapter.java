@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
-import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -8,7 +7,6 @@ import com.blankj.utilcode.util.ClickUtils;
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
 import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity;
 import com.example.schoolairdroprefactoredition.ui.components.RecyclerFooter;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -42,7 +40,7 @@ public class HomeNewsRecyclerAdapter extends BaseMultiItemQuickAdapter<BaseHomeN
         View item = holder.itemView;
         ClickUtils.applyPressedViewScale(item);
         item.setOnClickListener(v -> {
-            GoodsActivity.start(getContext(), new Bundle(), null);
+//            GoodsActivity.start(getContext(), new Bundle(), null);
         });
     }
 

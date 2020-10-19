@@ -7,6 +7,7 @@ import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ISSBPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISSBCallback;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -122,6 +123,40 @@ public class SSBImpl implements ISSBPresenter {
             @Override
             public void onFailureAllRetries() {
                 if (mCallback != null)
+                    mCallback.onError();
+            }
+        });
+    }
+
+    @Override
+    public void getSellingByUID(int userID) {
+        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+        Api api = retrofit.create(Api.class);
+        Call<DomainGoodsInfo> task = api.getUserSellingByID(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, userID);
+        task.enqueue(new CallBackWithRetry<DomainGoodsInfo>(task) {
+            @Override
+            public void onFailureAllRetries() {
+                if (mCallback != null)
+                    mCallback.onError();
+            }
+
+            @Override
+            public void onResponse(@NotNull Call<DomainGoodsInfo> call, @NotNull Response<DomainGoodsInfo> response) {
+                if (response.code() == HttpURLConnection.HTTP_OK) {
+                    DomainGoodsInfo info = response.body();
+
+//                    try {
+//                        LogUtils.d(response.body().string());
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+
+                    if (mCallback != null)
+                        if (info != null && info.isSuccess()) {
+                            mCallback.onSellingListLoaded(info);
+                        } else
+                            mCallback.onError();
+                } else if (mCallback != null)
                     mCallback.onError();
             }
         });

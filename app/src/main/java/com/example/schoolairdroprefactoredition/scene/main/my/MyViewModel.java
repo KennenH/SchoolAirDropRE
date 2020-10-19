@@ -36,7 +36,8 @@ public class MyViewModel extends BaseStateViewModel implements IMyCallback {
 
     @Override
     public void onError() {
-        mOnRequestListener.onError();
+        if (mOnRequestListener != null)
+            mOnRequestListener.onError();
     }
 
 }

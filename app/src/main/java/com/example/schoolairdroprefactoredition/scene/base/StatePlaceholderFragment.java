@@ -70,10 +70,8 @@ public abstract class StatePlaceholderFragment extends Fragment {
         mLoading.show();
     }
 
-    /**
-     * 关闭加载弹窗
-     */
-    protected void dismissLoading() {
-        if (mLoading != null) mLoading.dismiss();
+    protected void dismissLoading(Runnable task) {
+        if (mLoading != null)
+            mLoading.dismissWith(task);
     }
 }

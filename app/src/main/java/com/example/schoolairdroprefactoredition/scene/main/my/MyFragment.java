@@ -13,7 +13,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
@@ -32,10 +31,6 @@ import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.impl.LoadingPopupView;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
-
-import org.jetbrains.annotations.NotNull;
-
-import static com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity.PAGE_INDEX;
 
 public class MyFragment extends Fragment implements View.OnClickListener, MainActivity.OnLoginStateChangedListener, BaseStateViewModel.OnRequestListener, SSBInfo.OnSSBActionListener {
 
@@ -110,7 +105,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
             mAvatar.setImageResource(R.drawable.ic_logo_alpha);
             mName.setText(getString(R.string.pleaseLogin));
         } else if (info != null) { // 设置页面数据
-            ImageUtil.roundedImageLoad(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), SizeUtils.dp2px(8));
+            ImageUtil.loadRoundedImage(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
             mName.setText(info.getUname());
         }
     }
@@ -123,7 +118,9 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
             case R.id.my_info:
                 if (bundle != null && bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE) != null
                         && bundle.getSerializable(ConstantUtil.KEY_USER_INFO) != null) {
-                    UserActivity.startForResult(getActivity(), bundle, true);
+                    UserActivity.start(getActivity(), true,
+                            (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE),
+                            bundle.getSerializable(ConstantUtil.KEY_USER_INFO));
                 } else {
                     LoginActivity.startForLogin(getContext());
                 }
@@ -154,7 +151,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
      * 登录状态改变的回调
      */
     @Override
-    public void onLoginStateChanged(@NotNull Bundle bundle) {
+    public void onLoginStateChanged() {
         DomainAuthorize token = getToken();
         setUserData();
         if (token != null)
@@ -169,23 +166,17 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
      */
     @Override
     public void onSellingClick(View view) {
-        Bundle bundle = getBundle();
-        bundle.putSerializable(PAGE_INDEX, 0);
-        SSBActivity.start(getContext(), bundle);
+        SSBActivity.start(getContext(), getToken(), getInfo(), 0, true);
     }
 
     @Override
     public void onSoldClick(View view) {
-        Bundle bundle = getBundle();
-        bundle.putSerializable(PAGE_INDEX, 1);
-        SSBActivity.start(getContext(), bundle);
+        SSBActivity.start(getContext(), getToken(), getInfo(), 1, true);
     }
 
     @Override
     public void onBoughtClick(View view) {
-        Bundle bundle = getBundle();
-        bundle.putSerializable(PAGE_INDEX, 2);
-        SSBActivity.start(getContext(), bundle);
+        SSBActivity.start(getContext(), getToken(), getInfo(), 2, true);
     }
 
     @Override

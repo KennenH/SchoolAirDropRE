@@ -3,6 +3,12 @@ package com.example.schoolairdroprefactoredition.utils;
 public class ConstantUtil {
 
     /**
+     * 图片压缩比率 范围在0-100之内
+     */
+    public static final int ORIGIN = 100;
+    public static final int DEFAULT_COMPRESS = 80;
+
+    /**
      * location
      */
     public static final String LONGITUDE = "nowLongitude";
@@ -12,7 +18,7 @@ public class ConstantUtil {
     /**
      * data fetch num
      */
-    public static final int DATA_FETCH_DEFAULT_SIZE = 15;
+    public static final int DATA_FETCH_DEFAULT_SIZE = 50;
 
     /**
      * home fragment singleton
@@ -55,6 +61,7 @@ public class ConstantUtil {
      * 使用token请求获取的用户信息键
      */
     public static final String KEY_USER_INFO = "UserInfo";
+    public static final String KEY_USER_BASE_INFO = "User?BASEInfo";
     /**
      * 获取物品信息键
      */
@@ -63,4 +70,16 @@ public class ConstantUtil {
      * 打开用户个人信息页面时是否可修改信息
      */
     public static final String KEY_INFO_MODIFIABLE = "modifiableOrNot?";
+    /**
+     * 标志有些页面是否是我的个人页面
+     */
+    public static final String KEY_IS_MINE = "isMyPageOrNOT?";
+
+    /**
+     * 报价页状态码
+     */
+    public static final int QUOTE_STATE_UNHANDLED = 0;
+    public static final int QUOTE_STATE_ACCEPTED = 1;
+    public static final int QUOTE_STATE_REFUSED = 2;
+
 }

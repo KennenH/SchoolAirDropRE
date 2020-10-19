@@ -1,12 +1,30 @@
 package com.example.schoolairdroprefactoredition.scene.main.base;
 
+import android.os.Bundle;
+import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
+import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 
 public class BaseChildFragment extends Fragment {
+
+    private static boolean requested = false; // 只在第一个子页面加载时询问权限
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        if (!requested) {
+            showPlaceHolder(StatePlaceHolder.TYPE_LOADING);
+            locate(PermissionBaseActivity.RequestType.AUTO);// 自动请求MainActivity的定位}
+            requested = true;
+        }
+    }
 
     /**
      * 显示PlaceHolder

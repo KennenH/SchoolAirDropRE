@@ -53,7 +53,7 @@
             android:layout_marginTop="@dimen/general_padding_large"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/line0"
-            app:placeholderImage="@drawable/bg_item_img_placeholder"
+            app:placeholderImage="@drawable/placeholder_rounded"
             app:roundedCornerRadius="@dimen/general_padding" />
 
         <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
@@ -65,13 +65,12 @@
             android:ellipsize="end"
             android:gravity="start"
             android:lines="2"
-            android:text="[img src=ic_negotiable_en_small/] [img src=ic_secondhand_en_small/] 华为 MateBookX "
+            tools:text="[img src=ic_negotiable_en_small/] [img src=ic_secondhand_en_small/] 华为 MateBookX "
             android:textColor="@color/black"
             android:textSize="@dimen/textSizeNormal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/goods_avatar"
             app:layout_constraintTop_toTopOf="@+id/goods_avatar" />
-
 
         <com.example.schoolairdroprefactoredition.ui.components.GoodsPrice
             android:id="@+id/goods_origin_price"
@@ -99,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_large"
-            android:layout_marginBottom="@dimen/general_padding_bit_larger"
+            android:layout_marginBottom="@dimen/general_padding_large"
             android:background="@drawable/bg_round_theme"
             android:drawablePadding="@dimen/general_padding_small"
             android:gravity="center"
@@ -114,22 +113,22 @@
             app:layout_constraintStart_toStartOf="@+id/goods_location"
             app:layout_constraintTop_toBottomOf="@+id/line1" />
 
-        <TextView
-            android:id="@+id/goods_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/general_padding_large"
-            android:background="@drawable/button_round_stroke_primary"
-            android:gravity="center"
-            android:paddingStart="@dimen/general_padding_bit_larger"
-            android:paddingTop="@dimen/general_padding_tiny"
-            android:paddingEnd="@dimen/general_padding_bit_larger"
-            android:paddingBottom="@dimen/general_padding_tiny"
-            android:text="@string/editGoods"
-            android:textColor="@color/black"
-            app:layout_constraintBottom_toBottomOf="@+id/goods_watches"
-            app:layout_constraintEnd_toStartOf="@+id/goods_more_action"
-            app:layout_constraintTop_toTopOf="@+id/goods_watches" />
+<!--        <TextView-->
+<!--            android:id="@+id/goods_edit"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginEnd="@dimen/general_padding_large"-->
+<!--            android:background="@drawable/button_round_stroke_primary"-->
+<!--            android:gravity="center"-->
+<!--            android:paddingStart="@dimen/general_padding_bit_larger"-->
+<!--            android:paddingTop="@dimen/general_padding_tiny"-->
+<!--            android:paddingEnd="@dimen/general_padding_bit_larger"-->
+<!--            android:paddingBottom="@dimen/general_padding_tiny"-->
+<!--            android:text="@string/editGoods"-->
+<!--            android:textColor="@color/black"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/goods_watches"-->
+<!--            app:layout_constraintEnd_toStartOf="@+id/goods_more_action"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/goods_watches" />-->
 
         <ImageView
             android:id="@+id/goods_more_action"

@@ -43,7 +43,7 @@
             android:scaleType="centerCrop"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/line0"
-            app:placeholderImage="@drawable/bg_item_img_placeholder"
+            app:placeholderImage="@drawable/placeholder_rounded"
             app:roundedCornerRadius="@dimen/general_padding_tiny" />
 
         <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages

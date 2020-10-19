@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:placeholderImage="@drawable/bg_item_img_placeholder"
+        app:placeholderImage="@drawable/placeholder_rounded"
         app:roundedCornerRadius="@dimen/general_padding" />
 
     <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages

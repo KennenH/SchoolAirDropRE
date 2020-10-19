@@ -1,7 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.facebook.drawee.view.SimpleDraweeView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="@dimen/home_item_image"
-    android:layout_height="@dimen/home_item_image"
-    app:placeholderImage="@drawable/bg_item_img_placeholder"
-    app:roundedCornerRadius="@dimen/general_padding_small" />
+<com.example.schoolairdroprefactoredition.ui.components.AddPicItem xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" />

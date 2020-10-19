@@ -38,10 +38,10 @@ public class MarginItemDecoration extends RecyclerView.ItemDecoration {
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
         if (parent.getPaddingLeft() != space) {
             if (!isHome)
-                parent.setPadding(space, space, space, space);
+                parent.setPadding(space, 0, space, space);
         }
 
-        outRect.top = space;
+        outRect.top = parent.getChildAdapterPosition(view) == 0 ? 2 * space : space;
         outRect.right = space;
         outRect.left = space;
         outRect.bottom = space;

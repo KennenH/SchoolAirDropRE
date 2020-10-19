@@ -1,11 +1,13 @@
 package com.example.schoolairdroprefactoredition.utils;
 
 import android.content.Context;
+import android.widget.TextView;
 
 import androidx.annotation.StringRes;
 
-import com.example.schoolairdroprefactoredition.ui.components.CenterDialogPopView;
+import com.example.schoolairdroprefactoredition.R;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 
 public class DialogUtil {
@@ -31,6 +33,87 @@ public class DialogUtil {
      * @param type one of {@link DIALOG_TYPE}
      */
     public static void showCenterDialog(Context context, @DIALOG_TYPE int type, @StringRes int tip) {
-        new XPopup.Builder(context).asCustom(new CenterDialogPopView(context, tip, type)).show().delayDismiss(1000);
+        switch (type) {
+            case DialogUtil.DIALOG_TYPE.SUCCESS:
+                showSuccess(context, tip);
+                break;
+            case DialogUtil.DIALOG_TYPE.FAILED:
+                showFailed(context, tip);
+                break;
+            case DialogUtil.DIALOG_TYPE.ERROR_NETWORK:
+                showNetWorkError(context, tip);
+                break;
+            default:
+                showUnknown(context, tip);
+                break;
+        }
+    }
+
+    private static void showSuccess(Context context, @StringRes int tip) {
+        new XPopup.Builder(context)
+                .isClickThrough(true)
+                .asCustom(new BasePopupView(context) {
+                    @Override
+                    protected void init() {
+                        super.init();
+                        ((TextView) findViewById(R.id.dialog_txt)).setText(tip);
+                    }
+
+                    @Override
+                    protected int getPopupLayoutId() {
+                        return R.layout.dialog_center_success;
+                    }
+                }).show().delayDismiss(1000);
+    }
+
+    private static void showFailed(Context context, @StringRes int tip) {
+        new XPopup.Builder(context)
+                .isClickThrough(true)
+                .asCustom(new BasePopupView(context) {
+                    @Override
+                    protected void init() {
+                        super.init();
+                        ((TextView) findViewById(R.id.dialog_txt)).setText(tip);
+                    }
+
+                    @Override
+                    protected int getPopupLayoutId() {
+                        return R.layout.dialog_center_failed;
+                    }
+                }).show().delayDismiss(1000);
+    }
+
+    private static void showNetWorkError(Context context, @StringRes int tip) {
+        new XPopup.Builder(context)
+                .isClickThrough(true)
+                .asCustom(new BasePopupView(context) {
+                    @Override
+                    protected void init() {
+                        super.init();
+                        ((TextView) findViewById(R.id.dialog_txt)).setText(tip);
+                    }
+
+                    @Override
+                    protected int getPopupLayoutId() {
+                        return R.layout.dialog_center_error_network;
+                    }
+                }).show().delayDismiss(1000);
+    }
+
+    private static void showUnknown(Context context, @StringRes int tip) {
+        new XPopup.Builder(context)
+                .isClickThrough(true)
+                .asCustom(new BasePopupView(context) {
+                    @Override
+                    protected void init() {
+                        super.init();
+                        ((TextView) findViewById(R.id.dialog_txt)).setText(tip);
+                    }
+
+                    @Override
+                    protected int getPopupLayoutId() {
+                        return R.layout.dialog_center_attention;
+                    }
+                }).show().delayDismiss(1000);
     }
 }
