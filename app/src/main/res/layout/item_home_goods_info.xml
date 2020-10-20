@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/general_padding_small"
         android:ellipsize="end"
+        android:textColor="@color/primaryText"
         android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="@+id/item_credit"
         app:layout_constraintEnd_toStartOf="@+id/item_credit"

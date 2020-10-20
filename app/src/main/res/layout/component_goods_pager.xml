@@ -25,7 +25,6 @@
         android:paddingTop="4dp"
         android:paddingEnd="@dimen/general_padding"
         android:paddingBottom="4dp"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/goods_pager_pager"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -36,14 +35,14 @@
             android:layout_height="wrap_content"
             android:includeFontPadding="false"
             android:text="1"
-            android:textColor="@color/white"
+            android:textColor="@color/whiteAlways"
             android:textSize="18dp" />
 
         <TextView
             android:id="@+id/goods_pager_total"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/white"
+            android:textColor="@color/whiteAlways"
             android:textSize="14dp"
             tools:text="/3" />
     </LinearLayout>

@@ -22,7 +22,7 @@
             android:paddingTop="@dimen/general_padding_bit_larger"
             android:paddingBottom="@dimen/general_padding_bit_larger"
             android:src="@drawable/ic_message_fill"
-            app:tint="@color/white" />
+            app:tint="@color/whiteAlways" />
 
     </com.lihang.ShadowLayout>
 </merge>

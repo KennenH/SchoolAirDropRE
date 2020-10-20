@@ -11,5 +11,7 @@
         android:drawablePadding="15dp"
         android:paddingTop="20dp"
         android:text="@string/dialogNetWorkError"
+        android:textColor="@color/whiteAlways"
+        app:drawableTint="@color/whiteAlways"
         app:drawableTopCompat="@drawable/ic_globle" />
 </LinearLayout>

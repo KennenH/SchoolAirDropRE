@@ -5,9 +5,10 @@
         <item name="android:windowActionBar">false</item>
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
+        <item name="actionMenuTextColor">@color/black</item>
         <item name="android:windowBackground">@color/primary</item>
         <item name="colorPrimary">@color/colorAccent</item>
-        <item name="colorPrimaryDark">@color/primaryEvenDarker</item>
+        <item name="colorPrimaryDark">@color/primaryText</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
@@ -43,7 +44,7 @@
     </style>
 
     <style name="FullscreenActionBarStyle" parent="Widget.AppCompat.ActionBar">
-        <item name="android:background">@color/black_overlay</item>
+        <item name="android:background">@color/blackOverlay</item>
     </style>
 
     <style name="SheetCancel" parent="Widget.AppCompat.TextView">
@@ -57,6 +58,7 @@
     <style name="SheetNormal" parent="Widget.AppCompat.TextView">
         <item name="android:padding">@dimen/general_padding_bit_larger</item>
         <item name="android:textColor">@color/black</item>
+        <item name="background">@color/white</item>
     </style>
 
     <!--=============================picker Theme================================-->
@@ -75,9 +77,9 @@
         <!--标题上拉箭头-->
         <item name="picture.arrow_up.icon">@drawable/ic_null</item>
         <!--标题文字颜色-->
-        <item name="picture.title.textColor">@color/white</item>
+        <item name="picture.title.textColor">@color/whiteAlways</item>
         <!--标题栏右边文字-->
-        <item name="picture.right.textColor">@color/white</item>
+        <item name="picture.right.textColor">@color/whiteAlways</item>
         <!--图片列表勾选样式-->
         <item name="picture.checked.style">@drawable/ic_select</item>
         <!--开启图片列表勾选数字模式,开启的话勾选样式要换-->
@@ -89,15 +91,15 @@
         <!--图片列表预览文字颜色-->
         <item name="picture.preview.textColor">@color/primaryText</item>
         <!--图片列表已完成文字颜色-->
-        <item name="picture.complete.textColor">@color/white</item>
+        <item name="picture.complete.textColor">@color/whiteAlways</item>
         <!--图片已选数量圆点背景色-->
         <item name="picture.num.style">@drawable/ic_null</item>
         <!--预览界面标题栏背景色-->
         <item name="picture.ac_preview.title.bg">@color/blackPrimary</item>
         <!--预览界面标题文字颜色-->
-        <item name="picture.ac_preview.title.textColor">@color/white</item>
+        <item name="picture.ac_preview.title.textColor">@color/whiteAlways</item>
         <!--预览界面已完成文字颜色-->
-        <item name="picture.ac_preview.complete.textColor">@color/white
+        <item name="picture.ac_preview.complete.textColor">@color/whiteAlways
         </item>
         <!--预览界面底部背景色-->
         <item name="picture.ac_preview.bottom.bg">@color/blackPrimary</item>

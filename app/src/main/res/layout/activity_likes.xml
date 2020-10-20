@@ -20,6 +20,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/favorite"
+            android:textColor="@color/primaryText"
             android:textSize="@dimen/textSizeNormal" />
     </androidx.appcompat.widget.Toolbar>
 

@@ -12,6 +12,7 @@
         android:layout_width="@dimen/toolbar_icon"
         android:layout_height="@dimen/toolbar_icon"
         android:src="@drawable/chat_2"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@id/item_likes_icon"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,11 +23,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/general_padding_large"
+        android:text="0"
+        android:textColor="@color/primaryText"
         android:textSize="@dimen/textSizeLarge"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/item_comments_icon"
         app:layout_constraintStart_toStartOf="@id/item_comments_icon"
-        app:layout_constraintTop_toBottomOf="@id/item_comments_icon"
-        android:text="0" />
+        app:layout_constraintTop_toBottomOf="@id/item_comments_icon" />
 
     <ImageView
         android:id="@+id/item_likes_icon"
@@ -42,11 +45,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/general_padding_large"
+        android:text="0"
+        android:textColor="@color/primaryText"
         android:textSize="@dimen/textSizeLarge"
         app:layout_constraintEnd_toEndOf="@+id/item_likes_icon"
         app:layout_constraintStart_toStartOf="@+id/item_likes_icon"
-        app:layout_constraintTop_toBottomOf="@+id/item_likes_icon"
-        android:text="0" />
+        app:layout_constraintTop_toBottomOf="@+id/item_likes_icon" />
 
     <ImageView
         android:id="@+id/item_watches_icon"
@@ -61,10 +65,11 @@
         android:id="@+id/item_watches"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="0"
+        android:textColor="@color/primaryText"
         android:textSize="@dimen/textSizeLarge"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/item_watches_icon"
-        app:layout_constraintStart_toStartOf="@+id/item_watches_icon"
-        android:text="0" />
+        app:layout_constraintStart_toStartOf="@+id/item_watches_icon" />
 
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

@@ -53,7 +53,7 @@ public class Application extends android.app.Application {
         if (shouldInit()) {
             MiPushClient.registerPush(this, MIPUSH_APP_ID, MIPUSH_APP_KEY);
         }
-        //打开Log
+
         LoggerInterface newLogger = new LoggerInterface() {
             @Override
             public void setTag(String tag) {
@@ -70,7 +70,7 @@ public class Application extends android.app.Application {
                 LogUtils.d(content);
             }
         };
-        Logger.setLogger(this, newLogger);
+//        Logger.setLogger(this, newLogger);
     }
 
     private boolean shouldInit() {

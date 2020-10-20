@@ -104,9 +104,6 @@
             android:name=".scene.transactionstate.TransactionStateActivity"
             android:label="" />
         <activity
-            android:name=".scene.arrangeplace.UnArrangePositionTransactionActivity"
-            android:label="" />
-        <activity
             android:name=".scene.arrangeplace.ArrangePositionActivity"
             android:label="" />
         <activity

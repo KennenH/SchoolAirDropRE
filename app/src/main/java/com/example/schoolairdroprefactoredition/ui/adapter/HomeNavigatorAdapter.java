@@ -45,8 +45,8 @@ public class HomeNavigatorAdapter extends CommonNavigatorAdapter {
     @Override
     public IPagerTitleView getTitleView(Context context, int index) {
         ScalePagerTitleView title = new ScalePagerTitleView(context);
-        title.setNormalColor(Color.BLACK);
-        title.setSelectedColor(Color.BLACK);
+        title.setNormalColor(context.getResources().getColor(R.color.black, context.getTheme()));
+        title.setSelectedColor(context.getResources().getColor(R.color.black, context.getTheme()));
         title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
         title.setOnClickListener(v -> mViewPager.setCurrentItem(index));
         title.setText(mList.get(index));
@@ -61,7 +61,7 @@ public class HomeNavigatorAdapter extends CommonNavigatorAdapter {
         indicator.setLineHeight(SizeUtils.dp2px(4));
         indicator.setRoundRadius(SizeUtils.dp2px(4));
         indicator.setYOffset(SizeUtils.dp2px(8));
-        indicator.setColors(Color.parseColor("#60A3F7"));
+        indicator.setColors(context.getResources().getColor(R.color.colorAccent, context.getTheme()));
 
         return indicator;
     }

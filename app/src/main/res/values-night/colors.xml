@@ -12,13 +12,13 @@
     <color name="colorAccentShadow">#DA4395FA</color>
     <color name="blackShadow">#73C8C8C8</color>
 
-    <color name="primaryLight">#F4F4F4</color>
-    <color name="primary">#efefef</color>
-    <color name="primaryDark">#eeeeee</color>
-    <color name="primaryDarker">#DADADA</color>
-    <color name="primaryEvenDarker">#B5B5B5</color>
-    <color name="primaryDarkest">#9E9E9E</color>
-    <color name="primaryText">#888888</color>
+    <color name="primaryLight">#0E0E0E</color>
+    <color name="primary">#000000</color>
+    <color name="primaryDark">#252525</color>
+    <color name="primaryDarker">#303030</color>
+    <color name="primaryEvenDarker">#404040</color>
+    <color name="primaryDarkest">#505050</color>
+    <color name="primaryText">#FFFFFF</color>
 
     <color name="translucent">#E6FFFFFF</color>
     <color name="darkTranslucent">#CB707070</color>
@@ -31,12 +31,12 @@
     <color name="heart">#FF695E</color>
     <color name="red">#CD2610</color>
 
-    <color name="white">#ffffff</color>
-    <color name="grey">#dddddd</color>
-    <color name="colorLine">#CCDADADA</color>
+    <color name="white">#151515</color>
+    <color name="grey">#222222</color>
+    <color name="colorLine">#CC242424</color>
     <color name="blackPrimary">#282828</color>
     <color name="blackOverlay">#66000000</color>
-    <color name="black">#000000</color>
+    <color name="black">#ffffff</color>
 
     <color name="colorPrimaryPink">#ED7ECD</color>
     <color name="colorPrimaryRed">#DD402C</color>
@@ -50,7 +50,4 @@
     <color name="colorCreditLowBg">#fefede</color>
     <color name="colorCreditLow">#e8b13e</color>
     <color name="colorCreditLowDark">#C88D12</color>
-
-    <color name="whiteAlways">#ffffff</color>
-    <color name="blackAlways">#000000</color>
 </resources>

@@ -34,6 +34,7 @@ public class QuoteActivity extends ImmersionStatusBarActivity {
         binding.name.setText(R.string.quote);
         binding.pager.setAdapter(new QuotePagerAdapter(getSupportFragmentManager(), BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, this));
         binding.tab.setTabIndicatorFullWidth(false);
+        binding.tab.setTabTextColors(getResources().getColor(R.color.black, getTheme()), getResources().getColor(R.color.black, getTheme()));
         binding.tab.setupWithViewPager(binding.pager);
     }
 

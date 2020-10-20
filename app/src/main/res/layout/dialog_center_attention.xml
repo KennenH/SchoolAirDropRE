@@ -10,6 +10,8 @@
         style="@style/DialogText"
         android:paddingTop="17dp"
         android:text="@string/errorUnknown"
+        android:textColor="@color/whiteAlways"
+        app:drawableTint="@color/whiteAlways"
         app:drawableTopCompat="@drawable/ic_attention_nowrap" />
 
 </LinearLayout>

@@ -8,5 +8,7 @@
     <TextView
         android:id="@+id/dialog_txt"
         style="@style/DialogText"
+        android:textColor="@color/whiteAlways"
+        app:drawableTint="@color/whiteAlways"
         app:drawableTopCompat="@drawable/ic_failed_nowrap" />
 </LinearLayout>

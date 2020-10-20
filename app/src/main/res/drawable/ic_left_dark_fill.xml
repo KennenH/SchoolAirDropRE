@@ -7,6 +7,6 @@
         android:fillColor="@color/darkTranslucent"
         android:pathData="M85.33,512a426.67,426.67 0,1 0,853.33 0,426.67 426.67,0 1,0 -853.33,0z" />
     <path
-        android:fillColor="@color/white"
+        android:fillColor="@color/whiteAlways"
         android:pathData="m438.31,512 l178.39,182.69a32.13,32.13 0,0 1,0 44.67,30.28 30.28,0 0,1 -43.58,0L374.53,535.99A31.89,31.89 0,0 1,365.54 512,31.89 31.89,0 0,1 374.53,488.01L573.12,284.64a30.28,30.28 0,0 1,43.58 0,32.13 32.13,0 0,1 0,44.67L438.31,512Z" />
 </vector>

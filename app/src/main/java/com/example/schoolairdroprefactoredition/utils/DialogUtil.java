@@ -1,10 +1,12 @@
 package com.example.schoolairdroprefactoredition.utils;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.widget.TextView;
 
 import androidx.annotation.StringRes;
 
+import com.blankj.utilcode.util.BarUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BasePopupView;
@@ -12,9 +14,16 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 
 public class DialogUtil {
     public static void showConfirm(Context context, CharSequence title, CharSequence content, OnConfirmListener confirmListener) {
-        new XPopup.Builder(context).asConfirm(title, content, context.getString(android.R.string.cancel), context.getString(android.R.string.ok)
-                , confirmListener, () -> {
-                }, false).show();
+        boolean isDarkTheme = false;
+        if ((context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
+            isDarkTheme = true;
+        }
+
+        new XPopup.Builder(context)
+                .isDarkTheme(isDarkTheme)
+                .asConfirm(title, content, context.getString(android.R.string.cancel), context.getString(android.R.string.ok)
+                        , confirmListener, () -> {
+                        }, false).show();
     }
 
     /**

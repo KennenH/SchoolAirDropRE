@@ -62,6 +62,7 @@
         android:layout_marginTop="@dimen/general_padding_larger"
         android:gravity="center"
         android:text="校园空投官方账号\nwww.schoolairdrop.com"
+        android:textColor="@color/primaryText"
         android:textSize="14dp"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline1"

@@ -29,6 +29,7 @@
             android:background="@color/white"
             android:elevation="1dp"
             app:itemIconSize="@dimen/toolbar_icon"
+            app:itemIconTint="@drawable/button_nav_icon"
             app:labelVisibilityMode="unlabeled"
             app:menu="@menu/bottom_nav_menu" />
     </LinearLayout>

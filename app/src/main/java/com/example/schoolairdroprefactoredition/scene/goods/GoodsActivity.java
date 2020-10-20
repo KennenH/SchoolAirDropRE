@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -109,6 +110,19 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
         binding.goodsButtonRight.setOnButtonClickListener(this);
 
         validateInfo();
+    }
+
+    @Override
+    protected void setThemeMode() {
+        BarUtils.setStatusBarLightMode(this, false);
+        switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
+            case Configuration.UI_MODE_NIGHT_NO:
+                BarUtils.setNavBarLightMode(this, true);
+                break;
+            case Configuration.UI_MODE_NIGHT_YES:
+                BarUtils.setNavBarLightMode(this, false);
+                break;
+        }
     }
 
     /**

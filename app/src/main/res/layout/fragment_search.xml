@@ -38,6 +38,7 @@
                 android:gravity="center"
                 android:padding="@dimen/general_padding_large"
                 android:text="@string/cancel"
+                android:textColor="@color/primaryText"
                 android:textSize="@dimen/textSizeNormal"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

@@ -6,4 +6,5 @@
     android:gravity="center"
     android:padding="@dimen/general_padding_large"
     android:text="@string/recyclerFooter"
+    android:textColor="@color/primaryText"
     android:textSize="@dimen/textSizeMin" />

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -35,6 +36,7 @@ import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.mob.pushsdk.MobPush;
+import com.mob.pushsdk.MobPushCallback;
 
 import me.jessyan.autosize.AutoSizeCompat;
 
@@ -92,8 +94,6 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
         BottomNavigationView navView = findViewById(R.id.nav_view);
         navView.setOnNavigationItemSelectedListener(this);
         navView.setSelectedItemId(R.id.navigation_box);
-
-        MobPush.getRegistrationId(LogUtils::d);
     }
 
     /**

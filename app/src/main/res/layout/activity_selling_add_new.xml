@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/addNewSelling"
+            android:textColor="@color/primaryText"
             android:textSize="@dimen/textSizeNormal" />
 
     </androidx.appcompat.widget.Toolbar>
@@ -32,7 +33,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorAccent"
-        android:visibility="gone"
         app:layout_constraintTop_toBottomOf="@+id/toolbar">
 
         <TextView
@@ -43,9 +43,10 @@
             android:drawablePadding="@dimen/general_padding"
             android:ellipsize="end"
             android:text="@string/draftCleared"
-            android:textColor="@color/white"
+            android:textColor="@color/whiteAlways"
             android:textSize="@dimen/textSizeNormal"
             app:drawableStartCompat="@drawable/ic_attention_small"
+            app:drawableTint="@color/whiteAlways"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/draft_action"
             app:layout_constraintStart_toStartOf="parent"
@@ -57,6 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/general_padding_small"
             android:background="@drawable/button_round_stroke_primary"
+            android:backgroundTint="@color/whiteAlways"
             android:padding="@dimen/general_padding"
             android:text="@string/restoreDraft"
             android:textColor="@color/colorAccent"
@@ -75,7 +77,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:tint="@color/white" />
+            app:tint="@color/whiteAlways" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -260,7 +262,7 @@
                         android:paddingEnd="@dimen/general_padding_large"
                         android:paddingBottom="@dimen/general_padding_small"
                         android:text="@string/confirm"
-                        android:textColor="@color/white"
+                        android:textColor="@color/whiteAlways"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />

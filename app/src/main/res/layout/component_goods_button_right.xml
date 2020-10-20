@@ -68,7 +68,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/line"
                 app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/white" />
+                app:tint="@color/whiteAlways" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.lihang.ShadowLayout>

@@ -17,7 +17,7 @@
             android:layout_marginStart="@dimen/general_padding_bit_larger"
             android:layout_marginTop="@dimen/general_padding_bit_larger"
             android:text="@string/monthlyAssessment"
-            android:textColor="@color/black"
+            android:textColor="@color/blackAlways"
             android:textSize="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -26,11 +26,11 @@
             android:id="@+id/assessment_change"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/assessmentUp"
             android:src="@drawable/ic_up"
             app:layout_constraintBottom_toBottomOf="@+id/assessment_type"
             app:layout_constraintEnd_toEndOf="@+id/assessment_time"
-            app:layout_constraintTop_toTopOf="@+id/assessment_type"
-            android:contentDescription="@string/assessmentUp" />
+            app:layout_constraintTop_toTopOf="@+id/assessment_type" />
 
         <TextView
             android:id="@+id/assessment_time"

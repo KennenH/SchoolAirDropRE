@@ -11,6 +11,7 @@
         android:gravity="center"
         android:padding="@dimen/general_padding_large"
         android:text="2020年8月21日 21:25"
+        android:textColor="@color/primaryText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"

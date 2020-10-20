@@ -39,6 +39,7 @@ public class OnGoingActivity extends ImmersionStatusBarActivity {
         binding.name.setText(R.string.onGoing);
 
         binding.pager.setAdapter(new OnGoingPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, this));
+        binding.tab.setTabTextColors(getResources().getColor(R.color.black, getTheme()), getResources().getColor(R.color.black, getTheme()));
         binding.tab.setTabIndicatorFullWidth(false);
         binding.tab.setupWithViewPager(binding.pager);
     }

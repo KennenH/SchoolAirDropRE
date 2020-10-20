@@ -20,7 +20,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:text="@string/selectPosition" />
+            android:text="@string/selectPosition"
+            android:textColor="@color/primaryText" />
     </androidx.appcompat.widget.Toolbar>
 
     <LinearLayout
@@ -44,6 +45,8 @@
             android:id="@+id/search"
             style="@style/SearchEditText"
             android:hint="@string/searchPosition"
+            android:textColor="@color/primaryText"
+            android:textColorHint="@color/primaryText"
             tools:ignore="RtlSymmetry" />
     </LinearLayout>
 

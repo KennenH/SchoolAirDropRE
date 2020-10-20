@@ -13,6 +13,7 @@
         android:gravity="center"
         android:padding="@dimen/general_padding_bit_larger"
         android:text="@string/sortBy"
+        android:textColor="@color/primaryText"
         android:textSize="@dimen/textSizeMin"
         app:layout_constraintTop_toTopOf="parent" />
 

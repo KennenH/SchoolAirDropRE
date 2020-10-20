@@ -39,7 +39,7 @@
                 android:paddingEnd="@dimen/general_padding_large"
                 android:paddingBottom="@dimen/general_padding"
                 android:text="@string/locating"
-                android:textColor="@color/white"
+                android:textColor="@color/whiteAlways"
                 android:textSize="@dimen/textSizeNormal" />
 
         </LinearLayout>
@@ -82,7 +82,7 @@
             android:gravity="center"
             android:padding="@dimen/general_padding_large"
             android:text="@string/relocate"
-            android:textColor="@color/white"
+            android:textColor="@color/whiteAlways"
             android:textSize="@dimen/textSizeLarge"
             />
 

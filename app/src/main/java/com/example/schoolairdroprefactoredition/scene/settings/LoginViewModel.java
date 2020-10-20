@@ -12,6 +12,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.presenter.callback.ILoginCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.LoginImpl;
+import com.mob.pushsdk.MobPush;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 public class LoginViewModel extends AndroidViewModel implements ILoginCallback {
@@ -41,7 +42,7 @@ public class LoginViewModel extends AndroidViewModel implements ILoginCallback {
     }
 
     public LiveData<DomainAuthorize> authorizeWithAlipayID(String cookie, String rawAlipay, String publicKey) {
-        loginImpl.postAlipayIDRSA(cookie, rawAlipay, publicKey, MiPushClient.getRegId(getApplication()));
+        MobPush.getRegistrationId(regID -> loginImpl.postAlipayIDRSA(cookie, rawAlipay, publicKey, regID));
         return mAuthorizedSession;
     }
 

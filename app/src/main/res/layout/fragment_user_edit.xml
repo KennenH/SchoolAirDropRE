@@ -17,7 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/modifyInfo" />
+            android:text="@string/modifyInfo"
+            android:textColor="@color/primaryText" />
 
     </androidx.appcompat.widget.Toolbar>
 

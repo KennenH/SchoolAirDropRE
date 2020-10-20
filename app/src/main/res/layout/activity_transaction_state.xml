@@ -59,7 +59,7 @@
             android:ellipsize="end"
             android:maxLines="2"
             android:text="@string/waitingForBuyerPayment"
-            android:textColor="@color/white"
+            android:textColor="@color/whiteAlways"
             android:textSize="30dp" />
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:text="23:59:59"
-            android:textColor="@color/white"
+            android:textColor="@color/whiteAlways"
             android:textSize="@dimen/textSizeLarger" />
 
     </LinearLayout>
@@ -87,7 +87,7 @@
         app:spb_checkStateCompleted="true"
         app:spb_currentStateNumber="two"
         app:spb_maxStateNumber="four"
-        app:spb_stateBackgroundColor="@color/white"
+        app:spb_stateBackgroundColor="@color/whiteAlways"
         app:spb_stateDescriptionColor="#808080"
         app:spb_stateForegroundColor="@color/colorPrimaryGreen"
         app:spb_stateNumberBackgroundColor="#808080"
@@ -119,6 +119,7 @@
                     android:orientation="horizontal"
                     android:padding="@dimen/general_padding_bit_larger"
                     android:text="浙江省杭州市江干区学源街258号"
+                    android:textColor="@color/primaryText"
                     app:drawableEndCompat="@drawable/ic_right_arrow"
                     app:drawableStartCompat="@drawable/ic_aim"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -156,6 +157,7 @@
                         android:paddingTop="@dimen/general_padding_large"
                         android:paddingBottom="@dimen/general_padding_large"
                         android:text="@string/notMatchDescription"
+                        android:textColor="@color/primaryText"
                         android:textSize="@dimen/textSizeNormal"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@+id/QR_code"
@@ -172,7 +174,7 @@
                         android:paddingTop="@dimen/general_padding_large"
                         android:paddingBottom="@dimen/general_padding_large"
                         android:text="@string/receivingCode"
-                        android:textColor="@color/white"
+                        android:textColor="@color/whiteAlways"
                         android:textSize="@dimen/textSizeNormal"
                         app:layout_constraintBottom_toBottomOf="@+id/incompatible"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -219,6 +221,7 @@
                         android:layout_width="@dimen/toolbar_icon_large"
                         android:layout_height="@dimen/toolbar_icon_large"
                         android:src="@drawable/ic_message"
+                        android:tint="@color/whiteAlways"
                         app:layout_constraintBottom_toBottomOf="@+id/avatar"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/avatar" />
@@ -249,6 +252,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/general_padding_bit_larger"
                         android:text="@string/warningForSeller"
+                        android:textColor="@color/primaryText"
                         android:textSize="@dimen/textSizeNormal"
                         app:layout_constraintBottom_toBottomOf="@+id/warning"
                         app:layout_constraintEnd_toEndOf="parent"

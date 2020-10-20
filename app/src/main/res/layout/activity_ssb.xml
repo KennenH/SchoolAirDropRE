@@ -23,6 +23,7 @@
             android:layout_height="match_parent"
             android:gravity="center"
             android:text="@string/selling"
+            android:textColor="@color/primaryText"
             android:textSize="14dp" />
     </androidx.appcompat.widget.Toolbar>
 
@@ -53,6 +54,7 @@
             android:inputType="text"
             android:paddingStart="10dp"
             android:textColor="@color/primaryText"
+            android:textColorHint="@color/primaryText"
             android:textSize="@dimen/textSizeNormal"
             tools:ignore="RtlSymmetry" />
 

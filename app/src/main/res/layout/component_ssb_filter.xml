@@ -17,11 +17,12 @@
         android:drawablePadding="@dimen/general_padding"
         android:gravity="center_vertical"
         android:text="@string/statistic"
+        android:textColor="@color/primaryText"
         android:textSize="14dp"
+        app:drawableStartCompat="@drawable/ic_statistics"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:drawableStartCompat="@drawable/ic_statistics" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
         android:id="@+id/ssb_header_filter"
