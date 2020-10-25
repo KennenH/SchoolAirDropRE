@@ -28,12 +28,12 @@ public class QuoteViewModel extends BaseStateViewModel implements IQuoteSections
         return mQuoteSent;
     }
 
-    public LiveData<Boolean> acceptQuote(String token, int goodsID) {
+    public LiveData<Boolean> acceptQuote(String token, String goodsID) {
         quoteImpl.acceptQuote(token, goodsID);
         return mAcceptResult;
     }
 
-    public LiveData<Boolean> refuseQuote(String token, int goodsID) {
+    public LiveData<Boolean> refuseQuote(String token, String goodsID) {
         quoteImpl.refuseQuote(token, goodsID);
         return mRefuseResult;
     }

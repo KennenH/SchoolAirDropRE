@@ -20,7 +20,7 @@
         android:id="@+id/s1"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/primary"
+        android:background="@color/colorLine"
         app:layout_constraintTop_toBottomOf="@+id/female" />
 
     <TextView
@@ -38,7 +38,7 @@
         android:id="@+id/s2"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/primary"
+        android:background="@color/colorLine"
         app:layout_constraintTop_toBottomOf="@+id/male" />
 
     <TextView
@@ -56,7 +56,7 @@
         android:id="@+id/gap"
         android:layout_width="match_parent"
         android:layout_height="@dimen/general_padding_large"
-        android:background="@color/primary"
+        android:background="@color/colorLine"
         app:layout_constraintTop_toBottomOf="@id/hermaphrodite" />
 
     <TextView

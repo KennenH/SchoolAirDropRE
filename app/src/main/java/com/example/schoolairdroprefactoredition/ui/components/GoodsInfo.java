@@ -49,7 +49,7 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
      * 隐藏卖家信息
      * 从在售页面进入的物品界面要隐藏卖家信息
      * 防止在查看他人在售列表时
-     * 点击物品 -> 点击用户 -> 点击在售 -> 再点击物品……
+     * 点击物品 -> 查看用户信息 -> 点击在售 -> 再点击物品…
      * 无限套娃访问
      */
     public void hideSellerInfo() {

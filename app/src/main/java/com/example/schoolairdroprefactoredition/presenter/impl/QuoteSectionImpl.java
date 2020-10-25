@@ -12,6 +12,7 @@ import com.example.schoolairdroprefactoredition.presenter.callback.IQuoteSection
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -103,7 +104,7 @@ public class QuoteSectionImpl implements IQuoteSectionsPresenter {
     }
 
     @Override
-    public void acceptQuote(String token, int quoteID) {
+    public void acceptQuote(String token, String quoteID) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
         Call<DomainResult> task = api.acceptQuote(token, quoteID);
@@ -117,6 +118,13 @@ public class QuoteSectionImpl implements IQuoteSectionsPresenter {
             @Override
             public void onResponse(Call<DomainResult> call, Response<DomainResult> response) {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
+
+//                    try {
+//                        LogUtils.d(response.body().string());
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+
                     DomainResult result = response.body();
                     if (mCallback != null)
                         if (result != null && result.isSuccess())
@@ -124,14 +132,20 @@ public class QuoteSectionImpl implements IQuoteSectionsPresenter {
                         else
                             mCallback.onError();
 
-                } else if (mCallback != null)
+                } else if (mCallback != null) {
+                    try {
+                        LogUtils.d(response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                     mCallback.onError();
+                }
             }
         });
     }
 
     @Override
-    public void refuseQuote(String token, int goodsID) {
+    public void refuseQuote(String token, String goodsID) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
         Call<DomainResult> task = api.refuseQuote(token, goodsID);

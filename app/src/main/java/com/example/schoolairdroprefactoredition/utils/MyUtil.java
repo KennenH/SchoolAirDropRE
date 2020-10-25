@@ -183,14 +183,13 @@ public class MyUtil {
                 //.isMultipleRecyclerAnimation(false)// 多图裁剪底部列表显示动画效果
                 .isZoomAnim(true)// 图片列表点击 缩放效果 默认true
                 //.imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg,Android Q使用PictureMimeType.PNG_Q
-                .isEnableCrop(isCrop)// 是否裁剪
+//                .isEnableCrop(isCrop)// 是否裁剪
                 //.basicUCropConfig()//对外提供所有UCropOptions参数配制，但如果PictureSelector原本支持设置的还是会使用原有的设置
-                .isCompress(true)// 是否压缩
-                .compressQuality(60)// 图片压缩后输出质量 0~ 100
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
                 //.queryMaxFileSize(10)// 只查多少M以内的图片、视频、音频  单位M
                 //.compressSavePath(getPath())//压缩图片保存地址
-//                .withAspectRatio(aspect_ratio_x, aspect_ratio_y)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                .isEnableCrop(isCrop)
+                .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示
                 .isGif(false)// 是否显示gif图片
                 .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
@@ -207,7 +206,7 @@ public class MyUtil {
                 //.recordVideoSecond(10)//录制视频秒数 默认60s
                 //.isPreviewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
 //                .cutOutQuality(60)// 裁剪输出质量 默认100
-                .minimumCompressSize(250)// 小于多少kb的图片不压缩
+//                .minimumCompressSize(250)// 小于多少kb的图片不压缩
 //                .cropImageWideHigh()// 裁剪宽高比，设置如果大于图片本身宽高则无效
                 //.rotateEnabled(false) // 裁剪是否可旋转图片
                 //.scaleEnabled(false)// 裁剪是否可放大缩小图片
@@ -253,14 +252,14 @@ public class MyUtil {
                 //.imageFormat(PictureMimeType.PNG)// 拍照保存图片格式后缀,默认jpeg,Android Q使用PictureMimeType.PNG_Q
                 .isEnableCrop(isCrop)// 是否裁剪
                 //.basicUCropConfig()//对外提供所有UCropOptions参数配制，但如果PictureSelector原本支持设置的还是会使用原有的设置
-                .isCompress(true)// 是否压缩
-                .compressQuality(60)// 图片压缩后输出质量 0~ 100
+//                .isCompress(true)// 是否压缩
+//                .compressQuality(60)// 图片压缩后输出质量 0~ 100
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
                 //.queryMaxFileSize(10)// 只查多少M以内的图片、视频、音频  单位M
                 //.compressSavePath(getPath())//压缩图片保存地址
                 //.sizeMultiplier(0.5f)// glide 加载图片大小 0~1之间 如设置 .glideOverride()无效 注：已废弃
                 //.glideOverride(160, 160)// glide 加载宽高，越小图片列表越流畅，但会影响列表图片浏览的清晰度 注：已废弃
-//                .withAspectRatio(aspect_ratio_x, aspect_ratio_y)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
+                .withAspectRatio(1, 1)// 裁剪比例 如16:9 3:2 3:4 1:1 可自定义
                 .hideBottomControls(false)// 是否显示uCrop工具栏，默认不显示
                 .isGif(false)// 是否显示gif图片
                 .freeStyleCropEnabled(false)// 裁剪框是否可拖拽
@@ -278,7 +277,7 @@ public class MyUtil {
                 //.isPreviewEggs(true)// 预览图片时 是否增强左右滑动图片体验(图片滑动一半即可看到上一张是否选中)
                 //.cropCompressQuality(90)// 注：已废弃 改用cutOutQuality()
 //                .cutOutQuality(90)// 裁剪输出质量 默认100
-                .minimumCompressSize(250)// 小于多少kb的图片不压缩
+//                .minimumCompressSize(250)// 小于多少kb的图片不压缩
                 //.cropWH()// 裁剪宽高比，设置如果大于图片本身宽高则无效
                 //.cropImageWideHigh()// 裁剪宽高比，设置如果大于图片本身宽高则无效
                 //.rotateEnabled(false) // 裁剪是否可旋转图片

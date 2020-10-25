@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
@@ -86,10 +87,13 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
             if (!isMine) {
                 binding.goodsMoreAction.setVisibility(View.GONE);
             } else {
-                binding.goodsMoreAction.setOnClickListener(v -> {
-                    // 弹出更多动作的弹窗
-                    if (mOnSSBItemActionListener != null)
-                        mOnSSBItemActionListener.onItemActionButtonClick(v, bean);
+                binding.goodsMoreAction.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        // 弹出更多动作的弹窗
+                        if (mOnSSBItemActionListener != null)
+                            mOnSSBItemActionListener.onItemActionButtonClick(v, bean);
+                    }
                 });
             }
         }

@@ -22,6 +22,8 @@ public class QuoteDecoration extends RecyclerView.ItemDecoration {
     private Paint mTextPaint;
 
     private int unhandled;
+    // flag whether unprocessed header has been drawn
+    private boolean unprocessedHasDrawn = false;
 
     private static final float WIDTH_PERCENT = 0.75f;
     private float headerHeight;
@@ -42,32 +44,36 @@ public class QuoteDecoration extends RecyclerView.ItemDecoration {
         unprocessed = context.getResources().getString(R.string.unprocessedSub, unhandled);
         processed = context.getResources().getString(R.string.processedSub, handled);
         headerHeight = context.getResources().getDimension(R.dimen.icon_normal);
-        mHeaderPaint.setColor(context.getResources().getColor(R.color.primary, context.getTheme()));
+        mHeaderPaint.setColor(context.getColor(R.color.primary));
         mDecorationPaint.setStrokeWidth(gap);
-        mDecorationPaint.setColor(Color.WHITE);
+        mDecorationPaint.setColor(context.getColor(R.color.white));
 
-        mTextPaint.setColor(context.getResources().getColor(R.color.primaryText, context.getTheme()));
+        mTextPaint.setColor(context.getColor(R.color.primaryText));
         mTextPaint.setTextSize(fontSize);
-        mTextPaint.setColor(Color.BLACK);
         mTextPaint.setFakeBoldText(true);
         mTextPaint.setAntiAlias(true);
     }
 
     @Override
     public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-        super.getItemOffsets(outRect, view, parent, state);
-        final int pos = parent.getChildAdapterPosition(view);
-        if (pos == 0 || pos == unhandled)
-            outRect.top = (int) headerHeight;
-        else
-            outRect.top = (int) gap * 2;
+        if (outRect.top == 0) {
+            final int pos = parent.getChildAdapterPosition(view);
+            if (pos == 0 || pos == unhandled) {
+                if (unhandled != 0)
+                    outRect.top = (int) headerHeight;
+                else
+                    outRect.top = (int) headerHeight * 2;
+            } else {
+                outRect.top = (int) gap * 2;
+            }
 
-        if (parent.getAdapter() != null &&
-                pos == parent.getAdapter().getItemCount() - 1)
-            outRect.bottom = (int) gap * 2;
+            if (parent.getAdapter() != null &&
+                    pos == parent.getAdapter().getItemCount() - 1)
+                outRect.bottom = (int) gap * 2;
 
-        outRect.right = (int) gap * 2;
-        outRect.left = (int) gap * 2;
+            outRect.right = (int) gap * 2;
+            outRect.left = (int) gap * 2;
+        }
     }
 
     @Override
@@ -76,11 +82,18 @@ public class QuoteDecoration extends RecyclerView.ItemDecoration {
         for (int i = 0; i < count; i++) {
             View child = parent.getChildAt(i);
             final int pos = parent.getChildAdapterPosition(child);
+            float top = child.getTop();
             if (pos == 0 || pos == unhandled) {
-                float top = child.getTop();
-                String curText = pos == 0 ? unprocessed : processed;
-                c.drawRect(parent.getLeft(), top - headerHeight, parent.getRight(), top, mHeaderPaint);
-                c.drawText(curText, parent.getLeft() + gap * 2, top - headerHeight / 2f + fontSize / 2f, mTextPaint);
+                if (unhandled == 0) { // unhandled == 0 时，未处理和已处理头部分开绘制
+                    c.drawRect(parent.getLeft(), top - 2f * headerHeight, parent.getRight(), top - headerHeight, mHeaderPaint);
+                    c.drawText(unprocessed, parent.getLeft() + gap * 2f, top - headerHeight * 3f / 2f + fontSize / 2f, mTextPaint);
+                    c.drawRect(parent.getLeft(), top - headerHeight, parent.getRight(), top, mHeaderPaint);
+                    c.drawText(processed, parent.getLeft() + gap * 2f, top - headerHeight / 2f + fontSize / 2f, mTextPaint);
+                } else {
+                    String curText = pos == 0 ? unprocessed : processed;
+                    c.drawRect(parent.getLeft(), top - headerHeight, parent.getRight(), top, mHeaderPaint);
+                    c.drawText(curText, parent.getLeft() + gap * 2f, top - headerHeight / 2f + fontSize / 2f, mTextPaint);
+                }
             }
         }
     }

@@ -93,5 +93,6 @@ public class LoginViewModel extends AndroidViewModel implements ILoginCallback {
     @Override
     protected void onCleared() {
         loginImpl.unregisterCallback(this);
+        mOnLoginErrorListener = null;
     }
 }

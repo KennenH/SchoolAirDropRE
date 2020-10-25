@@ -179,4 +179,12 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     public void onItemActionButtonClick(View view, DomainGoodsInfo.DataBean bean) {
         onItemAction(view, bean);
     }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (mAdapter != null)
+            mAdapter.setOnSSBItemActionListener(null);
+        mOnSSBDataLenChangedListener = null;
+    }
 }

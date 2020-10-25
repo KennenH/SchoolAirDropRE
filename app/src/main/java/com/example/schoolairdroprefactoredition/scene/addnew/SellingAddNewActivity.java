@@ -214,7 +214,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     protected void albumGranted() {
         super.albumGranted();
         if (request == REQUEST_CODE_COVER)
-            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_COVER,  1, true, false);
+            MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_COVER, 1, true, false);
         else if (request == REQUEST_CODE_PIC_SET)
             MyUtil.pickPhotoFromAlbum(this, REQUEST_CODE_PIC_SET, 8, false, false);
     }
@@ -240,7 +240,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                 if (data != null) {
                     LocalMedia cover = PictureSelector.obtainMultipleResult(data).get(0);
                     String qPath = cover.getAndroidQToPath();
-                    mCoverPath = qPath == null ? cover.getPath() : qPath;
+                    mCoverPath = qPath == null ? cover.getCutPath() : qPath;
                     binding.cover.setImageLocalPath(mCoverPath);
                 }
             } else if (requestCode == REQUEST_CODE_PIC_SET) { // 图片集选择返回
@@ -335,31 +335,31 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         boolean pass = true;
         View focusView = null;
         if (binding.optionDescription.getText().length() < 1) {
-            AnimUtil.whiteBackgroundViewBlinkRed(this, binding.optionDescriptionWrapper);
+            AnimUtil.primaryBackgroundViewBlinkRed(this, binding.optionDescriptionWrapper);
             focusView = binding.optionDescriptionWrapper;
             pass = false;
         }
 
         if (binding.priceInput.getText().toString().trim().equals("")) {
-            AnimUtil.whiteBackgroundViewBlinkRed(this, binding.optionPrice);
+            AnimUtil.primaryBackgroundViewBlinkRed(this, binding.optionPrice);
             focusView = binding.priceTitle;
             pass = false;
         }
 
         if (binding.optionTitle.getText().length() < 1) {
-            AnimUtil.whiteBackgroundViewBlinkRed(this, binding.optionTitleWrapper);
+            AnimUtil.primaryBackgroundViewBlinkRed(this, binding.optionTitleWrapper);
             focusView = binding.titleTitle;
             pass = false;
         }
 
         if (mAdapter.getData().size() < 1) {
-            AnimUtil.whiteBackgroundViewBlinkRed(this, binding.picSet);
+            AnimUtil.primaryBackgroundViewBlinkRed(this, binding.picSet);
             focusView = binding.picSetTitle;
             pass = false;
         }
 
         if (mCoverPath == null || mCoverPath.trim().equals("")) {
-            AnimUtil.whiteBackgroundViewBlinkRed(this, binding.coverWrapper);
+            AnimUtil.primaryBackgroundViewBlinkRed(this, binding.coverWrapper);
             focusView = binding.coverTitle;
             pass = false;
         }

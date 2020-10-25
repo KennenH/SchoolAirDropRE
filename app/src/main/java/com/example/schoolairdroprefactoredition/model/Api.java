@@ -133,14 +133,14 @@ public interface Api {
      */
     @FormUrlEncoded
     @POST("quote/acceptQuote")
-    Call<DomainResult> acceptQuote(@Header("Authorization") String token, @Field("quote_id") int quoteID);
+    Call<DomainResult> acceptQuote(@Header("Authorization") String token, @Field("quote_id") String quoteID);
 
     /**
      * 拒绝报价
      */
     @FormUrlEncoded
     @POST("quote/refuseQuote")
-    Call<DomainResult> refuseQuote(@Header("Authorization") String token, @Field("quote_id") int quoteID);
+    Call<DomainResult> refuseQuote(@Header("Authorization") String token, @Field("quote_id") String quoteID);
 
     /**
      * 上传新的物品

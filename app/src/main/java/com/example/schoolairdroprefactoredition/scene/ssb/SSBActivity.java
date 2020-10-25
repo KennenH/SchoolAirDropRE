@@ -58,11 +58,12 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
+
         Intent intent = new Intent(context, SSBActivity.class);
         intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
         intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo);
-        intent.putExtra(PAGE_INDEX, page);
         intent.putExtra(ConstantUtil.KEY_IS_MINE, isMine);
+        intent.putExtra(PAGE_INDEX, page);
 
         if (context instanceof AppCompatActivity)
             ((AppCompatActivity) context).startActivityForResult(intent, LoginActivity.LOGIN);
@@ -135,9 +136,7 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
 
         binding.ssbPager.setOffscreenPageLimit(2);
         binding.ssbPager.setAdapter(mPagerAdapter);
-        binding.ssbPager.post(() -> {
-            if (!isMine) binding.ssbPager.setCurrentItem(index);
-        });
+        binding.ssbPager.setCurrentItem(index);
     }
 
     @Override
@@ -244,5 +243,14 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
         if (id == R.id.ssb_search) {
             // open search page
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mOnLoginStateChangeListener = null;
+        mOnChangedToBoughtListener = null;
+        mOnChangedToSellingListener = null;
+        mOnChangedToSoldListener = null;
     }
 }

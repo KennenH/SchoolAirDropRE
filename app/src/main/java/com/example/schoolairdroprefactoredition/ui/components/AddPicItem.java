@@ -61,7 +61,7 @@ public class AddPicItem extends ConstraintLayout implements View.OnClickListener
      */
     public void setImageRemotePath(String pathWithBaseUrl) {
         this.imagePath = pathWithBaseUrl;
-        ImageUtil.loadRoundedImage(binding.image, pathWithBaseUrl, SizeUtils.dp2px(40), SizeUtils.dp2px(40));
+        ImageUtil.loadRoundedImage(binding.image, pathWithBaseUrl);
         binding.close.setVisibility(VISIBLE);
     }
 

@@ -20,7 +20,7 @@
         android:id="@+id/s2"
         android:layout_width="match_parent"
         android:layout_height="@dimen/sheet_gap"
-        android:background="@color/primary"
+        android:background="@color/colorLine"
         app:layout_constraintTop_toBottomOf="@+id/modify" />
 
     <TextView
@@ -38,7 +38,7 @@
         android:id="@+id/gap"
         android:layout_width="match_parent"
         android:layout_height="@dimen/general_padding_large"
-        android:background="@color/primary"
+        android:background="@color/colorLine"
         app:layout_constraintTop_toBottomOf="@id/off_shelf" />
 
     <TextView

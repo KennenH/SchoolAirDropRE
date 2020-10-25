@@ -93,4 +93,9 @@ public class SSBViewModel extends BaseStateViewModel implements ISSBCallback {
         mOnSSBActionListener = listener;
     }
 
+    @Override
+    protected void onCleared() {
+        super.onCleared();
+        ssbImpl.unregisterCallback(this);
+    }
 }

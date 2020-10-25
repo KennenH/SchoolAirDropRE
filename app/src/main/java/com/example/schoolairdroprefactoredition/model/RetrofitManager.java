@@ -20,8 +20,8 @@ public class RetrofitManager {
         mRetrofit = new Retrofit.Builder()
                 .baseUrl(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW)
                 .client(new OkHttpClient.Builder()
-                        .readTimeout(3, TimeUnit.SECONDS)
-                        .connectTimeout(3, TimeUnit.SECONDS)
+                        .readTimeout(4, TimeUnit.SECONDS)
+                        .connectTimeout(4, TimeUnit.SECONDS)
                         .build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

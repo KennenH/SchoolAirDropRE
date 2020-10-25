@@ -221,7 +221,6 @@
                         android:layout_width="@dimen/toolbar_icon_large"
                         android:layout_height="@dimen/toolbar_icon_large"
                         android:src="@drawable/ic_message"
-                        android:tint="@color/whiteAlways"
                         app:layout_constraintBottom_toBottomOf="@+id/avatar"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="@+id/avatar" />

@@ -13,7 +13,7 @@
     <color name="blackShadow">#73C8C8C8</color>
 
     <color name="primaryLight">#0E0E0E</color>
-    <color name="primary">#000000</color>
+    <color name="primary">#0B0B0B</color>
     <color name="primaryDark">#252525</color>
     <color name="primaryDarker">#303030</color>
     <color name="primaryEvenDarker">#404040</color>
@@ -33,7 +33,7 @@
 
     <color name="white">#151515</color>
     <color name="grey">#222222</color>
-    <color name="colorLine">#CC242424</color>
+    <color name="colorLine">#222222</color>
     <color name="blackPrimary">#282828</color>
     <color name="blackOverlay">#66000000</color>
     <color name="black">#ffffff</color>

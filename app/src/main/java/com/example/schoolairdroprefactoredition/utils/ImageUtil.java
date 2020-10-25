@@ -24,18 +24,7 @@ public class ImageUtil {
                 .apply(new RequestOptions()
                         .encodeQuality(ConstantUtil.ORIGIN)
                         .placeholder(R.drawable.placeholder_rounded)
-                        .transform(new CenterCrop(), new RoundedCorners(SizeUtils.dp2px(5)))
-                        .override(SizeUtils.dp2px(80), SizeUtils.dp2px(80)))
-                .into(imageView);
-    }
-
-    public static void loadRoundedImage(ImageView imageView, String uri, int height, int width) {
-        Glide.with(imageView).load(uri)
-                .apply(new RequestOptions()
-                        .encodeQuality(ConstantUtil.ORIGIN)
-                        .placeholder(R.drawable.placeholder_rounded)
-                        .transform(new CenterCrop(), new RoundedCorners(SizeUtils.dp2px(5)))
-                        .override(width, height))
+                        .transform(new CenterCrop(), new RoundedCorners(SizeUtils.dp2px(5))))
                 .into(imageView);
     }
 }

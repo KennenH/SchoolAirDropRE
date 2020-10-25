@@ -2,8 +2,12 @@ package com.example.schoolairdroprefactoredition;
 
 import android.app.ActivityManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Process;
 
+import androidx.preference.PreferenceManager;
+
+import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.LogUtils;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.mob.pushsdk.MobPush;
@@ -85,5 +89,4 @@ public class Application extends android.app.Application {
         }
         return false;
     }
-
 }

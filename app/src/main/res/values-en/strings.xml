@@ -221,4 +221,5 @@
     <string name="modifySuccess">Success</string>
     <string name="modifyFailed">Failed</string>
     <string name="gettingGoodsLocation">Locating item</string>
+    <string name="goodsIsNotQuotable">Item Is Not Quotable</string>
 </resources>

@@ -57,9 +57,13 @@ public class QuoteRecyclerAdapter extends BaseQuickAdapter<DomainQuote.DataBean,
                     break;
                 case 1:
                     binding.status.setText(getContext().getString(R.string.accepted));
+                    binding.quoteAccept.setVisibility(View.GONE);
+                    binding.quoteRefuse.setVisibility(View.GONE);
                     break;
                 case 2:
                     binding.status.setText(getContext().getString(R.string.rejected));
+                    binding.quoteAccept.setVisibility(View.GONE);
+                    binding.quoteRefuse.setVisibility(View.GONE);
                     break;
             }
 
@@ -102,9 +106,9 @@ public class QuoteRecyclerAdapter extends BaseQuickAdapter<DomainQuote.DataBean,
     }
 
     public interface OnQuoteActionListener {
-        void onQuoteAccept(int quoteID);
+        void onQuoteAccept(String quoteID);
 
-        void onQuoteRefuse(int quoteID);
+        void onQuoteRefuse(String quoteID);
     }
 
     public void setOnQuoteActionListener(OnQuoteActionListener listener) {

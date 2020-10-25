@@ -17,11 +17,11 @@ import com.example.schoolairdroprefactoredition.R;
 public class AnimUtil {
 
     /**
-     * 使白色背景的view高亮闪烁红色以引起用户注意
+     * 使primary背景的view高亮闪烁红色以引起用户注意
      */
-    public static void whiteBackgroundViewBlinkRed(Context context, final View view) {
+    public static void primaryBackgroundViewBlinkRed(Context context, final View view) {
         int colorTo = ContextCompat.getColor(context, R.color.colorPrimaryRedLight);
-        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(), Color.WHITE, colorTo);
+        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(), context.getResources().getColor(R.color.white, context.getTheme()), colorTo);
         anim.setDuration(180); // milliseconds
         anim.setRepeatCount(1); // repeat count must be ood to recover original color of view
         anim.setRepeatMode(ValueAnimator.REVERSE);

@@ -36,8 +36,8 @@ public class FileUtil {
         File file = new File(path);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         return isAddNewItem ?
-                bitmapToFile(context, scaleBitmap(bitmap, 500, 500)) :
-                bitmapToFile(context, scaleBitmap(bitmap, 300, 300));
+                bitmapToFile(context, bitmap, 80) :
+                bitmapToFile(context, scaleBitmap(bitmap, 350, 350), 100);
     }
 
     /**
@@ -71,7 +71,7 @@ public class FileUtil {
     }
 
     @Nullable
-    public static File bitmapToFile(Context context, Bitmap bitmap) {
+    public static File bitmapToFile(Context context, Bitmap bitmap, @IntRange(from = 1, to = 100) int quality) {
         File f = null;
         try {
             f = File.createTempFile("AddNew_Cover", null, context.getCacheDir());
@@ -81,7 +81,7 @@ public class FileUtil {
         }
 
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+        bitmap.compress(Bitmap.CompressFormat.JPEG, quality, bos);
         byte[] data = bos.toByteArray();
 
         FileOutputStream fos;

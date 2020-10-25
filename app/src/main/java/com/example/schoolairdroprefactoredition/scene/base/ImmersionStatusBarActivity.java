@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.BarUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
@@ -16,35 +17,24 @@ import com.lxj.xpopup.impl.LoadingPopupView;
 
 public class ImmersionStatusBarActivity extends AppCompatActivity {
     private LoadingPopupView mLoading;
+    protected boolean isDarkTheme = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setStatusBar();
-        setBottomNavBar();
-        setThemeMode();
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         super.onCreate(savedInstanceState);
-    }
-
-    protected void setThemeMode() {
-        switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
-            case Configuration.UI_MODE_NIGHT_NO:
-                BarUtils.setNavBarLightMode(this, true);
-                BarUtils.setStatusBarLightMode(this, true);
-                break;
-            case Configuration.UI_MODE_NIGHT_YES:
-                BarUtils.setNavBarLightMode(this, false);
-                BarUtils.setStatusBarLightMode(this, false);
-                break;
+        if ((getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
+            isDarkTheme = true;
         }
+
+        setActivityTheme();
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     }
 
-    protected void setStatusBar() {
-        StatusBarUtil.setStatusTextColor(this, getResources().getColor(R.color.white, getTheme()));
-    }
-
-    protected void setBottomNavBar() {
-        BarUtils.setNavBarColor(this, getResources().getColor(R.color.white, getTheme()));
+    protected void setActivityTheme() {
+        StatusBarUtil.setStatusTextColor(this, getColor(R.color.white), !isDarkTheme);
+        BarUtils.setStatusBarLightMode(this, !isDarkTheme);
+        BarUtils.setNavBarLightMode(this, !isDarkTheme);
+        BarUtils.setNavBarColor(this, getColor(R.color.white));
     }
 
     protected void showLoading() {

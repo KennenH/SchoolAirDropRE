@@ -42,7 +42,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.jaeger.library.StatusBarUtil;
 
 public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonSingle.OnButtonClickListener, ButtonDouble.OnButtonClickListener, BaseStateViewModel.OnRequestListener, GoodsInfo.OnUserInfoClickListener {
-
     public static final String KEY_IS_FROM_SELLING = "fromSelling?";
 
     /**
@@ -79,8 +78,8 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
     private DomainAuthorize token;
     private DomainGoodsInfo.DataBean goodsInfo;
 
-    private boolean isNotMine = false;
-    private boolean isFavored = false;
+    private boolean isNotMine = false; // 是否不是我的物品
+    private boolean isFavored = false; // 物品是否已收藏
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
@@ -93,10 +92,12 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
         binding = ActivityGoodsBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
 
+        //////////////////////////// 不要改动这里的设置 /////////////////////////////////
         StatusBarUtil.setTranslucentForImageView(this, 0, binding.goodsToolbar);
-        BarUtils.setStatusBarLightMode(this, true);
-        BarUtils.setNavBarLightMode(this, true);
-        BarUtils.setNavBarColor(this, getColor(R.color.white));
+        BarUtils.setStatusBarLightMode(this, !isDarkTheme);
+        BarUtils.setNavBarLightMode(this, !isDarkTheme);
+        //////////////////////////// 不要改动这里的设置 /////////////////////////////////
+
         setSupportActionBar(binding.goodsToolbar);
 
         bundle = getIntent().getExtras();
@@ -112,25 +113,13 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
         validateInfo();
     }
 
-    @Override
-    protected void setThemeMode() {
-        BarUtils.setStatusBarLightMode(this, false);
-        switch (getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) {
-            case Configuration.UI_MODE_NIGHT_NO:
-                BarUtils.setNavBarLightMode(this, true);
-                break;
-            case Configuration.UI_MODE_NIGHT_YES:
-                BarUtils.setNavBarLightMode(this, false);
-                break;
-        }
-    }
-
     /**
      * 有效化登录状态等页面信息
      */
     private void validateInfo() {
         token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
         goodsInfo = (DomainGoodsInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_GOODS_INFO);
+        // 若从用户信息页面进入的在售页面，则隐藏卖家信息，原因见方法本身
         if (bundle.getBoolean(KEY_IS_FROM_SELLING))
             binding.goodsInfoContainer.hideSellerInfo();
 
@@ -138,8 +127,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
             checkIfItemFavored();
             myViewModel.getUserInfo(token.getAccess_token()).observe(this, data -> {
                 isNotMine = data.getData().get(0).getUid() != goodsInfo.getSeller_info().getUid();
-
-                if (isNotMine) {
+                if (isNotMine) { // 不是我的物品，则显示与卖家互动的按钮
                     binding.goodsButtonLeft.setVisibility(View.VISIBLE);
                     binding.goodsButtonRight.setVisibility(View.VISIBLE);
                     binding.goodsInfoContainer.showBottom();
@@ -249,8 +237,36 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                 dialog.setContentView(binding.getRoot());
 
                 try {
+                    binding.warning.setVisibility(View.GONE);
+
+                    if (goodsInfo.getGoods_is_brandNew() == 1)
+                        binding.secondHandTip.setVisibility(View.VISIBLE);
+                    else binding.secondHandTip.setVisibility(View.GONE);
+
+                    if (goodsInfo.getGoods_is_quotable() != 1) {
+                        binding.quotePrice.setFilters(new InputFilter[]{new DecimalFilter()});
+                        binding.quotePrice.setOnEditorActionListener((v, actionId, event) -> {
+                            binding.quotePrice.clearFocus();
+                            KeyboardUtils.hideSoftInput(v);
+                            return true;
+                        });
+                        binding.quotePrice.setOnFocusChangeListener((v, hasFocus) -> {
+                            if (hasFocus && binding.warning.getVisibility() == View.VISIBLE)
+                                AnimUtil.collapse(binding.warning);
+                        });
+                        binding.notQuotableTip.setVisibility(View.VISIBLE);
+                    } else {
+                        binding.notQuotableTip.setVisibility(View.GONE);
+                        binding.quotePrice.setText(goodsInfo.getGoods_price());
+                        binding.quotePrice.setEnabled(false);
+                    }
+
                     binding.originPrice.setText(goodsInfo.getGoods_price());
                     binding.title.setOnClickListener(v -> {
+                        binding.quotePrice.clearFocus();
+                        KeyboardUtils.hideSoftInput(v);
+                    });
+                    binding.notQuotableTip.setOnClickListener(v -> {
                         binding.quotePrice.clearFocus();
                         KeyboardUtils.hideSoftInput(v);
                     });
@@ -258,16 +274,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                         binding.quotePrice.clearFocus();
                         KeyboardUtils.hideSoftInput(v);
                     });
-                    binding.quotePrice.setOnEditorActionListener((v, actionId, event) -> {
-                        binding.quotePrice.clearFocus();
-                        KeyboardUtils.hideSoftInput(v);
-                        return true;
-                    });
-                    binding.quotePrice.setFilters(new InputFilter[]{new DecimalFilter()});
-                    binding.quotePrice.setOnFocusChangeListener((v, hasFocus) -> {
-                        if (hasFocus && binding.warning.getVisibility() == View.VISIBLE)
-                            AnimUtil.collapse(binding.warning);
-                    });
+
                     binding.cancel.setOnClickListener(v -> dialog.dismiss());
                     binding.confirm.setOnClickListener(v -> {
                         if (binding.quotePrice.getText().toString().equals("")) {

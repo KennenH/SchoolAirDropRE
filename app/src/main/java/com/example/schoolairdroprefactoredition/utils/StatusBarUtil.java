@@ -686,7 +686,7 @@ public class StatusBarUtil {
      * @param activity
      * @param backgroundColor 状态栏背景色
      */
-    public static void setStatusTextColor(Activity activity, int backgroundColor) {
+    public static void setStatusTextColor(Activity activity, int backgroundColor, boolean isLightMode) {
 //        //判断是否为小米或魅族手机，如果是则将状态栏文字改为黑色
 //        if (MIUISetStatusBarLightMode(activity) || FlymeSetStatusBarLightMode(activity)) {
 //            //设置状态栏为指定颜色
@@ -695,7 +695,8 @@ public class StatusBarUtil {
 //            activity.getWindow().setStatusBarColor(backgroundColor);
 //        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
         activity.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        if (isLightMode)
+            activity.getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         activity.getWindow().setStatusBarColor(backgroundColor);
 
         //fitsSystemWindow 为 false, 不预留系统栏位置.

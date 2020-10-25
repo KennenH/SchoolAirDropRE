@@ -40,4 +40,9 @@ public class TokenViewModel extends ViewModel implements ICacheCallback {
     public void onTokenCacheLoaded(DomainAuthorize token) {
         mTokenCache.postValue(token);
     }
+
+    @Override
+    protected void onCleared() {
+        cacheImpl.unregisterCallback(this);
+    }
 }

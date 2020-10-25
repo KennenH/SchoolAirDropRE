@@ -71,13 +71,15 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
             setContentView(binding.getRoot());
 
             final String phone = info.getUalipay();
-            final String priPhone = phone.substring(0, 3).concat("****").concat(phone.substring(7));
+
+//          todo 发布时取消注释下面这句话
+            // final String priPhone = phone.substring(0, 3).concat("****").concat(phone.substring(7));
 
             final boolean[] isPri = {true};
 
-            binding.userName.setText(priPhone);
+            binding.userName.setText(phone);
             binding.userName.setOnClickListener(v -> {
-                binding.userName.setText(isPri[0] ? phone : priPhone);
+                binding.userName.setText(isPri[0] ? phone : phone);
                 isPri[0] = !isPri[0];
             });
 

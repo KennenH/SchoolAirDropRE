@@ -90,6 +90,11 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
         requestPermission(PermissionConstants.LOCATION, RequestType.AUTO);
     }
 
+    @Override
+    protected void setActivityTheme() {
+        // do nothing
+    }
+
     /**
      * 正在定位
      */
@@ -114,11 +119,6 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
             locating();
             requestPermission(PermissionConstants.LOCATION, RequestType.MANUAL);
         }
-    }
-
-    @Override
-    protected void setStatusBar() {
-        // do nothing
     }
 
     @Override

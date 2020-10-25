@@ -222,68 +222,72 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                 break;
         }
         int finalRequest = request;
-        new XPopup.Builder(this).asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
-                , () -> {
-                    switch (permission) {
-                        case PermissionConstants.LOCATION:
-                            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, finalRequest);
-                            break;
-                        case PermissionConstants.CAMERA:
-                            requestPermissions(new String[]{Manifest.permission.CAMERA}, finalRequest);
-                            break;
-                        case PermissionConstants.STORAGE:
-                            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, finalRequest);
-                            break;
-                        case PermissionConstants.PHONE:
-                            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, finalRequest);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                , () -> {
-                    switch (permission) {
-                        case PermissionConstants.LOCATION:
-                            locationDenied();
-                            break;
-                        case PermissionConstants.CAMERA:
-                            cameraDenied();
-                            break;
-                        case PermissionConstants.STORAGE:
-                            albumDenied();
-                            break;
-                        case PermissionConstants.PHONE:
-                            phoneDenied();
-                            break;
-                        default:
-                            break;
-                    }
-                }, false).show();
+        new XPopup.Builder(this)
+                .isDarkTheme(isDarkTheme)
+                .asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
+                        , () -> {
+                            switch (permission) {
+                                case PermissionConstants.LOCATION:
+                                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, finalRequest);
+                                    break;
+                                case PermissionConstants.CAMERA:
+                                    requestPermissions(new String[]{Manifest.permission.CAMERA}, finalRequest);
+                                    break;
+                                case PermissionConstants.STORAGE:
+                                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, finalRequest);
+                                    break;
+                                case PermissionConstants.PHONE:
+                                    requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, finalRequest);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        , () -> {
+                            switch (permission) {
+                                case PermissionConstants.LOCATION:
+                                    locationDenied();
+                                    break;
+                                case PermissionConstants.CAMERA:
+                                    cameraDenied();
+                                    break;
+                                case PermissionConstants.STORAGE:
+                                    albumDenied();
+                                    break;
+                                case PermissionConstants.PHONE:
+                                    phoneDenied();
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }, false).show();
     }
 
     private void popUpToSettingsForPermission(@StringRes int res, @PermissionConstants.Permission String permission) {
-        new XPopup.Builder(this).asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
-                , () -> {
-                    switch (permission) {
-                        case PermissionConstants.LOCATION:
-                            goSettings(Automatically.LOCATION);
-                            break;
-                        case PermissionConstants.CAMERA:
-                            goSettings(Automatically.CAMERA);
-                            break;
-                        case PermissionConstants.STORAGE:
-                            goSettings(Automatically.ALBUM);
-                            break;
-                        case PermissionConstants.PHONE:
-                            goSettings(Automatically.PHONE);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-                , () -> { // do nothing
-                },
-                false).show();
+        new XPopup.Builder(this)
+                .isDarkTheme(isDarkTheme)
+                .asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
+                        , () -> {
+                            switch (permission) {
+                                case PermissionConstants.LOCATION:
+                                    goSettings(Automatically.LOCATION);
+                                    break;
+                                case PermissionConstants.CAMERA:
+                                    goSettings(Automatically.CAMERA);
+                                    break;
+                                case PermissionConstants.STORAGE:
+                                    goSettings(Automatically.ALBUM);
+                                    break;
+                                case PermissionConstants.PHONE:
+                                    goSettings(Automatically.PHONE);
+                                    break;
+                                default:
+                                    break;
+                            }
+                        }
+                        , () -> { // do nothing
+                        },
+                        false).show();
     }
 
     @Override

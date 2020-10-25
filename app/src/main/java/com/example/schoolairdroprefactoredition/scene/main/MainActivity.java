@@ -313,6 +313,8 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
         mPurchase = null;
 
         if (mClient != null) {
+            mClient.stopLocation();
+            mClient.unRegisterLocationListener(this);
             mClient.onDestroy();
             mClient = null;
             mOption = null;

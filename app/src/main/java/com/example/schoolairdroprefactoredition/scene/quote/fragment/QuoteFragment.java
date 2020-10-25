@@ -96,18 +96,26 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
             showPlaceholder(StatePlaceHolder.TYPE_LOADING);
             if (index == PAGE_RECEIVED) {
                 viewModel.getQuoteReceived(token.getAccess_token()).observe(getViewLifecycleOwner(), received -> {
-                    mAdapter.setList(sortDataByPrecess(received));
-                    binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), received.size(), unHandled));
-                    showContentContainer();
+                    if (received.size() == 0) {
+                        showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
+                    } else {
+                        mAdapter.setList(sortDataByPrecess(received));
+                        binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), received.size(), unHandled));
+                        showContentContainer();
+                    }
                 });
             } else {
                 viewModel.getQuoteSent(token.getAccess_token()).observe(getViewLifecycleOwner(), sent -> {
-                    mAdapter.setList(sortDataByPrecess(sent));
-                    binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), sent.size(), unHandled));
-                    showContentContainer();
+                    if (sent.size() == 0) {
+                        showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
+                    } else {
+                        mAdapter.setList(sortDataByPrecess(sent));
+                        binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), sent.size(), unHandled));
+                        showContentContainer();
+                    }
                 });
             }
-        } else showPlaceholder(StatePlaceHolder.TYPE_ERROR);
+        } else showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
     }
 
     /**
@@ -139,7 +147,7 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
     }
 
     @Override
-    public void onQuoteAccept(int quoteID) {
+    public void onQuoteAccept(String quoteID) {
         DomainAuthorize token = null;
         try {
             token = (DomainAuthorize) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
@@ -160,7 +168,7 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
     }
 
     @Override
-    public void onQuoteRefuse(int quoteID) {
+    public void onQuoteRefuse(String quoteID) {
         DomainAuthorize token = null;
         try {
             token = (DomainAuthorize) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);

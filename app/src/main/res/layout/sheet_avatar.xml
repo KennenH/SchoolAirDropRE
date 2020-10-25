@@ -21,7 +21,7 @@
         android:id="@+id/s1"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/primary"
+        android:background="@color/colorLine"
         app:layout_constraintTop_toBottomOf="@+id/take_photo" />
 
     <TextView
@@ -39,7 +39,7 @@
         android:id="@+id/s2"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/primary"
+        android:background="@color/colorLine"
         app:layout_constraintTop_toBottomOf="@+id/select_from_album" />
 
     <TextView
@@ -57,7 +57,7 @@
         android:id="@+id/gap"
         android:layout_width="match_parent"
         android:layout_height="@dimen/general_padding_large"
-        android:background="@color/primary"
+        android:background="@color/colorLine"
         app:layout_constraintTop_toBottomOf="@id/save_to_album" />
 
     <TextView

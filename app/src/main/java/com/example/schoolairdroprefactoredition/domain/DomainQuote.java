@@ -4,10 +4,9 @@ import java.io.Serializable;
 import java.util.List;
 
 public class DomainQuote implements Serializable {
-
     /**
      * success : true
-     * data : [{"quote_id":8,"goods":{"goods_name":"4","goods_img_cover":"assets/goods/img/IpKjir5n8mtXzA01_0.jpg","goods_img_set":"assets/goods/img/IpKjir5n8mtXzA01_1.jpg&assets/goods/img/IpKjir5n8mtXzA01_2.jpg&assets/goods/img/IpKjir5n8mtXzA01_3.jpg&assets/goods/img/IpKjir5n8mtXzA01_4.jpg&assets/goods/img/IpKjir5n8mtXzA01_5.jpg","goods_id":1072,"goods_price":258,"goods_is_quotable":0,"goods_is_brandNew":0,"goods_description":"好像也","goods_sellerid":14},"sender_id":15,"quote_price":"123","state":0,"sender_info":{"uid":15,"uname":"iken","credit_num":2,"user_img_path":"/assets/user/avatars/15_20200923145227.jpg"}},{"quote_id":13,"goods":{"goods_name":"4","goods_img_cover":"assets/goods/img/IpKjir5n8mtXzA01_0.jpg","goods_img_set":"assets/goods/img/IpKjir5n8mtXzA01_1.jpg&assets/goods/img/IpKjir5n8mtXzA01_2.jpg&assets/goods/img/IpKjir5n8mtXzA01_3.jpg&assets/goods/img/IpKjir5n8mtXzA01_4.jpg&assets/goods/img/IpKjir5n8mtXzA01_5.jpg","goods_id":1072,"goods_price":258,"goods_is_quotable":0,"goods_is_brandNew":0,"goods_description":"好像也","goods_sellerid":14},"sender_id":15,"quote_price":"222","state":0,"sender_info":{"uid":15,"uname":"iken","credit_num":2,"user_img_path":"/assets/user/avatars/15_20200923145227.jpg"}},{"quote_id":14,"goods":{"goods_name":"4","goods_img_cover":"assets/goods/img/IpKjir5n8mtXzA01_0.jpg","goods_img_set":"assets/goods/img/IpKjir5n8mtXzA01_1.jpg&assets/goods/img/IpKjir5n8mtXzA01_2.jpg&assets/goods/img/IpKjir5n8mtXzA01_3.jpg&assets/goods/img/IpKjir5n8mtXzA01_4.jpg&assets/goods/img/IpKjir5n8mtXzA01_5.jpg","goods_id":1072,"goods_price":258,"goods_is_quotable":0,"goods_is_brandNew":0,"goods_description":"好像也","goods_sellerid":14},"sender_id":15,"quote_price":"231","state":0,"sender_info":{"uid":15,"uname":"iken","credit_num":2,"user_img_path":"/assets/user/avatars/15_20200923145227.jpg"}},{"quote_id":15,"goods":{"goods_name":"4","goods_img_cover":"assets/goods/img/IpKjir5n8mtXzA01_0.jpg","goods_img_set":"assets/goods/img/IpKjir5n8mtXzA01_1.jpg&assets/goods/img/IpKjir5n8mtXzA01_2.jpg&assets/goods/img/IpKjir5n8mtXzA01_3.jpg&assets/goods/img/IpKjir5n8mtXzA01_4.jpg&assets/goods/img/IpKjir5n8mtXzA01_5.jpg","goods_id":1072,"goods_price":258,"goods_is_quotable":0,"goods_is_brandNew":0,"goods_description":"好像也","goods_sellerid":14},"sender_id":15,"quote_price":"223","state":0,"sender_info":{"uid":15,"uname":"iken","credit_num":2,"user_img_path":"/assets/user/avatars/15_20200923145227.jpg"}},{"quote_id":16,"goods":{"goods_name":"3","goods_img_cover":"assets/goods/img/GjtT2zNbErMcud4I_0.jpg","goods_img_set":"assets/goods/img/GjtT2zNbErMcud4I_1.jpg&assets/goods/img/GjtT2zNbErMcud4I_2.jpg&assets/goods/img/GjtT2zNbErMcud4I_3.jpg&assets/goods/img/GjtT2zNbErMcud4I_4.jpg&assets/goods/img/GjtT2zNbErMcud4I_5.jpg&assets/goods/img/GjtT2zNbErMcud4I_6.jpg&assets/goods/img/GjtT2zNbErMcud4I_7.jpg","goods_id":1075,"goods_price":666,"goods_is_quotable":0,"goods_is_brandNew":0,"goods_description":"a","goods_sellerid":14},"sender_id":15,"quote_price":"666","state":0,"sender_info":{"uid":15,"uname":"iken","credit_num":2,"user_img_path":"/assets/user/avatars/15_20200923145227.jpg"}},{"quote_id":18,"goods":{"goods_name":"我们的生活方式","goods_img_cover":"assets/goods/img/ZJBgkyN8Ebodvwuj_0.jpg","goods_img_set":"","goods_id":1081,"goods_price":8881,"goods_is_quotable":0,"goods_is_brandNew":0,"goods_description":"我在你面前什么都不知道","goods_sellerid":14},"sender_id":15,"quote_price":"666","state":0,"sender_info":{"uid":15,"uname":"iken","credit_num":2,"user_img_path":"/assets/user/avatars/15_20200923145227.jpg"}}]
+     * data : [{"quote_id":"1602819155430","goods":{"goods_name":"1","goods_img_cover":"assets/goods/img/tm8dpPJygBL20kXE_0.jpg","goods_img_set":"assets/goods/img/tm8dpPJygBL20kXE_1.jpg&assets/goods/img/tm8dpPJygBL20kXE_2.jpg&assets/goods/img/tm8dpPJygBL20kXE_3.jpg&assets/goods/img/tm8dpPJygBL20kXE_4.jpg&assets/goods/img/tm8dpPJygBL20kXE_5.jpg","goods_id":1076,"goods_price":999,"goods_is_quotable":1,"goods_is_brandNew":0,"goods_description":"啊啊啊","goods_sellerid":14},"sender_id":null,"quote_price":"55","state":1,"sender_info":null,"receiver_info":{"uid":14,"uname":"lucky熊zz","credit_num":2,"user_img_path":"/assets/user/avatars/14_20201020152934.jpg"}},{"quote_id":"1602735505280","goods":{"goods_name":"月亮圆","goods_img_cover":"assets/goods/img/IdGSQr1pohtkfA2E_0.jpg","goods_img_set":"","goods_id":1061,"goods_price":120,"goods_is_quotable":1,"goods_is_brandNew":1,"goods_description":"哈哈哈哈睡觉睡觉睡觉睡觉睡觉","goods_sellerid":14},"sender_id":null,"quote_price":"6666","state":2,"sender_info":null,"receiver_info":{"uid":14,"uname":"lucky熊zz","credit_num":2,"user_img_path":"/assets/user/avatars/14_20201020152934.jpg"}},{"quote_id":"1602735510969","goods":{"goods_name":"月亮圆","goods_img_cover":"assets/goods/img/IdGSQr1pohtkfA2E_0.jpg","goods_img_set":"","goods_id":1061,"goods_price":120,"goods_is_quotable":1,"goods_is_brandNew":1,"goods_description":"哈哈哈哈睡觉睡觉睡觉睡觉睡觉","goods_sellerid":14},"sender_id":null,"quote_price":"6666","state":2,"sender_info":null,"receiver_info":{"uid":14,"uname":"lucky熊zz","credit_num":2,"user_img_path":"/assets/user/avatars/14_20201020152934.jpg"}},{"quote_id":"1602735668879","goods":{"goods_name":"月亮圆","goods_img_cover":"assets/goods/img/IdGSQr1pohtkfA2E_0.jpg","goods_img_set":"","goods_id":1061,"goods_price":120,"goods_is_quotable":1,"goods_is_brandNew":1,"goods_description":"哈哈哈哈睡觉睡觉睡觉睡觉睡觉","goods_sellerid":14},"sender_id":null,"quote_price":"6666","state":1,"sender_info":null,"receiver_info":{"uid":14,"uname":"lucky熊zz","credit_num":2,"user_img_path":"/assets/user/avatars/14_20201020152934.jpg"}},{"quote_id":"1603163055999","goods":{"goods_name":"月亮圆","goods_img_cover":"assets/goods/img/IdGSQr1pohtkfA2E_0.jpg","goods_img_set":"","goods_id":1061,"goods_price":120,"goods_is_quotable":1,"goods_is_brandNew":1,"goods_description":"哈哈哈哈睡觉睡觉睡觉睡觉睡觉","goods_sellerid":14},"sender_id":null,"quote_price":"666","state":2,"sender_info":null,"receiver_info":{"uid":14,"uname":"lucky熊zz","credit_num":2,"user_img_path":"/assets/user/avatars/14_20201020152934.jpg"}}]
      */
 
     private boolean success;
@@ -31,35 +30,28 @@ public class DomainQuote implements Serializable {
 
     public static class DataBean implements Serializable {
         /**
-         * quote_id : 8
-         * goods : {"goods_name":"4","goods_img_cover":"assets/goods/img/IpKjir5n8mtXzA01_0.jpg","goods_img_set":"assets/goods/img/IpKjir5n8mtXzA01_1.jpg&assets/goods/img/IpKjir5n8mtXzA01_2.jpg&assets/goods/img/IpKjir5n8mtXzA01_3.jpg&assets/goods/img/IpKjir5n8mtXzA01_4.jpg&assets/goods/img/IpKjir5n8mtXzA01_5.jpg","goods_id":1072,"goods_price":258,"goods_is_quotable":0,"goods_is_brandNew":0,"goods_description":"好像也","goods_sellerid":14}
-         * sender_id : 15
-         * quote_price : 123
-         * state : 0
-         * sender_info : {"uid":15,"uname":"iken","credit_num":2,"user_img_path":"/assets/user/avatars/15_20200923145227.jpg"}
+         * quote_id : 1602819155430
+         * goods : {"goods_name":"1","goods_img_cover":"assets/goods/img/tm8dpPJygBL20kXE_0.jpg","goods_img_set":"assets/goods/img/tm8dpPJygBL20kXE_1.jpg&assets/goods/img/tm8dpPJygBL20kXE_2.jpg&assets/goods/img/tm8dpPJygBL20kXE_3.jpg&assets/goods/img/tm8dpPJygBL20kXE_4.jpg&assets/goods/img/tm8dpPJygBL20kXE_5.jpg","goods_id":1076,"goods_price":999,"goods_is_quotable":1,"goods_is_brandNew":0,"goods_description":"啊啊啊","goods_sellerid":14}
+         * sender_id : null
+         * quote_price : 55
+         * state : 1
+         * sender_info : null
+         * receiver_info : {"uid":14,"uname":"lucky熊zz","credit_num":2,"user_img_path":"/assets/user/avatars/14_20201020152934.jpg"}
          */
 
-        private int quote_id;
+        private String quote_id;
         private GoodsBean goods;
-        private int sender_id;
+        private String sender_id;
         private String quote_price;
         private int state;
-        private SenderInfoBean sender_info;
         private ReceiverInfoBean receiver_info;
+        private SenderInfoBean sender_info;
 
-        public ReceiverInfoBean getReceiver_info() {
-            return receiver_info;
-        }
-
-        public void setReceiver_info(ReceiverInfoBean receiver_info) {
-            this.receiver_info = receiver_info;
-        }
-
-        public int getQuote_id() {
+        public String getQuote_id() {
             return quote_id;
         }
 
-        public void setQuote_id(int quote_id) {
+        public void setQuote_id(String quote_id) {
             this.quote_id = quote_id;
         }
 
@@ -71,11 +63,11 @@ public class DomainQuote implements Serializable {
             this.goods = goods;
         }
 
-        public int getSender_id() {
+        public Object getSender_id() {
             return sender_id;
         }
 
-        public void setSender_id(int sender_id) {
+        public void setSender_id(String sender_id) {
             this.sender_id = sender_id;
         }
 
@@ -103,16 +95,24 @@ public class DomainQuote implements Serializable {
             this.sender_info = sender_info;
         }
 
+        public ReceiverInfoBean getReceiver_info() {
+            return receiver_info;
+        }
+
+        public void setReceiver_info(ReceiverInfoBean receiver_info) {
+            this.receiver_info = receiver_info;
+        }
+
         public static class GoodsBean implements Serializable {
             /**
-             * goods_name : 4
-             * goods_img_cover : assets/goods/img/IpKjir5n8mtXzA01_0.jpg
-             * goods_img_set : assets/goods/img/IpKjir5n8mtXzA01_1.jpg&assets/goods/img/IpKjir5n8mtXzA01_2.jpg&assets/goods/img/IpKjir5n8mtXzA01_3.jpg&assets/goods/img/IpKjir5n8mtXzA01_4.jpg&assets/goods/img/IpKjir5n8mtXzA01_5.jpg
-             * goods_id : 1072
-             * goods_price : 258
-             * goods_is_quotable : 0
+             * goods_name : 1
+             * goods_img_cover : assets/goods/img/tm8dpPJygBL20kXE_0.jpg
+             * goods_img_set : assets/goods/img/tm8dpPJygBL20kXE_1.jpg&assets/goods/img/tm8dpPJygBL20kXE_2.jpg&assets/goods/img/tm8dpPJygBL20kXE_3.jpg&assets/goods/img/tm8dpPJygBL20kXE_4.jpg&assets/goods/img/tm8dpPJygBL20kXE_5.jpg
+             * goods_id : 1076
+             * goods_price : 999
+             * goods_is_quotable : 1
              * goods_is_brandNew : 0
-             * goods_description : 好像也
+             * goods_description : 啊啊啊
              * goods_sellerid : 14
              */
 
@@ -199,14 +199,7 @@ public class DomainQuote implements Serializable {
             }
         }
 
-        public static class SenderInfoBean {
-            /**
-             * uid : 15
-             * uname : iken
-             * credit_num : 2
-             * user_img_path : /assets/user/avatars/15_20200923145227.jpg
-             */
-
+        public static class SenderInfoBean implements Serializable {
             private int uid;
             private String uname;
             private int credit_num;
@@ -245,12 +238,13 @@ public class DomainQuote implements Serializable {
             }
         }
 
-        public static class ReceiverInfoBean {
+
+        public static class ReceiverInfoBean implements Serializable {
             /**
-             * uid : 15
-             * uname : iken
+             * uid : 14
+             * uname : lucky熊zz
              * credit_num : 2
-             * user_img_path : /assets/user/avatars/15_20200923145227.jpg
+             * user_img_path : /assets/user/avatars/14_20201020152934.jpg
              */
 
             private int uid;
