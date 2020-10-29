@@ -33,8 +33,8 @@ public class LoginImpl implements ILoginPresenter {
      */
     @Override
     public void logout() {
-        UserLoginCacheUtils.deleteCache(UserTokenCache.USER_TOKEN);
-        UserLoginCacheUtils.deleteCache(UserInfoCache.USER_INFO);
+        UserLoginCacheUtils.Companion.getInstance().deleteCache(UserTokenCache.USER_TOKEN);
+        UserLoginCacheUtils.Companion.getInstance().deleteCache(UserInfoCache.USER_INFO);
     }
 
     @Override
@@ -111,15 +111,16 @@ public class LoginImpl implements ILoginPresenter {
                 if (code == HttpURLConnection.HTTP_OK) {
                     DomainAuthorize authorization = response.body();
 
-                    // token 有效期为一小时
+//                     token 有效期为一小时
                     if (authorization != null)
-                        UserLoginCacheUtils.saveUserToken(authorization, 3600_000);
+                        UserLoginCacheUtils.Companion.getInstance().saveUserToken(authorization, 3600_000);
                     else {
                         if (mCallback != null)
                             mCallback.onLoginError();
                     }
+
 //                    try {
-//                        Log.d("postAlipayIDRSA", "response.body.string -- > " + authorization.string());
+//                        LogUtils.d(response.body().string());
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
@@ -166,7 +167,7 @@ public class LoginImpl implements ILoginPresenter {
                     if (mCallback != null)
                         if (info != null && info.isSuccess()) {
                             mCallback.onUserInfoLoaded(info);
-                            UserLoginCacheUtils.saveUserInfo(info.getData().get(0));
+                            UserLoginCacheUtils.Companion.getInstance().saveUserInfo(info.getData().get(0));
                         } else
                             mCallback.onLoginError();
                 } else {

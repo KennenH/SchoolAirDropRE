@@ -1,7 +1,7 @@
 package com.example.schoolairdroprefactoredition.presenter.callback;
 
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
-import com.example.schoolairdroprefactoredition.scene.addnew.AddNewDraftCache;
+import com.example.schoolairdroprefactoredition.cache.AddNewDraftCache;
 
 public interface ISellingAddNewCallback {
     /**

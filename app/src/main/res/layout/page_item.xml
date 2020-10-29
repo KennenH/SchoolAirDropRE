@@ -32,7 +32,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/item_page_icon"
         app:layout_constraintStart_toEndOf="@+id/item_page_icon"
         app:layout_constraintTop_toTopOf="@+id/item_page_icon"
-        tools:text="@string/likes" />
+        tools:text="@string/title" />
 
     <TextView
         android:id="@+id/item_page_description"
@@ -45,7 +45,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/item_page_name"
         app:layout_constraintTop_toBottomOf="@+id/item_page_name"
-        tools:text="查看我的收藏查看我的收藏查看我的收藏" />
+        tools:text="@string/detailDescription" />
 
     <ImageView
         android:id="@+id/item_page_arrow"

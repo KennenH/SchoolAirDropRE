@@ -13,6 +13,9 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Collection;
 
 /**
  * 附近在售列表的adapter
@@ -68,4 +71,5 @@ public class HomeNearbyRecyclerAdapter extends BaseFooterAdapter<DomainGoodsInfo
             }
         }
     }
+
 }

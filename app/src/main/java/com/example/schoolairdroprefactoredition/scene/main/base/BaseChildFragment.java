@@ -8,13 +8,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.blankj.utilcode.constant.PermissionConstants;
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 
 public class BaseChildFragment extends Fragment {
 
-    private static boolean requested = false; // 只在第一个子页面加载时询问权限
+    /**
+     * 只在第一个子页面加载时询问权限
+     * 但是这里会有一个问题，切换app主题时由于requested已置为true
+     * 因此页面被recreated的时候就不会再次自动获取数据
+     * 解决：需要在onDestroy中将requested重新置为false
+     */
+    private static boolean requested = false;
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -51,8 +58,8 @@ public class BaseChildFragment extends Fragment {
      * 请求{@link MainActivity#requestPermission(String, int)} (int)} ()}的定位
      */
     protected void locate(@PermissionBaseActivity.RequestType int type) {
-        if (getActivity() instanceof PermissionBaseActivity) {
-            ((PermissionBaseActivity) getActivity()).requestPermission(PermissionConstants.LOCATION, type);
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).requestPermission(PermissionConstants.LOCATION, type);
         }
     }
 
@@ -60,8 +67,14 @@ public class BaseChildFragment extends Fragment {
      * 请求定位但是不请求权限
      */
     protected void locateWithoutRequest() {
-        if (getActivity() instanceof PermissionBaseActivity) {
-            ((PermissionBaseActivity) getActivity()).checkPermissionWithoutRequest(PermissionBaseActivity.Automatically.LOCATION);
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).checkPermissionWithoutRequest(PermissionBaseActivity.Automatically.LOCATION);
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        requested = false;
     }
 }

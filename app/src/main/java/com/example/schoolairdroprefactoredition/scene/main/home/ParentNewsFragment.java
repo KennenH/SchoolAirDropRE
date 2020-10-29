@@ -23,10 +23,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigat
 public class ParentNewsFragment extends BaseParentFragment
         implements View.OnClickListener {
 
-    public static ParentNewsFragment newInstance(Bundle bundle) {
-        ParentNewsFragment fragment = new ParentNewsFragment();
-        fragment.setArguments(bundle);
-        return fragment;
+    public static ParentNewsFragment newInstance() {
+        return new ParentNewsFragment();
     }
 
     @Override
@@ -42,7 +40,7 @@ public class ParentNewsFragment extends BaseParentFragment
         final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
 
         HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, HomePagerAdapter.HOME);
-        setUpPlaceHolderHAndGoodsContainer(binding.placeholder, binding.homeViewpager);
+        setUpPlaceHolderHAndContainerView(binding.placeholder, binding.homeViewpager);
 
         CommonNavigator commonNavigator = new CommonNavigator(getContext());
         HomeNavigatorAdapter adapter = new HomeNavigatorAdapter(getContext(), binding.homeViewpager, HomeNavigatorAdapter.HOME);

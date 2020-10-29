@@ -70,6 +70,8 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
 
         mRefresh.setOnClickListener(this);
         mAction.setOnClickListener(this);
+
+        setPlaceHolderType(TYPE_LOADING);
     }
 
     /**

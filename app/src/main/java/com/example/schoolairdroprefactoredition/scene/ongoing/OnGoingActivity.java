@@ -22,7 +22,7 @@ public class OnGoingActivity extends ImmersionStatusBarActivity {
 
     public static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, OnGoingActivity.class);
-        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, bundle);
+        intent.putExtras(bundle);
         context.startActivity(intent);
     }
 

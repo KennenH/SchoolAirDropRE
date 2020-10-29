@@ -7,6 +7,7 @@ import androidx.lifecycle.AndroidViewModel;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
+import com.example.schoolairdroprefactoredition.cache.AddNewDraftCache;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISellingAddNewCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.SellingAddNewImpl;

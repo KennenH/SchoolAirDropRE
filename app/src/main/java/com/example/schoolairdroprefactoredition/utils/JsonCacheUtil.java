@@ -1,8 +1,10 @@
 package com.example.schoolairdroprefactoredition.utils;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 
 import androidx.security.crypto.EncryptedSharedPreferences;
+import androidx.security.crypto.MasterKey;
 import androidx.security.crypto.MasterKeys;
 
 import com.blankj.utilcode.util.Utils;
@@ -21,15 +23,15 @@ public class JsonCacheUtil {
 
     private static JsonCacheUtil jsonCacheUtil = null;
     private SharedPreferences mSharePreferences;
-    private Gson mGson;
+    private final Gson mGson;
 
     private JsonCacheUtil() {
         try {
+            Context context = Utils.getApp().getApplicationContext();
             mSharePreferences = EncryptedSharedPreferences
-                    .create(
+                    .create(context,
                             ENCRYPTED_SHARED_PREFERENCE_NAME,
-                            MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC),
-                            Utils.getApp().getApplicationContext(),
+                            new MasterKey.Builder(context).setKeyGenParameterSpec(MasterKeys.AES256_GCM_SPEC).build(),
                             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
                             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM);
         } catch (GeneralSecurityException | IOException e) {

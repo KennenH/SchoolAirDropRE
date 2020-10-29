@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.scene.addnew;
+package com.example.schoolairdroprefactoredition.cache;
 
 import com.luck.picture.lib.entity.LocalMedia;
 

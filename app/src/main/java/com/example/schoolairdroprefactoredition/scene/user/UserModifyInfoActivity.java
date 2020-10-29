@@ -117,7 +117,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
         int id = v.getId();
         if (id == R.id.user_avatar) {
             UserUpdateAvatarActivity.start(this, token, info);
-        } else if (id == R.id.user_name) {
+        } else if (id == R.id.userName) {
             UserUpdateNameActivity.start(this, token, info);
         }
     }

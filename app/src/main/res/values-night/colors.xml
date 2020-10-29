@@ -44,10 +44,10 @@
     <color name="colorPrimaryGreen">#44A944</color>
     <color name="colorPrimaryGreenLight">#4BD34B</color>
 
-    <color name="colorCreditGoodBg">#ddf6ff</color>
-    <color name="colorCreditGood">#0394e4</color>
-    <color name="colorCreditGoodDark">#0077DF</color>
-    <color name="colorCreditLowBg">#fefede</color>
-    <color name="colorCreditLow">#e8b13e</color>
-    <color name="colorCreditLowDark">#C88D12</color>
+    <color name="colorCreditGoodBg">#B7CBD3</color>
+    <color name="colorCreditGood">#0380C5</color>
+    <color name="colorCreditGoodDark">#0269C3</color>
+    <color name="colorCreditLowBg">#D3D3B9</color>
+    <color name="colorCreditLow">#CD9D38</color>
+    <color name="colorCreditLowDark">#B58012</color>
 </resources>

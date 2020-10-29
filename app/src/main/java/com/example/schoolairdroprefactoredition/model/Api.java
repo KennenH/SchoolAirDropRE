@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.model;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult;
+import com.example.schoolairdroprefactoredition.domain.DomainOnGoing;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainQuote;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
@@ -14,7 +15,6 @@ import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 import java.util.List;
 
 import okhttp3.MultipartBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -238,6 +238,11 @@ public interface Api {
      */
     Call<TestGoodsItemBean> getSearchResult();
 
+    /**
+     * 获取我发出的正在进行
+     */
+    @POST("event/getMyReceive")
+    Call<DomainOnGoing> getEventMyReceived(@Header("Authorization") String token);
 
     /**
      * 服务器授权

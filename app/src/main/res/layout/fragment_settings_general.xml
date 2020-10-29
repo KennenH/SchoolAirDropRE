@@ -17,13 +17,14 @@
             android:splitMotionEvents="false">
 
             <com.example.schoolairdroprefactoredition.ui.components.PageItem
-                android:id="@+id/settings_general_language"
+                android:id="@+id/settingsGeneralDarkTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:PI_title="@string/language" />
+                app:PI_isSwitch="true"
+                app:PI_title="@string/darkTheme" />
 
             <com.example.schoolairdroprefactoredition.ui.components.PageItem
-                android:id="@+id/settings_general_storage"
+                android:id="@+id/settingsGeneralStorage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/general_padding_large"

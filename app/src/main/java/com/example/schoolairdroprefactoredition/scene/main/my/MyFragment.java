@@ -41,10 +41,8 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
 
     private LoadingPopupView mLoading;
 
-    public static MyFragment newInstance(Bundle bundle) {
-        MyFragment fragment = new MyFragment();
-        fragment.setArguments(bundle);
-        return fragment;
+    public static MyFragment newInstance() {
+        return new MyFragment();
     }
 
     @Override

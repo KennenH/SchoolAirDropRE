@@ -13,19 +13,21 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.databinding.FragmentRecyclerBinding;
-import com.example.schoolairdroprefactoredition.model.databean.TestOnGoingBean;
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainOnGoing;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.OnGoingRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
 
 import java.util.List;
 
 public class OnGoingFragment extends StatePlaceholderFragment implements BaseStateViewModel.OnRequestListener {
     private static final String ARG_SECTION_NUMBER = "section_number";
-    private static final int PAGE_UNPAID = 0;
-    private static final int PAGE_UNDELIVERED = 1;
+    private static final int PAGE_SENT = 0;
+    private static final int PAGE_RECEIVED = 1;
 
     private FragmentRecyclerBinding binding;
 
@@ -50,7 +52,7 @@ public class OnGoingFragment extends StatePlaceholderFragment implements BaseSta
         viewModel = new ViewModelProvider(this).get(OnGoingViewModel.class);
         viewModel.setOnRequestListener(this);
 
-        index = PAGE_UNPAID;
+        index = PAGE_SENT;
         if (getArguments() != null) {
             index = getArguments().getInt(ARG_SECTION_NUMBER);
         }
@@ -60,28 +62,47 @@ public class OnGoingFragment extends StatePlaceholderFragment implements BaseSta
         binding.recycler.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(8), false));
         binding.recycler.setAdapter(mAdapter);
 
+        getOnGoing();
+
         return binding.getRoot();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        if (index == PAGE_UNPAID) {
+    public void getOnGoing() {
+        DomainAuthorize token = null;
+        try {
+            token = (DomainAuthorize) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
+        } catch (NullPointerException ignored) {
+        }
+
+        if (token == null) {
+            showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
+            return;
+        }
+
+        if (index == PAGE_SENT) {
             showPlaceholder(StatePlaceHolder.TYPE_LOADING);
-            viewModel.getUnPaid().observe(getViewLifecycleOwner(), unpaid -> {
-                mAdapter.setList(unpaid);
-                showContentContainer();
+            viewModel.getSent(token.getAccess_token()).observe(getViewLifecycleOwner(), sent -> {
+                if (sent.size() == 0) {
+                    showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
+                } else {
+                    mAdapter.setList(sent);
+                    showContentContainer();
+                }
             });
         } else {
             showPlaceholder(StatePlaceHolder.TYPE_LOADING);
-            viewModel.getUnDelivered().observe(getViewLifecycleOwner(), undelivered -> {
-                mAdapter.setList(undelivered);
-                showContentContainer();
+            viewModel.getReceived(token.getAccess_token()).observe(getViewLifecycleOwner(), received -> {
+                if (received.size() == 0) {
+                    showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
+                } else {
+                    mAdapter.setList(received);
+                    showContentContainer();
+                }
             });
         }
     }
 
-    private void sortData(List<TestOnGoingBean> data) {
+    private void sortData(List<DomainOnGoing.Data> data) {
 
     }
 
@@ -93,6 +114,6 @@ public class OnGoingFragment extends StatePlaceholderFragment implements BaseSta
 
     @Override
     public void onError() {
-        showPlaceholder(StatePlaceHolder.TYPE_ERROR);
+        dismissLoading(() -> showPlaceholder(StatePlaceHolder.TYPE_ERROR));
     }
 }

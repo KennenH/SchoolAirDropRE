@@ -28,12 +28,9 @@ public class BaseParentFragment extends StatePlaceholderFragment implements Stat
     }
 
     /**
-     * 设置页面placeholder 与 物品列表
-     *
-     * @param placeHolder
-     * @param goodsContainer
+     * 绑定页面placeholder 与 内容视图
      */
-    protected void setUpPlaceHolderHAndGoodsContainer(StatePlaceHolder placeHolder, ViewPager goodsContainer) {
+    protected void setUpPlaceHolderHAndContainerView(StatePlaceHolder placeHolder, ViewPager goodsContainer) {
         mPlaceHolder = placeHolder;
         mContentContainer = goodsContainer;
 

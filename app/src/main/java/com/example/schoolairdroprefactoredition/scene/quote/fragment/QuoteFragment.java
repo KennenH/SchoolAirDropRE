@@ -85,7 +85,6 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
      */
     private void getQuote() {
         unHandled = 0;
-
         DomainAuthorize token = null;
         try {
             token = (DomainAuthorize) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
@@ -137,7 +136,7 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
 
     @Override
     public void onError() {
-        showPlaceholder(StatePlaceHolder.TYPE_ERROR);
+        dismissLoading(() -> showPlaceholder(StatePlaceHolder.TYPE_ERROR));
     }
 
     @Override

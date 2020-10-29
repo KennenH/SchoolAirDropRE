@@ -124,8 +124,8 @@ public class QuoteSectionImpl implements IQuoteSectionsPresenter {
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
-
                     DomainResult result = response.body();
+
                     if (mCallback != null)
                         if (result != null && result.isSuccess())
                             mCallback.onAcceptQuoteSuccess();

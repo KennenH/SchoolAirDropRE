@@ -160,7 +160,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
 
     @Override
     public void onError() {
-        showPlaceholder(StatePlaceHolder.TYPE_ERROR);
+        dismissLoading(() -> showPlaceholder(StatePlaceHolder.TYPE_ERROR));
     }
 
     @Override

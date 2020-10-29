@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -19,7 +18,6 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
@@ -34,24 +32,26 @@ import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModelKt;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.mob.pushsdk.MobPush;
-import com.mob.pushsdk.MobPushCallback;
 
 import me.jessyan.autosize.AutoSizeCompat;
 
-public class MainActivity extends PermissionBaseActivity implements BottomNavigationView.OnNavigationItemSelectedListener, AMapLocationListener, LoginViewModel.OnLoginErrorListener {
-    private LoginViewModel loginViewModel;
+public class MainActivity extends PermissionBaseActivity
+        implements BottomNavigationView.OnNavigationItemSelectedListener,
+        AMapLocationListener, LoginViewModel.OnLoginErrorListener {
+    private LoginViewModelKt loginViewModel;
     private TokenViewModel tokenViewModel;
 
     private FragmentManager mFragmentManager = getSupportFragmentManager();
 
-    protected OnLocationListener mOnLocationListener;
+    private OnLocationListener mOnLocationListener;
     private OnLoginStateChangedListener mOnLoginStateChangedListener;
 
     private AMapLocationClient mClient;
     private AMapLocationClientOption mOption;
 
+    private BottomNavigationView mNavView;
     private ParentNewsFragment mHome;
     private ParentPurchasingFragment mPurchase;
     private MyFragment mMy;
@@ -65,9 +65,8 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
+        loginViewModel = new ViewModelProvider(this).get(LoginViewModelKt.class);
         tokenViewModel = new ViewModelProvider(this).get(TokenViewModel.class);
-        loginViewModel.setOnLoginErrorListener(this);
 
         // 获取本地用户信息缓存
         tokenViewModel.getTokenCaChe().observe(this, token -> bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, token));
@@ -75,25 +74,25 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
 
         // 添加新的tab时在此添加
         if (mHome == null) {
-            mHome = ParentNewsFragment.newInstance(bundle);
+            mHome = ParentNewsFragment.newInstance();
             mHome.setOnSearchBarClickedListener(() -> mFragmentManager.beginTransaction()
                     .replace(R.id.container, SearchFragment.newInstance(bundle))
                     .addToBackStack(null)
                     .commit());
         }
         if (mPurchase == null) {
-            mPurchase = ParentPurchasingFragment.newInstance(bundle);
+            mPurchase = ParentPurchasingFragment.newInstance();
             mPurchase.setOnSearchBarClickedListener(() -> mFragmentManager.beginTransaction()
                     .replace(R.id.container, SearchFragment.newInstance(bundle))
                     .addToBackStack(null)
                     .commit());
         }
         if (mMy == null)
-            mMy = MyFragment.newInstance(bundle);
+            mMy = MyFragment.newInstance();
 
-        BottomNavigationView navView = findViewById(R.id.nav_view);
-        navView.setOnNavigationItemSelectedListener(this);
-        navView.setSelectedItemId(R.id.navigation_box);
+        mNavView = findViewById(R.id.navView);
+        mNavView.setOnNavigationItemSelectedListener(this);
+        mNavView.setSelectedItemId(R.id.navigation_box);
     }
 
     /**
@@ -163,7 +162,7 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
                     .commit();
 
             if (!fragment.isAdded()) {
-                int mContainer = R.id.nav_host_fragment;
+                int mContainer = R.id.navHostFragment;
                 mFragmentManager
                         .beginTransaction()
                         .add(mContainer, fragment)
@@ -269,16 +268,15 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
     private void autoReLoginWithCache() {
         DomainUserInfo.DataBean info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
         if (info != null)
-            loginViewModel.getPublicKey().observe(this, key -> {
-                loginViewModel.authorizeWithAlipayID(
-                        key.getCookie()
-                        , info.getUalipay()
-                        , key.getPublic_key())
-                        .observe(this, token -> {
-                            bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, token);
-                            autoLoginWithToken();
-                        });
-            });
+            loginViewModel.getPublicKey().observe(this, key ->
+                    loginViewModel.authorizeWithAlipayID(
+                    key.getCookie()
+                    , info.getUalipay()
+                    , key.getPublic_key())
+                    .observe(this, token -> {
+                        bundle.putSerializable(ConstantUtil.KEY_AUTHORIZE, token);
+                        autoLoginWithToken();
+                    }));
     }
 
     public Bundle getBundle() {
@@ -302,6 +300,21 @@ public class MainActivity extends PermissionBaseActivity implements BottomNaviga
                     mOnLoginStateChangedListener.onLoginStateChanged();
             });
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        validateNavigation();
+    }
+
+    private void validateNavigation() {
+        if (mHome.isVisible())
+            mNavView.setSelectedItemId(R.id.navigation_home);
+        else if (mPurchase.isVisible())
+            mNavView.setSelectedItemId(R.id.navigation_box);
+        else if (mPurchase.isVisible())
+            mNavView.setSelectedItemId(R.id.navigation_my);
     }
 
     @Override

@@ -160,12 +160,12 @@
                         android:textColor="@color/primaryText"
                         android:textSize="@dimen/textSizeNormal"
                         app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/QR_code"
+                        app:layout_constraintEnd_toStartOf="@+id/QRCodeBtn"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tip" />
 
                     <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
-                        android:id="@+id/QR_code"
+                        android:id="@+id/QRCodeBtn"
                         android:layout_width="0dp"
                         android:layout_height="0dp"
                         android:layout_marginStart="@dimen/general_padding"
@@ -202,7 +202,7 @@
                         app:roundedCornerRadius="@dimen/general_padding_small" />
 
                     <TextView
-                        android:id="@+id/user_name"
+                        android:id="@+id/userName"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/general_padding_bit_larger"

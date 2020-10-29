@@ -85,7 +85,7 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
         chatViewModel = new ViewModelProvider(this).get(ChatViewModel.class);
 
         setSupportActionBar(findViewById(R.id.toolbar));
-        mUserName = findViewById(R.id.user_name);
+        mUserName = findViewById(R.id.userName);
         mInput = findViewById(R.id.edit_view);
         mEmoji = findViewById(R.id.chat_bar_emotion);
         mMore = findViewById(R.id.chat_bar_addition);

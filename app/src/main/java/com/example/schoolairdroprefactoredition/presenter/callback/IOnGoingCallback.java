@@ -1,11 +1,11 @@
 package com.example.schoolairdroprefactoredition.presenter.callback;
 
-import com.example.schoolairdroprefactoredition.model.databean.TestOnGoingBean;
+import com.example.schoolairdroprefactoredition.domain.DomainOnGoing;
 
 import java.util.List;
 
-public interface IOnGoingCallback extends IBaseCallback{
-    void onUnPaidLoaded(List<TestOnGoingBean> data);
+public interface IOnGoingCallback extends IBaseCallback {
+    void onEventMySentLoaded(List<DomainOnGoing.Data> data);
 
-    void onUnDeliveredLoaded(List<TestOnGoingBean> data);
+    void onEventMyReceivedLoaded(List<DomainOnGoing.Data> data);
 }

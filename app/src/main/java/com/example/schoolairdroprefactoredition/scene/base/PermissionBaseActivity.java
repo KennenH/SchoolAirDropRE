@@ -30,7 +30,6 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
      */
     public void requestPermission(@PermissionConstants.Permission String permission, @RequestType int type) {
         int res = 0;
-
         switch (permission) {
             case PermissionConstants.LOCATION:
                 res = R.string.locationPermissionContent;

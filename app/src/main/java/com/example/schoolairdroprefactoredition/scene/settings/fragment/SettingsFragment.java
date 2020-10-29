@@ -26,6 +26,7 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
+import com.lxj.xpopup.interfaces.OnConfirmListener;
 
 /**
  * 设置的主页面
@@ -181,7 +182,7 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
                 transact(manager, SettingsNotificationFragment.newInstance(bundle), notificationName);
                 break;
             case R.id.settings_home_general:
-                transact(manager, SettingsGeneralFragment.newInstance(bundle), generalName);
+                transact(manager, SettingsGeneralFragment.Companion.newInstance(bundle), generalName);
                 break;
             case R.id.settings_home_about:
                 transact(manager, new SettingsAboutFragment(), aboutName);
@@ -190,11 +191,15 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
                 // switch account
                 break;
             case R.id.settings_home_sign_out:
-                loginViewModel.logout();
-                if (getActivity() != null) {
-                    getActivity().setResult(Activity.RESULT_OK);
-                    getActivity().finish();
-                }
+                DialogUtil.showConfirm(getContext(), getString(R.string.logout), getString(R.string.confirmLogout),
+                        () -> {
+                            loginViewModel.logout();
+                            if (getActivity() != null) {
+                                getActivity().setResult(Activity.RESULT_OK);
+                                getActivity().finish();
+                            }
+                        }
+                );
                 break;
         }
     }

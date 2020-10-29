@@ -2,8 +2,6 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import android.content.Context;
 
-import androidx.annotation.Nullable;
-
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.model.Api;
@@ -11,22 +9,16 @@ import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ISellingAddNewPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISellingAddNewCallback;
-import com.example.schoolairdroprefactoredition.scene.addnew.AddNewDraftCache;
-import com.example.schoolairdroprefactoredition.utils.FileUtil;
+import com.example.schoolairdroprefactoredition.cache.AddNewDraftCache;
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
 import com.luck.picture.lib.entity.LocalMedia;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 

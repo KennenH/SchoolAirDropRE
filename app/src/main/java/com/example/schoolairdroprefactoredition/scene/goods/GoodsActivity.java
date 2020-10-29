@@ -243,7 +243,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                         binding.secondHandTip.setVisibility(View.VISIBLE);
                     else binding.secondHandTip.setVisibility(View.GONE);
 
-                    if (goodsInfo.getGoods_is_quotable() != 1) {
+                    if (goodsInfo.getGoods_is_quotable() == 1) {
                         binding.quotePrice.setFilters(new InputFilter[]{new DecimalFilter()});
                         binding.quotePrice.setOnEditorActionListener((v, actionId, event) -> {
                             binding.quotePrice.clearFocus();
@@ -261,7 +261,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                         binding.quotePrice.setEnabled(false);
                     }
 
-                    binding.originPrice.setText(goodsInfo.getGoods_price());
+                    binding.originPrice.setText(getString(R.string.priceRMB, goodsInfo.getGoods_price()));
                     binding.title.setOnClickListener(v -> {
                         binding.quotePrice.clearFocus();
                         KeyboardUtils.hideSoftInput(v);

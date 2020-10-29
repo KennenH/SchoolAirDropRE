@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.FragmentPagerAdapter;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
@@ -23,10 +24,8 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigat
 
 public class ParentPurchasingFragment extends BaseParentFragment implements View.OnClickListener {
 
-    public static ParentPurchasingFragment newInstance(Bundle bundle) {
-        ParentPurchasingFragment fragment = new ParentPurchasingFragment();
-        fragment.setArguments(bundle);
-        return fragment;
+    public static ParentPurchasingFragment newInstance() {
+        return new ParentPurchasingFragment();
     }
 
     @Override
@@ -42,7 +41,7 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
         HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, HomePagerAdapter.PURCHASING);
-        setUpPlaceHolderHAndGoodsContainer(binding.placeholder, binding.homeViewpager);
+        setUpPlaceHolderHAndContainerView(binding.placeholder, binding.homeViewpager);
 
         CommonNavigator commonNavigator = new CommonNavigator(getContext());
         HomeNavigatorAdapter adapter = new HomeNavigatorAdapter(getContext(), binding.homeViewpager, HomeNavigatorAdapter.PURCHASING);

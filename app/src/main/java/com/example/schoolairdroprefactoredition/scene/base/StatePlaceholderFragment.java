@@ -73,5 +73,6 @@ public abstract class StatePlaceholderFragment extends Fragment {
     protected void dismissLoading(Runnable task) {
         if (mLoading != null)
             mLoading.dismissWith(task);
+        else task.run();
     }
 }

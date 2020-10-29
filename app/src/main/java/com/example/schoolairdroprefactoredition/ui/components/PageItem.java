@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,12 +14,13 @@ import androidx.appcompat.widget.SwitchCompat;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.facebook.drawee.view.SimpleDraweeView;
 
-public class PageItem extends ConstraintLayout {
+public class PageItem extends ConstraintLayout implements CompoundButton.OnCheckedChangeListener {
 
     private SimpleDraweeView mIconView;
     private TextView mNameView;
@@ -40,6 +42,8 @@ public class PageItem extends ConstraintLayout {
     private Drawable mIconRes;
     private Drawable mArrowRes;
     private Drawable mBackground;
+
+    private OnPageItemSelectedListener mOnPageItemSelectedListener;
 
     public PageItem(Context context) {
         this(context, null);
@@ -142,6 +146,9 @@ public class PageItem extends ConstraintLayout {
 
         if (mArrowRes != null && isShowArrow)
             mArrowView.setImageDrawable(mArrowRes);
+
+        mSwitch.setOnCheckedChangeListener(this);
+        mCheck.setOnCheckedChangeListener(this);
     }
 
     public void setIconImage(String url) {
@@ -160,11 +167,11 @@ public class PageItem extends ConstraintLayout {
     }
 
     public boolean isItemSelected() {
-        if (isSwitch)
-            return mSwitch.isSelected();
-        else if (isCheck)
-            return mCheck.isSelected();
-        else
+        if (isSwitch) {
+            return mSwitch.isChecked();
+        } else if (isCheck) {
+            return mCheck.isChecked();
+        } else
             return false;
     }
 
@@ -188,5 +195,19 @@ public class PageItem extends ConstraintLayout {
         } else if (isCheck) {
             mCheck.setSelected(false);
         }
+    }
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (mOnPageItemSelectedListener != null)
+            mOnPageItemSelectedListener.onPageItemToggled();
+    }
+
+    public interface OnPageItemSelectedListener {
+        void onPageItemToggled();
+    }
+
+    public void setOnPageItemSelectedListener(OnPageItemSelectedListener listener) {
+        mOnPageItemSelectedListener = listener;
     }
 }

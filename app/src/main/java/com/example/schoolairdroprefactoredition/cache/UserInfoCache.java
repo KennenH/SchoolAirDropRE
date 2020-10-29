@@ -14,4 +14,11 @@ public class UserInfoCache {
     public void setInfo(DomainUserInfo.DataBean info) {
         this.info = info;
     }
+
+    @Override
+    public String toString() {
+        return "UserInfoCache{" +
+                "info=" + info +
+                '}';
+    }
 }

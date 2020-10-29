@@ -2,17 +2,15 @@ package com.example.schoolairdroprefactoredition;
 
 import android.app.ActivityManager;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Process;
 
-import androidx.preference.PreferenceManager;
+import androidx.appcompat.app.AppCompatDelegate;
 
-import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.LogUtils;
+import com.example.schoolairdroprefactoredition.cache.UserSettingsCache;
+import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
-import com.mob.pushsdk.MobPush;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
-import com.xiaomi.mipush.sdk.Logger;
 import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.util.List;
@@ -31,6 +29,23 @@ public class Application extends android.app.Application {
         Fresco.initialize(this);
         initAdapt();
         initMiPush();
+        initAppTheme();
+    }
+
+    private void initAppTheme() {
+        JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
+        UserSettingsCache settings = mJsonCacheUtil.getValue(UserSettingsCache.USER_SETTINGS, UserSettingsCache.class);
+        if (settings == null) settings = new UserSettingsCache(false);
+        AppCompatDelegate.setDefaultNightMode(settings.isDarkTheme() ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+    }
+
+    public void setAppTheme(boolean isDarkTheme) {
+        JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
+        UserSettingsCache settings = mJsonCacheUtil.getValue(UserSettingsCache.USER_SETTINGS, UserSettingsCache.class);
+        if (settings == null) settings = new UserSettingsCache(false);
+        AppCompatDelegate.setDefaultNightMode(isDarkTheme ? AppCompatDelegate.MODE_NIGHT_YES : AppCompatDelegate.MODE_NIGHT_NO);
+        settings.setDarkTheme(isDarkTheme);
+        mJsonCacheUtil.saveCache(UserSettingsCache.USER_SETTINGS, settings);
     }
 
     private void initAdapt() {
