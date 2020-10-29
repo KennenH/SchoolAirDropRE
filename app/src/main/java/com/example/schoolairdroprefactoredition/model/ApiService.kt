@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.model
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
+import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -36,9 +37,8 @@ interface ApiService {
     /**
      * 使用token获取用户信息
      */
-    @FormUrlEncoded
     @POST("user/getUserInfo")
-    fun getUserInfo(@Field("Authorization") token: String): Call<DomainUserInfo>
+    fun getUserInfo(@Header("Authorization") token: String): Call<DomainUserInfo>
 
 
 }

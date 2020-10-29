@@ -15,7 +15,7 @@ import com.facebook.shimmer.ShimmerFrameLayout;
 
 public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListener {
 
-    private ComponentGoodsDetailBinding binding;
+    private final ComponentGoodsDetailBinding binding;
 
     private OnUserInfoClickListener mOnUserInfoClickListener;
 

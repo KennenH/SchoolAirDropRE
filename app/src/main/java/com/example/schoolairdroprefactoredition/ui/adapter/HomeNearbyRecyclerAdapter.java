@@ -13,9 +13,6 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
 
 /**
  * 附近在售列表的adapter
@@ -39,7 +36,7 @@ public class HomeNearbyRecyclerAdapter extends BaseFooterAdapter<DomainGoodsInfo
                 binding.itemSeller.setText(data.getSeller_info().getUname());
 
                 if (getContext() instanceof MainActivity) {
-                    Bundle bundle = ((MainActivity) getContext()).getBundle();
+                    Bundle bundle = ((MainActivity) getContext()).getIntent().getExtras();
                     binding.getRoot().setOnClickListener(v -> GoodsActivity.start(getContext(),
                             (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE),
                             data, false));

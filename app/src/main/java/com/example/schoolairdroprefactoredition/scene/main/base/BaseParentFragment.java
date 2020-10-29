@@ -58,7 +58,7 @@ public class BaseParentFragment extends StatePlaceholderFragment implements Stat
     @Override
     public void onHomePostMyItem(View view) {
         if (getActivity() instanceof MainActivity) {
-            SellingAddNewActivity.start(getContext(), ((MainActivity) getActivity()).getBundle());
+            SellingAddNewActivity.start(getContext(), getActivity().getIntent().getExtras());
         } else
             DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
     }

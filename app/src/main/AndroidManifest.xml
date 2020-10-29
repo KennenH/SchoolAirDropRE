@@ -101,17 +101,6 @@
             android:name=".scene.map.AMapActivity"
             android:label="" />
 
-        <service
-            android:name="com.amap.api.location.APSService"
-            android:foregroundServiceType="location" />
-
-        <meta-data
-            android:name="com.amap.api.v2.apikey"
-            android:value="000d70a1a333ed61daa264e000de94e1" />
-
-        <activity
-            android:name=".scene.goods.GoodsActivity"
-            android:label="" />
         <activity
             android:name=".scene.main.MainActivity"
             android:configChanges="locale|layoutDirection|orientation|screenSize|keyboardHidden"
@@ -123,6 +112,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service
+            android:name="com.amap.api.location.APSService"
+            android:foregroundServiceType="location" />
+
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="000d70a1a333ed61daa264e000de94e1" />
+
+        <activity
+            android:name=".scene.goods.GoodsActivity"
+            android:label="" />
         <activity
             android:name=".scene.settings.SettingsActivity"
             android:label="" />

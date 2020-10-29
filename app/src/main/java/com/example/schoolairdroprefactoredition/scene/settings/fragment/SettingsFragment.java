@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -15,42 +14,36 @@ import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.databinding.FragmentSettingsHomeBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.domain.base.LoadState;
 import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
-import com.example.schoolairdroprefactoredition.scene.settings.LoginViewModel;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
-import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
+import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.impl.LoadingPopupView;
-import com.lxj.xpopup.interfaces.OnConfirmListener;
 
 /**
  * 设置的主页面
  */
-public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, SettingsActivity.OnLoginListener, LoginViewModel.OnLoginErrorListener {
+public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, SettingsActivity.OnLoginListener {
     public static final int LOGOUT = 1205; // 请求码 退出本地登录
 
     private LoginViewModel loginViewModel;
 
     private FragmentManager manager;
 
+    private FragmentSettingsHomeBinding binding;
+
     private String notificationName;
     private String alipayBindingName;
     private String privacyName;
     private String generalName;
     private String aboutName;
-
-    private PageItem mAlipay;
-    private PageItem mPrivacy;
-    private PageItem mNotification;
-    private PageItem mGeneral;
-    private PageItem mAbout;
-    private TextView mSwitchAccount;
-    private TextView mLogout;
 
     private LoadingPopupView mLoading;
 
@@ -96,31 +89,27 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        final View root = LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_home, container, false);
+        binding = FragmentSettingsHomeBinding.bind(LayoutInflater.from(getContext()).inflate(R.layout.fragment_settings_home, container, false));
         loginViewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-        loginViewModel.setOnLoginErrorListener(this);
+        loginViewModel.getLoadState().observe(getViewLifecycleOwner(), state -> {
+            if (state == LoadState.ERROR)
+                mLoading.dismissWith(() ->
+                        DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLogin));
+        });
 
-        mAlipay = root.findViewById(R.id.settings_home_alipay);
-        mPrivacy = root.findViewById(R.id.settings_home_privacy);
-        mNotification = root.findViewById(R.id.settings_home_notification);
-        mGeneral = root.findViewById(R.id.settings_home_general);
-        mAbout = root.findViewById(R.id.settings_home_about);
-        mSwitchAccount = root.findViewById(R.id.settings_home_switch_account);
-        mLogout = root.findViewById(R.id.settings_home_sign_out);
-
-        mAlipay.setOnClickListener(this);
-        mPrivacy.setOnClickListener(this);
-        mNotification.setOnClickListener(this);
-        mGeneral.setOnClickListener(this);
-        mAbout.setOnClickListener(this);
-        mSwitchAccount.setOnClickListener(this);
-        mLogout.setOnClickListener(this);
+        binding.settingsHomeAlipay.setOnClickListener(this);
+        binding.settingsHomePrivacy.setOnClickListener(this);
+        binding.settingsHomeNotification.setOnClickListener(this);
+        binding.settingsHomeGeneral.setOnClickListener(this);
+        binding.settingsHomeAbout.setOnClickListener(this);
+        binding.settingsHomeSwitchAccount.setOnClickListener(this);
+        binding.settingsHomeSignOut.setOnClickListener(this);
 
         mLoading = new XPopup.Builder(getContext()).asLoading();
 
         validateState();
 
-        return root;
+        return binding.getRoot();
     }
 
     /**
@@ -142,12 +131,12 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
      */
     private void validateState() {
         if (isLoggedIn()) {
-            mAlipay.setDescription(getString(R.string.loggedIn, userInfo.getUname()));
-            mSwitchAccount.setVisibility(View.VISIBLE);
-            mLogout.setVisibility(View.VISIBLE);
+            binding.settingsHomeAlipay.setDescription(getString(R.string.loggedIn, userInfo.getUname()));
+            binding.settingsHomeSwitchAccount.setVisibility(View.VISIBLE);
+            binding.settingsHomeSignOut.setVisibility(View.VISIBLE);
         } else {
-            mSwitchAccount.setVisibility(View.GONE);
-            mLogout.setVisibility(View.GONE);
+            binding.settingsHomeSwitchAccount.setVisibility(View.GONE);
+            binding.settingsHomeSignOut.setVisibility(View.GONE);
         }
     }
 
@@ -202,13 +191,5 @@ public class SettingsFragment extends TransactionBaseFragment implements View.On
                 );
                 break;
         }
-    }
-
-    @Override
-    public void onLoginError() {
-        if (mLoading != null)
-            mLoading.smartDismiss();
-
-        DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLogin);
     }
 }

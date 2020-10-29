@@ -239,7 +239,7 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                 try {
                     binding.warning.setVisibility(View.GONE);
 
-                    if (goodsInfo.getGoods_is_brandNew() == 1)
+                    if (goodsInfo.getGoods_is_brandNew() != 1)
                         binding.secondHandTip.setVisibility(View.VISIBLE);
                     else binding.secondHandTip.setVisibility(View.GONE);
 
@@ -254,9 +254,9 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                             if (hasFocus && binding.warning.getVisibility() == View.VISIBLE)
                                 AnimUtil.collapse(binding.warning);
                         });
-                        binding.notQuotableTip.setVisibility(View.VISIBLE);
-                    } else {
                         binding.notQuotableTip.setVisibility(View.GONE);
+                    } else {
+                        binding.notQuotableTip.setVisibility(View.VISIBLE);
                         binding.quotePrice.setText(goodsInfo.getGoods_price());
                         binding.quotePrice.setEnabled(false);
                     }

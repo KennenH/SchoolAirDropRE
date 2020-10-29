@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.scene.main.my;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -78,18 +79,19 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
         return binding.getRoot();
     }
 
-    private Bundle getBundle() {
-        if (getActivity() instanceof MainActivity)
-            return ((MainActivity) getActivity()).getBundle();
-        return new Bundle();
+    private Intent getIntent() {
+        if (getActivity() instanceof MainActivity) {
+            return getActivity().getIntent();
+        }
+        return new Intent();
     }
 
     private DomainUserInfo.DataBean getInfo() {
-        return (DomainUserInfo.DataBean) getBundle().getSerializable(ConstantUtil.KEY_USER_INFO);
+        return (DomainUserInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_USER_INFO);
     }
 
     private DomainAuthorize getToken() {
-        return (DomainAuthorize) getBundle().getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        return (DomainAuthorize) getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
     }
 
     /**
@@ -111,20 +113,20 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        Bundle bundle = getBundle();
+        Intent intent = getIntent();
         switch (id) {
             case R.id.my_info:
-                if (bundle != null && bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE) != null
-                        && bundle.getSerializable(ConstantUtil.KEY_USER_INFO) != null) {
+                if (intent != null && intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE) != null
+                        && intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) != null) {
                     UserActivity.start(getActivity(), true,
-                            (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE),
-                            bundle.getSerializable(ConstantUtil.KEY_USER_INFO));
+                            (DomainAuthorize) intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE),
+                            intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO));
                 } else {
                     LoginActivity.startForLogin(getContext());
                 }
                 break;
             case R.id.my_onGoing:
-                OnGoingActivity.start(getContext(), bundle);
+                OnGoingActivity.start(getContext(), intent.getExtras());
                 break;
             case R.id.my_likes:
                 // list my likes
@@ -134,12 +136,12 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
                 break;
             case R.id.my_settings:
                 if (getToken() == null)
-                    SettingsActivity.startForResultLogin(getContext(), bundle);
+                    SettingsActivity.startForResultLogin(getContext(), intent.getExtras());
                 else
-                    SettingsActivity.startForResultLogout(getContext(), bundle);
+                    SettingsActivity.startForResultLogout(getContext(), intent.getExtras());
                 break;
             case R.id.my_quote:
-                QuoteActivity.start(getContext(), bundle);
+                QuoteActivity.start(getContext(), intent.getExtras());
                 break;
         }
     }

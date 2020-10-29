@@ -18,7 +18,7 @@ class UserLoginCacheUtils {
      * @param token    本次登录获取到的token
      * @param duration token持续时间
      */
-    fun saveUserToken(token: DomainAuthorize, duration: Long) {
+    fun saveUserToken(token: DomainAuthorize, duration: Long = 3_600) {
         var userTokenCache: UserTokenCache? = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache::class.java)
         if (userTokenCache == null) userTokenCache = UserTokenCache()
         userTokenCache.token = token
@@ -32,7 +32,7 @@ class UserLoginCacheUtils {
      *
      * @param info 本次登录获取的用户信息
      */
-    fun saveUserInfo(info: DomainUserInfo.DataBean?) {
+    fun saveUserInfo(info: DomainUserInfo.DataBean) {
         var userInfoCache: UserInfoCache? = mJsonCacheUtil.getValue(UserInfoCache.USER_INFO, UserInfoCache::class.java)
         if (userInfoCache == null) userInfoCache = UserInfoCache()
         userInfoCache.info = info
@@ -44,7 +44,7 @@ class UserLoginCacheUtils {
      *
      * @param key 键
      */
-    fun deleteCache(key: String?) {
+    fun deleteCache(key: String) {
         mJsonCacheUtil.deleteCache(key)
     }
 }

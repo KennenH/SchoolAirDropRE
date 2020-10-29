@@ -20,12 +20,14 @@ import com.example.schoolairdroprefactoredition.databinding.ActivityLoggedInBind
 import com.example.schoolairdroprefactoredition.databinding.ActivityLoginBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.domain.base.LoadState;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.utils.AnimUtil;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
+import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel;
 
-public class LoginActivity extends ImmersionStatusBarActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener, LoginViewModel.OnLoginErrorListener {
+public class LoginActivity extends ImmersionStatusBarActivity implements View.OnClickListener, CompoundButton.OnCheckedChangeListener {
     public static final int LOGIN = 1212;// 请求码 网络登录请求
 
     /**
@@ -95,7 +97,14 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
             binding = ActivityLoginBinding.inflate(LayoutInflater.from(this));
             setContentView(binding.getRoot());
             viewModel = new ViewModelProvider(this).get(LoginViewModel.class);
-            viewModel.setOnLoginErrorListener(this);
+            viewModel.getLoadState().observe(this, state -> {
+                if (state == LoadState.LOADING)
+                    showLoading();
+                else if (state == LoadState.ERROR) {
+                    isLogging = false;
+                    dismissLoading(() -> DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLogin));
+                }
+            });
 
             binding.loginWithAlipay.setEnabled(false);
             binding.cancel.setOnClickListener(this);
@@ -187,12 +196,5 @@ public class LoginActivity extends ImmersionStatusBarActivity implements View.On
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         binding.loginWithAlipay.setEnabled(isChecked);
-    }
-
-    @Override
-    public void onLoginError() {
-        isLogging = false;
-        dismissLoading(() ->
-                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLogin));
     }
 }
