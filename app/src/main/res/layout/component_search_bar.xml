@@ -11,7 +11,7 @@
         android:layout_height="@dimen/toolbar_icon_large"
         android:background="@drawable/bg_round_primary_light"
         android:drawableStart="@drawable/ic_search"
-        android:drawablePadding="@dimen/general_padding_small"
+        android:drawablePadding="@dimen/general_padding"
         android:gravity="start|center_vertical"
         android:hint="@string/search"
         android:importantForAutofill="no"

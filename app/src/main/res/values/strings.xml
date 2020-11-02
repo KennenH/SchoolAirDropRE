@@ -253,4 +253,6 @@
     <string name="logout">退出登录</string>
     <string name="confirmLogout">确认退出登录</string>
 
+    <string name="shareSearchBar" translatable="false">shareElementSearchBar</string>
+
 </resources>

@@ -8,15 +8,16 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentNewsFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasingFragment
 import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
@@ -28,6 +29,7 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.fragment_home.*
 import me.jessyan.autosize.AutoSizeCompat
 
 class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
@@ -51,6 +53,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     private val mOption by lazy {
         AMapLocationClientOption()
+    }
+
+    private val mSearch by lazy {
+        SearchFragment.newInstance()
     }
 
     private val mHome by lazy {
@@ -126,17 +132,11 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     private fun initView() {
         mHome.setOnSearchBarClickedListener {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, SearchFragment.newInstance(intent.extras))
-                    .addToBackStack(null)
-                    .commit()
+            showSearch()
         }
 
         mPurchasing.setOnSearchBarClickedListener {
-            supportFragmentManager.beginTransaction()
-                    .replace(R.id.container, SearchFragment.newInstance(intent.extras))
-                    .addToBackStack(null)
-                    .commit()
+            showSearch()
         }
 
         navView.setOnNavigationItemSelectedListener(this@MainActivity)
@@ -179,6 +179,24 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 else
                     beginTransaction()
                             .show(fragment)
+                            .commit()
+            }
+        }
+    }
+
+    private fun showSearch() {
+        supportFragmentManager.apply {
+            if (mSearch.isHidden || !mSearch.isAdded) {
+                if (!mSearch.isAdded)
+                    beginTransaction()
+                            .add(R.id.container, mSearch)
+                            .addToBackStack(null)
+                            .show(mSearch)
+                            .commit()
+                else
+                    beginTransaction()
+                            .show(mSearch)
+                            .addToBackStack(null)
                             .commit()
             }
         }

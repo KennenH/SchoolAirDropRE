@@ -26,6 +26,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/general_padding_large"
+                android:transitionName="@string/shareSearchBar"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/search_cancel"
                 app:layout_constraintStart_toStartOf="parent"
@@ -66,6 +67,7 @@
                 android:id="@+id/search_history"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#ff0000"
                 android:overScrollMode="never"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
@@ -74,6 +76,7 @@
                 android:id="@+id/search_suggestion"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="#00ff00"
                 android:overScrollMode="never"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
@@ -83,12 +86,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:overScrollMode="never"
+                android:background="#0000ff"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
 
             <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
                 android:id="@+id/search_place_holder"
                 android:layout_width="match_parent"
+                android:background="#ffff00"
                 android:layout_height="match_parent" />
         </FrameLayout>
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>

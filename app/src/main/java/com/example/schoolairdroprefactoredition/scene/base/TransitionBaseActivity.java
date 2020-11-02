@@ -22,9 +22,9 @@ import com.example.schoolairdroprefactoredition.R;
 /**
  * 一个activity中包含一个frameLayout以包含其他fragment
  * 切换动画以及逻辑已实现，只需添加fragment并调用
- * {@link TransactionBaseActivity#firstTransact(androidx.fragment.app.Fragment, java.lang.String)}
+ * {@link TransitionBaseActivity#firstTransact(androidx.fragment.app.Fragment, java.lang.String)}
  */
-public class TransactionBaseActivity extends ImmersionStatusBarActivity implements FragmentManager.OnBackStackChangedListener {
+public class TransitionBaseActivity extends ImmersionStatusBarActivity implements FragmentManager.OnBackStackChangedListener {
 
     protected TextView mName1;
     protected TextView mName2;

@@ -223,4 +223,6 @@
     <string name="gettingGoodsLocation">Locating item</string>
     <string name="goodsIsNotQuotable">Item Is Not Quotable</string>
     <string name="darkTheme">Dark Theme</string>
+    <string name="logout">Logout</string>
+    <string name="confirmLogout">Are You Sure You Want To Logout</string>
 </resources>

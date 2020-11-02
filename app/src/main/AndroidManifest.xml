@@ -33,6 +33,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".scene.trash.TrashBinActivity"></activity>
         <activity
             android:name=".scene.transactionstate.TransactionStateActivity"
             android:label="" />
@@ -100,7 +101,6 @@
         <activity
             android:name=".scene.map.AMapActivity"
             android:label="" />
-
         <activity
             android:name=".scene.main.MainActivity"
             android:configChanges="locale|layoutDirection|orientation|screenSize|keyboardHidden"
@@ -112,6 +112,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service
             android:name="com.amap.api.location.APSService"
             android:foregroundServiceType="location" />

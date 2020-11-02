@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
@@ -12,10 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseActivity;
+import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment;
 
-public class SettingsActivity extends TransactionBaseActivity implements FragmentManager.OnBackStackChangedListener {
+public class SettingsActivity extends TransitionBaseActivity implements FragmentManager.OnBackStackChangedListener {
 
     public Intent intent;
 
@@ -39,7 +38,6 @@ public class SettingsActivity extends TransactionBaseActivity implements Fragmen
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         intent = getIntent();
 
         final String settingName = getResources().getString(R.string.setting);

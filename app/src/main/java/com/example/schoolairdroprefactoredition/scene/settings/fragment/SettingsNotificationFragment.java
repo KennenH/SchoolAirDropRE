@@ -10,13 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
+import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 
 /**
  * 通知页面
  */
-public class SettingsNotificationFragment extends TransactionBaseFragment implements View.OnClickListener {
+public class SettingsNotificationFragment extends TransitionBaseFragment implements View.OnClickListener {
 
     public SettingsNotificationFragment() {
     }

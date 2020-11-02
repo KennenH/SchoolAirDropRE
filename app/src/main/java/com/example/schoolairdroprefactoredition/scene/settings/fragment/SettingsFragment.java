@@ -18,7 +18,7 @@ import com.example.schoolairdroprefactoredition.databinding.FragmentSettingsHome
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.domain.base.LoadState;
-import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
+import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -30,7 +30,7 @@ import com.lxj.xpopup.impl.LoadingPopupView;
 /**
  * 设置的主页面
  */
-public class SettingsFragment extends TransactionBaseFragment implements View.OnClickListener, SettingsActivity.OnLoginListener {
+public class SettingsFragment extends TransitionBaseFragment implements View.OnClickListener, SettingsActivity.OnLoginListener {
     public static final int LOGOUT = 1205; // 请求码 退出本地登录
 
     private LoginViewModel loginViewModel;

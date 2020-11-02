@@ -13,7 +13,7 @@ import androidx.fragment.app.FragmentManager;
 
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
-import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseActivity;
+import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.user.fragment.UserFragment;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
@@ -21,7 +21,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javadz.beanutils.BeanUtils;
 
-public class UserActivity extends TransactionBaseActivity implements FragmentManager.OnBackStackChangedListener {
+public class UserActivity extends TransitionBaseActivity implements FragmentManager.OnBackStackChangedListener {
     public static final int REQUEST_UPDATE = 520;
 
     /**

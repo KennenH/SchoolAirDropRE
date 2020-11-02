@@ -12,13 +12,13 @@ import androidx.annotation.Nullable;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSettingsAboutBinding;
-import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
+import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment;
 import com.example.schoolairdroprefactoredition.ui.components.PageItem;
 
 /**
  * 关于页面
  */
-public class SettingsAboutFragment extends TransactionBaseFragment implements View.OnClickListener {
+public class SettingsAboutFragment extends TransitionBaseFragment implements View.OnClickListener {
 
     private TextView mVersion;
     private PageItem mWhatsNew;

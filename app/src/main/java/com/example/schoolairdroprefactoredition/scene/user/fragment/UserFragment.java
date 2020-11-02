@@ -21,7 +21,7 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentUserBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
-import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment;
+import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment;
 import com.example.schoolairdroprefactoredition.scene.credit.CreditActivity;
 import com.example.schoolairdroprefactoredition.scene.main.my.MyViewModel;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
@@ -38,7 +38,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import javadz.beanutils.BeanUtils;
 
-public class UserFragment extends TransactionBaseFragment implements UserHomeBaseInfo.OnBaseInfoActionListener, UserHomeSellingInfo.OnMoreInfoActionListener, UserActivity.OnUserInfoUpdatedListener {
+public class UserFragment extends TransitionBaseFragment implements UserHomeBaseInfo.OnBaseInfoActionListener, UserHomeSellingInfo.OnMoreInfoActionListener, UserActivity.OnUserInfoUpdatedListener {
 
     private MyViewModel viewModel;
 

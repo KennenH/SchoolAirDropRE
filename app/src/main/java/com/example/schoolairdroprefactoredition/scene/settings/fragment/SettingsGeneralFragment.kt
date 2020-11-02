@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import com.example.schoolairdroprefactoredition.Application
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.scene.base.TransactionBaseFragment
+import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment
 import com.example.schoolairdroprefactoredition.ui.components.PageItem
 import com.example.schoolairdroprefactoredition.viewmodel.SettingsGeneralViewModel
 import kotlinx.android.synthetic.main.fragment_settings_general.*
 
-class SettingsGeneralFragment : TransactionBaseFragment(),
+class SettingsGeneralFragment : TransitionBaseFragment(),
         View.OnClickListener, PageItem.OnPageItemSelectedListener {
 
     private val generalViewModel by lazy {

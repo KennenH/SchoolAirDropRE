@@ -25,6 +25,7 @@ import com.example.schoolairdroprefactoredition.scene.quote.QuoteActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
+import com.example.schoolairdroprefactoredition.scene.trash.TrashBinActivity;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.ui.components.SSBInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -133,6 +134,8 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
                 break;
             case R.id.my_trash:
                 // list trash
+                TrashBinActivity.Companion.start(getContext());
+
                 break;
             case R.id.my_settings:
                 if (getToken() == null)

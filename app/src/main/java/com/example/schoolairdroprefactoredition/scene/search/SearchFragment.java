@@ -14,14 +14,14 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.transition.ChangeBounds;
+import androidx.transition.AutoTransition;
 import androidx.transition.Transition;
+import androidx.transition.TransitionInflater;
+import androidx.transition.TransitionListenerAdapter;
 import androidx.transition.TransitionManager;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSearchPrelayoutBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.BaseFooterAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderFooterOnlyRecyclerAdapter;
@@ -39,7 +39,6 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     private SearchViewModel searchViewModel;
 
     private FragmentSearchPrelayoutBinding binding;
-    private ConstraintSet constraintSet = new ConstraintSet();
 
     private HeaderFooterOnlyRecyclerAdapter mHistoryAdapter;
     private SearchSuggestionRecyclerAdapter mSuggestionAdapter;
@@ -47,9 +46,6 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     private SearchHistoryHeader mHistoryHeader;
 
-    private Bundle bundle;
-    private DomainUserInfo.DataBean info;
-    private DomainAuthorize token;
     private double longitude;
     private double latitude;
 
@@ -59,24 +55,28 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     private int searchPage = 1;
 
-    public static SearchFragment newInstance(Bundle bundle) {
-        SearchFragment fragment = new SearchFragment();
-        fragment.setArguments(bundle);
-        return fragment;
+    private final ConstraintSet constraintSet = new ConstraintSet();
+
+    public static SearchFragment newInstance() {
+        return new SearchFragment();
+    }
+
+    private Bundle getBundle() {
+        if (getActivity() != null) {
+            return getActivity().getIntent().getExtras();
+        }
+        return new Bundle();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bundle = getArguments();
-        if (bundle != null) {
-            info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
-            token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
-            try {
-                longitude = (double) bundle.getSerializable(ConstantUtil.LONGITUDE);
-                latitude = (double) bundle.getSerializable(ConstantUtil.LATITUDE);
-            } catch (NullPointerException ignored) {
-            }
+        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.share_element));
+
+        try {
+            longitude = (double) getBundle().getSerializable(ConstantUtil.LONGITUDE);
+            latitude = (double) getBundle().getSerializable(ConstantUtil.LATITUDE);
+        } catch (NullPointerException ignored) {
         }
     }
 
@@ -157,10 +157,13 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
             }
         });
 
-//        showHistory();
         binding.searchResult.setOnLoadMoreListener(this);
-        binding.search.openSearch();
         binding.refresh.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
         binding.root.post(this::startAnimation);
     }
 
@@ -188,33 +191,14 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     private void startAnimation() {
         constraintSet.clone(getContext(), R.layout.fragment_search);
-        Transition transition = new ChangeBounds();
+        Transition transition = new AutoTransition();
         transition.setInterpolator(new DecelerateInterpolator());
         transition.setDuration(150);
-        transition.addListener(new Transition.TransitionListener() {
-            @Override
-            public void onTransitionStart(@NonNull Transition transition) {
-
-            }
-
+        transition.addListener(new TransitionListenerAdapter() {
             @Override
             public void onTransitionEnd(@NonNull Transition transition) {
                 binding.refresh.setVisibility(View.VISIBLE);
-            }
-
-            @Override
-            public void onTransitionCancel(@NonNull Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionPause(@NonNull Transition transition) {
-
-            }
-
-            @Override
-            public void onTransitionResume(@NonNull Transition transition) {
-
+                binding.search.openSearch();
             }
         });
         TransitionManager.beginDelayedTransition(binding.root, transition);
