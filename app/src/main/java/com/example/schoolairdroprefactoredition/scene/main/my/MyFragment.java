@@ -18,19 +18,20 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.scene.capture.CaptureActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
-import com.example.schoolairdroprefactoredition.scene.ongoing.OnGoingActivity;
-import com.example.schoolairdroprefactoredition.scene.quote.QuoteActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
-import com.example.schoolairdroprefactoredition.scene.trash.TrashBinActivity;
+import com.example.schoolairdroprefactoredition.scene.tab.ongoing.OnGoingActivity;
+import com.example.schoolairdroprefactoredition.scene.tab.quote.QuoteActivity;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.ui.components.SSBInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.google.zxing.integration.android.IntentIntegrator;
 import com.lxj.xpopup.impl.LoadingPopupView;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
@@ -123,7 +124,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
                             (DomainAuthorize) intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE),
                             intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO));
                 } else {
-                    LoginActivity.startForLogin(getContext());
+                    LoginActivity.Companion.startForLogin(getContext());
                 }
                 break;
             case R.id.my_onGoing:
@@ -131,17 +132,17 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
                 break;
             case R.id.my_likes:
                 // list my likes
+                IntentIntegrator.forSupportFragment(MyFragment.this)
+                        .setCaptureActivity(CaptureActivity.class)
+                        .setBeepEnabled(false)
+                        .initiateScan();
                 break;
             case R.id.my_trash:
                 // list trash
-                TrashBinActivity.Companion.start(getContext());
 
                 break;
             case R.id.my_settings:
-                if (getToken() == null)
-                    SettingsActivity.startForResultLogin(getContext(), intent.getExtras());
-                else
-                    SettingsActivity.startForResultLogout(getContext(), intent.getExtras());
+                SettingsActivity.startForResultLogin(getContext(), intent.getExtras());
                 break;
             case R.id.my_quote:
                 QuoteActivity.start(getContext(), intent.getExtras());

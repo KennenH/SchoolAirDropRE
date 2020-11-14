@@ -125,13 +125,81 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/constraintLayout"
+                    android:id="@+id/theOtherSideLocationWrapper"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/general_padding_large"
                     android:background="@drawable/bg_rounded_white"
                     android:padding="@dimen/general_padding_bit_larger"
                     app:layout_constraintTop_toBottomOf="@id/location">
+
+                    <TextView
+                        android:id="@+id/theOtherSideTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:drawablePadding="@dimen/general_padding_bit_larger"
+                        android:gravity="center_vertical"
+                        android:text="对方约定的地点"
+                        android:textColor="@color/primaryText"
+                        android:textSize="@dimen/textSizeNormal"
+                        app:drawableStartCompat="@drawable/ic_icon_other_side_location"
+                        app:drawableTint="@color/colorAccent"
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:layout_editor_absoluteX="15dp" />
+
+                    <TextView
+                        android:id="@+id/theOtherSideLocation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/general_padding_large"
+                        android:text="巴比馒头"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/textSizeLarger"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/theOtherSideTitle" />
+
+                    <TextView
+                        android:id="@+id/theOtherSideDetailLocation"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/general_padding_large"
+                        android:text="中国计量大学西区8幢125号"
+                        android:textColor="@color/primaryText"
+                        android:textSize="@dimen/textSizeNormal"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/theOtherSideLocation" />
+
+                    <ImageView
+                        android:id="@+id/acceptLocation"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_marginEnd="@dimen/general_padding_bit_larger"
+                        android:background="@drawable/button_round_stroke_primary"
+                        android:src="@drawable/ic_success"
+                        app:layout_constraintEnd_toStartOf="@id/refuseLocation"
+                        app:layout_constraintTop_toTopOf="@id/refuseLocation" />
+
+                    <ImageView
+                        android:id="@+id/refuseLocation"
+                        android:layout_width="45dp"
+                        android:layout_height="45dp"
+                        android:layout_marginTop="@dimen/general_padding"
+                        android:background="@drawable/button_round_stroke_primary"
+                        android:src="@drawable/ic_failed"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/theOtherSideDetailLocation" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:id="@+id/constraintLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/general_padding_large"
+                    android:background="@drawable/bg_rounded_white"
+                    android:padding="@dimen/general_padding_bit_larger"
+                    app:layout_constraintTop_toBottomOf="@id/theOtherSideLocationWrapper">
 
                     <TextView
                         android:id="@+id/tip"

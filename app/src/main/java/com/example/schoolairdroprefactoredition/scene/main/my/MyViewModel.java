@@ -10,7 +10,7 @@ import com.example.schoolairdroprefactoredition.presenter.impl.MyImpl;
 
 public class MyViewModel extends BaseStateViewModel implements IMyCallback {
 
-    private MyImpl mImpl;
+    private final MyImpl mImpl;
 
     private MutableLiveData<DomainUserInfo> mUserInfo = new MutableLiveData<>();
 

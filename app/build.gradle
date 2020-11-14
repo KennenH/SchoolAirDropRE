@@ -77,7 +77,6 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.preference:preference-ktx:1.1.1'
     implementation 'androidx.security:security-crypto:1.1.0-alpha02'
-    implementation project(path: ':zxing')
 //    implementation files('../lib/libs/MiPush_SDK_Client_3_8_0.jar')
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0'
@@ -88,6 +87,9 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0'
+
+    // zxing
+    implementation 'com.journeyapps:zxing-android-embedded:4.1.0'
     //base recycler view
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
     //utils

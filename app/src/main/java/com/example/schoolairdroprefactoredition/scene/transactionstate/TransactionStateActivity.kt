@@ -12,7 +12,6 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.arrangeplace.ArrangePositionActivity
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil
-import com.google.zxing.client.android.CaptureActivity
 import kotlinx.android.synthetic.main.activity_transaction_state.*
 
 class TransactionStateActivity : AppCompatActivity(), View.OnClickListener {
@@ -56,8 +55,7 @@ class TransactionStateActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             QRCodeBtn -> {
-                val intent = Intent(this@TransactionStateActivity, CaptureActivity::class.java)
-                startActivity(intent)
+
             }
 
             avatar -> {

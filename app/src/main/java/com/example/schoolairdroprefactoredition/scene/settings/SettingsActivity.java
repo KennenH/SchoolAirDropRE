@@ -11,8 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment;
+import com.example.schoolairdroprefactoredition.scene.switchaccount.SwitchAccountActivity;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 public class SettingsActivity extends TransitionBaseActivity implements FragmentManager.OnBackStackChangedListener {
 
@@ -27,21 +30,19 @@ public class SettingsActivity extends TransitionBaseActivity implements Fragment
             ((AppCompatActivity) context).startActivityForResult(intent, LoginActivity.LOGIN);
     }
 
-    public static void startForResultLogout(Context context, Bundle bundle) {
-        Intent intent = new Intent(context, SettingsActivity.class);
-        if (bundle != null) intent.putExtras(bundle);
-        if (context instanceof AppCompatActivity)
-            ((AppCompatActivity) context).startActivityForResult(intent, SettingsFragment.LOGOUT);
-    }
+//    public static void startForResultLogout(Context context, Bundle bundle) {
+//        Intent intent = new Intent(context, SettingsActivity.class);
+//        if (bundle != null) intent.putExtras(bundle);
+//        if (context instanceof AppCompatActivity)
+//            ((AppCompatActivity) context).startActivityForResult(intent, SettingsFragment.LOGOUT);
+//    }
 
     @Override
     @SuppressLint("SourceLockedOrientationActivity")
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        intent = getIntent();
-
         final String settingName = getResources().getString(R.string.setting);
-        firstTransact(SettingsFragment.newInstance(intent), settingName);
+        firstTransact(SettingsFragment.newInstance(getIntent()), settingName);
     }
 
     @Override
@@ -53,6 +54,13 @@ public class SettingsActivity extends TransitionBaseActivity implements Fragment
 
                 if (mOnLoginListener != null)
                     mOnLoginListener.onLogged(data);
+            } else if (requestCode == SwitchAccountActivity.SWITCH_ACCOUNT) {
+                if (data != null) {
+                    DomainUserInfo.DataBean user = (DomainUserInfo.DataBean) data.getSerializableExtra(ConstantUtil.KEY_USER_INFO);
+                    if (user != null) {
+                        LoginActivity.Companion.startForLogin(SettingsActivity.this, user.getUalipay());
+                    }
+                }
             }
         }
     }

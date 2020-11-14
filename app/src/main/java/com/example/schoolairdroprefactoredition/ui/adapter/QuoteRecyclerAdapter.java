@@ -10,7 +10,7 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ItemQuoteBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainQuote;
-import com.example.schoolairdroprefactoredition.scene.quote.fragment.QuoteFragment;
+import com.example.schoolairdroprefactoredition.scene.tab.quote.fragment.QuoteFragment;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;

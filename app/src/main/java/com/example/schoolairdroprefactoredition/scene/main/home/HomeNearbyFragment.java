@@ -104,8 +104,13 @@ public class HomeNearbyFragment extends BaseChildFragment
                         showContentContainer();
                     }
                 });
-            } else showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
-        } else showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
+            } else {
+                showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
+            }
+        } else {
+            showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
+        }
+
     }
 
     @Override

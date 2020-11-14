@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
@@ -28,7 +27,7 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
 
     private OnSSBItemActionListener mOnSSBItemActionListener;
 
-    private boolean isMine;
+    private final boolean isMine;
 
     private GeocodeSearch mGeocodeSearch;
 
@@ -45,11 +44,11 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
             final boolean isSecondHand = bean.getGoods_is_brandNew() == 0;
 
             if (isQuotable && isSecondHand)
-                binding.goodsTitle.setText(getContext().getString(R.string.itemNSs, bean.getGoods_name()));
+                binding.ssbSellingGoodsTitle.setText(getContext().getString(R.string.itemNSs, bean.getGoods_name()));
             else if (isQuotable)
-                binding.goodsTitle.setText(getContext().getString(R.string.itemNs, bean.getGoods_name()));
+                binding.ssbSellingGoodsTitle.setText(getContext().getString(R.string.itemNs, bean.getGoods_name()));
             else
-                binding.goodsTitle.setText(getContext().getString(R.string.itemSs, bean.getGoods_name()));
+                binding.ssbSellingGoodsTitle.setText(getContext().getString(R.string.itemSs, bean.getGoods_name()));
 
             binding.goodsLocation.setLocationName(getContext().getString(R.string.gettingGoodsLocation));
             mGeocodeSearch = new GeocodeSearch(getContext());
@@ -73,8 +72,8 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
                     200, GeocodeSearch.AMAP);
             mGeocodeSearch.getFromLocationAsyn(query);
 
-            ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + bean.getGoods_img_cover());
-            binding.goodsOriginPrice.setPrice(bean.getGoods_price());
+            ImageUtil.loadRoundedImage(binding.ssbSellingGoodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + bean.getGoods_img_cover());
+            binding.ssbSellingGoodsPrice.setPrice(bean.getGoods_price());
 
             if (getContext() instanceof AppCompatActivity) {
                 Bundle bundle = ((AppCompatActivity) getContext()).getIntent().getExtras();

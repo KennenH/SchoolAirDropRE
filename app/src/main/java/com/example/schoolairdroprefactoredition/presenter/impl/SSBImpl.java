@@ -1,9 +1,8 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
-import com.example.schoolairdroprefactoredition.model.Api;
+import com.example.schoolairdroprefactoredition.model.api.Api;
 import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ISSBPresenter;
@@ -12,10 +11,8 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.IOException;
 import java.net.HttpURLConnection;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

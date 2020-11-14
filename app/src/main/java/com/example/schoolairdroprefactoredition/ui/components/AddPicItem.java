@@ -10,7 +10,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ItemAddPicBinding;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
@@ -52,7 +51,10 @@ public class AddPicItem extends ConstraintLayout implements View.OnClickListener
      */
     public void setImageLocalPath(String localPath) {
         this.imagePath = localPath;
-        binding.image.setImageURI(Uri.fromFile(new File(localPath)));
+        if (localPath.startsWith("content://") || localPath.startsWith("file://"))
+            binding.image.setImageURI(localPath);
+        else
+            binding.image.setImageURI(Uri.fromFile(new File(localPath)));
         binding.close.setVisibility(VISIBLE);
     }
 

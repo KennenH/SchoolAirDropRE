@@ -25,6 +25,8 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
@@ -74,10 +76,16 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         return binding.getRoot();
     }
 
+    @NonNull
     @Override
-    public void setContainerAndPlaceholder() {
-        mStatePlaceholderFragmentContainer = binding.ssbRecycler;
-        mStatePlaceholderFragmentPlaceholder = binding.placeHolder;
+    public StatePlaceHolder getStatePlaceholder() {
+        return binding.placeHolder;
+    }
+
+    @NotNull
+    @Override
+    public View getContentContainer() {
+        return binding.ssbRecycler;
     }
 
     /**

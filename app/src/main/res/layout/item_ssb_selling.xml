@@ -19,8 +19,8 @@
             android:layout_marginTop="@dimen/general_padding_large"
             android:contentDescription="@string/avatar"
             android:scaleType="centerCrop"
-            app:layout_constraintEnd_toEndOf="@+id/goods_title"
-            app:layout_constraintStart_toStartOf="@+id/goods_avatar"
+            app:layout_constraintEnd_toEndOf="@+id/ssb_selling_goods_title"
+            app:layout_constraintStart_toStartOf="@+id/ssb_selling_goods_avatar"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -41,12 +41,12 @@
             android:layout_height="2px"
             android:layout_marginTop="@dimen/general_padding_large"
             android:background="@color/colorLine"
-            app:layout_constraintEnd_toEndOf="@+id/goods_title"
+            app:layout_constraintEnd_toEndOf="@+id/ssb_selling_goods_title"
             app:layout_constraintStart_toStartOf="@+id/goods_location"
             app:layout_constraintTop_toBottomOf="@id/goods_location" />
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/goods_avatar"
+            android:id="@+id/ssb_selling_goods_avatar"
             android:layout_width="85dp"
             android:layout_height="85dp"
             android:layout_marginStart="@dimen/general_padding_bit_larger"
@@ -57,7 +57,7 @@
             app:roundedCornerRadius="@dimen/general_padding" />
 
         <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
-            android:id="@+id/goods_title"
+            android:id="@+id/ssb_selling_goods_title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/general_padding_large"
@@ -68,20 +68,20 @@
             android:textColor="@color/black"
             android:textSize="@dimen/textSizeNormal"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/goods_avatar"
-            app:layout_constraintTop_toTopOf="@+id/goods_avatar"
+            app:layout_constraintStart_toEndOf="@+id/ssb_selling_goods_avatar"
+            app:layout_constraintTop_toTopOf="@+id/ssb_selling_goods_avatar"
             tools:text="[img src=ic_negotiable_en_small/] [img src=ic_secondhand_en_small/] 华为 MateBookX " />
 
         <com.example.schoolairdroprefactoredition.ui.components.GoodsPrice
-            android:id="@+id/goods_origin_price"
+            android:id="@+id/ssb_selling_goods_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="$109.0"
             android:textColor="@color/colorAccent"
             android:textSize="@dimen/textSizeNormal"
             android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="@+id/goods_avatar"
-            app:layout_constraintStart_toStartOf="@+id/goods_title" />
+            app:layout_constraintBottom_toBottomOf="@+id/ssb_selling_goods_avatar"
+            app:layout_constraintStart_toStartOf="@+id/ssb_selling_goods_title" />
 
         <View
             android:id="@+id/line1"
@@ -89,9 +89,9 @@
             android:layout_height="2px"
             android:layout_marginTop="@dimen/general_padding_large"
             android:background="@color/colorLine"
-            app:layout_constraintEnd_toEndOf="@+id/goods_title"
+            app:layout_constraintEnd_toEndOf="@+id/ssb_selling_goods_title"
             app:layout_constraintStart_toStartOf="@id/goods_location"
-            app:layout_constraintTop_toBottomOf="@id/goods_avatar" />
+            app:layout_constraintTop_toBottomOf="@id/ssb_selling_goods_avatar" />
 
         <TextView
             android:id="@+id/goods_watches"
@@ -137,7 +137,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_more_action"
             app:layout_constraintBottom_toBottomOf="@+id/goods_watches"
-            app:layout_constraintEnd_toEndOf="@+id/goods_title"
+            app:layout_constraintEnd_toEndOf="@+id/ssb_selling_goods_title"
             app:layout_constraintTop_toTopOf="@+id/goods_watches" />
 
     </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

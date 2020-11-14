@@ -2,18 +2,19 @@ package com.example.schoolairdroprefactoredition.scene.base;
 
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
+import android.content.res.Resources;
 import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.BarUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil;
 import com.lxj.xpopup.impl.LoadingPopupView;
+
+import me.jessyan.autosize.AutoSizeCompat;
 
 public class ImmersionStatusBarActivity extends AppCompatActivity {
     private LoadingPopupView mLoading;
@@ -52,5 +53,14 @@ public class ImmersionStatusBarActivity extends AppCompatActivity {
     protected void dismissLoading(Runnable task) {
         if (mLoading != null)
             mLoading.dismissWith(task);
+    }
+
+    /**
+     * 帮助androidAutoSize适配屏幕
+     */
+    @Override
+    public Resources getResources() {
+        AutoSizeCompat.autoConvertDensityOfGlobal(super.getResources());
+        return super.getResources();
     }
 }

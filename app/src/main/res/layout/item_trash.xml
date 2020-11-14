@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardCornerRadius="@dimen/general_padding"
+    app:cardElevation="1dp">
+
+    <com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_sheet_white">
+
+        <TextView
+            android:id="@+id/trashTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/general_padding_bit_larger"
+            android:ellipsize="end"
+            android:lines="1"
+            android:text="2/4 对方主动中断交易"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSizeNormal"
+            app:layout_constraintEnd_toEndOf="@+id/line0"
+            app:layout_constraintStart_toStartOf="@+id/goodsAvatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/line0"
+            android:layout_width="0dp"
+            android:layout_height="2px"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:background="@color/colorLine"
+            app:layout_constraintEnd_toEndOf="@+id/goodsTitle"
+            app:layout_constraintStart_toStartOf="@+id/goodsAvatar"
+            app:layout_constraintTop_toBottomOf="@+id/trashTitle" />
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/goodsAvatar"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
+            android:layout_marginStart="@dimen/general_padding_bit_larger"
+            android:layout_marginTop="@dimen/general_padding_large"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/line0"
+            app:placeholderImage="@drawable/placeholder_rounded"
+            app:roundedCornerRadius="@dimen/general_padding_tiny" />
+
+        <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
+            android:id="@+id/goodsTitle"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/general_padding_large"
+            android:layout_marginEnd="@dimen/general_padding_bit_larger"
+            android:ellipsize="end"
+            android:gravity="start"
+            android:lines="2"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSizeNormal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/goodsAvatar"
+            app:layout_constraintTop_toTopOf="@+id/goodsAvatar"
+            tools:text="[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] 华为 MateBookX " />
+
+        <TextView
+            android:id="@+id/goodsPriceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/negotiatePrice"
+            android:textColor="@color/primaryText"
+            android:textSize="@dimen/textSizeMin"
+            app:layout_constraintBottom_toTopOf="@+id/goodsNegotiatePrice"
+            app:layout_constraintEnd_toEndOf="@+id/goodsTitle"
+            app:layout_constraintTop_toBottomOf="@+id/on_going_title"
+            app:layout_constraintVertical_chainStyle="spread" />
+
+        <com.example.schoolairdroprefactoredition.ui.components.GoodsPrice
+            android:id="@+id/goodsNegotiatePrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/textSizeNormal"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@+id/goodsAvatar"
+            app:layout_constraintEnd_toEndOf="@+id/goodsTitle" />
+
+        <View
+            android:id="@+id/line1"
+            android:layout_width="0dp"
+            android:layout_height="2px"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:background="@color/colorLine"
+            app:layout_constraintEnd_toEndOf="@id/goodsTitle"
+            app:layout_constraintStart_toStartOf="@+id/goodsAvatar"
+            app:layout_constraintTop_toBottomOf="@id/goodsAvatar" />
+
+        <TextView
+            android:id="@+id/cancelText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/transactionCancelReason"
+            android:textColor="@color/primaryText"
+            app:layout_constraintBottom_toBottomOf="@+id/cancelReason"
+            app:layout_constraintStart_toStartOf="@+id/goodsAvatar"
+            app:layout_constraintTop_toTopOf="@+id/cancelReason" />
+
+        <TextView
+            android:id="@+id/cancelReason"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/general_padding_bit_larger"
+            android:layout_marginTop="@dimen/general_padding_bit_larger"
+            android:layout_marginBottom="@dimen/general_padding_bit_larger"
+            android:ellipsize="end"
+            android:gravity="center_vertical|end"
+            android:lines="1"
+            android:text="@string/notMatchDescription"
+            android:textColor="@color/colorPrimaryRed"
+            android:textSize="@dimen/textSizeNormal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/goodsTitle"
+            app:layout_constraintStart_toEndOf="@+id/cancelText"
+            app:layout_constraintTop_toBottomOf="@+id/line1" />
+    </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>
+</androidx.cardview.widget.CardView>

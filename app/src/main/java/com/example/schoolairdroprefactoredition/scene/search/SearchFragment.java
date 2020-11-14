@@ -243,7 +243,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
         binding.searchSuggestion.setVisibility(View.GONE);
         binding.searchResult.setVisibility(View.GONE);
         binding.searchPlaceHolder.setVisibility(View.VISIBLE);
-        binding.searchPlaceHolder.setPlaceHolderType(type);
+        binding.searchPlaceHolder.setPlaceholderType(type);
     }
 
     @Override

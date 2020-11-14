@@ -2,22 +2,20 @@ package com.example.schoolairdroprefactoredition.scene.main
 
 import android.app.Activity
 import android.content.Intent
-import android.content.res.Resources
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentNewsFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasingFragment
 import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
@@ -29,8 +27,6 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.fragment_home.*
-import me.jessyan.autosize.AutoSizeCompat
 
 class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
         AMapLocationListener {
@@ -43,8 +39,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         ViewModelProvider(this).get(LoginViewModel::class.java)
     }
 
-    private val tokenViewModel by lazy {
-        ViewModelProvider(this).get(TokenViewModel::class.java)
+    private val accountViewModel by lazy {
+        ViewModelProvider(this).get(AccountViewModel::class.java)
     }
 
     private val mClient by lazy {
@@ -74,12 +70,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     private var mOnLoginStateChangedListener: OnLoginStateChangedListener? = null
     private var mOnLocationListener: OnLocationListener? = null
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        initCache()
-        initView()
+        checkIfAgreeToTermsOfServiceAndPrivacyPolicy()
     }
 
     /**
@@ -99,21 +93,21 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         if (resultCode == Activity.RESULT_OK)
             when (requestCode) {
                 LoginActivity.LOGIN -> {
-                    intent.putExtra(ConstantUtil.KEY_AUTHORIZE, data?.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE))
-                    intent.putExtra(ConstantUtil.KEY_USER_INFO, data?.getSerializableExtra(ConstantUtil.KEY_USER_INFO))
-                    mOnLoginStateChangedListener?.onLoginStateChanged()
+                    if (data == null) {
+                        intent.removeExtra(ConstantUtil.KEY_USER_INFO)
+                        intent.removeExtra(ConstantUtil.KEY_AUTHORIZE)
+                        mOnLoginStateChangedListener?.onLoginStateChanged()
+                    } else {
+                        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, data.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE))
+                        intent.putExtra(ConstantUtil.KEY_USER_INFO, data.getSerializableExtra(ConstantUtil.KEY_USER_INFO))
+                        mOnLoginStateChangedListener?.onLoginStateChanged()
+                    }
                 }
 
                 UserActivity.REQUEST_UPDATE -> {
                     if (data?.getBooleanExtra(ConstantUtil.KEY_UPDATED, false) as Boolean) {
                         autoLoginWithToken()
                     }
-                }
-
-                SettingsFragment.LOGOUT -> {
-                    intent.removeExtra(ConstantUtil.KEY_USER_INFO)
-                    intent.removeExtra(ConstantUtil.KEY_AUTHORIZE)
-                    mOnLoginStateChangedListener?.onLoginStateChanged()
                 }
             }
     }
@@ -143,6 +137,17 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         navView.selectedItemId = R.id.navigation_box
     }
 
+    /**
+     * 当用户同意使用服务条款时才加载首页内容
+     */
+    override fun agreeToTermsOfService() {
+        super.agreeToTermsOfService()
+        setContentView(R.layout.activity_main)
+
+        initCache()
+        initView()
+    }
+
     override fun locationGranted() {
         super.locationGranted()
         startLocation()
@@ -154,10 +159,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     private fun initCache() {
-        tokenViewModel.tokenCaChe.observe(this@MainActivity, {
+        accountViewModel.lastLoggedTokenCaChe.observe(this@MainActivity, {
             intent.putExtra(ConstantUtil.KEY_AUTHORIZE, it)
         })
-        tokenViewModel.userInfoCache.observe(this@MainActivity, {
+        accountViewModel.lastLoggedUserInfoCache.observe(this@MainActivity, {
             intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
         })
     }
@@ -207,17 +212,24 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 如果获取本地token为空而用户基本信息仍有缓存则代表用户token已过期，将自动重新登录
      * <p>
      * token 有效时间在LoginImpl中修改，否则与服务器过期时间不同会导致用户自动登录失败
+     *
+     * 同步锁防止多个子fragment同时请求MainActivity的登陆
      */
+    @Synchronized
     fun autoLogin() {
         if (!autoLogged) {
             autoLogged = true // 已自动登录标识，防止多个子fragment调用此方法
-            tokenViewModel.tokenCaChe.observe(this, {
+            accountViewModel.lastLoggedTokenCaChe.observe(this, {
                 if (it != null) { // token 仍有效 使用本地缓存重新获取token后登录
+                    intent.putExtra(ConstantUtil.KEY_AUTHORIZE, it)
                     autoLoginWithToken()
                 } else {
-                    tokenViewModel.userInfoCache.observe(this, { infoCache: DomainUserInfo.DataBean? ->
-                        if (infoCache != null) // token 已无效 使用本地缓存重新获取token后登录
+                    accountViewModel.lastLoggedUserInfoCache.observe(this, { infoCache ->
+                        // token 已无效 使用本地缓存重新获取token后登录
+                        if (infoCache != null) {
+                            intent.putExtra(ConstantUtil.KEY_USER_INFO, infoCache)
                             autoReLoginWithCache()
+                        }
                     })
                 }
             })
@@ -233,7 +245,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     private fun autoLoginWithToken() {
         val token: DomainAuthorize = intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE) as DomainAuthorize
         if (token.access_token != null) {
-            loginViewModel.getUserInfo(token.access_token).observe(this, {
+            loginViewModel.getUserInfo(token.access_token)?.observe(this, {
 
                 Toast.makeText(this@MainActivity, "登录成功", Toast.LENGTH_SHORT).show()
 
@@ -250,20 +262,30 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      */
     private fun autoReLoginWithCache() {
         val userInfo: DomainUserInfo.DataBean = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean
+        var gettingPublicKey = false
         if (userInfo.ualipay != null) {
-            loginViewModel.apply {
-                getPublicKey().observe(this@MainActivity, { publicK ->
-                    authorizeWithAlipayID(
-                            publicK.cookie,
-                            userInfo.ualipay,
-                            publicK.public_key)
-                            .observe(this@MainActivity, { token ->
-                                intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token)
-                                autoLoginWithToken()
-                            })
-                })
-            }
+            loginViewModel.getPublicKey()?.observe(this@MainActivity, { publicK ->
+                if (!gettingPublicKey && publicK != null) {
+                    gettingPublicKey = true
+                    authorizeWithAlipayID(userInfo, publicK)
+                }
+            })
         }
+    }
+
+    /**
+     * 使用同步锁定防止多次同时请求
+     */
+    @Synchronized
+    private fun authorizeWithAlipayID(userInfo: DomainUserInfo.DataBean, publicK: DomainAuthorizeGet) {
+        loginViewModel.authorizeWithAlipayID(
+                publicK.cookie,
+                userInfo.ualipay,
+                publicK.public_key)
+                .observe(this@MainActivity, { token ->
+                    intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token)
+                    autoLoginWithToken()
+                })
     }
 
     private fun startLocation() {
@@ -332,13 +354,5 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         mOnLocationListener?.onLocated(aMapLocation)
         intent.putExtra(ConstantUtil.LONGITUDE, aMapLocation?.longitude)
         intent.putExtra(ConstantUtil.LATITUDE, aMapLocation?.latitude)
-    }
-
-    /**
-     * 帮助AndroidAutoSize适配屏幕
-     */
-    override fun getResources(): Resources {
-        AutoSizeCompat.autoConvertDensityOfGlobal(super.getResources())
-        return super.getResources()
     }
 }

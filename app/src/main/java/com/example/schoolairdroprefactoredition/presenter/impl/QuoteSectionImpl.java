@@ -3,7 +3,7 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainQuote;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
-import com.example.schoolairdroprefactoredition.model.Api;
+import com.example.schoolairdroprefactoredition.model.api.Api;
 import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IQuoteSectionsPresenter;
@@ -12,7 +12,6 @@ import com.example.schoolairdroprefactoredition.presenter.callback.IQuoteSection
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Response;
 import retrofit2.Retrofit;

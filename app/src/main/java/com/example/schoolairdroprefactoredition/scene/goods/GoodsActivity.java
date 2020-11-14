@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -126,13 +125,15 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
         if (token != null && goodsInfo.getSeller_info() != null) {
             checkIfItemFavored();
             myViewModel.getUserInfo(token.getAccess_token()).observe(this, data -> {
-                isNotMine = data.getData().get(0).getUid() != goodsInfo.getSeller_info().getUid();
-                if (isNotMine) { // 不是我的物品，则显示与卖家互动的按钮
-                    binding.goodsButtonLeft.setVisibility(View.VISIBLE);
-                    binding.goodsButtonRight.setVisibility(View.VISIBLE);
-                    binding.goodsInfoContainer.showBottom();
+                if (data != null) {
+                    isNotMine = data.getData().get(0).getUid() != goodsInfo.getSeller_info().getUid();
+                    if (isNotMine) { // 不是我的物品，则显示与卖家互动的按钮
+                        binding.goodsButtonLeft.setVisibility(View.VISIBLE);
+                        binding.goodsButtonRight.setVisibility(View.VISIBLE);
+                        binding.goodsInfoContainer.showBottom();
+                    }
+                    binding.goodsInfoContainer.stopShimming();
                 }
-                binding.goodsInfoContainer.stopShimming();
             });
         } else binding.goodsInfoContainer.stopShimming();
 
@@ -143,22 +144,13 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
      * 检查物品是否被收藏
      */
     private void checkIfItemFavored() {
-        if (token != null && goodsInfo != null)
-            goodsViewModel.isItemFavored(token.getAccess_token(), goodsInfo.getGoods_id()).observe(this, isItemFavored -> {
-                isFavored = isItemFavored;
-                if (isItemFavored)
-                    binding.goodsButtonRight.setFavor(true);
-                else
-                    binding.goodsButtonRight.setFavor(false);
-            });
-        binding.goodsInfoContainer.stopShimming();
     }
 
     /**
      * 登录
      */
     public void login() {
-        LoginActivity.startForLogin(this);
+        LoginActivity.Companion.startForLogin(this);
     }
 
     @Override
@@ -188,11 +180,16 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
             if (goodsInfo != null && isNotMine) {
                 showLoading();
                 goodsViewModel.quoteRequest(token.getAccess_token(), goodsInfo.getGoods_id(), input)
-                        .observe(this, result -> dismissLoading(() -> {
-                            if (dialog != null)
-                                dialog.dismiss();
-                            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successQuote);
-                        }));
+                        .observe(this, result -> {
+                                    if (result != null) {
+                                        dismissLoading(() -> {
+                                            if (dialog != null)
+                                                dialog.dismiss();
+                                            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successQuote);
+                                        });
+                                    }
+                                }
+                        );
             } else {
                 if (dialog != null)
                     dialog.dismiss();
@@ -286,6 +283,8 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                             quote(binding.quotePrice.getText().toString());
                     });
 
+                    binding.quotePrice.clearFocus();
+
                     {
                         View view1 = dialog.getDelegate().findViewById(com.google.android.material.R.id.design_bottom_sheet);
                         view1.setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.transparent, this.getTheme()));
@@ -313,22 +312,6 @@ public class GoodsActivity extends ImmersionStatusBarActivity implements ButtonS
                 }
             }
             dialog.show();
-        }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-
-        try {
-            if (isFavored != binding.goodsButtonRight.getIsFavored()) {
-                if (binding.goodsButtonRight.getIsFavored()) {
-                    goodsViewModel.favoriteItem(token.getAccess_token(), goodsInfo.getGoods_id());
-                } else {
-                    goodsViewModel.unFavorItem(token.getAccess_token(), goodsInfo.getGoods_id());
-                }
-            }
-        } catch (NullPointerException ignored) {
         }
     }
 

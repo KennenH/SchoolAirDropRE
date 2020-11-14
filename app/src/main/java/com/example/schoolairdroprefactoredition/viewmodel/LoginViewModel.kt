@@ -38,10 +38,11 @@ class LoginViewModel : ViewModel() {
         viewModelScope.launch {
             loadState.value = LoadState.LOADING
             mainRepository.getPublicKey { success, response ->
-                if (success)
+                if (success) {
                     mPublicKey.postValue(response)
-                else
+                } else {
                     loadState.value = LoadState.ERROR
+                }
             }
         }
         return mPublicKey
@@ -61,13 +62,15 @@ class LoginViewModel : ViewModel() {
                     rawAlipayID,
                     publicKey,
             ) { success, response ->
-                if (success)
+                if (success) {
                     mAuthorize.postValue(response)
-                else
+                } else {
                     loadState.value = LoadState.ERROR
+                }
 
-                if (response != null)
+                if (response != null) {
                     UserLoginCacheUtils.instance.saveUserToken(response)
+                }
             }
         }
         return mAuthorize
@@ -82,11 +85,13 @@ class LoginViewModel : ViewModel() {
                 if (success) {
                     mUserInfo.postValue(response)
                     loadState.value = LoadState.SUCCESS
-                } else
+                } else {
                     loadState.value = LoadState.ERROR
+                }
 
-                if (response != null)
+                if (response != null) {
                     UserLoginCacheUtils.instance.saveUserInfo(response.data[0])
+                }
             }
         }
         return mUserInfo

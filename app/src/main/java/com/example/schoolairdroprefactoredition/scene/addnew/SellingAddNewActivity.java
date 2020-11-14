@@ -318,7 +318,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
                                     });
                         }
                     } else {
-                        LoginActivity.startForLogin(this);
+                        LoginActivity.Companion.startForLogin(this);
                     }
                 } else // 修改物品
                     AddNewResultActivity.start(this, true, TIP_MODIFY_FAILED);

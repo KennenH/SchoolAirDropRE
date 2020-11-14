@@ -53,9 +53,8 @@
             android:layout_marginStart="@dimen/general_padding_large"
             android:layout_marginEnd="@dimen/general_padding_bit_larger"
             android:ellipsize="end"
-            android:gravity="center_vertical|start"
             android:lines="2"
-            android:text="[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] 华为 MateBookX 一年 7成新 物美价廉 买不了吃亏买不了上当"
+            android:text="[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] 华为 MateBookX 一年 7成新 "
             android:textColor="@color/black"
             android:textSize="@dimen/textSizeNormal"
             app:layout_constraintEnd_toEndOf="parent"
@@ -82,21 +81,21 @@
             app:layout_constraintEnd_toEndOf="@+id/on_going_title"
             app:layout_constraintTop_toBottomOf="@+id/on_going_price_text" />
 
-        <TextView
-            android:id="@+id/on_going_remaining"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:gravity="end|center_vertical"
-            android:paddingStart="@dimen/general_padding_large"
-            android:paddingTop="@dimen/general_padding_tiny"
-            android:paddingEnd="@dimen/general_padding_tiny"
-            android:paddingBottom="@dimen/general_padding_tiny"
-            android:text="@string/remainingTime"
-            android:textColor="@color/black"
-            android:textSize="@dimen/textSizeNormal"
-            android:textStyle="bold"
-            app:layout_constraintBaseline_toBaselineOf="@id/on_going_header_title"
-            app:layout_constraintEnd_toEndOf="@+id/on_going_title" />
+<!--        <TextView-->
+<!--            android:id="@+id/on_going_remaining"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:gravity="end|center_vertical"-->
+<!--            android:paddingStart="@dimen/general_padding_large"-->
+<!--            android:paddingTop="@dimen/general_padding_tiny"-->
+<!--            android:paddingEnd="@dimen/general_padding_tiny"-->
+<!--            android:paddingBottom="@dimen/general_padding_tiny"-->
+<!--            android:text="@string/remainingTime"-->
+<!--            android:textColor="@color/black"-->
+<!--            android:textSize="@dimen/textSizeNormal"-->
+<!--            android:textStyle="bold"-->
+<!--            app:layout_constraintBaseline_toBaselineOf="@id/on_going_header_title"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/on_going_title" />-->
 
 
         <TextView

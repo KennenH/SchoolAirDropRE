@@ -4,21 +4,17 @@ import android.content.Context;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult;
-import com.example.schoolairdroprefactoredition.model.Api;
+import com.example.schoolairdroprefactoredition.model.api.Api;
 import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IUserAvatarPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IUserAvatarCallback;
 import com.example.schoolairdroprefactoredition.utils.FileUtil;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 
-import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 

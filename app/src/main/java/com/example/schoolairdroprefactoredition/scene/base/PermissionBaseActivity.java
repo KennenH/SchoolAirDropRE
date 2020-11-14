@@ -4,14 +4,19 @@ import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 
 import com.blankj.utilcode.constant.PermissionConstants;
+import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.lxj.xpopup.XPopup;
+import com.lxj.xpopup.core.BasePopupView;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
@@ -97,6 +102,52 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                 .request();
     }
 
+    /**
+     * 检查是否已经同意服务条款和隐私政策
+     */
+    public void checkIfAgreeToTermsOfServiceAndPrivacyPolicy() {
+        boolean isAgreed = getSharedPreferences(ConstantUtil.START_UP_PREFERENCE, MODE_PRIVATE).getBoolean(ConstantUtil.START_UP_IS_TERMS_AGREED, false);
+        if (!isAgreed) {
+            new XPopup.Builder(this)
+                    .isClickThrough(false)
+                    .dismissOnTouchOutside(false)
+                    .asCustom(new BasePopupView(this) {
+                        @Override
+                        protected void init() {
+                            super.init();
+                            TextView agree = findViewById(R.id.dialog_privacy_agree);
+                            TextView disagree = findViewById(R.id.dialog_privacy_disagree);
+                            ((CheckBox) findViewById(R.id.dialog_privacy_check)).setOnCheckedChangeListener((button, selected) -> {
+                                agree.setEnabled(selected);
+                                if (selected)
+                                    agree.setText(getString(R.string.agreeAboveAgreementAndStartToUse));
+                                else
+                                    agree.setText(getString(R.string.pleaseAgreeAboveTermsFirst));
+                            });
+
+                            agree.setOnClickListener(v -> {
+                                dismiss();
+                                agreeToTermsOfService();
+
+//                                getSharedPreferences(ConstantUtil.START_UP_PREFERENCE, MODE_PRIVATE)
+//                                        .edit()
+//                                        .putBoolean(ConstantUtil.START_UP_IS_TERMS_AGREED, true)
+//                                        .apply();
+                            });
+
+                            disagree.setOnClickListener(v -> AppUtils.exitApp());
+                        }
+
+                        @Override
+                        protected int getPopupLayoutId() {
+                            return R.layout.dialog_privacy_policy;
+                        }
+                    })
+                    .show();
+        } else {
+            agreeToTermsOfService();
+        }
+    }
 
     /**
      * 仅检查是否有某个权限，不请求权限，即权限被拒绝时保持完全沉默
@@ -152,6 +203,12 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
      * 手动请求码，在检测到权限被拒绝时会弹窗引导用户手动设置
      */
     public @interface Manually {
+    }
+
+    /**
+     * 用户同意使用隐私政策
+     */
+    protected void agreeToTermsOfService() {
     }
 
     /**

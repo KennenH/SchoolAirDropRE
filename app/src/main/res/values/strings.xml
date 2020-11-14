@@ -12,7 +12,10 @@
     <string name="alipayID" translatable="false">%s</string>
     <string name="userProtocol" translatable="false">《用户许可协议》</string>
     <string name="serviceProtocol" translatable="false">《校园空投服务条款》</string>
+    <string name="privacyProtocol" translatable="false">《校园空投及第三方服务隐私政策》</string>
     <string name="fraction0" translatable="false">.00</string>
+
+
     <string name="itemNS">"[img src=ic_negotiable/] [img src=ic_secondhand/] %s"</string>
     <string name="itemNSs">"[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] %s"</string>
     <string name="itemN">"[img src=ic_negotiable/] %s"</string>
@@ -254,5 +257,24 @@
     <string name="confirmLogout">确认退出登录</string>
 
     <string name="shareSearchBar" translatable="false">shareElementSearchBar</string>
+    <string name="confirmTransaction">确认收货</string>
+    <string name="buyerReceiveQRCode">买家收货码</string>
+    <string name="pleaseConfirmPurchase">请在确认购买之后再给予卖家扫描</string>
+    <string name="refreshQR">刷新二维码</string>
+    <string name="noTorchTip">该设备不支持开启灯光</string>
+    <string name="eventStep1">1/4 等待见面</string>
+    <string name="eventStep2">2/4 等待支付</string>
+    <string name="eventStep3">3/4 等待交付</string>
+    <string name="eventStep4">4/4 交易即将完成</string>
+    <string name="negotiatePrice">协商价格</string>
+    <string name="transactionCancelReason">原因</string>
+    <string name="transhBin">回收站</string>
+    <string name="currentAccount">当前账号</string>
+    <string name="agreeAboveAgreementAndStartToUse">同意并开始使用</string>
+    <string name="disagreeAndQuit">拒绝并退出校园空投</string>
+    <string name="serviceTip">在开始之前，请仔细阅读我们的服务条款和隐私政策(包含第三方服务)</string>
+    <string name="haveReadAndAgreeTerms">我已认真阅读并同意以上服务条款和隐私政策</string>
+    <string name="privacyAndService">隐私政策与服务条款</string>
+    <string name="pleaseAgreeAboveTermsFirst">请先阅读并同意以上条款</string>
 
 </resources>

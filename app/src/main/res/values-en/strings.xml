@@ -225,4 +225,20 @@
     <string name="darkTheme">Dark Theme</string>
     <string name="logout">Logout</string>
     <string name="confirmLogout">Are You Sure You Want To Logout</string>
+    <string name="refreshQR">Refresh</string>
+    <string name="noTorchTip">Torch Not Supported On This Device</string>
+    <string name="eventStep1">1/4 Waiting For Payment</string>
+    <string name="eventStep2">2/4 Waiting For 哈哈哈</string>
+    <string name="eventStep3">3/4 Waiting For 干哈叫</string>
+    <string name="eventStep4">"4/4 "</string>
+    <string name="negotiatePrice">Negotiated price</string>
+    <string name="transactionCancelReason">Reason</string>
+    <string name="transhBin">Trash Bin</string>
+    <string name="haveReadAndAgreeTerms">I have carefully read and agree to the above terms of service and privacy policy</string>
+    <string name="agreeAboveAgreementAndStartToUse">Agree and start using</string>
+    <string name="disagreeAndQuit">Reject and exit app</string>
+    <string name="currentAccount">Current Account</string>
+    <string name="privacyAndService">Privacy Policy and Terms of Service</string>
+    <string name="pleaseAgreeAboveTermsFirst">Please agree terms above first</string>
+    <string name="serviceTip">Before we start, please read our terms of service and privacy policy (including third-party services)</string>
 </resources>

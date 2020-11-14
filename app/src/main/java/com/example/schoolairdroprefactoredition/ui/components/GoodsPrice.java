@@ -12,9 +12,9 @@ import com.example.schoolairdroprefactoredition.utils.NumberUtil;
 
 public class GoodsPrice extends ConstraintLayout {
 
-    private TextView mCurrency;
-    private TextView mPriceInt;
-    private TextView mPriceFraction;
+    private final TextView mCurrency;
+    private final TextView mPriceInt;
+    private final TextView mPriceFraction;
 
     public GoodsPrice(Context context) {
         this(context, null);

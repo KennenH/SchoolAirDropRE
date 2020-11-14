@@ -25,7 +25,6 @@ class UserLoginCacheUtils {
         mJsonCacheUtil.saveCache(UserTokenCache.USER_TOKEN, userTokenCache, duration)
     }
 
-
     /**
      * 保存上次登录后获取的用户信息
      * 以便下次打开app时即时加载
@@ -35,16 +34,34 @@ class UserLoginCacheUtils {
     fun saveUserInfo(info: DomainUserInfo.DataBean) {
         var userInfoCache: UserInfoCache? = mJsonCacheUtil.getValue(UserInfoCache.USER_INFO, UserInfoCache::class.java)
         if (userInfoCache == null) userInfoCache = UserInfoCache()
-        userInfoCache.info = info
+        userInfoCache.updateUserAccount(info)
+        mJsonCacheUtil.saveCache(UserInfoCache.USER_INFO, userInfoCache)
+    }
+
+    /**
+     * 退出当前账号
+     * 不会删除当前账号在设备上的缓存
+     *
+     * 除非删除账号，会将在本设备上的该账号信息清除
+     */
+    private fun quitCurrentUser() {
+        var userInfoCache: UserInfoCache? = mJsonCacheUtil.getValue(UserInfoCache.USER_INFO, UserInfoCache::class.java)
+        if (userInfoCache == null) userInfoCache = UserInfoCache()
+        userInfoCache.quitCurrentAccount()
         mJsonCacheUtil.saveCache(UserInfoCache.USER_INFO, userInfoCache)
     }
 
     /**
      * 删除对应键的值
      *
+     * todo 删除缓存对于用户信息来说分两种，第一种仅退出账号不删除信息，第二种删除信息，此处是仅退出不删除
+     *
      * @param key 键
      */
     fun deleteCache(key: String) {
-        mJsonCacheUtil.deleteCache(key)
+        if (key == UserInfoCache.USER_INFO) {
+            quitCurrentUser()
+        } else
+            mJsonCacheUtil.deleteCache(key)
     }
 }

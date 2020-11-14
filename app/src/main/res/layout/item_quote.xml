@@ -87,7 +87,7 @@
             tools:text="[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] 华为 MateBookX " />
 
         <TextView
-            android:id="@+id/goods_price_text"
+            android:id="@+id/goods_origin_price_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/originPrice"
@@ -140,7 +140,7 @@
             android:layout_height="2px"
             android:layout_marginTop="@dimen/general_padding_large"
             android:background="@color/colorLine"
-            app:layout_constraintEnd_toEndOf="@id/goods_title"
+            app:layout_constraintEnd_toEndOf="@id/goodsTitle"
             app:layout_constraintStart_toStartOf="@+id/goods_avatar"
             app:layout_constraintTop_toBottomOf="@id/goods_avatar" />
 
@@ -175,7 +175,8 @@
             android:textSize="@dimen/textSizeNormal"
             app:layout_constraintBottom_toBottomOf="@+id/quote_price"
             app:layout_constraintEnd_toEndOf="@+id/goods_title"
-            app:layout_constraintTop_toTopOf="@+id/quote_price" />
+            app:layout_constraintTop_toTopOf="@+id/quote_price"
+            app:layout_constraintVertical_bias="0.0" />
 
     </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>
 </androidx.cardview.widget.CardView>

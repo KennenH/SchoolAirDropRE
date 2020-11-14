@@ -21,6 +21,7 @@ import com.example.schoolairdroprefactoredition.domain.base.LoadState;
 import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity;
+import com.example.schoolairdroprefactoredition.scene.switchaccount.SwitchAccountActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel;
@@ -156,9 +157,9 @@ public class SettingsFragment extends TransitionBaseFragment implements View.OnC
         switch (id) {
             case R.id.settings_home_alipay:
                 if (!isLoggedIn())
-                    LoginActivity.startForLogin(getContext());
+                    LoginActivity.Companion.startForLogin(getContext());
                 else
-                    LoginActivity.startAfterLogin(getContext(), userInfo);
+                    LoginActivity.Companion.startAfterLogin(getContext(), userInfo);
 
                 if (getActivity() != null)
                     getActivity().overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
@@ -178,13 +179,16 @@ public class SettingsFragment extends TransitionBaseFragment implements View.OnC
                 break;
             case R.id.settings_home_switch_account:
                 // switch account
+                if (getActivity() != null) {
+                    SwitchAccountActivity.Companion.start(getContext(), getActivity().getIntent().getExtras());
+                }
                 break;
             case R.id.settings_home_sign_out:
                 DialogUtil.showConfirm(getContext(), getString(R.string.logout), getString(R.string.confirmLogout),
                         () -> {
                             loginViewModel.logout();
                             if (getActivity() != null) {
-                                getActivity().setResult(Activity.RESULT_OK);
+                                getActivity().setResult(Activity.RESULT_OK, null);
                                 getActivity().finish();
                             }
                         }

@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.PlaceholderBinding;
+import com.example.schoolairdroprefactoredition.domain.base.LoadState;
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 import com.github.ybq.android.spinkit.SpinKitView;
 
@@ -16,6 +17,7 @@ import com.github.ybq.android.spinkit.SpinKitView;
  * 状态显示PlaceHolder
  */
 public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnClickListener {
+
     public static final int TYPE_EMPTY_GOODS_HOME = 99;//状态 类型 没有物品 仅首页使用
     public static final int TYPE_EMPTY_NEWS_HOME = 66;//状态 类型 没有附近话题 仅首页使用
     public static final int TYPE_EMPTY = 110;//状态 类型 没有物品
@@ -39,11 +41,11 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
     private static final int TIP_DENIED = R.string.permissionDenied;// 状态 提示 权限被拒
     private static final int TIP_ERROR = R.string.errorLoading;// 状态 提示 加载错误
 
-    private ImageView mIcon;
-    private TextView mTip;
-    private ImageView mRefresh;
-    private TextView mAction;
-    private SpinKitView mLoading;
+    private final ImageView mIcon;
+    private final TextView mTip;
+    private final ImageView mRefresh;
+    private final TextView mAction;
+    private final SpinKitView mLoading;
 
     private int type = TYPE_ERROR;
 
@@ -71,7 +73,7 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
         mRefresh.setOnClickListener(this);
         mAction.setOnClickListener(this);
 
-        setPlaceHolderType(TYPE_LOADING);
+        setPlaceholderType(TYPE_LOADING);
     }
 
     /**
@@ -86,8 +88,11 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
      *             {@link StatePlaceHolder#TYPE_NETWORK_OR_LOCATION_ERROR_HOME}
      *             {@link StatePlaceHolder#TYPE_DENIED}
      *             {@link StatePlaceHolder#TYPE_ERROR}
+     * @deprecated 改用
+     *              {@link StatePlaceHolder#setPlaceholderType(LoadState)}
+     *
      */
-    public void setPlaceHolderType(int type) {
+    public void setPlaceholderType(int type) {
         this.type = type;
         if (type == TYPE_NETWORK_OR_LOCATION_ERROR_HOME) {
             // 网络或定位出错
@@ -163,6 +168,10 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(VISIBLE);
         }
+    }
+
+    public void setPlaceholderType(LoadState type) {
+        
     }
 
     /**

@@ -68,10 +68,16 @@ public class BaseParentFragment extends StatePlaceholderFragment implements Stat
 
     }
 
+    @org.jetbrains.annotations.Nullable
     @Override
-    public void setContainerAndPlaceholder() {
-        mStatePlaceholderFragmentPlaceholder = mPlaceHolder;
-        mStatePlaceholderFragmentContainer = mContentContainer;
+    public StatePlaceHolder getStatePlaceholder() {
+        return mPlaceHolder;
+    }
+
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public View getContentContainer() {
+        return mContentContainer;
     }
 
     /**

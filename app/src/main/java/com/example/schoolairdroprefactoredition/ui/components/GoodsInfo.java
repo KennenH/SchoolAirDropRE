@@ -96,7 +96,7 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.goods_avatar || id == R.id.goods_user_name) {
+        if (id == R.id.goodsAvatar || id == R.id.goods_user_name) {
             if (mOnUserInfoClickListener != null)
                 mOnUserInfoClickListener.onUserInfoClick(v);
         }

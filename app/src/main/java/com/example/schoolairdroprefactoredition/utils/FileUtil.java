@@ -7,8 +7,6 @@ import android.graphics.BitmapFactory;
 import androidx.annotation.IntRange;
 import androidx.annotation.Nullable;
 
-import com.blankj.utilcode.util.LogUtils;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -20,23 +18,13 @@ import okhttp3.RequestBody;
 
 public class FileUtil {
     /**
-     * 获取文件大小
-     *
-     * @return 单位 KB
-     */
-    public static String getFileSizeKB(File file) {
-        if (file == null) return null;
-        return String.valueOf(file.length() / 1024);
-    }
-
-    /**
      * 压缩图片转换为base64
      */
     public static File compressFile(Context context, String path, boolean isAddNewItem) {
         File file = new File(path);
         Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
         return isAddNewItem ?
-                bitmapToFile(context, bitmap, 80) :
+                bitmapToFile(context, scaleBitmap(bitmap, 1080, 1080), 80) :
                 bitmapToFile(context, scaleBitmap(bitmap, 350, 350), 100);
     }
 

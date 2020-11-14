@@ -2,14 +2,14 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainOnGoing;
-import com.example.schoolairdroprefactoredition.model.Api;
+import com.example.schoolairdroprefactoredition.model.api.Api;
 import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IOnGoingPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IOnGoingCallback;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
-import java.util.ArrayList;
 
 import retrofit2.Call;
 import retrofit2.Response;
@@ -34,22 +34,38 @@ public class OnGoingImpl implements IOnGoingPresenter {
             @Override
             public void onResponse(Call<DomainOnGoing> call, Response<DomainOnGoing> response) {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
+
+//                    try {
+//                        LogUtils.d(response.body().string());
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+
                     DomainOnGoing receive = response.body();
                     if (mCallback != null)
                         if (receive != null && receive.getSuccess()) {
-                            mCallback.onEventMyReceivedLoaded(receive.getData());
+                            mCallback.onEventMyReceivedLoaded(receive);
                         } else
                             mCallback.onError();
-                } else if (mCallback != null)
+                } else if (mCallback != null) {
+
+                    try {
+                        LogUtils.d(response.errorBody().string());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
                     mCallback.onError();
+                }
             }
         });
     }
 
     @Override
     public void getMySent(String token) {
-        if (mCallback != null)
-            mCallback.onEventMySentLoaded(new ArrayList<>());
+        if (mCallback != null) {
+            mCallback.onError();
+        }
     }
 
     @Override

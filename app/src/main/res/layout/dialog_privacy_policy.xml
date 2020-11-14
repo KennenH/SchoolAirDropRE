@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_rounded_white"
+    android:padding="@dimen/general_padding_bit_larger">
+
+    <TextView
+        android:id="@+id/dialog_privacy_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/privacyAndService"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizeLarge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/dialog_privacy_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:scrollbars="vertical"
+        android:text="@string/serviceTip"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textSizeMin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_privacy_title" />
+
+    <TextView
+        android:id="@+id/privacy_terms"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:gravity="center"
+        android:text="@string/serviceProtocol"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/textSizeLarge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialog_privacy_text" />
+
+    <TextView
+        android:id="@+id/service_terms"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:gravity="center"
+        android:text="@string/privacyProtocol"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/textSizeLarge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/privacy_terms" />
+
+    <CheckBox
+        android:id="@+id/dialog_privacy_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:buttonTint="@color/primaryText"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_privacy_agree_text"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/dialog_privacy_agree_text" />
+
+    <TextView
+        android:id="@+id/dialog_privacy_agree_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:text="@string/haveReadAndAgreeTerms"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintBottom_toTopOf="@id/dialog_privacy_agree"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dialog_privacy_check"
+        app:layout_constraintTop_toBottomOf="@+id/service_terms" />
+
+    <TextView
+        android:id="@+id/dialog_privacy_agree"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:background="@drawable/login"
+        android:enabled="false"
+        android:gravity="center"
+        android:padding="@dimen/general_padding_large"
+        android:text="@string/pleaseAgreeAboveTermsFirst"
+        android:textColor="@color/whiteAlways"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_privacy_agree_text" />
+
+    <TextView
+        android:id="@+id/dialog_privacy_disagree"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:background="@drawable/button_rounded_primary5"
+        android:gravity="center"
+        android:padding="@dimen/general_padding_large"
+        android:text="@string/disagreeAndQuit"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_privacy_agree" />
+</androidx.constraintlayout.widget.ConstraintLayout>

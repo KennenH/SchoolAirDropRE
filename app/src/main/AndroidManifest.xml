@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.schoolairdroprefactoredition">
+
+    <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
     <!-- 用于进行网络定位 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
@@ -33,7 +36,21 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".scene.trash.TrashBinActivity"></activity>
+        <activity android:name=".scene.switchaccount.SwitchAccountActivity"></activity>
+        <activity
+            android:name=".scene.capture.CaptureActivity"
+            android:label="" />
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:label=""
+            android:screenOrientation="portrait"
+            tools:replace="screenOrientation" />
+        <activity
+            android:name=".scene.qrcode.ConfirmTransactionActivity"
+            android:label="" />
+        <activity
+            android:name=".scene.tab.trash.TrashBinActivity"
+            android:label="" />
         <activity
             android:name=".scene.transactionstate.TransactionStateActivity"
             android:label="" />
@@ -50,7 +67,7 @@
         <activity
             android:name=".scene.user.UserUpdateAvatarActivity"
             android:label="" />
-        <activity android:name=".scene.likes.LikesActivity" />
+        <activity android:name=".scene.tab.likes.LikesActivity" />
         <activity
             android:name=".scene.addnew.AddNewResultActivity"
             android:label="" />
@@ -70,7 +87,7 @@
             android:name=".scene.addnew.SellingAddNewActivity"
             android:label="" />
         <activity
-            android:name=".scene.ongoing.OnGoingActivity"
+            android:name=".scene.tab.ongoing.OnGoingActivity"
             android:label="" />
         <activity
             android:name=".scene.credit.CreditActivity"
@@ -87,10 +104,10 @@
             android:name=".scene.ssb.SSBActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
-            android:name=".scene.quote.QuoteDetailActivity"
+            android:name=".scene.tab.quote.QuoteDetailActivity"
             android:label="" />
         <activity
-            android:name=".scene.quote.QuoteActivity"
+            android:name=".scene.tab.quote.QuoteActivity"
             android:label="" />
         <activity
             android:name=".scene.chat.ChatActivity"

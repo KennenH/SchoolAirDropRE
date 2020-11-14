@@ -60,7 +60,7 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <com.facebook.drawee.view.SimpleDraweeView
-            android:id="@+id/goods_avatar"
+            android:id="@+id/goodsAvatar"
             android:layout_width="@dimen/toolbar_icon_even_larger"
             android:layout_height="@dimen/toolbar_icon_even_larger"
             android:scaleType="centerCrop"
@@ -78,9 +78,9 @@
             android:padding="@dimen/general_padding_large"
             android:textColor="@color/primaryText"
             android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="@+id/goods_avatar"
-            app:layout_constraintStart_toEndOf="@+id/goods_avatar"
-            app:layout_constraintTop_toTopOf="@+id/goods_avatar"
+            app:layout_constraintBottom_toBottomOf="@+id/goodsAvatar"
+            app:layout_constraintStart_toEndOf="@+id/goodsAvatar"
+            app:layout_constraintTop_toTopOf="@+id/goodsAvatar"
             tools:text="李伟" />
 
         <View
@@ -90,7 +90,7 @@
             android:layout_marginTop="@dimen/general_padding_larger"
             android:background="@color/colorLine"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/goods_avatar" />
+            app:layout_constraintTop_toBottomOf="@id/goodsAvatar" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <TextView

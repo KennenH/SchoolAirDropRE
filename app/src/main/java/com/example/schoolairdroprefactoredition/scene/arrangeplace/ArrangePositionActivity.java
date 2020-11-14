@@ -140,7 +140,7 @@ public class ArrangePositionActivity extends PermissionBaseActivity implements P
     private void showPlaceHolder(int type) {
         binding.poiRecycler.setVisibility(View.GONE);
         binding.searchRecycler.setVisibility(View.GONE);
-        binding.placeholder.setPlaceHolderType(type);
+        binding.placeholder.setPlaceholderType(type);
         binding.placeholder.setVisibility(View.VISIBLE);
     }
 

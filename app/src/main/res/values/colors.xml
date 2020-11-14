@@ -53,4 +53,5 @@
 
     <color name="whiteAlways">#ffffff</color>
     <color name="blackAlways">#000000</color>
+    <color name="greyAlways">#424242</color>
 </resources>

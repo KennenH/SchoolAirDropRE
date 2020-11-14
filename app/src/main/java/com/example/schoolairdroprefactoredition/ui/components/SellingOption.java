@@ -95,7 +95,7 @@ public class SellingOption extends ConstraintLayoutAuto {
     }
 
     public boolean getIsSelected() {
-        return mSwitch.isSelected();
+        return mSwitch.isChecked();
     }
 
     public void toggle() {
