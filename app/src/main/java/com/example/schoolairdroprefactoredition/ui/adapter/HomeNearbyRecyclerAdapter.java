@@ -37,7 +37,7 @@ public class HomeNearbyRecyclerAdapter extends BaseFooterAdapter<DomainGoodsInfo
 
                 if (getContext() instanceof MainActivity) {
                     Bundle bundle = ((MainActivity) getContext()).getIntent().getExtras();
-                    binding.getRoot().setOnClickListener(v -> GoodsActivity.start(getContext(),
+                    binding.getRoot().setOnClickListener(v -> GoodsActivity.Companion.start(getContext(),
                             (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE),
                             data, false));
                 }

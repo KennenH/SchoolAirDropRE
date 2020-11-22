@@ -18,20 +18,37 @@ class TrashBinViewModel : ViewModel() {
 
     val trashBinLoadState = MutableLiveData<LoadState>()
 
-    private val mTrashBin = MutableLiveData<DomainTrashBin>()
+    private val mCorrupted = MutableLiveData<DomainTrashBin>()
 
-    fun getTrashBin(token: String): LiveData<DomainTrashBin> {
+    private val mAccomplished = MutableLiveData<DomainTrashBin>()
+
+    fun getCorrupted(token: String): LiveData<DomainTrashBin> {
         viewModelScope.launch {
             trashBinLoadState.value = LoadState.LOADING
-            trashBinRepository.getTrashBin(token) { success, response ->
+            trashBinRepository.getCorrupted(token) { success, response ->
                 if (success) {
-                    mTrashBin.postValue(response)
+                    mCorrupted.postValue(response)
                     trashBinLoadState.value = LoadState.SUCCESS
                 } else {
                     trashBinLoadState.value = LoadState.ERROR
                 }
             }
         }
-        return mTrashBin
+        return mCorrupted
+    }
+
+    fun getAccomplished(token: String): LiveData<DomainTrashBin> {
+        viewModelScope.launch {
+            trashBinLoadState.value = LoadState.LOADING
+            trashBinRepository.getAccomplished(token) { success, response ->
+                if (success) {
+                    mAccomplished.postValue(response)
+                    trashBinLoadState.value = LoadState.SUCCESS
+                } else {
+                    trashBinLoadState.value = LoadState.ERROR
+                }
+            }
+        }
+        return mAccomplished
     }
 }

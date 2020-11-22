@@ -3,14 +3,12 @@ package com.example.schoolairdroprefactoredition.ui.adapter;
 import android.os.Bundle;
 import android.view.View;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ItemQuoteBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.DomainQuote;
-import com.example.schoolairdroprefactoredition.scene.tab.quote.fragment.QuoteFragment;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
@@ -46,7 +44,7 @@ public class QuoteRecyclerAdapter extends BaseQuickAdapter<DomainQuote.DataBean,
             binding.goodsOriginPrice.setPrice(bean.getGoods().getGoods_price());
             binding.quotePrice.setPrice(bean.getQuote_price());
 
-            if (pageNum == QuoteFragment.PAGE_SENT) {
+            if (pageNum == 1) {
                 binding.quoteRefuse.setVisibility(View.GONE);
                 binding.quoteAccept.setVisibility(View.GONE);
             }
@@ -89,19 +87,18 @@ public class QuoteRecyclerAdapter extends BaseQuickAdapter<DomainQuote.DataBean,
                         bean.getReceiver_info() == null ? bean.getSender_info() : bean.getReceiver_info());
             });
             binding.quoteAccept.setOnClickListener(v -> {
-                if (pageNum == QuoteFragment.PAGE_RECEIVED && mOnQuoteActionListener != null)
+                if (pageNum == 0 && mOnQuoteActionListener != null)
                     mOnQuoteActionListener.onQuoteAccept(bean.getQuote_id());
             });
             binding.quoteRefuse.setOnClickListener(v -> {
-                if (pageNum == QuoteFragment.PAGE_RECEIVED && mOnQuoteActionListener != null)
+                if (pageNum == 0 && mOnQuoteActionListener != null)
                     mOnQuoteActionListener.onQuoteRefuse(bean.getQuote_id());
             });
 
             binding.getRoot().setOnClickListener(v -> {
 //            QuoteDetailActivity.start(getContext());
             });
-        } catch (NullPointerException e) {
-            LogUtils.d("null");
+        } catch (NullPointerException ignored) {
         }
     }
 

@@ -60,6 +60,12 @@ object ConstantUtil {
     var LOCAL = "http://10.0.2.2:8000/"
     const val MENU_CLICK_GAP = 1000
 
+
+    /**
+     * tab页面页号
+     */
+    const val KEY_ARG_SECTION_NUMBER = "section_number"
+
     /**
      * 要登陆的alipayID
      */

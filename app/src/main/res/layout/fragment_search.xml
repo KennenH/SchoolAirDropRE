@@ -26,7 +26,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/general_padding_large"
-                android:transitionName="@string/shareSearchBar"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/search_cancel"
                 app:layout_constraintStart_toStartOf="parent"

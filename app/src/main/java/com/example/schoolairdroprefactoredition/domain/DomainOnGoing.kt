@@ -3,29 +3,29 @@ package com.example.schoolairdroprefactoredition.domain
 import java.io.Serializable
 
 data class DomainOnGoing(
-        val `data`: List<Data>,
+        val `data`: List<OnGoingData>,
         val success: Boolean
 ) : Serializable
 
-data class Data(
-        val buyer_info: BuyerInfo?,
+data class OnGoingData(
+        val onGoingBuyer_info: OnGoingBuyerInfo?,
         val date: String,
         val event_id: String,
-        val goods_info: GoodsInfo,
+        val onGoingGoods_info: OnGoingGoodsInfo,
         val place: Any,
         val price: String,
-        val seller_info: SellerInfo?,
+        val onGoingSeller_info: OnGoingSellerInfo?,
         val step: Int
 ) : Serializable
 
-data class BuyerInfo(
+data class OnGoingBuyerInfo(
         val credit_num: Int,
         val uid: Int,
         val uname: String,
         val user_img_path: String
 ) : Serializable
 
-data class GoodsInfo(
+data class OnGoingGoodsInfo(
         val chat_count: Int,
         val favor_count: Int,
         val goods_description: String,
@@ -42,7 +42,7 @@ data class GoodsInfo(
         val watch_count: Int
 ) : Serializable
 
-data class SellerInfo(
+data class OnGoingSellerInfo(
         val credit_num: Int,
         val uid: Int,
         val uname: String,

@@ -20,7 +20,7 @@
     <color name="primaryDarkest">#9E9E9E</color>
     <color name="primaryText">#888888</color>
 
-    <color name="translucent">#E6FFFFFF</color>
+    <color name="translucent">#CBFFFFFF</color>
     <color name="darkTranslucent">#CB707070</color>
     <color name="darkerTranslucent">#E65E5E5E</color>
 
@@ -54,4 +54,8 @@
     <color name="whiteAlways">#ffffff</color>
     <color name="blackAlways">#000000</color>
     <color name="greyAlways">#424242</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="darkTransparent">#34737373</color>
+    <color name="blackTransparent">#CB101010</color>
 </resources>

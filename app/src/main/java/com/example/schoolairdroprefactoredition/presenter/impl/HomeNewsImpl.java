@@ -16,7 +16,6 @@ public class HomeNewsImpl implements IHomeNewsPresenter {
      */
     @Override
     public void getNews(int page) {
-
         TestNewsItemBean[] data = new TestNewsItemBean[12];
         for (int i = 0; i < 12; i++) {
             data[i] = new TestNewsItemBean();
@@ -24,11 +23,13 @@ public class HomeNewsImpl implements IHomeNewsPresenter {
                 data[i].setTitle("快速上手");
                 data[i].setType(HomeNewsRecyclerAdapter.TYPE_TWO);
             } else {
-                data[i].setTitle("校园空投校园内测开始啦!进来解锁新姿势!");
+                data[i].setTitle("校园空投开始校园内测啦,速戳宇宙最全攻略!");
             }
         }
-        if (mCallback != null)
+
+        if (mCallback != null) {
             mCallback.onNewsLoaded(Arrays.asList(data));
+        }
     }
 
     @Override

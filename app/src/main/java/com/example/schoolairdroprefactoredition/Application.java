@@ -61,11 +61,7 @@ public class Application extends android.app.Application {
         float designHeightInDp = config.getDesignHeightInDp();
         float rateWidth = screenWidth / designWidthInDp;
         float rateHeight = screenHeight / designHeightInDp;
-        if (rateWidth > rateHeight) {
-            config.setBaseOnWidth(false);
-        } else {
-            config.setBaseOnWidth(true);
-        }
+        config.setBaseOnWidth(!(rateWidth > rateHeight));
     }
 
     private void initMiPush() {

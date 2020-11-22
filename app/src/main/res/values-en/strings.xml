@@ -241,4 +241,9 @@
     <string name="privacyAndService">Privacy Policy and Terms of Service</string>
     <string name="pleaseAgreeAboveTermsFirst">Please agree terms above first</string>
     <string name="serviceTip">Before we start, please read our terms of service and privacy policy (including third-party services)</string>
+    <string name="corrupted">Corrupted</string>
+    <string name="complished">Finished</string>
+    <string name="termsOfServiceAgreeFailed">Ah oh, the treaty is lost</string>
+    <string name="addNewGoodsError">Error adding new item, try to update the version if it fails multiple times</string>
+    <string name="playground">Playground</string>
 </resources>

@@ -78,7 +78,7 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
             if (getContext() instanceof AppCompatActivity) {
                 Bundle bundle = ((AppCompatActivity) getContext()).getIntent().getExtras();
                 if (bundle != null)
-                    holder.itemView.setOnClickListener(v -> GoodsActivity.start(getContext(),
+                    holder.itemView.setOnClickListener(v -> GoodsActivity.Companion.start(getContext(),
                             (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE),
                             bean, true));
             }

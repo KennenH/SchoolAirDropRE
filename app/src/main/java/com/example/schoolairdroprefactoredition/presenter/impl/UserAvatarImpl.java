@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult;
-import com.example.schoolairdroprefactoredition.model.api.Api;
 import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
+import com.example.schoolairdroprefactoredition.model.api.Api;
 import com.example.schoolairdroprefactoredition.presenter.IUserAvatarPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IUserAvatarCallback;
 import com.example.schoolairdroprefactoredition.utils.FileUtil;
@@ -23,20 +23,21 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
 
     @Override
     public void updateAvatar(Context context, String token, String img) {
-        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
-        Api api = retrofit.create(Api.class);
+        try {
+            Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+            Api api = retrofit.create(Api.class);
 
-        MultipartBody.Part photo = FileUtil.createFileWithPath(context, "photo", img, false);
+            MultipartBody.Part photo = FileUtil.createFileWithPath(context, "photo", img, false);
 
-        retrofit2.Call<DomainAvatarUpdateResult> task = api.updateAvatar(token, photo);
-        task.enqueue(new CallBackWithRetry<DomainAvatarUpdateResult>(task) {
-            @Override
-            public void onResponse(retrofit2.Call<DomainAvatarUpdateResult> call, Response<DomainAvatarUpdateResult> response) {
-                int code = response.code();
-                if (code == HttpURLConnection.HTTP_OK) {
-                    DomainAvatarUpdateResult body = response.body();
-                    if (body != null)
-                        if (body.isSuccess()) {
+            retrofit2.Call<DomainAvatarUpdateResult> task = api.updateAvatar(token, photo);
+            task.enqueue(new CallBackWithRetry<DomainAvatarUpdateResult>(task) {
+                @Override
+                public void onResponse(retrofit2.Call<DomainAvatarUpdateResult> call, Response<DomainAvatarUpdateResult> response) {
+                    int code = response.code();
+                    if (code == HttpURLConnection.HTTP_OK) {
+                        DomainAvatarUpdateResult body = response.body();
+                        if (body != null)
+                            if (body.isSuccess()) {
 
 //                    try {
 //                        LogUtils.d(response.body().string());
@@ -44,27 +45,32 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
 //                        e.printStackTrace();
 //                    }
 //
-                            if (mCallback != null)
-                                mCallback.onUpdateSuccess(body);
-                        } else if (mCallback != null)
+                                if (mCallback != null)
+                                    mCallback.onUpdateSuccess(body);
+                            } else if (mCallback != null)
+                                mCallback.onError();
+                    } else {
+                        try {
+                            LogUtils.d(response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                        if (mCallback != null)
                             mCallback.onError();
-                } else {
-                    try {
-                        LogUtils.d(response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
                     }
+                }
+
+                @Override
+                public void onFailureAllRetries() {
                     if (mCallback != null)
                         mCallback.onError();
                 }
+            });
+        } catch (Exception e) {
+            if (mCallback != null) {
+                mCallback.onError();
             }
-
-            @Override
-            public void onFailureAllRetries() {
-                if (mCallback != null)
-                    mCallback.onError();
-            }
-        });
+        }
     }
 
     @Override

@@ -10,7 +10,6 @@
     <color name="colorPrimaryDarker">#0953B8</color>
 
     <color name="colorAccentShadow">#DA4395FA</color>
-    <color name="blackShadow">#73C8C8C8</color>
 
     <color name="primaryLight">#0E0E0E</color>
     <color name="primary">#0B0B0B</color>
@@ -20,7 +19,6 @@
     <color name="primaryDarkest">#505050</color>
     <color name="primaryText">#FFFFFF</color>
 
-    <color name="translucent">#E6FFFFFF</color>
     <color name="darkTranslucent">#CB707070</color>
     <color name="darkerTranslucent">#E65E5E5E</color>
 

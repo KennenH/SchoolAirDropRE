@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/button_sheet_white">
+
+    <ImageView
+        android:id="@+id/messages_avatar"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:layout_marginStart="@dimen/general_padding_large"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:layout_marginBottom="@dimen/general_padding_large"
+        android:scaleType="centerCrop"
+        android:src="@drawable/pk"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/messages_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding_large"
+        android:layout_marginEnd="@dimen/general_padding_large"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="我是标题"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizeLarge"
+        app:layout_constraintBottom_toTopOf="@id/messages_abstract"
+        app:layout_constraintEnd_toStartOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@id/messages_avatar"
+        app:layout_constraintTop_toTopOf="@id/messages_avatar" />
+
+    <TextView
+        android:id="@+id/messages_abstract"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:lines="1"
+        android:text="我是内容摘要我是内容摘要我是内容摘要"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintBottom_toBottomOf="@+id/messages_avatar"
+        app:layout_constraintEnd_toEndOf="@+id/messages_title"
+        app:layout_constraintStart_toStartOf="@id/messages_title"
+        app:layout_constraintTop_toBottomOf="@id/messages_title" />
+
+    <TextView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/general_padding_large"
+        android:background="@drawable/bg_round_red"
+        android:gravity="center"
+        android:paddingStart="@dimen/general_padding"
+        android:paddingTop="@dimen/general_padding_tiny"
+        android:paddingEnd="@dimen/general_padding"
+        android:paddingBottom="@dimen/general_padding_tiny"
+        android:text="99+"
+        android:textColor="@color/whiteAlways"
+        android:textSize="@dimen/textSizeNormal"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

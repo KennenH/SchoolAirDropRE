@@ -123,6 +123,7 @@ public class MyUtil {
                 .openCamera(PictureMimeType.ofImage())
                 .isEnableCrop(true)
                 .compressQuality(60)
+                .rotateEnabled(false)
                 .isCompress(true)
                 .minimumCompressSize(100)// 小于多少kb的图片不压缩
                 .theme(R.style.picture_white_style)
@@ -140,6 +141,7 @@ public class MyUtil {
                 .isEnableCrop(true)
                 .circleDimmedLayer(isCircle)
                 .compressQuality(60)
+                .rotateEnabled(false)
                 .isCompress(true)
                 .minimumCompressSize(100)// 小于多少kb的图片不压缩
                 .theme(R.style.picture_white_style)
@@ -165,7 +167,7 @@ public class MyUtil {
                 .isReturnEmpty(false)// 未选择数据时点击按钮是否可以返回
                 .closeAndroidQChangeWH(true)//如果图片有旋转角度则对换宽高,默认为true
                 .closeAndroidQChangeVideoWH(!SdkVersionUtils.checkedAndroid_Q())// 如果视频有旋转角度则对换宽高,默认为false
-                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)// 设置相册Activity方向，不设置默认使用系统
+                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)// 设置相册Activity方向，不设置默认使用系统
 //                .isOriginalImageControl(cb_original.isChecked())// 是否显示原图控制按钮，如果设置为true则用户可以自由选择是否使用原图，压缩、裁剪功能将会失效
                 //.bindCustomPlayVideoCallback(new MyVideoSelectedPlayCallback(getContext()))// 自定义视频播放回调控制，用户可以使用自己的视频播放界面
                 //.bindCustomPreviewCallback(new MyCustomPreviewInterfaceListener())// 自定义图片预览回调接口
@@ -200,6 +202,7 @@ public class MyUtil {
 //                .showCropFrame(cb_showCropFrame.isChecked())// 是否显示裁剪矩形边框 圆形裁剪时建议设为false
 //                .showCropGrid(cb_showCropGrid.isChecked())// 是否显示裁剪矩形网格 圆形裁剪时建议设为false
                 .isOpenClickSound(false)// 是否开启点击声音
+                .rotateEnabled(false)
                 //.isDragFrame(false)// 是否可拖动裁剪框(固定)
                 //.videoMinSecond(10)// 查询多少秒以内的视频
                 //.videoMaxSecond(15)// 查询多少秒以内的视频
@@ -232,7 +235,7 @@ public class MyUtil {
                 .isReturnEmpty(false)// 未选择数据时点击按钮是否可以返回
                 .closeAndroidQChangeWH(true)//如果图片有旋转角度则对换宽高,默认为true
                 .closeAndroidQChangeVideoWH(!SdkVersionUtils.checkedAndroid_Q())// 如果视频有旋转角度则对换宽高,默认为false
-                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED)// 设置相册Activity方向，不设置默认使用系统
+                .setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)// 设置相册Activity方向，不设置默认使用系统
 //                .isOriginalImageControl(cb_original.isChecked())// 是否显示原图控制按钮，如果设置为true则用户可以自由选择是否使用原图，压缩、裁剪功能将会失效
                 //.bindCustomPlayVideoCallback(new MyVideoSelectedPlayCallback(getContext()))// 自定义视频播放回调控制，用户可以使用自己的视频播放界面
                 //.bindCustomPreviewCallback(new MyCustomPreviewInterfaceListener())// 自定义图片预览回调接口
@@ -253,6 +256,7 @@ public class MyUtil {
                 .isEnableCrop(isCrop)// 是否裁剪
                 //.basicUCropConfig()//对外提供所有UCropOptions参数配制，但如果PictureSelector原本支持设置的还是会使用原有的设置
 //                .isCompress(true)// 是否压缩
+                .rotateEnabled(false) // 旋转
 //                .compressQuality(60)// 图片压缩后输出质量 0~ 100
                 .synOrAsy(true)//同步true或异步false 压缩 默认同步
                 //.queryMaxFileSize(10)// 只查多少M以内的图片、视频、音频  单位M

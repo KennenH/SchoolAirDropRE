@@ -71,7 +71,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.share_element));
+        setSharedElementEnterTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.share_element_post_pager));
 
         try {
             longitude = (double) getBundle().getSerializable(ConstantUtil.LONGITUDE);

@@ -31,12 +31,17 @@
         android:allowBackup="true"
         android:icon="@drawable/logo_218x"
         android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/ic_icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".scene.switchaccount.SwitchAccountActivity"></activity>
+        <activity
+            android:name=".scene.posts.PostsActivity"
+            android:label=""
+            android:theme="@style/AppTheme.PostsActivity" />
+        <activity
+            android:name=".scene.switchaccount.SwitchAccountActivity"
+            android:label="" />
         <activity
             android:name=".scene.capture.CaptureActivity"
             android:label="" />

@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.TypedValue;
 
 import androidx.viewpager.widget.ViewPager;
@@ -30,10 +29,11 @@ public class HomeNavigatorAdapter extends CommonNavigatorAdapter {
         mViewPager = viewPager;
 
         String[] menu;
-        if (page == PURCHASING)
+        if (page == PURCHASING) {
             menu = new String[]{context.getString(R.string.purchasing)};
-        else
-            menu = new String[]{context.getString(R.string.all), context.getString(R.string.official), context.getString(R.string.nearby)};
+        } else {
+            menu = new String[]{context.getString(R.string.playground)};
+        }
         mList = Arrays.asList(menu);
     }
 

@@ -8,4 +8,5 @@ enum class LoadState {
     LOADING,
     ERROR,
     EMPTY,
+    AUTHORIZATION_OUT_OF_DATE,
 }

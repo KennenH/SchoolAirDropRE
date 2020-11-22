@@ -27,7 +27,7 @@ import static com.example.schoolairdroprefactoredition.utils.FileUtil.createFile
 public class SellingAddNewImpl implements ISellingAddNewPresenter {
 
     private ISellingAddNewCallback mCallback;
-    private JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
+    private final JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
 
     @Override
     public void submit(String token, String cover, List<String> picSet,
@@ -36,39 +36,42 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
                        boolean isBrandNew, boolean isQuotable,
                        float price, Context context) {
 
-        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
-        Api api = retrofit.create(Api.class);
+        try {
+            Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+            Api api = retrofit.create(Api.class);
 
-        List<MultipartBody.Part> goodsSet = new ArrayList<>();
-        int i = 0;
-        for (String pic : picSet)
-            goodsSet.add(createFileWithPath(context, "goods_img_set" + i++, pic, true));
+            List<MultipartBody.Part> goodsSet = new ArrayList<>();
+            int i = 0;
+            for (String pic : picSet) {
+                goodsSet.add(createFileWithPath(context, "goods_img_set" + i++, pic, true));
+            }
 
-        MultipartBody.Part goodsCover = createFileWithPath(context, "goods_img_cover", cover, true);
-        if (goodsCover == null && mCallback != null)
-            mCallback.onAddNewItemError();
+            MultipartBody.Part goodsCover = createFileWithPath(context, "goods_img_cover", cover, true);
+            if (goodsCover == null && mCallback != null) {
+                mCallback.onAddNewItemError();
+            }
 
-        MultipartBody.Part goodsName = MultipartBody.Part.createFormData("goods_name", name);
-        MultipartBody.Part goodsDes = MultipartBody.Part.createFormData("goods_description", description);
+            MultipartBody.Part goodsName = MultipartBody.Part.createFormData("goods_name", name);
+            MultipartBody.Part goodsDes = MultipartBody.Part.createFormData("goods_description", description);
 
-        MultipartBody.Part goodsLongitude = MultipartBody.Part.createFormData("goods_longitude", String.valueOf(longitude));
-        MultipartBody.Part goodsLatitude = MultipartBody.Part.createFormData("goods_latitude", String.valueOf(latitude));
+            MultipartBody.Part goodsLongitude = MultipartBody.Part.createFormData("goods_longitude", String.valueOf(longitude));
+            MultipartBody.Part goodsLatitude = MultipartBody.Part.createFormData("goods_latitude", String.valueOf(latitude));
 //        MultipartBody.Part goodsLongitude = MultipartBody.Part.createFormData("goods_longitude", String.valueOf(120.36055));
 //        MultipartBody.Part goodsLatitude = MultipartBody.Part.createFormData("goods_latitude", String.valueOf(30.31747));
 
-        MultipartBody.Part goodsBrandNew = MultipartBody.Part.createFormData("goods_is_brandNew", isBrandNew ? "1" : "0");
-        MultipartBody.Part goodsQuotable = MultipartBody.Part.createFormData("goods_is_quotable", isQuotable ? "1" : "0");
-        MultipartBody.Part goodsPrice = MultipartBody.Part.createFormData("goods_price", String.valueOf(price));
+            MultipartBody.Part goodsBrandNew = MultipartBody.Part.createFormData("goods_is_brandNew", isBrandNew ? "1" : "0");
+            MultipartBody.Part goodsQuotable = MultipartBody.Part.createFormData("goods_is_quotable", isQuotable ? "1" : "0");
+            MultipartBody.Part goodsPrice = MultipartBody.Part.createFormData("goods_price", String.valueOf(price));
 
-        retrofit2.Call<DomainResult> task = api.postNewItem(
-                token, goodsCover, goodsSet, goodsName, goodsDes, goodsLongitude, goodsLatitude, goodsQuotable, goodsBrandNew, goodsPrice);
+            retrofit2.Call<DomainResult> task = api.postNewItem(
+                    token, goodsCover, goodsSet, goodsName, goodsDes, goodsLongitude, goodsLatitude, goodsQuotable, goodsBrandNew, goodsPrice);
 
-        task.enqueue(new CallBackWithRetry<DomainResult>(task) {
-            @Override
-            public void onResponse(retrofit2.Call<DomainResult> call, Response<DomainResult> response) {
-                int code = response.code();
-                if (code == HttpURLConnection.HTTP_OK) {
-                    DomainResult body = response.body();
+            task.enqueue(new CallBackWithRetry<DomainResult>(task) {
+                @Override
+                public void onResponse(retrofit2.Call<DomainResult> call, Response<DomainResult> response) {
+                    int code = response.code();
+                    if (code == HttpURLConnection.HTTP_OK) {
+                        DomainResult body = response.body();
 
 //                    try {
 //                        LogUtils.d(response.body().string());
@@ -76,29 +79,35 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
 //                        e.printStackTrace();
 //                    }
 
-                    if (mCallback != null)
-                        if (body != null) {
-                            mCallback.onSubmitResult(body);
-                        } else {
-                            mCallback.onAddNewItemError();
+                        if (mCallback != null)
+                            if (body != null) {
+                                mCallback.onSubmitResult(body);
+                            } else {
+                                mCallback.onAddNewItemError();
+                            }
+                    } else {
+                        try {
+                            LogUtils.d(response.errorBody().string());
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                } else {
-                    try {
-                        LogUtils.d(response.errorBody().string());
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                        if (mCallback != null)
+                            mCallback.onAddNewItemError();
                     }
+                }
+
+                @Override
+                public void onFailureAllRetries() {
                     if (mCallback != null)
                         mCallback.onAddNewItemError();
                 }
-            }
+            });
 
-            @Override
-            public void onFailureAllRetries() {
-                if (mCallback != null)
-                    mCallback.onAddNewItemError();
+        } catch (Exception e) {
+            if (mCallback != null) {
+                mCallback.onOtherError();
             }
-        });
+        }
     }
 
     @Override

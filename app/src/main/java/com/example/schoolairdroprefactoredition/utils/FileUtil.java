@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.Nullable;
@@ -20,9 +21,15 @@ public class FileUtil {
     /**
      * 压缩图片转换为base64
      */
-    public static File compressFile(Context context, String path, boolean isAddNewItem) {
-        File file = new File(path);
-        Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
+    public static File compressFile(Context context, String path, boolean isAddNewItem) throws IOException {
+        Bitmap bitmap;
+        if (isUriPath(path)) {
+            bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(Uri.parse(path)));
+//            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(path));
+        } else {
+            File file = new File(path);
+            bitmap = BitmapFactory.decodeFile(file.getPath());
+        }
         return isAddNewItem ?
                 bitmapToFile(context, scaleBitmap(bitmap, 1080, 1080), 80) :
                 bitmapToFile(context, scaleBitmap(bitmap, 350, 350), 100);
@@ -93,12 +100,19 @@ public class FileUtil {
      * @return MultiPartBody.Part
      */
     @Nullable
-    public static MultipartBody.Part createFileWithPath(Context context, String key, String path, boolean isAddNewItem) {
+    public static MultipartBody.Part createFileWithPath(Context context, String key, String path, boolean isAddNewItem) throws IOException {
         File file = compressFile(context, path, isAddNewItem);
         RequestBody body;
         if (file != null) {
             body = RequestBody.create(MediaType.parse("image/*"), file);
             return MultipartBody.Part.createFormData(key, file.getName(), body);
         } else return null;
+    }
+
+    /**
+     * 是否为uri
+     */
+    private static boolean isUriPath(String path) {
+        return path.startsWith("content:") || path.startsWith("file:");
     }
 }

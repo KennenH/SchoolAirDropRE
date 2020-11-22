@@ -8,8 +8,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.transition.TransitionInflater;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
@@ -29,15 +27,9 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setSharedElementReturnTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.share_element));
-    }
-
-    @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        if (getActivity() != null && getActivity() instanceof MainActivity) {
+        if (getActivity() instanceof MainActivity) {
             ((MainActivity) getActivity()).autoLogin();
         }
     }
@@ -46,7 +38,7 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
-        HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, HomePagerAdapter.PURCHASING);
+        HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), HomePagerAdapter.PURCHASING);
         setUpPlaceHolderHAndContainerView(binding.placeholder, binding.homeViewpager);
 
         CommonNavigator commonNavigator = new CommonNavigator(getContext());

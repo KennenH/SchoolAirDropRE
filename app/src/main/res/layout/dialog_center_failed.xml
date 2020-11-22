@@ -2,12 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="@dimen/general_dialog_center"
-    android:layout_height="@dimen/general_dialog_center"
-    android:layout_gravity="center">
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:minHeight="120dp">
 
     <TextView
         android:id="@+id/dialog_txt"
         style="@style/DialogText"
+        android:text="@string/addNewGoodsError"
         android:textColor="@color/whiteAlways"
         app:drawableTint="@color/whiteAlways"
         app:drawableTopCompat="@drawable/ic_failed_nowrap" />

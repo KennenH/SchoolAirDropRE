@@ -2,6 +2,8 @@ package com.example.schoolairdroprefactoredition.model;
 
 import com.blankj.utilcode.util.LogUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 
@@ -11,14 +13,12 @@ public abstract class CallBackWithRetry<T> implements Callback<T> {
     private final Call<T> call;
     private int retryCount = 0;
 
-    private boolean isRequesting = false; // 正在请求标志，当正在请求时拦截相同的请求
-
     public CallBackWithRetry(Call<T> call) {
         this.call = call;
     }
 
     @Override
-    public void onFailure(Call<T> call, Throwable t) {
+    public void onFailure(@NotNull Call<T> call, @NotNull Throwable t) {
         if (retryCount++ < TOTAL_RETRIES) {
             retry();
         } else {

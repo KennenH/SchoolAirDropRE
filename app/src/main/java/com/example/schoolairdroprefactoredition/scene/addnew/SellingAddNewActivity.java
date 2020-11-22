@@ -38,6 +38,7 @@ import com.example.schoolairdroprefactoredition.ui.components.AddPicItem;
 import com.example.schoolairdroprefactoredition.utils.AnimUtil;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DecimalFilter;
+import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -621,5 +622,11 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     @Override
     public void onModifyInfoError() {
         dismissLoading(() -> AddNewResultActivity.start(this, false, TIP_MODIFY_FAILED));
+    }
+
+    @Override
+    public void onOtherError() {
+        dismissLoading(() ->
+                DialogUtil.showCenterDialog(SellingAddNewActivity.this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.addNewGoodsError));
     }
 }

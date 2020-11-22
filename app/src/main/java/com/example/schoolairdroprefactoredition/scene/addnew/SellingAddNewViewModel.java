@@ -88,10 +88,18 @@ public class SellingAddNewViewModel extends AndroidViewModel implements ISelling
             mOnRequestListener.onModifyInfoError();
     }
 
+    @Override
+    public void onOtherError() {
+        if (mOnRequestListener != null)
+            mOnRequestListener.onOtherError();
+    }
+
     public interface OnRequestListener {
         void onAddNewItemError();
 
         void onModifyInfoError();
+
+        void onOtherError();
     }
 
     public void setOnRequestListener(OnRequestListener listener) {

@@ -11,17 +11,19 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentNewsFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasingFragment
+import com.example.schoolairdroprefactoredition.scene.main.messages.MessagesFragment
 import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
 import com.example.schoolairdroprefactoredition.scene.search.SearchFragment
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
-import com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
@@ -32,7 +34,15 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         AMapLocationListener {
 
     companion object {
-        var autoLogged = false
+        private var autoLogged = false
+
+        /**
+         * 通知MainActivity主题改变
+         */
+        fun notifyThemeChanged() {
+            autoLogged = false
+            BaseChildFragment.notifyThemeChanged()
+        }
     }
 
     private val loginViewModel by lazy {
@@ -59,6 +69,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         ParentNewsFragment.newInstance()
     }
 
+    private val mMessages by lazy {
+        MessagesFragment()
+    }
+
     private val mMy by lazy {
         MyFragment.newInstance()
     }
@@ -67,8 +81,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         ParentPurchasingFragment.newInstance()
     }
 
-    private var mOnLoginStateChangedListener: OnLoginStateChangedListener? = null
-    private var mOnLocationListener: OnLocationListener? = null
+    private var mOnLoginStateChangedListener: ArrayList<OnLoginStateChangedListener> = ArrayList()
+    private var mOnLocationListenerList: ArrayList<OnLocationListener> = ArrayList()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -85,6 +99,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
             mHome.isVisible -> navView.selectedItemId = R.id.navigation_home
             mPurchasing.isVisible -> navView.selectedItemId = R.id.navigation_box
             mPurchasing.isVisible -> navView.selectedItemId = R.id.navigation_my
+            mMessages.isVisible -> navView.selectedItemId = R.id.navigation_message
         }
     }
 
@@ -96,11 +111,13 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                     if (data == null) {
                         intent.removeExtra(ConstantUtil.KEY_USER_INFO)
                         intent.removeExtra(ConstantUtil.KEY_AUTHORIZE)
-                        mOnLoginStateChangedListener?.onLoginStateChanged()
                     } else {
                         intent.putExtra(ConstantUtil.KEY_AUTHORIZE, data.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE))
                         intent.putExtra(ConstantUtil.KEY_USER_INFO, data.getSerializableExtra(ConstantUtil.KEY_USER_INFO))
-                        mOnLoginStateChangedListener?.onLoginStateChanged()
+                    }
+
+                    for (listener in mOnLoginStateChangedListener) {
+                        listener.onLoginStateChanged()
                     }
                 }
 
@@ -114,14 +131,11 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     override fun onDestroy() {
         super.onDestroy()
-
-        autoLogged = false
-
         mClient.stopLocation()
         mClient.unRegisterLocationListener(this@MainActivity)
 
-        mOnLocationListener = null
-        mOnLoginStateChangedListener = null
+        mOnLocationListenerList.clear()
+        mOnLoginStateChangedListener.clear()
     }
 
     private fun initView() {
@@ -132,7 +146,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         mPurchasing.setOnSearchBarClickedListener {
             showSearch()
         }
-
+        
         navView.setOnNavigationItemSelectedListener(this@MainActivity)
         navView.selectedItemId = R.id.navigation_box
     }
@@ -142,6 +156,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      */
     override fun agreeToTermsOfService() {
         super.agreeToTermsOfService()
+        notifyThemeChanged()
         setContentView(R.layout.activity_main)
 
         initCache()
@@ -155,7 +170,9 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     override fun locationDenied() {
         super.locationDenied()
-        mOnLocationListener?.onPermissionDenied()
+        for (onLocationListener in mOnLocationListenerList) {
+            onLocationListener.onPermissionDenied()
+        }
     }
 
     private fun initCache() {
@@ -174,6 +191,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                         .hide(mHome)
                         .hide(mMy)
                         .hide(mPurchasing)
+                        .hide(mMessages)
                         .commit()
 
                 if (!fragment.isAdded)
@@ -245,13 +263,15 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     private fun autoLoginWithToken() {
         val token: DomainAuthorize = intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE) as DomainAuthorize
         if (token.access_token != null) {
-            loginViewModel.getUserInfo(token.access_token)?.observe(this, {
+            loginViewModel.getUserInfo(token.access_token).observe(this, {
 
                 Toast.makeText(this@MainActivity, "登录成功", Toast.LENGTH_SHORT).show()
 
                 val userInfo = it?.data?.get(0)
                 intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
-                mOnLoginStateChangedListener?.onLoginStateChanged()
+                for (listener in mOnLoginStateChangedListener) {
+                    listener.onLoginStateChanged()
+                }
             })
         }
     }
@@ -264,8 +284,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         val userInfo: DomainUserInfo.DataBean = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean
         var gettingPublicKey = false
         if (userInfo.ualipay != null) {
-            loginViewModel.getPublicKey()?.observe(this@MainActivity, { publicK ->
-                if (!gettingPublicKey && publicK != null) {
+            loginViewModel.getPublicKey().observe(this@MainActivity, { publicK ->
+                if (!gettingPublicKey) {
                     gettingPublicKey = true
                     authorizeWithAlipayID(userInfo, publicK)
                 }
@@ -319,8 +339,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         fun onLoginStateChanged()
     }
 
-    fun setOnLoginActivityListener(listener: OnLoginStateChangedListener) {
-        mOnLoginStateChangedListener = listener
+    fun addOnLoginActivityListener(listener: OnLoginStateChangedListener) {
+        mOnLoginStateChangedListener.add(listener)
     }
 
     interface OnLocationListener {
@@ -328,8 +348,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         fun onPermissionDenied()
     }
 
-    fun setOnLocationListener(listener: OnLocationListener) {
-        mOnLocationListener = listener
+    fun addOnLocationListener(listener: OnLocationListener) {
+        mOnLocationListenerList.add(listener)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -346,12 +366,18 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 showFragment(mPurchasing)
                 return true
             }
+            R.id.navigation_message -> {
+                showFragment(mMessages)
+                return true
+            }
         }
         return false
     }
 
     override fun onLocationChanged(aMapLocation: AMapLocation?) {
-        mOnLocationListener?.onLocated(aMapLocation)
+        for (onLocationListener in mOnLocationListenerList) {
+            onLocationListener.onLocated(aMapLocation)
+        }
         intent.putExtra(ConstantUtil.LONGITUDE, aMapLocation?.longitude)
         intent.putExtra(ConstantUtil.LATITUDE, aMapLocation?.latitude)
     }

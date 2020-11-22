@@ -14,7 +14,7 @@ import com.example.schoolairdroprefactoredition.scene.tab.quote.fragment.QuoteFr
 
 public class QuotePagerAdapter extends FragmentPagerAdapter {
 
-    private Context mContext;
+    private final Context mContext;
 
     @IdRes
     private static final int[] TABS = new int[]{R.string.received, R.string.sent};

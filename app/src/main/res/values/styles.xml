@@ -12,8 +12,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="AppTheme.PostsActivity">
+        <item name="android:windowSharedElementEnterTransition">
+            @transition/share_element_post_pager
+        </item>
+    </style>
+
     <!--    启动页面-->
     <style name="splashScreenTheme" parent="AppTheme.NoActionBar">
+        <item name="android:windowExitTransition">@transition/share_element_exit</item>
+        <item name="android:windowReenterTransition">@transition/share_element_reenter</item>
         <item name="android:windowBackground">@drawable/splash</item>
         <item name="android:statusBarColor">@color/colorAccentDark</item>
         <item name="android:navigationBarColor">@color/colorAccentDark</item>
@@ -141,6 +149,9 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
         <item name="android:layout_gravity">center</item>
+        <item name="android:paddingStart">@dimen/general_padding_large</item>
+        <item name="android:paddingEnd">@dimen/general_padding_large</item>
+        <item name="android:paddingBottom">@dimen/general_padding_large</item>
         <item name="android:background">@drawable/button_rounded_primary8</item>
         <item name="android:backgroundTint">@color/darkerTranslucent</item>
         <item name="android:gravity">center</item>

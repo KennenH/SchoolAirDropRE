@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.settings.fragment
 
+import android.app.Activity
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.schoolairdroprefactoredition.Application
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment
+import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.ui.components.PageItem
 import com.example.schoolairdroprefactoredition.viewmodel.SettingsGeneralViewModel
 import kotlinx.android.synthetic.main.fragment_settings_general.*

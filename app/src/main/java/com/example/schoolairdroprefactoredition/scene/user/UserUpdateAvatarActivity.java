@@ -35,7 +35,6 @@ import com.luck.picture.lib.entity.LocalMedia;
 import com.lxj.xpopup.impl.LoadingPopupView;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.ArrayList;
 
 import javadz.beanutils.BeanUtils;
 
@@ -114,7 +113,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
     private void init() {
         try {
             mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
-            ImageUtil.loadImage(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
+            ImageUtil.loadImage(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), R.drawable.ic_logo_alpha_white);
         } catch (NullPointerException e) {
             LogUtils.d("info null");
         }

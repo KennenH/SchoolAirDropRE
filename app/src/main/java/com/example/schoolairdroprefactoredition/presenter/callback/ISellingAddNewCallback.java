@@ -23,4 +23,9 @@ public interface ISellingAddNewCallback {
      * 修改物品时出错
      */
     void onModifyInfoError();
+
+    /**
+     * 其他错误
+     */
+    void onOtherError();
 }

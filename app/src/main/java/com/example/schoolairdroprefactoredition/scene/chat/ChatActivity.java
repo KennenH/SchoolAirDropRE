@@ -69,7 +69,7 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
     private RecyclerView mEmojiRecycler;
     private RecyclerView mMoreRecycler;
 
-    private ChatRecyclerAdapter mChatRecyclerAdapter = new ChatRecyclerAdapter();
+    private final ChatRecyclerAdapter mChatRecyclerAdapter = new ChatRecyclerAdapter();
 
     private Animation sendOut;
     private Animation moreOut;

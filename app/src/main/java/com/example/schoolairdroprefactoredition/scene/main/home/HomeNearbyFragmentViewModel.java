@@ -15,9 +15,9 @@ public class HomeNearbyFragmentViewModel extends BaseStateViewModel implements I
     private double longitude;
     private double latitude;
 
-    private HomeGoodsInfoImpl mHomeImpl;
+    private final HomeGoodsInfoImpl mHomeImpl;
 
-    private MutableLiveData<List<DomainGoodsInfo.DataBean>> mGoodsInfo = new MutableLiveData<>();
+    private final MutableLiveData<List<DomainGoodsInfo.DataBean>> mGoodsInfo = new MutableLiveData<>();
 
     public HomeNearbyFragmentViewModel() {
         mHomeImpl = new HomeGoodsInfoImpl();
@@ -44,7 +44,7 @@ public class HomeNearbyFragmentViewModel extends BaseStateViewModel implements I
     }
 
     public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo() {
-        mHomeImpl.getNearbyGoods(nowPage, longitude, latitude);
+        mHomeImpl.getNearbyGoods(nowPage++, longitude, latitude);
         return mGoodsInfo;
     }
 

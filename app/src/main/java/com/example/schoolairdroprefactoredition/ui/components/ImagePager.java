@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.ui.components;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -9,15 +10,19 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsPagerBinding;
+import com.example.schoolairdroprefactoredition.databinding.ComponentImagePagerBinding;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.XPopup;
@@ -25,26 +30,28 @@ import com.lxj.xpopup.XPopup;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChangeListener {
+public class ImagePager extends ConstraintLayout implements ViewPager.OnPageChangeListener {
 
-    private List<Object> mData = new ArrayList<>();
+    private final List<Object> mData = new ArrayList<>();
 
-    private ComponentGoodsPagerBinding binding;
+    private final ComponentImagePagerBinding binding;
     private long lastClickTime = 0;
 
-    public GoodsPager(Context context) {
+    private OnFirstImageLoadedListener mOnFirstImageLoadedListener;
+
+    public ImagePager(Context context) {
         this(context, null);
     }
 
-    public GoodsPager(Context context, AttributeSet attrs) {
+    public ImagePager(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public GoodsPager(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ImagePager(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        binding = ComponentGoodsPagerBinding.inflate(LayoutInflater.from(context), this, true);
+        binding = ComponentImagePagerBinding.inflate(LayoutInflater.from(context), this, true);
 
-        GoodsPagerAdapter mAdapter = new GoodsPagerAdapter();
+        ImagePagerAdapter mAdapter = new ImagePagerAdapter();
         binding.goodsPagerPager.addOnPageChangeListener(this);
         binding.goodsPagerPager.setAdapter(mAdapter);
     }
@@ -77,7 +84,19 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
         // do nothing
     }
 
-    public class GoodsPagerAdapter extends PagerAdapter {
+    /**
+     * 第一张图片加载完毕
+     * 便于activity开启元素共享动画
+     */
+    public interface OnFirstImageLoadedListener {
+        void onFirstImageLoaded();
+    }
+
+    public void setOnFirstImageLoadedListener(OnFirstImageLoadedListener listener) {
+        this.mOnFirstImageLoadedListener = listener;
+    }
+
+    public class ImagePagerAdapter extends PagerAdapter {
         @Override
         public int getCount() {
             int size = mData.size();
@@ -98,6 +117,23 @@ public class GoodsPager extends ConstraintLayout implements ViewPager.OnPageChan
                     .load((String) mData.get(position))
                     .encodeQuality(ConstantUtil.ORIGIN)
                     .apply(new RequestOptions().placeholder(R.drawable.logo_placeholder).override(Target.SIZE_ORIGINAL))
+                    .listener(new RequestListener<Drawable>() {
+                        @Override
+                        public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
+                            if (position == 0 && mOnFirstImageLoadedListener != null) {
+                                mOnFirstImageLoadedListener.onFirstImageLoaded();
+                            }
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
+                            if (position == 0 && mOnFirstImageLoadedListener != null) {
+                                mOnFirstImageLoadedListener.onFirstImageLoaded();
+                            }
+                            return false;
+                        }
+                    })
                     .into(pic);
 
             pic.setOnClickListener(v -> {

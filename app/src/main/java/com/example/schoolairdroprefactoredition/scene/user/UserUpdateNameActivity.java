@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,7 +76,8 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
         mTip = findViewById(R.id.input_tip);
         mTitle = findViewById(R.id.title);
         mInput = findViewById(R.id.input);
-        mInput.setMaxLines(1);
+        mInput.setInputType(EditorInfo.TYPE_NULL);
+        mInput.setLines(1);
         mInput.setOnClickListener(this);
         mInput.requestFocus();
         KeyboardUtils.showSoftInput();

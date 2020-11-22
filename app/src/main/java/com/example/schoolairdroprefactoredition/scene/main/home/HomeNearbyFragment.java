@@ -41,9 +41,8 @@ public class HomeNearbyFragment extends BaseChildFragment
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         if (getActivity() instanceof MainActivity)
-            ((MainActivity) getActivity()).setOnLocationListener(this);
+            ((MainActivity) getActivity()).addOnLocationListener(this);
     }
 
     @Nullable
@@ -110,7 +109,6 @@ public class HomeNearbyFragment extends BaseChildFragment
         } else {
             showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
         }
-
     }
 
     @Override

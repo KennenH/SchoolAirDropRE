@@ -7,9 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.transition.TransitionInflater;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
@@ -30,12 +27,6 @@ public class ParentNewsFragment extends BaseParentFragment
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setSharedElementReturnTransition(TransitionInflater.from(getContext()).inflateTransition(R.transition.share_element));
-    }
-
-    @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         if (getActivity() instanceof MainActivity) {
@@ -47,7 +38,7 @@ public class ParentNewsFragment extends BaseParentFragment
                              ViewGroup container, Bundle savedInstanceState) {
         final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, HomePagerAdapter.HOME);
+        HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), HomePagerAdapter.HOME);
         setUpPlaceHolderHAndContainerView(binding.placeholder, binding.homeViewpager);
 
         CommonNavigator commonNavigator = new CommonNavigator(getContext());

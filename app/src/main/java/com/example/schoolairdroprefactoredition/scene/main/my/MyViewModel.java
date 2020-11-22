@@ -12,7 +12,7 @@ public class MyViewModel extends BaseStateViewModel implements IMyCallback {
 
     private final MyImpl mImpl;
 
-    private MutableLiveData<DomainUserInfo> mUserInfo = new MutableLiveData<>();
+    private final MutableLiveData<DomainUserInfo> mUserInfo = new MutableLiveData<>();
 
     public MyViewModel() {
         mImpl = new MyImpl();

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.databinding.FragmentRecyclerBinding;
-import com.example.schoolairdroprefactoredition.domain.Data;
+import com.example.schoolairdroprefactoredition.domain.OnGoingData;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
@@ -24,11 +24,9 @@ import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecor
 
 import java.util.List;
 
-public class OnGoingFragment extends StatePlaceholderFragment implements BaseStateViewModel.OnRequestListener {
-    private static final String ARG_SECTION_NUMBER = "section_number";
-    private static final int PAGE_SENT = 0;
-    private static final int PAGE_RECEIVED = 1;
+import static com.example.schoolairdroprefactoredition.utils.ConstantUtil.KEY_ARG_SECTION_NUMBER;
 
+public class OnGoingFragment extends StatePlaceholderFragment implements BaseStateViewModel.OnRequestListener {
     private FragmentRecyclerBinding binding;
 
     private OnGoingViewModel viewModel;
@@ -40,7 +38,7 @@ public class OnGoingFragment extends StatePlaceholderFragment implements BaseSta
     public static OnGoingFragment newInstance(int index) {
         OnGoingFragment fragment = new OnGoingFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_SECTION_NUMBER, index);
+        bundle.putInt(KEY_ARG_SECTION_NUMBER, index);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -52,9 +50,9 @@ public class OnGoingFragment extends StatePlaceholderFragment implements BaseSta
         viewModel = new ViewModelProvider(this).get(OnGoingViewModel.class);
         viewModel.setOnRequestListener(this);
 
-        index = PAGE_SENT;
+        index = 0;
         if (getArguments() != null) {
-            index = getArguments().getInt(ARG_SECTION_NUMBER);
+            index = getArguments().getInt(KEY_ARG_SECTION_NUMBER);
         }
 
         mAdapter = new OnGoingRecyclerAdapter();
@@ -89,7 +87,7 @@ public class OnGoingFragment extends StatePlaceholderFragment implements BaseSta
             return;
         }
 
-        if (index == PAGE_SENT) {
+        if (index == 0) {
             showPlaceholder(StatePlaceHolder.TYPE_LOADING);
             viewModel.getSent(token.getAccess_token()).observe(getViewLifecycleOwner(), sent -> {
                 if (sent.getData().size() == 0) {
@@ -112,7 +110,7 @@ public class OnGoingFragment extends StatePlaceholderFragment implements BaseSta
         }
     }
 
-    private void sortData(List<Data> data) {
+    private void sortData(List<OnGoingData> data) {
 
     }
 

@@ -33,6 +33,13 @@ public class BaseChildFragment extends Fragment {
     }
 
     /**
+     * 通知主题改变
+     */
+    public static void notifyThemeChanged() {
+        requested = false;
+    }
+
+    /**
      * 显示PlaceHolder
      *
      * @param type {@link com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder#TYPE_NETWORK_OR_LOCATION_ERROR_HOME}

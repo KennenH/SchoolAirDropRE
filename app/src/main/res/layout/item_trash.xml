@@ -61,7 +61,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/goodsAvatar"
             app:layout_constraintTop_toTopOf="@+id/goodsAvatar"
-            tools:text="[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] 华为 MateBookX " />
+            android:text="[img src=ic_negotiable_small/] [img src=ic_secondhand_small/] 华为 Mate40 全新 拼夕夕百亿补贴价" />
 
         <TextView
             android:id="@+id/goodsPriceText"

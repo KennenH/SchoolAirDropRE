@@ -27,11 +27,9 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-public class QuoteFragment extends StatePlaceholderFragment implements BaseStateViewModel.OnRequestListener, QuoteRecyclerAdapter.OnQuoteActionListener {
-    private static final String ARG_SECTION_NUMBER = "section_number";
-    public static final int PAGE_RECEIVED = 0;
-    public static final int PAGE_SENT = 1;
+import static com.example.schoolairdroprefactoredition.utils.ConstantUtil.KEY_ARG_SECTION_NUMBER;
 
+public class QuoteFragment extends StatePlaceholderFragment implements BaseStateViewModel.OnRequestListener, QuoteRecyclerAdapter.OnQuoteActionListener {
     private QuoteViewModel viewModel;
 
     private int index;
@@ -45,7 +43,7 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
     public static QuoteFragment newInstance(int index) {
         QuoteFragment fragment = new QuoteFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt(ARG_SECTION_NUMBER, index);
+        bundle.putInt(KEY_ARG_SECTION_NUMBER, index);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -57,9 +55,9 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
         viewModel = new ViewModelProvider(this).get(QuoteViewModel.class);
         viewModel.setOnRequestListener(this);
 
-        index = PAGE_RECEIVED;
+        index = 0;
         if (getArguments() != null)
-            index = getArguments().getInt(ARG_SECTION_NUMBER);
+            index = getArguments().getInt(KEY_ARG_SECTION_NUMBER);
 
         if (getActivity() != null) {
             Bundle bundle = getActivity().getIntent().getExtras();
@@ -101,30 +99,33 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
         } catch (NullPointerException ignored) {
         }
 
-        if (token != null) {
-            showPlaceholder(StatePlaceHolder.TYPE_LOADING);
-            if (index == PAGE_RECEIVED) {
-                viewModel.getQuoteReceived(token.getAccess_token()).observe(getViewLifecycleOwner(), received -> {
-                    if (received.size() == 0) {
-                        showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
-                    } else {
-                        mAdapter.setList(sortDataByPrecess(received));
-                        binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), received.size(), unHandled));
-                        showContentContainer();
-                    }
-                });
-            } else {
-                viewModel.getQuoteSent(token.getAccess_token()).observe(getViewLifecycleOwner(), sent -> {
-                    if (sent.size() == 0) {
-                        showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
-                    } else {
-                        mAdapter.setList(sortDataByPrecess(sent));
-                        binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), sent.size(), unHandled));
-                        showContentContainer();
-                    }
-                });
-            }
-        } else showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
+        if (token == null) {
+            showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
+            return;
+        }
+
+        showPlaceholder(StatePlaceHolder.TYPE_LOADING);
+        if (index == 0) {
+            viewModel.getQuoteReceived(token.getAccess_token()).observe(getViewLifecycleOwner(), received -> {
+                if (received.size() == 0) {
+                    showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
+                } else {
+                    mAdapter.setList(sortDataByPrecess(received));
+                    binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), received.size(), unHandled));
+                    showContentContainer();
+                }
+            });
+        } else {
+            viewModel.getQuoteSent(token.getAccess_token()).observe(getViewLifecycleOwner(), sent -> {
+                if (sent.size() == 0) {
+                    showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
+                } else {
+                    mAdapter.setList(sortDataByPrecess(sent));
+                    binding.recycler.addItemDecoration(new QuoteDecoration(getContext(), sent.size(), unHandled));
+                    showContentContainer();
+                }
+            });
+        }
     }
 
     /**

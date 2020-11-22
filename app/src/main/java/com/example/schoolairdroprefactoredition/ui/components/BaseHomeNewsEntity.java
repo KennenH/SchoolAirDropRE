@@ -7,7 +7,7 @@ public class BaseHomeNewsEntity implements MultiItemEntity {
 
     private int type = HomeNewsRecyclerAdapter.TYPE_ONE;
     private String title;
-    private String ur;
+    private String uri;
 
     public void setType(int type) {
         this.type = type;
@@ -21,12 +21,12 @@ public class BaseHomeNewsEntity implements MultiItemEntity {
         this.title = title;
     }
 
-    public String getUr() {
-        return ur;
+    public String getUri() {
+        return uri;
     }
 
-    public void setUr(String ur) {
-        this.ur = ur;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
     @Override

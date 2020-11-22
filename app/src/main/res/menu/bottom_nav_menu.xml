@@ -3,18 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_all"
-        android:title="@string/home" />
-
-    <item
         android:id="@+id/navigation_box"
-        android:icon="@drawable/ic_box"
+        android:icon="@drawable/ic_moneybox"
         android:title="@string/purchasing" />
 
     <item
+        android:id="@+id/navigation_home"
+        android:icon="@drawable/ic_all"
+        android:title="@string/playground" />
+
+    <item
+        android:id="@+id/hidden"
+        android:title="" />
+
+    <item
+        android:id="@+id/navigation_message"
+        android:icon="@drawable/ic_messages"
+        android:title="@string/messages" />
+
+    <item
         android:id="@+id/navigation_my"
-        android:icon="@drawable/ic_user"
+        android:icon="@drawable/ic_user_line"
         android:title="@string/my" />
 
 </menu>

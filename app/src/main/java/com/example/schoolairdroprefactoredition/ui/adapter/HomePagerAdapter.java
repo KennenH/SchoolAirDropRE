@@ -1,7 +1,5 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
-import android.os.Bundle;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -13,23 +11,24 @@ import com.example.schoolairdroprefactoredition.scene.main.home.HomeNewsFragment
 
 public class HomePagerAdapter extends FragmentPagerAdapter {
 
-    public static final int HOME = 3;
+    public static final int HOME = 1;
     public static final int PURCHASING = 1;
 
     private int mIndex;
 
-    public HomePagerAdapter(@NonNull FragmentManager fm, int behavior, int page) {
-        super(fm, behavior);
+    public HomePagerAdapter(@NonNull FragmentManager fm, int page) {
+        super(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mIndex = page;
     }
 
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        if (mIndex == HOME)
+        if (mIndex == HOME) {
             return HomeNewsFragment.newInstance();
-        else
+        } else {
             return HomeNearbyFragment.newInstance();
+        }
     }
 
     @Override

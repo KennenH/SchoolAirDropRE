@@ -89,50 +89,57 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
      *             {@link StatePlaceHolder#TYPE_DENIED}
      *             {@link StatePlaceHolder#TYPE_ERROR}
      * @deprecated 改用
-     *              {@link StatePlaceHolder#setPlaceholderType(LoadState)}
-     *
+     * {@link StatePlaceHolder#setPlaceholderType(LoadState)}
      */
     public void setPlaceholderType(int type) {
         this.type = type;
         if (type == TYPE_NETWORK_OR_LOCATION_ERROR_HOME) {
             // 网络或定位出错
             mLoading.setVisibility(GONE);
+            mAction.setVisibility(GONE);
+
             mIcon.setImageResource(ICON_NETWORK_OR_LOCATION_ERROR_HOME);
-            mIcon.setVisibility(VISIBLE);
             mTip.setText(TIP_NETWORK_OR_LOCATION_ERROR_HOME);
+
+            mIcon.setVisibility(VISIBLE);
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(VISIBLE);
-            mAction.setVisibility(GONE);
         } else if (type == TYPE_EMPTY_GOODS_HOME) {
             // 附近没有物品 仅首页使用
             mLoading.setVisibility(GONE);
+
             mIcon.setImageResource(ICON_GOODS_EMPTY);
-            mIcon.setVisibility(VISIBLE);
             mTip.setText(TIP_EMPTY_GOODS_HOME);
+            mAction.setText(R.string.postMyItem);
+
+            mIcon.setVisibility(VISIBLE);
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(VISIBLE);
             mAction.setVisibility(VISIBLE);
-            mAction.setText(R.string.postMyItem);
         } else if (type == TYPE_EMPTY_NEWS_HOME) {
             // 附近没有物品 仅首页使用
             mLoading.setVisibility(GONE);
+
             mIcon.setImageResource(ICON_NEWS_EMPTY);
-            mIcon.setVisibility(VISIBLE);
             mTip.setText(TIP_EMPTY_NEWS_HOME);
+            mAction.setText(R.string.postMyTopic);
+
+            mIcon.setVisibility(VISIBLE);
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(VISIBLE);
             mAction.setVisibility(VISIBLE);
-            mAction.setText(R.string.postMyTopic);
         } else if (type == TYPE_DENIED) {
             // 权限拒绝
             mLoading.setVisibility(GONE);
             mRefresh.setVisibility(GONE);
-            mIcon.setImageResource(ICON_DENIED);
+
             mIcon.setVisibility(VISIBLE);
-            mTip.setText(TIP_DENIED);
             mTip.setVisibility(VISIBLE);
-            mAction.setText(R.string.errorRetry);
             mAction.setVisibility(VISIBLE);
+
+            mIcon.setImageResource(ICON_DENIED);
+            mTip.setText(TIP_DENIED);
+            mAction.setText(R.string.errorRetry);
         } else if (type == TYPE_LOADING) {
             // 正在加载
             mIcon.setVisibility(GONE);
@@ -144,34 +151,40 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
             // 没有物品 非首页
             mLoading.setVisibility(GONE);
             mAction.setVisibility(GONE);
+
             mIcon.setImageResource(ICON_GOODS_EMPTY);
-            mIcon.setVisibility(VISIBLE);
             mTip.setText(TIP_EMPTY);
+
+            mIcon.setVisibility(VISIBLE);
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(VISIBLE);
         } else if (type == TYPE_EMPTY_SEARCH) {
             // 没有物品 搜索
             mLoading.setVisibility(GONE);
             mAction.setVisibility(GONE);
+
             mIcon.setImageResource(ICON_GOODS_EMPTY);
-            mIcon.setVisibility(VISIBLE);
             mTip.setText(TIP_EMPTY_SEARCH);
+
+            mIcon.setVisibility(VISIBLE);
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(VISIBLE);
         } else {
             // 未知错误
             mLoading.setVisibility(GONE);
             mAction.setVisibility(GONE);
+
             mIcon.setImageResource(ICON_ERROR);
-            mIcon.setVisibility(VISIBLE);
             mTip.setText(TIP_ERROR);
+
+            mIcon.setVisibility(VISIBLE);
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(VISIBLE);
         }
     }
 
     public void setPlaceholderType(LoadState type) {
-        
+        // TODO: 2020/11/15 将类型直接变为LoadState的枚举
     }
 
     /**

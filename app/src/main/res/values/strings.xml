@@ -41,6 +41,9 @@
     <string name="noItemToAgree">没有与%s待约定地点的物品</string>
     <string name="countDown" translatable="false">$1%d:$2%d:$3%d</string>
 
+    <!--    shared element transition name -->
+    <string name="sharedElementPostActivityWrapper" translatable="false">PostActivitySharedWrapper</string>
+    <string name="sharedElementPostActivityTitle" translatable="false">PostActivitySharedTitle</string>
 
     <!--  translatable  -->
     <string name="home">首页</string>
@@ -211,7 +214,7 @@
     <string name="originPrice">原价</string>
     <string name="unLogged">未登录</string>
     <string name="emptySearch">啊哦… 附近似乎没有人发布包含该关键字的物品</string>
-    <string name="nothingThere">空空如也…</string>
+    <string name="nothingThere">啥也没有…</string>
     <string name="dialogSuccess">完成</string>
     <string name="dialogFailed">出错啦</string>
     <string name="errorLoading">加载出错啦…</string>
@@ -256,7 +259,6 @@
     <string name="logout">退出登录</string>
     <string name="confirmLogout">确认退出登录</string>
 
-    <string name="shareSearchBar" translatable="false">shareElementSearchBar</string>
     <string name="confirmTransaction">确认收货</string>
     <string name="buyerReceiveQRCode">买家收货码</string>
     <string name="pleaseConfirmPurchase">请在确认购买之后再给予卖家扫描</string>
@@ -276,5 +278,10 @@
     <string name="haveReadAndAgreeTerms">我已认真阅读并同意以上服务条款和隐私政策</string>
     <string name="privacyAndService">隐私政策与服务条款</string>
     <string name="pleaseAgreeAboveTermsFirst">请先阅读并同意以上条款</string>
+    <string name="corrupted">已中断</string>
+    <string name="complished">已完成</string>
+    <string name="termsOfServiceAgreeFailed">啊哦,条约走丢了</string>
+    <string name="addNewGoodsError">上架时出错,若多次失败请尝试更新版本</string>
+    <string name="playground">广场</string>
 
 </resources>

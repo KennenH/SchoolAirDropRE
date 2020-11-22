@@ -55,33 +55,37 @@
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/toolbar_wrapper"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:background="@color/white"
             android:gravity="center"
             app:elevation="0dp">
 
-            <TextView
-                android:id="@+id/home_search_bar"
+            <androidx.appcompat.widget.Toolbar
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/toolbar_icon_large"
-                android:layout_marginStart="@dimen/general_padding_larger"
-                android:layout_marginEnd="@dimen/general_padding_larger"
-                android:background="@drawable/bg_round_primary_light"
-                android:drawablePadding="@dimen/general_padding"
-                android:gravity="center_vertical"
-                android:hint="@string/search"
-                android:paddingStart="10dp"
-                android:textColor="@color/primaryText"
-                android:textColorHint="@color/primaryText"
-                android:textSize="14dp"
-                android:transitionName="@string/shareSearchBar"
-                app:drawableStartCompat="@drawable/ic_search"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_scrollFlags="snap|scroll|enterAlways"
-                tools:ignore="RtlSymmetry" />
+                android:layout_height="?attr/actionBarSize"
+                app:layout_scrollFlags="snap|scroll|enterAlways">
+
+                <TextView
+                    android:id="@+id/home_search_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/toolbar_icon_large"
+                    android:layout_marginStart="@dimen/general_padding_larger"
+                    android:layout_marginEnd="@dimen/general_padding_larger"
+                    android:background="@drawable/bg_round_primary_light"
+                    android:drawablePadding="@dimen/general_padding"
+                    android:gravity="center_vertical"
+                    android:hint="@string/search"
+                    android:paddingStart="10dp"
+                    android:textColor="@color/primaryText"
+                    android:textColorHint="@color/primaryText"
+                    android:textSize="14dp"
+                    app:drawableStartCompat="@drawable/ic_search"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:ignore="RtlSymmetry" />
+            </androidx.appcompat.widget.Toolbar>
         </com.google.android.material.appbar.AppBarLayout>
 
         <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder

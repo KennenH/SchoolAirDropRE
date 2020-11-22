@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.example.schoolairdroprefactoredition.ui.components.GoodsPager
+    <com.example.schoolairdroprefactoredition.ui.components.ImagePager
         android:id="@+id/goods_pager"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
