@@ -16,6 +16,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.utils.AnimUtil
+import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
@@ -106,7 +107,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
             if (key != null) {
                 viewModel.authorizeWithAlipayID(key.cookie,
                         intent.getStringExtra(ConstantUtil.KEY_ALIPAY_FOR_LOGIN)
-                                ?: ConstantUtil.USER_ID, key.public_key)
+                                ?: AppConfig.USER_ID, key.public_key)
                         .observe(this, { token ->
                             if (token != null) {
                                 dismissLoading()

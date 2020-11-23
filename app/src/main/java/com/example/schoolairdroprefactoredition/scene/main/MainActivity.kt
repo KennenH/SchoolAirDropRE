@@ -11,14 +11,14 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewItemActivity
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
-import com.example.schoolairdroprefactoredition.scene.main.home.ParentNewsFragment
+import com.example.schoolairdroprefactoredition.scene.main.home.ParentPlaygroundFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasingFragment
 import com.example.schoolairdroprefactoredition.scene.main.messages.MessagesFragment
 import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
@@ -65,8 +65,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         SearchFragment.newInstance()
     }
 
-    private val mHome by lazy {
-        ParentNewsFragment.newInstance()
+    private val mPlayground by lazy {
+        ParentPlaygroundFragment.newInstance()
     }
 
     private val mMessages by lazy {
@@ -96,10 +96,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     override fun onResume() {
         super.onResume()
         when {
-            mHome.isVisible -> navView.selectedItemId = R.id.navigation_home
-            mPurchasing.isVisible -> navView.selectedItemId = R.id.navigation_box
-            mPurchasing.isVisible -> navView.selectedItemId = R.id.navigation_my
+            mPurchasing.isVisible -> navView.selectedItemId = R.id.navigation_purchasing
+            mPlayground.isVisible -> navView.selectedItemId = R.id.navigation_playground
             mMessages.isVisible -> navView.selectedItemId = R.id.navigation_message
+            mMy.isVisible -> navView.selectedItemId = R.id.navigation_my
         }
     }
 
@@ -139,16 +139,20 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     private fun initView() {
-        mHome.setOnSearchBarClickedListener {
+        mPlayground.setOnSearchBarClickedListener {
             showSearch()
         }
 
         mPurchasing.setOnSearchBarClickedListener {
             showSearch()
         }
-        
+
+        home_add_fab.setOnClickListener {
+            AddNewItemActivity.start(this, intent.extras)
+        }
+
         navView.setOnNavigationItemSelectedListener(this@MainActivity)
-        navView.selectedItemId = R.id.navigation_box
+        navView.selectedItemId = R.id.navigation_purchasing
     }
 
     /**
@@ -188,7 +192,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         supportFragmentManager.apply {
             if (fragment.isHidden || !fragment.isAdded) {
                 beginTransaction()
-                        .hide(mHome)
+                        .hide(mPlayground)
                         .hide(mMy)
                         .hide(mPurchasing)
                         .hide(mMessages)
@@ -354,20 +358,20 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.navigation_home -> {
-                showFragment(mHome)
-                return true
-            }
-            R.id.navigation_my -> {
-                showFragment(mMy)
-                return true
-            }
-            R.id.navigation_box -> {
+            R.id.navigation_purchasing -> {
                 showFragment(mPurchasing)
+                return true
+            }
+            R.id.navigation_playground -> {
+                showFragment(mPlayground)
                 return true
             }
             R.id.navigation_message -> {
                 showFragment(mMessages)
+                return true
+            }
+            R.id.navigation_my -> {
+                showFragment(mMy)
                 return true
             }
         }

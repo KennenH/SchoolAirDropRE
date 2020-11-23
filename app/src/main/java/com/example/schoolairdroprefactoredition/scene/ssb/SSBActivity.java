@@ -21,6 +21,7 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivitySsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewItemActivity;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SSBBaseFragment;
@@ -202,7 +203,7 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
 
 
     /**
-     * 在{@link com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity}中登录后
+     * 在{@link AddNewItemActivity}中登录后
      * 将登录结果回调至ssb三个子fragment中
      */
     public interface OnLoginStateChangeListener {

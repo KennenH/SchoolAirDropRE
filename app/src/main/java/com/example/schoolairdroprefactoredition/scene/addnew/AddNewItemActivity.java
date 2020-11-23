@@ -51,10 +51,10 @@ import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResult
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.TIP_ADD_NEW_SUCCESS;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.TIP_MODIFY_FAILED;
 
-public class SellingAddNewActivity extends PermissionBaseActivity implements View.OnClickListener, AMapLocationListener, HorizontalImageRecyclerAdapter.OnPicSetClickListener, SellingAddNewViewModel.OnRequestListener {
+public class AddNewItemActivity extends PermissionBaseActivity implements View.OnClickListener, AMapLocationListener, HorizontalImageRecyclerAdapter.OnPicSetClickListener, AddNewItemViewModel.OnRequestListener {
 
     public static void start(Context context, Bundle bundle) {
-        Intent intent = new Intent(context, SellingAddNewActivity.class);
+        Intent intent = new Intent(context, AddNewItemActivity.class);
         if (bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE) == null) {
             // 若未登录则带着登录请求打开页面
             startForLogin(context);
@@ -73,7 +73,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     public static final int REQUEST_CODE_COVER = 219;// 请求码 封面选择
     public static final int REQUEST_CODE_PIC_SET = 11;// 请求码 图片集选择
 
-    private SellingAddNewViewModel viewModel;
+    private AddNewItemViewModel viewModel;
 
     private ActivitySellingAddNewBinding binding;
 
@@ -97,7 +97,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     private boolean isAddNewMode; // 是否是新增而不是修改物品
 
     private static void startForLogin(Context context) {
-        Intent intent = new Intent(context, SellingAddNewActivity.class);
+        Intent intent = new Intent(context, AddNewItemActivity.class);
         if (context instanceof AppCompatActivity) {
             AppCompatActivity activity = (AppCompatActivity) context;
             activity.startActivityForResult(intent, LoginActivity.LOGIN);
@@ -111,11 +111,11 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
         binding = ActivitySellingAddNewBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
         setSupportActionBar(findViewById(R.id.toolbar));
-        viewModel = new ViewModelProvider(this).get(SellingAddNewViewModel.class);
+        viewModel = new ViewModelProvider(this).get(AddNewItemViewModel.class);
         viewModel.setOnRequestListener(this);
 
         token = (DomainAuthorize) getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
-        isAddNewMode = getIntent().getIntExtra(SellingAddNewActivity.PAGE_CONVERT_TO_MODIFY, -1) != REQUEST_PAGE_CONVERT_TO_MODIFY;
+        isAddNewMode = getIntent().getIntExtra(AddNewItemActivity.PAGE_CONVERT_TO_MODIFY, -1) != REQUEST_PAGE_CONVERT_TO_MODIFY;
 
         binding.draftTipToggle.setText(isAddNewMode ? R.string.addNewSelling : R.string.modifyInfo);
         binding.savedDraft.setVisibility(View.GONE);
@@ -149,7 +149,7 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
             @Override
             public void onItemClick() {
                 if (binding.cover.getImagePath() != null && !binding.cover.getImagePath().equals("")) {
-                    new XPopup.Builder(SellingAddNewActivity.this)
+                    new XPopup.Builder(AddNewItemActivity.this)
                             .isDarkTheme(true)
                             .isDestroyOnDismiss(true)
                             .asImageViewer(binding.cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, new MyUtil.ImageLoader())
@@ -627,6 +627,6 @@ public class SellingAddNewActivity extends PermissionBaseActivity implements Vie
     @Override
     public void onOtherError() {
         dismissLoading(() ->
-                DialogUtil.showCenterDialog(SellingAddNewActivity.this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.addNewGoodsError));
+                DialogUtil.showCenterDialog(AddNewItemActivity.this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.addNewGoodsError));
     }
 }

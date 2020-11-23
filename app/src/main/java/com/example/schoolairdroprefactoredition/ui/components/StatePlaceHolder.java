@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.PlaceholderBinding;
 import com.example.schoolairdroprefactoredition.domain.base.LoadState;
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewItemActivity;
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 import com.github.ybq.android.spinkit.SpinKitView;
 
@@ -209,7 +210,7 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
      */
     public interface OnHomePlaceHolderActionListener {
         /**
-         * 发布我的物品 打开{@link com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity}
+         * 发布我的物品 打开{@link AddNewItemActivity}
          */
         void onHomePostMyItem(View view);
 

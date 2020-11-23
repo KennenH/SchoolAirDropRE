@@ -14,11 +14,15 @@ import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.utils.AppConfig;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.XPopup;
 import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.impl.LoadingPopupView;
+import com.mob.MobSDK;
+import com.mob.OperationCallback;
 
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
@@ -128,7 +132,6 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                             });
 
                             agree.setOnClickListener(v -> handleAgreementToTermsOfService(this));
-
                             disagree.setOnClickListener(v -> AppUtils.exitApp());
                         }
 
@@ -202,32 +205,32 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     /**
      * 处理用户同意后请求
      */
-    private void handleAgreementToTermsOfService(@Nullable BasePopupView dialog) {
-        LoadingPopupView loading = MyUtil.loading(this);
-//        loading.show();
-        agreeToTermsOfService();
-        dialog.dismiss();
-//        MobSDK.submitPolicyGrantResult(true, new OperationCallback<Void>() {
-//            @Override
-//            public void onComplete(Void aVoid) {
-////                getSharedPreferences(ConstantUtil.START_UP_PREFERENCE, MODE_PRIVATE)
-////                        .edit()
-////                        .putBoolean(ConstantUtil.START_UP_IS_TERMS_AGREED, true)
-////                        .apply();
-//
-//                if (dialog != null) {
-//                    loading.dismissWith(dialog::dismiss);
-//                }
-//
-//                agreeToTermsOfService();
-//            }
-//
-//            @Override
-//            public void onFailure(Throwable throwable) {
-//                loading.dismissWith(() ->
-//                        DialogUtil.showCenterDialog(PermissionBaseActivity.this, DialogUtil.DIALOG_TYPE.FAILED, R.string.termsOfServiceAgreeFailed));
-//            }
-//        });
+    private void handleAgreementToTermsOfService(BasePopupView dialog) {
+        if (AppConfig.IS_DEBUG) {
+            dialog.dismiss();
+            agreeToTermsOfService();
+        } else {
+            LoadingPopupView loading = MyUtil.loading(this);
+            loading.show();
+            MobSDK.submitPolicyGrantResult(true, new OperationCallback<Void>() {
+                @Override
+                public void onComplete(Void aVoid) {
+                    getSharedPreferences(ConstantUtil.START_UP_PREFERENCE, MODE_PRIVATE)
+                            .edit()
+                            .putBoolean(ConstantUtil.START_UP_IS_TERMS_AGREED, true)
+                            .apply();
+
+                    loading.dismissWith(dialog::dismiss);
+                    agreeToTermsOfService();
+                }
+
+                @Override
+                public void onFailure(Throwable throwable) {
+                    loading.dismissWith(() ->
+                            DialogUtil.showCenterDialog(PermissionBaseActivity.this, DialogUtil.DIALOG_TYPE.FAILED, R.string.termsOfServiceAgreeFailed));
+                }
+            });
+        }
     }
 
     /**

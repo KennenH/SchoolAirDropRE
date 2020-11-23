@@ -23,6 +23,13 @@
             android:textSize="@dimen/textSizeNormal" />
     </androidx.appcompat.widget.Toolbar>
 
+    <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
+        android:id="@+id/messages_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="@+id/messages_refresh"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar2" />
+
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/messages_refresh"
         android:layout_width="match_parent"
@@ -40,22 +47,12 @@
             android:layout_height="wrap_content"
             android:background="@color/primary" />
 
-        <FrameLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/messages_recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:overScrollMode="never"
+            tools:listitem="@layout/item_home_messages" />
 
-            <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
-                android:id="@+id/messages_placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/messages_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never"
-                tools:listitem="@layout/item_home_messages" />
-
-        </FrameLayout>
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

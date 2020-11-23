@@ -15,7 +15,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 
 import java.util.List;
 
-public class SellingAddNewViewModel extends AndroidViewModel implements ISellingAddNewCallback {
+public class AddNewItemViewModel extends AndroidViewModel implements ISellingAddNewCallback {
 
     private MutableLiveData<DomainResult> mSubmitResult = new MutableLiveData<>();
     private MutableLiveData<AddNewDraftCache> mRecoveredDraft = new MutableLiveData<>();
@@ -24,7 +24,7 @@ public class SellingAddNewViewModel extends AndroidViewModel implements ISelling
 
     private OnRequestListener mOnRequestListener;
 
-    public SellingAddNewViewModel(@NonNull Application application) {
+    public AddNewItemViewModel(@NonNull Application application) {
         super(application);
         sellingAddNewImpl = new SellingAddNewImpl();
         sellingAddNewImpl.registerCallback(this);

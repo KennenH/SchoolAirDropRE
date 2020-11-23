@@ -10,7 +10,7 @@ import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewMod
 
 import java.util.List;
 
-public class HomeNewsFragmentViewModel extends BaseStateViewModel implements IHomeNewsCallback {
+public class HomePlaygroundFragmentViewModel extends BaseStateViewModel implements IHomeNewsCallback {
     private int page;
     private double longitude;
     private double latitude;
@@ -18,7 +18,7 @@ public class HomeNewsFragmentViewModel extends BaseStateViewModel implements IHo
 
     private final MutableLiveData<List<TestNewsItemBean>> mHomeNews = new MutableLiveData<>();
 
-    public HomeNewsFragmentViewModel() {
+    public HomePlaygroundFragmentViewModel() {
         mHomeImpl = new HomeNewsImpl();
         mHomeImpl.registerCallback(this);
     }

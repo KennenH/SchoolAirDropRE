@@ -1,14 +1,10 @@
 package com.example.schoolairdroprefactoredition.scene.main.home;
 
 import android.content.Intent;
-import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityOptionsCompat;
 import androidx.core.util.Pair;
@@ -19,7 +15,6 @@ import com.amap.api.location.AMapLocation;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
-import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.posts.PostsActivity;
@@ -28,49 +23,30 @@ import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerVie
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
-import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import org.jetbrains.annotations.NotNull;
 
-public class HomeNewsFragment extends BaseChildFragment implements
-        OnRefreshListener, EndlessRecyclerView.OnLoadMoreListener,
-        BaseStateViewModel.OnRequestListener, MainActivity.OnLoginStateChangedListener,
-        MainActivity.OnLocationListener, HomeNewsRecyclerAdapter.OnNoMoreDataListener, HomeNewsRecyclerAdapter.OnHomePostActionClickListener {
+public class HomePlaygroundFragment extends BaseChildFragment implements
+        BaseStateViewModel.OnRequestListener,
+        HomeNewsRecyclerAdapter.OnNoMoreDataListener, HomeNewsRecyclerAdapter.OnHomePostActionClickListener {
 
-    private FragmentHomeContentBinding binding;
-
-    private HomeNewsFragmentViewModel homeContentFragmentViewModel;
+    private HomePlaygroundFragmentViewModel homeContentFragmentViewModel;
 
     private HomeNewsRecyclerAdapter mHomeNewsRecyclerAdapter;
 
-    private AMapLocation mLocation;
+    private EndlessRecyclerView mHomeRecycler;
 
-    public static HomeNewsFragment newInstance() {
-        return new HomeNewsFragment();
+    public static HomePlaygroundFragment newInstance() {
+        return new HomePlaygroundFragment();
     }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getActivity() instanceof MainActivity) {
-            ((MainActivity) getActivity()).addOnLocationListener(this);
-        }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentHomeContentBinding.inflate(inflater, container, false);
-        homeContentFragmentViewModel = new ViewModelProvider(this).get(HomeNewsFragmentViewModel.class);
+    public void initView(FragmentHomeContentBinding binding) {
+        homeContentFragmentViewModel = new ViewModelProvider(this).get(HomePlaygroundFragmentViewModel.class);
         homeContentFragmentViewModel.setOnRequestListener(this);
 
-        initRecycler();
+        mHomeRecycler = binding.homeRecycler;
 
-        return binding.getRoot();
-    }
-
-    private void initRecycler() {
-        binding.homeRefresh.setOnRefreshListener(this);
         binding.homeRecycler.setOnLoadMoreListener(this);
 
         StaggeredGridLayoutManager mManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
@@ -85,57 +61,34 @@ public class HomeNewsFragment extends BaseChildFragment implements
         binding.homeRecycler.setAdapter(mHomeNewsRecyclerAdapter);
     }
 
-    /**
-     * 来自{@link MainActivity}的定位回调
-     */
     @Override
-    public void onLocated(AMapLocation aMapLocation) {
-        if (aMapLocation != null) {
-            if (aMapLocation.getErrorCode() == 0) {
-                mLocation = aMapLocation;
-                homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
-                    if (data.size() < 1) {
-                        showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_NEWS_HOME);
-                    } else {
-                        mHomeNewsRecyclerAdapter.setList(data);
-                        showContentContainer();
-                    }
-                });
+    public void getOnlineData(AMapLocation aMapLocation) {
+        homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
+            if (data.size() < 1) {
+                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_NEWS_HOME);
             } else {
-                showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
+                mHomeNewsRecyclerAdapter.setList(data);
+                showContentContainer();
             }
-        } else {
-            showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
-        }
+        });
     }
 
     @Override
-    public void onPermissionDenied() {
-        showPlaceHolder(StatePlaceHolder.TYPE_DENIED);
-    }
-
-    @Override
-    public void onRefresh(@NonNull RefreshLayout refreshLayout) {
-        if (mLocation != null) {
-            homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
-                refreshLayout.finishRefresh();
-                if (data.size() < 1) {
-                    showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_NEWS_HOME);
-                } else {
-                    mHomeNewsRecyclerAdapter.setList(data);
-                    showContentContainer();
-                }
-            });
-        } else { // 定位失败时通知父Fragment显示PlaceHolder
+    public void getRefreshData(@NonNull RefreshLayout refreshLayout, AMapLocation aMapLocation) {
+        homeContentFragmentViewModel.getHomeNews(aMapLocation.getLongitude(), aMapLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
             refreshLayout.finishRefresh();
-            showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME);
-            locateWithoutRequest();// 自动请求MainActivity的定位
-        }
+            if (data.size() < 1) {
+                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_NEWS_HOME);
+            } else {
+                mHomeNewsRecyclerAdapter.setList(data);
+                showContentContainer();
+            }
+        });
     }
 
     @Override
-    public void autoLoadMore(EndlessRecyclerView recycler) {
-//        homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
+    public void getAutoLoadMoreData(AMapLocation aMapLocation) {
+        //        homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
 //            mHomeNewsRecyclerAdapter.addData(data);
 //            showContentContainer();
 //            recycler.finishLoading();
@@ -148,18 +101,13 @@ public class HomeNewsFragment extends BaseChildFragment implements
     }
 
     @Override
-    public void onLoginStateChanged() {
-
-    }
-
-    @Override
     public void onNoMoreData() {
-        binding.homeRecycler.setIsNoMoreData(true);
+        mHomeRecycler.setIsNoMoreData(true);
     }
 
     @Override
     public void onNoMoreDataRefresh() {
-        binding.homeRecycler.setIsNoMoreData(false);
+        mHomeRecycler.setIsNoMoreData(false);
     }
 
     @Override
@@ -175,4 +123,5 @@ public class HomeNewsFragment extends BaseChildFragment implements
         } catch (NullPointerException ignored) {
         }
     }
+
 }

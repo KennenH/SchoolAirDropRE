@@ -18,7 +18,7 @@ import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.databinding.SheetSsbItemMoreBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
-import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewItemActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -124,9 +124,9 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
                         bundle = new Bundle();
 
                     bundle.putSerializable(ConstantUtil.KEY_GOODS_INFO, bean);
-                    bundle.putInt(SellingAddNewActivity.PAGE_CONVERT_TO_MODIFY, SellingAddNewActivity.REQUEST_PAGE_CONVERT_TO_MODIFY);
+                    bundle.putInt(AddNewItemActivity.PAGE_CONVERT_TO_MODIFY, AddNewItemActivity.REQUEST_PAGE_CONVERT_TO_MODIFY);
 
-                    SellingAddNewActivity.start(getContext(), bundle);
+                    AddNewItemActivity.start(getContext(), bundle);
                     dialog.dismiss();
                 });
                 binding.offShelf.setOnClickListener(v -> {
@@ -191,7 +191,7 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
                 getActivity().getSupportFragmentManager().popBackStack();
         } else if (id == R.id.ssb_selling_add) {
             if (getActivity() != null && getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
-                SellingAddNewActivity.start(getContext(), getActivity().getIntent().getExtras());
+                AddNewItemActivity.start(getContext(), getActivity().getIntent().getExtras());
             }
         }
         return super.onOptionsItemSelected(item);

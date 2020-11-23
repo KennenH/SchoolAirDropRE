@@ -6,7 +6,7 @@
 
     <fragment
         android:id="@+id/home_news"
-        android:name="com.example.schoolairdroprefactoredition.scene.main.home.ParentNewsFragment">
+        android:name="com.example.schoolairdroprefactoredition.scene.main.home.ParentPlaygroundFragment">
         <action
             android:id="@+id/news_to_search"
             app:destination="@id/home_search"

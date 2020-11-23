@@ -8,7 +8,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.scene.addnew.SellingAddNewActivity;
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewItemActivity;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
@@ -58,7 +58,7 @@ public class BaseParentFragment extends StatePlaceholderFragment implements Stat
     @Override
     public void onHomePostMyItem(View view) {
         if (getActivity() instanceof MainActivity) {
-            SellingAddNewActivity.start(getContext(), getActivity().getIntent().getExtras());
+            AddNewItemActivity.start(getContext(), getActivity().getIntent().getExtras());
         } else
             DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
     }

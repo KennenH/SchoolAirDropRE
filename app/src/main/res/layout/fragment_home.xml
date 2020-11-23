@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
-    tools:context=".scene.main.home.ParentNewsFragment">
+    tools:context=".scene.main.home.ParentPlaygroundFragment">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/home_toolbar"

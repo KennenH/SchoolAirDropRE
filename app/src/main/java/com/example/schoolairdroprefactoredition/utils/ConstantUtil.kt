@@ -1,8 +1,6 @@
 package com.example.schoolairdroprefactoredition.utils
 
 object ConstantUtil {
-    const val USER_ID = "19858120611"
-
     /**
      * 检查用户是否同意使用服务协议和隐私政策
      */
@@ -20,44 +18,42 @@ object ConstantUtil {
      */
     const val LONGITUDE = "nowLongitude"
     const val LATITUDE = "nowLatitude"
+    const val AMAP_LOCATION = "amapLocation"
 
     /**
      * data fetch num
      */
-    const val DATA_FETCH_DEFAULT_SIZE = 50
+    const val DATA_FETCH_DEFAULT_SIZE = 20
 
     /**
      * home fragment singleton
      */
-    @JvmField
-    var FRAGMENT_NUM = "fragment_num"
-    var FRAGMENT_NUM_NEWS = 101
-    var FRAGMENT_NUM_NEARBY = 102
+    const val FRAGMENT_NUM = "fragment_num"
+    const val FRAGMENT_NUM_NEWS = 101
+    const val FRAGMENT_NUM_NEARBY = 102
 
     /**
      * SOB base Api
      */
-    var SOB_API_BASE_URL = "https://api.sunofbeach.net/shop/"
+    const val SOB_API_BASE_URL = "https://api.sunofbeach.net/shop/"
 
     /**
      * 移动端接口密码
      */
-    var CLIENT_GRANT_TYPE = "client_credentials"
-
-    @JvmField
-    var CLIENT_ID = "testclient"
-
-    @JvmField
-    var CLIENT_SECRET = "123456"
+    const val CLIENT_GRANT_TYPE = "client_credentials"
+    const val CLIENT_ID = "testclient"
+    const val CLIENT_SECRET = "123456"
 
     /**
      * 校园空投 网络接口base url
      */
-    var SCHOOL_AIR_DROP_BASE_URL = "http://106.54.110.46/inf/"
+    const val SCHOOL_AIR_DROP_BASE_URL = "http://106.54.110.46/inf/"
+    const val SCHOOL_AIR_DROP_BASE_URL_NEW = "http://106.54.110.46:8000/"
+    const val LOCAL = "http://10.0.2.2:8000/"
 
-    @JvmField
-    var SCHOOL_AIR_DROP_BASE_URL_NEW = "http://106.54.110.46:8000/"
-    var LOCAL = "http://10.0.2.2:8000/"
+    /**
+     * 点击间隔最短1秒
+     */
     const val MENU_CLICK_GAP = 1000
 
 

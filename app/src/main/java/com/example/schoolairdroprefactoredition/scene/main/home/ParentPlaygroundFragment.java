@@ -19,11 +19,11 @@ import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
 
-public class ParentNewsFragment extends BaseParentFragment
+public class ParentPlaygroundFragment extends BaseParentFragment
         implements View.OnClickListener {
 
-    public static ParentNewsFragment newInstance() {
-        return new ParentNewsFragment();
+    public static ParentPlaygroundFragment newInstance() {
+        return new ParentPlaygroundFragment();
     }
 
     @Override
@@ -38,14 +38,13 @@ public class ParentNewsFragment extends BaseParentFragment
                              ViewGroup container, Bundle savedInstanceState) {
         final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), HomePagerAdapter.HOME);
+        HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), HomePagerAdapter.PAGE_TYPE_PLAYGROUND);
         setUpPlaceHolderHAndContainerView(binding.placeholder, binding.homeViewpager);
 
         CommonNavigator commonNavigator = new CommonNavigator(getContext());
         HomeNavigatorAdapter adapter = new HomeNavigatorAdapter(getContext(), binding.homeViewpager, HomeNavigatorAdapter.HOME);
         commonNavigator.setAdapter(adapter);
         binding.homeViewpager.setAdapter(homePagerAdapter);
-        binding.homeViewpager.setOffscreenPageLimit(3);
         binding.homeIndicator.setNavigator(commonNavigator);
         ViewPagerHelper.bind(binding.homeIndicator, binding.homeViewpager);
 

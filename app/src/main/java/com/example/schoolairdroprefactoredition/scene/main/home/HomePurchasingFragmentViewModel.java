@@ -10,7 +10,7 @@ import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewMod
 
 import java.util.List;
 
-public class HomeNearbyFragmentViewModel extends BaseStateViewModel implements IHomeGoodsInfoCallback {
+public class HomePurchasingFragmentViewModel extends BaseStateViewModel implements IHomeGoodsInfoCallback {
     private int nowPage;
     private double longitude;
     private double latitude;
@@ -19,7 +19,7 @@ public class HomeNearbyFragmentViewModel extends BaseStateViewModel implements I
 
     private final MutableLiveData<List<DomainGoodsInfo.DataBean>> mGoodsInfo = new MutableLiveData<>();
 
-    public HomeNearbyFragmentViewModel() {
+    public HomePurchasingFragmentViewModel() {
         mHomeImpl = new HomeGoodsInfoImpl();
         mHomeImpl.registerCallback(this);
     }

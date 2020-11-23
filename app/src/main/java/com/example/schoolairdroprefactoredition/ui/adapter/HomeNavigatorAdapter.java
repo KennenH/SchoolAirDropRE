@@ -22,8 +22,8 @@ public class HomeNavigatorAdapter extends CommonNavigatorAdapter {
     public static final int HOME = 0;
     public static final int PURCHASING = 1;
 
-    private List<String> mList;
-    private ViewPager mViewPager;
+    private final List<String> mList;
+    private final ViewPager mViewPager;
 
     public HomeNavigatorAdapter(Context context, ViewPager viewPager, int page) {
         mViewPager = viewPager;

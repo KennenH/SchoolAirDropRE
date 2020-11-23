@@ -89,7 +89,7 @@
             android:name=".scene.addnew.InputSetActivity"
             android:label="" />
         <activity
-            android:name=".scene.addnew.SellingAddNewActivity"
+            android:name=".scene.addnew.AddNewItemActivity"
             android:label="" />
         <activity
             android:name=".scene.tab.ongoing.OnGoingActivity"

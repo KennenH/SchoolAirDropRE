@@ -12,12 +12,11 @@ import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarAct
 import com.example.schoolairdroprefactoredition.ui.adapter.TransitionAdapter
 import kotlinx.android.synthetic.main.activity_posts.*
 
-
 class PostsActivity : ImmersionStatusBarActivity() {
 
     companion object {
         val startTitleSize = SizeUtils.dp2px(5f).toFloat()
-        val endTitleSize = SizeUtils.dp2px(7.5f).toFloat()
+        val endTitleSize = SizeUtils.dp2px(7f).toFloat()
         const val pagerAnimDuration = 500L
         const val titleAnimDuration = 250L
     }

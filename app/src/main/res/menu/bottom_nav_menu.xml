@@ -3,12 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/navigation_box"
+        android:id="@+id/navigation_purchasing"
         android:icon="@drawable/ic_moneybox"
         android:title="@string/purchasing" />
 
     <item
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_playground"
         android:icon="@drawable/ic_all"
         android:title="@string/playground" />
 
