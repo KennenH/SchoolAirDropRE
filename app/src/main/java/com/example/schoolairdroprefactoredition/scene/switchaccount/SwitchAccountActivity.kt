@@ -23,7 +23,7 @@ import kotlinx.android.synthetic.main.activity_switch_account.*
 class SwitchAccountActivity : ImmersionStatusBarActivity() {
 
     companion object {
-        const val SWITCH_ACCOUNT = 731
+        const val SWITCH_ACCOUNT = 235
 
         fun start(context: Context, bundle: Bundle) {
             val intent = Intent(context, SwitchAccountActivity::class.java)

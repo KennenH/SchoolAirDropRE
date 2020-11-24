@@ -16,7 +16,7 @@ class PostsActivity : ImmersionStatusBarActivity() {
 
     companion object {
         val startTitleSize = SizeUtils.dp2px(5f).toFloat()
-        val endTitleSize = SizeUtils.dp2px(7f).toFloat()
+        val endTitleSize = SizeUtils.dp2px(7.2f).toFloat()
         const val pagerAnimDuration = 500L
         const val titleAnimDuration = 250L
     }

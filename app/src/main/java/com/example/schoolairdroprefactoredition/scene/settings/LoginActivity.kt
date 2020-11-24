@@ -64,7 +64,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
             login_with_alipay.isEnabled = false
             cancel.setOnClickListener(this)
             checkbox.setOnCheckedChangeListener(this)
-            checkbox.isSelected = false
+            checkbox.isChecked = false
             login_with_alipay.setOnClickListener(this)
         }
     }

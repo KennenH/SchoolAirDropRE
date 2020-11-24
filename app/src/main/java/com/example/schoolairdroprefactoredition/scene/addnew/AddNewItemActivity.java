@@ -300,7 +300,7 @@ public class AddNewItemActivity extends PermissionBaseActivity implements View.O
                             viewModel.submit(token.getAccess_token(), mCoverPath, mPicSetPaths,
                                     binding.optionTitle.getText().toString(), binding.optionDescription.getText().toString(),
                                     mAmapLocation.getLongitude(), mAmapLocation.getLatitude(),
-                                    binding.optionSecondHand.getIsSelected(), !binding.optionNegotiable.getIsSelected(),
+                                    !binding.optionSecondHand.getIsChecked(), binding.optionNegotiable.getIsChecked(),
                                     Float.parseFloat(binding.priceInput.getText().toString()))
                                     .observe(this, result -> {
                                         // 这里有一个bug 当提交响应失败后 再在同一个页面重试之后成功 将会多次弹出成功提示页面 但实际只提交成功了一次
@@ -388,15 +388,15 @@ public class AddNewItemActivity extends PermissionBaseActivity implements View.O
                     || !binding.optionTitle.getText().toString().trim().equals("")
                     || !binding.optionDescription.getText().toString().trim().equals("")
                     || !binding.priceInput.getText().toString().equals("")
-                    || binding.optionNegotiable.getIsSelected()
-                    || binding.optionSecondHand.getIsSelected())) {
+                    || binding.optionNegotiable.getIsChecked()
+                    || binding.optionSecondHand.getIsChecked())) {
                 viewModel.save(mCoverPath,
                         mPicSetSelected,
                         binding.optionTitle.getText().toString(),
                         binding.optionDescription.getText().toString(),
                         binding.priceInput.getText().toString(),
-                        binding.optionNegotiable.getIsSelected(),
-                        binding.optionSecondHand.getIsSelected());
+                        binding.optionNegotiable.getIsChecked(),
+                        binding.optionSecondHand.getIsChecked());
             } else viewModel.deleteDraft();
     }
 
@@ -412,18 +412,24 @@ public class AddNewItemActivity extends PermissionBaseActivity implements View.O
 
                 mCoverPath = draftCache.getCover();
                 mPicSetSelected = draftCache.getPicSet();
-                if (mCoverPath != null && !mCoverPath.equals(""))
+
+                if (mCoverPath != null && !mCoverPath.equals("")) {
                     binding.cover.setImageLocalPath(mCoverPath);
+                }
                 mAdapter.setList(mPicSetSelected);
                 binding.optionTitle.setText(draftCache.getTitle());
                 binding.optionDescription.setText(draftCache.getDescription());
                 binding.priceInput.setText(draftCache.getPrice());
-                if (draftCache.isNegotiable())
-                    if (!binding.optionNegotiable.getIsSelected())
+                if (draftCache.isNegotiable()) {
+                    if (!binding.optionNegotiable.getIsChecked()) {
                         binding.optionNegotiable.toggle();
-                if (draftCache.isSecondHand())
-                    if (!binding.optionSecondHand.getIsSelected())
+                    }
+                }
+                if (draftCache.isSecondHand()) {
+                    if (!binding.optionSecondHand.getIsChecked()) {
                         binding.optionSecondHand.toggle();
+                    }
+                }
             }
 
             binding.draftTip.setText(getString(R.string.draftRecovered));
@@ -471,9 +477,9 @@ public class AddNewItemActivity extends PermissionBaseActivity implements View.O
         binding.cover.clearImage(true);
         binding.optionTitle.setText("");
         binding.priceInput.setText("");
-        if (binding.optionNegotiable.getIsSelected())
+        if (binding.optionNegotiable.getIsChecked())
             binding.optionNegotiable.toggle();
-        if (binding.optionSecondHand.getIsSelected())
+        if (binding.optionSecondHand.getIsChecked())
             binding.optionSecondHand.toggle();
         binding.optionDescription.setText("");
 

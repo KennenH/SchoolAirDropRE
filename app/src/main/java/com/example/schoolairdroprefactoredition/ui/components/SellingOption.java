@@ -14,10 +14,10 @@ import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 
 public class SellingOption extends ConstraintLayoutAuto {
 
-    private TextView mTitle;
-    private TextView mDescription;
-    private ImageView mArrow;
-    private SwitchCompat mSwitch;
+    private final TextView mTitle;
+    private final TextView mDescription;
+    private final ImageView mArrow;
+    private final SwitchCompat mSwitch;
 
     private boolean isSwitch = false;
     private boolean isShowArrow = false;
@@ -94,7 +94,7 @@ public class SellingOption extends ConstraintLayoutAuto {
         mDescription.setText(description);
     }
 
-    public boolean getIsSelected() {
+    public boolean getIsChecked() {
         return mSwitch.isChecked();
     }
 

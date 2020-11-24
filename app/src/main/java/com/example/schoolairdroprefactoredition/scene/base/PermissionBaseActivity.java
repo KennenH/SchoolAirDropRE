@@ -208,6 +208,10 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     private void handleAgreementToTermsOfService(BasePopupView dialog) {
         if (AppConfig.IS_DEBUG) {
             dialog.dismiss();
+            getSharedPreferences(ConstantUtil.START_UP_PREFERENCE, MODE_PRIVATE)
+                    .edit()
+                    .putBoolean(ConstantUtil.START_UP_IS_TERMS_AGREED, false)
+                    .apply();
             agreeToTermsOfService();
         } else {
             LoadingPopupView loading = MyUtil.loading(this);

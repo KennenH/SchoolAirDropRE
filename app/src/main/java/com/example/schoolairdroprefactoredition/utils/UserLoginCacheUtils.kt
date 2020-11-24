@@ -41,8 +41,6 @@ class UserLoginCacheUtils {
     /**
      * 退出当前账号
      * 不会删除当前账号在设备上的缓存
-     *
-     * 除非删除账号，会将在本设备上的该账号信息清除
      */
     private fun quitCurrentUser() {
         var userInfoCache: UserInfoCache? = mJsonCacheUtil.getValue(UserInfoCache.USER_INFO, UserInfoCache::class.java)

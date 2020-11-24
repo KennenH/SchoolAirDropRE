@@ -164,12 +164,12 @@ class CaptureActivity : AppCompatActivity(), TorchListener {
 
     override fun onTorchOn() {
         isFlashOn = true
-        switch_flashlight.setImageResource(R.drawable.ic_flashlight_button)
+        switch_flashlight.setImageResource(R.drawable.ic_flashlight_on_button)
     }
 
     override fun onTorchOff() {
         isFlashOn = false
-        switch_flashlight.setImageResource(R.drawable.ic_flashlight_on_button)
+        switch_flashlight.setImageResource(R.drawable.ic_flashlight_button)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {

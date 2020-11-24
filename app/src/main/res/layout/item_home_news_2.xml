@@ -31,7 +31,7 @@
             android:gravity="bottom|start"
             android:maxLines="2"
             android:padding="@dimen/general_padding"
-            android:text="#朴信惠ins新图"
+            android:text="#2020考研#"
             android:textColor="@color/whiteAlways"
             android:textSize="@dimen/textSizeLarge"
             app:layout_constraintBottom_toBottomOf="parent"

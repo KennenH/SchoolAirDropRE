@@ -17,10 +17,10 @@ import java.util.List;
 
 public class AddNewItemViewModel extends AndroidViewModel implements ISellingAddNewCallback {
 
-    private MutableLiveData<DomainResult> mSubmitResult = new MutableLiveData<>();
-    private MutableLiveData<AddNewDraftCache> mRecoveredDraft = new MutableLiveData<>();
+    private final MutableLiveData<DomainResult> mSubmitResult = new MutableLiveData<>();
+    private final MutableLiveData<AddNewDraftCache> mRecoveredDraft = new MutableLiveData<>();
 
-    private SellingAddNewImpl sellingAddNewImpl;
+    private final SellingAddNewImpl sellingAddNewImpl;
 
     private OnRequestListener mOnRequestListener;
 
