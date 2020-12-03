@@ -7,7 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ItemQuoteBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainQuote;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -78,12 +78,12 @@ public class QuoteRecyclerAdapter extends BaseQuickAdapter<DomainQuote.DataBean,
 
             binding.userAvatar.setOnClickListener(v -> {
                 UserActivity.start(getContext(), false,
-                        (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE),
+                        (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN),
                         bean.getReceiver_info() == null ? bean.getSender_info() : bean.getReceiver_info());
             });
             binding.userName.setOnClickListener(v -> {
                 UserActivity.start(getContext(), false,
-                        (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE),
+                        (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN),
                         bean.getReceiver_info() == null ? bean.getSender_info() : bean.getReceiver_info());
             });
             binding.quoteAccept.setOnClickListener(v -> {

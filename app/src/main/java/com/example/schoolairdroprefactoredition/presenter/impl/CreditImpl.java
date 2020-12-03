@@ -11,6 +11,16 @@ import java.util.Arrays;
 
 public class CreditImpl implements ICreditPresenter {
 
+    private static CreditImpl mCreditImpl = null;
+
+    public static CreditImpl getInstance() {
+        if (mCreditImpl == null) {
+            mCreditImpl = new CreditImpl();
+        }
+
+        return mCreditImpl;
+    }
+
     private ICreditCallback mCallback;
 
     @Override

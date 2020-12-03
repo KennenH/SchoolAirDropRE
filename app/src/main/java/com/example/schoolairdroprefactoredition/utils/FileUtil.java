@@ -3,10 +3,16 @@ package com.example.schoolairdroprefactoredition.utils;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 
 import androidx.annotation.IntRange;
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -33,6 +39,25 @@ public class FileUtil {
         return isAddNewItem ?
                 bitmapToFile(context, scaleBitmap(bitmap, 1080, 1080), 80) :
                 bitmapToFile(context, scaleBitmap(bitmap, 350, 350), 100);
+    }
+
+    /**
+     * 将图片url转换为Bitmap
+     */
+    @Nullable
+    public static Bitmap urlToBitmap(Context context, String imageUrl) {
+        final Bitmap[] bitmap = {null};
+        Glide.with(context).asBitmap().load(imageUrl).into(new CustomTarget<Bitmap>() {
+            @Override
+            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                bitmap[0] = resource;
+            }
+
+            @Override
+            public void onLoadCleared(@Nullable Drawable placeholder) {
+            }
+        });
+        return bitmap[0];
     }
 
     /**

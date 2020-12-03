@@ -17,8 +17,20 @@ import com.lxj.xpopup.impl.LoadingPopupView;
 import me.jessyan.autosize.AutoSizeCompat;
 
 public class ImmersionStatusBarActivity extends AppCompatActivity {
+
     private LoadingPopupView mLoading;
+
+    /**
+     * 是否为暗黑模式
+     */
     protected boolean isDarkTheme = false;
+
+    /**
+     * 是否有请求正在运行标志位，当有请求正在运行时通过
+     * {@link ImmersionStatusBarActivity#showLoading(Runnable)}
+     * 运行的网络请求将不会再次发起并且会被抛弃而不是等待上一个请求结束
+     */
+    private boolean isRequestRunning = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -39,20 +51,44 @@ public class ImmersionStatusBarActivity extends AppCompatActivity {
     }
 
     protected void showLoading() {
-        if (mLoading == null)
+        if (mLoading == null) {
             mLoading = MyUtil.loading(this);
+        }
 
         mLoading.show();
     }
 
+    /**
+     * request在获取数据结束之前将只会被发起一次
+     *
+     * @param request 网络请求
+     */
+    protected void showLoading(Runnable request) {
+        if (mLoading == null) {
+            mLoading = MyUtil.loading(this);
+        }
+
+        mLoading.show();
+
+        if (!isRequestRunning) {
+            request.run();
+        }
+    }
+
     protected void dismissLoading() {
-        if (mLoading != null)
+        isRequestRunning = false;
+
+        if (mLoading != null) {
             mLoading.smartDismiss();
+        }
     }
 
     protected void dismissLoading(Runnable task) {
-        if (mLoading != null)
+        isRequestRunning = false;
+
+        if (mLoading != null) {
             mLoading.dismissWith(task);
+        }
     }
 
     /**

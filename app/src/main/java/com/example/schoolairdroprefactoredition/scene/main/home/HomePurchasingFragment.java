@@ -66,7 +66,7 @@ public class HomePurchasingFragment extends BaseChildFragment
     public void getOnlineData(AMapLocation aMapLocation) {
         homeContentFragmentViewModel.getGoodsInfo(aMapLocation.getLongitude(), aMapLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
             if (data.size() == 0)
-                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_GOODS_HOME);
+                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME_GOODS);
             else {
                 mHomeNearbyRecyclerAdapter.setList(data);
                 showContentContainer();
@@ -79,7 +79,7 @@ public class HomePurchasingFragment extends BaseChildFragment
         homeContentFragmentViewModel.getGoodsInfo(aMapLocation.getLongitude(), aMapLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
             refreshLayout.finishRefresh();
             if (data.size() == 0) {
-                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_GOODS_HOME);
+                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME_GOODS);
             } else {
                 mHomeNearbyRecyclerAdapter.setList(data);
                 showContentContainer();

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.example.schoolairdroprefactoredition.cache.UserInfoCache;
 import com.example.schoolairdroprefactoredition.cache.UserTokenCache;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
 
@@ -30,8 +30,8 @@ public class AccountViewModel extends ViewModel {
     /**
      * 获取上次登录用户的token信息
      */
-    public LiveData<DomainAuthorize> getLastLoggedTokenCaChe() {
-        MutableLiveData<DomainAuthorize> mTokenCache = new MutableLiveData<>();
+    public LiveData<DomainToken> getLastLoggedTokenCaChe() {
+        MutableLiveData<DomainToken> mTokenCache = new MutableLiveData<>();
         UserTokenCache userTokenCache = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache.class);
         if (userTokenCache == null) userTokenCache = new UserTokenCache();
         mTokenCache.setValue(userTokenCache.getToken());

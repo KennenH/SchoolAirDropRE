@@ -18,7 +18,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.user.fragment.UserAvatarViewModel;
@@ -42,19 +42,11 @@ import static com.example.schoolairdroprefactoredition.scene.user.UserActivity.R
 
 public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseStateViewModel.OnRequestListener, View.OnLongClickListener, View.OnClickListener {
 
-    public static void startForResult(Context context, Bundle bundle) {
-        Intent intent = new Intent(context, UserUpdateAvatarActivity.class);
-        intent.putExtras(bundle);
-        if (context instanceof AppCompatActivity) {
-            ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_UPDATE);
-        }
-    }
-
     /**
      * @param token 验证信息
      * @param info  我的用户信息
      */
-    public static void start(Context context, DomainAuthorize token, Object info) {
+    public static void start(Context context, DomainToken token, Object info) {
         if (token == null) return;
 
         DomainBaseUserInfo my = new DomainBaseUserInfo();
@@ -65,7 +57,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
         }
         Intent intent = new Intent(context, UserUpdateAvatarActivity.class);
         intent.putExtra(ConstantUtil.KEY_USER_INFO, my);
-        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
+        intent.putExtra(ConstantUtil.KEY_TOKEN, token);
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).startActivityForResult(intent, REQUEST_UPDATE);
         }
@@ -83,7 +75,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
     private Bundle bundle;
 
     private DomainBaseUserInfo info;
-    private DomainAuthorize token;
+    private DomainToken token;
 
 
     @Override
@@ -101,7 +93,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
         if (bundle == null)
             bundle = new Bundle();
 
-        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
         info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
 
         mAvatar = findViewById(R.id.avatar);
@@ -112,7 +104,6 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
 
     private void init() {
         try {
-            mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
             ImageUtil.loadImage(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), R.drawable.ic_logo_alpha_white);
         } catch (NullPointerException e) {
             LogUtils.d("info null");
@@ -223,7 +214,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
                 mDialog.dismiss();
                 break;
             case R.id.select_from_album:
-                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, 1, true, true);
+                MyUtil.pickPhotoFromAlbum(this, REQUEST_ALBUM, 1, true, true, false);
                 mDialog.dismiss();
                 break;
             case R.id.save_to_album:

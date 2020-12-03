@@ -31,13 +31,13 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     /**
      * 请求获取权限
      * 在执行需要权限的方法之前必须先执行此方法来判断是否有权限
-     * 在 granted 方法中执行需要权限的操作
-     * 在 denied 方法中执行权限拒绝后的操作
+     * 在 XXGranted 方法(eg. {@link PermissionBaseActivity#locationGranted()})中执行需要权限的操作
+     * 在 XXDenied 方法(eg. {@link PermissionBaseActivity#locationDenied()})中执行权限拒绝后的操作
      * <p>
-     * 在类型为{@link RequestType#MANUAL}时若已勾选不再提醒，则弹窗引导用户手动设置 (适用于用户手动重试时)
-     * 反之若类型为{@link RequestType#AUTO}时若权限被拒绝则不会询问  (适用于页面打开时自动检查权限)
      *
      * @param type one of {@link RequestType#MANUAL} or {@link RequestType#AUTO}
+     *             在类型为 {@link RequestType#MANUAL} 时若已勾选不再提醒，则弹窗引导用户手动设置 **适用于用户手动重试时**
+     *             反之若类型为 {@link RequestType#AUTO} 时若权限被拒绝则不会询问 **适用于页面打开时自动检查权限**
      */
     public void requestPermission(@PermissionConstants.Permission String permission, @RequestType int type) {
         int res = 0;
@@ -110,6 +110,8 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
 
     /**
      * 检查是否已经同意服务条款和隐私政策
+     * 若已同意则在{@link PermissionBaseActivity#agreeToTermsOfService()}中启动主页面的渲染
+     * 否则退出App
      */
     public void checkIfAgreeToTermsOfServiceAndPrivacyPolicy() {
         boolean isAgreed = getSharedPreferences(ConstantUtil.START_UP_PREFERENCE, MODE_PRIVATE).getBoolean(ConstantUtil.START_UP_IS_TERMS_AGREED, false);
@@ -238,7 +240,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     }
 
     /**
-     * 同意成功
+     * 服务条款和隐私政策同意成功
      */
     protected void agreeToTermsOfService() {
     }

@@ -16,6 +16,15 @@ import retrofit2.Retrofit;
 
 public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
 
+    private static HomeGoodsInfoImpl mHomeGoodsInfoImpl = null;
+
+    public static HomeGoodsInfoImpl getInstance() {
+        if (mHomeGoodsInfoImpl == null) {
+            mHomeGoodsInfoImpl = new HomeGoodsInfoImpl();
+        }
+        return mHomeGoodsInfoImpl;
+    }
+
     private IHomeGoodsInfoCallback mCallback = null;
 
     /**

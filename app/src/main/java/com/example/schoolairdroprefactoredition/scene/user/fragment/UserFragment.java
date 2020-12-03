@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentUserBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment;
 import com.example.schoolairdroprefactoredition.scene.credit.CreditActivity;
@@ -52,7 +52,7 @@ public class UserFragment extends TransitionBaseFragment implements UserHomeBase
 
     private boolean isModifiable = false;
     private boolean isMine = false;
-    private DomainAuthorize token;
+    private DomainToken token;
     private DomainBaseUserInfo userInfo;
 
     public static UserFragment newInstance(Bundle bundle) {
@@ -78,7 +78,7 @@ public class UserFragment extends TransitionBaseFragment implements UserHomeBase
             bundle = new Bundle();
         } else {
             isModifiable = bundle.getBoolean(ConstantUtil.KEY_INFO_MODIFIABLE);
-            token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+            token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
             userInfo = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
         }
     }

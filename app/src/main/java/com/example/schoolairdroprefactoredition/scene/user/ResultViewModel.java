@@ -9,12 +9,12 @@ import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewMod
 
 public class ResultViewModel extends BaseStateViewModel implements IResultCallback {
 
-    private MutableLiveData<Boolean> mRenameResult = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mRenameResult = new MutableLiveData<>();
 
-    private UserNameImpl userNameImpl;
+    private final UserNameImpl userNameImpl;
 
     public ResultViewModel() {
-        userNameImpl = new UserNameImpl();
+        userNameImpl = UserNameImpl.getInstance();
         userNameImpl.registerCallback(this);
     }
 

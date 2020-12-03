@@ -28,7 +28,6 @@ import com.effective.android.panel.interfaces.listener.OnPanelChangeListener;
 import com.effective.android.panel.view.panel.IPanelView;
 import com.effective.android.panel.view.panel.PanelView;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.presenter.impl.ChatViewModel;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.chat.entity.ChatReceiveMessageEntity;
 import com.example.schoolairdroprefactoredition.scene.chat.entity.ChatSendMessageEntity;
@@ -167,7 +166,7 @@ public class ChatActivity extends ImmersionStatusBarActivity implements OnRefres
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = new MenuInflater(this);
-        inflater.inflate(R.menu.chat_more, menu);
+        inflater.inflate(R.menu.more, menu);
         menu.getItem(0).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
     }

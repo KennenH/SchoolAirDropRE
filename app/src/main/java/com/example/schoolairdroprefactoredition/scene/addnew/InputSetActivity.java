@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -73,27 +74,33 @@ public class InputSetActivity extends ImmersionStatusBarActivity {
         mInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // do nothing
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // do nothing
             }
 
             @Override
             public void afterTextChanged(Editable s) {
                 if (type == TYPE_TITLE) {
                     mRemaining.setText(getString(R.string.textRemainCount, MAX_TITLE - mInput.getText().length()));
-                    mInput.setMaxLines(2);
-                } else
+                    mInput.setLines(2);
+                } else {
                     mRemaining.setText(getString(R.string.textRemainCount, MAX_DESCRIPTION - mInput.getText().length()));
+                    mInput.setMinLines(5);
+                }
+                mInput.setGravity(Gravity.START | Gravity.TOP);
             }
         });
 
         mInput.setOnFocusChangeListener((v, hasFocus) -> {
-            if (hasFocus)
+            if (hasFocus) {
                 KeyboardUtils.showSoftInput(v);
-            else
+            } else {
                 KeyboardUtils.hideSoftInput(v);
+            }
         });
 
         init();
@@ -130,6 +137,10 @@ public class InputSetActivity extends ImmersionStatusBarActivity {
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == android.R.id.home) {
+            // 当本次修改后文本长度与上次保存的文本长度差超过10时默认为保存而不是丢弃修改
+            if (Math.abs(mInput.getText().length() - content.length()) > 10) {
+                sendData();
+            }
             finish();
             return true;
         } else if (id == R.id.done) {

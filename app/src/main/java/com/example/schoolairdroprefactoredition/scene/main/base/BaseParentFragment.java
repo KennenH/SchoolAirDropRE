@@ -8,11 +8,13 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.scene.addnew.AddNewItemActivity;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 
 public class BaseParentFragment extends StatePlaceholderFragment implements StatePlaceHolder.OnPlaceHolderRefreshListener, StatePlaceHolder.OnHomePlaceHolderActionListener {
@@ -58,14 +60,31 @@ public class BaseParentFragment extends StatePlaceholderFragment implements Stat
     @Override
     public void onHomePostMyItem(View view) {
         if (getActivity() instanceof MainActivity) {
-            AddNewItemActivity.start(getContext(), getActivity().getIntent().getExtras());
-        } else
-            DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
+            DomainToken token;
+            try {
+                token = (DomainToken) getActivity().getIntent().getExtras().getSerializable(ConstantUtil.KEY_TOKEN);
+            } catch (NullPointerException e) {
+                token = null;
+            }
+            AddNewActivity.start(getContext(), token, AddNewActivity.AddNewType.ADD_ITEM);
+        }
     }
 
+    /**
+     * PlaceHolder动作回调{@link StatePlaceHolder.OnPlaceHolderRefreshListener}
+     * 发表帖子
+     */
     @Override
-    public void onHomePostMyTopic(View view) {
-
+    public void onHomePostMyPosts(View view) {
+        if (getActivity() instanceof MainActivity) {
+            DomainToken token;
+            try {
+                token = (DomainToken) getActivity().getIntent().getExtras().getSerializable(ConstantUtil.KEY_TOKEN);
+            } catch (NullPointerException e) {
+                token = null;
+            }
+            AddNewActivity.start(getContext(), token, AddNewActivity.AddNewType.ADD_POST);
+        }
     }
 
     @org.jetbrains.annotations.Nullable

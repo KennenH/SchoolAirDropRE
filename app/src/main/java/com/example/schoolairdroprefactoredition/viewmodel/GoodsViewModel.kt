@@ -25,6 +25,7 @@ class GoodsViewModel : ViewModel() {
                 quotePrice) { success, response ->
             if (success && response != null && response.isSuccess) {
                 mQuoteState.value = LoadState.SUCCESS
+                mQuoteResult.postValue(true)
             } else {
                 mQuoteState.value = LoadState.ERROR
             }

@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.goods
 
+import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -8,14 +9,17 @@ import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
+import android.view.animation.Animation
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.KeyboardUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.SheetQuoteBinding
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
@@ -47,7 +51,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
          * @param isFromSelling 详见{@link GoodsInfo#hideSellerInfo()}
          */
         fun start(context: Context,
-                  token: DomainAuthorize?,
+                  token: DomainToken?,
                   goodsInfo: DomainGoodsInfo.DataBean?,
                   isFromSelling: Boolean) {
             if (goodsInfo == null) return
@@ -55,7 +59,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
             val intent = Intent(context, GoodsActivity::class.java)
             intent.apply {
                 putExtra(ConstantUtil.KEY_GOODS_INFO, goodsInfo)
-                putExtra(ConstantUtil.KEY_AUTHORIZE, token)
+                putExtra(ConstantUtil.KEY_TOKEN, token)
                 putExtra(KEY_IS_FROM_SELLING, isFromSelling)
             }
 
@@ -86,10 +90,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     }
 
     private fun init() {
-        StatusBarUtil.setTranslucentForImageView(this@GoodsActivity, 0, goods_toolbar)
-        BarUtils.setStatusBarLightMode(this@GoodsActivity, !isDarkTheme)
-        BarUtils.setNavBarLightMode(this@GoodsActivity, !isDarkTheme)
-
+        setBar()
         setSupportActionBar(goods_toolbar)
 
         goods_button_left.visibility = View.GONE
@@ -101,9 +102,6 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
 
         goodsViewModel.mQuoteState.observe(this, {
             when (it) {
-                LoadState.LOADING -> {
-                    showLoading()
-                }
                 LoadState.SUCCESS -> {
                     dismissLoading {
                         DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successQuote)
@@ -111,7 +109,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
                 }
                 LoadState.ERROR -> {
                     dismissLoading {
-                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorUnknown)
+                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
                     }
                 }
                 else -> {
@@ -123,10 +121,20 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     }
 
     /**
+     * 设置底部栏和状态样式
+     */
+    private fun setBar() {
+        StatusBarUtil.setTranslucentForImageView(this@GoodsActivity, 0, goods_toolbar)
+        BarUtils.setStatusBarLightMode(this@GoodsActivity, !isDarkTheme)
+        BarUtils.setNavBarLightMode(this@GoodsActivity, !isDarkTheme)
+        status_bar_overlay.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, BarUtils.getStatusBarHeight())
+    }
+
+    /**
      * 有效化页面状态等信息
      */
     private fun validateInfo() {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE)
+        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
         val goodsInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO) as DomainGoodsInfo.DataBean
 
         // 若从用户信息页面进入的在售页面，则隐藏卖家信息，原因见方法本身
@@ -136,7 +144,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
 
         if (token != null && goodsInfo.seller_info != null) {
             checkIfItemFavored()
-            myViewModel.getUserInfo((token as DomainAuthorize).access_token).observe(this, {
+            myViewModel.getUserInfo((token as DomainToken).access_token).observe(this, {
                 isNotMine = it.data[0].uid != goodsInfo.seller_info.uid
                 if (isNotMine) {
                     goods_button_left.visibility = View.VISIBLE
@@ -158,6 +166,9 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     private fun checkIfItemFavored() {
     }
 
+    /**
+     * 在未登录时打开物品页面并进行操作时
+     */
     private fun login() {
         LoginActivity.startForLogin(this@GoodsActivity)
     }
@@ -168,10 +179,10 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
             if (requestCode == LoginActivity.LOGIN) {
                 if (data != null) {
                     intent.apply {
-                        removeExtra(ConstantUtil.KEY_AUTHORIZE)
+                        removeExtra(ConstantUtil.KEY_TOKEN)
                         removeExtra(ConstantUtil.KEY_USER_INFO)
-                        putExtra(ConstantUtil.KEY_AUTHORIZE,
-                                data.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE))
+                        putExtra(ConstantUtil.KEY_TOKEN,
+                                data.getSerializableExtra(ConstantUtil.KEY_TOKEN))
                         putExtra(ConstantUtil.KEY_USER_INFO,
                                 data.getSerializableExtra(ConstantUtil.KEY_USER_INFO))
                     }
@@ -187,21 +198,22 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
      * 发起报价
      */
     private fun quote(input: String) {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE)
+        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
         val goodsInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO)
         if (token != null) {
             if (goodsInfo != null && isNotMine) {
-                showLoading()
-                goodsViewModel.quoteRequest((token as DomainAuthorize).access_token, (goodsInfo as DomainGoodsInfo.DataBean).goods_id, input).observe(this@GoodsActivity, {
-                    if (it != null) {
-                        dismissLoading {
-                            dialog?.dismiss()
-                            DialogUtil.showCenterDialog(this@GoodsActivity,
-                                    DialogUtil.DIALOG_TYPE.SUCCESS,
-                                    R.string.successQuote)
+                showLoading {
+                    goodsViewModel.quoteRequest((token as DomainToken).access_token, (goodsInfo as DomainGoodsInfo.DataBean).goods_id, input).observe(this@GoodsActivity, {
+                        if (it != null) {
+                            dismissLoading {
+                                dialog?.dismiss()
+                                DialogUtil.showCenterDialog(this@GoodsActivity,
+                                        DialogUtil.DIALOG_TYPE.SUCCESS,
+                                        R.string.successQuote)
+                            }
                         }
-                    }
-                })
+                    })
+                }
             } else {
                 dialog?.dismiss()
                 DialogUtil.showCenterDialog(this@GoodsActivity, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
@@ -221,7 +233,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     }
 
     override fun onButtonClick() {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE)
+        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
         if (token == null) {
             login()
         } else {
@@ -230,17 +242,17 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     }
 
     override fun onUserInfoClick(view: View?) {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE)
+        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
         val goodsInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO)
         if (token != null && goodsInfo != null)
             UserActivity.start(this@GoodsActivity,
                     false,
-                    token as DomainAuthorize,
+                    token as DomainToken,
                     (goodsInfo as DomainGoodsInfo.DataBean).seller_info)
     }
 
     override fun onLeftButtonClick() {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE)
+        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
         if (token == null) {
             login()
         } else {
@@ -249,7 +261,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     }
 
     override fun onRightButtonClick() {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE)
+        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
         val goodsInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO)
 
         if (token == null) {

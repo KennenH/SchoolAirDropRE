@@ -19,7 +19,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -34,7 +34,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
      * @param token 验证信息
      * @param info  我的信息
      */
-    public static void start(Context context, DomainAuthorize token, Object info) {
+    public static void start(Context context, DomainToken token, Object info) {
         if (token == null) return;
 
         DomainBaseUserInfo my = new DomainBaseUserInfo();
@@ -45,7 +45,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
             e.printStackTrace();
         }
         Intent intent = new Intent(context, UserUpdateNameActivity.class);
-        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
+        intent.putExtra(ConstantUtil.KEY_TOKEN, token);
         intent.putExtra(ConstantUtil.KEY_USER_INFO, my);
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).startActivityForResult(intent, UserActivity.REQUEST_UPDATE);
@@ -62,7 +62,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
 
     private Bundle bundle;
 
-    private DomainAuthorize token;
+    private DomainToken token;
     private DomainBaseUserInfo info;
 
     @Override
@@ -86,7 +86,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
         if (bundle == null)
             bundle = new Bundle();
 
-        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
         info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
 
         init();
@@ -117,7 +117,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
         if (bundle == null)
             bundle = new Bundle();
 
-        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
         info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
         if (info != null) name = info.getUname();
         mInput.setText(name);

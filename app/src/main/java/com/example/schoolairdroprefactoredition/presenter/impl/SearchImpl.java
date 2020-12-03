@@ -22,9 +22,18 @@ import static com.example.schoolairdroprefactoredition.cache.SearchHistories.SEA
 
 public class SearchImpl implements ISearchPresenter {
 
+    private static SearchImpl mSearchImpl = null;
+
+    public static SearchImpl getInstance() {
+        if (mSearchImpl == null) {
+            mSearchImpl = new SearchImpl();
+        }
+        return mSearchImpl;
+    }
+
     private ISearchCallback mCallback;
 
-    private JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
+    private final JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
 
     private int historyMaxStack = 10;
 
@@ -55,13 +64,13 @@ public class SearchImpl implements ISearchPresenter {
     }
 
     @Override
-    public void getSearchResult(int page,double longitude, double latitude, String key, boolean isLoadMore) {
+    public void getSearchResult(int page, double longitude, double latitude, String key, boolean isLoadMore) {
         if (!isLoadMore)
             saveHistory(key);
 
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainGoodsInfo> task = api.searchGoods(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET,page, longitude, latitude, key);
+        Call<DomainGoodsInfo> task = api.searchGoods(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page, longitude, latitude, key);
         task.enqueue(new CallBackWithRetry<DomainGoodsInfo>(task) {
             @Override
             public void onResponse(Call<DomainGoodsInfo> call, Response<DomainGoodsInfo> response) {

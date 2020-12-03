@@ -16,7 +16,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.capture.CaptureActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
@@ -93,8 +93,8 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
         return (DomainUserInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_USER_INFO);
     }
 
-    private DomainAuthorize getToken() {
-        return (DomainAuthorize) getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
+    private DomainToken getToken() {
+        return (DomainToken) getIntent().getSerializableExtra(ConstantUtil.KEY_TOKEN);
     }
 
     /**
@@ -119,10 +119,10 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
         Intent intent = getIntent();
         switch (id) {
             case R.id.my_info:
-                if (intent != null && intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE) != null
+                if (intent != null && intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) != null
                         && intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) != null) {
                     UserActivity.start(getActivity(), true,
-                            (DomainAuthorize) intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE),
+                            (DomainToken) intent.getSerializableExtra(ConstantUtil.KEY_TOKEN),
                             intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO));
                 } else {
                     LoginActivity.Companion.startForLogin(getContext());
@@ -157,7 +157,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
      */
     @Override
     public void onLoginStateChanged() {
-        DomainAuthorize token = getToken();
+        DomainToken token = getToken();
         setUserData();
         if (token != null)
             viewModel.getUserInfo(token.getAccess_token()).observe(getViewLifecycleOwner(), data -> {

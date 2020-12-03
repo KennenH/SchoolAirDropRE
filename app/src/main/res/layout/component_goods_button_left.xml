@@ -9,10 +9,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:hl_cornerRadius="@dimen/general_round_rect"
-        app:hl_isShowShadow="true"
-        app:hl_shadowBackColor="@color/colorAccent"
+        app:hl_layoutBackground="@color/colorAccent"
         app:hl_shadowColor="@color/colorAccentShadow"
-        app:hl_shadowLimit="10dp">
+        app:hl_shadowLimit="@dimen/general_padding_large">
 
         <ImageView
             android:id="@+id/button_one"

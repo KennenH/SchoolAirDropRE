@@ -1,9 +1,8 @@
 package com.example.schoolairdroprefactoredition.model.api
 
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -32,7 +31,7 @@ interface UserApi {
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String,
             @Field("alipay_id") encryptedAlipayID: String,
-            @Field("registration_id") registrationID: String?): Call<DomainAuthorize>
+            @Field("registration_id") registrationID: String?): Call<DomainToken>
 
     /**
      * 使用token获取用户信息

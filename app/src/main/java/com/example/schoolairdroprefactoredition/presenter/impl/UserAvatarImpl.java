@@ -19,6 +19,16 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class UserAvatarImpl implements IUserAvatarPresenter {
+
+    private static UserAvatarImpl mUserAvatarImpl = null;
+
+    public static UserAvatarImpl getInstance() {
+        if (mUserAvatarImpl == null) {
+            mUserAvatarImpl = new UserAvatarImpl();
+        }
+        return mUserAvatarImpl;
+    }
+
     private IUserAvatarCallback mCallback;
 
     @Override

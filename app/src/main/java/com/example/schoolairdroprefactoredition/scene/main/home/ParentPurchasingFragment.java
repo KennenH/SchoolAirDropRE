@@ -13,7 +13,6 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment;
-import com.example.schoolairdroprefactoredition.scene.map.AMapActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNavigatorAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
 
@@ -49,7 +48,9 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
         ViewPagerHelper.bind(binding.homeIndicator, binding.homeViewpager);
 
         binding.homeSearchBar.setOnClickListener(this);
-        binding.homeLocation.setOnClickListener(this);
+        binding.homeTopAdd.setOnClickListener(this);
+        binding.homeTopAdd.setText(R.string.addNewSelling);
+        binding.homeTopAdd.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_logo_text_alpha_20, 0, 0, 0);
 
         return binding.getRoot();
     }
@@ -61,8 +62,8 @@ public class ParentPurchasingFragment extends BaseParentFragment implements View
             if (mOnSearchBarClickedListener != null) {
                 mOnSearchBarClickedListener.onSearchBarClicked();
             }
-        } else if (id == R.id.home_location) {
-            AMapActivity.startForResult(getContext());
+        } else if (id == R.id.home_top_add) {
+            onHomePostMyItem(v);
         }
     }
 }

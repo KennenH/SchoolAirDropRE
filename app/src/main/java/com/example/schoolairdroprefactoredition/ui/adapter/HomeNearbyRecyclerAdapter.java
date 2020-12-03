@@ -5,7 +5,7 @@ import android.os.Bundle;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ItemHomeGoodsInfoBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
@@ -38,7 +38,7 @@ public class HomeNearbyRecyclerAdapter extends BaseFooterAdapter<DomainGoodsInfo
                 if (getContext() instanceof MainActivity) {
                     Bundle bundle = ((MainActivity) getContext()).getIntent().getExtras();
                     binding.getRoot().setOnClickListener(v -> GoodsActivity.Companion.start(getContext(),
-                            (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE),
+                            (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN),
                             data, false));
                 }
 

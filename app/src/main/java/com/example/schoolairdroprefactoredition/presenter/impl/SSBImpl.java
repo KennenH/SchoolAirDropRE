@@ -20,6 +20,15 @@ import retrofit2.Retrofit;
 
 public class SSBImpl implements ISSBPresenter {
 
+    private static SSBImpl mSSBImpl = null;
+
+    public static SSBImpl getInstance() {
+        if (mSSBImpl == null) {
+            mSSBImpl = new SSBImpl();
+        }
+        return mSSBImpl;
+    }
+
     private ISSBCallback mCallback;
 
     @Override

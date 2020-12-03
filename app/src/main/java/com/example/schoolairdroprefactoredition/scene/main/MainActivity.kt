@@ -12,10 +12,10 @@ import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.scene.addnew.AddNewItemActivity
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentPlaygroundFragment
@@ -38,6 +38,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
         /**
          * 通知MainActivity主题改变
+         * 重置某些页面自动加载数据的标志位
          */
         fun notifyThemeChanged() {
             autoLogged = false
@@ -65,7 +66,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         SearchFragment.newInstance()
     }
 
-    private val mPlayground by lazy {
+    private val mPlaza by lazy {
         ParentPlaygroundFragment.newInstance()
     }
 
@@ -97,7 +98,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         super.onResume()
         when {
             mPurchasing.isVisible -> navView.selectedItemId = R.id.navigation_purchasing
-            mPlayground.isVisible -> navView.selectedItemId = R.id.navigation_playground
+            mPlaza.isVisible -> navView.selectedItemId = R.id.navigation_playground
             mMessages.isVisible -> navView.selectedItemId = R.id.navigation_message
             mMy.isVisible -> navView.selectedItemId = R.id.navigation_my
         }
@@ -110,9 +111,9 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 LoginActivity.LOGIN -> {
                     if (data == null) {
                         intent.removeExtra(ConstantUtil.KEY_USER_INFO)
-                        intent.removeExtra(ConstantUtil.KEY_AUTHORIZE)
+                        intent.removeExtra(ConstantUtil.KEY_TOKEN)
                     } else {
-                        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, data.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE))
+                        intent.putExtra(ConstantUtil.KEY_TOKEN, data.getSerializableExtra(ConstantUtil.KEY_TOKEN))
                         intent.putExtra(ConstantUtil.KEY_USER_INFO, data.getSerializableExtra(ConstantUtil.KEY_USER_INFO))
                     }
 
@@ -139,7 +140,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     private fun initView() {
-        mPlayground.setOnSearchBarClickedListener {
+        mPlaza.setOnSearchBarClickedListener {
             showSearch()
         }
 
@@ -148,7 +149,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         }
 
         home_add_fab.setOnClickListener {
-            AddNewItemActivity.start(this, intent.extras)
+            val token: DomainToken? = intent.extras?.getSerializable(ConstantUtil.KEY_TOKEN) as DomainToken?
+            AddNewActivity.start(this, token, AddNewActivity.AddNewType.ADD_POST)
         }
 
         navView.setOnNavigationItemSelectedListener(this@MainActivity)
@@ -175,13 +177,13 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     override fun locationDenied() {
         super.locationDenied()
         for (onLocationListener in mOnLocationListenerList) {
-            onLocationListener.onPermissionDenied()
+            onLocationListener.onLocationPermissionDenied()
         }
     }
 
     private fun initCache() {
         accountViewModel.lastLoggedTokenCaChe.observe(this@MainActivity, {
-            intent.putExtra(ConstantUtil.KEY_AUTHORIZE, it)
+            intent.putExtra(ConstantUtil.KEY_TOKEN, it)
         })
         accountViewModel.lastLoggedUserInfoCache.observe(this@MainActivity, {
             intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
@@ -192,21 +194,22 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         supportFragmentManager.apply {
             if (fragment.isHidden || !fragment.isAdded) {
                 beginTransaction()
-                        .hide(mPlayground)
+                        .hide(mPlaza)
                         .hide(mMy)
                         .hide(mPurchasing)
                         .hide(mMessages)
                         .commit()
 
-                if (!fragment.isAdded)
+                if (!fragment.isAdded) {
                     beginTransaction()
                             .add(R.id.navHostFragment, fragment)
                             .show(fragment)
                             .commit()
-                else
+                } else {
                     beginTransaction()
                             .show(fragment)
                             .commit()
+                }
             }
         }
     }
@@ -214,17 +217,18 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     private fun showSearch() {
         supportFragmentManager.apply {
             if (mSearch.isHidden || !mSearch.isAdded) {
-                if (!mSearch.isAdded)
+                if (!mSearch.isAdded) {
                     beginTransaction()
                             .add(R.id.container, mSearch)
                             .addToBackStack(null)
                             .show(mSearch)
                             .commit()
-                else
+                } else {
                     beginTransaction()
                             .show(mSearch)
                             .addToBackStack(null)
                             .commit()
+                }
             }
         }
     }
@@ -243,7 +247,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
             autoLogged = true // 已自动登录标识，防止多个子fragment调用此方法
             accountViewModel.lastLoggedTokenCaChe.observe(this, {
                 if (it != null) { // token 仍有效 使用本地缓存重新获取token后登录
-                    intent.putExtra(ConstantUtil.KEY_AUTHORIZE, it)
+                    intent.putExtra(ConstantUtil.KEY_TOKEN, it)
                     autoLoginWithToken()
                 } else {
                     accountViewModel.lastLoggedUserInfoCache.observe(this, { infoCache ->
@@ -265,7 +269,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 2、用户信息修改后回到MainActivity
      */
     private fun autoLoginWithToken() {
-        val token: DomainAuthorize = intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE) as DomainAuthorize
+        val token: DomainToken = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken
         if (token.access_token != null) {
             loginViewModel.getUserInfo(token.access_token).observe(this, {
 
@@ -307,7 +311,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 userInfo.ualipay,
                 publicK.public_key)
                 .observe(this@MainActivity, { token ->
-                    intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token)
+                    intent.putExtra(ConstantUtil.KEY_TOKEN, token)
                     autoLoginWithToken()
                 })
     }
@@ -349,7 +353,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     interface OnLocationListener {
         fun onLocated(aMapLocation: AMapLocation?)
-        fun onPermissionDenied()
+        fun onLocationPermissionDenied()
     }
 
     fun addOnLocationListener(listener: OnLocationListener) {
@@ -363,7 +367,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 return true
             }
             R.id.navigation_playground -> {
-                showFragment(mPlayground)
+                showFragment(mPlaza)
                 return true
             }
             R.id.navigation_message -> {

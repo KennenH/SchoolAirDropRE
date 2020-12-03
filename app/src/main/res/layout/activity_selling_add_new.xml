@@ -81,13 +81,74 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/server_tip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryRed"
+        app:layout_constraintTop_toBottomOf="@id/saved_draft">
+
+        <TextView
+            android:id="@+id/tip_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/general_padding_bit_larger"
+            android:drawablePadding="@dimen/general_padding"
+            android:ellipsize="end"
+            android:textColor="@color/whiteAlways"
+            android:textSize="@dimen/textSizeNormal"
+            app:drawableStartCompat="@drawable/ic_attention_small"
+            app:drawableTint="@color/whiteAlways"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/tip_close"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/tip_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/general_padding_small"
+            android:padding="@dimen/general_padding"
+            android:src="@drawable/ic_close"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:tint="@color/whiteAlways" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/illegal_warning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/orangeLight"
+        app:layout_constraintTop_toBottomOf="@id/server_tip">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/general_padding_bit_larger"
+            android:drawablePadding="@dimen/general_padding"
+            android:ellipsize="end"
+            android:text="@string/doNotPostIllegalContent"
+            android:textColor="@color/whiteAlways"
+            android:textSize="@dimen/textSizeNormal"
+            app:drawableStartCompat="@drawable/ic_attention_small"
+            app:drawableTint="@color/whiteAlways"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
         android:id="@+id/overDragLayout"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/saved_draft">
+        app:layout_constraintTop_toBottomOf="@+id/illegal_warning">
 
         <androidx.core.widget.NestedScrollView
             android:id="@+id/scroll_view"
@@ -137,6 +198,8 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+
 
                 <TextView
                     android:id="@+id/pic_set_title"
@@ -190,7 +253,7 @@
                     android:padding="@dimen/general_padding_large"
                     app:layout_constraintTop_toBottomOf="@id/title_title">
 
-                    <com.example.schoolairdroprefactoredition.ui.components.SellingOption
+                    <com.example.schoolairdroprefactoredition.ui.components.OptionItem
                         android:id="@+id/option_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
@@ -282,7 +345,7 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/option_price" />
 
-                <com.example.schoolairdroprefactoredition.ui.components.SellingOption
+                <com.example.schoolairdroprefactoredition.ui.components.OptionItem
                     android:id="@+id/option_location"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -291,7 +354,7 @@
                     android:layout_marginEnd="@dimen/general_padding_large"
                     app:layout_constraintTop_toBottomOf="@+id/option_title_title" />
 
-                <com.example.schoolairdroprefactoredition.ui.components.SellingOption
+                <com.example.schoolairdroprefactoredition.ui.components.OptionItem
                     android:id="@+id/option_negotiable"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -302,7 +365,7 @@
                     app:SO_title="@string/negotiable"
                     app:layout_constraintTop_toBottomOf="@id/option_location" />
 
-                <com.example.schoolairdroprefactoredition.ui.components.SellingOption
+                <com.example.schoolairdroprefactoredition.ui.components.OptionItem
                     android:id="@+id/option_secondHand"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -337,7 +400,7 @@
                     android:padding="@dimen/general_padding_large"
                     app:layout_constraintTop_toBottomOf="@+id/detail_title">
 
-                    <com.example.schoolairdroprefactoredition.ui.components.SellingOption
+                    <com.example.schoolairdroprefactoredition.ui.components.OptionItem
                         android:id="@+id/option_description"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />

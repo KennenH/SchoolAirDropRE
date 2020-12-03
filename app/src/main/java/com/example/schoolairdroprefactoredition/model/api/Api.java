@@ -1,6 +1,6 @@
 package com.example.schoolairdroprefactoredition.model.api;
 
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
@@ -252,7 +252,7 @@ public interface Api {
 
     @FormUrlEncoded
     @POST("authorize/login")
-    Call<DomainAuthorize> authorize(@Header("Cookie") String sessionID
+    Call<DomainToken> authorize(@Header("Cookie") String sessionID
             , @Field("grant_type") String grantType
             , @Field("client_id") String clientID
             , @Field("client_secret") String clientSecret

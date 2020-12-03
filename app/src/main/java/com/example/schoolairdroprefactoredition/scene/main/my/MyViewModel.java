@@ -15,7 +15,7 @@ public class MyViewModel extends BaseStateViewModel implements IMyCallback {
     private final MutableLiveData<DomainUserInfo> mUserInfo = new MutableLiveData<>();
 
     public MyViewModel() {
-        mImpl = new MyImpl();
+        mImpl = MyImpl.getInstance();
         mImpl.registerCallback(this);
     }
 

@@ -23,7 +23,7 @@ object ConstantUtil {
     /**
      * data fetch num
      */
-    const val DATA_FETCH_DEFAULT_SIZE = 20
+    const val DATA_FETCH_DEFAULT_SIZE = 50
 
     /**
      * home fragment singleton
@@ -63,6 +63,11 @@ object ConstantUtil {
     const val KEY_ARG_SECTION_NUMBER = "section_number"
 
     /**
+     * AddNewActivity 页面类型
+     */
+    const val KEY_ADD_NEW_TYPE = "addNewPageType"
+
+    /**
      * 要登陆的alipayID
      */
     const val KEY_ALIPAY_FOR_LOGIN = "RequestedLoginAlipayID"
@@ -75,7 +80,7 @@ object ConstantUtil {
     /**
      * 页面获取用户授权信息的键
      */
-    const val KEY_AUTHORIZE = "AUTH2User"
+    const val KEY_TOKEN = "AUTH2User"
 
     /**
      * 使用token请求获取的用户信息键

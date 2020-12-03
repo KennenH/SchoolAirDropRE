@@ -10,10 +10,11 @@
     <item
         android:id="@+id/navigation_playground"
         android:icon="@drawable/ic_all"
-        android:title="@string/playground" />
+        android:title="@string/plaza" />
 
     <item
-        android:id="@+id/hidden"
+        android:id="@+id/navigation_hidden"
+        android:enabled="false"
         android:title="" />
 
     <item

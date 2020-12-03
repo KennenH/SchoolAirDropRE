@@ -19,9 +19,9 @@ import androidx.viewpager.widget.ViewPager;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivitySsbBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
-import com.example.schoolairdroprefactoredition.scene.addnew.AddNewItemActivity;
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SSBBaseFragment;
@@ -51,7 +51,7 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
      * 2、登录查看自己的页面 有token
      * 3、登录查看他人的页面 有token
      */
-    public static void start(Context context, DomainAuthorize token, Object info, int page, boolean isMine) {
+    public static void start(Context context, DomainToken token, Object info, int page, boolean isMine) {
         if (info == null) return;
         DomainBaseUserInfo userInfo = new DomainBaseUserInfo();
         try {
@@ -61,7 +61,7 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
         }
 
         Intent intent = new Intent(context, SSBActivity.class);
-        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
+        intent.putExtra(ConstantUtil.KEY_TOKEN, token);
         intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo);
         intent.putExtra(ConstantUtil.KEY_IS_MINE, isMine);
         intent.putExtra(PAGE_INDEX, page);
@@ -203,7 +203,7 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
 
 
     /**
-     * 在{@link AddNewItemActivity}中登录后
+     * 在{@link AddNewActivity}中登录后
      * 将登录结果回调至ssb三个子fragment中
      */
     public interface OnLoginStateChangeListener {

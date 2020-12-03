@@ -3,10 +3,10 @@ package com.example.schoolairdroprefactoredition.scene.main.home;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeNewsCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.HomeNewsImpl;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
+import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity;
 
 import java.util.List;
 
@@ -16,14 +16,14 @@ public class HomePlaygroundFragmentViewModel extends BaseStateViewModel implemen
     private double latitude;
     private final HomeNewsImpl mHomeImpl;
 
-    private final MutableLiveData<List<TestNewsItemBean>> mHomeNews = new MutableLiveData<>();
+    private final MutableLiveData<List<BaseHomeNewsEntity>> mHomeNews = new MutableLiveData<>();
 
     public HomePlaygroundFragmentViewModel() {
         mHomeImpl = new HomeNewsImpl();
         mHomeImpl.registerCallback(this);
     }
 
-    public LiveData<List<TestNewsItemBean>> getHomeNews(double longitude, double latitude) {
+    public LiveData<List<BaseHomeNewsEntity>> getHomeNews(double longitude, double latitude) {
         page = 0;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -32,7 +32,7 @@ public class HomePlaygroundFragmentViewModel extends BaseStateViewModel implemen
         return mHomeNews;
     }
 
-    public LiveData<List<TestNewsItemBean>> getHomeNews() {
+    public LiveData<List<BaseHomeNewsEntity>> getHomeNews() {
         mHomeImpl.getNews(page++);
         return mHomeNews;
     }
@@ -42,7 +42,7 @@ public class HomePlaygroundFragmentViewModel extends BaseStateViewModel implemen
 //    }
 
     @Override
-    public void onNewsLoaded(List<TestNewsItemBean> data) {
+    public void onNewsLoaded(List<BaseHomeNewsEntity> data) {
         mHomeNews.setValue(data);
     }
 

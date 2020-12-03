@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.cache.UserInfoCache
 import com.example.schoolairdroprefactoredition.cache.UserTokenCache
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
@@ -20,7 +19,7 @@ class LoginViewModel : ViewModel() {
     private val loadState = MutableLiveData<LoadState>()
 
     private val mPublicKey = MutableLiveData<DomainAuthorizeGet>()
-    private val mAuthorize = MutableLiveData<DomainAuthorize>()
+    private val mAuthorize = MutableLiveData<DomainToken>()
     private val mUserInfo = MutableLiveData<DomainUserInfo>()
 
     private val mainRepository by lazy {
@@ -55,7 +54,7 @@ class LoginViewModel : ViewModel() {
             cookies: String,
             rawAlipayID: String,
             publicKey: String,
-    ): LiveData<DomainAuthorize> {
+    ): LiveData<DomainToken> {
         viewModelScope.launch {
             mainRepository.authorizeWithAlipayID(
                     cookies,

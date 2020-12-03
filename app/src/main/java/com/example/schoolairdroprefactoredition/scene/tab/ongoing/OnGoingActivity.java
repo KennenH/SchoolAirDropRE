@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.viewpager.widget.PagerAdapter;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.tab.TabBaseActivity;
@@ -23,7 +22,7 @@ public class OnGoingActivity extends TabBaseActivity {
 
     @NotNull
     @Override
-    public PagerAdapter getPagerAdapter() {
+    public FragmentPagerAdapter getPagerAdapter() {
         return new OnGoingPagerAdapter(getSupportFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT, this);
     }
 

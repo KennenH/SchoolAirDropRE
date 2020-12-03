@@ -6,8 +6,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.databinding.FragmentRecyclerBinding
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
-import com.example.schoolairdroprefactoredition.domain.DomainTrashBin
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.scene.tab.TabBaseFragment
 import com.example.schoolairdroprefactoredition.ui.adapter.TrashBinRecyclerAdapter
@@ -58,7 +57,7 @@ class TrashBinFragment : TabBaseFragment() {
         binding?.recycler?.adapter = mAdapter
     }
 
-    override fun loadFirstTabData(binding: FragmentRecyclerBinding?, token: DomainAuthorize) {
+    override fun loadFirstTabData(binding: FragmentRecyclerBinding?, token: DomainToken) {
         binding?.placeholder?.setPlaceholderType(StatePlaceHolder.TYPE_LOADING)
         viewModel.getCorrupted(token.access_token).observe(this, {
             if (it.data.isEmpty()) {
@@ -70,7 +69,7 @@ class TrashBinFragment : TabBaseFragment() {
 
     }
 
-    override fun loadSecondTabData(binding: FragmentRecyclerBinding?, token: DomainAuthorize) {
+    override fun loadSecondTabData(binding: FragmentRecyclerBinding?, token: DomainToken) {
         binding?.placeholder?.setPlaceholderType(StatePlaceHolder.TYPE_LOADING)
         viewModel.getAccomplished(token.access_token).observe(this, {
             if (it.data.isEmpty()) {

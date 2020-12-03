@@ -13,7 +13,7 @@ object RetrofitClient {
     private val dispatcher: Dispatcher = Dispatcher()
 
     private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
-            .connectTimeout(3, TimeUnit.SECONDS)
+            .connectTimeout(2500, TimeUnit.MILLISECONDS)
             .dispatcher(dispatcher.also { dispatcher.maxRequests = 1 })
             .build()
 

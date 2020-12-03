@@ -26,7 +26,7 @@ public class OnGoingViewModel extends BaseStateViewModel implements IOnGoingCall
     }
 
     public OnGoingViewModel() {
-        onGoingImpl = new OnGoingImpl();
+        onGoingImpl = OnGoingImpl.getInstance();
         onGoingImpl.registerCallback(this);
     }
 

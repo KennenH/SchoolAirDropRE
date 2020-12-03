@@ -14,6 +14,16 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class LikesImpl implements ILikesPresenter {
+
+    private static LikesImpl mLikeImpl = null;
+
+    public static LikesImpl getInstance() {
+        if (mLikeImpl == null) {
+            mLikeImpl = new LikesImpl();
+        }
+        return mLikeImpl;
+    }
+
     private ILikesCallback mCallback;
 
     @Override

@@ -3,19 +3,9 @@ package com.example.schoolairdroprefactoredition.model.databean;
 import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity;
 
 public class TestNewsItemBean extends BaseHomeNewsEntity {
-    private String title;
     private String month;
     private String day;
     private String sender;
-    private String url;
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
 
     public String getMonth() {
         return month;
@@ -39,13 +29,5 @@ public class TestNewsItemBean extends BaseHomeNewsEntity {
 
     public void setSender(String sender) {
         this.sender = sender;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 }

@@ -56,7 +56,8 @@
     <color name="greyAlways">#424242</color>
 
     <color name="transparent">#00000000</color>
-    <color name="darkTransparent">#255C5C5C</color>
-    <color name="darkerTransparent">#CB2B2B2B</color>
-    <color name="blackTransparent">#CB1C1C1C</color>
+    <color name="darkTransparentAlways">#1E000000</color>
+    <color name="darkerTransparentAlways">#80000000</color>
+    <color name="darkTransparent">#1EFFFFFF</color>
+    <color name="darkerTransparent">#80FFFFFF</color>
 </resources>

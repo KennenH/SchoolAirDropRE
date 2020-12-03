@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.example.schoolairdroprefactoredition.R;
@@ -18,7 +17,7 @@ import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.databinding.SheetSsbItemMoreBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
-import com.example.schoolairdroprefactoredition.scene.addnew.AddNewItemActivity;
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -30,7 +29,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
  * {@link SoldFragment}
  * {@link BoughtFragment}
  * <p>
- * todo 若查看的为他人的页面，则检查该用户是否开放其他用户查看其在售列表，不允许则显示被拒绝
+ * todo 若查看的为他人的页面，则检查该用户是否开放其他用户查看其在售列表，不允许则显示被隐藏
  */
 public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLoginStateChangeListener, SSBActivity.OnChangedToSellingListener {
 
@@ -65,8 +64,9 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
      */
     @Override
     public void init(FragmentSsbBinding binding) {
-        if (isMine)
+        if (isMine) {
             setHasOptionsMenu(true);
+        }
         getSelling();
     }
 
@@ -116,17 +116,7 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
                 SheetSsbItemMoreBinding binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(getContext()));
                 dialog.setContentView(binding.getRoot());
                 binding.modify.setOnClickListener(v -> {
-                    Bundle bundle = null;
-                    if (getContext() instanceof AppCompatActivity)
-                        bundle = ((AppCompatActivity) getContext()).getIntent().getExtras();
-
-                    if (bundle == null)
-                        bundle = new Bundle();
-
-                    bundle.putSerializable(ConstantUtil.KEY_GOODS_INFO, bean);
-                    bundle.putInt(AddNewItemActivity.PAGE_CONVERT_TO_MODIFY, AddNewItemActivity.REQUEST_PAGE_CONVERT_TO_MODIFY);
-
-                    AddNewItemActivity.start(getContext(), bundle);
+                    AddNewActivity.start(getContext(), getToken(), bean);
                     dialog.dismiss();
                 });
                 binding.offShelf.setOnClickListener(v -> {
@@ -191,7 +181,7 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
                 getActivity().getSupportFragmentManager().popBackStack();
         } else if (id == R.id.ssb_selling_add) {
             if (getActivity() != null && getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
-                AddNewItemActivity.start(getContext(), getActivity().getIntent().getExtras());
+                AddNewActivity.start(getContext(), getToken(), AddNewActivity.AddNewType.ADD_ITEM);
             }
         }
         return super.onOptionsItemSelected(item);

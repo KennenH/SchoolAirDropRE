@@ -12,7 +12,6 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment;
-import com.example.schoolairdroprefactoredition.scene.map.AMapActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNavigatorAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
 
@@ -49,7 +48,9 @@ public class ParentPlaygroundFragment extends BaseParentFragment
         ViewPagerHelper.bind(binding.homeIndicator, binding.homeViewpager);
 
         binding.homeSearchBar.setOnClickListener(this);
-        binding.homeLocation.setOnClickListener(this);
+        binding.homeTopAdd.setOnClickListener(this);
+        binding.homeTopAdd.setText(R.string.addNewPost);
+        binding.homeTopAdd.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_15, 0, 0, 0);
 
         return binding.getRoot();
     }
@@ -58,10 +59,11 @@ public class ParentPlaygroundFragment extends BaseParentFragment
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.home_search_bar) {
-            if (mOnSearchBarClickedListener != null)
+            if (mOnSearchBarClickedListener != null) {
                 mOnSearchBarClickedListener.onSearchBarClicked();
-        } else if (id == R.id.home_location) {
-            AMapActivity.startForResult(getContext());
+            }
+        } else if (id == R.id.home_top_add) {
+            onHomePostMyPosts(v);
         }
     }
 }

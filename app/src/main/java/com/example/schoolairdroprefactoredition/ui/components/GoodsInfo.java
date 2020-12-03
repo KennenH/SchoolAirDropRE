@@ -61,23 +61,26 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
             try {
                 boolean negotiable = data.getGoods_is_quotable() == 1;// 是否可议价
                 boolean secondHand = data.getGoods_is_brandNew() == 0;// 是否二手
-                if (negotiable && secondHand)
+                if (negotiable && secondHand) {
                     binding.goodsName.setText(getContext().getResources().getString(R.string.itemNS, data.getGoods_name()));
-                else if (negotiable)
+                } else if (negotiable) {
                     binding.goodsName.setText(getContext().getResources().getString(R.string.itemN, data.getGoods_name()));
-                else if (secondHand)
+                } else if (secondHand) {
                     binding.goodsName.setText(getContext().getResources().getString(R.string.itemS, data.getGoods_name()));
-                else
+                } else {
                     binding.goodsName.setText(data.getGoods_name());
+                }
 
                 binding.goodsPrice.setPrice(data.getGoods_price());
                 binding.goodsDescription.setText(data.getGoods_description());
-                binding.goodsPager.setData(MyUtil.getArrayFromString(data.getGoods_img_set()));
+                binding.goodsPager.setData(MyUtil.getArrayFromString(data.getGoods_img_set()), false);
 
                 if (data.getSeller_info() != null) {
                     ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path());
                     binding.goodsUserName.setText(data.getSeller_info().getUname());
-                } else binding.goodsSellerInfo.setVisibility(GONE);
+                } else {
+                    binding.goodsSellerInfo.setVisibility(GONE);
+                }
             } catch (NullPointerException ignored) {
             }
         }

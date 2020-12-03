@@ -2,6 +2,7 @@
 <com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -24,7 +25,7 @@
                 <androidx.cardview.widget.CardView
                     android:id="@+id/posts_images"
                     android:layout_width="match_parent"
-                    android:layout_height="240dp"
+                    android:layout_height="wrap_content"
                     android:transitionGroup="true"
                     android:transitionName="@string/sharedElementPostActivityWrapper"
                     app:cardElevation="0dp"
@@ -32,13 +33,18 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <ImageView
+                    <!--                                        <ImageView-->
+                    <!--                                            android:id="@+id/posts_image_test"-->
+                    <!--                                            android:layout_width="match_parent"-->
+                    <!--                                            android:layout_height="250dp"-->
+                    <!--                                            android:scaleType="centerCrop"-->
+                    <!--                                            android:src="@drawable/pk" />-->
+
+                    <com.example.schoolairdroprefactoredition.ui.components.ImagePager
+                        android:id="@+id/posts_pager"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:adjustViewBounds="true"
-                        android:contentDescription="@string/picSet"
-                        android:scaleType="centerCrop"
-                        android:src="@drawable/pk" />
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never" />
                 </androidx.cardview.widget.CardView>
 
                 <TextView

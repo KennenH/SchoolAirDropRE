@@ -5,11 +5,15 @@ import android.animation.ValueAnimator
 import android.os.Bundle
 import android.transition.Transition
 import android.view.MenuItem
-import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.TransitionAdapter
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.ImageUtil
+import com.example.schoolairdroprefactoredition.utils.StatusBarUtil
+import kotlinx.android.synthetic.main.activity_goods.*
 import kotlinx.android.synthetic.main.activity_posts.*
 
 class PostsActivity : ImmersionStatusBarActivity() {
@@ -25,10 +29,25 @@ class PostsActivity : ImmersionStatusBarActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_posts)
         setSupportActionBar(toolbar)
-        startTransition()
+        initView()
     }
 
-    private fun startTransition() {
+    private fun initView() {
+        supportPostponeEnterTransition()
+        initTransition()
+        posts_pager.setOtherResourceFitFirst()
+        posts_pager.setOnFirstImageLoadedListener {
+            supportStartPostponedEnterTransition()
+        }
+        val list = ArrayList<String>()
+        list.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + "assets/goods/img/UmMHekJlINW5BYhL_1.jpg")
+        list.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + "assets/goods/img/UmMHekJlINW5BYhL_3.jpg")
+        list.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + "assets/goods/img/759OL4FeobGDtuga_1.jpg")
+//        ImageUtil.loadImage(posts_image_test, list[2], R.drawable.logo_placeholder) { supportStartPostponedEnterTransition() }
+        posts_pager.setData(list, true)
+    }
+
+    private fun initTransition() {
         posts_images.radius = SizeUtils.dp2px(12f).toFloat()
         window.sharedElementEnterTransition.apply {
             addListener(object : TransitionAdapter() {

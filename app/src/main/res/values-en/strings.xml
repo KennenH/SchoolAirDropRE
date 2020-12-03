@@ -185,7 +185,7 @@
     <string name="unLogged">Not Logged</string>
     <string name="InitiateQuote">Initiate A Quote</string>
     <string name="SendMessage">Send Message</string>
-    <string name="draftRecovered">Saved draft has been restored</string>
+    <string name="draftRecovered">Saved form has been restored</string>
     <string name="clearInput">Clear Input</string>
     <string name="dialogNetWorkError">Network Error</string>
     <string name="restoreDraft">Restore</string>
@@ -245,5 +245,19 @@
     <string name="complished">Finished</string>
     <string name="termsOfServiceAgreeFailed">Ah oh, the treaty is lost</string>
     <string name="addNewGoodsError">Error adding new item, try to update the version if it fails multiple times</string>
-    <string name="playground">Playground</string>
+    <string name="plaza">Plaza</string>
+    <string name="doNotPostIllegalContent">Please do not post articles and items that violate school rules and national laws. Please check the contents of the form carefully.</string>
+    <string name="phonePermissionContent">This function is required when receiving message notifications. If not allowed, you will not be able to accept important notices.</string>
+    <string name="modifyFailedTip">It may be that the server is under maintenance. The form for modifying the item will not be saved. It is recommended to try again later.</string>
+    <string name="submitItemLocationFailedTip">The current location result is abnormal, and the item may not be searched by other students on campus. The form has been automatically saved. It is recommended to retry the submission later.</string>
+    <string name="modifyLocationFailedTip">The current positioning result is abnormal, and the item may not be searched by other students on campus. It is recommended to try again later.</string>
+    <string name="confirmTransaction">Confirm Receipt</string>
+    <string name="buyerReceiveQRCode">Buyer Receiving Code</string>
+    <string name="pleaseConfirmPurchase">Please confirm the purchase before scanning QR</string>
+    <string name="addNewPost">Add New Post</string>
+    <string name="submitPostLocationFailedTip">The current location result is abnormal, and the post may not be searched by other students on campus. The form has been automatically saved. It is recommended to retry the submission later.</string>
+    <string name="newPostSuccessTip">The post has been posted to the Plaza.</string>
+    <string name="why">Why?</string>
+    <string name="errorLoadItemInfo">Error Loading Item Infomation</string>
+    <string name="postTitleSaySth">Say Something</string>
 </resources>

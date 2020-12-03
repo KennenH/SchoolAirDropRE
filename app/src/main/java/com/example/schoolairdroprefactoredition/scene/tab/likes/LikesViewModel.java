@@ -10,12 +10,12 @@ import com.example.schoolairdroprefactoredition.presenter.impl.LikesImpl;
 
 public class LikesViewModel extends ViewModel implements ILikesCallback {
 
-    private LikesImpl likesImpl;
+    private final LikesImpl likesImpl;
 
-    private MutableLiveData<DomainGoodsInfo> mLikes = new MutableLiveData<>();
+    private final MutableLiveData<DomainGoodsInfo> mLikes = new MutableLiveData<>();
 
     public LikesViewModel() {
-        likesImpl = new LikesImpl();
+        likesImpl = LikesImpl.getInstance();
         likesImpl.registerCallback(this);
     }
 

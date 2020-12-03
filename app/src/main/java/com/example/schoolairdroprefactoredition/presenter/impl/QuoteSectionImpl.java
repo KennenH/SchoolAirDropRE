@@ -18,6 +18,15 @@ import retrofit2.Retrofit;
 
 public class QuoteSectionImpl implements IQuoteSectionsPresenter {
 
+    private static QuoteSectionImpl mQuoteSectionImpl = null;
+
+    public static QuoteSectionImpl getInstance() {
+        if (mQuoteSectionImpl == null) {
+            mQuoteSectionImpl = new QuoteSectionImpl();
+        }
+        return mQuoteSectionImpl;
+    }
+
     private IQuoteSectionsCallback mCallback;
 
     @Override

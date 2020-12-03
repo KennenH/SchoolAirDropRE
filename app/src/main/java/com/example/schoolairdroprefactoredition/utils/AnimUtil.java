@@ -4,10 +4,10 @@ import android.animation.ArgbEvaluator;
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
@@ -46,6 +46,18 @@ public class AnimUtil {
         anim.start();
     }
 
+    /**
+     * 使文字颜色闪烁以引起用户注意
+     *
+     * @param fromColor 起始颜色
+     * @param toColor   结束颜色
+     */
+    public static void textColorAnim(Context context, final TextView textView, @ColorRes int fromColor, @ColorRes int toColor) {
+        ValueAnimator anim = ValueAnimator.ofObject(new ArgbEvaluator(), ContextCompat.getColor(context, fromColor), ContextCompat.getColor(context, toColor));
+        anim.setDuration(180);
+        anim.addUpdateListener(animation -> textView.setTextColor((int) animation.getAnimatedValue()));
+        anim.start();
+    }
 
     /**
      * View 从上至下展开动画

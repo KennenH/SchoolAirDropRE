@@ -1,6 +1,6 @@
 package com.example.schoolairdroprefactoredition.presenter.callback;
 
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 
@@ -13,7 +13,7 @@ public interface ILoginCallback {
     /**
      * 成功获取token
      */
-    void onAuthorizationSuccess(DomainAuthorize authorization);
+    void onAuthorizationSuccess(DomainToken authorization);
 
     /**
      * 用户信息加载

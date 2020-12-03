@@ -15,6 +15,15 @@ import retrofit2.Retrofit;
 
 public class MyImpl implements IMyPresenter {
 
+    private static MyImpl mMyImpl = null;
+
+    public static MyImpl getInstance() {
+        if (mMyImpl == null) {
+            mMyImpl = new MyImpl();
+        }
+        return mMyImpl;
+    }
+
     private IMyCallback mCallback = null;
 
     @Override

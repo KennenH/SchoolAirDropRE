@@ -38,11 +38,13 @@ class HomeNewsRecyclerAdapter : BaseMultiItemQuickAdapter<BaseHomeNewsEntity, Ba
                     }
                 }
                 ImageUtil.loadRoundImage(holder.itemView.findViewById(R.id.news_avatar), "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1606042040652&di=38cf0771633e1235ad6ce15ababccf93&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201410%2F22%2F20141022073033_nBdWH.jpeg")
+                ImageUtil.loadImage(holder.itemView.findViewById(R.id.news_image), item.url, R.drawable.placeholder_rounded)
                 holder.setText(R.id.news_title, item.title)
             }
 
             TYPE_TWO -> {
-                // todo 打开话题贴
+                ImageUtil.loadImage(holder.itemView.findViewById(R.id.news_image2), item.url, R.drawable.logo_placeholder)
+                holder.setText(R.id.news_title2, item.title)
             }
         }
     }

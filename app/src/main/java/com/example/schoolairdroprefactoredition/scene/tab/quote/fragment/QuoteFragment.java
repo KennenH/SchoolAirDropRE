@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentRecyclerBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainQuote;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
@@ -93,9 +93,9 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
      */
     private void getQuote() {
         unHandled = 0;
-        DomainAuthorize token = null;
+        DomainToken token = null;
         try {
-            token = (DomainAuthorize) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
+            token = (DomainToken) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_TOKEN);
         } catch (NullPointerException ignored) {
         }
 
@@ -152,9 +152,9 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
 
     @Override
     public void onQuoteAccept(String quoteID) {
-        DomainAuthorize token = null;
+        DomainToken token = null;
         try {
-            token = (DomainAuthorize) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
+            token = (DomainToken) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_TOKEN);
         } catch (NullPointerException ignored) {
         }
 
@@ -173,9 +173,9 @@ public class QuoteFragment extends StatePlaceholderFragment implements BaseState
 
     @Override
     public void onQuoteRefuse(String quoteID) {
-        DomainAuthorize token = null;
+        DomainToken token = null;
         try {
-            token = (DomainAuthorize) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
+            token = (DomainToken) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_TOKEN);
         } catch (NullPointerException ignored) {
         }
 

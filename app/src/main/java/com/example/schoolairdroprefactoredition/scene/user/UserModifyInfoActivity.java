@@ -14,7 +14,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentUserEditBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -32,14 +32,14 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
 
     private Bundle bundle;
 
-    private DomainAuthorize token;
+    private DomainToken token;
     private DomainBaseUserInfo info;
 
     /**
      * @param token  验证信息
      * @param myInfo 我的信息 必须直接包含基本信息的get set方法
      */
-    public static void start(Context context, DomainAuthorize token, Object myInfo) {
+    public static void start(Context context, DomainToken token, Object myInfo) {
         if (token == null) return;
 
         Intent intent = new Intent(context, UserModifyInfoActivity.class);
@@ -51,7 +51,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
         }
 
         intent.putExtra(ConstantUtil.KEY_USER_INFO, my);
-        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
+        intent.putExtra(ConstantUtil.KEY_TOKEN, token);
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).startActivityForResult(intent, UserActivity.REQUEST_UPDATE);
         }
@@ -74,7 +74,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
         if (bundle == null)
             bundle = new Bundle();
 
-        token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+        token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
         info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
         setUserInfo();
     }
@@ -116,7 +116,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.user_avatar) {
-            UserUpdateAvatarActivity.start(this, token, info);
+            UserUpdateAvatarActivityKt.Companion.start(this, token, info);
         } else if (id == R.id.userName) {
             UserUpdateNameActivity.start(this, token, info);
         }

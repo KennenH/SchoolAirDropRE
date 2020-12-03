@@ -15,7 +15,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ItemSsbSellingBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -43,12 +43,13 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
             final boolean isQuotable = bean.getGoods_is_quotable() == 1;
             final boolean isSecondHand = bean.getGoods_is_brandNew() == 0;
 
-            if (isQuotable && isSecondHand)
+            if (isQuotable && isSecondHand) {
                 binding.ssbSellingGoodsTitle.setText(getContext().getString(R.string.itemNSs, bean.getGoods_name()));
-            else if (isQuotable)
+            } else if (isQuotable) {
                 binding.ssbSellingGoodsTitle.setText(getContext().getString(R.string.itemNs, bean.getGoods_name()));
-            else
+            } else {
                 binding.ssbSellingGoodsTitle.setText(getContext().getString(R.string.itemSs, bean.getGoods_name()));
+            }
 
             binding.goodsLocation.setLocationName(getContext().getString(R.string.gettingGoodsLocation));
             mGeocodeSearch = new GeocodeSearch(getContext());
@@ -77,10 +78,11 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
 
             if (getContext() instanceof AppCompatActivity) {
                 Bundle bundle = ((AppCompatActivity) getContext()).getIntent().getExtras();
-                if (bundle != null)
+                if (bundle != null) {
                     holder.itemView.setOnClickListener(v -> GoodsActivity.Companion.start(getContext(),
-                            (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE),
+                            (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN),
                             bean, true));
+                }
             }
 
             if (!isMine) {
@@ -90,8 +92,9 @@ public class SSBAdapter extends BaseQuickAdapter<DomainGoodsInfo.DataBean, BaseV
                     @Override
                     public void onClick(View v) {
                         // 弹出更多动作的弹窗
-                        if (mOnSSBItemActionListener != null)
+                        if (mOnSSBItemActionListener != null) {
                             mOnSSBItemActionListener.onItemActionButtonClick(v, bean);
+                        }
                     }
                 });
             }

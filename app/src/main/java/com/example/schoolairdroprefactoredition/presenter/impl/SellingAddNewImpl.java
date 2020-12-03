@@ -3,13 +3,14 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 import android.content.Context;
 
 import com.blankj.utilcode.util.LogUtils;
+import com.example.schoolairdroprefactoredition.cache.NewPostDraftCache;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.model.api.Api;
 import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.ISellingAddNewPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISellingAddNewCallback;
-import com.example.schoolairdroprefactoredition.cache.AddNewDraftCache;
+import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache;
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil;
 import com.luck.picture.lib.entity.LocalMedia;
 
@@ -26,15 +27,24 @@ import static com.example.schoolairdroprefactoredition.utils.FileUtil.createFile
 
 public class SellingAddNewImpl implements ISellingAddNewPresenter {
 
+    private static SellingAddNewImpl mSellingAddNewImpl = null;
+
+    public static SellingAddNewImpl getInstance() {
+        if (mSellingAddNewImpl == null) {
+            mSellingAddNewImpl = new SellingAddNewImpl();
+        }
+        return mSellingAddNewImpl;
+    }
+
     private ISellingAddNewCallback mCallback;
     private final JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
 
     @Override
-    public void submit(String token, String cover, List<String> picSet,
-                       String name, String description,
-                       double longitude, double latitude,
-                       boolean isBrandNew, boolean isQuotable,
-                       float price, Context context) {
+    public void submitNewItem(String token, String cover, List<String> picSet,
+                              String title, String description,
+                              double longitude, double latitude,
+                              boolean isBrandNew, boolean isQuotable,
+                              float price, Context context) {
 
         try {
             Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
@@ -51,7 +61,7 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
                 mCallback.onAddNewItemError();
             }
 
-            MultipartBody.Part goodsName = MultipartBody.Part.createFormData("goods_name", name);
+            MultipartBody.Part goodsName = MultipartBody.Part.createFormData("goods_name", title);
             MultipartBody.Part goodsDes = MultipartBody.Part.createFormData("goods_description", description);
 
             MultipartBody.Part goodsLongitude = MultipartBody.Part.createFormData("goods_longitude", String.valueOf(longitude));
@@ -81,7 +91,7 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
 
                         if (mCallback != null)
                             if (body != null) {
-                                mCallback.onSubmitResult(body);
+                                mCallback.onSubmitItemResult(body);
                             } else {
                                 mCallback.onAddNewItemError();
                             }
@@ -91,15 +101,17 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                        if (mCallback != null)
+                        if (mCallback != null) {
                             mCallback.onAddNewItemError();
+                        }
                     }
                 }
 
                 @Override
                 public void onFailureAllRetries() {
-                    if (mCallback != null)
+                    if (mCallback != null) {
                         mCallback.onAddNewItemError();
+                    }
                 }
             });
 
@@ -111,9 +123,16 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
     }
 
     @Override
-    public void save(String cover, List<LocalMedia> picSet, String title, String description, String price, boolean isQuotable, boolean isSecondHand) {
-        AddNewDraftCache draft = mJsonCacheUtil.getValue(AddNewDraftCache.ADD_NEW_DRAFT, AddNewDraftCache.class);
-        if (draft == null) draft = new AddNewDraftCache();
+    public void submitNewPost(String token, String cover, float hwRatio, List<String> picSet, String title, String content, double longitude, double latitude, Context context) {
+        if (mCallback != null) {
+            mCallback.onAddNewPostError();
+        }
+    }
+
+    @Override
+    public void saveItemDraft(String cover, List<LocalMedia> picSet, String title, String description, String price, boolean isQuotable, boolean isSecondHand) {
+        NewItemDraftCache draft = mJsonCacheUtil.getValue(NewItemDraftCache.NEW_ITEM_DRAFT, NewItemDraftCache.class);
+        if (draft == null) draft = new NewItemDraftCache();
         draft.setCover(cover);
         draft.setPicSet(picSet);
         draft.setTitle(title);
@@ -121,18 +140,42 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
         draft.setPrice(price);
         draft.setNegotiable(isQuotable);
         draft.setSecondHand(isSecondHand);
-        mJsonCacheUtil.saveCache(AddNewDraftCache.ADD_NEW_DRAFT, draft);
+        mJsonCacheUtil.saveCache(NewItemDraftCache.NEW_ITEM_DRAFT, draft);
     }
 
     @Override
-    public void deleteDraft() {
-        mJsonCacheUtil.saveCache(AddNewDraftCache.ADD_NEW_DRAFT, null);
+    public void savePostDraft(String cover, float hwRatio, List<LocalMedia> picSet, String title, String content) {
+        NewPostDraftCache draft = mJsonCacheUtil.getValue(NewPostDraftCache.NEW_POST_DRAFT, NewPostDraftCache.class);
+        if (draft == null) draft = new NewPostDraftCache();
+        draft.setCover(cover);
+        draft.setHwRatio(hwRatio);
+        draft.setPicSet(picSet);
+        draft.setTitle(title);
+        draft.setContent(content);
+        mJsonCacheUtil.saveCache(NewPostDraftCache.NEW_POST_DRAFT, draft);
     }
 
     @Override
-    public void recoverDraft() {
-        AddNewDraftCache draft = mJsonCacheUtil.getValue(AddNewDraftCache.ADD_NEW_DRAFT, AddNewDraftCache.class);
-        mCallback.onDraftRecovered(draft);
+    public void deleteItemDraft() {
+        mJsonCacheUtil.saveCache(NewItemDraftCache.NEW_ITEM_DRAFT, null);
+    }
+
+    @Override
+    public void deletePostDraft() {
+        mJsonCacheUtil.saveCache(NewPostDraftCache.NEW_POST_DRAFT, null);
+    }
+
+
+    @Override
+    public void restoreItemDraft() {
+        NewItemDraftCache draft = mJsonCacheUtil.getValue(NewItemDraftCache.NEW_ITEM_DRAFT, NewItemDraftCache.class);
+        mCallback.onItemDraftRestored(draft);
+    }
+
+    @Override
+    public void restorePostDraft() {
+        NewPostDraftCache draft = mJsonCacheUtil.getValue(NewPostDraftCache.NEW_POST_DRAFT, NewPostDraftCache.class);
+        mCallback.onPostDraftRestored(draft);
     }
 
 //    /**

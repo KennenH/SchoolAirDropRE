@@ -39,7 +39,7 @@ public class QuoteViewModel extends BaseStateViewModel implements IQuoteSections
     }
 
     public QuoteViewModel() {
-        quoteImpl = new QuoteSectionImpl();
+        quoteImpl = QuoteSectionImpl.getInstance();
         quoteImpl.registerCallback(this);
     }
 

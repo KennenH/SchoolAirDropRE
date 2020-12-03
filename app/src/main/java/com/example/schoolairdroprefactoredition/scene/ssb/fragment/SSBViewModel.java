@@ -14,17 +14,17 @@ public class SSBViewModel extends BaseStateViewModel implements ISSBCallback {
     private int soldPage = 0;
     private int boughtPage = 0;
 
-    private SSBImpl ssbImpl;
+    private final SSBImpl ssbImpl;
 
-    private MutableLiveData<DomainGoodsInfo> mSellingBeans = new MutableLiveData<>();
-    private MutableLiveData<DomainGoodsInfo> mBoughtBeans = new MutableLiveData<>();
-    private MutableLiveData<DomainGoodsInfo> mSoldBeans = new MutableLiveData<>();
-    private MutableLiveData<Boolean> mUnListItemResult = new MutableLiveData<>();
+    private final MutableLiveData<DomainGoodsInfo> mSellingBeans = new MutableLiveData<>();
+    private final MutableLiveData<DomainGoodsInfo> mBoughtBeans = new MutableLiveData<>();
+    private final MutableLiveData<DomainGoodsInfo> mSoldBeans = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> mUnListItemResult = new MutableLiveData<>();
 
     private OnSSBActionListener mOnSSBActionListener;
 
     public SSBViewModel() {
-        ssbImpl = new SSBImpl();
+        ssbImpl = SSBImpl.getInstance();
         ssbImpl.registerCallback(this);
     }
 

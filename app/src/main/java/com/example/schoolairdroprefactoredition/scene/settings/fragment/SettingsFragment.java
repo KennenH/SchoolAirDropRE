@@ -15,7 +15,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSettingsHomeBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.domain.base.LoadState;
 import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment;
@@ -50,7 +50,7 @@ public class SettingsFragment extends TransitionBaseFragment implements View.OnC
 
     private Bundle bundle;
     private DomainUserInfo.DataBean userInfo = null;
-    private DomainAuthorize token = null;
+    private DomainToken token = null;
 
     public static SettingsFragment newInstance(Intent intent) {
         SettingsFragment fragment = new SettingsFragment();
@@ -83,7 +83,7 @@ public class SettingsFragment extends TransitionBaseFragment implements View.OnC
             bundle = new Bundle();
         } else {
             userInfo = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
-            token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+            token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
         }
     }
 
@@ -121,7 +121,7 @@ public class SettingsFragment extends TransitionBaseFragment implements View.OnC
         bundle = intent.getExtras();
         if (bundle != null) {
             userInfo = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
-            token = (DomainAuthorize) bundle.getSerializable(ConstantUtil.KEY_AUTHORIZE);
+            token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
             validateState();
         }
     }

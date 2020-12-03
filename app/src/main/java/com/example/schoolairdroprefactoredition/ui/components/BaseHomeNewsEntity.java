@@ -21,11 +21,11 @@ public class BaseHomeNewsEntity implements MultiItemEntity {
         this.title = title;
     }
 
-    public String getUri() {
+    public String getUrl() {
         return uri;
     }
 
-    public void setUri(String uri) {
+    public void setUrl(String uri) {
         this.uri = uri;
     }
 

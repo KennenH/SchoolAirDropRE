@@ -65,7 +65,7 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
     public void getOnlineData(AMapLocation aMapLocation) {
         homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
             if (data.size() < 1) {
-                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_NEWS_HOME);
+                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME_POST);
             } else {
                 mHomeNewsRecyclerAdapter.setList(data);
                 showContentContainer();
@@ -78,7 +78,7 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
         homeContentFragmentViewModel.getHomeNews(aMapLocation.getLongitude(), aMapLocation.getLatitude()).observe(getViewLifecycleOwner(), data -> {
             refreshLayout.finishRefresh();
             if (data.size() < 1) {
-                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_NEWS_HOME);
+                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME_POST);
             } else {
                 mHomeNewsRecyclerAdapter.setList(data);
                 showContentContainer();

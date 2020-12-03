@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.user.fragment.UserFragment;
@@ -33,7 +33,7 @@ public class UserActivity extends TransitionBaseActivity implements FragmentMana
      * @param token                    验证信息
      * @param thisPersonInfo           这个人的信息
      */
-    public static void start(Context context, boolean isMyOwnPageAndModifiable, DomainAuthorize token, Object thisPersonInfo) {
+    public static void start(Context context, boolean isMyOwnPageAndModifiable, DomainToken token, Object thisPersonInfo) {
         if (thisPersonInfo == null) return;
 
         DomainBaseUserInfo thisPerson = new DomainBaseUserInfo();
@@ -43,7 +43,7 @@ public class UserActivity extends TransitionBaseActivity implements FragmentMana
             e.printStackTrace();
         }
         Intent intent = new Intent(context, UserActivity.class);
-        intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token);
+        intent.putExtra(ConstantUtil.KEY_TOKEN, token);
         intent.putExtra(ConstantUtil.KEY_USER_INFO, thisPerson);
         intent.putExtra(ConstantUtil.KEY_INFO_MODIFIABLE, isMyOwnPageAndModifiable);
         if (context instanceof AppCompatActivity)

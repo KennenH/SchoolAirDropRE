@@ -12,9 +12,9 @@ import java.util.List;
 
 public class UnArrangePositionTransactionViewModel extends ViewModel implements IUnselectedTransactionCallback {
 
-    private UnselectedTransactionImpl unselectedTransactionImpl;
+    private final UnselectedTransactionImpl unselectedTransactionImpl;
 
-    private MutableLiveData<List<DomainUnselectedTransaction>> mUnselectedTransactionList = new MutableLiveData<>();
+    private final MutableLiveData<List<DomainUnselectedTransaction>> mUnselectedTransactionList = new MutableLiveData<>();
 
     public LiveData<List<DomainUnselectedTransaction>> getUnselectedTransactionList() {
         unselectedTransactionImpl.getUnselectedTransaction();
@@ -22,7 +22,7 @@ public class UnArrangePositionTransactionViewModel extends ViewModel implements 
     }
 
     public UnArrangePositionTransactionViewModel() {
-        unselectedTransactionImpl = new UnselectedTransactionImpl();
+        unselectedTransactionImpl = UnselectedTransactionImpl.getInstance();
         unselectedTransactionImpl.registerCallback(this);
     }
 

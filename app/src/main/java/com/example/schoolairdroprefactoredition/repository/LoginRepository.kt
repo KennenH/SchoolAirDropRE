@@ -1,6 +1,6 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.model.CallBackWithRetry
@@ -53,7 +53,7 @@ class LoginRepository private constructor() {
             cookies: String,
             rawAlipayID: String,
             publicKey: String,
-            onResult: (success: Boolean, response: DomainAuthorize?) -> Unit) {
+            onResult: (success: Boolean, response: DomainToken?) -> Unit) {
         MobPush.getRegistrationId { registrationID ->
 //            if (registrationID == null) {
 //                onResult(false, null)
@@ -65,8 +65,8 @@ class LoginRepository private constructor() {
                         ConstantUtil.CLIENT_SECRET,
                         RSACoder.encryptWithPublicKey(publicKey, rawAlipayID), registrationID)
                         .apply {
-                            enqueue(object : CallBackWithRetry<DomainAuthorize>(this) {
-                                override fun onResponse(call: Call<DomainAuthorize>, response: Response<DomainAuthorize>) {
+                            enqueue(object : CallBackWithRetry<DomainToken>(this) {
+                                override fun onResponse(call: Call<DomainToken>, response: Response<DomainToken>) {
                                     if (response.code() == HttpURLConnection.HTTP_OK) {
                                         if (response.isSuccessful) {
                                             onResult(true, response.body())

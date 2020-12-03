@@ -20,7 +20,7 @@ public class HomePurchasingFragmentViewModel extends BaseStateViewModel implemen
     private final MutableLiveData<List<DomainGoodsInfo.DataBean>> mGoodsInfo = new MutableLiveData<>();
 
     public HomePurchasingFragmentViewModel() {
-        mHomeImpl = new HomeGoodsInfoImpl();
+        mHomeImpl = HomeGoodsInfoImpl.getInstance();
         mHomeImpl.registerCallback(this);
     }
 

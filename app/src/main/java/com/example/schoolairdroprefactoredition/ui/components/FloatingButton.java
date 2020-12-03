@@ -4,20 +4,17 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.content.Context;
-import android.graphics.Rect;
 import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
-import android.util.Property;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.R;
@@ -63,8 +60,8 @@ public class FloatingButton extends ConstraintLayout implements View.OnTouchList
         mImage = findViewById(R.id.button_one);
         mShadow = findViewById(R.id.shadow_layout);
 
-        mImage.setImageDrawable(getResources().getDrawable(R.drawable.floating_button));
-        mShadow.setmShadowLimit(SizeUtils.dp2px(10));
+        mImage.setImageDrawable(ResourcesCompat.getDrawable(getResources(),R.drawable.floating_button,getContext().getTheme()));
+        mShadow.setShadowLimit(SizeUtils.dp2px(10));
 
         setAlpha(normalAlpha);
 

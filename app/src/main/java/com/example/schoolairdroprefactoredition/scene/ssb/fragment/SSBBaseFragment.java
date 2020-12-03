@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
@@ -122,9 +122,9 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     /**
      * 获取{@link SSBActivity}的登录信息
      */
-    protected DomainAuthorize getToken() {
+    protected DomainToken getToken() {
         try {
-            return (DomainAuthorize) getActivity().getIntent().getExtras().getSerializable(ConstantUtil.KEY_AUTHORIZE);
+            return (DomainToken) getActivity().getIntent().getExtras().getSerializable(ConstantUtil.KEY_TOKEN);
         } catch (NullPointerException ignored) {
         }
         return null;

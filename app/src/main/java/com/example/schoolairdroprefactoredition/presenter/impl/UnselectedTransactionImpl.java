@@ -8,6 +8,15 @@ import java.util.Arrays;
 
 public class UnselectedTransactionImpl implements IUnselectedTransactionPresenter {
 
+    private static UnselectedTransactionImpl mUnselectedTransactionImpl = null;
+
+    public static UnselectedTransactionImpl getInstance() {
+        if (mUnselectedTransactionImpl == null) {
+            mUnselectedTransactionImpl = new UnselectedTransactionImpl();
+        }
+        return mUnselectedTransactionImpl;
+    }
+
     private IUnselectedTransactionCallback mCallback;
 
     @Override

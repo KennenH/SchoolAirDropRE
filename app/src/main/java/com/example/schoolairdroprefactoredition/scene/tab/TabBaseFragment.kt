@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.example.schoolairdroprefactoredition.databinding.FragmentRecyclerBinding
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -35,9 +35,9 @@ abstract class TabBaseFragment : StatePlaceholderFragment() {
      * 获取Tab上的数据
      */
     open protected fun getTabData(binding: FragmentRecyclerBinding?, index: Int?) {
-        var token: DomainAuthorize? = null
+        var token: DomainToken? = null
         try {
-            token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE) as DomainAuthorize
+            token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken
         } catch (ignored: NullPointerException) {
         }
 
@@ -58,12 +58,12 @@ abstract class TabBaseFragment : StatePlaceholderFragment() {
     /**
      * 加载第一个tab页面内容
      */
-    abstract fun loadFirstTabData(binding: FragmentRecyclerBinding?, token: DomainAuthorize)
+    abstract fun loadFirstTabData(binding: FragmentRecyclerBinding?, token: DomainToken)
 
     /**
      * 加载第二个tab页面内容
      */
-    abstract fun loadSecondTabData(binding: FragmentRecyclerBinding?, token: DomainAuthorize)
+    abstract fun loadSecondTabData(binding: FragmentRecyclerBinding?, token: DomainToken)
 
     override fun getStatePlaceholder(): StatePlaceHolder? {
         return binding?.placeholder

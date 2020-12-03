@@ -11,7 +11,7 @@ import com.blankj.utilcode.util.ClickUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
@@ -55,8 +55,8 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
             ClickUtils.applyPressedViewAlpha(close, 0.6f)
         } else {
             setContentView(R.layout.activity_login)
-            viewModel.getLoadState().observe(this, { state: LoadState ->
-                if (state === LoadState.LOADING) showLoading() else if (state === LoadState.ERROR) {
+            viewModel.getLoadState().observe(this, {
+                if (it === LoadState.LOADING) showLoading() else if (it === LoadState.ERROR) {
                     isLogging = false
                     dismissLoading { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLogin) }
                 }
@@ -116,7 +116,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
                                 LogUtils.d("token -- > $token")
 
                                 // token
-                                intent.putExtra(ConstantUtil.KEY_AUTHORIZE, token)
+                                intent.putExtra(ConstantUtil.KEY_TOKEN, token)
                                 userInfoWithToken()
                             }
                         })
@@ -128,10 +128,10 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      * 使用token获取用户信息
      */
     private fun userInfoWithToken() {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE)
+        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
         if (token != null) {
             showLoading()
-            viewModel.getUserInfo((token as DomainAuthorize).access_token).observe(this, { info ->
+            viewModel.getUserInfo((token as DomainToken).access_token).observe(this, { info ->
                 if (info != null) {
                     isLogging = false
                     val userInfo = info.data[0]

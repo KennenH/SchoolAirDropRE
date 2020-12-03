@@ -19,7 +19,7 @@ public class QuoteDetailViewModel extends ViewModel implements IQuoteDetailCallb
     }
 
     public QuoteDetailViewModel() {
-        quoteImpl = new QuoteDetailImpl();
+        quoteImpl = QuoteDetailImpl.getInstance();
         quoteImpl.registerCallback(this);
     }
 

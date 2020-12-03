@@ -5,6 +5,7 @@ import android.view.ViewGroup;
 import android.widget.GridLayout;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager.widget.PagerAdapter;
 
 import com.blankj.utilcode.util.SizeUtils;
@@ -30,7 +31,7 @@ public class SheetActionPagerAdapter extends PagerAdapter {
 
         for (int i = 0; i < 4; i++) {
             SheetActionItem item = new SheetActionItem(container.getContext());
-            item.setImageDrawable(container.getContext().getResources().getDrawable(R.drawable.email));
+            item.setImageDrawable(ResourcesCompat.getDrawable(container.getResources(), R.drawable.email, container.getContext().getTheme()));
             GridLayout.LayoutParams params = new GridLayout.LayoutParams(GridLayout.spec(0, 1), GridLayout.spec(i, 1));
             params.setMargins(MARGIN, 0, MARGIN, 0);
             item.setLayoutParams(params);

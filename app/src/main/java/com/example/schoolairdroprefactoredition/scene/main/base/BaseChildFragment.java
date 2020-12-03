@@ -122,7 +122,7 @@ public abstract class BaseChildFragment extends Fragment implements MainActivity
      * 显示PlaceHolder
      *
      * @param type {@link com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder#TYPE_NETWORK_OR_LOCATION_ERROR_HOME}
-     *             {@link com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder#TYPE_EMPTY_GOODS_HOME}
+     *             {@link com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder#TYPE_EMPTY_HOME_GOODS}
      */
     protected void showPlaceHolder(int type) {
         if (getParentFragment() instanceof BaseParentFragment) {
@@ -168,7 +168,7 @@ public abstract class BaseChildFragment extends Fragment implements MainActivity
     }
 
     @Override
-    public void onPermissionDenied() {
+    public void onLocationPermissionDenied() {
         showPlaceHolder(StatePlaceHolder.TYPE_DENIED);
     }
 

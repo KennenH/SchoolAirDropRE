@@ -15,6 +15,15 @@ import retrofit2.Retrofit;
 
 public class UserNameImpl implements IUserNamePresenter {
 
+    private static UserNameImpl mUserNameImpl = null;
+
+    public static UserNameImpl getInstance() {
+        if (mUserNameImpl == null) {
+            mUserNameImpl = new UserNameImpl();
+        }
+        return mUserNameImpl;
+    }
+
     private IResultCallback mCallback;
 
     @Override

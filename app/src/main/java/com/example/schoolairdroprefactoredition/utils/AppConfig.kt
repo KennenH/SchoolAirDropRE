@@ -8,16 +8,16 @@ object AppConfig {
     /**
      * 是否开启debug模式
      */
-    const val IS_DEBUG = false
+    const val IS_DEBUG = true
 
     /**
      * 默认登录的用户
      *
      * wencaizhongbai
      * wiredo
-     *
+     * clz
      */
-    const val USER_ID = "wencaizhongbai"
+    const val USER_ID = "19858120611"
 
 
 }

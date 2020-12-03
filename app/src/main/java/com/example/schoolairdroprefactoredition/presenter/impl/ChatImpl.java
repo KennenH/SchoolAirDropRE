@@ -5,6 +5,15 @@ import com.example.schoolairdroprefactoredition.presenter.callback.IChatCallback
 
 public class ChatImpl implements IChatPresenter {
 
+    private static ChatImpl mChatImpl = null;
+
+    public static ChatImpl getInstance() {
+        if (mChatImpl == null) {
+            mChatImpl = ChatImpl.getInstance();
+        }
+        return mChatImpl;
+    }
+
     private IChatCallback mCallback;
 
     @Override

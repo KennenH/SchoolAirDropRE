@@ -26,16 +26,25 @@
                 android:layout_marginStart="@dimen/general_padding_large"
                 android:layout_marginEnd="@dimen/general_padding_bit_larger"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/home_location"
+                app:layout_constraintEnd_toStartOf="@+id/home_top_add"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/home_location"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+            <TextView
+                android:id="@+id/home_top_add"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/general_padding_bit_larger"
-                android:src="@drawable/location_anchor"
+                android:background="@drawable/button_round_stroke_primary"
+                android:drawablePadding="@dimen/general_padding_tiny"
+                android:paddingStart="@dimen/general_padding"
+                android:paddingTop="@dimen/general_padding_small"
+                android:paddingEnd="@dimen/general_padding"
+                android:paddingBottom="@dimen/general_padding_small"
+                android:text="@string/add"
+                android:textColor="@color/primaryText"
+                android:textSize="@dimen/textSizeNormal"
+                app:drawableStartCompat="@drawable/ic_logo_text_alpha_20"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

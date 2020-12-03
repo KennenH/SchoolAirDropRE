@@ -2,7 +2,7 @@ package com.example.schoolairdroprefactoredition.utils
 
 import com.example.schoolairdroprefactoredition.cache.UserInfoCache
 import com.example.schoolairdroprefactoredition.cache.UserTokenCache
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 
 class UserLoginCacheUtils {
@@ -18,7 +18,7 @@ class UserLoginCacheUtils {
      * @param token    本次登录获取到的token
      * @param duration token持续时间
      */
-    fun saveUserToken(token: DomainAuthorize, duration: Long = 3_600) {
+    fun saveUserToken(token: DomainToken, duration: Long = 3_600) {
         var userTokenCache: UserTokenCache? = mJsonCacheUtil.getValue(UserTokenCache.USER_TOKEN, UserTokenCache::class.java)
         if (userTokenCache == null) userTokenCache = UserTokenCache()
         userTokenCache.token = token

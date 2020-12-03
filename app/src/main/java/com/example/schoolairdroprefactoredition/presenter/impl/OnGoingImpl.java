@@ -17,6 +17,15 @@ import retrofit2.Retrofit;
 
 public class OnGoingImpl implements IOnGoingPresenter {
 
+    private static OnGoingImpl mOnGoingImpl = null;
+
+    public static OnGoingImpl getInstance() {
+        if (mOnGoingImpl == null) {
+            mOnGoingImpl = new OnGoingImpl();
+        }
+        return mOnGoingImpl;
+    }
+
     private IOnGoingCallback mCallback;
 
     @Override

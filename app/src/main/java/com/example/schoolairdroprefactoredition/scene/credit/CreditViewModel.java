@@ -28,7 +28,7 @@ public class CreditViewModel extends ViewModel implements ICreditCallback {
     }
 
     public CreditViewModel() {
-        creditImpl = new CreditImpl();
+        creditImpl = CreditImpl.getInstance();
         creditImpl.registerCallback(this);
     }
 

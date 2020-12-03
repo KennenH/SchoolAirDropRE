@@ -10,6 +10,15 @@ import java.util.Locale;
 
 public class QuoteDetailImpl implements IQuoteDetailPresenter {
 
+    private static QuoteDetailImpl mQuoteDetailImpl = null;
+
+    public static QuoteDetailImpl getInstance() {
+        if (mQuoteDetailImpl == null) {
+            mQuoteDetailImpl = new QuoteDetailImpl();
+        }
+        return mQuoteDetailImpl;
+    }
+
     private IQuoteDetailCallback mCallback;
 
     @Override

@@ -18,14 +18,14 @@ public class SearchViewModel extends BaseStateViewModel implements ISearchCallba
     private double lastLatitude;
     private int page = 0;
 
-    private SearchImpl mSearchImpl;
+    private final SearchImpl mSearchImpl;
 
-    private MutableLiveData<List<DomainGoodsInfo.DataBean>> mSearchResults = new MutableLiveData<>();
-    private MutableLiveData<SearchHistories> mSearchHistories = new MutableLiveData<>();
-    private MutableLiveData<SearchSuggestionBean> mSearchSuggestions = new MutableLiveData<>();
+    private final MutableLiveData<List<DomainGoodsInfo.DataBean>> mSearchResults = new MutableLiveData<>();
+    private final MutableLiveData<SearchHistories> mSearchHistories = new MutableLiveData<>();
+    private final MutableLiveData<SearchSuggestionBean> mSearchSuggestions = new MutableLiveData<>();
 
     public SearchViewModel() {
-        mSearchImpl = new SearchImpl();
+        mSearchImpl = SearchImpl.getInstance();
         mSearchImpl.registerCallback(this);
     }
 

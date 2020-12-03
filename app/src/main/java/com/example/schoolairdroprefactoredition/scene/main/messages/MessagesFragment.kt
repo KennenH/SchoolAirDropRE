@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -50,7 +49,7 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
     }
 
     private fun init() {
-        val token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE)
+        val token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_TOKEN)
         if (token == null) {
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY)
         }
@@ -84,7 +83,7 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
     }
 
     override fun onLoginStateChanged() {
-        val token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_AUTHORIZE)
+        val token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_TOKEN)
         if (token != null) {
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY)
 //            messagesViewModel.getMessagesList().observe(viewLifecycleOwner, {

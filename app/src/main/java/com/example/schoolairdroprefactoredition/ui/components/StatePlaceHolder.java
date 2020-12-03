@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.PlaceholderBinding;
 import com.example.schoolairdroprefactoredition.domain.base.LoadState;
-import com.example.schoolairdroprefactoredition.scene.addnew.AddNewItemActivity;
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity;
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 import com.github.ybq.android.spinkit.SpinKitView;
 
@@ -19,8 +19,8 @@ import com.github.ybq.android.spinkit.SpinKitView;
  */
 public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnClickListener {
 
-    public static final int TYPE_EMPTY_GOODS_HOME = 99;//状态 类型 没有物品 仅首页使用
-    public static final int TYPE_EMPTY_NEWS_HOME = 66;//状态 类型 没有附近话题 仅首页使用
+    public static final int TYPE_EMPTY_HOME_GOODS = 99;//状态 类型 没有物品 仅首页使用
+    public static final int TYPE_EMPTY_HOME_POST = 66;//状态 类型 没有附近话题 仅首页使用
     public static final int TYPE_EMPTY = 110;//状态 类型 没有物品
     public static final int TYPE_EMPTY_SEARCH = 220;//状态 类型 搜索为空
     public static final int TYPE_LOADING = 77;//状态 类型 正在加载
@@ -81,8 +81,8 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
      * 设置placeholder类型
      * one of below
      *
-     * @param type {@link StatePlaceHolder#TYPE_EMPTY_GOODS_HOME}
-     *             {@link StatePlaceHolder#TYPE_EMPTY_NEWS_HOME}
+     * @param type {@link StatePlaceHolder#TYPE_EMPTY_HOME_GOODS}
+     *             {@link StatePlaceHolder#TYPE_EMPTY_HOME_POST}
      *             {@link StatePlaceHolder#TYPE_EMPTY}
      *             {@link StatePlaceHolder#TYPE_EMPTY_SEARCH}
      *             {@link StatePlaceHolder#TYPE_LOADING}
@@ -105,7 +105,7 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
             mIcon.setVisibility(VISIBLE);
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(VISIBLE);
-        } else if (type == TYPE_EMPTY_GOODS_HOME) {
+        } else if (type == TYPE_EMPTY_HOME_GOODS) {
             // 附近没有物品 仅首页使用
             mLoading.setVisibility(GONE);
 
@@ -117,7 +117,7 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
             mTip.setVisibility(VISIBLE);
             mRefresh.setVisibility(VISIBLE);
             mAction.setVisibility(VISIBLE);
-        } else if (type == TYPE_EMPTY_NEWS_HOME) {
+        } else if (type == TYPE_EMPTY_HOME_POST) {
             // 附近没有物品 仅首页使用
             mLoading.setVisibility(GONE);
 
@@ -210,14 +210,14 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
      */
     public interface OnHomePlaceHolderActionListener {
         /**
-         * 发布我的物品 打开{@link AddNewItemActivity}
+         * 发布我的物品 打开{@link AddNewActivity}
          */
         void onHomePostMyItem(View view);
 
         /**
          * 发布我的话题
          */
-        void onHomePostMyTopic(View view);
+        void onHomePostMyPosts(View view);
     }
 
     public void setOnHomePostItemListener(OnHomePlaceHolderActionListener listener) {
@@ -232,15 +232,15 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
                 mOnPlaceHolderRefreshListener.onPlaceHolderRetry(v);
             }
         } else if (id == R.id.button) {
-            if (type == TYPE_EMPTY_GOODS_HOME) {
+            if (type == TYPE_EMPTY_HOME_GOODS) {
                 if (mOnPlaceHolderRefreshListener != null)
                     mOnHomePlaceHolderActionListener.onHomePostMyItem(v); // 当附近无物品时按钮效果为发布物品
             } else if (type == TYPE_DENIED) {
                 if (mOnHomePlaceHolderActionListener != null)
                     mOnPlaceHolderRefreshListener.onPlaceHolderRetry(v); // 否则当权限被拒绝时为开启权限
-            } else if (type == TYPE_EMPTY_NEWS_HOME) {
+            } else if (type == TYPE_EMPTY_HOME_POST) {
                 if (mOnHomePlaceHolderActionListener != null)
-                    mOnHomePlaceHolderActionListener.onHomePostMyTopic(v);
+                    mOnHomePlaceHolderActionListener.onHomePostMyPosts(v); // 当附近无帖子已发布时
             }
 
         }

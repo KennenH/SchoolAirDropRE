@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.blankj.utilcode.util.SizeUtils;
 import com.example.schoolairdroprefactoredition.databinding.FragmentRecyclerBinding;
 import com.example.schoolairdroprefactoredition.domain.OnGoingData;
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorize;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.OnGoingRecyclerAdapter;
@@ -76,9 +76,9 @@ public class OnGoingFragment extends StatePlaceholderFragment implements BaseSta
     }
 
     public void getOnGoing() {
-        DomainAuthorize token = null;
+        DomainToken token = null;
         try {
-            token = (DomainAuthorize) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_AUTHORIZE);
+            token = (DomainToken) getActivity().getIntent().getSerializableExtra(ConstantUtil.KEY_TOKEN);
         } catch (NullPointerException ignored) {
         }
 
