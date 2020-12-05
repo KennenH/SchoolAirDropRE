@@ -57,13 +57,32 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/general_padding_large"
                 android:layout_marginTop="@dimen/general_padding_large"
-                android:layout_marginBottom="@dimen/general_padding_large"
                 android:textColor="@color/primaryText"
                 android:textSize="@dimen/textSizeNormal"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/input"
                 tools:text="@string/textRemainCount" />
+
+            <TextView
+                android:id="@+id/input_warning"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/general_padding"
+                android:layout_marginEnd="@dimen/general_padding"
+                android:layout_marginBottom="@dimen/general_padding"
+                android:drawablePadding="@dimen/general_padding"
+                android:drawableTint="@color/colorPrimaryRed"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:text="@string/noSpaceAndLineBreak"
+                android:textColor="@color/colorPrimaryRed"
+                android:textSize="@dimen/textSizeNormal"
+                android:visibility="gone"
+                app:drawableStartCompat="@drawable/ic_attention_small"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/input_tip"
+                app:layout_constraintTop_toBottomOf="@+id/input_tip" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

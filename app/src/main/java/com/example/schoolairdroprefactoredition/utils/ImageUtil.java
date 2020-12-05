@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.utils;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.ScreenUtils;
@@ -50,12 +51,12 @@ public class ImageUtil {
                 .into(imageView);
     }
 
-    public static void loadRoundImage(ImageView imageView, String uri) {
+    public static void loadRoundImage(ImageView imageView, String uri, @DrawableRes int palceholder) {
         Glide.with(imageView).load(uri)
+                .circleCrop()
                 .apply(new RequestOptions()
                         .encodeQuality(ConstantUtil.ORIGIN)
-                        .placeholder(R.drawable.ic_logo_alpha)
-                        .transform(new CenterCrop(), new RoundedCorners(SizeUtils.dp2px(100))))
+                        .placeholder(palceholder))
                 .into(imageView);
     }
 

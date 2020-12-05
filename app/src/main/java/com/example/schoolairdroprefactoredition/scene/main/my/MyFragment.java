@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -35,6 +36,8 @@ import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.lxj.xpopup.impl.LoadingPopupView;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
+
+import org.jetbrains.annotations.NotNull;
 
 public class MyFragment extends Fragment implements View.OnClickListener, MainActivity.OnLoginStateChangedListener, BaseStateViewModel.OnRequestListener, SSBInfo.OnSSBActionListener {
 
@@ -89,10 +92,12 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
         return new Intent();
     }
 
+    @Nullable
     private DomainUserInfo.DataBean getInfo() {
         return (DomainUserInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_USER_INFO);
     }
 
+    @Nullable
     private DomainToken getToken() {
         return (DomainToken) getIntent().getSerializableExtra(ConstantUtil.KEY_TOKEN);
     }
@@ -121,7 +126,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
             case R.id.my_info:
                 if (intent != null && intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) != null
                         && intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) != null) {
-                    UserActivity.start(getActivity(), true,
+                    UserActivity.Companion.start(getActivity(), true,
                             (DomainToken) intent.getSerializableExtra(ConstantUtil.KEY_TOKEN),
                             intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO));
                 } else {
@@ -156,7 +161,7 @@ public class MyFragment extends Fragment implements View.OnClickListener, MainAc
      * 登录状态改变的回调
      */
     @Override
-    public void onLoginStateChanged() {
+    public void onLoginStateChanged(@NotNull Intent intent) {
         DomainToken token = getToken();
         setUserData();
         if (token != null)

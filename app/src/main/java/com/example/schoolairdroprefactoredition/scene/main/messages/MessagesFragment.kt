@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.main.messages
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,6 +27,10 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
         ViewModelProvider(this@MessagesFragment).get(MessagesViewModel::class.java)
     }
 
+    private val manager by lazy {
+        LinearLayoutManager(context, RecyclerView.VERTICAL, true)
+    }
+
     private var binding: FragmentMessagesBinding? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,7 +44,7 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
         binding = FragmentMessagesBinding.inflate(inflater, container, false)
 
         binding?.messagesRecycler?.apply {
-            layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, true)
+            layoutManager = manager
             adapter = homeMessagesRecyclerAdapter
         }
 
@@ -74,6 +79,14 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
         }
     }
 
+    fun pageScrollToTop() {
+        if (manager.findLastVisibleItemPosition() > 10) {
+            binding?.messagesRecycler?.scrollToPosition(5)
+        }
+        binding?.messagesRecycler?.smoothScrollToPosition(0)
+
+    }
+
     override fun getStatePlaceholder(): StatePlaceHolder? {
         return binding?.messagesPlaceholder
     }
@@ -82,8 +95,8 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
         return binding?.messagesRecycler
     }
 
-    override fun onLoginStateChanged() {
-        val token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_TOKEN)
+    override fun onLoginStateChanged(intent: Intent) {
+        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
         if (token != null) {
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY)
 //            messagesViewModel.getMessagesList().observe(viewLifecycleOwner, {

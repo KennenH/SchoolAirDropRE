@@ -19,8 +19,8 @@ import java.util.List;
 
 public class HomeNavigatorAdapter extends CommonNavigatorAdapter {
 
-    public static final int HOME = 0;
-    public static final int PURCHASING = 1;
+    public static final int HOME = 231;
+    public static final int PURCHASING = 679;
 
     private final List<String> mList;
     private final ViewPager mViewPager;

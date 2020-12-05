@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding;
@@ -14,6 +15,7 @@ import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNavigatorAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HomePagerAdapter;
+import com.google.android.material.appbar.AppBarLayout;
 
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator;
@@ -24,6 +26,12 @@ public class ParentPlaygroundFragment extends BaseParentFragment
     public static ParentPlaygroundFragment newInstance() {
         return new ParentPlaygroundFragment();
     }
+
+    private ViewPager mViewPager;
+
+    private HomePagerAdapter homePagerAdapter;
+
+    private AppBarLayout mAppbarLayout;
 
     @Override
     public void onAttach(@NonNull Context context) {
@@ -37,7 +45,10 @@ public class ParentPlaygroundFragment extends BaseParentFragment
                              ViewGroup container, Bundle savedInstanceState) {
         final FragmentHomeBinding binding = FragmentHomeBinding.inflate(inflater, container, false);
 
-        HomePagerAdapter homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), HomePagerAdapter.PAGE_TYPE_PLAYGROUND);
+        mViewPager = binding.homeViewpager;
+        mAppbarLayout = binding.toolbarWrapper;
+
+        homePagerAdapter = new HomePagerAdapter(getChildFragmentManager(), HomePagerAdapter.PAGE_TYPE_PLAYGROUND);
         setUpPlaceHolderHAndContainerView(binding.placeholder, binding.homeViewpager);
 
         CommonNavigator commonNavigator = new CommonNavigator(getContext());
@@ -53,6 +64,20 @@ public class ParentPlaygroundFragment extends BaseParentFragment
         binding.homeTopAdd.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_15, 0, 0, 0);
 
         return binding.getRoot();
+    }
+
+    /**
+     * 使列表滑动至顶部
+     * 当当前页面最后可见的item位置小于一定值时直接调用平滑滑动
+     * 否则将先闪现至固定item位置处再平滑滚动
+     * <p>
+     * 详见 {@link HomePlaygroundFragment#scrollToTop()}
+     */
+    public void pageScrollToTop() {
+        if (mViewPager != null && mAppbarLayout != null) {
+            homePagerAdapter.scrollToTop(mViewPager.getCurrentItem());
+            mAppbarLayout.setExpanded(true, true);
+        }
     }
 
     @Override

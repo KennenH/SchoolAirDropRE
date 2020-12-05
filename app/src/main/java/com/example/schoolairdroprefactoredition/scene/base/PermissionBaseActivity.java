@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.scene.base;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.Settings;
@@ -14,6 +15,7 @@ import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.AppUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.utils.AppConfig;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
@@ -109,11 +111,15 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     }
 
     /**
-     * 检查是否已经同意服务条款和隐私政策
+     * 检查是否已经同意服务条款和隐私政策 仅用于{@link com.example.schoolairdroprefactoredition.scene.main.MainActivity}
      * 若已同意则在{@link PermissionBaseActivity#agreeToTermsOfService()}中启动主页面的渲染
      * 否则退出App
      */
-    public void checkIfAgreeToTermsOfServiceAndPrivacyPolicy() {
+    public void checkIfAgreeToTermsOfServiceAndPrivacyPolicy(Context context) {
+        if (!(context instanceof MainActivity)) {
+            throw new IllegalStateException("checkIfAgreeToTermsOfServiceAndPrivacyPolicy can only be called in MainActivity.");
+        }
+
         boolean isAgreed = getSharedPreferences(ConstantUtil.START_UP_PREFERENCE, MODE_PRIVATE).getBoolean(ConstantUtil.START_UP_IS_TERMS_AGREED, false);
         if (!isAgreed) {
             new XPopup.Builder(this)

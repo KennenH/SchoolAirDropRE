@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.amap.api.location.AMapLocation
@@ -86,9 +85,14 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     private var mOnLocationListenerList: ArrayList<OnLocationListener> = ArrayList()
 
 
+    /**
+     * 在用户同意使用服务条款及用户协议后将交由
+     * [MainActivity.agreeToTermsOfService]
+     * 来处理页面初始化及启动程序，否则将退出App
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        checkIfAgreeToTermsOfServiceAndPrivacyPolicy()
+        checkIfAgreeToTermsOfServiceAndPrivacyPolicy(this@MainActivity)
     }
 
     /**
@@ -97,16 +101,28 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     override fun onResume() {
         super.onResume()
         when {
-            mPurchasing.isVisible -> navView.selectedItemId = R.id.navigation_purchasing
-            mPlaza.isVisible -> navView.selectedItemId = R.id.navigation_playground
-            mMessages.isVisible -> navView.selectedItemId = R.id.navigation_message
+            mPurchasing.isVisible -> {
+                if (navView.selectedItemId != R.id.navigation_purchasing) {
+                    navView.selectedItemId = R.id.navigation_purchasing
+                }
+            }
+            mPlaza.isVisible -> {
+                if (navView.selectedItemId != R.id.navigation_playground) {
+                    navView.selectedItemId = R.id.navigation_playground
+                }
+            }
+            mMessages.isVisible -> {
+                if (navView.selectedItemId != R.id.navigation_message) {
+                    navView.selectedItemId = R.id.navigation_message
+                }
+            }
             mMy.isVisible -> navView.selectedItemId = R.id.navigation_my
         }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK)
+        if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 LoginActivity.LOGIN -> {
                     if (data == null) {
@@ -118,7 +134,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                     }
 
                     for (listener in mOnLoginStateChangedListener) {
-                        listener.onLoginStateChanged()
+                        listener.onLoginStateChanged(intent)
                     }
                 }
 
@@ -128,6 +144,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                     }
                 }
             }
+        }
     }
 
     override fun onDestroy() {
@@ -139,7 +156,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         mOnLoginStateChangedListener.clear()
     }
 
-    private fun initView() {
+    private fun initListener() {
         mPlaza.setOnSearchBarClickedListener {
             showSearch()
         }
@@ -159,21 +176,28 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     /**
      * 当用户同意使用服务条款时才加载首页内容
+     * 进入本方法的前提时必须先同意
+     * [MainActivity.checkIfAgreeToTermsOfServiceAndPrivacyPolicy]
      */
     override fun agreeToTermsOfService() {
         super.agreeToTermsOfService()
         notifyThemeChanged()
         setContentView(R.layout.activity_main)
-
         initCache()
-        initView()
+        initListener()
     }
 
+    /*
+     * 父类接收到的定位权限被允许，在此进行定位操作
+     */
     override fun locationGranted() {
         super.locationGranted()
         startLocation()
     }
 
+    /**
+     * 父类接收到的定位权限被拒绝
+     */
     override fun locationDenied() {
         super.locationDenied()
         for (onLocationListener in mOnLocationListenerList) {
@@ -181,6 +205,9 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         }
     }
 
+    /**
+     * 读取手机缓存和账号设置
+     */
     private fun initCache() {
         accountViewModel.lastLoggedTokenCaChe.observe(this@MainActivity, {
             intent.putExtra(ConstantUtil.KEY_TOKEN, it)
@@ -190,6 +217,18 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         })
     }
 
+    /**
+     * 切换子页面的显示
+     * 当页面未被添加或者未显示时先先添加及显示
+     * 当已经显示时再点击导航栏图标将滑动至最顶部
+     *
+     * 注意：
+     * 这里页面显示时再点击使得页面滑动至顶部的逻辑不能用
+     * [BottomNavigationView.setOnNavigationItemReselectedListener]
+     * 这个接口实现，这个接口的用意是让图标在第二次被点击
+     * 的时候才能被选中，这样第一次进app的时候第一个页面就
+     * 会一直是虚空状态，要先切换到其他页面再切回来才能正常
+     */
     private fun showFragment(fragment: Fragment) {
         supportFragmentManager.apply {
             if (fragment.isHidden || !fragment.isAdded) {
@@ -210,10 +249,25 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                             .show(fragment)
                             .commit()
                 }
+            } else if (fragment.isAdded) {
+                when (fragment) {
+                    mPurchasing -> {
+                        mPurchasing.pageScrollToTop()
+                    }
+                    mPlaza -> {
+                        mPlaza.pageScrollToTop()
+                    }
+                    mMessages -> {
+                        mMessages.pageScrollToTop()
+                    }
+                }
             }
         }
     }
 
+    /**
+     * 显示搜索页面
+     */
     private fun showSearch() {
         supportFragmentManager.apply {
             if (mSearch.isHidden || !mSearch.isAdded) {
@@ -272,13 +326,12 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         val token: DomainToken = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken
         if (token.access_token != null) {
             loginViewModel.getUserInfo(token.access_token).observe(this, {
-
-                Toast.makeText(this@MainActivity, "登录成功", Toast.LENGTH_SHORT).show()
+//                Toast.makeText(this@MainActivity, "登录成功", Toast.LENGTH_SHORT).show()
 
                 val userInfo = it?.data?.get(0)
                 intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
                 for (listener in mOnLoginStateChangedListener) {
-                    listener.onLoginStateChanged()
+                    listener.onLoginStateChanged(intent)
                 }
             })
         }
@@ -316,6 +369,9 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 })
     }
 
+    /**
+     * 开始定位
+     */
     private fun startLocation() {
         mClient.setLocationListener(this@MainActivity)
         mOption.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
@@ -323,41 +379,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         mOption.isLocationCacheEnable = true
         mClient.setLocationOption(mOption)
         mClient.startLocation()
-    }
-
-    /**
-     * todo 可以将所有登录回调获取登录信息的地方都换成在缓存中获取，统一数据的可信来源是解决页面状态不一致的最佳办法
-     * <p>
-     * 登录状态改变后的后的回调监听 登录 退登 都会回到此处
-     * SettingsActivity中登录流程为:
-     * .                  监听
-     * {@link MyFragment} ===> {@link MainActivity}
-     * .                                                                                         监听
-     * {@link com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment} === > {@link SettingsActivity}
-     * <p>
-     * .                     start for result                          start for result
-     * {@link MainActivity} ================> {@link SettingsActivity} ================> {@link com.example.schoolairdroprefactoredition.scene.settings.LoginActivity}
-     * <p>
-     * 再按原路返回至各个Activity,然后监听回调至{@link MyFragment} 与 {@link com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment}
-     * <p>
-     * <p>
-     * 退出登录后将本地token清除 同时清除页面用户信息
-     */
-    interface OnLoginStateChangedListener {
-        fun onLoginStateChanged()
-    }
-
-    fun addOnLoginActivityListener(listener: OnLoginStateChangedListener) {
-        mOnLoginStateChangedListener.add(listener)
-    }
-
-    interface OnLocationListener {
-        fun onLocated(aMapLocation: AMapLocation?)
-        fun onLocationPermissionDenied()
-    }
-
-    fun addOnLocationListener(listener: OnLocationListener) {
-        mOnLocationListenerList.add(listener)
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -382,11 +403,78 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         return false
     }
 
+    /**
+     * 高德定位SDK结果回调
+     */
     override fun onLocationChanged(aMapLocation: AMapLocation?) {
         for (onLocationListener in mOnLocationListenerList) {
             onLocationListener.onLocated(aMapLocation)
         }
         intent.putExtra(ConstantUtil.LONGITUDE, aMapLocation?.longitude)
         intent.putExtra(ConstantUtil.LATITUDE, aMapLocation?.latitude)
+    }
+
+
+    /**************************************listeners**************************************/
+
+    /**
+     * todo 可以将所有登录回调获取登录信息的地方都换成在缓存中获取，统一数据的可信来源是解决页面状态不一致的最佳办法
+     * <p>
+     * 登录状态改变后的后的回调监听 登录 退登 都会回到此处
+     * SettingsActivity中登录流程为:
+     * .                  监听
+     * {@link MyFragment} ===> {@link MainActivity}
+     * .                                                                                         监听
+     * {@link com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment} === > {@link SettingsActivity}
+     * <p>
+     * .                     start for result                          start for result
+     * {@link MainActivity} ================> {@link SettingsActivity} ================> {@link com.example.schoolairdroprefactoredition.scene.settings.LoginActivity}
+     * <p>
+     * 再按原路返回至各个Activity,然后监听回调至{@link MyFragment} 与 {@link com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment}
+     * <p>
+     * <p>
+     * 退出登录后将本地token清除 同时清除页面用户信息
+     */
+    interface OnLoginStateChangedListener {
+        /**
+         *  登录结果回调
+         */
+        fun onLoginStateChanged(intent: Intent)
+    }
+
+    /**
+     * 添加接收登录结果回调的监听器
+     *
+     * 添加的监听器来自需要登录状态和账号信息的子页面
+     * 以便在登陆状态改变时即时通知子页面ui更新
+     */
+    fun addOnLoginActivityListener(listener: OnLoginStateChangedListener) {
+        mOnLoginStateChangedListener.add(listener)
+    }
+
+    /**
+     * 定位回调接口
+     * 获取结果 或 处理权限被拒绝时
+     */
+    interface OnLocationListener {
+        /**
+         * 定位结果回调
+         */
+        fun onLocated(aMapLocation: AMapLocation?)
+
+        /**
+         * 定位权限被拒绝
+         */
+        fun onLocationPermissionDenied()
+    }
+
+    /**
+     * 添加接收定位回调的监听器
+     *
+     * 来自需要位置信息的子页面
+     * 以便在获取位置信息后即时更新页面ui
+     */
+    fun addOnLocationListener(listener: OnLocationListener) {
+        mOnLocationListenerList.add(listener)
     }
 }

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".scene.user.UserActivity">
+
+    <ImageView
+        android:id="@+id/user_background"
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/pk"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.scwang.smart.refresh.layout.SmartRefreshLayout
+        android:id="@+id/user_background_over_drag"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:overScrollMode="never"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srlEnableLoadMore="false"
+        app:srlEnableOverScrollDrag="true"
+        app:srlEnablePreviewInEditMode="false"
+        app:srlFooterMaxDragRate="1.2"
+        app:srlHeaderMaxDragRate="1.4">
+
+        <com.example.schoolairdroprefactoredition.ui.components.OverDragEventHeader
+            android:id="@+id/user_background_over_drag_header"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/user_info_wrapper"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="200dp"
+                android:background="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.1" />
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.9" />
+
+                <TextView
+                    android:id="@+id/userName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="60dp"
+                    android:text="校园空投"
+                    android:textColor="@color/black"
+                    android:textSize="20dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_chainStyle="packed"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/verifyInfo"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginStart="@dimen/general_padding_small"
+                    android:src="@drawable/ic_verified"
+                    app:layout_constraintBottom_toBottomOf="@+id/userName"
+                    app:layout_constraintStart_toEndOf="@+id/userName"
+                    app:layout_constraintTop_toTopOf="@+id/userName" />
+
+                <TextView
+                    android:id="@+id/description"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/general_padding_larger"
+                    android:gravity="center"
+                    android:text="校园空投官方账号\nwww.schoolairdrop.com"
+                    android:textColor="@color/primaryText"
+                    android:textSize="14dp"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                    app:layout_constraintStart_toStartOf="@+id/guideline1"
+                    app:layout_constraintTop_toBottomOf="@+id/userName" />
+
+                <TextView
+                    android:id="@+id/user_join_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/general_padding_large"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:text="#2020年8月1日加入"
+                    android:textColor="@color/primaryEvenDarker"
+                    android:textSize="12dp"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline2"
+                    app:layout_constraintStart_toStartOf="@+id/guideline1"
+                    app:layout_constraintTop_toBottomOf="@+id/description" />
+
+
+                <androidx.constraintlayout.widget.Guideline
+                    android:id="@+id/guideline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintGuide_percent="0.5" />
+
+                <TextView
+                    android:id="@+id/user_more_selling"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/general_padding_bit_larger"
+                    android:gravity="center"
+                    android:padding="@dimen/general_padding"
+                    android:text="10"
+                    android:textColor="@color/black"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toStartOf="@id/guideline"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/user_join_time" />
+
+                <TextView
+                    android:id="@+id/user_selling_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:text="@string/selling"
+                    android:textColor="@color/primaryText"
+                    android:textSize="14dp"
+                    app:layout_constraintEnd_toStartOf="@+id/guideline"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/user_more_selling" />
+
+                <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
+                    android:id="@+id/user_more_posts"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:text="[img src=ic_credit2/]"
+                    android:textColor="@color/black"
+                    android:textSize="23dp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/user_selling_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintTop_toTopOf="@+id/user_more_selling" />
+
+                <TextView
+                    android:id="@+id/user_more_credits_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:gravity="center"
+                    android:text="@string/posts"
+                    android:textColor="@color/primaryText"
+                    android:textSize="14dp"
+                    app:layout_constraintBaseline_toBaselineOf="@id/user_selling_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/guideline"
+                    app:layout_constraintTop_toBottomOf="@+id/user_more_selling" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <com.facebook.drawee.view.SimpleDraweeView
+                android:id="@+id/user_avatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:actualImageResource="@drawable/ic_logo_text_alpha_20"
+                app:layout_constraintBottom_toTopOf="@+id/user_info_wrapper"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/user_info_wrapper"
+                app:roundAsCircle="true" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.scwang.smart.refresh.layout.SmartRefreshLayout>
+
+    <View
+        android:id="@+id/status_bar_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:background="@drawable/bg_top_dark_overlay_always"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_left_fill" />
+</androidx.constraintlayout.widget.ConstraintLayout>

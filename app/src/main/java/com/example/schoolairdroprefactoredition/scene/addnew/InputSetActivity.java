@@ -8,8 +8,8 @@ import android.text.InputFilter;
 import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -50,11 +50,10 @@ public class InputSetActivity extends ImmersionStatusBarActivity {
 
     private int type;
     private String content;
-    private String title = "";
 
-    private TextView mTitle;
     private EditText mInput;
     private TextView mRemaining;
+    private TextView mWarning;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +62,24 @@ public class InputSetActivity extends ImmersionStatusBarActivity {
         setSupportActionBar(findViewById(R.id.toolbar));
 
         Intent intent = getIntent();
-        title = intent.getStringExtra(TITLE);
+        String title = intent.getStringExtra(TITLE);
         type = intent.getIntExtra(TYPE, TYPE_TITLE);
         content = intent.getStringExtra(CONTENT);
 
-        mTitle = findViewById(R.id.title);
+        TextView mTitle = findViewById(R.id.title);
+        mTitle.setText(title);
         mInput = findViewById(R.id.input);
         mRemaining = findViewById(R.id.input_tip);
+        mWarning = findViewById(R.id.input_warning);
 
+        if (type == TYPE_TITLE) {
+            mInput.setMaxLines(2);
+        } else {
+            mInput.setMinLines(5);
+        }
+
+        mWarning.setVisibility(View.GONE);
+        mInput.setGravity(Gravity.START | Gravity.TOP);
         mInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -86,12 +95,14 @@ public class InputSetActivity extends ImmersionStatusBarActivity {
             public void afterTextChanged(Editable s) {
                 if (type == TYPE_TITLE) {
                     mRemaining.setText(getString(R.string.textRemainCount, MAX_TITLE - mInput.getText().length()));
-                    mInput.setLines(2);
+                    if (s.toString().contains(" ") || s.toString().contains("\n")) {
+                        mWarning.setVisibility(View.VISIBLE);
+                    } else {
+                        mWarning.setVisibility(View.GONE);
+                    }
                 } else {
                     mRemaining.setText(getString(R.string.textRemainCount, MAX_DESCRIPTION - mInput.getText().length()));
-                    mInput.setMinLines(5);
                 }
-                mInput.setGravity(Gravity.START | Gravity.TOP);
             }
         });
 
@@ -103,19 +114,15 @@ public class InputSetActivity extends ImmersionStatusBarActivity {
             }
         });
 
-        init();
-    }
-
-    private void init() {
-        mTitle.setText(title);
         if (type == TYPE_TITLE) {
             mInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_TITLE)});
         } else {
             mInput.setFilters(new InputFilter[]{new InputFilter.LengthFilter(MAX_DESCRIPTION)});
         }
         mInput.setText(content);
-        if (!mInput.hasFocus())
+        if (!mInput.hasFocus()) {
             mInput.requestFocus();
+        }
     }
 
     private void sendData() {
@@ -127,8 +134,7 @@ public class InputSetActivity extends ImmersionStatusBarActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = new MenuInflater(this);
-        inflater.inflate(R.menu.toolbar_done, menu);
+        getMenuInflater().inflate(R.menu.toolbar_done, menu);
         menu.getItem(0).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return true;
     }
@@ -144,9 +150,11 @@ public class InputSetActivity extends ImmersionStatusBarActivity {
             finish();
             return true;
         } else if (id == R.id.done) {
-            sendData();
-            finish();
-            return true;
+            if (mWarning.getVisibility() != View.VISIBLE) {
+                sendData();
+                finish();
+                return true;
+            }
         }
         return super.onOptionsItemSelected(item);
     }

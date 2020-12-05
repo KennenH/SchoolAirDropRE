@@ -21,7 +21,6 @@ import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
-import com.example.schoolairdroprefactoredition.scene.user.fragment.UserAvatarViewModel;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;

@@ -37,7 +37,7 @@ import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecycl
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem;
 import com.example.schoolairdroprefactoredition.utils.AnimUtil;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.example.schoolairdroprefactoredition.utils.DecimalFilter;
+import com.example.schoolairdroprefactoredition.utils.filters.DecimalFilter;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.luck.picture.lib.PictureSelector;

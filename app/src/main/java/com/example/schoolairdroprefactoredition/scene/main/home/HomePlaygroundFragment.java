@@ -36,6 +36,8 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
 
     private EndlessRecyclerView mHomeRecycler;
 
+    private StaggeredGridLayoutManager mManager;
+
     public static HomePlaygroundFragment newInstance() {
         return new HomePlaygroundFragment();
     }
@@ -49,7 +51,7 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
 
         binding.homeRecycler.setOnLoadMoreListener(this);
 
-        StaggeredGridLayoutManager mManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
+        mManager = new StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL);
         mManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         binding.homeRecycler.setPadding(SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f));
         binding.homeRecycler.setLayoutManager(mManager);
@@ -59,6 +61,20 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
         mHomeNewsRecyclerAdapter.setOnHomePostItemClickListener(this);
         mHomeNewsRecyclerAdapter.setOnNoMoreDataListener(this);
         binding.homeRecycler.setAdapter(mHomeNewsRecyclerAdapter);
+    }
+
+    /**
+     * 使列表滑动至顶部
+     * 当当前页面最后可见的item位置小于一定值时直接调用平滑滑动
+     * 否则将先闪现至固定item位置处再平滑滚动
+     */
+    public void scrollToTop() {
+        int[] visible = new int[5];
+        mManager.findLastVisibleItemPositions(visible);
+        if (visible[0] > 10) {
+            mHomeRecycler.scrollToPosition(5);
+        }
+        mHomeRecycler.smoothScrollToPosition(0);
     }
 
     @Override

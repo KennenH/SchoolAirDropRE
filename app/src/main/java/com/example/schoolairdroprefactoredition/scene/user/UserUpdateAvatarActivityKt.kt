@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.user
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
@@ -16,7 +15,6 @@ import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel
-import com.example.schoolairdroprefactoredition.scene.user.fragment.UserAvatarViewModel
 import com.example.schoolairdroprefactoredition.utils.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -152,7 +150,9 @@ class UserUpdateAvatarActivityKt : AppCompatActivity(), BaseStateViewModel.OnReq
 
     private fun updateAvatar(avatarUrl: String) {
         mLoading.dismissWith { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successAvatar) }
-        ImageUtil.loadRoundImage(avatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + avatarUrl)
+        ImageUtil.loadRoundImage(avatar,
+                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + avatarUrl,
+                R.drawable.ic_logo_alpha_white)
         info?.user_img_path = avatarUrl
 
         intent.putExtra(ConstantUtil.KEY_USER_INFO, info)

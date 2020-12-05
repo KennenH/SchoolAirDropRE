@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.scene.user.fragment;
+package com.example.schoolairdroprefactoredition.scene.user;
 
 import android.app.Application;
 

@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.scene.goods
 
-import android.animation.ValueAnimator
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -9,8 +8,6 @@ import android.text.InputFilter
 import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
-import android.view.animation.Animation
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
@@ -31,6 +28,7 @@ import com.example.schoolairdroprefactoredition.ui.components.ButtonDouble
 import com.example.schoolairdroprefactoredition.ui.components.ButtonSingle
 import com.example.schoolairdroprefactoredition.ui.components.GoodsInfo.OnUserInfoClickListener
 import com.example.schoolairdroprefactoredition.utils.*
+import com.example.schoolairdroprefactoredition.utils.filters.DecimalFilter
 import com.example.schoolairdroprefactoredition.viewmodel.GoodsViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog

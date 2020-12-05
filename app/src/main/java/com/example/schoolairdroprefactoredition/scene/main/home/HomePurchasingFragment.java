@@ -20,9 +20,12 @@ public class HomePurchasingFragment extends BaseChildFragment
         implements BaseStateViewModel.OnRequestListener, BaseFooterAdapter.OnNoMoreDataListener {
     private HomePurchasingFragmentViewModel homeContentFragmentViewModel;
 
-    private SmartRefreshLayout mRefresh;
     private EndlessRecyclerView mEndlessRecyclerView;
+
     private HomeNearbyRecyclerAdapter mHomeNearbyRecyclerAdapter;
+
+    private LinearLayoutManager mManager;
+
 
     public static HomePurchasingFragment newInstance() {
         return new HomePurchasingFragment();
@@ -33,17 +36,29 @@ public class HomePurchasingFragment extends BaseChildFragment
         homeContentFragmentViewModel = new ViewModelProvider(this).get(HomePurchasingFragmentViewModel.class);
         homeContentFragmentViewModel.setOnRequestListener(this);
 
-        mRefresh = binding.homeRefresh;
+        SmartRefreshLayout mRefresh = binding.homeRefresh;
         mEndlessRecyclerView = binding.homeRecycler;
 
         mRefresh.setOnRefreshListener(this);
-        RecyclerView.LayoutManager manager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
-        mEndlessRecyclerView.setLayoutManager(manager);
+        mManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        mEndlessRecyclerView.setLayoutManager(mManager);
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 
         mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter();
         mHomeNearbyRecyclerAdapter.setOnNoMoreDataListener(this);
         mEndlessRecyclerView.setAdapter(mHomeNearbyRecyclerAdapter);
+    }
+
+    /**
+     * 使列表滑动至顶部
+     * 当当前页面最后可见的item位置小于一定值时直接调用平滑滑动
+     * 否则将先闪现至固定item位置处再平滑滚动
+     */
+    public void scrollToTop() {
+        if (mManager.findLastVisibleItemPosition() > 10) {
+            mEndlessRecyclerView.scrollToPosition(5);
+        }
+        mEndlessRecyclerView.smoothScrollToPosition(0);
     }
 
     /**

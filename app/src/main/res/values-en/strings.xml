@@ -260,4 +260,6 @@
     <string name="why">Why?</string>
     <string name="errorLoadItemInfo">Error Loading Item Infomation</string>
     <string name="postTitleSaySth">Say Something</string>
+    <string name="posts">Posts</string>
+    <string name="noSpaceAndLineBreak">Please do not enter spaces and line breaks</string>
 </resources>

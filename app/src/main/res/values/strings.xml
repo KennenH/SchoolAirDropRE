@@ -291,5 +291,7 @@
     <string name="whyMyAppKeepBug">为什么我的校园空投总是报错、闪退、出现各种奇怪的bug?</string>
     <string name="errorLoadItemInfo">加载物品信息出错</string>
     <string name="postTitleSaySth">说点儿啥吧</string>
+    <string name="posts">帖子</string>
+    <string name="noSpaceAndLineBreak">请不要输入空格及换行符</string>
 
 </resources>

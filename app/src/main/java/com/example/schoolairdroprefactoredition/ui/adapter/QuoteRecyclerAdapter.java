@@ -7,8 +7,8 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ItemQuoteBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainQuote;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
@@ -77,12 +77,12 @@ public class QuoteRecyclerAdapter extends BaseQuickAdapter<DomainQuote.DataBean,
                 binding.goodsTitle.setText(bean.getGoods().getGoods_name());
 
             binding.userAvatar.setOnClickListener(v -> {
-                UserActivity.start(getContext(), false,
+                UserActivity.Companion.start(getContext(), false,
                         (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN),
                         bean.getReceiver_info() == null ? bean.getSender_info() : bean.getReceiver_info());
             });
             binding.userName.setOnClickListener(v -> {
-                UserActivity.start(getContext(), false,
+                UserActivity.Companion.start(getContext(), false,
                         (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN),
                         bean.getReceiver_info() == null ? bean.getSender_info() : bean.getReceiver_info());
             });
