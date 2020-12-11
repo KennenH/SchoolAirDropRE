@@ -9,17 +9,15 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
-import com.example.schoolairdroprefactoredition.scene.ssb.fragment.BoughtFragment;
 import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SSBBaseFragment;
 import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SellingFragment;
-import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SoldFragment;
 
 public class SSBPagerAdapter extends FragmentPagerAdapter implements SSBBaseFragment.OnSSBDataLenChangedListener {
 
-    private Context mContext;
+    private final Context mContext;
     private OnSSBDataLenChangedIntermediaryListener mOnSSBDataLenChangedIntermediaryListener;
 
-    private boolean isMine;
+    private final boolean isMine;
 
     public SSBPagerAdapter(Context context, @NonNull FragmentManager fm, int behavior, boolean isMine) {
         super(fm, behavior);
@@ -30,26 +28,14 @@ public class SSBPagerAdapter extends FragmentPagerAdapter implements SSBBaseFrag
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        switch (position) {
-            case SSBBaseFragment.SELLING_POS:
-                SellingFragment fragmentSelling = SellingFragment.newInstance(isMine);
-                fragmentSelling.setOnSSBDataLenChangedListener(this);
-                return fragmentSelling;
-            case SSBBaseFragment.SOLD_POS:
-                SoldFragment fragmentSold = SoldFragment.newInstance();
-                fragmentSold.setOnSSBDataLenChangedListener(this);
-                return fragmentSold;
-            case SSBBaseFragment.BOUGHT_POS:
-                BoughtFragment fragmentBought = BoughtFragment.newInstance();
-                fragmentBought.setOnSSBDataLenChangedListener(this);
-                return fragmentBought;
-        }
-        return SellingFragment.newInstance(false);
+        SellingFragment fragmentSelling = SellingFragment.newInstance(isMine);
+        fragmentSelling.setOnSSBDataLenChangedListener(this);
+        return fragmentSelling;
     }
 
     @Override
     public int getCount() {
-        return isMine ? 3 : 1;
+        return 1;
     }
 
     @Override

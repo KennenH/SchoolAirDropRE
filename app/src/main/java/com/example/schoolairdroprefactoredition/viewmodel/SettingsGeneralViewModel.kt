@@ -21,7 +21,7 @@ class SettingsGeneralViewModel : ViewModel() {
      */
     fun getIsDarkTheme(): LiveData<Boolean> {
         viewModelScope.launch {
-            val settings = mJsonCacheUtil.getValue(UserSettingsCache.USER_SETTINGS, UserSettingsCache::class.java)
+            val settings = mJsonCacheUtil.getValue(UserSettingsCache.KEY, UserSettingsCache::class.java)
             mIsDarkTheme.value = settings?.isDarkTheme
         }
         return mIsDarkTheme

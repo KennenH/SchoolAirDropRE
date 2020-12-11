@@ -25,7 +25,7 @@ class LoginRepository private constructor() {
 
     fun getPublicKey(onResult: (success: Boolean, response: DomainAuthorizeGet?) -> Unit) {
         RetrofitClient.userApi.getPublicKey().apply {
-            enqueue(object : CallBackWithRetry<DomainAuthorizeGet>(this) {
+            enqueue(object : CallBackWithRetry<DomainAuthorizeGet>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(false, null)
                 }
@@ -58,37 +58,37 @@ class LoginRepository private constructor() {
 //            if (registrationID == null) {
 //                onResult(false, null)
 //            } else
-                RetrofitClient.userApi.authorizeWithAlipayID(
-                        cookies,
-                        ConstantUtil.CLIENT_GRANT_TYPE,
-                        ConstantUtil.CLIENT_ID,
-                        ConstantUtil.CLIENT_SECRET,
-                        RSACoder.encryptWithPublicKey(publicKey, rawAlipayID), registrationID)
-                        .apply {
-                            enqueue(object : CallBackWithRetry<DomainToken>(this) {
-                                override fun onResponse(call: Call<DomainToken>, response: Response<DomainToken>) {
-                                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                                        if (response.isSuccessful) {
-                                            onResult(true, response.body())
-                                        } else {
-                                            onResult(false, null)
-                                        }
+            RetrofitClient.userApi.authorizeWithAlipayID(
+                    cookies,
+                    ConstantUtil.CLIENT_GRANT_TYPE,
+                    ConstantUtil.CLIENT_ID,
+                    ConstantUtil.CLIENT_SECRET,
+                    RSACoder.encryptWithPublicKey(publicKey, rawAlipayID), registrationID)
+                    .apply {
+                        enqueue(object : CallBackWithRetry<DomainToken>(this@apply) {
+                            override fun onResponse(call: Call<DomainToken>, response: Response<DomainToken>) {
+                                if (response.code() == HttpURLConnection.HTTP_OK) {
+                                    if (response.isSuccessful) {
+                                        onResult(true, response.body())
                                     } else {
                                         onResult(false, null)
                                     }
-                                }
-
-                                override fun onFailureAllRetries() {
+                                } else {
                                     onResult(false, null)
                                 }
-                            })
-                        }
+                            }
+
+                            override fun onFailureAllRetries() {
+                                onResult(false, null)
+                            }
+                        })
+                    }
         }
     }
 
     fun getUserInfo(token: String, onResult: (success: Boolean, response: DomainUserInfo?) -> Unit) {
-        RetrofitClient.userApi.getUserInfo(token).apply {
-            enqueue(object : CallBackWithRetry<DomainUserInfo>(this) {
+        RetrofitClient.userApi.getMyUserInfo(token).apply {
+            enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
                 override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         if (response.isSuccessful) {

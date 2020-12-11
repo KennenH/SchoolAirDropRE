@@ -8,13 +8,31 @@ import java.util.List;
  * 新帖子的草稿
  */
 public class NewPostDraftCache {
-    public static final String NEW_POST_DRAFT = "imPOSTdraftAndU?";
+    public static final String KEY = "imPOSTdraftAndU?";
 
+    private String tag;
+    private boolean isAnonymous;
     private String cover;
     private float hwRatio;
     private List<LocalMedia> picSet;
     private String title;
     private String content;
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public boolean isAnonymous() {
+        return isAnonymous;
+    }
+
+    public void setAnonymous(boolean anonymous) {
+        isAnonymous = anonymous;
+    }
 
     public float getHwRatio() {
         return hwRatio;

@@ -37,6 +37,7 @@
                 android:layout_marginEnd="@dimen/general_padding_bit_larger"
                 android:background="@drawable/button_round_stroke_primary"
                 android:drawablePadding="@dimen/general_padding_tiny"
+                android:drawableTint="@color/primaryText"
                 android:paddingStart="@dimen/general_padding"
                 android:paddingTop="@dimen/general_padding_small"
                 android:paddingEnd="@dimen/general_padding"

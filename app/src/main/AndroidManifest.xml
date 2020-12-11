@@ -36,12 +36,16 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".scene.ssb.MyPostActivity"
+            android:label="" />
+        <activity android:name=".scene.addnew.SelectPostTagActivity" />
+        <activity
             android:name=".scene.user.UserActivity"
             android:label="" />
         <activity android:name=".scene.user.UserUpdateAvatarActivityKt" />
         <activity android:name=".scene.why.WhyActivity" />
         <activity
-            android:name=".scene.posts.PostsActivity"
+            android:name=".scene.post.PostActivity"
             android:label=""
             android:theme="@style/AppTheme.PostsActivity" />
         <activity
@@ -55,15 +59,6 @@
             android:label=""
             android:screenOrientation="portrait"
             tools:replace="screenOrientation" />
-        <activity
-            android:name=".scene.qrcode.ConfirmTransactionActivity"
-            android:label="" />
-        <activity
-            android:name=".scene.tab.trash.TrashBinActivity"
-            android:label="" />
-        <activity
-            android:name=".scene.transactionstate.TransactionStateActivity"
-            android:label="" />
 
         <uses-library
             android:name="org.apache.http.legacy"
@@ -85,9 +80,6 @@
             android:name=".scene.base.PermissionBaseActivity"
             android:label="" />
         <activity
-            android:name=".scene.arrangeplace.ArrangePositionActivity"
-            android:label="" />
-        <activity
             android:name=".scene.settings.LoginActivity"
             android:label="" />
         <activity
@@ -95,12 +87,6 @@
             android:label="" />
         <activity
             android:name=".scene.addnew.AddNewActivity"
-            android:label="" />
-        <activity
-            android:name=".scene.tab.ongoing.OnGoingActivity"
-            android:label="" />
-        <activity
-            android:name=".scene.credit.CreditActivity"
             android:label="" />
 
         <meta-data
@@ -113,12 +99,6 @@
         <activity
             android:name=".scene.ssb.SSBActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
-            android:name=".scene.tab.quote.QuoteDetailActivity"
-            android:label="" />
-        <activity
-            android:name=".scene.tab.quote.QuoteActivity"
-            android:label="" />
         <activity
             android:name=".scene.chat.ChatActivity"
             android:windowSoftInputMode="stateAlwaysHidden" />

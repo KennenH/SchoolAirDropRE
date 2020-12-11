@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".scene.user.UserActivity">
 
     <ImageView
@@ -11,8 +12,13 @@
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/pk"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/user_background_overlay"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/darkTransparentAlways" />
 
     <com.scwang.smart.refresh.layout.SmartRefreshLayout
         android:id="@+id/user_background_over_drag"
@@ -144,12 +150,12 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/user_more_selling" />
 
-                <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
+                <TextView
                     android:id="@+id/user_more_posts"
                     android:layout_width="0dp"
                     android:layout_height="0dp"
                     android:gravity="center"
-                    android:text="[img src=ic_credit2/]"
+                    android:text="12"
                     android:textColor="@color/black"
                     android:textSize="23dp"
                     android:textStyle="bold"
@@ -171,14 +177,13 @@
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="@+id/guideline"
                     app:layout_constraintTop_toBottomOf="@+id/user_more_selling" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <com.facebook.drawee.view.SimpleDraweeView
                 android:id="@+id/user_avatar"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                app:actualImageResource="@drawable/ic_logo_text_alpha_20"
+                app:actualImageResource="@drawable/placeholder_round"
                 app:layout_constraintBottom_toTopOf="@+id/user_info_wrapper"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -187,17 +192,18 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
-    <View
-        android:id="@+id/status_bar_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="30dp"
-        android:background="@drawable/bg_top_dark_overlay_always"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--    <View-->
+    <!--        android:id="@+id/status_bar_overlay"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="30dp"-->
+    <!--        android:background="@drawable/bg_top_dark_overlay_always"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_left_fill" />
+        app:menu="@menu/user_personal"
+        app:navigationIcon="@drawable/ic_left_white" />
 </androidx.constraintlayout.widget.ConstraintLayout>

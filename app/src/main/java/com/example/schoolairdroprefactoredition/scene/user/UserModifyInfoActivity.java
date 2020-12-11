@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentUserEditBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
-import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
@@ -50,7 +50,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
             e.printStackTrace();
         }
 
-        intent.putExtra(ConstantUtil.KEY_USER_INFO, my);
+        intent.putExtra(ConstantUtil.KEY_USER_BASE_INFO, my);
         intent.putExtra(ConstantUtil.KEY_TOKEN, token);
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).startActivityForResult(intent, UserActivity.REQUEST_UPDATE);
@@ -75,7 +75,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
             bundle = new Bundle();
 
         token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
-        info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_BASE_INFO);
         setUserInfo();
     }
 
@@ -84,8 +84,8 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == UserActivity.REQUEST_UPDATE) {
                 if (data != null) {
-                    info = (DomainBaseUserInfo) data.getSerializableExtra(ConstantUtil.KEY_USER_INFO);
-                    bundle.putSerializable(ConstantUtil.KEY_USER_INFO, info);
+                    info = (DomainBaseUserInfo) data.getSerializableExtra(ConstantUtil.KEY_USER_BASE_INFO);
+                    bundle.putSerializable(ConstantUtil.KEY_USER_BASE_INFO, info);
                     setUserInfo();
                     setResult(Activity.RESULT_OK, data);
                 }

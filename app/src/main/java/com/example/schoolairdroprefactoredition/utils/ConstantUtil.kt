@@ -47,8 +47,8 @@ object ConstantUtil {
     /**
      * 校园空投 网络接口base url
      */
-    const val SCHOOL_AIR_DROP_BASE_URL = "http://106.54.110.46/inf/"
-    const val SCHOOL_AIR_DROP_BASE_URL_NEW = "http://106.54.110.46:8000/"
+    const val SCHOOL_AIR_DROP_BASE_URL = "http://106.54.110.46:8000/"
+    const val SCHOOL_AIR_DROP_BASE_URL_NEW = "http://81.69.14.64:8000/"
     const val LOCAL = "http://10.0.2.2:8000/"
 
     /**
@@ -83,6 +83,11 @@ object ConstantUtil {
     const val KEY_TOKEN = "AUTH2User"
 
     /**
+     * 仅获取用户id，是当前登录的用户的id
+     */
+    const val KEY_USER_ID = "Key_user_id!"
+
+    /**
      * 使用token请求获取的用户信息键
      */
     const val KEY_USER_INFO = "UserInfo"
@@ -92,6 +97,11 @@ object ConstantUtil {
      * 获取物品信息键
      */
     const val KEY_GOODS_INFO = "GoodsInfo"
+
+    /**
+     * 获取物品封面信息键
+     */
+    const val KEY_GOODS_BASE_INFO = "key_goods_base_info"
 
     /**
      * 打开用户个人信息页面时是否可修改信息

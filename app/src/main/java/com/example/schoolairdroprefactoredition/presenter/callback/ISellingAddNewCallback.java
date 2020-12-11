@@ -1,10 +1,11 @@
 package com.example.schoolairdroprefactoredition.presenter.callback;
 
+import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache;
 import com.example.schoolairdroprefactoredition.cache.NewPostDraftCache;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
-import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache;
 
 public interface ISellingAddNewCallback {
+
     /**
      * 添加新物品结果回调
      */

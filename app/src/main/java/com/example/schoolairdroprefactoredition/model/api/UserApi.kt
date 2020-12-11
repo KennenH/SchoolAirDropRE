@@ -1,8 +1,6 @@
 package com.example.schoolairdroprefactoredition.model.api
 
-import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
+import com.example.schoolairdroprefactoredition.domain.*
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -10,10 +8,6 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface UserApi {
-    companion object {
-        const val BASE_URL = "http://106.54.110.46:8000/"
-    }
-
     /**
      * 获取公钥
      */
@@ -37,7 +31,15 @@ interface UserApi {
      * 使用token获取用户信息
      */
     @POST("user/getUserInfo")
-    fun getUserInfo(@Header("Authorization") token: String): Call<DomainUserInfo>
+    fun getMyUserInfo(@Header("Authorization") token: String): Call<DomainUserInfo>
 
-
+    /**
+     * 使用用户id获取用户信息
+     */
+    @FormUrlEncoded
+    @POST("/user/getUserInfoById")
+    fun getUserInfoByID(
+            @Field("client_id") clientID: String,
+            @Field("client_secret") clientSecret: String,
+            @Field("uid") userID: Int): Call<DomainBaseUser>
 }

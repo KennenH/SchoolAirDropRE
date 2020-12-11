@@ -3,7 +3,7 @@ package com.example.schoolairdroprefactoredition.cache;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
 
 public class UserTokenCache {
-    public static final String USER_TOKEN = "imatoken";
+    public static final String KEY = "imatoken";
 
     private DomainToken token;
 

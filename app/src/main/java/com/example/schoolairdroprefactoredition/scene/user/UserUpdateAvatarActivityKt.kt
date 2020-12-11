@@ -13,7 +13,7 @@ import com.blankj.utilcode.util.ImageUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding
 import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo
+import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel
 import com.example.schoolairdroprefactoredition.utils.*
 import com.google.android.material.bottomsheet.BottomSheetBehavior

@@ -39,6 +39,7 @@ class LoginViewModel : ViewModel() {
             mainRepository.getPublicKey { success, response ->
                 if (success) {
                     mPublicKey.postValue(response)
+                    loadState.value = LoadState.SUCCESS
                 } else {
                     loadState.value = LoadState.ERROR
                 }
@@ -63,6 +64,7 @@ class LoginViewModel : ViewModel() {
             ) { success, response ->
                 if (success) {
                     mAuthorize.postValue(response)
+                    loadState.value = LoadState.SUCCESS
                 } else {
                     loadState.value = LoadState.ERROR
                 }
@@ -100,8 +102,8 @@ class LoginViewModel : ViewModel() {
      * 登出
      */
     fun logout() {
-        UserLoginCacheUtils.instance.deleteCache(UserTokenCache.USER_TOKEN)
-        UserLoginCacheUtils.instance.deleteCache(UserInfoCache.USER_INFO)
+        UserLoginCacheUtils.instance.deleteCache(UserTokenCache.KEY)
+        UserLoginCacheUtils.instance.deleteCache(UserInfoCache.KEY)
     }
 
 

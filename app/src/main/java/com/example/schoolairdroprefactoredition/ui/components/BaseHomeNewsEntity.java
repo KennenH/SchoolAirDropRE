@@ -1,11 +1,11 @@
 package com.example.schoolairdroprefactoredition.ui.components;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
-import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.adapter.HomePostsRecyclerAdapter;
 
 public class BaseHomeNewsEntity implements MultiItemEntity {
 
-    private int type = HomeNewsRecyclerAdapter.TYPE_ONE;
+    private int type = HomePostsRecyclerAdapter.TYPE_ONE;
     private String title;
     private String uri;
 

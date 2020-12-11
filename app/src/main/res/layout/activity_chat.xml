@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".scene.chat.ChatActivity"
     tools:viewBindingIgnore="true">
 
@@ -137,13 +138,15 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toStartOf="@id/chat_bar_emotion"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        tools:ignore="LabelFor" />
 
                     <ImageView
                         android:id="@+id/chat_bar_emotion"
                         android:layout_width="@dimen/toolbar_icon_bit_large"
                         android:layout_height="@dimen/toolbar_icon_bit_large"
                         android:layout_marginEnd="@dimen/general_padding"
+                        android:contentDescription="@string/emotion"
                         android:src="@drawable/ic_face"
                         app:layout_constraintBottom_toTopOf="@id/guideline3"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -177,6 +180,7 @@
                         android:id="@+id/chat_bar_addition"
                         android:layout_width="@dimen/toolbar_icon_bit_large"
                         android:layout_height="@dimen/toolbar_icon_bit_large"
+                        android:contentDescription="@string/more"
                         android:src="@drawable/ic_chat_more"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

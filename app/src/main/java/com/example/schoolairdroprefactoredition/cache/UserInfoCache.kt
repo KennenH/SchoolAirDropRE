@@ -6,7 +6,7 @@ import kotlin.collections.ArrayList
 class UserInfoCache {
 
     companion object {
-        const val USER_INFO = "infoinfoiminfo"
+        const val KEY = "infoinfoiminfo"
     }
 
     private val userList = ArrayList<DomainUserInfo.DataBean>()

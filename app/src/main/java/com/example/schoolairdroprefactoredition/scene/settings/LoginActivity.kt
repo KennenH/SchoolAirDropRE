@@ -25,10 +25,57 @@ import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
+    companion object {
+        const val LOGIN = 1212 // 请求码 网络登录请求
+
+        /**
+         * 尚未登录时打开当前页面
+         */
+        fun startForLogin(context: Context?) {
+            val intent = Intent(context, LoginActivity::class.java)
+            if (context is AppCompatActivity) {
+                context.startActivityForResult(intent, LOGIN)
+                AnimUtil.activityStartAnimUp(context)
+            }
+        }
+
+        /**
+         * 尚未登录且带着想要登录的alipayId进行登录请求
+         * 即切换账号登录
+         *
+         * @param alipayID 要登陆的账号
+         */
+        @JvmStatic
+        fun startForLogin(context: Context, alipayID: String) {
+            val intent = Intent(context, LoginActivity::class.java)
+            intent.putExtra(ConstantUtil.KEY_ALIPAY_FOR_LOGIN, alipayID)
+            if (context is AppCompatActivity) {
+                context.startActivityForResult(intent, LOGIN)
+                AnimUtil.activityStartAnimUp(context)
+            }
+        }
+
+        /**
+         * 已登录时打开当前页面
+         */
+        @JvmStatic
+        fun startAfterLogin(context: Context, userInfo: DomainUserInfo.DataBean?) {
+            val intent = Intent(context, LoginActivity::class.java)
+            intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
+            context.startActivity(intent)
+            if (context is AppCompatActivity) {
+                AnimUtil.activityStartAnimUp(context)
+            }
+        }
+    }
+
     private val viewModel by lazy {
         ViewModelProvider(this@LoginActivity).get(LoginViewModel::class.java)
     }
 
+    /**
+     * 防止正在登录时重复发起登录请求
+     */
     private var isLogging = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,11 +85,12 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
         // 已登录时
         if (info != null) {
             setContentView(R.layout.activity_logged_in)
-            val phone = (info as DomainUserInfo.DataBean).ualipay
 
+            val phone = (info as DomainUserInfo.DataBean).ualipay
 //          todo 发布时取消注释下面这句话
             // final String priPhone = phone.substring(0, 3).concat("****").concat(phone.substring(7));
             val isPri = booleanArrayOf(true)
+
             userName.text = phone
             userName.setOnClickListener {
                 userName.text = if (isPri[0]) phone else phone
@@ -55,8 +103,11 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
             ClickUtils.applyPressedViewAlpha(close, 0.6f)
         } else {
             setContentView(R.layout.activity_login)
+
             viewModel.getLoadState().observe(this, {
-                if (it === LoadState.LOADING) showLoading() else if (it === LoadState.ERROR) {
+                if (it === LoadState.LOADING) {
+                    showLoading()
+                } else if (it === LoadState.ERROR) {
                     isLogging = false
                     dismissLoading { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLogin) }
                 }
@@ -75,10 +126,20 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
         AnimUtil.activityExitAnimDown(this)
     }
 
+    /**
+     * 防止网络意外时重复登录逻辑：
+     *
+     * .网络正常时点击登录，显示loading                 进入登录请求
+     *   [LoginActivity.showLoading]  ---- >  [LoginActivity.loginWithAlipay]  ---- >
+     * . 网络出现异常，按下返回使loading消失    网络恢复，再次按下登录，但正在登录标识符将请求拦截
+     *   [LoginActivity.dismissLoading] ---- >  [LoginActivity.showLoading]
+     *
+     *   此时只会显示loading而不会重复请求，[com.example.schoolairdroprefactoredition.model.CallBackWithRetry]
+     *   会在此时进行3次请求重试，从而完成登录
+     */
     override fun onClick(v: View) {
         when (v.id) {
             R.id.login_with_alipay -> {
-                // 请求公钥与sessionID
                 showLoading()
                 if (NetworkUtils.isConnected()) {
                     if (!isLogging) {
@@ -89,6 +150,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
                     dismissLoading { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_NETWORK, R.string.dialogNetWorkError) }
                 }
             }
+
             R.id.cancel -> {
                 setResult(RESULT_CANCELED)
                 finish()
@@ -151,46 +213,4 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
         login_with_alipay.isEnabled = isChecked
     }
 
-    companion object {
-        const val LOGIN = 1212 // 请求码 网络登录请求
-
-        /**
-         * 尚未登录时
-         */
-        fun startForLogin(context: Context) {
-            val intent = Intent(context, LoginActivity::class.java)
-            if (context is AppCompatActivity) {
-                context.startActivityForResult(intent, LOGIN)
-                AnimUtil.activityStartAnimUp(context)
-            }
-        }
-
-        /**
-         * 尚未登录且带着想要登录的alipayId进行登录请求
-         *
-         * @param alipayID 要登陆的账号
-         */
-        @JvmStatic
-        fun startForLogin(context: Context, alipayID: String) {
-            val intent = Intent(context, LoginActivity::class.java)
-            intent.putExtra(ConstantUtil.KEY_ALIPAY_FOR_LOGIN, alipayID)
-            if (context is AppCompatActivity) {
-                context.startActivityForResult(intent, LOGIN)
-                AnimUtil.activityStartAnimUp(context)
-            }
-        }
-
-        /**
-         * 已登录时
-         */
-        @JvmStatic
-        fun startAfterLogin(context: Context, userInfo: DomainUserInfo.DataBean?) {
-            val intent = Intent(context, LoginActivity::class.java)
-            intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
-            context.startActivity(intent)
-            if (context is AppCompatActivity) {
-                AnimUtil.activityStartAnimUp(context)
-            }
-        }
-    }
 }

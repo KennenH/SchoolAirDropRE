@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
+import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
@@ -38,15 +38,13 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         SSBAdapter.OnSSBItemActionListener {
 
     public static final int SELLING_POS = 0;
-    public static final int SOLD_POS = 1;
-    public static final int BOUGHT_POS = 2;
 
     protected SSBViewModel viewModel;
 
     protected SSBAdapter mAdapter;
 
     protected com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding;
-    protected List<DomainGoodsInfo.DataBean> mList;
+    protected List<HomeGoodsListInfo.DataBean> mList;
 
     protected OnSSBDataLenChangedListener mOnSSBDataLenChangedListener;
 
@@ -68,8 +66,9 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         binding.ssbRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                if (getActivity() instanceof SSBActivity)
+                if (getActivity() instanceof SSBActivity) {
                     ((SSBActivity) getActivity()).hideSearchBar();
+                }
             }
         });
         init(binding);
@@ -109,7 +108,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     /**
      * 子fragment在获取网络数据之后调用
      */
-    protected void loadData(DomainGoodsInfo data) {
+    protected void loadData(HomeGoodsListInfo data) {
         mList = data.getData();
         if (mList.size() == 0)
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
@@ -147,8 +146,9 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
      * 重新统计页面数据总数
      */
     protected void dataLenOnChange(int page) {
-        if (mOnSSBDataLenChangedListener != null && mList != null)
+        if (mOnSSBDataLenChangedListener != null && mList != null) {
             mOnSSBDataLenChangedListener.onSSBDataLenChanged(mList.size(), page);
+        }
     }
 
     /**
@@ -179,20 +179,21 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     /**
      * item上右下角的三个点按钮的操作
      * 在售列表中为 {修改物品信息} 和 {下架物品}
-     * 已售和已购列表中的按钮动作待定
      */
-    public abstract void onItemAction(View view, DomainGoodsInfo.DataBean bean);
+    protected void onItemAction(View view, HomeGoodsListInfo.DataBean bean) {
+    }
 
     @Override
-    public void onItemActionButtonClick(View view, DomainGoodsInfo.DataBean bean) {
+    public void onItemActionButtonClick(View view, HomeGoodsListInfo.DataBean bean) {
         onItemAction(view, bean);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if (mAdapter != null)
+        if (mAdapter != null) {
             mAdapter.setOnSSBItemActionListener(null);
+        }
         mOnSSBDataLenChangedListener = null;
     }
 }

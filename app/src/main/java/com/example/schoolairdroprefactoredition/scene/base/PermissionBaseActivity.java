@@ -112,7 +112,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
 
     /**
      * 检查是否已经同意服务条款和隐私政策 仅用于{@link com.example.schoolairdroprefactoredition.scene.main.MainActivity}
-     * 若已同意则在{@link PermissionBaseActivity#agreeToTermsOfService()}中启动主页面的渲染
+     * 若已同意则在{@link PermissionBaseActivity#initAppMainAfterAgreeToTermsOfService()}中启动主页面的渲染
      * 否则退出App
      */
     public void checkIfAgreeToTermsOfServiceAndPrivacyPolicy(Context context) {
@@ -150,7 +150,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                     })
                     .show();
         } else {
-            agreeToTermsOfService();
+            initAppMainAfterAgreeToTermsOfService();
         }
     }
 
@@ -220,7 +220,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                     .edit()
                     .putBoolean(ConstantUtil.START_UP_IS_TERMS_AGREED, false)
                     .apply();
-            agreeToTermsOfService();
+            initAppMainAfterAgreeToTermsOfService();
         } else {
             LoadingPopupView loading = MyUtil.loading(this);
             loading.show();
@@ -233,7 +233,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                             .apply();
 
                     loading.dismissWith(dialog::dismiss);
-                    agreeToTermsOfService();
+                    initAppMainAfterAgreeToTermsOfService();
                 }
 
                 @Override
@@ -247,8 +247,9 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
 
     /**
      * 服务条款和隐私政策同意成功
+     * 开始处理
      */
-    protected void agreeToTermsOfService() {
+    protected void initAppMainAfterAgreeToTermsOfService() {
     }
 
     /**

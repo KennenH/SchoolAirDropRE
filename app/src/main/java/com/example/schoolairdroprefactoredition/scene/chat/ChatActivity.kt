@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.LogUtils
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
@@ -35,6 +36,7 @@ import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.android.synthetic.main.component_panel_addition.*
 import kotlinx.android.synthetic.main.component_panel_emotion.*
+import kotlinx.android.synthetic.main.fragment_messages.*
 
 class ChatActivity : ImmersionStatusBarActivity(), OnRefreshListener {
 
@@ -52,7 +54,10 @@ class ChatActivity : ImmersionStatusBarActivity(), OnRefreshListener {
         PanelSwitchHelper.Builder(this)
                 .addEditTextFocusChangeListener(object : OnEditFocusChangeListener {
                     override fun onFocusChange(view: View?, hasFocus: Boolean) {
-                        if (!hasFocus) KeyboardUtils.hideSoftInput(this@ChatActivity)
+//                        LogUtils.d("focus changed -- > $hasFocus")
+                        if (!hasFocus) {
+                            KeyboardUtils.hideSoftInput(this@ChatActivity)
+                        }
                     }
                 })
                 .addContentScrollMeasurer(object : ContentScrollMeasurer {
@@ -112,7 +117,6 @@ class ChatActivity : ImmersionStatusBarActivity(), OnRefreshListener {
     // 发送按钮是否显示标志
     private var isSendShowing = false
 
-
     private var mUnfilledHeight = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -148,7 +152,7 @@ class ChatActivity : ImmersionStatusBarActivity(), OnRefreshListener {
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
-        // todo 加载10条历史记录
+        // todo 加载15条历史记录
     }
 
 
@@ -172,6 +176,7 @@ class ChatActivity : ImmersionStatusBarActivity(), OnRefreshListener {
                 //nothing
             }
         })
+
         moreOut.setAnimationListener(object : Animation.AnimationListener {
             override fun onAnimationStart(animation: Animation) {
                 chat_bar_addition.isEnabled = false
@@ -192,6 +197,9 @@ class ChatActivity : ImmersionStatusBarActivity(), OnRefreshListener {
      * 初始化监听事件
      */
     private fun initEvents() {
+        // 随意调用一个方法以初始化helper
+        mHelper.resetState()
+
         // 输入框输入监听
         edit_view.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -223,7 +231,8 @@ class ChatActivity : ImmersionStatusBarActivity(), OnRefreshListener {
         recycler_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
             override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 if (newState == RecyclerView.SCROLL_STATE_DRAGGING) { // 消息列表滑动时隐藏键盘和面板
-                    if (mHelper.isKeyboardState()) edit_view.clearFocus() else if (mHelper.isPanelState()) mHelper.resetState()
+                    edit_view.clearFocus()
+                    mHelper.resetState()
                 }
             }
 
@@ -272,6 +281,7 @@ class ChatActivity : ImmersionStatusBarActivity(), OnRefreshListener {
         val morePanelAdapter = MorePanelAdapter()
         morePanelAdapter.setList(PanelMore.getPanelMore())
         more_recycler.adapter = morePanelAdapter
+
         morePanelAdapter.notifyDataSetChanged()
     }
     ////////////////////////////////// 初始化页面 //////////////////////////////////
@@ -304,6 +314,10 @@ class ChatActivity : ImmersionStatusBarActivity(), OnRefreshListener {
      * 将列表滑动至最底下
      */
     private fun scrollToFirst() {
-        mChatLayoutManager.scrollToPosition(0)
+        val firstVisible = mChatLayoutManager.findFirstVisibleItemPosition()
+        if (firstVisible > 20) {
+            recycler_view.scrollToPosition(10)
+        }
+        recycler_view.smoothScrollToPosition(0)
     }
 }

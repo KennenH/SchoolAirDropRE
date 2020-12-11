@@ -2,8 +2,12 @@ package com.example.schoolairdroprefactoredition.scene.main
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Paint
 import android.os.Bundle
 import android.view.MenuItem
+import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.amap.api.location.AMapLocation
@@ -86,13 +90,31 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
 
     /**
-     * 在用户同意使用服务条款及用户协议后将交由
-     * [MainActivity.agreeToTermsOfService]
-     * 来处理页面初始化及启动程序，否则将退出App
+     * 本页面初始化前询问用户是否同意服务协议
+     *
+     * 同意后将页面初始化代码写在
+     * [MainActivity.initAppMainAfterAgreeToTermsOfService]
+     * 不同意则将退出App
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkIfAgreeToTermsOfServiceAndPrivacyPolicy(this@MainActivity)
+    }
+
+
+    /**
+     * 加载[MainActivity]页面内容
+     *
+     * 父类调用本方法的前提时必须先同意
+     * [MainActivity.checkIfAgreeToTermsOfServiceAndPrivacyPolicy]
+     */
+    override fun initAppMainAfterAgreeToTermsOfService() {
+        super.initAppMainAfterAgreeToTermsOfService()
+        notifyThemeChanged()
+        setContentView(R.layout.activity_main)
+        initCache()
+        initListener()
+//        setMainActivitySaturation0()
     }
 
     /**
@@ -175,16 +197,18 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     /**
-     * 当用户同意使用服务条款时才加载首页内容
-     * 进入本方法的前提时必须先同意
-     * [MainActivity.checkIfAgreeToTermsOfServiceAndPrivacyPolicy]
+     * 将本页面颜色饱和度变为0
+     *
+     * 清明等祭祀节日主题
      */
-    override fun agreeToTermsOfService() {
-        super.agreeToTermsOfService()
-        notifyThemeChanged()
-        setContentView(R.layout.activity_main)
-        initCache()
-        initListener()
+    private fun setMainActivitySaturation0() {
+        val colorMatrix = ColorMatrix()
+        val paint = Paint()
+        val contentContainer = window.decorView
+
+        colorMatrix.setSaturation(0f)
+        paint.colorFilter = ColorMatrixColorFilter(colorMatrix)
+        contentContainer.setLayerType(View.LAYER_TYPE_SOFTWARE, paint)
     }
 
     /*

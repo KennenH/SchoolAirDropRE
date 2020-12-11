@@ -1,112 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/root"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    tools:context=".scene.posts.PostsActivity">
-
-    <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <androidx.core.widget.NestedScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/posts_images"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:transitionGroup="true"
-                    android:transitionName="@string/sharedElementPostActivityWrapper"
-                    app:cardElevation="0dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
-
-                    <!--                                        <ImageView-->
-                    <!--                                            android:id="@+id/posts_image_test"-->
-                    <!--                                            android:layout_width="match_parent"-->
-                    <!--                                            android:layout_height="250dp"-->
-                    <!--                                            android:scaleType="centerCrop"-->
-                    <!--                                            android:src="@drawable/pk" />-->
-
-                    <com.example.schoolairdroprefactoredition.ui.components.ImagePager
-                        android:id="@+id/posts_pager"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:overScrollMode="never" />
-                </androidx.cardview.widget.CardView>
-
-                <TextView
-                    android:id="@+id/posts_title"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_padding_bit_larger"
-                    android:layout_marginTop="@dimen/general_padding_bit_larger"
-                    android:layout_marginEnd="@dimen/general_padding_bit_larger"
-                    android:text="校园空投开始校园内测啦,速戳宇宙最全攻略!"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/textSizeLarger"
-                    android:transitionName="@string/sharedElementPostActivityTitle"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/posts_images" />
-
-                <ImageView
-                    android:id="@+id/posts_poster_avatar"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
-                    android:layout_marginTop="@dimen/general_padding_bit_larger"
-                    android:contentDescription="@string/avatar"
-                    android:src="@drawable/avatar"
-                    app:layout_constraintStart_toStartOf="@id/posts_title"
-                    app:layout_constraintTop_toBottomOf="@id/posts_title" />
-
-                <TextView
-                    android:id="@+id/posts_poster_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_padding"
-                    android:text="ikennenx"
-                    android:textColor="@color/primaryText"
-                    android:textSize="@dimen/textSizeNormal"
-                    app:layout_constraintBottom_toBottomOf="@+id/posts_poster_avatar"
-                    app:layout_constraintStart_toEndOf="@id/posts_poster_avatar"
-                    app:layout_constraintTop_toTopOf="@+id/posts_poster_avatar" />
-
-                <TextView
-                    android:id="@+id/posts_post_content"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/general_padding_bit_larger"
-                    android:layout_marginBottom="@dimen/general_padding_bit_larger"
-                    android:lineSpacingExtra="1dp"
-                    android:text="我是正文我是正文我是正文啦啦啦啦啦哈哈哈哈哈哈我是我是正文我是正文我是正文啦啦啦啦啦哈哈哈哈哈哈我是正文我是正文我是正文啦啦啦啦啦哈哈哈哈哈哈正文我是正文我是正文啦啦啦啦啦哈哈哈哈哈哈"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/textSizeNormal"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@id/posts_title"
-                    app:layout_constraintStart_toStartOf="@id/posts_title"
-                    app:layout_constraintTop_toBottomOf="@id/posts_poster_avatar" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </androidx.core.widget.NestedScrollView>
-    </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
+    android:layout_height="match_parent">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
+        app:contentInsetEnd="@dimen/toolbar_center_margin"
         app:layout_constraintTop_toTopOf="parent"
-        app:navigationIcon="@drawable/ic_left" />
-</com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>
+        app:navigationIcon="@drawable/ic_left">
+
+        <TextView
+            android:layout_width="match_parent"
+
+            android:layout_height="match_parent" />
+    </androidx.appcompat.widget.Toolbar>
+</androidx.constraintlayout.widget.ConstraintLayout>

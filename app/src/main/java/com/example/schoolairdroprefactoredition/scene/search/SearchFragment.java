@@ -25,7 +25,7 @@ import com.example.schoolairdroprefactoredition.databinding.FragmentSearchPrelay
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.BaseFooterAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderFooterOnlyRecyclerAdapter;
-import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.adapter.HomeGoodsRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.adapter.SearchSuggestionRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.SearchBar;
@@ -42,7 +42,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
 
     private HeaderFooterOnlyRecyclerAdapter mHistoryAdapter;
     private SearchSuggestionRecyclerAdapter mSuggestionAdapter;
-    private HomeNearbyRecyclerAdapter mResultAdapter;
+    private HomeGoodsRecyclerAdapter mResultAdapter;
 
     private SearchHistoryHeader mHistoryHeader;
 
@@ -103,7 +103,7 @@ public class SearchFragment extends Fragment implements SearchBar.OnSearchAction
     private void init() {
         mHistoryAdapter = new HeaderFooterOnlyRecyclerAdapter();
         mSuggestionAdapter = new SearchSuggestionRecyclerAdapter();
-        mResultAdapter = new HomeNearbyRecyclerAdapter();
+        mResultAdapter = new HomeGoodsRecyclerAdapter();
         mResultAdapter.setOnNoMoreDataListener(this);
         mHistoryHeader = new SearchHistoryHeader(getContext());
         binding.searchHistory.setLayoutManager(new LinearLayoutManager(getContext()));

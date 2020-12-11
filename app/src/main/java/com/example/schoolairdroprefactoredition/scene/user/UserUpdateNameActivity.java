@@ -20,7 +20,7 @@ import androidx.lifecycle.ViewModelProvider;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
-import com.example.schoolairdroprefactoredition.domain.base.DomainBaseUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
@@ -46,7 +46,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
         }
         Intent intent = new Intent(context, UserUpdateNameActivity.class);
         intent.putExtra(ConstantUtil.KEY_TOKEN, token);
-        intent.putExtra(ConstantUtil.KEY_USER_INFO, my);
+        intent.putExtra(ConstantUtil.KEY_USER_BASE_INFO, my);
         if (context instanceof AppCompatActivity) {
             ((AppCompatActivity) context).startActivityForResult(intent, UserActivity.REQUEST_UPDATE);
         }
@@ -87,7 +87,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
             bundle = new Bundle();
 
         token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
-        info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_BASE_INFO);
 
         init();
     }
@@ -118,7 +118,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
             bundle = new Bundle();
 
         token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
-        info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_BASE_INFO);
         if (info != null) name = info.getUname();
         mInput.setText(name);
         mInput.setSelection(name.length());
@@ -129,7 +129,7 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
      */
     private void sendData() {
         info.setUname(mInput.getText().toString().trim());
-        bundle.putSerializable(ConstantUtil.KEY_USER_INFO, info);
+        bundle.putSerializable(ConstantUtil.KEY_USER_BASE_INFO, info);
         Intent intent = new Intent();
         intent.putExtras(bundle);
         setResult(Activity.RESULT_OK, intent);

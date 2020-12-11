@@ -7,7 +7,8 @@ import android.view.View;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsDetailBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo;
+import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
@@ -41,8 +42,8 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
      * 是否隐藏页面最底部为三个按钮的留白
      * 当为自己的物品时，三个按钮隐藏，留白也应该隐藏
      */
-    public void showBottom() {
-        binding.goodsBottom.setVisibility(VISIBLE);
+    public void showBottom(boolean show) {
+        binding.goodsBottom.setVisibility(show ? VISIBLE : GONE);
     }
 
     /**
@@ -56,28 +57,28 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
         binding.goodsSellerInfo.setVisibility(GONE);
     }
 
-    public void setData(DomainGoodsInfo.DataBean data) {
-        if (data != null) {
+    public void setData(HomeGoodsListInfo.DataBean baseInfo, GoodsDetailInfo.DataBean detailInfo) {
+        if (baseInfo != null && detailInfo != null) {
             try {
-                boolean negotiable = data.getGoods_is_quotable() == 1;// 是否可议价
-                boolean secondHand = data.getGoods_is_brandNew() == 0;// 是否二手
+                boolean negotiable = baseInfo.getGoods_is_quotable() == 1;// 是否可议价
+                boolean secondHand = baseInfo.getGoods_is_brandNew() == 0;// 是否二手
                 if (negotiable && secondHand) {
-                    binding.goodsName.setText(getContext().getResources().getString(R.string.itemNS, data.getGoods_name()));
+                    binding.goodsName.setText(getContext().getResources().getString(R.string.itemNS, baseInfo.getGoods_name()));
                 } else if (negotiable) {
-                    binding.goodsName.setText(getContext().getResources().getString(R.string.itemN, data.getGoods_name()));
+                    binding.goodsName.setText(getContext().getResources().getString(R.string.itemN, baseInfo.getGoods_name()));
                 } else if (secondHand) {
-                    binding.goodsName.setText(getContext().getResources().getString(R.string.itemS, data.getGoods_name()));
+                    binding.goodsName.setText(getContext().getResources().getString(R.string.itemS, baseInfo.getGoods_name()));
                 } else {
-                    binding.goodsName.setText(data.getGoods_name());
+                    binding.goodsName.setText(baseInfo.getGoods_name());
                 }
 
-                binding.goodsPrice.setPrice(data.getGoods_price());
-                binding.goodsDescription.setText(data.getGoods_description());
-                binding.goodsPager.setData(MyUtil.getArrayFromString(data.getGoods_img_set()), false);
+                binding.goodsPrice.setPrice(baseInfo.getGoods_price());
+                binding.goodsPager.setData(MyUtil.getArrayFromString(detailInfo.getGoods_img_set()), false);
+                binding.goodsDescription.setText(detailInfo.getGoods_description());
 
-                if (data.getSeller_info() != null) {
-                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + data.getSeller_info().getUser_img_path());
-                    binding.goodsUserName.setText(data.getSeller_info().getUname());
+                if (baseInfo.getSeller_info() != null) {
+                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + detailInfo.getSeller_img());
+                    binding.goodsUserName.setText(baseInfo.getSeller_info());
                 } else {
                     binding.goodsSellerInfo.setVisibility(GONE);
                 }

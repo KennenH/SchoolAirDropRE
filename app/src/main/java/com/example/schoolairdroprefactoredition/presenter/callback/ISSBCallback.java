@@ -1,20 +1,21 @@
 package com.example.schoolairdroprefactoredition.presenter.callback;
 
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPostInfo;
+import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
 
 public interface ISSBCallback extends IBaseCallback {
-    // 在售
-    void onSellingListLoaded(DomainGoodsInfo selling);
-
-    // 已售
-    void onSoldListLoaded(DomainGoodsInfo sold);
-
-    // 已购
-    void onBoughtListLoaded(DomainGoodsInfo bought);
+    // 获取在售
+    void onSellingLoaded(HomeGoodsListInfo selling);
 
     // 下架物品
     void onUnListItemSuccess();
 
     // 操作失败
     void onActionFailed();
+
+    // 获取帖子
+    void onPostLoaded(DomainPostInfo postInfo);
+
+    // 删除帖子
+    void onDeletePostSuccess();
 }

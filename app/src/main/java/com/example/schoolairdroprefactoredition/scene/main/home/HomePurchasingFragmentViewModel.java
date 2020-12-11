@@ -3,7 +3,7 @@ package com.example.schoolairdroprefactoredition.scene.main.home;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeGoodsInfoCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.HomeGoodsInfoImpl;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
@@ -17,7 +17,7 @@ public class HomePurchasingFragmentViewModel extends BaseStateViewModel implemen
 
     private final HomeGoodsInfoImpl mHomeImpl;
 
-    private final MutableLiveData<List<DomainGoodsInfo.DataBean>> mGoodsInfo = new MutableLiveData<>();
+    private final MutableLiveData<List<HomeGoodsListInfo.DataBean>> mGoodsInfo = new MutableLiveData<>();
 
     public HomePurchasingFragmentViewModel() {
         mHomeImpl = HomeGoodsInfoImpl.getInstance();
@@ -25,7 +25,7 @@ public class HomePurchasingFragmentViewModel extends BaseStateViewModel implemen
     }
 
     @Override
-    public void onNearbyGoodsLoaded(List<DomainGoodsInfo.DataBean> goodsData) {
+    public void onNearbyGoodsLoaded(List<HomeGoodsListInfo.DataBean> goodsData) {
         mGoodsInfo.postValue(goodsData);
     }
 
@@ -34,7 +34,7 @@ public class HomePurchasingFragmentViewModel extends BaseStateViewModel implemen
         mOnRequestListener.onError();
     }
 
-    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo(double longitude, double latitude) {
+    public LiveData<List<HomeGoodsListInfo.DataBean>> getGoodsInfo(double longitude, double latitude) {
         nowPage = 0;
         this.longitude = longitude;
         this.latitude = latitude;
@@ -43,7 +43,7 @@ public class HomePurchasingFragmentViewModel extends BaseStateViewModel implemen
         return mGoodsInfo;
     }
 
-    public LiveData<List<DomainGoodsInfo.DataBean>> getGoodsInfo() {
+    public LiveData<List<HomeGoodsListInfo.DataBean>> getGoodsInfo() {
         mHomeImpl.getNearbyGoods(nowPage++, longitude, latitude);
         return mGoodsInfo;
     }

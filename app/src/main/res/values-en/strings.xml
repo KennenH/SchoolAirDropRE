@@ -68,7 +68,7 @@
     <string name="sent">Sent</string>
     <string name="agree">Agree</string>
     <string name="loginTip">Logging in with Alipay will get your account information, check the Service Terms to learn more</string>
-    <string name="loginWithAlipay">Log in with Alipay</string>
+    <string name="loginWithAlipay">[img src=ic_alipay_20/] Log in with Alipay</string>
     <string name="pending">Pending</string>
     <string name="expired">Expired</string>
     <string name="accepted">Accepted</string>
@@ -176,7 +176,7 @@
     <string name="errorUpdatingName">Error updating name</string>
     <string name="nothingThere">Nothing…</string>
     <string name="dialogSuccess">Success</string>
-    <string name="dialogFailed">Failed</string>
+    <string name="dialogFailed">Some Thing Went Wrong</string>
     <string name="errorLoading">Error Loading Data…</string>
     <string name="finalPrice">Final Price</string>
     <string name="goodsIsSecondHand">Item Is Second-hand</string>
@@ -246,7 +246,7 @@
     <string name="termsOfServiceAgreeFailed">Ah oh, the treaty is lost</string>
     <string name="addNewGoodsError">Error adding new item, try to update the version if it fails multiple times</string>
     <string name="plaza">Plaza</string>
-    <string name="doNotPostIllegalContent">Please do not post articles and items that violate school rules and national laws. Please check the contents of the form carefully.</string>
+    <string name="doNotPostIllegalContent">Please do not post articles and items that violate school rules and national laws. Please check the contents of the form carefully</string>
     <string name="phonePermissionContent">This function is required when receiving message notifications. If not allowed, you will not be able to accept important notices.</string>
     <string name="modifyFailedTip">It may be that the server is under maintenance. The form for modifying the item will not be saved. It is recommended to try again later.</string>
     <string name="submitItemLocationFailedTip">The current location result is abnormal, and the item may not be searched by other students on campus. The form has been automatically saved. It is recommended to retry the submission later.</string>
@@ -262,4 +262,10 @@
     <string name="postTitleSaySth">Say Something</string>
     <string name="posts">Posts</string>
     <string name="noSpaceAndLineBreak">Please do not enter spaces and line breaks</string>
+    <string name="selectMostSuitableTagForUPost">Please choose a tag that best summarizes the content of your post.</string>
+    <string name="selectTagTip">The selected tag will make your post organized under the corresponding topic, and the tag will be displayed on the title when the post is published</string>
+    <string name="whyTagSoFew">Why are there so few tags?</string>
+    <string name="emotion">Emotion</string>
+    <string name="anonymous">Anonymous</string>
+    <string name="tag">Topic Tag</string>
 </resources>

@@ -31,6 +31,8 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivitySellingAddNewBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo;
+import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter;
@@ -40,6 +42,7 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.filters.DecimalFilter;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.example.schoolairdroprefactoredition.viewmodel.GoodsViewModel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
 import com.lxj.xpopup.XPopup;
@@ -58,7 +61,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     /**
      * 发布物品或新帖子
      * 添加物品或帖子使用该方法
-     * 修改物品使用{@link AddNewActivity#start(Context, DomainToken, DomainGoodsInfo.DataBean)}
+     * 修改物品使用{@link AddNewActivity#start(Context, DomainToken, HomeGoodsListInfo.DataBean)}
      *
      * @param type 页面类型 one of {@link AddNewType#ADD_ITEM} {@link AddNewType#ADD_POST}
      */
@@ -73,13 +76,13 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
      * 修改物品信息
      * 添加物品或帖子使用{@link AddNewActivity#start(Context, DomainToken, int)}
      *
-     * @param goodsInfo 原物品信息
+     * @param goodsInfo 物品基本信息
      */
-    public static void start(Context context, @Nullable DomainToken token, DomainGoodsInfo.DataBean goodsInfo) {
+    public static void start(Context context, @Nullable DomainToken token, HomeGoodsListInfo.DataBean goodsInfo) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ConstantUtil.KEY_TOKEN, token);
         bundle.putSerializable(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.MODIFY_ITEM);
-        bundle.putSerializable(ConstantUtil.KEY_GOODS_INFO, goodsInfo);
+        bundle.putSerializable(ConstantUtil.KEY_GOODS_BASE_INFO, goodsInfo);
         start(context, bundle);
     }
 
@@ -88,7 +91,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
      * 若不知道这个bundle里需要传什么参数，请按情况使用以下打开方式
      * <p>
      * 新增物品或帖子: {@link AddNewActivity#start(Context, DomainToken, int)}
-     * 修改物品信息: {@link AddNewActivity#start(Context, DomainToken, DomainGoodsInfo.DataBean)}
+     * 修改物品信息: {@link AddNewActivity#start(Context, DomainToken, HomeGoodsListInfo.DataBean)}
      */
     private static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, AddNewActivity.class);
@@ -120,7 +123,8 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     public static final int REQUEST_CODE_COVER = 219;// 请求码 封面选择
     public static final int REQUEST_CODE_PIC_SET = 11;// 请求码 图片集选择
 
-    private AddNewViewModel viewModel;
+    private AddNewViewModel addNewViewModel;
+    private GoodsViewModel goodsViewModel;
 
     private ActivitySellingAddNewBinding binding;
 
@@ -137,6 +141,8 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     private List<LocalMedia> mPicSetSelected = new ArrayList<>();
 
     private DomainToken token;
+    private HomeGoodsListInfo.DataBean goodsBaseInfo;
+    private GoodsDetailInfo goodsDetailInfo;
 
     private boolean isDraftRestored = true;
     private boolean isSubmit = false;
@@ -151,10 +157,13 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
         binding = ActivitySellingAddNewBinding.inflate(LayoutInflater.from(this));
         setContentView(binding.getRoot());
         setSupportActionBar(findViewById(R.id.toolbar));
-        viewModel = new ViewModelProvider(this).get(AddNewViewModel.class);
-        viewModel.setOnRequestListener(this);
+
+        addNewViewModel = new ViewModelProvider(this).get(AddNewViewModel.class);
+        goodsViewModel = new ViewModelProvider(this).get(GoodsViewModel.class);
+        addNewViewModel.setOnRequestListener(this);
 
         token = (DomainToken) getIntent().getSerializableExtra(ConstantUtil.KEY_TOKEN);
+        goodsBaseInfo = (HomeGoodsListInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_BASE_INFO);
         addNewType = getIntent().getIntExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.ADD_ITEM);
 
         binding.savedDraft.setVisibility(View.GONE);
@@ -235,6 +244,9 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
         switch (addNewType) {
             case AddNewType.ADD_ITEM:
                 binding.draftTipToggle.setText(R.string.addNewSelling);
+                binding.tagTitle.setVisibility(View.GONE);
+                binding.optionTagWrapper.setVisibility(View.GONE);
+                binding.optionAnonymous.setVisibility(View.GONE);
                 restoreItemDraft();
                 break;
             case AddNewType.ADD_POST:
@@ -242,13 +254,15 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                 binding.optionPrice.setVisibility(View.GONE);
                 binding.optionNegotiable.setVisibility(View.GONE);
                 binding.optionSecondHand.setVisibility(View.GONE);
-
                 binding.draftTipToggle.setText(R.string.addNewPost);
                 binding.detailTitle.setText(R.string.postTitleSaySth);
                 restorePostDraft();
                 break;
             case AddNewType.MODIFY_ITEM:
                 binding.draftTipToggle.setText(R.string.modifyInfo);
+                binding.tagTitle.setVisibility(View.GONE);
+                binding.optionTagWrapper.setVisibility(View.GONE);
+                binding.optionAnonymous.setVisibility(View.GONE);
                 initGoodsInfo();
                 break;
         }
@@ -370,7 +384,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                                     mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
                                 }
 
-                                viewModel.submitItem(token.getAccess_token(), mCoverPath, mPicSetPaths,
+                                addNewViewModel.submitItem(token.getAccess_token(), mCoverPath, mPicSetPaths,
                                         binding.optionTitle.getText().toString(), binding.optionDescription.getText().toString(),
                                         mAmapLocation.getLongitude(), mAmapLocation.getLatitude(),
                                         !binding.optionSecondHand.getIsChecked(), binding.optionNegotiable.getIsChecked(),
@@ -417,7 +431,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                                 mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
                             }
 
-                            viewModel.submitPost(token.getAccess_token(), mCoverPath, mHWRatio, mPicSetPaths,
+                            addNewViewModel.submitPost(token.getAccess_token(), mCoverPath, mHWRatio, mPicSetPaths,
                                     binding.optionTitle.getText().toString(), binding.optionDescription.getText().toString(),
                                     mAmapLocation.getLongitude(), mAmapLocation.getLatitude())
                                     .observe(this, result -> {
@@ -505,7 +519,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                     || !binding.priceInput.getText().toString().equals("")
                     || binding.optionNegotiable.getIsChecked()
                     || binding.optionSecondHand.getIsChecked())) {
-                viewModel.saveItemDraft(mCoverPath,
+                addNewViewModel.saveItemDraft(mCoverPath,
                         mPicSetSelected,
                         binding.optionTitle.getText().toString(),
                         binding.optionDescription.getText().toString(),
@@ -513,20 +527,22 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                         binding.optionNegotiable.getIsChecked(),
                         binding.optionSecondHand.getIsChecked());
             } else {
-                viewModel.deleteItemDraft();
+                addNewViewModel.deleteItemDraft();
             }
         } else if (addNewType == AddNewType.ADD_POST) { // 保存帖子表单
             if (!isSubmit && (!mCoverPath.trim().equals("")
                     || mPicSetSelected.size() > 0
                     || !binding.optionTitle.getText().toString().trim().equals("")
                     || !binding.optionDescription.getText().toString().trim().equals(""))) {
-                viewModel.savePostDraft(mCoverPath,
+                addNewViewModel.savePostDraft(mCoverPath,
                         mHWRatio,
                         mPicSetSelected,
+                        binding.optionTag.getText().toString(),
+                        binding.optionAnonymous.getIsChecked(),
                         binding.optionTitle.getText().toString(),
                         binding.optionDescription.getText().toString());
             } else {
-                viewModel.deletePostDraft();
+                addNewViewModel.deletePostDraft();
             }
         }
     }
@@ -536,7 +552,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
      * 在用户清除草稿之后再次恢复
      */
     private void restoreItemDraft() {
-        viewModel.restoreItemDraft().observe(this, draftCache -> {
+        addNewViewModel.restoreItemDraft().observe(this, draftCache -> {
             if (draftCache != null) {
                 hasDraft = true;
                 binding.savedDraft.setVisibility(View.VISIBLE);// 显示草稿恢复提示
@@ -574,7 +590,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
      * 清除后在关闭之前仍可恢复
      */
     private void restorePostDraft() {
-        viewModel.restorePostDraft().observe(this, draftCache -> {
+        addNewViewModel.restorePostDraft().observe(this, draftCache -> {
             if (draftCache != null) {
                 hasDraft = true;
                 binding.savedDraft.setVisibility(View.VISIBLE);// 显示草稿恢复提示
@@ -598,10 +614,18 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     }
 
     /**
-     * 用给进来的物品信息填充页面
+     * 用给进来的物品id获取物品信息
+     * 在使用物品信息填充页面
      */
     private void initGoodsInfo() {
+        if (goodsBaseInfo == null) return;
+
+        goodsViewModel.getGoodsDetailByID(goodsBaseInfo.getGoods_id()).observe(this, detail -> {
+            goodsDetailInfo = detail;
+        });
+
         DomainGoodsInfo.DataBean goodsInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
+
         try {
             mCoverPath = ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + goodsInfo.getGoods_img_cover();
             binding.cover.setImageRemotePath(mCoverPath);

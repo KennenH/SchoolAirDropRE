@@ -17,7 +17,6 @@ import com.luck.picture.lib.entity.LocalMedia;
 import java.util.List;
 
 public class AddNewViewModel extends AndroidViewModel implements ISellingAddNewCallback {
-
     private final MutableLiveData<DomainResult> mSubmitItemResult = new MutableLiveData<>();
     private final MutableLiveData<DomainResult> mSubmitPostResult = new MutableLiveData<>();
 
@@ -84,8 +83,8 @@ public class AddNewViewModel extends AndroidViewModel implements ISellingAddNewC
     /**
      * 保存用户帖子草稿
      */
-    public void savePostDraft(String cover, float hwRatio, List<LocalMedia> picSet, String title, String content) {
-        sellingAddNewImpl.savePostDraft(cover, hwRatio, picSet, title, content);
+    public void savePostDraft(String cover, float hwRatio, List<LocalMedia> picSet, String tag, boolean anonymous, String title, String content) {
+        sellingAddNewImpl.savePostDraft(cover, hwRatio, picSet, tag, anonymous, title, content);
     }
 
     /**

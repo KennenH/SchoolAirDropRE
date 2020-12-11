@@ -12,6 +12,13 @@ import com.lxj.xpopup.core.BasePopupView;
 import com.lxj.xpopup.interfaces.OnConfirmListener;
 
 public class DialogUtil {
+
+    /**
+     * 是否正在显示标识
+     * 若是则丢弃下一个到来的同级别请求
+     */
+    private static boolean isShowingFlag = false;
+
     /**
      * 显示确认对话框
      *
@@ -38,6 +45,7 @@ public class DialogUtil {
      * @param type one of {@link DIALOG_TYPE}
      */
     public static void showCenterDialog(Context context, @DIALOG_TYPE int type, @StringRes int tip) {
+        isShowingFlag = true;
         switch (type) {
             case DialogUtil.DIALOG_TYPE.SUCCESS:
                 showSuccess(context, tip);
@@ -81,7 +89,7 @@ public class DialogUtil {
                     protected int getPopupLayoutId() {
                         return R.layout.dialog_center_success;
                     }
-                }).show().delayDismiss(1000);
+                }).show().delayDismissWith(1000, () -> isShowingFlag = false);
     }
 
     /**
@@ -101,7 +109,7 @@ public class DialogUtil {
                     protected int getPopupLayoutId() {
                         return R.layout.dialog_center_failed;
                     }
-                }).show().delayDismiss(1000);
+                }).show().delayDismissWith(1000, () -> isShowingFlag = false);
     }
 
     /**
@@ -121,7 +129,7 @@ public class DialogUtil {
                     protected int getPopupLayoutId() {
                         return R.layout.dialog_center_error_network;
                     }
-                }).show().delayDismiss(1000);
+                }).show().delayDismissWith(1000, () -> isShowingFlag = false);
     }
 
     /**
@@ -141,6 +149,6 @@ public class DialogUtil {
                     protected int getPopupLayoutId() {
                         return R.layout.dialog_center_attention;
                     }
-                }).show().delayDismiss(1000);
+                }).show().delayDismissWith(1000, () -> isShowingFlag = false);
     }
 }

@@ -85,7 +85,7 @@
         android:id="@+id/server_tip"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimaryRed"
+        android:background="@color/orangeLight"
         app:layout_constraintTop_toBottomOf="@id/saved_draft">
 
         <TextView
@@ -122,7 +122,7 @@
         android:id="@+id/illegal_warning"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/orangeLight"
+        android:background="@color/colorPrimaryRed"
         app:layout_constraintTop_toBottomOf="@id/server_tip">
 
         <TextView
@@ -230,10 +230,41 @@
                     app:layout_constraintTop_toBottomOf="@id/pic_set_title" />
 
                 <TextView
-                    android:id="@+id/title_title"
+                    android:id="@+id/tag_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/general_padding_bit_larger"
+                    android:drawablePadding="@dimen/general_padding_small"
+                    android:ellipsize="end"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true"
+                    android:text="@string/tag"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/textSizeNormal"
+                    app:drawableEndCompat="@drawable/ic_importance"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/pic_set" />
+
+                <LinearLayout
+                    android:id="@+id/option_tag_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/general_padding_small"
+                    android:padding="@dimen/general_padding_large"
+                    app:layout_constraintTop_toBottomOf="@id/tag_title">
+
+                    <com.example.schoolairdroprefactoredition.ui.components.OptionItem
+                        android:id="@+id/option_tag"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/title_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/general_padding_bit_larger"
+                    android:layout_marginTop="@dimen/general_padding_small"
                     android:drawablePadding="@dimen/general_padding_small"
                     android:ellipsize="end"
                     android:focusable="true"
@@ -243,7 +274,7 @@
                     android:textSize="@dimen/textSizeNormal"
                     app:drawableEndCompat="@drawable/ic_importance"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/pic_set" />
+                    app:layout_constraintTop_toBottomOf="@id/option_tag_wrapper" />
 
                 <LinearLayout
                     android:id="@+id/option_title_wrapper"
@@ -257,7 +288,6 @@
                         android:id="@+id/option_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content" />
-
                 </LinearLayout>
 
                 <TextView
@@ -376,6 +406,18 @@
                     app:SO_title="@string/second_hand"
                     app:layout_constraintTop_toBottomOf="@+id/option_negotiable" />
 
+                <com.example.schoolairdroprefactoredition.ui.components.OptionItem
+                    android:id="@+id/option_anonymous"
+                    android:layout_width="match_parent"
+                    app:SO_isSwitch="true"
+                    app:SO_title="@string/anonymous"
+                    app:SO_checked="true"
+                    android:layout_marginStart="@dimen/general_padding_large"
+                    android:layout_marginTop="@dimen/general_padding_small"
+                    android:layout_marginEnd="@dimen/general_padding_large"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/option_secondHand" />
+
                 <TextView
                     android:id="@+id/detail_title"
                     android:layout_width="wrap_content"
@@ -388,7 +430,7 @@
                     android:textSize="@dimen/textSizeNormal"
                     app:drawableEndCompat="@drawable/ic_importance"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/option_secondHand" />
+                    app:layout_constraintTop_toBottomOf="@+id/option_anonymous" />
 
                 <LinearLayout
                     android:id="@+id/option_description_wrapper"

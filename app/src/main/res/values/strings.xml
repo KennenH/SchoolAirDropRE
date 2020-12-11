@@ -114,7 +114,7 @@
     <string name="sent">我发出的</string>
     <string name="agree">同意</string>
     <string name="loginTip">使用支付宝登陆将获取你的账号信息,查看服务条款以了解更多</string>
-    <string name="loginWithAlipay">支付宝登录</string>
+    <string name="loginWithAlipay">[img src=ic_alipay_20/] 支付宝登录</string>
     <string name="pending">待处理</string>
     <string name="expired">已过期</string>
     <string name="accepted">已接受</string>
@@ -283,7 +283,7 @@
     <string name="termsOfServiceAgreeFailed">啊哦，条约走丢了</string>
     <string name="addNewGoodsError">发送请求时出错，若多次失败请更新版本</string>
     <string name="plaza">广场</string>
-    <string name="doNotPostIllegalContent">请不要发布违反学校规章、国家法律的语言和物品，请仔细检查表单各项内容。</string>
+    <string name="doNotPostIllegalContent">请不要发布违反学校规章、国家法律的语言和物品，请仔细检查表单各项内容</string>
     <string name="addNewPost">发布帖子</string>
     <string name="submitPostLocationFailedTip">当前定位结果异常，帖子很可能无法被其他同学看到。表单已自动保存，建议稍后重试提交。</string>
     <string name="newPostSuccessTip">帖子已发表至广场。</string>
@@ -293,5 +293,11 @@
     <string name="postTitleSaySth">说点儿啥吧</string>
     <string name="posts">帖子</string>
     <string name="noSpaceAndLineBreak">请不要输入空格及换行符</string>
+    <string name="selectMostSuitableTagForUPost">请选择一个最能概括你帖子内容的标签。</string>
+    <string name="selectTagTip">选择的标签将使你的帖子被整理在对应话题下，帖子发布时在标题上会显示标签</string>
+    <string name="whyTagSoFew">为什么标签如此有限？</string>
+    <string name="emotion">表情</string>
+    <string name="anonymous">匿名</string>
+    <string name="tag">话题标签</string>
 
 </resources>

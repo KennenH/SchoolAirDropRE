@@ -17,8 +17,8 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
-import com.example.schoolairdroprefactoredition.scene.posts.PostsActivity;
-import com.example.schoolairdroprefactoredition.ui.adapter.HomeNewsRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.scene.post.PostActivity;
+import com.example.schoolairdroprefactoredition.ui.adapter.HomePostsRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
@@ -28,11 +28,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class HomePlaygroundFragment extends BaseChildFragment implements
         BaseStateViewModel.OnRequestListener,
-        HomeNewsRecyclerAdapter.OnNoMoreDataListener, HomeNewsRecyclerAdapter.OnHomePostActionClickListener {
+        HomePostsRecyclerAdapter.OnNoMoreDataListener, HomePostsRecyclerAdapter.OnHomePostActionClickListener {
 
     private HomePlaygroundFragmentViewModel homeContentFragmentViewModel;
 
-    private HomeNewsRecyclerAdapter mHomeNewsRecyclerAdapter;
+    private HomePostsRecyclerAdapter mHomePostsRecyclerAdapter;
 
     private EndlessRecyclerView mHomeRecycler;
 
@@ -57,10 +57,10 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
         binding.homeRecycler.setLayoutManager(mManager);
         binding.homeRecycler.addItemDecoration(new MarginItemDecoration(SizeUtils.dp2px(1f), true));
 
-        mHomeNewsRecyclerAdapter = new HomeNewsRecyclerAdapter();
-        mHomeNewsRecyclerAdapter.setOnHomePostItemClickListener(this);
-        mHomeNewsRecyclerAdapter.setOnNoMoreDataListener(this);
-        binding.homeRecycler.setAdapter(mHomeNewsRecyclerAdapter);
+        mHomePostsRecyclerAdapter = new HomePostsRecyclerAdapter();
+        mHomePostsRecyclerAdapter.setOnHomePostItemClickListener(this);
+        mHomePostsRecyclerAdapter.setOnNoMoreDataListener(this);
+        binding.homeRecycler.setAdapter(mHomePostsRecyclerAdapter);
     }
 
     /**
@@ -83,7 +83,7 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
             if (data.size() < 1) {
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME_POST);
             } else {
-                mHomeNewsRecyclerAdapter.setList(data);
+                mHomePostsRecyclerAdapter.setList(data);
                 showContentContainer();
             }
         });
@@ -96,7 +96,7 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
             if (data.size() < 1) {
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME_POST);
             } else {
-                mHomeNewsRecyclerAdapter.setList(data);
+                mHomePostsRecyclerAdapter.setList(data);
                 showContentContainer();
             }
         });
@@ -129,7 +129,7 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
     @Override
     public void onHomePostItemClicked(@NotNull CardView pager, @NotNull TextView title) {
         try {
-            Intent intent = new Intent(getContext(), PostsActivity.class);
+            Intent intent = new Intent(getContext(), PostActivity.class);
             Pair<View, String> pair1 = Pair.create(pager, getString(R.string.sharedElementPostActivityWrapper));
             Pair<View, String> pair2 = Pair.create(title, getString(R.string.sharedElementPostActivityTitle));
 //            Pair<View, String> pair3 = Pair.create(avatar, getString(R.string.sharedElementPostActivityAvatar));

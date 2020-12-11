@@ -131,7 +131,7 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
 
     @Override
     public void saveItemDraft(String cover, List<LocalMedia> picSet, String title, String description, String price, boolean isQuotable, boolean isSecondHand) {
-        NewItemDraftCache draft = mJsonCacheUtil.getValue(NewItemDraftCache.NEW_ITEM_DRAFT, NewItemDraftCache.class);
+        NewItemDraftCache draft = mJsonCacheUtil.getValue(NewItemDraftCache.KEY, NewItemDraftCache.class);
         if (draft == null) draft = new NewItemDraftCache();
         draft.setCover(cover);
         draft.setPicSet(picSet);
@@ -140,41 +140,43 @@ public class SellingAddNewImpl implements ISellingAddNewPresenter {
         draft.setPrice(price);
         draft.setNegotiable(isQuotable);
         draft.setSecondHand(isSecondHand);
-        mJsonCacheUtil.saveCache(NewItemDraftCache.NEW_ITEM_DRAFT, draft);
+        mJsonCacheUtil.saveCache(NewItemDraftCache.KEY, draft);
     }
 
     @Override
-    public void savePostDraft(String cover, float hwRatio, List<LocalMedia> picSet, String title, String content) {
-        NewPostDraftCache draft = mJsonCacheUtil.getValue(NewPostDraftCache.NEW_POST_DRAFT, NewPostDraftCache.class);
+    public void savePostDraft(String cover, float hwRatio, List<LocalMedia> picSet, String tag, boolean anonymous, String title, String content) {
+        NewPostDraftCache draft = mJsonCacheUtil.getValue(NewPostDraftCache.KEY, NewPostDraftCache.class);
         if (draft == null) draft = new NewPostDraftCache();
         draft.setCover(cover);
         draft.setHwRatio(hwRatio);
         draft.setPicSet(picSet);
+        draft.setTag(tag);
+        draft.setAnonymous(anonymous);
         draft.setTitle(title);
         draft.setContent(content);
-        mJsonCacheUtil.saveCache(NewPostDraftCache.NEW_POST_DRAFT, draft);
+        mJsonCacheUtil.saveCache(NewPostDraftCache.KEY, draft);
     }
 
     @Override
     public void deleteItemDraft() {
-        mJsonCacheUtil.saveCache(NewItemDraftCache.NEW_ITEM_DRAFT, null);
+        mJsonCacheUtil.saveCache(NewItemDraftCache.KEY, null);
     }
 
     @Override
     public void deletePostDraft() {
-        mJsonCacheUtil.saveCache(NewPostDraftCache.NEW_POST_DRAFT, null);
+        mJsonCacheUtil.saveCache(NewPostDraftCache.KEY, null);
     }
 
 
     @Override
     public void restoreItemDraft() {
-        NewItemDraftCache draft = mJsonCacheUtil.getValue(NewItemDraftCache.NEW_ITEM_DRAFT, NewItemDraftCache.class);
+        NewItemDraftCache draft = mJsonCacheUtil.getValue(NewItemDraftCache.KEY, NewItemDraftCache.class);
         mCallback.onItemDraftRestored(draft);
     }
 
     @Override
     public void restorePostDraft() {
-        NewPostDraftCache draft = mJsonCacheUtil.getValue(NewPostDraftCache.NEW_POST_DRAFT, NewPostDraftCache.class);
+        NewPostDraftCache draft = mJsonCacheUtil.getValue(NewPostDraftCache.KEY, NewPostDraftCache.class);
         mCallback.onPostDraftRestored(draft);
     }
 

@@ -1,9 +1,9 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.model.api.Api;
+import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
 import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.model.RetrofitManager;
+import com.example.schoolairdroprefactoredition.model.api.Api;
 import com.example.schoolairdroprefactoredition.presenter.IHomeGoodsInfoPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IHomeGoodsInfoCallback;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -34,12 +34,12 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
     public void getNearbyGoods(int page, double longitude, double latitude) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainGoodsInfo> task = api.getGoodsInfo(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page, 120.36055, 30.31747);
-        task.enqueue(new CallBackWithRetry<DomainGoodsInfo>(task) {
+        Call<HomeGoodsListInfo> task = api.getGoodsInfo(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page, 120.36055, 30.31747);
+        task.enqueue(new CallBackWithRetry<HomeGoodsListInfo>(task) {
             @Override
-            public void onResponse(Call<DomainGoodsInfo> call, Response<DomainGoodsInfo> response) {
+            public void onResponse(Call<HomeGoodsListInfo> call, Response<HomeGoodsListInfo> response) {
                 int code = response.code();
-                DomainGoodsInfo info = response.body();
+                HomeGoodsListInfo info = response.body();
 
 //                try {
 //                    LogUtils.d(info.string());

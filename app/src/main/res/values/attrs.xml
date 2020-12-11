@@ -24,6 +24,7 @@
     </declare-styleable>
 
     <declare-styleable name="SellingOption">
+        <attr name="SO_checked" format="boolean" />
         <attr name="SO_title" format="string" />
         <attr name="SO_description" format="string" />
         <attr name="SO_isSwitch" format="boolean" />

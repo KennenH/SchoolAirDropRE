@@ -20,7 +20,9 @@ public class OptionItem extends ConstraintLayoutAuto {
     private final SwitchCompat mSwitch;
 
     private boolean isSwitch = false;
+    private boolean isCheck = false;
     private boolean isShowArrow = false;
+
     private String title = "";
     private String description = "";
 
@@ -49,6 +51,7 @@ public class OptionItem extends ConstraintLayoutAuto {
         TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SellingOption);
         if (attrs == null) return;
 
+        isCheck = ta.getBoolean(R.styleable.SellingOption_SO_checked, isCheck);
         isSwitch = ta.getBoolean(R.styleable.SellingOption_SO_isSwitch, isSwitch);
         isShowArrow = ta.getBoolean(R.styleable.SellingOption_SO_clickable, isShowArrow);
         title = ta.getString(R.styleable.SellingOption_SO_title);
@@ -59,6 +62,7 @@ public class OptionItem extends ConstraintLayoutAuto {
 
     private void init() {
         if (isSwitch) {
+            mSwitch.setChecked(isCheck);
             mSwitch.setVisibility(VISIBLE);
             mDescription.setVisibility(GONE);
             mArrow.setVisibility(INVISIBLE);

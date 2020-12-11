@@ -10,7 +10,7 @@ import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentB
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.ui.adapter.BaseFooterAdapter;
-import com.example.schoolairdroprefactoredition.ui.adapter.HomeNearbyRecyclerAdapter;
+import com.example.schoolairdroprefactoredition.ui.adapter.HomeGoodsRecyclerAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.scwang.smart.refresh.layout.SmartRefreshLayout;
@@ -22,10 +22,9 @@ public class HomePurchasingFragment extends BaseChildFragment
 
     private EndlessRecyclerView mEndlessRecyclerView;
 
-    private HomeNearbyRecyclerAdapter mHomeNearbyRecyclerAdapter;
+    private HomeGoodsRecyclerAdapter mHomeGoodsRecyclerAdapter;
 
     private LinearLayoutManager mManager;
-
 
     public static HomePurchasingFragment newInstance() {
         return new HomePurchasingFragment();
@@ -44,9 +43,9 @@ public class HomePurchasingFragment extends BaseChildFragment
         mEndlessRecyclerView.setLayoutManager(mManager);
         mEndlessRecyclerView.setOnLoadMoreListener(this);
 
-        mHomeNearbyRecyclerAdapter = new HomeNearbyRecyclerAdapter();
-        mHomeNearbyRecyclerAdapter.setOnNoMoreDataListener(this);
-        mEndlessRecyclerView.setAdapter(mHomeNearbyRecyclerAdapter);
+        mHomeGoodsRecyclerAdapter = new HomeGoodsRecyclerAdapter();
+        mHomeGoodsRecyclerAdapter.setOnNoMoreDataListener(this);
+        mEndlessRecyclerView.setAdapter(mHomeGoodsRecyclerAdapter);
     }
 
     /**
@@ -83,7 +82,7 @@ public class HomePurchasingFragment extends BaseChildFragment
             if (data.size() == 0)
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME_GOODS);
             else {
-                mHomeNearbyRecyclerAdapter.setList(data);
+                mHomeGoodsRecyclerAdapter.setList(data);
                 showContentContainer();
             }
         });
@@ -96,7 +95,7 @@ public class HomePurchasingFragment extends BaseChildFragment
             if (data.size() == 0) {
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME_GOODS);
             } else {
-                mHomeNearbyRecyclerAdapter.setList(data);
+                mHomeGoodsRecyclerAdapter.setList(data);
                 showContentContainer();
             }
         });

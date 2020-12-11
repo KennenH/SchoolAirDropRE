@@ -1,16 +1,13 @@
 package com.example.schoolairdroprefactoredition.model.api;
 
-import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult;
+import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
-import com.example.schoolairdroprefactoredition.domain.DomainOnGoing;
-import com.example.schoolairdroprefactoredition.domain.DomainQuote;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
-import com.example.schoolairdroprefactoredition.domain.DomainSearchItems;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
-import com.example.schoolairdroprefactoredition.model.databean.TestGoodsItemBean;
-import com.example.schoolairdroprefactoredition.model.databean.TestNewsItemBean;
+import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
 
 import java.util.List;
 
@@ -18,7 +15,6 @@ import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
-import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
@@ -34,42 +30,35 @@ public interface Api {
      */
     @FormUrlEncoded
     @POST("goods/getNearByGoods")
-    Call<DomainGoodsInfo> getGoodsInfo(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("page") int page, @Field("longitude") Double longitude, @Field("latitude") Double latitude);
+    Call<HomeGoodsListInfo> getGoodsInfo(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("page") int page, @Field("longitude") Double longitude, @Field("latitude") Double latitude);
 
     /**
      * 用户id获取用户基本信息
      */
     @FormUrlEncoded
-    @POST("user/getUserBaseInfo")
-    Call<DomainUserInfo> getUserInfoByID(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("uid") String userID);
+    @POST("user/getUserInfoById")
+    Call<DomainBaseUserInfo> getUserInfoByID(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("uid") String userID);
 
     /**
-     * 用户id获取用户在售信息
+     * 使用用户id获取用户在售信息
      */
     @FormUrlEncoded
     @POST("goods/getGoodsOnSaleByClient")
-    Call<DomainGoodsInfo> getUserSellingByID(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("uid") int userID);
+    Call<HomeGoodsListInfo> getUserSellingByID(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("uid") int userID);
 
     /**
-     * 获取本人在售物品列表
+     * 使用token获取本人在售物品列表
      */
     @FormUrlEncoded
     @POST("goods/getGoodsOnSale")
-    Call<DomainGoodsInfo> getMySellingGoods(@Header("Authorization") String token, @Field("page") int page);
+    Call<HomeGoodsListInfo> getMySellingGoods(@Header("Authorization") String token, @Field("page") int page);
 
     /**
-     * 获取本人已售物品列表
+     * 使用GoodID获取物品详细信息
      */
     @FormUrlEncoded
-    @POST("goods/getUserSell")
-    Call<DomainGoodsInfo> getMySoldGoods(@Header("Authorization") String token, @Field("page") int page);
-
-    /**
-     * 获取本人已购物品列表
-     */
-    @FormUrlEncoded
-    @POST("goods/getUserBought")
-    Call<DomainGoodsInfo> getMyBoughtGoods(@Header("Authorization") String token, @Field("page") int page);
+    @POST("goods/getGoodsDetail")
+    Call<DomainGoodsInfo> getGoodsDetailInfoByGoodsID(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("goodsID") int goodsID);
 
     /**
      * 下架物品
@@ -77,13 +66,6 @@ public interface Api {
     @FormUrlEncoded
     @POST("goods/deleteGoods")
     Call<DomainResult> unListItem(@Header("Authorization") String token, @Field("goods_id") String goodsID);
-
-    /**
-     * 收藏物品
-     */
-    @FormUrlEncoded
-    @POST("user/updateFavor")
-    Call<DomainResult> favoriteItem(@Header("Authorization") String token, @Field("goods_id") String goodsID);
 
     /**
      * 取消收藏物品
@@ -104,43 +86,6 @@ public interface Api {
      */
     @POST("user/getUserFavor")
     Call<DomainGoodsInfo> getFavorites(@Header("Authorization") String token);
-
-    /**
-     * 发起一个报价请求
-     *
-     * @param goodsID    物品id
-     * @param quotePrice 报价价格
-     */
-    @FormUrlEncoded
-    @POST("quote/quoteRequest")
-    Call<DomainResult> quoteRequest(@Header("Authorization") String token, @Field("goods_id") String goodsID, @Field("quote_price") String quotePrice);
-
-    /**
-     * 获取我发送的报价
-     */
-    @POST("quote/getQuoteMySend")
-    Call<DomainQuote> getQuoteMySend(@Header("Authorization") String token);
-
-    /**
-     * 获取我接收的报价
-     */
-    @POST("quote/getQuoteMyReceive")
-    Call<DomainQuote> getQuoteMyReceived(@Header("Authorization") String token);
-
-
-    /**
-     * 接受报价
-     */
-    @FormUrlEncoded
-    @POST("quote/acceptQuote")
-    Call<DomainResult> acceptQuote(@Header("Authorization") String token, @Field("quote_id") String quoteID);
-
-    /**
-     * 拒绝报价
-     */
-    @FormUrlEncoded
-    @POST("quote/refuseQuote")
-    Call<DomainResult> refuseQuote(@Header("Authorization") String token, @Field("quote_id") String quoteID);
 
     /**
      * 上传新的物品
@@ -183,12 +128,12 @@ public interface Api {
      */
     @FormUrlEncoded
     @POST("goods/searchGoods")
-    Call<DomainGoodsInfo> searchGoods(@Field("client_id") String clientID,
-                                      @Field("client_secret") String clientSecret,
-                                      @Field("page") int page,
-                                      @Field("longitude") Double longitude,
-                                      @Field("latitude") Double latitude,
-                                      @Field("keyWords") String keyWord);
+    Call<HomeGoodsListInfo> searchGoods(@Field("client_id") String clientID,
+                                        @Field("client_secret") String clientSecret,
+                                        @Field("page") int page,
+                                        @Field("longitude") Double longitude,
+                                        @Field("latitude") Double latitude,
+                                        @Field("keyWords") String keyWord);
 
     /**
      * 上传用户头像
@@ -205,44 +150,10 @@ public interface Api {
     Call<DomainResult> updateUserName(@Header("Authorization") String token, @Field("uname") String name);
 
     /**
-     * 修改用户性别
-     */
-    @FormUrlEncoded
-    @POST("user/updateUserInfo")
-    Call<DomainResult> updateUserSex(@Header("Authorization") String token, @Field("ugender") String gender);
-
-    /**
      * 用access_token换取用户基本信息
      */
     @POST("user/getUserInfo")
     Call<DomainUserInfo> getUserInfo(@Header("Authorization") String token);
-
-    /**
-     * 获取首页最新消息
-     */
-    @GET
-    Call<TestNewsItemBean> getNews();
-
-    /**
-     * 获取历史搜索
-     */
-    Call<DomainSearchItems> getSearchHistory();
-
-    /**
-     * 获取历史搜索的匹配和实时热词的建议
-     */
-    Call<DomainSearchItems> getSearchSuggestion();
-
-    /**
-     * 获取搜索商品结果
-     */
-    Call<TestGoodsItemBean> getSearchResult();
-
-    /**
-     * 获取我发出的正在进行
-     */
-    @POST("event/getMyReceive")
-    Call<DomainOnGoing> getEventMyReceived(@Header("Authorization") String token);
 
     /**
      * 服务器授权
@@ -258,10 +169,4 @@ public interface Api {
             , @Field("client_secret") String clientSecret
             , @Field("alipay_id") String encryptedAlipayID
             , @Field("registration_id") String registrationID);
-
-    /**
-     * 自动调用审核脚本
-     */
-    @POST("inf/server/autoSelect.php")
-    Call<DomainResult> autoSelect();
 }

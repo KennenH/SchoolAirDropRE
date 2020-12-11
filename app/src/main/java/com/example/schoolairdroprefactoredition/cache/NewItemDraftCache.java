@@ -8,7 +8,7 @@ import java.util.List;
  * 上架物品的草稿类
  */
 public class NewItemDraftCache {
-    public static final String NEW_ITEM_DRAFT = "AddNewDraft";
+    public static final String KEY = "AddNewDraft";
 
     private String cover;
     private List<LocalMedia> picSet;

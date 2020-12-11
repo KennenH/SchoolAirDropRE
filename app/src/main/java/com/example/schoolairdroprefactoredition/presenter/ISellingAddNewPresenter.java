@@ -8,6 +8,7 @@ import com.luck.picture.lib.entity.LocalMedia;
 import java.util.List;
 
 public interface ISellingAddNewPresenter extends IBasePresenter<ISellingAddNewCallback> {
+
     /**
      * 提交新的物品
      *
@@ -75,15 +76,19 @@ public interface ISellingAddNewPresenter extends IBasePresenter<ISellingAddNewCa
     /**
      * 保存帖子草稿
      *
-     * @param cover   封面
-     * @param hwRatio 高与宽之比
-     * @param picSet  图片集
-     * @param title   标题
-     * @param content 正文内容
+     * @param cover     封面
+     * @param hwRatio   高与宽之比
+     * @param picSet    图片集
+     * @param tag       话题标签
+     * @param title     标题
+     * @param anonymous 是否匿名
+     * @param content   正文内容
      */
     void savePostDraft(String cover,
                        float hwRatio,
                        List<LocalMedia> picSet,
+                       String tag,
+                       boolean anonymous,
                        String title,
                        String content);
 

@@ -51,12 +51,12 @@ public class ImageUtil {
                 .into(imageView);
     }
 
-    public static void loadRoundImage(ImageView imageView, String uri, @DrawableRes int palceholder) {
+    public static void loadRoundImage(ImageView imageView, String uri, @DrawableRes int placeholder) {
         Glide.with(imageView).load(uri)
                 .circleCrop()
                 .apply(new RequestOptions()
                         .encodeQuality(ConstantUtil.ORIGIN)
-                        .placeholder(palceholder))
+                        .placeholder(placeholder))
                 .into(imageView);
     }
 
