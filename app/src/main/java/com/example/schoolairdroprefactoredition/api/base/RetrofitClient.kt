@@ -1,10 +1,9 @@
-package com.example.schoolairdroprefactoredition.model
+package com.example.schoolairdroprefactoredition.api.base
 
-import com.example.schoolairdroprefactoredition.model.api.GoodsApi
-import com.example.schoolairdroprefactoredition.model.api.PostApi
-import com.example.schoolairdroprefactoredition.model.api.UserApi
+import com.example.schoolairdroprefactoredition.api.GoodsApi
+import com.example.schoolairdroprefactoredition.api.PostApi
+import com.example.schoolairdroprefactoredition.api.UserApi
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

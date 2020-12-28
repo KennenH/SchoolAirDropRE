@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.model
+package com.example.schoolairdroprefactoredition.api.base
 
 import com.blankj.utilcode.util.LogUtils
 import retrofit2.Call

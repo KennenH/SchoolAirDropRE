@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.model.databean;
+package com.example.schoolairdroprefactoredition.pojo.databean;
 
 import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity;
 

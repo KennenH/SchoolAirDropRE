@@ -37,6 +37,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         AMapLocationListener {
 
     companion object {
+        /**
+         * app打开时是否已有子fragment请求过自动登录
+         * 若无则自动登录，防止一次打开多次登录
+         */
         private var autoLogged = false
 
         /**

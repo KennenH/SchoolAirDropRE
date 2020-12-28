@@ -3,8 +3,8 @@ package com.example.schoolairdroprefactoredition.repository
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.model.CallBackWithRetry
-import com.example.schoolairdroprefactoredition.model.RetrofitClient
+import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.RSACoder
 import com.mob.pushsdk.MobPush

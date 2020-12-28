@@ -1,6 +1,4 @@
-package com.example.schoolairdroprefactoredition.model.databean;
-
-import android.net.Uri;
+package com.example.schoolairdroprefactoredition.pojo.databean;
 
 import java.util.List;
 

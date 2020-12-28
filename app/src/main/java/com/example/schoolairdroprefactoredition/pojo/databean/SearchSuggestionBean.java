@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.model.databean;
+package com.example.schoolairdroprefactoredition.pojo.databean;
 
 import android.graphics.drawable.Drawable;
 

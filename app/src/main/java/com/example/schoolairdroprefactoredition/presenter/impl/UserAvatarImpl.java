@@ -4,9 +4,9 @@ import android.content.Context;
 
 import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult;
-import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
-import com.example.schoolairdroprefactoredition.model.RetrofitManager;
-import com.example.schoolairdroprefactoredition.model.api.Api;
+import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry;
+import com.example.schoolairdroprefactoredition.api.base.RetrofitManager;
+import com.example.schoolairdroprefactoredition.api.Api;
 import com.example.schoolairdroprefactoredition.presenter.IUserAvatarPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IUserAvatarCallback;
 import com.example.schoolairdroprefactoredition.utils.FileUtil;

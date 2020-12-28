@@ -1,9 +1,4 @@
-package com.example.schoolairdroprefactoredition.model.databean;
-
-import android.content.Context;
-import android.graphics.drawable.Drawable;
-
-import com.example.schoolairdroprefactoredition.R;
+package com.example.schoolairdroprefactoredition.pojo.databean;
 
 public class TestUserInfoBean {
     // user base info

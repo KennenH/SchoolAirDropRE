@@ -88,6 +88,9 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
 
     private var dialog: BottomSheetDialog? = null
 
+    /**
+     * 是否不是我的物品
+     */
     private var isNotMine = false
 
     private var goodsDetailInfo: GoodsDetailInfo? = null

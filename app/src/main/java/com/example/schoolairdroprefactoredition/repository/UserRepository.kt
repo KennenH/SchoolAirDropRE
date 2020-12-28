@@ -1,11 +1,9 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.domain.DomainBaseUser
 import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.model.CallBackWithRetry
-import com.example.schoolairdroprefactoredition.model.RetrofitClient
+import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import javadz.beanutils.BeanUtils
 import retrofit2.Call

@@ -1,9 +1,9 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
-import com.example.schoolairdroprefactoredition.model.api.Api;
-import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
-import com.example.schoolairdroprefactoredition.model.RetrofitManager;
+import com.example.schoolairdroprefactoredition.api.Api;
+import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry;
+import com.example.schoolairdroprefactoredition.api.base.RetrofitManager;
 import com.example.schoolairdroprefactoredition.presenter.IUserNamePresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.IResultCallback;
 

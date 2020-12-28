@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.model.adapterbean;
+package com.example.schoolairdroprefactoredition.pojo.adapterbean;
 
 import androidx.annotation.DrawableRes;
 

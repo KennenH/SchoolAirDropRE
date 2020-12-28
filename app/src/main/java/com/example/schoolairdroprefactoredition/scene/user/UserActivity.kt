@@ -33,10 +33,21 @@ import kotlinx.android.synthetic.main.activity_user.*
 class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDragEventHeader.OnHeaderOverDragEventListener {
 
     companion object {
+        /**
+         * 背景图初始宽度即为屏幕宽
+         */
         val originBackgroundWidth = ScreenUtils.getAppScreenWidth()
-        const val animOffset = 40 // 拉动这么多距离时将会触发背景图放大效果
 
-        const val REQUEST_UPDATE = 520 // 请求码 修改用户个人信息
+        /**
+         * 拉动这么多距离的时候会使背景
+         */
+        const val animOffset = 40
+
+        /**
+         * 请求码
+         * 请求更新用户信息
+         */
+        const val REQUEST_UPDATE = 520
 
         /**
          * 从'我的'页面中打开个人信息
@@ -79,6 +90,9 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         ViewModelProvider(this).get(UserViewModel::class.java)
     }
 
+    /**
+     * 只有从`我的`页面中进入的个人主页才是可修改的
+     */
     private val isModifiable by lazy {
         intent.getBooleanExtra(ConstantUtil.KEY_INFO_MODIFIABLE, false)
     }
@@ -93,6 +107,9 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         user_background.layoutParams.height
     }
 
+    /**
+     * 判断是否是自己的个人主页
+     */
     private var isMine: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {

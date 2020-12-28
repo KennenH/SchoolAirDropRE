@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.model;
+package com.example.schoolairdroprefactoredition.api.base;
 
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 

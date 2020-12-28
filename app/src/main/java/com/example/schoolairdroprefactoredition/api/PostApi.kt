@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.model.api
+package com.example.schoolairdroprefactoredition.api
 
 import com.example.schoolairdroprefactoredition.domain.DomainPostInfo
 import retrofit2.Call

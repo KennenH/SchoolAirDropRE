@@ -2,9 +2,9 @@ package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import com.example.schoolairdroprefactoredition.cache.SearchHistories;
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
-import com.example.schoolairdroprefactoredition.model.CallBackWithRetry;
-import com.example.schoolairdroprefactoredition.model.RetrofitManager;
-import com.example.schoolairdroprefactoredition.model.api.Api;
+import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry;
+import com.example.schoolairdroprefactoredition.api.base.RetrofitManager;
+import com.example.schoolairdroprefactoredition.api.Api;
 import com.example.schoolairdroprefactoredition.presenter.ISearchPresenter;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISearchCallback;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;

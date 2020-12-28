@@ -134,7 +134,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      * . 网络出现异常，按下返回使loading消失    网络恢复，再次按下登录，但正在登录标识符将请求拦截
      *   [LoginActivity.dismissLoading] ---- >  [LoginActivity.showLoading]
      *
-     *   此时只会显示loading而不会重复请求，[com.example.schoolairdroprefactoredition.model.CallBackWithRetry]
+     *   此时只会显示loading而不会重复请求，[com.example.schoolairdroprefactoredition.pojo.CallBackWithRetry]
      *   会在此时进行3次请求重试，从而完成登录
      */
     override fun onClick(v: View) {
