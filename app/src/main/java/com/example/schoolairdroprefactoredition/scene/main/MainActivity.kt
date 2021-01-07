@@ -14,6 +14,7 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
@@ -193,7 +194,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
         home_add_fab.setOnClickListener {
             val token: DomainToken? = intent.extras?.getSerializable(ConstantUtil.KEY_TOKEN) as DomainToken?
-            AddNewActivity.start(this, token, AddNewActivity.AddNewType.ADD_POST)
+            AddNewActivity.start(this, token, AddNewActivity.AddNewType.ADD_ITEM)
         }
 
         navView.setOnNavigationItemSelectedListener(this@MainActivity)

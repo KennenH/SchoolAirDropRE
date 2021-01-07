@@ -69,7 +69,7 @@ public class SearchImpl implements ISearchPresenter {
             saveHistory(key);
         }
 
-        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+        Retrofit retrofit = RetrofitManager.getInstance().getDemoRetrofit();
         Api api = retrofit.create(Api.class);
         Call<HomeGoodsListInfo> task = api.searchGoods(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page, longitude, latitude, key);
         task.enqueue(new CallBackWithRetry<HomeGoodsListInfo>(task) {

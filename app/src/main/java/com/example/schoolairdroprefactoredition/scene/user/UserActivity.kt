@@ -20,11 +20,8 @@ import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.ui.components.OverDragEventHeader
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.DialogUtil
-import com.example.schoolairdroprefactoredition.utils.ImageUtil
+import com.example.schoolairdroprefactoredition.utils.*
 import com.example.schoolairdroprefactoredition.utils.MyUtil.ImageLoader
-import com.example.schoolairdroprefactoredition.utils.StatusBarUtil
 import com.example.schoolairdroprefactoredition.viewmodel.UserViewModel
 import com.lxj.xpopup.XPopup
 import javadz.beanutils.BeanUtils
@@ -172,14 +169,15 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
                 ?: intent.getSerializableExtra(ConstantUtil.KEY_USER_BASE_INFO) as DomainBaseUserInfo?
 
         ImageUtil.loadRoundImage(user_avatar,
-                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + userInfo?.user_img_path,
+                DemoConstantUtil.DEMO_BASE_URL + userInfo?.user_img_path,
                 R.drawable.placeholder_round)
 
-        ImageUtil.loadImage(user_background, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + userInfo?.user_img_path,
+        ImageUtil.loadImage(user_background, DemoConstantUtil.DEMO_BASE_URL + userInfo?.user_img_path,
                 R.drawable.logo_placeholder)
 
+        user_more_selling.text = userInfo?.count_on_sale.toString()
+        user_more_posts.text = "0" // TODO: 2021/1/4 post
         userName.text = userInfo?.uname
-        user_more_posts.text = "0"
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -209,7 +207,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
             R.id.user_avatar -> {
                 XPopup.Builder(this@UserActivity)
                         .asImageViewer(v as ImageView,
-                                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + userInfo?.user_img_path,
+                                DemoConstantUtil.DEMO_BASE_URL + userInfo?.user_img_path,
                                 false, -1, -1, 50,
                                 true, ImageLoader())
                         .show()

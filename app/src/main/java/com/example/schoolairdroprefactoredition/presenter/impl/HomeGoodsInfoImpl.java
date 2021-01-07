@@ -32,7 +32,7 @@ public class HomeGoodsInfoImpl implements IHomeGoodsInfoPresenter {
      */
     @Override
     public void getNearbyGoods(int page, double longitude, double latitude) {
-        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+        Retrofit retrofit = RetrofitManager.getInstance().getDemoRetrofit();
         Api api = retrofit.create(Api.class);
         Call<HomeGoodsListInfo> task = api.getGoodsInfo(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page, 120.36055, 30.31747);
         task.enqueue(new CallBackWithRetry<HomeGoodsListInfo>(task) {

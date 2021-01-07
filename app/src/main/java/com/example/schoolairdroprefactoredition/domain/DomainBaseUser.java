@@ -5,8 +5,10 @@ import java.util.List;
 import kotlin.jvm.functions.Function2;
 
 /**
+ * ！！注意！！
  * 仅在{@link com.example.schoolairdroprefactoredition.repository.UserRepository#getUserInfo(int, Function2)}
  * 处做临时bean存储器使用
+ * ！！注意！！
  */
 public class DomainBaseUser {
 

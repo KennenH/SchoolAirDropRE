@@ -27,6 +27,7 @@ import com.bumptech.glide.request.target.Target;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ComponentImagePagerBinding;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.DemoConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.XPopup;
@@ -83,7 +84,7 @@ public class ImagePager extends ConstraintLayout implements ViewPager.OnPageChan
             if (isIncludeBaseUrl) {
                 mData.add(pic);
             } else {
-                mData.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + pic);
+                mData.add(DemoConstantUtil.DEMO_BASE_URL + pic);
             }
         }
 

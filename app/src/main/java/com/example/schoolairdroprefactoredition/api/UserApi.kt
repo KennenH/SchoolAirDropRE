@@ -30,8 +30,9 @@ interface UserApi {
     /**
      * 使用token获取用户信息
      */
+    @FormUrlEncoded
     @POST("user/getUserInfo")
-    fun getMyUserInfo(@Header("Authorization") token: String): Call<DomainUserInfo>
+    fun getMyUserInfo(@Field("uid") uid: Int): Call<DomainUserInfo>
 
     /**
      * 使用用户id获取用户信息

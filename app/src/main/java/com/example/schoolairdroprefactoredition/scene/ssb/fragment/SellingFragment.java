@@ -47,8 +47,9 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        if (getArguments() != null)
+        if (getArguments() != null) {
             isMine = getArguments().getBoolean(ConstantUtil.KEY_IS_MINE, isMine);
+        }
 
         if (getActivity() instanceof SSBActivity) {
             ((SSBActivity) getActivity()).setOnLoginStateChangeListener(this);
@@ -83,7 +84,7 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
         if (isMine) {
             if (getToken() != null) {
                 showPlaceholder(StatePlaceHolder.TYPE_LOADING);
-                viewModel.getSelling(getToken().getAccess_token()).observe(getViewLifecycleOwner(), data -> {
+                viewModel.getSelling(15).observe(getViewLifecycleOwner(), data -> {
                     loadData(data);
                     dataLenOnChange(SSBBaseFragment.SELLING_POS);
                 });
@@ -112,7 +113,7 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
                 SheetSsbItemMoreBinding binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(getContext()));
                 dialog.setContentView(binding.getRoot());
                 binding.modify.setOnClickListener(v -> {
-                    AddNewActivity.start(getContext(), getToken(), bean.getGoods_id());
+                    AddNewActivity.start(getContext(), getToken(), bean);
                     dialog.dismiss();
                 });
                 binding.offShelf.setOnClickListener(v -> {

@@ -49,8 +49,9 @@ public class BaseParentFragment extends StatePlaceholderFragment implements Stat
         if (getActivity() instanceof MainActivity) {
             showPlaceholder(StatePlaceHolder.TYPE_LOADING);
             ((MainActivity) getActivity()).requestPermission(PermissionConstants.LOCATION, PermissionBaseActivity.RequestType.MANUAL);
-        } else
+        } else {
             DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed);
+        }
     }
 
     /**

@@ -42,6 +42,13 @@ public class ImageUtil {
                 .into(imageView);
     }
 
+    /**
+     * 加载矩形图片
+     *
+     * @param imageView      源
+     * @param uri            地址
+     * @param placeHolderRes 占位符
+     */
     public static void loadImage(ImageView imageView, String uri, int placeHolderRes) {
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transform(new CenterCrop());
@@ -51,6 +58,13 @@ public class ImageUtil {
                 .into(imageView);
     }
 
+    /**
+     * 加载圆形图片
+     *
+     * @param imageView   源
+     * @param uri         地址
+     * @param placeholder 占位符
+     */
     public static void loadRoundImage(ImageView imageView, String uri, @DrawableRes int placeholder) {
         Glide.with(imageView).load(uri)
                 .circleCrop()
@@ -60,6 +74,12 @@ public class ImageUtil {
                 .into(imageView);
     }
 
+    /**
+     * 加载圆角图片
+     *
+     * @param imageView 源
+     * @param uri       地址
+     */
     public static void loadRoundedImage(ImageView imageView, String uri) {
         Glide.with(imageView).load(uri)
                 .apply(new RequestOptions()

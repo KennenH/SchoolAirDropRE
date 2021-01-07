@@ -44,11 +44,9 @@ public class DomainUserInfo implements Serializable {
             return "DataBean{" +
                     "uid=" + uid +
                     ", uname='" + uname + '\'' +
-                    ", ugender='" + ugender + '\'' +
                     ", user_img_path='" + user_img_path + '\'' +
                     ", ualipay='" + ualipay + '\'' +
                     ", uphone=" + uphone +
-                    ", credit_num=" + credit_num +
                     ", device_token=" + device_token +
                     '}';
         }
@@ -63,15 +61,11 @@ public class DomainUserInfo implements Serializable {
 
         private int uid;
         private String uname;
-        private String ugender;
         private String user_img_path;
         private String ualipay;
         private String uphone;
-        private int credit_num;
         private String device_token;
         private int count_on_sale;
-        private int count_sold;
-        private int count_bought;
 
         public int getSelling() {
             return count_on_sale;
@@ -79,22 +73,6 @@ public class DomainUserInfo implements Serializable {
 
         public void setSelling(int selling) {
             this.count_on_sale = selling;
-        }
-
-        public int getSold() {
-            return count_sold;
-        }
-
-        public void setSold(int sold) {
-            this.count_sold = sold;
-        }
-
-        public int getBought() {
-            return count_bought;
-        }
-
-        public void setBought(int bought) {
-            this.count_bought = bought;
         }
 
         public int getUid() {
@@ -111,14 +89,6 @@ public class DomainUserInfo implements Serializable {
 
         public void setUname(String uname) {
             this.uname = uname;
-        }
-
-        public String getUgender() {
-            return ugender;
-        }
-
-        public void setUgender(String ugender) {
-            this.ugender = ugender;
         }
 
         public String getUser_img_path() {
@@ -143,14 +113,6 @@ public class DomainUserInfo implements Serializable {
 
         public void setUphone(String uphone) {
             this.uphone = uphone;
-        }
-
-        public int getCredit_num() {
-            return credit_num;
-        }
-
-        public void setCredit_num(int credit_num) {
-            this.credit_num = credit_num;
         }
 
         public Object getDevice_token() {

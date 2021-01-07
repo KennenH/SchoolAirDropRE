@@ -36,6 +36,32 @@ public interface ISellingAddNewPresenter extends IBasePresenter<ISellingAddNewCa
                        Context context);
 
     /**
+     * 修改物品信息
+     *
+     * @param token       token
+     * @param cover       封面
+     * @param picSet      图片集
+     * @param title       物品标题
+     * @param description 物品描述
+     * @param longitude   经度
+     * @param latitude    纬度
+     * @param isBrandNew  是否全新
+     * @param isQuotable  是否可议价
+     * @param price       价格
+     */
+    void updateItemInfo(String token,
+                        String cover,
+                        List<String> picSet,
+                        String title,
+                        String description,
+                        double longitude,
+                        double latitude,
+                        boolean isBrandNew,
+                        boolean isQuotable,
+                        float price,
+                        Context context);
+
+    /**
      * 提交新的帖子
      *
      * @param token   token

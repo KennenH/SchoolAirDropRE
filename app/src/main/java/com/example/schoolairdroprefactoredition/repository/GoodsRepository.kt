@@ -20,7 +20,7 @@ class GoodsRepository private constructor() {
 
     fun getGoodsDetail(goodsID: Int,
                        onResult: (success: Boolean, response: GoodsDetailInfo?) -> Unit) {
-        RetrofitClient.goodsApi.getGoodsDetail(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, goodsID).apply {
+        RetrofitClient.demoGoodsApi.getGoodsDetail(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, goodsID).apply {
             enqueue(object : CallBackWithRetry<GoodsDetailInfo>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(false, null)

@@ -25,6 +25,7 @@ import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.ui.components.SSBInfo
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.DemoConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.google.zxing.integration.android.IntentIntegrator
 
@@ -111,7 +112,7 @@ class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener
             mAvatar?.setImageResource(R.drawable.ic_logo_alpha)
             mName?.text = getString(R.string.pleaseLogin)
         } else if (info != null) { // 设置页面数据
-            ImageUtil.loadRoundedImage(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.user_img_path)
+            ImageUtil.loadRoundedImage(mAvatar, DemoConstantUtil.DEMO_BASE_URL + info.user_img_path)
             mName?.text = info.uname
         }
     }

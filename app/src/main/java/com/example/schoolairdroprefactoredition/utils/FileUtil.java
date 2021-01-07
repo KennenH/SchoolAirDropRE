@@ -18,6 +18,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.List;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -27,15 +31,17 @@ public class FileUtil {
     /**
      * 压缩图片转换为base64
      */
+    @Nullable
     public static File compressFile(Context context, String path, boolean isAddNewItem) throws IOException {
-        Bitmap bitmap;
+        Bitmap bitmap = null;
+
+        // 以content或者file开头和以/storage/emulated/0/Android..开头以不同处理方式
         if (isUriPath(path)) {
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(Uri.parse(path)));
-//            bitmap = MediaStore.Images.Media.getBitmap(context.getContentResolver(), Uri.parse(path));
         } else {
-            File file = new File(path);
-            bitmap = BitmapFactory.decodeFile(file.getPath());
+            bitmap = BitmapFactory.decodeFile(path);
         }
+
         return isAddNewItem ?
                 bitmapToFile(context, scaleBitmap(bitmap, 1080, 1080), 80) :
                 bitmapToFile(context, scaleBitmap(bitmap, 350, 350), 100);
@@ -67,6 +73,10 @@ public class FileUtil {
      * @param maxHeight 最大高
      */
     public static Bitmap scaleBitmap(Bitmap bm, int maxWidth, int maxHeight) {
+        if (bm == null) {
+            return null;
+        }
+
         int width = bm.getWidth();
         int height = bm.getHeight();
 
@@ -92,6 +102,8 @@ public class FileUtil {
 
     @Nullable
     public static File bitmapToFile(Context context, Bitmap bitmap, @IntRange(from = 1, to = 100) int quality) {
+        if (bitmap == null) return null;
+
         File f = null;
         try {
             f = File.createTempFile("AddNew_Cover", null, context.getCacheDir());
@@ -127,6 +139,7 @@ public class FileUtil {
     @Nullable
     public static MultipartBody.Part createFileWithPath(Context context, String key, String path, boolean isAddNewItem) throws IOException {
         File file = compressFile(context, path, isAddNewItem);
+
         RequestBody body;
         if (file != null) {
             body = RequestBody.create(MediaType.parse("image/*"), file);
@@ -134,10 +147,38 @@ public class FileUtil {
         } else return null;
     }
 
+    public static MultipartBody.Builder addFileWithPath(Context context, String key, List<String> path, boolean isAddNewItem) throws IOException {
+        MultipartBody.Builder builder = new MultipartBody.Builder();
+        for (String s : path) {
+            File file = compressFile(context, s, isAddNewItem);
+            RequestBody body;
+            if (file != null) {
+                body = RequestBody.create(MediaType.parse("image/*"), file);
+                builder.addFormDataPart(key, file.getName(), body);
+            }
+        }
+        return builder;
+    }
+
     /**
      * 是否为uri
      */
     private static boolean isUriPath(String path) {
         return path.startsWith("content:") || path.startsWith("file:");
+    }
+
+    @Nullable
+    public static Bitmap getBitmapFromURL(String url) {
+        try {
+            URL url1 = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection) url1.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            InputStream input = connection.getInputStream();
+            return BitmapFactory.decodeStream(input);
+        } catch (IOException e) {
+            // Log exception
+            return null;
+        }
     }
 }

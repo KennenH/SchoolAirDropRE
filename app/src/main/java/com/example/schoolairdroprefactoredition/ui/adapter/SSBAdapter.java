@@ -13,6 +13,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.DemoConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 
 import org.jetbrains.annotations.NotNull;
@@ -68,7 +69,7 @@ public class SSBAdapter extends BaseQuickAdapter<HomeGoodsListInfo.DataBean, Bas
 //                    200, GeocodeSearch.AMAP);
 //            mGeocodeSearch.getFromLocationAsyn(query);
 
-            ImageUtil.loadRoundedImage(binding.ssbSellingGoodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + bean.getGoods_img_cover());
+            ImageUtil.loadRoundedImage(binding.ssbSellingGoodsAvatar, DemoConstantUtil.DEMO_BASE_URL + bean.getGoods_img_cover());
             binding.ssbSellingGoodsPrice.setPrice(bean.getGoods_price());
 
             if (getContext() instanceof AppCompatActivity) {

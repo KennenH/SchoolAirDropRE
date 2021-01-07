@@ -87,7 +87,7 @@ class LoginRepository private constructor() {
     }
 
     fun getUserInfo(token: String, onResult: (success: Boolean, response: DomainUserInfo?) -> Unit) {
-        RetrofitClient.userApi.getMyUserInfo(token).apply {
+        RetrofitClient.demoUserApi.getMyUserInfo(15).apply {
             enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
                 override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {

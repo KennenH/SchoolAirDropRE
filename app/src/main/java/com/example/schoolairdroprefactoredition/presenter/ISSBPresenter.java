@@ -7,7 +7,7 @@ public interface ISSBPresenter extends IBasePresenter<ISSBCallback> {
     /**
      * 获取自己的在售列表
      */
-    void getSellingList(String token, int page);
+    void getSellingList(int userID);
 
     /**
      * 下架物品

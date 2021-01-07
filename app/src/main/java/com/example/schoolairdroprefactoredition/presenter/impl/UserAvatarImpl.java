@@ -34,12 +34,16 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
     @Override
     public void updateAvatar(Context context, String token, String img) {
         try {
-            Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+            Retrofit retrofit = RetrofitManager.getInstance().getDemoRetrofit();
             Api api = retrofit.create(Api.class);
 
             MultipartBody.Part photo = FileUtil.createFileWithPath(context, "photo", img, false);
+            MultipartBody.Part uid = MultipartBody.Part.createFormData("uid", "15");
+            MultipartBody.Builder builder = new MultipartBody.Builder();
+            builder.addPart(photo);
+            builder.addPart(uid);
 
-            retrofit2.Call<DomainAvatarUpdateResult> task = api.updateAvatar(token, photo);
+            retrofit2.Call<DomainAvatarUpdateResult> task = api.updateAvatar(builder.build());
             task.enqueue(new CallBackWithRetry<DomainAvatarUpdateResult>(task) {
                 @Override
                 public void onResponse(retrofit2.Call<DomainAvatarUpdateResult> call, Response<DomainAvatarUpdateResult> response) {

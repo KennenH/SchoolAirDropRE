@@ -6,14 +6,6 @@ import java.io.Serializable;
  * 用户基础信息bean
  */
 public class DomainBaseUserInfo implements Serializable {
-    @Override
-    public String toString() {
-        return "DomainBaseUserInfo{" +
-                "uid=" + uid +
-                ", uname='" + uname + '\'' +
-                ", user_img_path='" + user_img_path + '\'' +
-                '}';
-    }
 
     /**
      * uid : 15
@@ -25,6 +17,15 @@ public class DomainBaseUserInfo implements Serializable {
     private int uid;
     private String uname;
     private String user_img_path;
+    private int count_on_sale;
+
+    public int getCount_on_sale() {
+        return count_on_sale;
+    }
+
+    public void setCount_on_sale(int count_on_sale) {
+        this.count_on_sale = count_on_sale;
+    }
 
     public int getUid() {
         return uid;

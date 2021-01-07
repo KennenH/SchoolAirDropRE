@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.api.base;
 
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.DemoConstantUtil;
 
 import java.util.concurrent.TimeUnit;
 
@@ -10,7 +11,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitManager {
     private static final RetrofitManager instance = new RetrofitManager();
+
     private final Retrofit mRetrofit;// final 变量可以在构造器中初始化
+    private final Retrofit mDemoRetrofit;// final 变量可以在构造器中初始化
 
     public static RetrofitManager getInstance() {
         return instance;
@@ -25,9 +28,22 @@ public class RetrofitManager {
                         .build())
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
+
+        mDemoRetrofit = new Retrofit.Builder()
+                .baseUrl(DemoConstantUtil.DEMO_BASE_URL)
+                .client(new OkHttpClient.Builder()
+                        .readTimeout(4, TimeUnit.SECONDS)
+                        .connectTimeout(4, TimeUnit.SECONDS)
+                        .build())
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
     }
 
     public Retrofit getRetrofit() {
         return mRetrofit;
+    }
+
+    public Retrofit getDemoRetrofit() {
+        return mDemoRetrofit;
     }
 }

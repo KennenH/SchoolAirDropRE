@@ -9,7 +9,7 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsDetailBinding;
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo;
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.DemoConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -77,7 +77,7 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
                 binding.goodsDescription.setText(detailInfo.getGoods_description());
 
                 if (baseInfo.getSeller_info() != null) {
-                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + detailInfo.getSeller_img());
+                    ImageUtil.loadRoundedImage(binding.goodsAvatar, DemoConstantUtil.DEMO_BASE_URL + detailInfo.getSeller_img());
                     binding.goodsUserName.setText(baseInfo.getSeller_info());
                 } else {
                     binding.goodsSellerInfo.setVisibility(GONE);

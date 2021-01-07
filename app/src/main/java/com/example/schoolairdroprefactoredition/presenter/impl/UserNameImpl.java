@@ -28,9 +28,9 @@ public class UserNameImpl implements IUserNamePresenter {
 
     @Override
     public void rename(String token, String name) {
-        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+        Retrofit retrofit = RetrofitManager.getInstance().getDemoRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainResult> task = api.updateUserName(token, name);
+        Call<DomainResult> task = api.updateUserName(token, name, 15);
         task.enqueue(new CallBackWithRetry<DomainResult>(task) {
             @Override
             public void onResponse(Call<DomainResult> call, Response<DomainResult> response) {

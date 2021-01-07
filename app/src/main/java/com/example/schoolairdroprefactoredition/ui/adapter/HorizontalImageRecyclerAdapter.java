@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.DemoConstantUtil;
 import com.luck.picture.lib.entity.LocalMedia;
 
 import org.jetbrains.annotations.NotNull;
@@ -25,10 +26,11 @@ public class HorizontalImageRecyclerAdapter extends BaseQuickAdapter<LocalMedia,
         String realPath = s.getAndroidQToPath() == null ? s.getPath() : s.getAndroidQToPath();
 
         // 检查图片路径是否以base url开头
-        if (realPath.startsWith(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW))
+        if (realPath.startsWith(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW) || realPath.startsWith(DemoConstantUtil.DEMO_BASE_URL)) {
             image.setImageRemotePath(realPath); // 若是则为服务器图片
-        else
+        } else {
             image.setImageLocalPath(realPath); // 否则为本地图片
+        }
 
         image.setOnItemAddPicActionListener(new AddPicItem.OnItemAddPicActionListener() {
             @Override

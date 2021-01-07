@@ -18,6 +18,7 @@ import java.util.List;
 
 public class AddNewViewModel extends AndroidViewModel implements ISellingAddNewCallback {
     private final MutableLiveData<DomainResult> mSubmitItemResult = new MutableLiveData<>();
+    private final MutableLiveData<DomainResult> mUpdateItemResult = new MutableLiveData<>();
     private final MutableLiveData<DomainResult> mSubmitPostResult = new MutableLiveData<>();
 
     private final MutableLiveData<NewItemDraftCache> mRestoredItemDraft = new MutableLiveData<>();
@@ -45,6 +46,17 @@ public class AddNewViewModel extends AndroidViewModel implements ISellingAddNewC
                 longitude, latitude,
                 isBrandNew, isQuotable, price, getApplication());
         return mSubmitItemResult;
+    }
+
+    public LiveData<DomainResult> updateItemInfo(String token, String cover, List<String> picSet,
+                                                 String title, String description,
+                                                 double longitude, double latitude,
+                                                 boolean isBrandNew, boolean isQuotable, float price) {
+        sellingAddNewImpl.updateItemInfo(token, cover, picSet,
+                title, description,
+                longitude, latitude,
+                isBrandNew, isQuotable, price, getApplication());
+        return mUpdateItemResult;
     }
 
     /**
@@ -112,6 +124,11 @@ public class AddNewViewModel extends AndroidViewModel implements ISellingAddNewC
     @Override
     public void onSubmitItemResult(DomainResult result) {
         mSubmitItemResult.postValue(result);
+    }
+
+    @Override
+    public void onUpdateItemResult(DomainResult result) {
+        mUpdateItemResult.postValue(result);
     }
 
     @Override

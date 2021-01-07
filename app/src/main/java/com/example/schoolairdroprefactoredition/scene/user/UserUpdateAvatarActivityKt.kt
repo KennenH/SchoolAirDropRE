@@ -27,16 +27,16 @@ class UserUpdateAvatarActivityKt : AppCompatActivity(), BaseStateViewModel.OnReq
 
     companion object {
         fun start(context: Context, token: DomainToken, info: Any) {
-            val my = DomainBaseUserInfo()
+            val myBase = DomainBaseUserInfo()
 
             try {
-                BeanUtils.copyProperties(my, info)
+                BeanUtils.copyProperties(myBase, info)
             } catch (e: Exception) {
                 e.printStackTrace()
             }
 
             val intent = Intent(context, UserUpdateAvatarActivityKt::class.java)
-            intent.putExtra(ConstantUtil.KEY_USER_INFO, my)
+            intent.putExtra(ConstantUtil.KEY_USER_BASE_INFO, myBase)
             intent.putExtra(ConstantUtil.KEY_TOKEN, token)
             if (context is AppCompatActivity) {
                 context.startActivityForResult(intent, UserActivity.REQUEST_UPDATE)
@@ -74,12 +74,12 @@ class UserUpdateAvatarActivityKt : AppCompatActivity(), BaseStateViewModel.OnReq
         StatusBarUtil.setTranslucentForImageView(this, toolbar)
 
         token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken?
-        info = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainBaseUserInfo?
+        info = intent.getSerializableExtra(ConstantUtil.KEY_USER_BASE_INFO) as DomainBaseUserInfo?
 
         viewModel.setOnRequestListener(this)
         avatar.setOnLongClickListener(this)
 
-        ImageUtil.loadImage(avatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info?.user_img_path, R.drawable.ic_logo_alpha_white)
+        ImageUtil.loadImage(avatar, DemoConstantUtil.DEMO_BASE_URL + info?.user_img_path, R.drawable.ic_logo_alpha_white)
 
         mDialog.setContentView(binding.root)
         binding.apply {
@@ -150,12 +150,12 @@ class UserUpdateAvatarActivityKt : AppCompatActivity(), BaseStateViewModel.OnReq
 
     private fun updateAvatar(avatarUrl: String) {
         mLoading.dismissWith { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successAvatar) }
-        ImageUtil.loadRoundImage(avatar,
-                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + avatarUrl,
+        ImageUtil.loadImage(avatar,
+                DemoConstantUtil.DEMO_BASE_URL + avatarUrl,
                 R.drawable.ic_logo_alpha_white)
         info?.user_img_path = avatarUrl
 
-        intent.putExtra(ConstantUtil.KEY_USER_INFO, info)
+        intent.putExtra(ConstantUtil.KEY_USER_BASE_INFO, info)
         setResult(Activity.RESULT_OK, intent)
     }
 

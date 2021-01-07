@@ -28,9 +28,9 @@ public class MyImpl implements IMyPresenter {
 
     @Override
     public void getUserInfo(String token) {
-        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+        Retrofit retrofit = RetrofitManager.getInstance().getDemoRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<DomainUserInfo> task = api.getUserInfo(token);
+        Call<DomainUserInfo> task = api.getUserInfo(15);
         task.enqueue(new CallBackWithRetry<DomainUserInfo>(task) {
             @Override
             public void onResponse(Call<DomainUserInfo> call, Response<DomainUserInfo> response) {

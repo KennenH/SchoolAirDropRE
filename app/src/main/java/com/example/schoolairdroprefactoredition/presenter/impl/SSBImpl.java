@@ -31,10 +31,10 @@ public class SSBImpl implements ISSBPresenter {
     private ISSBCallback mCallback;
 
     @Override
-    public void getSellingList(String token, int page) {
-        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+    public void getSellingList(int userID) {
+        Retrofit retrofit = RetrofitManager.getInstance().getDemoRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<HomeGoodsListInfo> task = api.getMySellingGoods(token, page);
+        Call<HomeGoodsListInfo> task = api.getMySellingGoods(userID);
         task.enqueue(new CallBackWithRetry<HomeGoodsListInfo>(task) {
             @Override
             public void onResponse(@NotNull Call<HomeGoodsListInfo> call, @NotNull Response<HomeGoodsListInfo> response) {
@@ -58,7 +58,7 @@ public class SSBImpl implements ISSBPresenter {
 
     @Override
     public void unListItem(String token, String goodsID) {
-        Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
+        Retrofit retrofit = RetrofitManager.getInstance().getDemoRetrofit();
         Api api = retrofit.create(Api.class);
         Call<DomainResult> task = api.unListItem(token, goodsID);
         task.enqueue(new CallBackWithRetry<DomainResult>(task) {

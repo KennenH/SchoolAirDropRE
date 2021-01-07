@@ -9,16 +9,13 @@ import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
 
-import java.util.List;
-
 import okhttp3.MultipartBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.Header;
-import retrofit2.http.Multipart;
 import retrofit2.http.POST;
-import retrofit2.http.Part;
 
 /**
  * 网络数据接口类
@@ -51,7 +48,7 @@ public interface Api {
      */
     @FormUrlEncoded
     @POST("goods/getGoodsOnSale")
-    Call<HomeGoodsListInfo> getMySellingGoods(@Header("Authorization") String token, @Field("page") int page);
+    Call<HomeGoodsListInfo> getMySellingGoods(@Field("user_id") int uid);
 
     /**
      * 使用GoodID获取物品详细信息
@@ -89,30 +86,15 @@ public interface Api {
 
     /**
      * 上传新的物品
-     *
-     * @param token       token
-     * @param cover       封面
-     * @param picSet      图片集
-     * @param title       标题
-     * @param price       价格
-     * @param longitude   经度
-     * @param latitude    纬度
-     * @param negotiable  是否可议价
-     * @param brandNew    是否全新
-     * @param description 物品描述
      */
-    @Multipart
     @POST("goods/upload")
-    Call<DomainResult> postNewItem(@Header("Authorization") String token,
-                                   @Part MultipartBody.Part cover,
-                                   @Part List<MultipartBody.Part> picSet,
-                                   @Part MultipartBody.Part title,
-                                   @Part MultipartBody.Part description,
-                                   @Part MultipartBody.Part longitude,
-                                   @Part MultipartBody.Part latitude,
-                                   @Part MultipartBody.Part negotiable,
-                                   @Part MultipartBody.Part brandNew,
-                                   @Part MultipartBody.Part price);
+    Call<DomainResult> postNewItem(@Body MultipartBody body);
+
+    /**
+     * 修改物品信息
+     */
+    @POST("goods/updateGoodsInfo")
+    Call<DomainResult> updateItemInfo(@Body MultipartBody body);
 
     /**
      * 收藏物品
@@ -138,22 +120,22 @@ public interface Api {
     /**
      * 上传用户头像
      */
-    @Multipart
     @POST("user/uploadAvatar")
-    Call<DomainAvatarUpdateResult> updateAvatar(@Header("Authorization") String token, @Part MultipartBody.Part photo);
+    Call<DomainAvatarUpdateResult> updateAvatar(@Body MultipartBody body);
 
     /**
      * 修改用户名字
      */
     @FormUrlEncoded
     @POST("user/updateUserInfo")
-    Call<DomainResult> updateUserName(@Header("Authorization") String token, @Field("uname") String name);
+    Call<DomainResult> updateUserName(@Header("Authorization") String token, @Field("uname") String name, @Field("uid") int uid);
 
     /**
      * 用access_token换取用户基本信息
      */
+    @FormUrlEncoded
     @POST("user/getUserInfo")
-    Call<DomainUserInfo> getUserInfo(@Header("Authorization") String token);
+    Call<DomainUserInfo> getUserInfo(@Field("uid") int uid);
 
     /**
      * 服务器授权

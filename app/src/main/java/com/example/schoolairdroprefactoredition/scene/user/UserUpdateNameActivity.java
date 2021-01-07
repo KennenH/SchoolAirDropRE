@@ -142,20 +142,18 @@ public class UserUpdateNameActivity extends ImmersionStatusBarActivity implement
     private void rename() {
         KeyboardUtils.hideSoftInput(this);
 
-        if (name.equals(mInput.getText().toString().trim()))
+        if (name.equals(mInput.getText().toString().trim())) {
             finish();
-
-        if (token != null && token.getAccess_token() != null) {
-            viewModel.rename(token.getAccess_token(), mInput.getText().toString().trim())
-                    .observe(this, data -> {
-                        if (data) {
-                            sendData();
-                        } else {
-                            Toast.makeText(this, R.string.errorUpdatingName, Toast.LENGTH_SHORT).show();
-                        }
-
-                    });
         }
+
+        viewModel.rename("", mInput.getText().toString().trim())
+                .observe(this, data -> {
+                    if (data) {
+                        sendData();
+                    } else {
+                        Toast.makeText(this, R.string.errorUpdatingName, Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override

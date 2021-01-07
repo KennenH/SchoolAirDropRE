@@ -3,6 +3,8 @@ package com.example.schoolairdroprefactoredition.scene.addnew;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -30,7 +32,6 @@ import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivitySellingAddNewBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo;
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
@@ -39,9 +40,11 @@ import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecycl
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem;
 import com.example.schoolairdroprefactoredition.utils.AnimUtil;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.example.schoolairdroprefactoredition.utils.filters.DecimalFilter;
+import com.example.schoolairdroprefactoredition.utils.DemoConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
+import com.example.schoolairdroprefactoredition.utils.FileUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.example.schoolairdroprefactoredition.utils.filters.DecimalFilter;
 import com.example.schoolairdroprefactoredition.viewmodel.GoodsViewModel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -51,9 +54,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.FAILED_ADD;
-import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.LOCATION_FAILED_NEW_ITEM;
-import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_NEW_ITEM;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.FAILED_MODIFY;
+import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.LOCATION_FAILED_NEW_ITEM;
+import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_MODIFY;
+import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_NEW_ITEM;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_NEW_POST;
 
 public class AddNewActivity extends PermissionBaseActivity implements View.OnClickListener, AMapLocationListener, HorizontalImageRecyclerAdapter.OnPicSetClickListener, AddNewViewModel.OnRequestListener {
@@ -142,11 +146,13 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
 
     private DomainToken token;
     private HomeGoodsListInfo.DataBean goodsBaseInfo;
-    private GoodsDetailInfo goodsDetailInfo;
+    private GoodsDetailInfo.DataBean goodsDetailInfo;
 
     private boolean isDraftRestored = true;
     private boolean isSubmit = false;
     private boolean hasDraft = false;
+
+    private static DownLoadPicSetAsync async = new DownLoadPicSetAsync();
 
     @AddNewType
     private int addNewType = AddNewType.ADD_ITEM; // 页面新增类型
@@ -199,7 +205,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
 
             @Override
             public void onItemClick() {
-                if (binding.cover.getImagePath() != null && !binding.cover.getImagePath().equals("")) {
+                if (binding.cover.getImagePath() != null && !"".equals(binding.cover.getImagePath())) {
                     new XPopup.Builder(AddNewActivity.this)
                             .isDarkTheme(true)
                             .isDestroyOnDismiss(true)
@@ -406,13 +412,41 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                                         });
                             }
                     );
-
                 }
             } else {
                 LoginActivity.Companion.startForLogin(this);
             }
         } else if (addNewType == AddNewType.MODIFY_ITEM) { // 修改物品
-            AddNewResultActivity.start(this, false, FAILED_MODIFY);
+            showLoading(() -> {
+                List<String> mPicSetPaths = new ArrayList<>();
+                for (LocalMedia localMedia : mPicSetSelected) {
+                    String qPath = localMedia.getAndroidQToPath();
+                    mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
+                }
+
+
+
+                addNewViewModel.updateItemInfo(token.getAccess_token(), mCoverPath, mPicSetPaths,
+                        binding.optionTitle.getText().toString(), binding.optionDescription.getText().toString(),
+                        mAmapLocation.getLongitude(), mAmapLocation.getLatitude(),
+                        !binding.optionSecondHand.getIsChecked(), binding.optionNegotiable.getIsChecked(),
+                        Float.parseFloat(binding.priceInput.getText().toString()))
+                        .observe(this, result -> {
+                            // 这里有一个bug 当提交响应失败后 再在同一个页面重试之后成功 将会多次弹出成功提示页面 但实际只提交成功了一次
+                            // 所以这里加一个标志变量 打开一次页面最多只能成功一次 因此成功后即不再弹出
+                            if (!isSubmit) {
+                                dismissLoading(() -> {
+                                    AddNewResultActivity.start(this, result.isSuccess(), result.isSuccess() ? SUCCESS_MODIFY : FAILED_MODIFY);
+                                    if (result.isSuccess()) {
+                                        isSubmit = true;// 发送已完毕标志
+
+                                        finish();
+                                        AnimUtil.activityExitAnimDown(this);
+                                    }
+                                });
+                            }
+                        });
+            });
         }
     }
 
@@ -621,33 +655,36 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
         if (goodsBaseInfo == null) return;
 
         goodsViewModel.getGoodsDetailByID(goodsBaseInfo.getGoods_id()).observe(this, detail -> {
-            goodsDetailInfo = detail;
-        });
+            showLoading();
+            goodsDetailInfo = detail.getData().get(0);
+            try {
+                mCoverPath = DemoConstantUtil.DEMO_BASE_URL + goodsBaseInfo.getGoods_img_cover();
+                binding.cover.setImageRemotePath(mCoverPath);
+                List<String> picSet = goodsDetailInfo.getGoods_img_set() == null || goodsDetailInfo.getGoods_img_set().trim().equals("") ?
+                        new ArrayList<>() : MyUtil.getArrayFromString(goodsDetailInfo.getGoods_img_set());
 
-        DomainGoodsInfo.DataBean goodsInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
-
-        try {
-            mCoverPath = ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + goodsInfo.getGoods_img_cover();
-            binding.cover.setImageRemotePath(mCoverPath);
-            List<String> picSet = goodsInfo.getGoods_img_set() == null || goodsInfo.getGoods_img_set().trim().equals("") ?
-                    new ArrayList<>() : MyUtil.getArrayFromString(goodsInfo.getGoods_img_set());
-
-            for (int i = 0; i < picSet.size(); i++) {
-                LocalMedia media = new LocalMedia();
-                media.setPath(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + picSet.get(i));
-                mPicSetSelected.add(media);
+                for (int i = 0; i < picSet.size(); i++) {
+                    LocalMedia media = new LocalMedia();
+                    media.setPath(DemoConstantUtil.DEMO_BASE_URL + picSet.get(i));
+                    mPicSetSelected.add(media);
+                }
+                mAdapter.setList(mPicSetSelected);
+                binding.optionTitle.setText(goodsBaseInfo.getGoods_name());
+                binding.priceInput.setText(goodsBaseInfo.getGoods_price());
+                if (goodsBaseInfo.getGoods_is_brandNew() == 0) {
+                    binding.optionSecondHand.toggle();
+                }
+                if (goodsBaseInfo.getGoods_is_quotable() == 1) {
+                    binding.optionNegotiable.toggle();
+                }
+                binding.optionDescription.setText(goodsDetailInfo.getGoods_description());
+            } catch (NullPointerException e) {
+                e.printStackTrace();
+                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorLoadItemInfo);
+            } finally {
+                dismissLoading();
             }
-            mAdapter.setList(mPicSetSelected);
-            binding.optionTitle.setText(goodsInfo.getGoods_name());
-            binding.priceInput.setText(goodsInfo.getGoods_price());
-            if (goodsInfo.getGoods_is_brandNew() == 0)
-                binding.optionSecondHand.toggle();
-            if (goodsInfo.getGoods_is_quotable() == 1)
-                binding.optionNegotiable.toggle();
-            binding.optionDescription.setText(goodsInfo.getGoods_description());
-        } catch (NullPointerException ignored) {
-            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorLoadItemInfo);
-        }
+        });
     }
 
     /**
@@ -819,5 +856,12 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     public void onOtherError() {
         dismissLoading(() ->
                 DialogUtil.showCenterDialog(AddNewActivity.this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.addNewGoodsError));
+    }
+
+    static class DownLoadPicSetAsync extends AsyncTask<String, Void, Bitmap> {
+        @Override
+        protected Bitmap doInBackground(String... strings) {
+            return FileUtil.getBitmapFromURL(strings[0]);
+        }
     }
 }

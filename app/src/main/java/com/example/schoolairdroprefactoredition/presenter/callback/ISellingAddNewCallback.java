@@ -12,6 +12,11 @@ public interface ISellingAddNewCallback {
     void onSubmitItemResult(DomainResult result);
 
     /**
+     * 修改物品信息回调
+     */
+    void onUpdateItemResult(DomainResult result);
+
+    /**
      * 添加新物品草稿恢复回调
      */
     void onItemDraftRestored(NewItemDraftCache draftCache);

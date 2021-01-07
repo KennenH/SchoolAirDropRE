@@ -9,6 +9,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.DemoConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 
 /**
@@ -21,7 +22,7 @@ class HomeGoodsRecyclerAdapter : BaseFooterAdapter<HomeGoodsListInfo.DataBean, B
             val negotiable = item.goods_is_quotable == 1
             val secondHand = item.goods_is_brandNew == 0
 
-            ImageUtil.loadRoundedImage(binding.itemImage, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + item.goods_img_cover)
+            ImageUtil.loadRoundedImage(binding.itemImage, DemoConstantUtil.DEMO_BASE_URL + item.goods_img_cover)
             binding.itemPrice.setPrice(item.goods_price)
             binding.itemSeller.text = item.seller_info
             if (context is AppCompatActivity) {

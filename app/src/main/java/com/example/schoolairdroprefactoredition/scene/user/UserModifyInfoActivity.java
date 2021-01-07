@@ -14,10 +14,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentUserEditBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+import com.example.schoolairdroprefactoredition.utils.DemoConstantUtil;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -107,7 +108,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
      */
     private void setUserInfo() {
         if (info != null) {
-            binding.userAvatar.setIconImage(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path());
+            binding.userAvatar.setIconImage(DemoConstantUtil.DEMO_BASE_URL + info.getUser_img_path());
             binding.userName.setDescription(info.getUname());
         }
     }

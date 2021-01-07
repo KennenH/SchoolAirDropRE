@@ -55,6 +55,7 @@ object MyUtil {
     fun loading(context: Context?): LoadingPopupView {
         return XPopup.Builder(context)
                 .dismissOnTouchOutside(false)
+                .dismissOnBackPressed(false)
                 .setPopupCallback(object : SimpleCallback() {
                     override fun onShow(popupView: BasePopupView) {
                         if (context is AppCompatActivity) {
