@@ -39,9 +39,11 @@ class LoginRepository private constructor() {
                             result.cookie = session
                             onResult(true, result)
                         } else {
+//                            LogUtils.d(response.errorBody()?.string())
                             onResult(false, null)
                         }
                     } else {
+//                        LogUtils.d(response.errorBody()?.string())
                         onResult(false, null)
                     }
                 }
@@ -86,17 +88,19 @@ class LoginRepository private constructor() {
         }
     }
 
-    fun getUserInfo(token: String, onResult: (success: Boolean, response: DomainUserInfo?) -> Unit) {
+    fun getUserInfo(token: String, onResult: (success: Boolean, response: DomainUserInfo.DataBean?) -> Unit) {
         RetrofitClient.userApi.getMyUserInfo(token).apply {
             enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
                 override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
+                        val body = response.body()
                         if (response.isSuccessful) {
-                            onResult(true, response.body())
+                            onResult(true, body?.data)
                         } else {
                             onResult(false, null)
                         }
                     } else {
+//                        LogUtils.d(response.errorBody()?.string())
                         onResult(false, null)
                     }
                 }

@@ -42,6 +42,9 @@ public class ImageUtil {
                 .into(imageView);
     }
 
+    /**
+     * 指定placeholder的矩形
+     */
     public static void loadImage(ImageView imageView, String uri, int placeHolderRes) {
         RequestOptions requestOptions = new RequestOptions();
         requestOptions = requestOptions.transform(new CenterCrop());
@@ -51,6 +54,9 @@ public class ImageUtil {
                 .into(imageView);
     }
 
+    /**
+     * 指定placeholder的圆形图片
+     */
     public static void loadRoundImage(ImageView imageView, String uri, @DrawableRes int placeholder) {
         Glide.with(imageView).load(uri)
                 .circleCrop()
@@ -60,11 +66,26 @@ public class ImageUtil {
                 .into(imageView);
     }
 
+    /**
+     * 灰白placeholder的圆角矩形图片
+     */
     public static void loadRoundedImage(ImageView imageView, String uri) {
         Glide.with(imageView).load(uri)
                 .apply(new RequestOptions()
                         .encodeQuality(ConstantUtil.ORIGIN)
                         .placeholder(R.drawable.placeholder_rounded)
+                        .transform(new CenterCrop(), new RoundedCorners(SizeUtils.dp2px(5))))
+                .into(imageView);
+    }
+
+    /**
+     * 带主题色placeholder的圆角矩形图片
+     */
+    public static void loadRoundedImageColorfulPlaceholder(ImageView imageView, String uri) {
+        Glide.with(imageView).load(uri)
+                .apply(new RequestOptions()
+                        .encodeQuality(ConstantUtil.ORIGIN)
+                        .placeholder(R.drawable.ic_logo_alpha)
                         .transform(new CenterCrop(), new RoundedCorners(SizeUtils.dp2px(5))))
                 .into(imageView);
     }
@@ -81,5 +102,16 @@ public class ImageUtil {
         int screenWidth = ScreenUtils.getAppScreenWidth();
         int resizedHeight = (screenWidth / resWidth) * resHeight;
         return Math.min(resizedHeight, maxHeight);
+    }
+
+    /**
+     * 将url修正为开头不带 / 的
+     */
+    public static String fixUrl(String url) {
+        if (url.startsWith("/")) {
+            return url.substring(1);
+        } else {
+            return url;
+        }
     }
 }

@@ -77,7 +77,7 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
                 binding.goodsDescription.setText(detailInfo.getGoods_description());
 
                 if (baseInfo.getSeller_info() != null) {
-                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + detailInfo.getSeller_img());
+                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(detailInfo.getSeller_img()));
                     binding.goodsUserName.setText(baseInfo.getSeller_info());
                 } else {
                     binding.goodsSellerInfo.setVisibility(GONE);
@@ -101,8 +101,9 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.goodsAvatar || id == R.id.goods_user_name) {
-            if (mOnUserInfoClickListener != null)
+            if (mOnUserInfoClickListener != null) {
                 mOnUserInfoClickListener.onUserInfoClick(v);
+            }
         }
     }
 

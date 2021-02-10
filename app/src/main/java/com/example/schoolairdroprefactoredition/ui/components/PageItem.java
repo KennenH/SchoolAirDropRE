@@ -62,8 +62,9 @@ public class PageItem extends ConstraintLayout implements CompoundButton.OnCheck
 
     private void initAttrs(Context context, AttributeSet attrs) {
         TypedArray attr = context.obtainStyledAttributes(attrs, R.styleable.PageItem);
-        if (attrs == null)
+        if (attrs == null) {
             return;
+        }
 
         isFirst = attr.getBoolean(R.styleable.PageItem_PI_isFirst, isFirst);
         isLast = attr.getBoolean(R.styleable.PageItem_PI_isLast, isLast);
@@ -107,14 +108,16 @@ public class PageItem extends ConstraintLayout implements CompoundButton.OnCheck
         }
 
         if (mBackground == null) {
-            if (isFirst)
+            if (isFirst) {
                 setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_sheet_first, context.getTheme()));
-            else if (isLast)
+            } else if (isLast) {
                 setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_radius_last, context.getTheme()));
-            else
+            } else {
                 setBackground(ResourcesCompat.getDrawable(getResources(), R.drawable.button_sheet_white, context.getTheme()));
-        } else
+            }
+        } else {
             setBackground(mBackground);
+        }
 
         if (isSwitch) {
             mArrowView.setVisibility(GONE);
@@ -125,8 +128,9 @@ public class PageItem extends ConstraintLayout implements CompoundButton.OnCheck
             mCheck.setVisibility(VISIBLE);
             mSwitch.setVisibility(GONE);
         } else {
-            if (isShowArrow)
+            if (isShowArrow) {
                 mArrowView.setVisibility(VISIBLE);
+            }
             mSwitch.setVisibility(GONE);
             mCheck.setVisibility(GONE);
         }
@@ -134,27 +138,32 @@ public class PageItem extends ConstraintLayout implements CompoundButton.OnCheck
         if (mDescription != null && !mDescription.trim().equals("")) {
             mDescriptionView.setVisibility(VISIBLE);
             mDescriptionView.setText(mDescription);
-        } else
+        } else {
             mDescriptionView.setVisibility(GONE);
+        }
 
-        if (mIconRes != null)
+        if (mIconRes != null) {
             mIconView.setImageDrawable(mIconRes);
+        }
 
-        if (mName != null)
+        if (mName != null) {
             mNameView.setText(mName);
+        }
 
-        if (mArrowRes != null && isShowArrow)
+        if (mArrowRes != null && isShowArrow) {
             mArrowView.setImageDrawable(mArrowRes);
+        }
 
         mSwitch.setOnCheckedChangeListener(this);
         mCheck.setOnCheckedChangeListener(this);
     }
 
     public void setIconImage(String url) {
-        if (isIconLarge)
+        if (isIconLarge) {
             ImageUtil.loadRoundedImage(mIconView, url);
-        else
+        } else {
             mIconView.setImageURI(url);
+        }
     }
 
     public void setDescription(String description) {
@@ -170,22 +179,25 @@ public class PageItem extends ConstraintLayout implements CompoundButton.OnCheck
             return mSwitch.isChecked();
         } else if (isCheck) {
             return mCheck.isChecked();
-        } else
+        } else {
             return false;
+        }
     }
 
     public void select() {
-        if (isSwitch)
+        if (isSwitch) {
             mSwitch.setChecked(true);
-        else if (isCheck)
+        } else if (isCheck) {
             mCheck.setSelected(true);
+        }
     }
 
     public void toggle() {
-        if (isSwitch)
+        if (isSwitch) {
             mSwitch.toggle();
-        else if (isCheck)
+        } else if (isCheck) {
             mCheck.toggle();
+        }
     }
 
     public void deSelect() {
@@ -198,8 +210,9 @@ public class PageItem extends ConstraintLayout implements CompoundButton.OnCheck
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-        if (mOnPageItemSelectedListener != null)
+        if (mOnPageItemSelectedListener != null) {
             mOnPageItemSelectedListener.onPageItemToggled();
+        }
     }
 
     public interface OnPageItemSelectedListener {

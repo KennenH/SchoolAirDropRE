@@ -216,7 +216,7 @@
     <string name="itemNs">[img src=ic_negotiable_en_small/] %s</string>
     <string name="itemS">[img src=ic_secondhand_en/] %s</string>
     <string name="itemSs">[img src=ic_secondhand_en_small/] %s</string>
-    <string name="loading">Loading…</string>
+    <string name="loading">Loading</string>
     <string name="statistic">Total</string>
     <string name="modifySuccess">Success</string>
     <string name="modifyFailed">Failed</string>
@@ -268,4 +268,9 @@
     <string name="emotion">Emotion</string>
     <string name="anonymous">Anonymous</string>
     <string name="tag">Topic Tag</string>
+    <string name="disconnect">Disconnect</string>
+    <string name="picture">[picture]</string>
+    <string name="connecting">Connecting</string>
+    <string name="noMessageYet">Nothing here</string>
+    <string name="systemBusy">Please try again later</string>
 </resources>

@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.domain;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -21,9 +23,6 @@ public class GoodsDetailInfo implements Serializable {
      */
 
     private List<DataBean> data;
-    /**
-     * is_in_favor : false
-     */
 
     private boolean is_in_favor;
 
@@ -71,9 +70,13 @@ public class GoodsDetailInfo implements Serializable {
                     '}';
         }
 
+        @SerializedName("goods_img_set")
         private String goods_img_set;
+        @SerializedName("goods_description")
         private String goods_description;
+        @SerializedName("seller_img")
         private String seller_img;
+        @SerializedName("uid")
         private int uid;
 
         public int getUid() {

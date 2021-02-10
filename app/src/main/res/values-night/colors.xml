@@ -51,4 +51,7 @@
     <color name="darkTransparent">#1E000000</color>
     <color name="darkerTransparent">#80000000</color>
 
+    <color name="placeholderBackground">#CDD0D3</color>
+    <color name="placeholderLightDots">#9EC9F8</color>
+    <color name="placeholderDarkDots">#5878B6</color>
 </resources>

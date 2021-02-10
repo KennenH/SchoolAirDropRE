@@ -55,6 +55,9 @@ public class ImmersionStatusBarActivity extends AppCompatActivity {
             mLoading = MyUtil.loading(this);
         }
 
+        if (mLoading.isShow()) {
+            return;
+        }
         mLoading.show();
     }
 
@@ -64,11 +67,7 @@ public class ImmersionStatusBarActivity extends AppCompatActivity {
      * @param request 网络请求
      */
     protected void showLoading(Runnable request) {
-        if (mLoading == null) {
-            mLoading = MyUtil.loading(this);
-        }
-
-        mLoading.show();
+        showLoading();
 
         if (!isRequestRunning) {
             request.run();
@@ -78,7 +77,7 @@ public class ImmersionStatusBarActivity extends AppCompatActivity {
     protected void dismissLoading() {
         isRequestRunning = false;
 
-        if (mLoading != null) {
+        if (mLoading != null && !mLoading.isDismiss()) {
             mLoading.smartDismiss();
         }
     }
@@ -86,8 +85,10 @@ public class ImmersionStatusBarActivity extends AppCompatActivity {
     protected void dismissLoading(Runnable task) {
         isRequestRunning = false;
 
-        if (mLoading != null) {
+        if (mLoading != null && !mLoading.isDismiss()) {
             mLoading.dismissWith(task);
+        } else {
+            task.run();
         }
     }
 

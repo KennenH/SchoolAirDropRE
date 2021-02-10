@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.ui.adapter;
 
-import android.os.Bundle;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,7 +8,6 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ItemSsbSellingBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
@@ -68,20 +66,12 @@ public class SSBAdapter extends BaseQuickAdapter<HomeGoodsListInfo.DataBean, Bas
 //                    200, GeocodeSearch.AMAP);
 //            mGeocodeSearch.getFromLocationAsyn(query);
 
-            ImageUtil.loadRoundedImage(binding.ssbSellingGoodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + bean.getGoods_img_cover());
+            ImageUtil.loadRoundedImage(binding.ssbSellingGoodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(bean.getGoods_img_cover()));
             binding.ssbSellingGoodsPrice.setPrice(bean.getGoods_price());
 
             if (getContext() instanceof AppCompatActivity) {
-                Bundle bundle = ((AppCompatActivity) getContext()).getIntent().getExtras();
-                if (bundle != null) {
-                    holder.itemView.setOnClickListener(v ->
-                            GoodsActivity.Companion.start(
-                                    getContext(),
-                                    (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN),
-                                    bundle.getSerializable(ConstantUtil.KEY_USER_INFO),
-                                    bean,
-                                    true));
-                }
+                holder.itemView.setOnClickListener(v ->
+                        GoodsActivity.Companion.start(getContext(), bean, true));
             }
 
             if (!isMine) {

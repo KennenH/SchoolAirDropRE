@@ -8,9 +8,8 @@
         android:id="@+id/send_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
         android:gravity="center"
-        android:padding="@dimen/general_padding_large"
-        android:text="2020年8月21日 21:25"
         android:textColor="@color/primaryText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,6 +19,7 @@
         android:id="@+id/send_avatar"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        android:layout_marginTop="@dimen/general_padding_large"
         android:layout_marginEnd="@dimen/general_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/send_time"
@@ -30,6 +30,8 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding_large"
+        android:layout_marginEnd="@dimen/general_padding_large"
         android:gravity="center_vertical|end"
         android:orientation="horizontal"
         app:layout_constraintEnd_toStartOf="@+id/send_avatar"
@@ -37,12 +39,20 @@
         app:layout_constraintTop_toTopOf="@+id/send_avatar">
 
         <ImageView
-            android:id="@+id/send_loading"
+            android:id="@+id/send_failed"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/ic_attention_normal"
+            android:visibility="gone"
+            app:tint="@color/red" />
+
+        <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/send_sending"
+            style="@style/SpinKitView.Small.FadingCircle"
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:layout_marginStart="@dimen/general_padding"
             android:layout_marginEnd="@dimen/general_padding"
-            android:src="@drawable/ic_loading"
             android:visibility="gone" />
 
         <com.facebook.drawee.view.SimpleDraweeView

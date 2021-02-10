@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,13 +16,11 @@ import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecor
 public class LikesActivity extends ImmersionStatusBarActivity {
 
     private ActivityLikesBinding binding;
-    private LikesViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLikesBinding.inflate(LayoutInflater.from(this));
-        viewModel = new ViewModelProvider(this).get(LikesViewModel.class);
         setContentView(binding.getRoot());
         setSupportActionBar(binding.toolbar);
 

@@ -1,13 +1,10 @@
 package com.example.schoolairdroprefactoredition.utils.decoration;
 
 import android.graphics.Rect;
-import android.util.Log;
 import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.blankj.utilcode.util.ScreenUtils;
 
 public class GridItemDecoration extends RecyclerView.ItemDecoration {
 
@@ -24,8 +21,6 @@ public class GridItemDecoration extends RecyclerView.ItemDecoration {
             throw new IllegalArgumentException("span cannot less than 1");
 
         this.space = DecorationUtil.getSpace(span, itemWidth);
-        Log.d("哈哈哈哈哈啊哈哈", "span -- > " + span + " itemWidth -- > " + itemWidth + " screenWidth -- > " + ScreenUtils.getAppScreenWidth() + " space -- > " + space
-        );
     }
 
     public GridItemDecoration(int space) {

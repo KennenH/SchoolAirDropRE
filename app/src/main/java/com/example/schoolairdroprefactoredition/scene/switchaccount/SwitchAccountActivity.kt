@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -23,7 +22,7 @@ import kotlinx.android.synthetic.main.activity_switch_account.*
 class SwitchAccountActivity : ImmersionStatusBarActivity() {
 
     companion object {
-        const val SWITCH_ACCOUNT = 235
+        const val SWITCH_ACCOUNT = 9346
 
         fun start(context: Context, bundle: Bundle) {
             val intent = Intent(context, SwitchAccountActivity::class.java)

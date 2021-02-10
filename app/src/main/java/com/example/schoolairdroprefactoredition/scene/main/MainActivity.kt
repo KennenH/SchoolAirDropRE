@@ -15,11 +15,14 @@ import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
+import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentPlaygroundFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasingFragment
@@ -28,13 +31,19 @@ import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
 import com.example.schoolairdroprefactoredition.scene.search.SearchFragment
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
+import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.viewmodel.InstanceMessageViewModel
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
+import net.x52im.mobileimsdk.server.protocal.Protocal
+import java.lang.NullPointerException
+import java.util.*
+import kotlin.collections.ArrayList
 
 class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
-        AMapLocationListener {
+        AMapLocationListener, Application.IMListener {
 
     companion object {
         /**
@@ -61,6 +70,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         ViewModelProvider(this).get(AccountViewModel::class.java)
     }
 
+    private val imViewModel by lazy {
+        InstanceMessageViewModel.InstanceViewModelFactory((application as Application).chatRepository).create(InstanceMessageViewModel::class.java)
+    }
+
     private val mClient by lazy {
         AMapLocationClient(this@MainActivity)
     }
@@ -69,29 +82,48 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         AMapLocationClientOption()
     }
 
+    /**
+     * 搜索 页面
+     */
     private val mSearch by lazy {
         SearchFragment.newInstance()
     }
 
+    /**
+     * 广场 页面
+     */
     private val mPlaza by lazy {
         ParentPlaygroundFragment.newInstance()
     }
 
-    private val mMessages by lazy {
-        MessagesFragment()
-    }
+    /**
+     * 消息 页面
+     */
+    private val mMessages = MessagesFragment()
 
+    /**
+     * 我的 页面
+     */
     private val mMy by lazy {
         MyFragment.newInstance()
     }
 
+    /**
+     * 淘物 页面
+     */
     private val mPurchasing by lazy {
         ParentPurchasingFragment.newInstance()
     }
 
-    private var mOnLoginStateChangedListener: ArrayList<OnLoginStateChangedListener> = ArrayList()
-    private var mOnLocationListenerList: ArrayList<OnLocationListener> = ArrayList()
+    /**
+     * app登录状态改变监听器
+     */
+    private var mOnLoginStateChangedListeners: ArrayList<OnLoginStateChangedListener> = ArrayList()
 
+    /**
+     * 高德定位状态改变监听器
+     */
+    private var mOnLocationListeners: ArrayList<OnLocationListener> = ArrayList()
 
     /**
      * 本页面初始化前询问用户是否同意服务协议
@@ -142,7 +174,9 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                     navView.selectedItemId = R.id.navigation_message
                 }
             }
-            mMy.isVisible -> navView.selectedItemId = R.id.navigation_my
+            mMy.isVisible -> {
+                navView.selectedItemId = R.id.navigation_my
+            }
         }
     }
 
@@ -151,17 +185,18 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
                 LoginActivity.LOGIN -> {
+                    val userInfo = data?.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
+                    val token = data?.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken
+
                     if (data == null) {
                         intent.removeExtra(ConstantUtil.KEY_USER_INFO)
                         intent.removeExtra(ConstantUtil.KEY_TOKEN)
                     } else {
-                        intent.putExtra(ConstantUtil.KEY_TOKEN, data.getSerializableExtra(ConstantUtil.KEY_TOKEN))
-                        intent.putExtra(ConstantUtil.KEY_USER_INFO, data.getSerializableExtra(ConstantUtil.KEY_USER_INFO))
+                        intent.putExtra(ConstantUtil.KEY_TOKEN, token)
+                        intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
                     }
 
-                    for (listener in mOnLoginStateChangedListener) {
-                        listener.onLoginStateChanged(intent)
-                    }
+                    loginStateChanged(userInfo, token)
                 }
 
                 UserActivity.REQUEST_UPDATE -> {
@@ -178,11 +213,13 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         mClient.stopLocation()
         mClient.unRegisterLocationListener(this@MainActivity)
 
-        mOnLocationListenerList.clear()
-        mOnLoginStateChangedListener.clear()
+        mOnLocationListeners.clear()
+        mOnLoginStateChangedListeners.clear()
     }
 
     private fun initListener() {
+        (application as Application).addOnIMListener(this@MainActivity)
+
         mPlaza.setOnSearchBarClickedListener {
             showSearch()
         }
@@ -192,8 +229,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         }
 
         home_add_fab.setOnClickListener {
-            val token: DomainToken? = intent.extras?.getSerializable(ConstantUtil.KEY_TOKEN) as DomainToken?
-            AddNewActivity.start(this, token, AddNewActivity.AddNewType.ADD_POST)
+            AddNewActivity.start(this, AddNewActivity.AddNewType.ADD_POST)
+//            ChatActivity.startForTest(this)
         }
 
         navView.setOnNavigationItemSelectedListener(this@MainActivity)
@@ -228,7 +265,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      */
     override fun locationDenied() {
         super.locationDenied()
-        for (onLocationListener in mOnLocationListenerList) {
+        for (onLocationListener in mOnLocationListeners) {
             onLocationListener.onLocationPermissionDenied()
         }
     }
@@ -238,9 +275,11 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      */
     private fun initCache() {
         accountViewModel.lastLoggedTokenCaChe.observe(this@MainActivity, {
+            (application as Application).cacheMyInfoAndToken(token = it)
             intent.putExtra(ConstantUtil.KEY_TOKEN, it)
         })
         accountViewModel.lastLoggedUserInfoCache.observe(this@MainActivity, {
+            (application as Application).cacheMyInfoAndToken(userInfo = it)
             intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
         })
     }
@@ -354,13 +393,9 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         val token: DomainToken = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken
         if (token.access_token != null) {
             loginViewModel.getUserInfo(token.access_token).observe(this, {
-//                Toast.makeText(this@MainActivity, "登录成功", Toast.LENGTH_SHORT).show()
+                intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
 
-                val userInfo = it?.data?.get(0)
-                intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
-                for (listener in mOnLoginStateChangedListener) {
-                    listener.onLoginStateChanged(intent)
-                }
+                loginStateChanged(it, token)
             })
         }
     }
@@ -370,26 +405,25 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 在app首次打开时调用
      */
     private fun autoReLoginWithCache() {
-        val userInfo: DomainUserInfo.DataBean = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean
+//        val userInfo: DomainUserInfo.DataBean = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean
         var gettingPublicKey = false
-        if (userInfo.ualipay != null) {
-            loginViewModel.getPublicKey().observe(this@MainActivity, { publicK ->
-                if (!gettingPublicKey) {
-                    gettingPublicKey = true
-                    authorizeWithAlipayID(userInfo, publicK)
-                }
-            })
-        }
+        loginViewModel.getPublicKey().observe(this@MainActivity, { publicK ->
+            if (!gettingPublicKey) {
+                gettingPublicKey = true
+                authorizeWithAlipayID(publicK)
+            }
+        })
     }
 
     /**
-     * 使用同步锁定防止多次同时请求
+     * 使用alipay id登录
+     * 注解为同步方法以防止多次同时请求
      */
     @Synchronized
-    private fun authorizeWithAlipayID(userInfo: DomainUserInfo.DataBean, publicK: DomainAuthorizeGet) {
+    private fun authorizeWithAlipayID(publicK: DomainAuthorizeGet) {
         loginViewModel.authorizeWithAlipayID(
                 publicK.cookie,
-                userInfo.ualipay,
+                AppConfig.USER_ALIPAY,
                 publicK.public_key)
                 .observe(this@MainActivity, { token ->
                     intent.putExtra(ConstantUtil.KEY_TOKEN, token)
@@ -399,6 +433,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     /**
      * 开始定位
+     * 结果回调在[MainActivity.onLocationChanged]中
      */
     private fun startLocation() {
         mClient.setLocationListener(this@MainActivity)
@@ -433,9 +468,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     /**
      * 高德定位SDK结果回调
+     * 开始定位的方法在[MainActivity.startLocation]
      */
     override fun onLocationChanged(aMapLocation: AMapLocation?) {
-        for (onLocationListener in mOnLocationListenerList) {
+        for (onLocationListener in mOnLocationListeners) {
             onLocationListener.onLocated(aMapLocation)
         }
         intent.putExtra(ConstantUtil.LONGITUDE, aMapLocation?.longitude)
@@ -443,10 +479,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
 
+    /*************************************************************************************/
     /**************************************listeners**************************************/
-
+    /*************************************************************************************/
     /**
-     * todo 可以将所有登录回调获取登录信息的地方都换成在缓存中获取，统一数据的可信来源是解决页面状态不一致的最佳办法
      * <p>
      * 登录状态改变后的后的回调监听 登录 退登 都会回到此处
      * SettingsActivity中登录流程为:
@@ -465,7 +501,13 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      */
     interface OnLoginStateChangedListener {
         /**
-         *  登录结果回调
+         *  登录状态改变的回调
+         *  使用[MainActivity.loginStateChanged]来通知监听器
+         *
+         *  @param intent
+         *  包含的键值对
+         *  [ConstantUtil.KEY_TOKEN] token 类型为[DomainToken]
+         *  [ConstantUtil.KEY_USER_INFO] 我的用户信息 类型为[DomainUserInfo.DataBean]
          */
         fun onLoginStateChanged(intent: Intent)
     }
@@ -477,7 +519,27 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 以便在登陆状态改变时即时通知子页面ui更新
      */
     fun addOnLoginActivityListener(listener: OnLoginStateChangedListener) {
-        mOnLoginStateChangedListener.add(listener)
+        mOnLoginStateChangedListeners.add(listener)
+    }
+
+    /**
+     * 为监听登录状态改变的监听器回调登录状态
+     *
+     * 并且根据app登录状态来改变IM系统的登录状态
+     */
+    private fun loginStateChanged(userInfo: DomainUserInfo.DataBean?, token: DomainToken?) {
+        (application as Application).cacheMyInfoAndToken(userInfo, token)
+
+        for (listener in mOnLoginStateChangedListeners) {
+            listener.onLoginStateChanged(intent)
+        }
+
+        // 若为登录app回调，则登录IM，否则退出IM
+        if (userInfo != null && token != null) {
+            (application as Application).doLoginIM()
+        } else {
+            (application as Application).doLogoutIM()
+        }
     }
 
     /**
@@ -503,6 +565,49 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 以便在获取位置信息后即时更新页面ui
      */
     fun addOnLocationListener(listener: OnLocationListener) {
-        mOnLocationListenerList.add(listener)
+        mOnLocationListeners.add(listener)
     }
+
+
+    /*****************************************************************************************/
+    /************************************** IM listeners**************************************/
+    /*****************************************************************************************/
+    override fun onIMStartLogin() {
+        // do nothing
+    }
+
+    override fun onIMLoginResponse(code: Int) {
+        // do nothing
+    }
+
+    override fun onIMLinkDisconnect(code: Int) {
+        // do nothing
+    }
+
+    override fun onIMMessageLost(lostMessages: ArrayList<Protocal>) {
+        // do nothing
+    }
+
+    override fun onIMMessageBeReceived(fingerprint: String) {
+        // do nothing
+    }
+
+    override fun onIMReceiveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
+        // 保存收到的消息
+        try {
+            val myID = (application as Application).getCachedMyInfo()?.userId
+            imViewModel.saveInstanceMessage(ChatHistory(fingerprint, senderID, myID.toString(), typeu, content, Date(), 0))
+        } catch (e: NullPointerException) {
+            val myID = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo
+            val uid = myID?.data?.userId
+            if (uid != null) {
+                imViewModel.saveInstanceMessage(ChatHistory(fingerprint, senderID, uid.toString(), typeu, content, Date(), 0))
+            }
+        }
+    }
+
+    override fun onIMErrorResponse(errorCode: Int, message: String) {
+        // do nothing
+    }
+
 }

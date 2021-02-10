@@ -19,25 +19,20 @@ import com.example.schoolairdroprefactoredition.scene.capture.CaptureActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity.OnLoginStateChangedListener
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel
-import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity.Companion.startForLogin
+import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
-import com.example.schoolairdroprefactoredition.ui.components.SSBInfo
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.google.zxing.integration.android.IntentIntegrator
 
-class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener, BaseStateViewModel.OnRequestListener {
+class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener {
 
     companion object {
         fun newInstance(): MyFragment {
             return MyFragment()
         }
-    }
-
-    private val viewModel by lazy {
-        ViewModelProvider(this).get(MyViewModel::class.java)
     }
 
     private var mAvatar: ImageView? = null
@@ -58,14 +53,12 @@ class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener
         mAvatar = binding.myAvatar
         mName = binding.myName
 
-        viewModel.setOnRequestListener(this)
         binding.myInfo.setOnClickListener(this)
         binding.mySelling.setOnClickListener(this)
         binding.myPosts.setOnClickListener(this)
         binding.myLikes.setOnClickListener(this)
         binding.mySettings.setOnClickListener(this)
         binding.rootLayout.setOnRefreshListener { it.finishRefresh() }
-//        binding.mySellingPosts.setOnSSBActionListener(this)
 
         setUserData()
         return binding.root
@@ -77,27 +70,11 @@ class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener
         } else Intent()
 
     private fun getInfo(): DomainUserInfo.DataBean? {
-        val info = mainIntent.getSerializableExtra(ConstantUtil.KEY_USER_INFO)
-
-        return info as? DomainUserInfo.DataBean
-
-//        return if (info == null) {
-//            null
-//        } else {
-//            info as DomainUserInfo.DataBean
-//        }
+        return mainIntent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
     }
 
     private fun getToken(): DomainToken? {
-        val token = mainIntent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
-
-        return token as? DomainToken
-
-//        return if (token == null) {
-//            null
-//        } else {
-//            token as DomainToken
-//        }
+        return mainIntent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken
     }
 
     /**
@@ -111,8 +88,8 @@ class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener
             mAvatar?.setImageResource(R.drawable.ic_logo_alpha)
             mName?.text = getString(R.string.pleaseLogin)
         } else if (info != null) { // 设置页面数据
-            ImageUtil.loadRoundedImage(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.user_img_path)
-            mName?.text = info.uname
+            ImageUtil.loadRoundedImageColorfulPlaceholder(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(info.userAvatar))
+            mName?.text = info.userName
         }
     }
 
@@ -122,12 +99,9 @@ class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener
         when (id) {
             R.id.my_info -> {
                 if (intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) != null && intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) != null) {
-                    UserActivity.start(
-                            activity,
-                            intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken,
-                            intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO))
+                    UserActivity.start(activity)
                 } else {
-                    startForLogin(context)
+                    LoginActivity.start(context)
                 }
             }
 
@@ -148,7 +122,7 @@ class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener
             }
 
             R.id.my_posts -> {
-
+                Toast.makeText(context, "working on it!", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -158,13 +132,6 @@ class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener
      * 登录状态改变的回调
      */
     override fun onLoginStateChanged(intent: Intent) {
-        val token = getToken()
         setUserData()
-        if (token != null) viewModel.getUserInfo(token.access_token).observe(viewLifecycleOwner, { setUserData() })
     }
-
-    override fun onError() {
-        Toast.makeText(context, "Error getting user info", Toast.LENGTH_SHORT).show()
-    }
-
 }

@@ -18,7 +18,7 @@ object AppConfig {
      * wiredo
      * clz
      */
-    const val USER_ID = "19858120611"
+    const val USER_ALIPAY = "19858120611"
 
 
 }

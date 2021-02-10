@@ -3,7 +3,6 @@ package com.example.schoolairdroprefactoredition.ui.adapter
 import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
-import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
@@ -15,11 +14,9 @@ import com.example.schoolairdroprefactoredition.utils.ImageUtil
 class SwitchAccountRecyclerAdapter(val info: DomainUserInfo.DataBean?) : BaseQuickAdapter<DomainUserInfo.DataBean, BaseViewHolder>(R.layout.item_accounts) {
 
     override fun convert(holder: BaseViewHolder, item: DomainUserInfo.DataBean) {
-        if (item.ualipay == null) return
-
         holder.itemView.setOnClickListener {
             if (context is AppCompatActivity) {
-                if (info != null && info.ualipay == item.ualipay) {
+                if (info != null && info.userId == item.userId) {
                     (context as AppCompatActivity).finish()
                     AnimUtil.activityExitAnimDown(context as AppCompatActivity)
                 } else {
@@ -32,13 +29,13 @@ class SwitchAccountRecyclerAdapter(val info: DomainUserInfo.DataBean?) : BaseQui
             }
         }
 
-        if (info != null && info.ualipay == item.ualipay) {
+        if (info != null && info.userId == item.userId) {
             holder.setGone(R.id.current_account, false)
         } else {
             holder.setGone(R.id.current_account, true)
         }
-        ImageUtil.loadRoundedImage(holder.getView(R.id.account_avatar), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + item.user_img_path)
-        holder.setText(R.id.account_name, item.uname)
+        ImageUtil.loadRoundedImage(holder.getView(R.id.account_avatar), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(item.userAvatar))
+        holder.setText(R.id.account_name, item.userName)
     }
 
 }

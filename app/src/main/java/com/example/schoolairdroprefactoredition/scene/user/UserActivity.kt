@@ -15,8 +15,8 @@ import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo
+import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.ui.components.OverDragEventHeader
@@ -27,7 +27,6 @@ import com.example.schoolairdroprefactoredition.utils.MyUtil.ImageLoader
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil
 import com.example.schoolairdroprefactoredition.viewmodel.UserViewModel
 import com.lxj.xpopup.XPopup
-import javadz.beanutils.BeanUtils
 import kotlinx.android.synthetic.main.activity_user.*
 
 class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDragEventHeader.OnHeaderOverDragEventListener {
@@ -50,36 +49,37 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         const val REQUEST_UPDATE = 520
 
         /**
+         * ********* 注意 *********
+         *   仅用于打开自己的主页
+         * ********* 注意 *********
+         *
          * 从'我的'页面中打开个人信息
          * 直接传递我的信息即可
-         * @param myInfo 当前登录账号的个人信息
-         * @param token  当前登录账号的token
          */
-        fun start(context: Context?, token: DomainToken?, myInfo: Any?) {
-            if (context == null || myInfo == null) return
-
-            val myBaseInfo = DomainBaseUserInfo()
-            BeanUtils.copyProperties(myBaseInfo, myInfo)
+        fun start(context: Context?) {
+            if (context == null) {
+                return
+            }
 
             val intent = Intent(context, UserActivity::class.java)
-            intent.putExtra(ConstantUtil.KEY_TOKEN, token)
-            intent.putExtra(ConstantUtil.KEY_USER_BASE_INFO, myBaseInfo)
             intent.putExtra(ConstantUtil.KEY_INFO_MODIFIABLE, true)
-            if (context is AppCompatActivity) context.startActivityForResult(intent, REQUEST_UPDATE)
+            if (context is AppCompatActivity) {
+                context.startActivityForResult(intent, REQUEST_UPDATE)
+            }
         }
 
         /**
          * 从任何其他非'我的'的页面打开本页面
-         * 需要一个userID且无论该页面是否查看的是
-         * 本人的个人主页，都无法修改个人信息
-         * @param userID    卖家uID
-         * @param token     当前账号token
+         * 需要一个userID且无论该页面是否查看的是本人的个人主页，都无法修改个人信息
+         *
+         * @param userID    要查看的用户id
          */
-        fun start(context: Context?, userID: Int, token: DomainToken?) {
-            if (context == null || userID == -1) return
+        fun start(context: Context?, userID: Int?) {
+            if (context == null || userID == null || userID == -1) {
+                return
+            }
 
             val intent = Intent(context, UserActivity::class.java)
-            intent.putExtra(ConstantUtil.KEY_TOKEN, token)
             intent.putExtra(ConstantUtil.KEY_USER_ID, userID)
             intent.putExtra(ConstantUtil.KEY_INFO_MODIFIABLE, false)
             context.startActivity(intent)
@@ -98,10 +98,10 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
     }
 
     private val token by lazy {
-        intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken
+        (application as Application).getCachedToken()
     }
 
-    private var userInfo: DomainBaseUserInfo? = null
+    private var userInfo: DomainUserInfo.DataBean? = null
 
     private val originBackgroundHeight by lazy {
         user_background.layoutParams.height
@@ -126,10 +126,9 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         if (resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 if (requestCode == REQUEST_UPDATE) {
-                    userInfo = data.getSerializableExtra(ConstantUtil.KEY_USER_BASE_INFO) as DomainBaseUserInfo?
-                    intent.putExtra(ConstantUtil.KEY_USER_BASE_INFO, userInfo)
+                    userInfo = data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
+                    intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
 
-                    LogUtils.d(userInfo.toString())
                     setUserInfo(userInfo)
 
                     data.putExtra(ConstantUtil.KEY_UPDATED, true)
@@ -143,18 +142,16 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         BarUtils.setStatusBarLightMode(this@UserActivity, !isDarkTheme)
         BarUtils.setNavBarLightMode(this@UserActivity, !isDarkTheme)
 
-        userInfo = intent.getSerializableExtra(ConstantUtil.KEY_USER_BASE_INFO) as DomainBaseUserInfo?
+        userInfo = (application as Application).getCachedMyInfo()
         val sellerID = intent.getIntExtra(ConstantUtil.KEY_USER_ID, -1)
 
         if (userInfo == null && sellerID != -1) {
             userViewModel.getUserBaseInfoByID(sellerID).observe(this) {
-                intent.putExtra(ConstantUtil.KEY_USER_BASE_INFO, it)
+                intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
                 setUserInfo(it)
             }
         } else if (userInfo != null && sellerID == -1) {
             setUserInfo(userInfo)
-        } else {
-            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
         }
 
         user_background_over_drag_header.setOnHeaderOverDragEventListener(this)
@@ -167,31 +164,36 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
      * 使用用户信息装填ui界面
      * 在 用户第一次进入页面时 以及 用户修改信息后返回时调用
      */
-    private fun setUserInfo(baseUserInfo: DomainBaseUserInfo? = null) {
-        userInfo = baseUserInfo
-                ?: intent.getSerializableExtra(ConstantUtil.KEY_USER_BASE_INFO) as DomainBaseUserInfo?
+    private fun setUserInfo(userInfo: DomainUserInfo.DataBean? = null) {
+        this.userInfo = userInfo
+                ?: (application as Application).getCachedMyInfo()
+
+        user_avatar.setActualImageResource(R.drawable.placeholder_round)
+        user_background.setImageResource(R.drawable.logo_placeholder)
 
         ImageUtil.loadRoundImage(user_avatar,
-                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + userInfo?.user_img_path,
+                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(this.userInfo?.userAvatar),
                 R.drawable.placeholder_round)
 
-        ImageUtil.loadImage(user_background, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + userInfo?.user_img_path,
+        ImageUtil.loadImage(user_background, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(this.userInfo?.userAvatar),
                 R.drawable.logo_placeholder)
 
-        userName.text = userInfo?.uname
-        user_more_posts.text = "0"
+        userName.text = this.userInfo?.userName
+        user_more_selling.text = userInfo?.userGoodsOnSaleCount.toString()
+        user_more_posts.text = userInfo?.userContactCount.toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.user_personal, menu)
-        menu?.getItem(0)?.isVisible = isModifiable
+        if (isModifiable) {
+            menuInflater.inflate(R.menu.user_personal, menu)
+        }
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.modify_info -> {
-                UserModifyInfoActivity.start(this, token, userInfo)
+                UserModifyInfoActivity.start(this)
                 return isModifiable
             }
 
@@ -209,8 +211,8 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
             R.id.user_avatar -> {
                 XPopup.Builder(this@UserActivity)
                         .asImageViewer(v as ImageView,
-                                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + userInfo?.user_img_path,
-                                false, -1, -1, 50,
+                                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(userInfo?.userAvatar),
+                                false, -1, -1, ScreenUtils.getAppScreenWidth(),
                                 true, ImageLoader())
                         .show()
             }
@@ -237,4 +239,6 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
             user_background.layoutParams = ConstraintLayout.LayoutParams(width, originBackgroundHeight + extraOffset)
         }
     }
+
+
 }

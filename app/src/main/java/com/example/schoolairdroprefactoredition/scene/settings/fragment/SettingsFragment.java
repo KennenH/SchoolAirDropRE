@@ -132,7 +132,7 @@ public class SettingsFragment extends TransitionBaseFragment implements View.OnC
      */
     private void validateState() {
         if (isLoggedIn()) {
-            binding.settingsHomeAlipay.setDescription(getString(R.string.loggedIn, userInfo.getUname()));
+            binding.settingsHomeAlipay.setDescription(getString(R.string.loggedIn, userInfo.getUserName()));
             binding.settingsHomeSwitchAccount.setVisibility(View.VISIBLE);
             binding.settingsHomeSignOut.setVisibility(View.VISIBLE);
         } else {
@@ -156,13 +156,11 @@ public class SettingsFragment extends TransitionBaseFragment implements View.OnC
         int id = v.getId();
         switch (id) {
             case R.id.settings_home_alipay:
-                if (!isLoggedIn())
-                    LoginActivity.Companion.startForLogin(getContext());
-                else
-                    LoginActivity.Companion.startAfterLogin(getContext(), userInfo);
+                LoginActivity.Companion.start(getContext());
 
-                if (getActivity() != null)
+                if (getActivity() != null) {
                     getActivity().overridePendingTransition(R.anim.enter_y_fragment, R.anim.alpha_out);
+                }
 
                 break;
             case R.id.settings_home_privacy:

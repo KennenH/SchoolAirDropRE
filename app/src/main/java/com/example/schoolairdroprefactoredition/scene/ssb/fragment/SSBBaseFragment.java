@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo.DataBean;
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
-import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
@@ -57,7 +57,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         viewModel.setOnSSBActionListener(this);
 
         binding.ssbRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
-        binding.placeHolder.setOnPlaceHolderActionListener(this);
+        binding.placeHolder.addOnPlaceHolderActionListener(this);
 
         mAdapter = new SSBAdapter(getActivity().getIntent().getBooleanExtra(ConstantUtil.KEY_IS_MINE, false));
         mAdapter.setOnSSBItemActionListener(this);
@@ -129,8 +129,8 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         return null;
     }
 
-    protected DomainBaseUserInfo getBaseUserInfo() {
-        DomainBaseUserInfo info = new DomainBaseUserInfo();
+    protected DataBean getUserInfo() {
+        DataBean info = new DataBean();
         try {
             BeanUtils.copyProperties(info, getActivity().getIntent().getExtras().getSerializable(ConstantUtil.KEY_USER_INFO));
         } catch (IllegalAccessException | InvocationTargetException | NullPointerException e) {

@@ -6,7 +6,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity;
-import com.example.schoolairdroprefactoredition.pojo.adapterbean.MorePanelBean;
+import com.example.schoolairdroprefactoredition.scene.chat.panel.MorePanelBean;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 
 import org.jetbrains.annotations.NotNull;

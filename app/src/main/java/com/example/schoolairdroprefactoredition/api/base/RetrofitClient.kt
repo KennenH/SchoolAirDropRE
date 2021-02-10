@@ -1,8 +1,6 @@
 package com.example.schoolairdroprefactoredition.api.base
 
-import com.example.schoolairdroprefactoredition.api.GoodsApi
-import com.example.schoolairdroprefactoredition.api.PostApi
-import com.example.schoolairdroprefactoredition.api.UserApi
+import com.example.schoolairdroprefactoredition.api.*
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -18,8 +16,14 @@ object RetrofitClient {
 //            .dispatcher(dispatcher.also { dispatcher.maxRequests = 1 })
             .build()
 
-    val retrofit: Retrofit = Retrofit.Builder()
-            .baseUrl(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW)
+    private val retrofit: Retrofit = Retrofit.Builder()
+            .baseUrl(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
+            .build()
+
+    private val retrofitIM: Retrofit = Retrofit.Builder()
+            .baseUrl(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_IM)
             .addConverterFactory(GsonConverterFactory.create())
             .client(okHttpClient)
             .build()
@@ -38,4 +42,14 @@ object RetrofitClient {
      * 帖子接口
      */
     val postApi: PostApi = retrofit.create(PostApi::class.java)
+
+    /**
+     * IM接口
+     */
+    val imApi: IMApi = retrofitIM.create(IMApi::class.java)
+
+    /**
+     * 图片上传独立接口
+     */
+    val uploadApi: UploadApi = retrofit.create(UploadApi::class.java)
 }

@@ -4,8 +4,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.ItemHomeGoodsInfoBinding
-import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -21,19 +19,12 @@ class HomeGoodsRecyclerAdapter : BaseFooterAdapter<HomeGoodsListInfo.DataBean, B
             val negotiable = item.goods_is_quotable == 1
             val secondHand = item.goods_is_brandNew == 0
 
-            ImageUtil.loadRoundedImage(binding.itemImage, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + item.goods_img_cover)
+            ImageUtil.loadRoundedImage(binding.itemImage, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(item.goods_img_cover))
             binding.itemPrice.setPrice(item.goods_price)
             binding.itemSeller.text = item.seller_info
             if (context is AppCompatActivity) {
-                val bundle = (context as AppCompatActivity).intent.extras
-
                 binding.root.setOnClickListener {
-                    GoodsActivity.start(
-                            context,
-                            bundle?.getSerializable(ConstantUtil.KEY_TOKEN) as? DomainToken,
-                            bundle?.getSerializable(ConstantUtil.KEY_USER_INFO),
-                            item,
-                            false)
+                    GoodsActivity.start(context, item, false)
                 }
             }
             if (negotiable && secondHand) {

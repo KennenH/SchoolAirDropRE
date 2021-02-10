@@ -12,9 +12,10 @@ import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.domain.DomainToken
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo
-import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
@@ -27,8 +28,8 @@ import com.example.schoolairdroprefactoredition.ui.components.GoodsInfo.OnUserIn
 import com.example.schoolairdroprefactoredition.utils.*
 import com.example.schoolairdroprefactoredition.viewmodel.GoodsViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import javadz.beanutils.BeanUtils
 import kotlinx.android.synthetic.main.activity_goods.*
+import kotlinx.android.synthetic.main.activity_logged_in.*
 
 class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickListener, OnUserInfoClickListener, ButtonDouble.OnButtonClickListener {
 
@@ -39,37 +40,14 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
          * 1、账号本人信息由KEY_AUTHORIZE从服务器获取，但是它可为空即在未登录状态查看物品信息
          * 2、物品信息由KEY_GOODS_ID从服务器获取，不可以为空
          *
-         * @param token         验证信息
-         * @param userInfo      当前登录的用户信息，一定要包含[DomainBaseUserInfo]中的所有属性
          * @param goodsBaseInfo 物品基本信息
          * @param isFromSelling 详见{@link GoodsInfo#hideSellerInfo()}
          */
         fun start(context: Context,
-                  token: DomainToken?,
-                  userInfo: Any?,
                   goodsBaseInfo: HomeGoodsListInfo.DataBean,
                   isFromSelling: Boolean) {
-            val thisPerson = DomainBaseUserInfo()
-            if (userInfo != null) {
-                BeanUtils.copyProperties(thisPerson, userInfo)
-                start(context, token, thisPerson.uid, goodsBaseInfo, isFromSelling)
-            } else {
-                start(context, token, -1, goodsBaseInfo, isFromSelling)
-            }
-        }
-
-        /**
-         * @param userID 当前登录的用户的uid
-         */
-        private fun start(context: Context,
-                          token: DomainToken?,
-                          userID: Int?,
-                          goodsBaseInfo: HomeGoodsListInfo.DataBean,
-                          isFromSelling: Boolean) {
             val intent = Intent(context, GoodsActivity::class.java)
             intent.apply {
-                putExtra(ConstantUtil.KEY_TOKEN, token)
-                putExtra(ConstantUtil.KEY_USER_ID, userID)
                 putExtra(ConstantUtil.KEY_GOODS_BASE_INFO, goodsBaseInfo)
                 putExtra(KEY_IS_FROM_SELLING, isFromSelling)
             }
@@ -93,6 +71,13 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
      */
     private var isNotMine = false
 
+    private val goodsInfo by lazy {
+        intent.getSerializableExtra(ConstantUtil.KEY_GOODS_BASE_INFO) as HomeGoodsListInfo.DataBean
+    }
+
+    /**
+     * 物品详细信息
+     */
     private var goodsDetailInfo: GoodsDetailInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -138,8 +123,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
      * 则判定为是自己的物品，则隐藏底部交互按钮
      */
     private fun validateInfo() {
-        val goodsInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_BASE_INFO) as HomeGoodsListInfo.DataBean
-        val myID = intent.getIntExtra(ConstantUtil.KEY_USER_ID, -1)
+        val myInfo = (application as Application).getCachedMyInfo()
 
         // 若从用户信息页面进入的在售页面，则隐藏卖家信息，原因见方法本身
         if (intent.getBooleanExtra(KEY_IS_FROM_SELLING, false)) {
@@ -149,7 +133,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
         goodsViewModel.getGoodsDetailByID(goodsInfo.goods_id)
                 .observe(this@GoodsActivity) {
                     goodsDetailInfo = it
-                    isNotMine = it.data[0].uid != myID
+                    isNotMine = it.data[0].uid != myInfo?.userId
 
                     showActionButtons(isNotMine)
                     goods_info_container.setData(goodsInfo, it.data[0])
@@ -171,7 +155,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
      * 在未登录时打开物品页面并进行操作时
      */
     private fun login() {
-        LoginActivity.startForLogin(this@GoodsActivity)
+        LoginActivity.start(this@GoodsActivity)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -179,14 +163,9 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == LoginActivity.LOGIN) {
                 if (data != null) {
-                    intent.apply {
-                        removeExtra(ConstantUtil.KEY_TOKEN)
-                        removeExtra(ConstantUtil.KEY_USER_INFO)
-                        putExtra(ConstantUtil.KEY_TOKEN,
-                                data.getSerializableExtra(ConstantUtil.KEY_TOKEN))
-                        putExtra(ConstantUtil.KEY_USER_INFO,
-                                data.getSerializableExtra(ConstantUtil.KEY_USER_INFO))
-                    }
+                    (application as Application).cacheMyInfoAndToken(
+                            data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean,
+                            data.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken)
 
                     validateInfo()
                     setResult(Activity.RESULT_OK, data)
@@ -205,30 +184,32 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     }
 
     override fun onButtonClick() {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
-        if (token == null) {
+        if ((application as Application).getCachedToken() == null) {
             login()
         } else {
-            ChatActivity.start(this@GoodsActivity)
+            val userInfo = goodsDetailInfo?.data?.get(0)
+            val user = DomainUserInfo.DataBean()
+            if (userInfo != null) {
+                user.userName = goodsInfo.seller_info
+                user.userAvatar = userInfo.seller_img
+                user.userId = userInfo.uid
+                ChatActivity.start(this@GoodsActivity, user)
+            }
         }
     }
 
     override fun onUserInfoClick(view: View?) {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
         val userID = goodsDetailInfo?.data?.get(0)?.uid
 
         if (userID != null) {
-            UserActivity.start(this@GoodsActivity,
-                    userID,
-                    token as DomainToken?)
+            UserActivity.start(this@GoodsActivity, userID)
         } else {
             LogUtils.d(goodsDetailInfo.toString())
         }
     }
 
     override fun onLeftButtonClick() {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
-        if (token == null) {
+        if ((application as Application).getCachedToken() == null) {
             login()
         } else {
             goods_button_right.toggleFavor()

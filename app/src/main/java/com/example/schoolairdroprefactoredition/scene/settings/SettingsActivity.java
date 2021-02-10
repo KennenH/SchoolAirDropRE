@@ -58,7 +58,7 @@ public class SettingsActivity extends TransitionBaseActivity implements Fragment
                 if (data != null) {
                     DomainUserInfo.DataBean user = (DomainUserInfo.DataBean) data.getSerializableExtra(ConstantUtil.KEY_USER_INFO);
                     if (user != null) {
-                        LoginActivity.Companion.startForLogin(SettingsActivity.this, user.getUalipay());
+                        LoginActivity.Companion.start(SettingsActivity.this);
                     }
                 }
             }

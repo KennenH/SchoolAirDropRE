@@ -2,7 +2,6 @@ package com.example.schoolairdroprefactoredition.api;
 
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet;
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult;
-import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
@@ -31,13 +30,6 @@ public interface Api {
     @FormUrlEncoded
     @POST("goods/getNearByGoods")
     Call<HomeGoodsListInfo> getGoodsInfo(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("page") int page, @Field("longitude") Double longitude, @Field("latitude") Double latitude);
-
-    /**
-     * 用户id获取用户基本信息
-     */
-    @FormUrlEncoded
-    @POST("user/getUserInfoById")
-    Call<DomainBaseUserInfo> getUserInfoByID(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("uid") String userID);
 
     /**
      * 使用用户id获取用户在售信息

@@ -54,6 +54,7 @@ object MyUtil {
     @JvmStatic
     fun loading(context: Context?): LoadingPopupView {
         return XPopup.Builder(context)
+                .dismissOnBackPressed(true)
                 .dismissOnTouchOutside(false)
                 .setPopupCallback(object : SimpleCallback() {
                     override fun onShow(popupView: BasePopupView) {

@@ -11,6 +11,7 @@ import com.blankj.utilcode.util.ClickUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
@@ -23,47 +24,15 @@ import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_logged_in.*
 import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, CompoundButton.OnCheckedChangeListener, Application.OnApplicationLoginListener {
 
     companion object {
-        const val LOGIN = 1212 // 请求码 网络登录请求
+        const val LOGIN = 39726 // 请求码 网络登录请求
 
-        /**
-         * 尚未登录时打开当前页面
-         */
-        fun startForLogin(context: Context?) {
+        fun start(context: Context?) {
             val intent = Intent(context, LoginActivity::class.java)
             if (context is AppCompatActivity) {
                 context.startActivityForResult(intent, LOGIN)
-                AnimUtil.activityStartAnimUp(context)
-            }
-        }
-
-        /**
-         * 尚未登录且带着想要登录的alipayId进行登录请求
-         * 即切换账号登录
-         *
-         * @param alipayID 要登陆的账号
-         */
-        @JvmStatic
-        fun startForLogin(context: Context, alipayID: String) {
-            val intent = Intent(context, LoginActivity::class.java)
-            intent.putExtra(ConstantUtil.KEY_ALIPAY_FOR_LOGIN, alipayID)
-            if (context is AppCompatActivity) {
-                context.startActivityForResult(intent, LOGIN)
-                AnimUtil.activityStartAnimUp(context)
-            }
-        }
-
-        /**
-         * 已登录时打开当前页面
-         */
-        @JvmStatic
-        fun startAfterLogin(context: Context, userInfo: DomainUserInfo.DataBean?) {
-            val intent = Intent(context, LoginActivity::class.java)
-            intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
-            context.startActivity(intent)
-            if (context is AppCompatActivity) {
                 AnimUtil.activityStartAnimUp(context)
             }
         }
@@ -78,15 +47,20 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      */
     private var isLogging = false
 
+    /**
+     * 是否正在执行finish部分的代码
+     */
+    private var isExiting = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val info = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO)
 
+        val info = (application as Application).getCachedMyInfo()
         // 已登录时
         if (info != null) {
             setContentView(R.layout.activity_logged_in)
 
-            val phone = (info as DomainUserInfo.DataBean).ualipay
+            val phone = AppConfig.USER_ALIPAY
 //          todo 发布时取消注释下面这句话
             // final String priPhone = phone.substring(0, 3).concat("****").concat(phone.substring(7));
             val isPri = booleanArrayOf(true)
@@ -103,6 +77,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
             ClickUtils.applyPressedViewAlpha(close, 0.6f)
         } else {
             setContentView(R.layout.activity_login)
+            (application as Application).addOnApplicationLoginListener(this)
 
             viewModel.getLoadState().observe(this, {
                 if (it === LoadState.LOADING) {
@@ -134,7 +109,8 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      * . 网络出现异常，按下返回使loading消失    网络恢复，再次按下登录，但正在登录标识符将请求拦截
      *   [LoginActivity.dismissLoading] ---- >  [LoginActivity.showLoading]
      *
-     *   此时只会显示loading而不会重复请求，[com.example.schoolairdroprefactoredition.pojo.CallBackWithRetry]
+     *   此时只会显示loading而不会重复请求
+     *   [com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry]
      *   会在此时进行3次请求重试，从而完成登录
      */
     override fun onClick(v: View) {
@@ -153,8 +129,11 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
 
             R.id.cancel -> {
                 setResult(RESULT_CANCELED)
-                finish()
-                AnimUtil.activityExitAnimDown(this)
+                if (!isExiting) {
+                    isExiting = true
+                    finish()
+                    AnimUtil.activityExitAnimDown(this)
+                }
             }
         }
     }
@@ -167,21 +146,21 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     private fun loginWithAlipay() {
         viewModel.getPublicKey().observe(this, { key ->
             if (key != null) {
-                viewModel.authorizeWithAlipayID(key.cookie,
-                        intent.getStringExtra(ConstantUtil.KEY_ALIPAY_FOR_LOGIN)
-                                ?: AppConfig.USER_ID, key.public_key)
+                viewModel.authorizeWithAlipayID(key.cookie, AppConfig.USER_ALIPAY, key.public_key)
                         .observe(this, { token ->
                             if (token != null) {
-                                dismissLoading()
 
                                 // todo comment this when release
                                 LogUtils.d("token -- > $token")
 
-                                // token
-                                intent.putExtra(ConstantUtil.KEY_TOKEN, token)
-                                userInfoWithToken()
+                                getUserInfoWithToken(token)
                             }
                         })
+            } else {
+                isLogging = false
+                dismissLoading()
+
+                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
             }
         })
     }
@@ -189,28 +168,53 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     /**
      * 使用token获取用户信息
      */
-    private fun userInfoWithToken() {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
+    private fun getUserInfoWithToken(token: DomainToken?) {
         if (token != null) {
-            showLoading()
-            viewModel.getUserInfo((token as DomainToken).access_token).observe(this, { info ->
-                if (info != null) {
+            viewModel.getUserInfo(token.access_token).observe(this, {
+                if (it != null) {
                     isLogging = false
-                    val userInfo = info.data[0]
+
                     // token换取的user info
-                    intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
+                    intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
+                    intent.putExtra(ConstantUtil.KEY_TOKEN, token)
                     setResult(RESULT_OK, intent)
-                    dismissLoading {
+
+                    if (!isExiting) {
+                        isExiting = true
+                        dismissLoading()
                         finish()
                         AnimUtil.activityExitAnimDown(this)
                     }
                 }
             })
-        } else DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
+        } else {
+            isLogging = false
+            dismissLoading()
+
+            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
+        }
     }
 
+    /**
+     * 用户协议勾选事件回调
+     */
     override fun onCheckedChanged(buttonView: CompoundButton, isChecked: Boolean) {
         login_with_alipay.isEnabled = isChecked
     }
+
+    /**
+     * app登陆状态改变回调
+     *
+     * 当进入页面的时候未登录但是在用户再次按下登录按钮或者登录事件回调之前
+     */
+    override fun onApplicationLoginStateChange(isLogged: Boolean) {
+        if (!isExiting) {
+            isExiting = true
+            dismissLoading()
+            finish()
+            AnimUtil.activityExitAnimDown(this)
+        }
+    }
+
 
 }

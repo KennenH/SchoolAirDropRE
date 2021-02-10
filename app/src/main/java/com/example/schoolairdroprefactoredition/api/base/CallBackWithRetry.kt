@@ -16,8 +16,9 @@ abstract class CallBackWithRetry<T>(private val call: Call<T>) : Callback<T> {
     private var retryCount = 0
 
     override fun onFailure(call: Call<T>, t: Throwable) {
+        call.cancel()
         if (retryCount++ < TOTAL_RETRIES) {
-            retry()
+            call.clone().enqueue(this)
         } else {
             onFailureAllRetries()
             LogUtils.d(t.toString())
@@ -28,9 +29,4 @@ abstract class CallBackWithRetry<T>(private val call: Call<T>) : Callback<T> {
      * 所有重试均失败则视为失败
      */
     abstract fun onFailureAllRetries()
-
-    private fun retry() {
-        call.clone().enqueue(this)
-    }
-
 }

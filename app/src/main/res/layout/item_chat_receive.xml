@@ -8,9 +8,8 @@
         android:id="@+id/receive_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
         android:gravity="center"
-        android:padding="@dimen/general_padding_large"
-        android:text="2020年8月21日 21:25"
         android:textColor="@color/primaryText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
@@ -22,42 +21,35 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginStart="@dimen/general_padding"
+        android:layout_marginTop="@dimen/general_padding_large"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/receive_time"
         app:placeholderImage="@drawable/iphone"
         app:placeholderImageScaleType="centerCrop"
         app:roundedCornerRadius="@dimen/general_padding_small" />
 
+    <!-- 以下 layout_marginEnd = 38dp 的计算 == > 10 + 18 + 10，详见 item_chat_send.xml -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/general_padding_small"
+        android:layout_marginEnd="38dp"
         android:gravity="center_vertical|start"
+        android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/receive_avatar"
         app:layout_constraintTop_toTopOf="@+id/receive_avatar">
 
         <TextView
-            android:id="@+id/receive_image"
+            android:id="@+id/receive_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/chat_other_9"
             android:gravity="center_vertical"
             android:letterSpacing="0.08"
             android:lineSpacingExtra="1dp"
+            android:text="安徽省肯德基卡仕达大苏打啊实打啊实打啊实打啊实打"
             android:textColor="@color/blackAlways"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@id/receive_avatar"
-            app:layout_constraintTop_toTopOf="@id/receive_avatar" />
-
-        <ImageView
-            android:id="@+id/receive_loading"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="@dimen/general_padding"
-            android:layout_marginEnd="@dimen/general_padding"
-            android:src="@drawable/ic_loading" />
-
-
+            android:textIsSelectable="true" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,7 +18,7 @@ import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ActivitySsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
-import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo.DataBean;
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity;
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
@@ -46,7 +46,7 @@ public class SSBActivity extends ImmersionStatusBarActivity implements View.OnCl
      */
     public static void start(Context context, DomainToken token, Object info, int page, boolean isMine) {
         if (info == null) return;
-        DomainBaseUserInfo userInfo = new DomainBaseUserInfo();
+        DataBean userInfo = new DataBean();
         try {
             BeanUtils.copyProperties(userInfo, info);
         } catch (IllegalAccessException | InvocationTargetException e) {

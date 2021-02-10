@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class SettingsGeneralViewModel : ViewModel() {
@@ -25,5 +26,10 @@ class SettingsGeneralViewModel : ViewModel() {
             mIsDarkTheme.value = settings?.isDarkTheme
         }
         return mIsDarkTheme
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
     }
 }

@@ -27,8 +27,9 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
     @Override
     public void setList(@org.jetbrains.annotations.Nullable Collection<? extends T> list) {
         super.setList(list);
-        if (mOnNoMoreDataListener != null)
+        if (mOnNoMoreDataListener != null) {
             mOnNoMoreDataListener.onNoMoreDataRefresh();
+        }
 
         removeAllFooterView();
         if (list != null && list.size() < ConstantUtil.DATA_FETCH_DEFAULT_SIZE) {
@@ -49,8 +50,9 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
      * 在没有更多数据时添加尾巴
      */
     private void addNoMoreFooter() {
-        if (mOnNoMoreDataListener != null)
+        if (mOnNoMoreDataListener != null) {
             mOnNoMoreDataListener.onNoMoreData();
+        }
 
         RecyclerFooter footer = new RecyclerFooter(getContext());
         footer.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));

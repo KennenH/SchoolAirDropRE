@@ -16,7 +16,6 @@ import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.databinding.SheetSsbItemMoreBinding;
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
-import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo;
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
@@ -24,6 +23,8 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
+
+import static com.example.schoolairdroprefactoredition.domain.DomainUserInfo.DataBean;
 
 /**
  * todo 若查看的为他人的页面，则检查该用户是否开放其他用户查看其在售列表，不允许则显示被隐藏
@@ -47,8 +48,9 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
 
-        if (getArguments() != null)
+        if (getArguments() != null) {
             isMine = getArguments().getBoolean(ConstantUtil.KEY_IS_MINE, isMine);
+        }
 
         if (getActivity() instanceof SSBActivity) {
             ((SSBActivity) getActivity()).setOnLoginStateChangeListener(this);
@@ -89,10 +91,10 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
                 });
             } else showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
         } else {
-            DomainBaseUserInfo info = getBaseUserInfo();
+            DataBean info = getUserInfo();
             if (info != null) {
                 showPlaceholder(StatePlaceHolder.TYPE_LOADING);
-                viewModel.getSellingByID(info.getUid()).observe(getViewLifecycleOwner(), data -> {
+                viewModel.getSellingByID(info.getUserId()).observe(getViewLifecycleOwner(), data -> {
                     loadData(data);
                     dataLenOnChange(SSBBaseFragment.SELLING_POS);
                 });
@@ -112,7 +114,7 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
                 SheetSsbItemMoreBinding binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(getContext()));
                 dialog.setContentView(binding.getRoot());
                 binding.modify.setOnClickListener(v -> {
-                    AddNewActivity.start(getContext(), getToken(), bean.getGoods_id());
+                    AddNewActivity.start(getContext(),bean.getGoods_id());
                     dialog.dismiss();
                 });
                 binding.offShelf.setOnClickListener(v -> {
@@ -166,19 +168,23 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (!isMine) return false;
-
-        if (SystemClock.elapsedRealtime() - lastClickTime < ConstantUtil.MENU_CLICK_GAP)
+        if (!isMine) {
             return false;
+        }
+
+        if (SystemClock.elapsedRealtime() - lastClickTime < ConstantUtil.MENU_CLICK_GAP) {
+            return false;
+        }
         lastClickTime = SystemClock.elapsedRealtime();
 
         int id = item.getItemId();
         if (id == R.id.toolbar) {
-            if (getActivity() != null)
+            if (getActivity() != null) {
                 getActivity().getSupportFragmentManager().popBackStack();
+            }
         } else if (id == R.id.selling_posts_add) {
             if (getActivity() != null && getActivity().getIntent() != null && getActivity().getIntent().getExtras() != null) {
-                AddNewActivity.start(getContext(), getToken(), AddNewActivity.AddNewType.ADD_ITEM);
+                AddNewActivity.start(getContext(), AddNewActivity.AddNewType.ADD_ITEM);
             }
         }
         return super.onOptionsItemSelected(item);

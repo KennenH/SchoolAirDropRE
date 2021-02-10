@@ -20,12 +20,12 @@
         app:navigationIcon="@drawable/ic_left">
 
         <TextView
-            android:id="@+id/userName"
+            android:id="@+id/user_name"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:ellipsize="end"
             android:gravity="center"
-            android:text="小鱼子酱"
+            android:text=""
             android:textColor="@color/black"
             android:textSize="@dimen/textSizeNormal" />
     </androidx.appcompat.widget.Toolbar>
@@ -51,14 +51,19 @@
             app:hide_by_touch_outside_enable="true"
             app:input_view="@id/edit_view">
 
-            <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
+            <com.scwang.smart.refresh.layout.SmartRefreshLayout
                 android:id="@+id/recycler_container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_above="@+id/bottom_action"
                 android:background="@color/white"
                 app:layout_constraintBottom_toTopOf="@+id/bottom_action"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toTopOf="parent"
+                app:srlEnableAutoLoadMore="false"
+                app:srlEnableOverScrollDrag="true"
+                app:srlEnableRefresh="true">
+
+                <!--简易刷新头-->
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
@@ -68,7 +73,7 @@
                     android:background="@color/white"
                     android:overScrollMode="never"
                     android:tag="recycler_view" />
-            </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
+            </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/bottom_action"
@@ -132,7 +137,7 @@
                         android:paddingTop="@dimen/general_padding"
                         android:paddingEnd="@dimen/general_padding_large"
                         android:paddingBottom="@dimen/general_padding"
-                        android:textColor="?attr/colorControlNormal"
+                        android:textColor="@color/black"
                         android:textCursorDrawable="@drawable/cursor"
                         android:textSize="@dimen/textSizeNormal"
                         app:layout_constraintBottom_toBottomOf="parent"

@@ -19,7 +19,7 @@ import com.blankj.utilcode.util.LogUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
-import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
@@ -48,7 +48,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
     public static void start(Context context, DomainToken token, Object info) {
         if (token == null) return;
 
-        DomainBaseUserInfo my = new DomainBaseUserInfo();
+        DomainUserInfo.DataBean my = new DomainUserInfo.DataBean();
         try {
             BeanUtils.copyProperties(my, info);
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -73,7 +73,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
 
     private Bundle bundle;
 
-    private DomainBaseUserInfo info;
+    private DomainUserInfo.DataBean info;
     private DomainToken token;
 
 
@@ -93,7 +93,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
             bundle = new Bundle();
 
         token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
-        info = (DomainBaseUserInfo) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
+        info = (DomainUserInfo.DataBean) bundle.getSerializable(ConstantUtil.KEY_USER_INFO);
 
         mAvatar = findViewById(R.id.avatar);
         mAvatar.setOnLongClickListener(this);
@@ -103,7 +103,7 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
 
     private void init() {
         try {
-            ImageUtil.loadImage(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + info.getUser_img_path(), R.drawable.ic_logo_alpha_white);
+            ImageUtil.loadImage(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(info.getUserAvatar()), R.drawable.ic_logo_alpha_white);
         } catch (NullPointerException e) {
             LogUtils.d("info null");
         }
@@ -193,8 +193,8 @@ public class UserUpdateAvatarActivity extends AppCompatActivity implements BaseS
         dismissLoading(() ->
                 DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successAvatar));
         try {
-            mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + avatarUrl);
-            info.setUser_img_path(avatarUrl);
+            mAvatar.setImageURI(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(avatarUrl));
+            info.setUserAvatar(avatarUrl);
             bundle.putSerializable(ConstantUtil.KEY_USER_INFO, info);
         } catch (NullPointerException e) {
             LogUtils.d(avatarUrl);

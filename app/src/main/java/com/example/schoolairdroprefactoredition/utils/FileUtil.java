@@ -26,8 +26,10 @@ import okhttp3.RequestBody;
 public class FileUtil {
     /**
      * 压缩图片转换为base64
+     *
+     * @param isNeedLarge 是否需要大图，若为头像则只需要小图即可
      */
-    public static File compressFile(Context context, String path, boolean isAddNewItem) throws IOException {
+    public static File compressFile(Context context, String path, boolean isNeedLarge) throws IOException {
         Bitmap bitmap;
         if (isUriPath(path)) {
             bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(Uri.parse(path)));
@@ -36,8 +38,8 @@ public class FileUtil {
             File file = new File(path);
             bitmap = BitmapFactory.decodeFile(file.getPath());
         }
-        return isAddNewItem ?
-                bitmapToFile(context, scaleBitmap(bitmap, 1080, 1080), 80) :
+        return isNeedLarge ?
+                bitmapToFile(context, scaleBitmap(bitmap, 1000, 1000), 80) :
                 bitmapToFile(context, scaleBitmap(bitmap, 350, 350), 100);
     }
 
@@ -125,13 +127,15 @@ public class FileUtil {
      * @return MultiPartBody.Part
      */
     @Nullable
-    public static MultipartBody.Part createFileWithPath(Context context, String key, String path, boolean isAddNewItem) throws IOException {
-        File file = compressFile(context, path, isAddNewItem);
+    public static MultipartBody.Part createPartWithPath(Context context, String key, String path, boolean isNeedLarge) throws IOException {
+        File file = compressFile(context, path, isNeedLarge);
         RequestBody body;
         if (file != null) {
             body = RequestBody.create(MediaType.parse("image/*"), file);
             return MultipartBody.Part.createFormData(key, file.getName(), body);
-        } else return null;
+        } else {
+            return null;
+        }
     }
 
     /**

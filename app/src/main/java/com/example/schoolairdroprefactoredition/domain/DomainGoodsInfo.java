@@ -214,7 +214,6 @@ public class DomainGoodsInfo implements Serializable {
                 return "SellerInfoBean{" +
                         "uid=" + uid +
                         ", uname='" + uname + '\'' +
-                        ", credit_num=" + credit_num +
                         ", user_img_path='" + user_img_path + '\'' +
                         '}';
             }
@@ -229,7 +228,6 @@ public class DomainGoodsInfo implements Serializable {
 
             private int uid;
             private String uname;
-            private int credit_num;
             private String user_img_path;
 
             public int getUid() {
@@ -246,14 +244,6 @@ public class DomainGoodsInfo implements Serializable {
 
             public void setUname(String uname) {
                 this.uname = uname;
-            }
-
-            public int getCredit_num() {
-                return credit_num;
-            }
-
-            public void setCredit_num(int credit_num) {
-                this.credit_num = credit_num;
             }
 
             public String getUser_img_path() {

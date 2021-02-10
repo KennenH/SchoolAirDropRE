@@ -1,39 +1,64 @@
 package com.example.schoolairdroprefactoredition.domain;
 
-import java.io.Serializable;
-import java.util.List;
+import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
+
+/**
+ * 禁止在fragment和activity中直接传递本类对象
+ * 应统一传递{@link DataBean}，只有在viewmodel
+ * 中和repository中才直接使用本类对象
+ */
 public class DomainUserInfo implements Serializable {
 
     @Override
     public String toString() {
-        return "DomainGetUserInfo{" +
-                "success=" + success +
+        return "DomainUserInfo{" +
+                "time=" + time +
+                ", msg='" + msg + '\'' +
+                ", code=" + code +
                 ", data=" + data +
                 '}';
     }
 
-    /**
-     * success : true
-     * data : [{"uid":15,"uname":"user_15","ugender":"m","user_img_path":"http://106.54.110.46/public/assets/user/avatars/default.jpg","ualipay":"19858120611","uphone":null,"credit_num":2,"device_token":null}]
-     */
+    @SerializedName("time")
+    private String time;
+    @SerializedName("msg")
+    private String msg;
+    @SerializedName("code")
+    private int code;
+    @SerializedName("data")
+    private DataBean data;
 
-    private boolean success;
-    private List<DataBean> data;
-
-    public boolean isSuccess() {
-        return success;
+    public String getTime() {
+        return time;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setTime(String time) {
+        this.time = time;
     }
 
-    public List<DataBean> getData() {
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public DataBean getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(DataBean data) {
         this.data = data;
     }
 
@@ -42,123 +67,94 @@ public class DomainUserInfo implements Serializable {
         @Override
         public String toString() {
             return "DataBean{" +
-                    "uid=" + uid +
-                    ", uname='" + uname + '\'' +
-                    ", ugender='" + ugender + '\'' +
-                    ", user_img_path='" + user_img_path + '\'' +
-                    ", ualipay='" + ualipay + '\'' +
-                    ", uphone=" + uphone +
-                    ", credit_num=" + credit_num +
-                    ", device_token=" + device_token +
+                    "user_id=" + userId +
+                    ", user_name='" + userName + '\'' +
+                    ", user_gender='" + userGender + '\'' +
+                    ", user_avatar='" + userAvatar + '\'' +
                     '}';
         }
 
         /**
-         * uid : 15
-         * uname : user_15
-         * user_img_path : http://106.54.110.46/public/assets/user/avatars/default.jpg
-         * credit_num : 2
-         * device_token : null
+         * "user_id": 7,
+         * "user_name": "user_7",
+         * "user_avatar": "/uploads/img/user/default/default.jpg",
+         * "user_gender": "m",
+         * "createtime": 1612696413,
+         * "user_goodsOnSaleCount": 0,
+         * "user_contactCount": 0
          */
 
-        private int uid;
-        private String uname;
-        private String ugender;
-        private String user_img_path;
-        private String ualipay;
-        private String uphone;
-        private int credit_num;
-        private String device_token;
-        private int count_on_sale;
-        private int count_sold;
-        private int count_bought;
+        @SerializedName("user_id")
+        private int userId;
+        @SerializedName("user_name")
+        private String userName;
+        @SerializedName("user_avatar")
+        private String userAvatar;
+        @SerializedName("user_gender")
+        private String userGender;
+        @SerializedName("createtime")
+        private long createtime;
+        @SerializedName("user_goodsOnSaleCount")
+        private int userGoodsOnSaleCount;
+        @SerializedName("user_contactCount")
+        private int userContactCount;
 
-        public int getSelling() {
-            return count_on_sale;
+        public long getCreatetime() {
+            return createtime;
         }
 
-        public void setSelling(int selling) {
-            this.count_on_sale = selling;
+        public void setCreatetime(long createtime) {
+            this.createtime = createtime;
         }
 
-        public int getSold() {
-            return count_sold;
+        public int getUserGoodsOnSaleCount() {
+            return userGoodsOnSaleCount;
         }
 
-        public void setSold(int sold) {
-            this.count_sold = sold;
+        public void setUserGoodsOnSaleCount(int selling) {
+            this.userGoodsOnSaleCount = selling;
         }
 
-        public int getBought() {
-            return count_bought;
+
+        public int getUserContactCount() {
+            return userContactCount;
         }
 
-        public void setBought(int bought) {
-            this.count_bought = bought;
+        public void setUserContactCount(int bought) {
+            this.userContactCount = bought;
         }
 
-        public int getUid() {
-            return uid;
+        public int getUserId() {
+            return userId;
         }
 
-        public void setUid(int uid) {
-            this.uid = uid;
+        public void setUserId(int userId) {
+            this.userId = userId;
         }
 
-        public String getUname() {
-            return uname;
+        public String getUserName() {
+            return userName;
         }
 
-        public void setUname(String uname) {
-            this.uname = uname;
+        public void setUserName(String userName) {
+            this.userName = userName;
         }
 
-        public String getUgender() {
-            return ugender;
+        public String getUserGender() {
+            return userGender;
         }
 
-        public void setUgender(String ugender) {
-            this.ugender = ugender;
+        public void setUserGender(String userGender) {
+            this.userGender = userGender;
         }
 
-        public String getUser_img_path() {
-            return user_img_path;
+        public String getUserAvatar() {
+            return userAvatar;
         }
 
-        public void setUser_img_path(String user_img_path) {
-            this.user_img_path = user_img_path;
+        public void setUserAvatar(String userAvatar) {
+            this.userAvatar = userAvatar;
         }
 
-        public String getUalipay() {
-            return ualipay;
-        }
-
-        public void setUalipay(String ualipay) {
-            this.ualipay = ualipay;
-        }
-
-        public Object getUphone() {
-            return uphone;
-        }
-
-        public void setUphone(String uphone) {
-            this.uphone = uphone;
-        }
-
-        public int getCredit_num() {
-            return credit_num;
-        }
-
-        public void setCredit_num(int credit_num) {
-            this.credit_num = credit_num;
-        }
-
-        public Object getDevice_token() {
-            return device_token;
-        }
-
-        public void setDevice_token(String device_token) {
-            this.device_token = device_token;
-        }
     }
 }

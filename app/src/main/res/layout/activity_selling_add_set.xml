@@ -17,7 +17,7 @@
         app:navigationIcon="@drawable/ic_left">
 
         <TextView
-            android:id="@+id/title"
+            android:id="@+id/set_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -36,13 +36,15 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/general_padding_large">
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:focusable="true">
 
             <EditText
                 android:id="@+id/input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:focusable="true"
                 android:gravity="center_vertical"
                 android:inputType="textMultiLine"
                 android:padding="@dimen/general_padding_bit_larger"

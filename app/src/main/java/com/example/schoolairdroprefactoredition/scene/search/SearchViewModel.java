@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.example.schoolairdroprefactoredition.cache.SearchHistories;
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
-import com.example.schoolairdroprefactoredition.pojo.databean.SearchSuggestionBean;
+import com.example.schoolairdroprefactoredition.domain.SearchSuggestionBean;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISearchCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.SearchImpl;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;

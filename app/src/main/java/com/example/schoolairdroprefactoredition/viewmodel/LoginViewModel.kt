@@ -12,6 +12,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.repository.LoginRepository
 import com.example.schoolairdroprefactoredition.utils.UserLoginCacheUtils
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
@@ -20,7 +21,7 @@ class LoginViewModel : ViewModel() {
 
     private val mPublicKey = MutableLiveData<DomainAuthorizeGet>()
     private val mAuthorize = MutableLiveData<DomainToken>()
-    private val mUserInfo = MutableLiveData<DomainUserInfo>()
+    private val mUserInfo = MutableLiveData<DomainUserInfo.DataBean>()
 
     private val mainRepository by lazy {
         LoginRepository.getInstance()
@@ -80,7 +81,7 @@ class LoginViewModel : ViewModel() {
     /**
      * 使用token获取用户信息
      */
-    fun getUserInfo(token: String): LiveData<DomainUserInfo> {
+    fun getUserInfo(token: String): LiveData<DomainUserInfo.DataBean> {
         viewModelScope.launch {
             mainRepository.getUserInfo(token) { success, response ->
                 if (success) {
@@ -91,7 +92,7 @@ class LoginViewModel : ViewModel() {
                 }
 
                 if (response != null) {
-                    UserLoginCacheUtils.instance.saveUserInfo(response.data[0])
+                    UserLoginCacheUtils.instance.saveUserInfo(response)
                 }
             }
         }
@@ -106,5 +107,8 @@ class LoginViewModel : ViewModel() {
         UserLoginCacheUtils.instance.deleteCache(UserInfoCache.KEY)
     }
 
-
+    override fun onCleared() {
+        super.onCleared()
+        viewModelScope.cancel()
+    }
 }

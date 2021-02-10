@@ -8,9 +8,8 @@
         android:id="@+id/send_time"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
         android:gravity="center"
-        android:padding="@dimen/general_padding_large"
-        android:text="2020年8月21日 21:25"
         android:textColor="@color/primaryText"
         android:textSize="@dimen/textSizeNormal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -21,6 +20,7 @@
         android:id="@+id/send_avatar"
         android:layout_width="45dp"
         android:layout_height="45dp"
+        android:layout_marginTop="@dimen/general_padding_large"
         android:layout_marginEnd="@dimen/general_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/send_time"
@@ -37,24 +37,41 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/send_avatar">
 
-        <ImageView
-            android:id="@+id/send_loading"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:layout_marginStart="@dimen/general_padding"
-            android:layout_marginEnd="@dimen/general_padding"
-            android:src="@drawable/ic_loading" />
-
-        <TextView
-            android:id="@+id/send_image"
+        <FrameLayout
+            android:id="@+id/icon_wrapper"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/general_padding_small"
+            android:layout_marginStart="@dimen/general_padding_large"
+            android:layout_marginEnd="@dimen/general_padding_large">
+
+            <ImageView
+                android:id="@+id/send_failed"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_attention_normal"
+                android:visibility="invisible"
+                app:tint="@color/red" />
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/send_loading"
+                style="@style/SpinKitView.Small.ChasingDots"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:visibility="invisible" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/send_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/chat_my_9"
             android:gravity="center_vertical"
+            android:text="建行卡省的就卡死的啊实打啊实打奥氏啊实打奥氏打飒飒的奥氏大苏啊实打啊实打啊实打打"
+            android:layout_marginEnd="@dimen/general_padding_small"
             android:letterSpacing="0.08"
             android:lineSpacingExtra="1dp"
-            android:textColor="@color/whiteAlways" />
+            android:textColor="@color/whiteAlways"
+            android:textIsSelectable="true" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

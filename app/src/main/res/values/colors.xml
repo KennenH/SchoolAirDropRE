@@ -60,4 +60,9 @@
     <color name="darkerTransparentAlways">#80000000</color>
     <color name="darkTransparent">#1EFFFFFF</color>
     <color name="darkerTransparent">#80FFFFFF</color>
+
+
+    <color name="placeholderBackground">#EAF0F7</color>
+    <color name="placeholderLightDots">#CADAEC</color>
+    <color name="placeholderDarkDots">#6C7C9D</color>
 </resources>

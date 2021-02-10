@@ -70,8 +70,8 @@ class ParentPurchasingFragment : BaseParentFragment(), View.OnClickListener {
      */
     fun pageScrollToTop() {
         if (mViewPager != null && mAppBarLayout != null) {
-            mHomePagerAdapter?.scrollToTop(mViewPager!!.currentItem)
-            mAppBarLayout!!.setExpanded(true, true)
+            mHomePagerAdapter?.scrollToTop(mViewPager?.currentItem ?: 0)
+            mAppBarLayout?.setExpanded(true, true)
         }
     }
 

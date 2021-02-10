@@ -1,11 +1,8 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.example.schoolairdroprefactoredition.domain.DomainBaseUser
-import com.example.schoolairdroprefactoredition.domain.DomainBaseUserInfo
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import javadz.beanutils.BeanUtils
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -20,16 +17,14 @@ class UserRepository private constructor() {
                 }
     }
 
-    fun getUserInfo(userID: Int, onResult: (success: Boolean, response: DomainBaseUserInfo?) -> Unit) {
-        RetrofitClient.userApi.getUserInfoByID(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, userID).apply {
-            enqueue(object : CallBackWithRetry<DomainBaseUser>(this@apply) {
-                override fun onResponse(call: Call<DomainBaseUser>, response: Response<DomainBaseUser>) {
+    fun getUserInfoById(userID: Int, onResult: (success: Boolean, response: DomainUserInfo.DataBean?) -> Unit) {
+        RetrofitClient.userApi.getUserInfoByID(userID).apply {
+            enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
+                override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         if (response.isSuccessful) {
                             val body = response.body()
-                            val baseUserInfo = DomainBaseUserInfo()
-                            BeanUtils.copyProperties(baseUserInfo, body?.data?.get(0))
-                            onResult(true, baseUserInfo)
+                            onResult(true, body?.data)
                         } else {
                             onResult(false, null)
                         }

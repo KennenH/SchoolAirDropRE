@@ -15,12 +15,7 @@ class UserInfoCache {
      * 获取上次登录的账号信息
      */
     fun getLastLoggedAccount(): DomainUserInfo.DataBean? {
-        val info: DomainUserInfo.DataBean? = userList.firstOrNull()
-        return if (info != null && info.ualipay != null) {
-            info
-        } else {
-            null
-        }
+        return userList.firstOrNull()
     }
 
     /**
@@ -58,7 +53,7 @@ class UserInfoCache {
         }
 
         for ((index, i) in userList.withIndex()) {
-            if (i.ualipay == info.ualipay) {
+            if (i.userId == info.userId) {
                 userList.removeAt(index)
                 break
             }
@@ -67,7 +62,7 @@ class UserInfoCache {
         // 当没有缓存账号或者第一个账号不为空白替代账号时直接在头部添加账号信息
         // 否则，第一个账号应该是空白替代账号，直接将其替代
         val first = userList.firstOrNull()
-        if (first == null || first.ualipay != null) {
+        if (first == null) {
             userList.add(0, info)
         } else {
             userList[0] = info

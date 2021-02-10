@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.chat.panel;
 
 import com.example.schoolairdroprefactoredition.R;
-import com.example.schoolairdroprefactoredition.pojo.adapterbean.MorePanelBean;
 
 import java.util.ArrayList;
 import java.util.List;

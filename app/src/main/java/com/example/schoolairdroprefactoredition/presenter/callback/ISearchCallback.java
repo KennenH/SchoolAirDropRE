@@ -2,7 +2,7 @@ package com.example.schoolairdroprefactoredition.presenter.callback;
 
 import com.example.schoolairdroprefactoredition.cache.SearchHistories;
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
-import com.example.schoolairdroprefactoredition.pojo.databean.SearchSuggestionBean;
+import com.example.schoolairdroprefactoredition.domain.SearchSuggestionBean;
 
 import java.util.List;
 

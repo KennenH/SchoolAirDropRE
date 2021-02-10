@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import com.amap.api.location.AMapLocation
 import com.blankj.utilcode.constant.PermissionConstants
@@ -27,7 +28,11 @@ abstract class BaseChildFragment : Fragment(), OnLocationListener, EndlessRecycl
          */
         private var requested = false
 
-        private var isMainActivityLocated = false // 其他页面是否受到过定位信息
+        /**
+         * 主页面是否收到过定位信息
+         * 与具体某个页面没有关系，只要任何一个子页面收到回调便认为已定位
+         */
+        private var isMainActivityLocated = false
 
         private var aMapLocation: AMapLocation? = null
 
@@ -43,16 +48,18 @@ abstract class BaseChildFragment : Fragment(), OnLocationListener, EndlessRecycl
     }
 
     /**
-     * 是否已经获取来自[MainActivity]的定位信息
-     *
+     * 当前子页面是否已经获取来自[MainActivity]的定位信息
+     * 与上面的[BaseChildFragment.isMainActivityLocated]不同的是这个变量记录每个子页面的已定位标志
      *
      * 1、先入为主的页面将有权力主动要求MainActivity获取定位信息
      * 2、后来者若发现页面中已经存在定位信息，则可以直接使用它获取数据
      * 3、后来者若发现页面中不存在定位信息，则将等待主页面返回定位信息
-     * 4、在主页的定位信息返回之后，若发现该页面已经被通知过了，则忽略
-     * 该页面的数据获取，否则获取页面数据
+     * 4、在主页的定位信息返回之后，若发现该页面已经被通知过了，则忽略该页面的数据获取，否则获取页面数据
+     *
+     * fatal bug fix: 但是这里的 已定位 逻辑会有问题，若是因为网络等其他原因造成的页面无法加载，用户在
+     * 点击重试之后会发现页面无限等待，因为这里的定位查重逻辑将用户手动重试的请求也一并过滤了
      */
-    private var isThisPageLocationGot = false // 本页面是否收到过定位信息
+    private var isThisPageLocationGot = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -106,12 +113,12 @@ abstract class BaseChildFragment : Fragment(), OnLocationListener, EndlessRecycl
     abstract fun getOnlineData(aMapLocation: AMapLocation?)
 
     /**
-     * 下拉刷新获取数据
+     * 下拉刷新
      */
     abstract fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?)
 
     /**
-     * 下拉自动获取更多数据
+     * 上拉获取更多数据
      */
     abstract fun getAutoLoadMoreData(aMapLocation: AMapLocation?)
 
@@ -147,6 +154,7 @@ abstract class BaseChildFragment : Fragment(), OnLocationListener, EndlessRecycl
 
     /**
      * 请求定位但是不请求权限
+     * 即若定位权限被拒绝也将保持沉默
      */
     private fun locateWithoutRequest() {
         if (activity is MainActivity) {
@@ -154,13 +162,16 @@ abstract class BaseChildFragment : Fragment(), OnLocationListener, EndlessRecycl
         }
     }
 
+    /**
+     * [MainActivity.OnLocationListener]监听回调
+     */
     override fun onLocated(aMapLocation: AMapLocation?) {
         Companion.aMapLocation = aMapLocation
         isMainActivityLocated = true
-        if (!isThisPageLocationGot) {
-            isThisPageLocationGot = true
-            getPageDataIfLocated()
-        }
+//        if (!isThisPageLocationGot) {
+//            isThisPageLocationGot = true
+        getPageDataIfLocated()
+//        }
     }
 
     override fun onLocationPermissionDenied() {
@@ -171,7 +182,7 @@ abstract class BaseChildFragment : Fragment(), OnLocationListener, EndlessRecycl
         if (aMapLocation != null) {
             getAutoLoadMoreData(aMapLocation)
         } else {
-            showPlaceHolder(StatePlaceHolder.TYPE_ERROR)
+            Toast.makeText(context, "something went wrong >_<", Toast.LENGTH_SHORT).show()
             recycler.finishLoading()
         }
     }

@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,9 +27,11 @@ import com.amap.api.location.AMapLocationListener;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.application.Application;
 import com.example.schoolairdroprefactoredition.databinding.ActivitySellingAddNewBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo;
 import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
@@ -39,9 +40,11 @@ import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecycl
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem;
 import com.example.schoolairdroprefactoredition.utils.AnimUtil;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.example.schoolairdroprefactoredition.utils.filters.DecimalFilter;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
+import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
+import com.example.schoolairdroprefactoredition.utils.filters.DecimalFilter;
+import com.example.schoolairdroprefactoredition.viewmodel.AddNewViewModel;
 import com.example.schoolairdroprefactoredition.viewmodel.GoodsViewModel;
 import com.luck.picture.lib.PictureSelector;
 import com.luck.picture.lib.entity.LocalMedia;
@@ -51,36 +54,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.FAILED_ADD;
+import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.FAILED_MODIFY;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.LOCATION_FAILED_NEW_ITEM;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_NEW_ITEM;
-import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.FAILED_MODIFY;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_NEW_POST;
 
-public class AddNewActivity extends PermissionBaseActivity implements View.OnClickListener, AMapLocationListener, HorizontalImageRecyclerAdapter.OnPicSetClickListener, AddNewViewModel.OnRequestListener {
+public class AddNewActivity extends PermissionBaseActivity implements View.OnClickListener, AMapLocationListener, HorizontalImageRecyclerAdapter.OnPicSetClickListener {
 
     /**
      * 发布物品或新帖子
      * 添加物品或帖子使用该方法
-     * 修改物品使用{@link AddNewActivity#start(Context, DomainToken, HomeGoodsListInfo.DataBean)}
+     * 修改物品使用{@link AddNewActivity#start(Context, HomeGoodsListInfo.DataBean)}
      *
      * @param type 页面类型 one of {@link AddNewType#ADD_ITEM} {@link AddNewType#ADD_POST}
      */
-    public static void start(Context context, @Nullable DomainToken token, @AddNewType int type) {
+    public static void start(Context context, @AddNewType int type) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ConstantUtil.KEY_TOKEN, token);
         bundle.putSerializable(ConstantUtil.KEY_ADD_NEW_TYPE, type);
         start(context, bundle);
     }
 
     /**
      * 修改物品信息
-     * 添加物品或帖子使用{@link AddNewActivity#start(Context, DomainToken, int)}
+     * 添加物品或帖子使用{@link AddNewActivity#start(Context, int)}
      *
      * @param goodsInfo 物品基本信息
      */
-    public static void start(Context context, @Nullable DomainToken token, HomeGoodsListInfo.DataBean goodsInfo) {
+    public static void start(Context context, HomeGoodsListInfo.DataBean goodsInfo) {
         Bundle bundle = new Bundle();
-        bundle.putSerializable(ConstantUtil.KEY_TOKEN, token);
         bundle.putSerializable(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.MODIFY_ITEM);
         bundle.putSerializable(ConstantUtil.KEY_GOODS_BASE_INFO, goodsInfo);
         start(context, bundle);
@@ -90,24 +91,15 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
      * 打开页面
      * 若不知道这个bundle里需要传什么参数，请按情况使用以下打开方式
      * <p>
-     * 新增物品或帖子: {@link AddNewActivity#start(Context, DomainToken, int)}
-     * 修改物品信息: {@link AddNewActivity#start(Context, DomainToken, HomeGoodsListInfo.DataBean)}
+     * 新增物品或帖子: {@link AddNewActivity#start(Context, int)}
+     * 修改物品信息: {@link AddNewActivity#start(Context, HomeGoodsListInfo.DataBean)}
      */
     private static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, AddNewActivity.class);
         intent.putExtras(bundle);
-
-        DomainToken token = (DomainToken) bundle.getSerializable(ConstantUtil.KEY_TOKEN);
-        if (token != null && token.getAccess_token() != null) {
-            context.startActivity(intent);
-            if (context instanceof AppCompatActivity) {
-                AnimUtil.activityStartAnimUp((AppCompatActivity) context);
-            }
-        } else {
-            if (context instanceof AppCompatActivity) {
-                ((AppCompatActivity) context).startActivityForResult(intent, LoginActivity.LOGIN);
-                AnimUtil.activityStartAnimUp((AppCompatActivity) context);
-            }
+        if (context instanceof AppCompatActivity) {
+            ((AppCompatActivity) context).startActivityForResult(intent, LoginActivity.LOGIN);
+            AnimUtil.activityStartAnimUp((AppCompatActivity) context);
         }
     }
 
@@ -140,7 +132,6 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     private float mHWRatio = 1.0f;
     private List<LocalMedia> mPicSetSelected = new ArrayList<>();
 
-    private DomainToken token;
     private HomeGoodsListInfo.DataBean goodsBaseInfo;
     private GoodsDetailInfo goodsDetailInfo;
 
@@ -160,9 +151,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
 
         addNewViewModel = new ViewModelProvider(this).get(AddNewViewModel.class);
         goodsViewModel = new ViewModelProvider(this).get(GoodsViewModel.class);
-        addNewViewModel.setOnRequestListener(this);
 
-        token = (DomainToken) getIntent().getSerializableExtra(ConstantUtil.KEY_TOKEN);
         goodsBaseInfo = (HomeGoodsListInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_BASE_INFO);
         addNewType = getIntent().getIntExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.ADD_ITEM);
 
@@ -202,7 +191,6 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                 if (binding.cover.getImagePath() != null && !binding.cover.getImagePath().equals("")) {
                     new XPopup.Builder(AddNewActivity.this)
                             .isDarkTheme(true)
-                            .isDestroyOnDismiss(true)
                             .asImageViewer(binding.cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, new MyUtil.ImageLoader())
                             .show();
                 } else {
@@ -328,8 +316,13 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
             } else if (requestCode == LoginActivity.LOGIN) { // 在本页面打开登录页面登录并返回
                 if (data != null) {
                     setResult(Activity.RESULT_OK, data);
-                    token = (DomainToken) data.getSerializableExtra(ConstantUtil.KEY_TOKEN);
-                    submit();
+                    ((Application) getApplication()).cacheMyInfoAndToken(
+                            (DomainUserInfo.DataBean) data.getSerializableExtra(ConstantUtil.KEY_USER_INFO),
+                            (DomainToken) data.getSerializableExtra(ConstantUtil.KEY_TOKEN));
+                    try {
+                        submit();
+                    } catch (Exception ignored) {
+                    }
                 }
             }
         }
@@ -343,8 +336,9 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
             mClient = new AMapLocationClient(this);
             mClient.setLocationListener(this);
         }
-        if (mOption == null)
+        if (mOption == null) {
             mOption = new AMapLocationClientOption();
+        }
 
         binding.optionLocation.setDescription(getString(R.string.locating));
         mOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
@@ -372,13 +366,14 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
      */
     private void submitItem() {
         if (addNewType == AddNewType.ADD_ITEM) { // 新增物品
+            DomainToken token = ((Application) getApplication()).getCachedToken();
             if (token != null) {
                 if (mAmapLocation == null) {
 //                            dismissLoading(() ->
                     AddNewResultActivity.start(this, false, LOCATION_FAILED_NEW_ITEM);
                 } else {
                     showLoading(() -> {
-                                List<String> mPicSetPaths = new ArrayList<>();
+                                ArrayList<String> mPicSetPaths = new ArrayList<>();
                                 for (LocalMedia localMedia : mPicSetSelected) {
                                     String qPath = localMedia.getAndroidQToPath();
                                     mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
@@ -394,8 +389,8 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                                             // 所以这里加一个标志变量 打开一次页面最多只能成功一次 因此成功后即不再弹出
                                             if (!isSubmit) {
                                                 dismissLoading(() -> {
-                                                    AddNewResultActivity.start(this, result.isSuccess(), result.isSuccess() ? SUCCESS_NEW_ITEM : FAILED_ADD);
-                                                    if (result.isSuccess()) {
+                                                    AddNewResultActivity.start(this, result, result ? SUCCESS_NEW_ITEM : FAILED_ADD);
+                                                    if (result) {
                                                         isSubmit = true;// 发送已完毕标志
 
                                                         finish();
@@ -406,10 +401,9 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                                         });
                             }
                     );
-
                 }
             } else {
-                LoginActivity.Companion.startForLogin(this);
+                LoginActivity.Companion.start(this);
             }
         } else if (addNewType == AddNewType.MODIFY_ITEM) { // 修改物品
             AddNewResultActivity.start(this, false, FAILED_MODIFY);
@@ -420,6 +414,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
      * 提交新帖表单
      */
     private void submitPost() {
+        DomainToken token = ((Application) getApplication()).getCachedToken();
         if (token != null) {
             if (mAmapLocation == null) {
                 AddNewResultActivity.start(this, false, LOCATION_FAILED_NEW_ITEM);
@@ -439,8 +434,8 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                                         // 所以这里加一个标志变量 打开一次页面最多只能成功一次 因此成功后即不再弹出
                                         if (!isSubmit) {
                                             dismissLoading(() -> {
-                                                AddNewResultActivity.start(this, result.isSuccess(), result.isSuccess() ? SUCCESS_NEW_POST : FAILED_ADD);
-                                                if (result.isSuccess()) {
+                                                AddNewResultActivity.start(this, result, result ? SUCCESS_NEW_POST : FAILED_ADD);
+                                                if (result) {
                                                     isSubmit = true;// 发送已完毕标志
 
                                                     finish();
@@ -453,7 +448,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                 );
             }
         } else {
-            LoginActivity.Companion.startForLogin(this);
+            LoginActivity.Companion.start(this);
         }
     }
 
@@ -627,23 +622,25 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
         DomainGoodsInfo.DataBean goodsInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
 
         try {
-            mCoverPath = ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + goodsInfo.getGoods_img_cover();
+            mCoverPath = ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(goodsInfo.getGoods_img_cover());
             binding.cover.setImageRemotePath(mCoverPath);
             List<String> picSet = goodsInfo.getGoods_img_set() == null || goodsInfo.getGoods_img_set().trim().equals("") ?
                     new ArrayList<>() : MyUtil.getArrayFromString(goodsInfo.getGoods_img_set());
 
             for (int i = 0; i < picSet.size(); i++) {
                 LocalMedia media = new LocalMedia();
-                media.setPath(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + picSet.get(i));
+                media.setPath(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(picSet.get(i)));
                 mPicSetSelected.add(media);
             }
             mAdapter.setList(mPicSetSelected);
             binding.optionTitle.setText(goodsInfo.getGoods_name());
             binding.priceInput.setText(goodsInfo.getGoods_price());
-            if (goodsInfo.getGoods_is_brandNew() == 0)
+            if (goodsInfo.getGoods_is_brandNew() == 0) {
                 binding.optionSecondHand.toggle();
-            if (goodsInfo.getGoods_is_quotable() == 1)
+            }
+            if (goodsInfo.getGoods_is_quotable() == 1) {
                 binding.optionNegotiable.toggle();
+            }
             binding.optionDescription.setText(goodsInfo.getGoods_description());
         } catch (NullPointerException ignored) {
             DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorLoadItemInfo);
@@ -655,15 +652,17 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
      */
     private void clearDraft() {
         mCoverPath = "";
-        mPicSetSelected = new ArrayList<>();
-        mAdapter.setList(new ArrayList<>());
+        mPicSetSelected.clear();
+        mAdapter.setList(mPicSetSelected);
         binding.cover.clearImage(true);
         binding.optionTitle.setText("");
         binding.priceInput.setText("");
-        if (binding.optionNegotiable.getIsChecked())
+        if (binding.optionNegotiable.getIsChecked()) {
             binding.optionNegotiable.toggle();
-        if (binding.optionSecondHand.getIsChecked())
+        }
+        if (binding.optionSecondHand.getIsChecked()) {
             binding.optionSecondHand.toggle();
+        }
         binding.optionDescription.setText("");
 
         binding.draftTip.setText(getString(R.string.draftCleared));
@@ -674,8 +673,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = new MenuInflater(this);
-        inflater.inflate(R.menu.selling_add_done, menu);
+        getMenuInflater().inflate(R.menu.selling_add_done, menu);
         menu.getItem(0).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
     }
@@ -686,8 +684,15 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
         if (id == android.R.id.home) {
             finish();
             AnimUtil.activityExitAnimDown(this);
+            return true;
         } else if (id == R.id.add_submit) {
-            submit();
+            item.setEnabled(false);
+            try {
+                submit();
+            } catch (Exception ignored) {
+            }
+            item.setEnabled(true);
+            return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -703,7 +708,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.option_title) {
-            InputSetActivity.start(this, InputSetActivity.TYPE_TITLE, binding.optionTitle.getText().toString(), getString(R.string.title));
+            InputSetActivity.Companion.start(this, InputSetActivity.TYPE_TITLE, binding.optionTitle.getText().toString(), getString(R.string.title));
         } else if (id == R.id.price_confirm) {
             KeyboardUtils.hideSoftInput(v);
             binding.priceInput.clearFocus();
@@ -715,7 +720,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
         } else if (id == R.id.option_secondHand) {
             binding.optionSecondHand.toggle();
         } else if (id == R.id.option_description) {
-            InputSetActivity.start(this, InputSetActivity.TYPE_DESCRIPTION, binding.optionDescription.getText().toString(), getString(R.string.goods_description));
+            InputSetActivity.Companion.start(this, InputSetActivity.TYPE_DESCRIPTION, binding.optionDescription.getText().toString(), getString(R.string.goods_description));
         } else if (id == R.id.saved_close) {
             AnimUtil.collapse(binding.savedDraft);
             AnimUtil.textColorAnim(this, binding.draftTipToggle, R.color.primaryText, R.color.colorAccent);
@@ -793,31 +798,9 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
 
         new XPopup.Builder(this)
                 .isDarkTheme(true)
-                .isDestroyOnDismiss(true)
                 .asImageViewer(source, pos, data, false, false, -1, -1, -1, true, (popupView, position1) -> {
                     popupView.updateSrcView(binding.picSet.getChildAt(position1).findViewById(R.id.image));
                 }, new MyUtil.ImageLoader())
                 .show();
-    }
-
-    @Override
-    public void onAddNewItemError() {
-        dismissLoading(() -> AddNewResultActivity.start(this, false, FAILED_ADD));
-    }
-
-    @Override
-    public void onModifyInfoError() {
-        dismissLoading(() -> AddNewResultActivity.start(this, false, FAILED_MODIFY));
-    }
-
-    @Override
-    public void onAddNewPostError() {
-        dismissLoading(() -> AddNewResultActivity.start(this, false, FAILED_ADD));
-    }
-
-    @Override
-    public void onOtherError() {
-        dismissLoading(() ->
-                DialogUtil.showCenterDialog(AddNewActivity.this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.addNewGoodsError));
     }
 }

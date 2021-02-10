@@ -16,7 +16,6 @@ import androidx.constraintlayout.widget.Constraints;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.SizeUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -83,7 +82,7 @@ public class ImagePager extends ConstraintLayout implements ViewPager.OnPageChan
             if (isIncludeBaseUrl) {
                 mData.add(pic);
             } else {
-                mData.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + pic);
+                mData.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(pic));
             }
         }
 
@@ -162,11 +161,11 @@ public class ImagePager extends ConstraintLayout implements ViewPager.OnPageChan
                         @Override
                         public boolean onResourceReady(Bitmap resource, Object model, Target<Bitmap> target, DataSource dataSource, boolean isFirstResource) {
                             if (position == 0 && mOnFirstImageLoadedListener != null) {
-                                LogUtils.d(
-                                        "res width -- > " + resource.getWidth()
-                                                + "res height -- > " + resource.getHeight()
-                                                + "\nresized height -- > " + ImageUtil.getResizedHeight(resource.getWidth(), resource.getHeight(), SizeUtils.dp2px(400f))
-                                                + "\n 400dp -- > " + SizeUtils.dp2px(400f));
+//                                LogUtils.d(
+//                                        "res width -- > " + resource.getWidth()
+//                                                + "res height -- > " + resource.getHeight()
+//                                                + "\nresized height -- > " + ImageUtil.getResizedHeight(resource.getWidth(), resource.getHeight(), SizeUtils.dp2px(400f))
+//                                                + "\n 400dp -- > " + SizeUtils.dp2px(400f));
 
                                 mOnFirstImageLoadedListener.onFirstImageLoaded(true);
 
@@ -187,7 +186,6 @@ public class ImagePager extends ConstraintLayout implements ViewPager.OnPageChan
 
                 new XPopup.Builder(getContext())
                         .hasStatusBar(false)
-                        .isDestroyOnDismiss(true)
                         .asImageViewer(pic, position, mData, false, false, -1, -1, -1, true, (popupView, position1) -> {
                             popupView.updateSrcView((ImageView) binding.goodsPagerPager.getChildAt(position1));
                         }, new MyUtil.ImageLoader())

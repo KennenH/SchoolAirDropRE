@@ -48,7 +48,7 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
     private final TextView mAction;
     private final SpinKitView mLoading;
 
-    private int type = TYPE_ERROR;
+    private int type = TYPE_LOADING;
 
     private OnPlaceHolderRefreshListener mOnPlaceHolderRefreshListener;
     private OnHomePlaceHolderActionListener mOnHomePlaceHolderActionListener;
@@ -89,8 +89,6 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
      *             {@link StatePlaceHolder#TYPE_NETWORK_OR_LOCATION_ERROR_HOME}
      *             {@link StatePlaceHolder#TYPE_DENIED}
      *             {@link StatePlaceHolder#TYPE_ERROR}
-     * @deprecated 改用
-     * {@link StatePlaceHolder#setPlaceholderType(LoadState)}
      */
     public void setPlaceholderType(int type) {
         this.type = type;
@@ -201,7 +199,7 @@ public class StatePlaceHolder extends ConstraintLayoutAuto implements View.OnCli
     /**
      * 设置重试监听器
      */
-    public void setOnPlaceHolderActionListener(OnPlaceHolderRefreshListener listener) {
+    public void addOnPlaceHolderActionListener(OnPlaceHolderRefreshListener listener) {
         mOnPlaceHolderRefreshListener = listener;
     }
 

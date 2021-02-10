@@ -246,7 +246,7 @@
     <string name="ic_credit3">[img src=ic_credit3/]</string>
     <string name="ic_credit4">[img src=ic_credit4/]</string>
     <string name="ic_credit5">[img src=ic_credit5/]</string>
-    <string name="loading">正在加载…</string>
+    <string name="loading">正在加载</string>
     <string name="statistic">统计</string>
     <string name="modifySuccess">修改完成</string>
     <string name="modifyFailed">修改失败</string>
@@ -299,5 +299,10 @@
     <string name="emotion">表情</string>
     <string name="anonymous">匿名</string>
     <string name="tag">话题标签</string>
+    <string name="disconnect">未连接</string>
+    <string name="picture">[图片]</string>
+    <string name="connecting">正在连接</string>
+    <string name="noMessageYet">还没有消息哦</string>
+    <string name="systemBusy">系统繁忙，请稍后再试</string>
 
 </resources>

@@ -61,8 +61,9 @@ public class JsonCacheUtil {
         SharedPreferences.Editor editor = mSharePreferences.edit();
         String gsonStr = mGson.toJson(value);
 
-        if (duration != -1L)
+        if (duration != -1L) {
             duration += System.currentTimeMillis();
+        }
 
         CacheWithDuration cacheWithDuration = new CacheWithDuration(duration, gsonStr);
         String cacheWithDurationToJson = mGson.toJson(cacheWithDuration);

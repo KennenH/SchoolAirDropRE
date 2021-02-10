@@ -13,6 +13,7 @@ import androidx.annotation.StringRes;
 
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.AppUtils;
+import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
@@ -60,7 +61,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                 break;
         }
 
-        int finalRes = res;
+        final int finalRes = res;
         PermissionUtils.permission(permission)
                 .callback((isAllGranted, granted, deniedForever, denied) -> {
                     // 权限允许
@@ -84,10 +85,12 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                         return;
                     }
 
-                    if (deniedForever.size() != 0 && type == RequestType.MANUAL) {// 拒绝并不再提醒
+                    if (deniedForever.size() != 0 && type == RequestType.MANUAL) {// 拒绝并不再提醒，但是又手动做需要权限的操作
                         popUpToSettingsForPermission(finalRes, permission);
                     } else if (denied.size() != 0) { // 拒绝但未勾选不再提醒
                         popUpForRequestPermission(finalRes, permission);
+                    } else {
+                        LogUtils.d("权限请求失败了，将调用父类权限拒绝方法");
                     }
 
                     switch (permission) {
@@ -147,8 +150,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                         protected int getPopupLayoutId() {
                             return R.layout.dialog_privacy_policy;
                         }
-                    })
-                    .show();
+                    }).show();
         } else {
             initAppMainAfterAgreeToTermsOfService();
         }
@@ -156,29 +158,37 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
 
     /**
      * 仅检查是否有某个权限，不请求权限，即权限被拒绝时保持完全沉默
-     * 是否有权限仍旧在 granted 方法和 denied 方法中判断
+     * 需要权限的操作仍旧在 granted 方法和 denied 方法中执行
      */
     public void checkPermissionWithoutRequest(int requestCode) {
         switch (requestCode) {
             case Automatically.LOCATION:
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED)
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PERMISSION_GRANTED) {
                     locationGranted();
-                else locationDenied();
+                } else {
+                    locationDenied();
+                }
                 break;
             case Automatically.CAMERA:
-                if (checkSelfPermission(Manifest.permission.CAMERA) == PERMISSION_GRANTED)
+                if (checkSelfPermission(Manifest.permission.CAMERA) == PERMISSION_GRANTED) {
                     cameraGranted();
-                else cameraDenied();
+                } else {
+                    cameraDenied();
+                }
                 break;
             case Automatically.ALBUM:
-                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED)
+                if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PERMISSION_GRANTED) {
                     albumGranted();
-                else albumDenied();
+                } else {
+                    albumDenied();
+                }
                 break;
             case Automatically.PHONE:
-                if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PERMISSION_GRANTED)
+                if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE) == PERMISSION_GRANTED) {
                     phoneGranted();
-                else phoneDenied();
+                } else {
+                    phoneDenied();
+                }
             default:
                 break;
         }
@@ -247,7 +257,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
 
     /**
      * 服务条款和隐私政策同意成功
-     * 开始处理
+     * 开始初始化App
      */
     protected void initAppMainAfterAgreeToTermsOfService() {
     }
@@ -300,6 +310,12 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     protected void phoneDenied() {
     }
 
+    /**
+     * 用户之前拒绝了权限，但是并没有勾选不再提示，此时需要弹窗提示用户授予权限
+     *
+     * @param res        弹窗提示语
+     * @param permission 权限串{@link PermissionConstants.Permission}
+     */
     private void popUpForRequestPermission(@StringRes int res, @PermissionConstants.Permission String permission) {
         int request = 0;
         switch (permission) {
@@ -360,11 +376,18 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                         }, false).show();
     }
 
+    /**
+     * 用户之前拒绝了权限并勾选不再提示，但是现在又手动点击需要权限的操作，此时需要弹出对话框来引导用户
+     * 去系统设置中手动设置
+     *
+     * @param res        对话框提示res
+     * @param permission 权限{@link PermissionConstants.Permission}
+     */
     private void popUpToSettingsForPermission(@StringRes int res, @PermissionConstants.Permission String permission) {
         new XPopup.Builder(this)
                 .isDarkTheme(isDarkTheme)
                 .asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
-                        , () -> {
+                        , () -> { // 点击确定，引导至系统设置
                             switch (permission) {
                                 case PermissionConstants.LOCATION:
                                     goSettings(Automatically.LOCATION);
@@ -382,7 +405,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                                     break;
                             }
                         }
-                        , () -> { // do nothing
+                        , () -> { // 点击取消，do nothing
                         },
                         false).show();
     }
@@ -390,13 +413,16 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // 设置返回时检查自动权限,不申请
+        // 从系统设置返回至App时检查自动权限，若未允许也不再申请
         checkPermissionWithoutRequest(requestCode);
     }
 
     /**
      * 进入设置，手动给予权限
-     * 只接受{@link RequestType#AUTO}
+     *
+     * @param requestCode 必须是自动权限{@link Automatically}，该requestCode将会传递至
+     *                    {@link #onActivityResult(int, int, Intent)}中，从而传递至
+     *                    {@link #checkPermissionWithoutRequest(int)}，该方法只接收自动权限
      */
     private void goSettings(int requestCode) {
         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
