@@ -67,12 +67,8 @@
             android:name=".scene.user.UserModifyInfoActivity"
             android:label="" />
         <activity
-            android:name=".scene.user.UserUpdateNameActivity"
+            android:name=".scene.tab.likes.LikesActivity"
             android:label="" />
-        <activity
-            android:name=".scene.user.UserUpdateAvatarActivity"
-            android:label="" />
-        <activity android:name=".scene.tab.likes.LikesActivity" />
         <activity
             android:name=".scene.addnew.AddNewResultActivity"
             android:label="" />

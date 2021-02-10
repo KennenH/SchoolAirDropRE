@@ -10,6 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitManager {
     private static final RetrofitManager instance = new RetrofitManager();
+
     private final Retrofit mRetrofit;// final 变量可以在构造器中初始化
 
     public static RetrofitManager getInstance() {

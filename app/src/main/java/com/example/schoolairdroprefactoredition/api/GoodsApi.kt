@@ -14,7 +14,7 @@ interface GoodsApi {
      */
     @FormUrlEncoded
     @POST("goods/getNearByGoods")
-    fun getGoodsInfo(
+    fun getNearByGoods(
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String,
             @Field("page") page: Int,

@@ -145,7 +145,7 @@ class UserUpdateAvatarActivityKt : AppCompatActivity(), View.OnLongClickListener
     private fun updateAvatar(avatarUrl: String) {
         mLoading.dismissWith { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successAvatar) }
         ImageUtil.loadRoundImage(avatar,
-                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(avatarUrl),
+                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(avatarUrl),
                 R.drawable.ic_logo_alpha_white)
         info?.userAvatar = avatarUrl
 

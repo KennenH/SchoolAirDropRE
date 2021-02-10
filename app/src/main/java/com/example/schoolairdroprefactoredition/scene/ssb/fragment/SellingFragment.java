@@ -85,7 +85,7 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
         if (isMine) {
             if (getToken() != null) {
                 showPlaceholder(StatePlaceHolder.TYPE_LOADING);
-                viewModel.getSelling(getToken().getAccess_token()).observe(getViewLifecycleOwner(), data -> {
+                viewModel.getSelling(15).observe(getViewLifecycleOwner(), data -> {
                     loadData(data);
                     dataLenOnChange(SSBBaseFragment.SELLING_POS);
                 });

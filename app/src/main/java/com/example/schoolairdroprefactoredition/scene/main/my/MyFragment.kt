@@ -10,7 +10,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding
 import com.example.schoolairdroprefactoredition.domain.DomainToken
@@ -18,7 +17,6 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.capture.CaptureActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity.OnLoginStateChangedListener
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity

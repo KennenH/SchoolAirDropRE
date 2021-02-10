@@ -31,8 +31,8 @@ public class SSBViewModel extends BaseStateViewModel implements ISSBCallback {
         ssbImpl.registerCallback(this);
     }
 
-    public LiveData<HomeGoodsListInfo> getSelling(String token) {
-        ssbImpl.getSellingList(token, 1);
+    public LiveData<HomeGoodsListInfo> getSelling(int userID) {
+        ssbImpl.getSellingList(userID);
         return mSelling;
     }
 

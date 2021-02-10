@@ -117,14 +117,14 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
      * 我的头像url
      */
     private val myAvatarUrl by lazy {
-        ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(myInfo?.userAvatar)
+        ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(myInfo?.userAvatar)
     }
 
     /**
      * 对方的头像url
      */
     private val counterpartUrl by lazy {
-        ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(counterpartInfo?.userAvatar)
+        ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(counterpartInfo?.userAvatar)
     }
 
     init {

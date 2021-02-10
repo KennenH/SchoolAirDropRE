@@ -201,9 +201,9 @@
     <string name="connectionLost">连接中断 请重试</string>
     <string name="submitSuccess">提交成功</string>
     <string name="submitFailed">提交失败</string>
-    <string name="submitSuccessTip">物品进入审核阶段，我们会在72小时内通知你物品的审核情况。</string>
+    <string name="submitSuccessTip">物品进入审核阶段，审核完毕后将会通知你。</string>
     <string name="submitFailedTip">上传物品时遇到错误。表单已自动保存，建议稍后重试提交。</string>
-    <string name="modifySuccessTip">修改过的物品将重新进行审核，我们会在72小时内通知你物品的审核情况。</string>
+    <string name="modifySuccessTip">修改过的物品将重新进行审核，审核完毕后将会通知你。</string>
     <string name="modifyFailedTip">可能是土豆服务器不给力或者正在维护。修改物品的表单不会保存，建议稍后再试。</string>
     <string name="OK">好</string>
     <string name="errorUpdateAvatar">上传头像出错</string>

@@ -14,6 +14,7 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
@@ -230,7 +231,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
         home_add_fab.setOnClickListener {
             AddNewActivity.start(this, AddNewActivity.AddNewType.ADD_POST)
-//            ChatActivity.startForTest(this)
         }
 
         navView.setOnNavigationItemSelectedListener(this@MainActivity)
@@ -595,7 +595,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     override fun onIMReceiveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
         // 保存收到的消息
         try {
-            val myID = (application as Application).getCachedMyInfo()?.userId
+            val myID = (application as Application).getCachedMyInfo()
             imViewModel.saveInstanceMessage(ChatHistory(fingerprint, senderID, myID.toString(), typeu, content, Date(), 0))
         } catch (e: NullPointerException) {
             val myID = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo

@@ -39,7 +39,7 @@ public class UserAvatarImpl implements IUserAvatarPresenter {
 
             MultipartBody.Part photo = FileUtil.createPartWithPath(context, "photo", img, false);
 
-            retrofit2.Call<DomainAvatarUpdateResult> task = api.updateAvatar(token, photo);
+            retrofit2.Call<DomainAvatarUpdateResult> task = api.updateAvatar(photo);
             task.enqueue(new CallBackWithRetry<DomainAvatarUpdateResult>(task) {
                 @Override
                 public void onResponse(retrofit2.Call<DomainAvatarUpdateResult> call, Response<DomainAvatarUpdateResult> response) {

@@ -34,7 +34,7 @@ class SwitchAccountRecyclerAdapter(val info: DomainUserInfo.DataBean?) : BaseQui
         } else {
             holder.setGone(R.id.current_account, true)
         }
-        ImageUtil.loadRoundedImage(holder.getView(R.id.account_avatar), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(item.userAvatar))
+        ImageUtil.loadRoundedImage(holder.getView(R.id.account_avatar), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(item.userAvatar))
         holder.setText(R.id.account_name, item.userName)
     }
 

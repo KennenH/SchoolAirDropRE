@@ -20,11 +20,8 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.ui.components.OverDragEventHeader
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.DialogUtil
-import com.example.schoolairdroprefactoredition.utils.ImageUtil
+import com.example.schoolairdroprefactoredition.utils.*
 import com.example.schoolairdroprefactoredition.utils.MyUtil.ImageLoader
-import com.example.schoolairdroprefactoredition.utils.StatusBarUtil
 import com.example.schoolairdroprefactoredition.viewmodel.UserViewModel
 import com.lxj.xpopup.XPopup
 import kotlinx.android.synthetic.main.activity_user.*

@@ -115,7 +115,6 @@ public class DomainUserInfo implements Serializable {
             this.userGoodsOnSaleCount = selling;
         }
 
-
         public int getUserContactCount() {
             return userContactCount;
         }
@@ -155,6 +154,5 @@ public class DomainUserInfo implements Serializable {
         public void setUserAvatar(String userAvatar) {
             this.userAvatar = userAvatar;
         }
-
     }
 }

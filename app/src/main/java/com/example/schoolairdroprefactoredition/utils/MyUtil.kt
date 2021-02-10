@@ -56,6 +56,7 @@ object MyUtil {
         return XPopup.Builder(context)
                 .dismissOnBackPressed(true)
                 .dismissOnTouchOutside(false)
+                .dismissOnBackPressed(false)
                 .setPopupCallback(object : SimpleCallback() {
                     override fun onShow(popupView: BasePopupView) {
                         if (context is AppCompatActivity) {

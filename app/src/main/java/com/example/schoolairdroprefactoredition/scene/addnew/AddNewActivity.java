@@ -3,6 +3,8 @@ package com.example.schoolairdroprefactoredition.scene.addnew;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -56,6 +58,7 @@ import java.util.List;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.FAILED_ADD;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.FAILED_MODIFY;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.LOCATION_FAILED_NEW_ITEM;
+import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_MODIFY;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_NEW_ITEM;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_NEW_POST;
 
@@ -133,7 +136,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     private List<LocalMedia> mPicSetSelected = new ArrayList<>();
 
     private HomeGoodsListInfo.DataBean goodsBaseInfo;
-    private GoodsDetailInfo goodsDetailInfo;
+    private GoodsDetailInfo.DataBean goodsDetailInfo;
 
     private boolean isDraftRestored = true;
     private boolean isSubmit = false;
@@ -188,7 +191,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
 
             @Override
             public void onItemClick() {
-                if (binding.cover.getImagePath() != null && !binding.cover.getImagePath().equals("")) {
+                if (binding.cover.getImagePath() != null && !"".equals(binding.cover.getImagePath())) {
                     new XPopup.Builder(AddNewActivity.this)
                             .isDarkTheme(true)
                             .asImageViewer(binding.cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, new MyUtil.ImageLoader())
@@ -406,7 +409,13 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                 LoginActivity.Companion.start(this);
             }
         } else if (addNewType == AddNewType.MODIFY_ITEM) { // 修改物品
-            AddNewResultActivity.start(this, false, FAILED_MODIFY);
+            showLoading(() -> {
+                List<String> mPicSetPaths = new ArrayList<>();
+                for (LocalMedia localMedia : mPicSetSelected) {
+                    String qPath = localMedia.getAndroidQToPath();
+                    mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
+                }
+            });
         }
     }
 
@@ -616,20 +625,20 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
         if (goodsBaseInfo == null) return;
 
         goodsViewModel.getGoodsDetailByID(goodsBaseInfo.getGoods_id()).observe(this, detail -> {
-            goodsDetailInfo = detail;
+            goodsDetailInfo = detail.getData().get(0);
         });
 
         DomainGoodsInfo.DataBean goodsInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
 
         try {
-            mCoverPath = ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(goodsInfo.getGoods_img_cover());
+            mCoverPath = ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(goodsInfo.getGoods_img_cover());
             binding.cover.setImageRemotePath(mCoverPath);
             List<String> picSet = goodsInfo.getGoods_img_set() == null || goodsInfo.getGoods_img_set().trim().equals("") ?
                     new ArrayList<>() : MyUtil.getArrayFromString(goodsInfo.getGoods_img_set());
 
             for (int i = 0; i < picSet.size(); i++) {
                 LocalMedia media = new LocalMedia();
-                media.setPath(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(picSet.get(i)));
+                media.setPath(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(picSet.get(i)));
                 mPicSetSelected.add(media);
             }
             mAdapter.setList(mPicSetSelected);
