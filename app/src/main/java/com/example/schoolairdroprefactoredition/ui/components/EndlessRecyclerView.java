@@ -61,15 +61,15 @@ public class EndlessRecyclerView extends RecyclerView {
 
             // pastVisibleItem 为当前第一个可见item的位置
             // 此处pastVisibleItems为临时数组，仅为获取其第一个item位置
-            if (mLayoutManager instanceof LinearLayoutManager)
+            if (mLayoutManager instanceof LinearLayoutManager) {
                 pastVisibleItem = ((LinearLayoutManager) mLayoutManager).findFirstVisibleItemPosition();
-            else if (mLayoutManager instanceof StaggeredGridLayoutManager) {
+            } else if (mLayoutManager instanceof StaggeredGridLayoutManager) {
                 ((StaggeredGridLayoutManager) mLayoutManager).findFirstVisibleItemPositions(pastVisibleItems);
                 pastVisibleItem = pastVisibleItems[0];
             }
 
             // 是否需要加载新数据
-            if (!isLoading && totalItemCount - pastVisibleItem < ConstantUtil.DATA_FETCH_DEFAULT_SIZE) {
+            if (!isLoading && totalItemCount - pastVisibleItem < ConstantUtil.DATA_FETCH_DEFAULT_SIZE / 2) {
                 // 正在加载标志，防止重复加载
                 isLoading = true;
                 // 加载新数据

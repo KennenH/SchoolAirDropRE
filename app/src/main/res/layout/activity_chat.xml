@@ -55,6 +55,7 @@
                 android:id="@+id/recycler_container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
+                app:srlEnablePreviewInEditMode="true"
                 android:layout_above="@+id/bottom_action"
                 android:background="@color/white"
                 app:layout_constraintBottom_toTopOf="@+id/bottom_action"
@@ -63,14 +64,14 @@
                 app:srlEnableOverScrollDrag="true"
                 app:srlEnableRefresh="true">
 
-                <!--简易刷新头-->
+                <!-- todo 简单刷新头 -->
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="0dp"
                     android:background="@color/white"
+                    tools:listitem="@layout/item_chat_send"
                     android:overScrollMode="never"
                     android:tag="recycler_view" />
             </com.scwang.smart.refresh.layout.SmartRefreshLayout>

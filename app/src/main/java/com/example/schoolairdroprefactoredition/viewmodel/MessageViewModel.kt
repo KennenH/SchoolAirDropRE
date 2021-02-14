@@ -6,16 +6,14 @@ import com.example.schoolairdroprefactoredition.database.pojo.*
 import com.example.schoolairdroprefactoredition.domain.DomainOfflineNum
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
-import com.example.schoolairdroprefactoredition.repository.ChatAllRepository
+import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
+import com.example.schoolairdroprefactoredition.repository.UserRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.MessageUtil
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 import kotlin.collections.ArrayList
 
-class MessageViewModel(private val chatRepository: ChatAllRepository) : ViewModel() {
-
-    private var chatHistoryLiveData = MutableLiveData<List<ChatHistory>>()
+class MessageViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
 
     private var userCacheLiveData = MutableLiveData<UserCache>()
 
@@ -23,7 +21,11 @@ class MessageViewModel(private val chatRepository: ChatAllRepository) : ViewMode
 
     var offlineNumLoadState = MutableLiveData<LoadState>()
 
-    class MessageViewModelFactory(private val repository: ChatAllRepository) : ViewModelProvider.Factory {
+    private val userRepository by lazy {
+        UserRepository.getInstance()
+    }
+
+    class MessageViewModelFactory(private val repository: DatabaseRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MessageViewModel::class.java)) {
                 return MessageViewModel(repository) as T
@@ -37,13 +39,14 @@ class MessageViewModel(private val chatRepository: ChatAllRepository) : ViewMode
      * 是本地未读和离线未读合并的
      */
     fun getChatList(receiverID: String): LiveData<List<ChatOfflineNumDetail>> {
-        return chatRepository.getChatList(receiverID).asLiveData()
+        LogUtils.d("消息列表改变，正在获取消息列表")
+        return databaseRepository.getChatList(receiverID).asLiveData()
     }
 
     fun getOfflineNumOnline(token: DomainToken): LiveData<DomainOfflineNum> {
         offlineNumLoadState.value = LoadState.LOADING
         viewModelScope.launch {
-            chatRepository.getOfflineNum(token) { success, response ->
+            databaseRepository.getOfflineNum(token) { success, response ->
                 if (success) {
                     offlineNumLoadState.value = LoadState.SUCCESS
                     offlineNumLiveData.value = response
@@ -66,25 +69,20 @@ class MessageViewModel(private val chatRepository: ChatAllRepository) : ViewMode
             val historyList: ArrayList<ChatHistory> = ArrayList()
             // 最后一条消息数组
             val lastFromUserInformation: ArrayList<LastFromUserInformation> = ArrayList()
+            // 用户基本信息
+            val senderInfo: ArrayList<UserCache> = ArrayList()
 
             val data = offlineNums.data
             for (offlineNum in data) {
-                lastFromUserInformation.add(LastFromUserInformation(
-                        offlineNum.senderId,
-                        offlineNum.fingerPrint,
-                        offlineNum.offline.size == ConstantUtil.DATA_FETCH_DEFAULT_SIZE
-                ))
-
-                // 消息数量
+                // 装配消息数量
                 numList.add(ChatOfflineNum(
                         offlineNum.senderId,
-                        offlineNum.senderInfo.senderName,
-                        offlineNum.senderInfo.senderAvatar,
                         offlineNum.receiverId,
                         offlineNum.offlineNum,
                         offlineNum.fingerPrint,
                         1))
 
+                // 装配消息记录
                 for (offlineBean in offlineNum.offline) {
                     historyList.add(ChatHistory(
                             offlineBean.fingerPrint,
@@ -94,29 +92,58 @@ class MessageViewModel(private val chatRepository: ChatAllRepository) : ViewMode
                             offlineBean.message,
                             offlineBean.sendTime,
                             1))
+
+                    // 装配最后一条消息
+                    lastFromUserInformation.add(LastFromUserInformation(
+                            offlineNum.senderId,
+                            offlineNum.fingerPrint,
+                            offlineNum.offline.size == ConstantUtil.DATA_FETCH_DEFAULT_SIZE
+                    ))
+
+                    // 装配用户信息
+                    senderInfo.add(UserCache(offlineNum.senderId.toInt(), offlineNum.senderInfo.senderName, offlineNum.senderInfo.senderAvatar))
                 }
             }
 
-            chatRepository.saveLatestMessage(lastFromUserInformation)
-            chatRepository.saveOfflineNum(numList)
-            chatRepository.saveHistory(historyList)
+            // 保存所有装配好的信息
+            databaseRepository.saveLastMessage(lastFromUserInformation)
+            databaseRepository.saveOfflineNum(numList)
+            databaseRepository.saveHistory(historyList)
+            databaseRepository.saveUserCache(senderInfo)
         }
     }
 
     /**
-     * 保存消息记录
+     * 侧滑删除会话，即将会话的display置为0
+     *
+     * 何时置1详见[com.example.schoolairdroprefactoredition.database.dao.ChatHistoryDao]
      */
-    fun saveHistories(histories: List<ChatHistory>) {
+    fun swipeToHideChannel(counterpartId: String) {
         viewModelScope.launch {
-            chatRepository.saveHistory(histories)
+            databaseRepository.hideChannel(counterpartId)
         }
     }
 
     /**
-     * ack消息数量
+     * 获取用户基本信息
      */
-    fun ackOfflineNum(receiverID: String, senderID: String) =
-            viewModelScope.launch {
-                chatRepository.ackOfflineNum(receiverID, senderID)
+    fun getUserBaseInfo(userId: Int): LiveData<UserCache?> {
+        viewModelScope.launch {
+            userRepository.getUserInfoById(userId) { success, response ->
+                if (success) {
+                    // 网络获取成功则返回并保存
+                    response?.let {
+                        val userCache = UserCache(it.userId, it.userName, it.userAvatar)
+                        userCacheLiveData.postValue(userCache)
+                        viewModelScope.launch {
+                            databaseRepository.saveUserCache(userCache)
+                        }
+                    }
+                } else {
+                    userCacheLiveData.postValue(null)
+                }
             }
+        }
+        return userCacheLiveData
+    }
 }

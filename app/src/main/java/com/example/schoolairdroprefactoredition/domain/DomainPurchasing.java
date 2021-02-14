@@ -3,7 +3,7 @@ package com.example.schoolairdroprefactoredition.domain;
 import java.io.Serializable;
 import java.util.List;
 
-public class HomeGoodsListInfo implements Serializable {
+public class DomainPurchasing implements Serializable {
 
     /**
      * success : true

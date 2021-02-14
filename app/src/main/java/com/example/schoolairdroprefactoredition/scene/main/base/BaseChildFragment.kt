@@ -120,10 +120,11 @@ abstract class BaseChildFragment : Fragment(), OnLocationListener, EndlessRecycl
     /**
      * 上拉获取更多数据
      */
-    abstract fun getAutoLoadMoreData(aMapLocation: AMapLocation?)
+    abstract fun getAutoLoadMoreData(recycler: EndlessRecyclerView, aMapLocation: AMapLocation?)
 
     /**
-     * 显示PlaceHolder
+     * 显示PlaceHolder，必须在页面的adapter中没有数据时才可以显示整页的占位符
+     * 否则将会严重影响用户体验
      *
      * @param type [com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME]
      * [com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder.TYPE_EMPTY_HOME_GOODS]
@@ -180,7 +181,7 @@ abstract class BaseChildFragment : Fragment(), OnLocationListener, EndlessRecycl
 
     override fun autoLoadMore(recycler: EndlessRecyclerView) {
         if (aMapLocation != null) {
-            getAutoLoadMoreData(aMapLocation)
+            getAutoLoadMoreData(recycler, aMapLocation)
         } else {
             Toast.makeText(context, "something went wrong >_<", Toast.LENGTH_SHORT).show()
             recycler.finishLoading()

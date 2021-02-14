@@ -5,19 +5,26 @@ import android.app.Application
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Process
+import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
+import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
 import com.example.schoolairdroprefactoredition.database.SARoomDatabase
+import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.im.IMClientManager
-import com.example.schoolairdroprefactoredition.repository.ChatAllRepository
+import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
+import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.viewmodel.ChatViewModel
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.xiaomi.channel.commonutils.logger.LoggerInterface
 import com.xiaomi.mipush.sdk.MiPushClient
+import kotlinx.android.synthetic.main.activity_chat.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import me.jessyan.autosize.AutoSize
@@ -54,6 +61,35 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
         }
     }
 
+    /**
+     * 发送文本消息
+     *
+     * 若以发送则返回消息指纹码，否则返回空
+     * 返回null代表消息根本没有发送，而不是发送失败
+     *
+     * @param userID 对方的id
+     * @return 发送的消息的指纹，若为null表示消息未被发送
+     */
+    fun doSendTextMessage(userID: String?, myId: String?, content: String, weakAdapter: WeakReference<ChatRecyclerAdapter>) {
+        if (userID != null && content.trim() != "") {
+            // 为本条消息创建消息指纹
+            val fingerprint = Protocal.genFingerPrint()
+            // 为新发送的消息new一个对象
+            val chat = ChatHistory(fingerprint, myId.toString(), userID, 0, content, Date(), 0)
+            // 获取adapter和recycler view的弱引用
+            val adapter = weakAdapter.get()
+            // 将发送的消息显示到消息框中
+            adapter?.addData(0, chat)
+            // 保存自己发送的消息
+            chatViewModel.saveSentMessage(chat)
+            // 框架异步发送消息
+            object : LocalDataSender.SendCommonDataAsync(content, userID, fingerprint, ConstantUtil.MESSAGE_TYPE_TEXT) {
+                override fun onPostExecute(p0: Int?) {
+                }
+            }.execute()
+        }
+    }
+
     private val applicationScope = CoroutineScope(SupervisorJob())
 
     private val schoolAirdropDatabase by lazy {
@@ -61,11 +97,15 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
     }
 
     val chatRepository by lazy {
-        ChatAllRepository(schoolAirdropDatabase.chatHistoryDao())
+        DatabaseRepository(schoolAirdropDatabase.chatHistoryDao())
     }
 
     private val chatClientManager by lazy {
         IMClientManager.getInstance(this)
+    }
+
+    private val chatViewModel by lazy {
+        ChatViewModel.ChatViewModelFactory(chatRepository).create(ChatViewModel::class.java)
     }
 
     /**

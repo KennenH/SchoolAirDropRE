@@ -1,7 +1,7 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.api.base.RetrofitManager;
 import com.example.schoolairdroprefactoredition.api.Api;
@@ -34,14 +34,14 @@ public class SSBImpl implements ISSBPresenter {
     public void getSellingList(int userID) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<HomeGoodsListInfo> task = api.getMySellingGoods(userID);
-        task.enqueue(new CallBackWithRetry<HomeGoodsListInfo>(task) {
+        Call<DomainPurchasing> task = api.getMySellingGoods(userID);
+        task.enqueue(new CallBackWithRetry<DomainPurchasing>(task) {
             @Override
-            public void onResponse(@NotNull Call<HomeGoodsListInfo> call, @NotNull Response<HomeGoodsListInfo> response) {
+            public void onResponse(@NotNull Call<DomainPurchasing> call, @NotNull Response<DomainPurchasing> response) {
                 int code = response.code();
                 if (mCallback != null)
                     if (code == HttpURLConnection.HTTP_OK) {
-                        HomeGoodsListInfo info = response.body();
+                        DomainPurchasing info = response.body();
                         if (info != null && info.isSuccess()) {
                             mCallback.onSellingLoaded(info);
                         } else mCallback.onError();
@@ -95,8 +95,8 @@ public class SSBImpl implements ISSBPresenter {
     public void getSellingByUID(int userID) {
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<HomeGoodsListInfo> task = api.getUserSellingByID(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, userID);
-        task.enqueue(new CallBackWithRetry<HomeGoodsListInfo>(task) {
+        Call<DomainPurchasing> task = api.getUserSellingByID(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, userID);
+        task.enqueue(new CallBackWithRetry<DomainPurchasing>(task) {
             @Override
             public void onFailureAllRetries() {
                 if (mCallback != null)
@@ -104,9 +104,9 @@ public class SSBImpl implements ISSBPresenter {
             }
 
             @Override
-            public void onResponse(@NotNull Call<HomeGoodsListInfo> call, @NotNull Response<HomeGoodsListInfo> response) {
+            public void onResponse(@NotNull Call<DomainPurchasing> call, @NotNull Response<DomainPurchasing> response) {
                 if (response.code() == HttpURLConnection.HTTP_OK) {
-                    HomeGoodsListInfo info = response.body();
+                    DomainPurchasing info = response.body();
 
 //                    try {
 //                        LogUtils.d(response.body().string());

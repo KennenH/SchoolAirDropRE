@@ -116,7 +116,7 @@ class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener
             }
 
             R.id.my_selling -> {
-                SSBActivity.start(context, getToken(), getInfo(), 0, true)
+                SSBActivity.start(context, getInfo(), 0, true)
             }
 
             R.id.my_posts -> {
@@ -131,5 +131,9 @@ class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener
      */
     override fun onLoginStateChanged(intent: Intent) {
         setUserData()
+    }
+
+    override fun onLogging() {
+        // do nothing
     }
 }

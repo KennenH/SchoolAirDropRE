@@ -19,10 +19,6 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
         ViewModelProvider(this).get(SettingsGeneralViewModel::class.java)
     }
 
-    private val languageName by lazy {
-        resources.getString(R.string.language)
-    }
-
     companion object {
         fun newInstance(bundle: Bundle): SettingsGeneralFragment {
             val fragment = SettingsGeneralFragment()
@@ -38,8 +34,9 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (generalViewModel.getIsDarkTheme().value == true)
+        if (generalViewModel.getIsDarkTheme().value == true) {
             settingsGeneralDarkTheme.select()
+        }
 
         settingsGeneralStorage.setOnClickListener(this@SettingsGeneralFragment)
         settingsGeneralDarkTheme.setOnClickListener(this@SettingsGeneralFragment)
@@ -49,7 +46,6 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
     override fun onClick(v: View?) {
         when (v) {
             settingsGeneralStorage -> {
-
             }
 
             settingsGeneralDarkTheme -> {

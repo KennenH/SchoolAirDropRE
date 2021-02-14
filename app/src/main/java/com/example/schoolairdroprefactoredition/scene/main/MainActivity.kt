@@ -23,7 +23,6 @@ import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
-import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentPlaygroundFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasingFragment
@@ -39,7 +38,6 @@ import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.x52im.mobileimsdk.server.protocal.Protocal
-import java.lang.NullPointerException
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -274,14 +272,15 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 读取手机缓存和账号设置
      */
     private fun initCache() {
-        accountViewModel.lastLoggedTokenCaChe.observe(this@MainActivity, {
-            (application as Application).cacheMyInfoAndToken(token = it)
+        val tokenCache = accountViewModel.lastLoggedTokenCaChe.value
+        val userInfoCache = accountViewModel.lastLoggedUserInfoCache.value
+        tokenCache?.let {
             intent.putExtra(ConstantUtil.KEY_TOKEN, it)
-        })
-        accountViewModel.lastLoggedUserInfoCache.observe(this@MainActivity, {
-            (application as Application).cacheMyInfoAndToken(userInfo = it)
+        }
+        userInfoCache?.let {
             intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
-        })
+        }
+
     }
 
     /**
@@ -366,20 +365,18 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     fun autoLogin() {
         if (!autoLogged) {
             autoLogged = true // 已自动登录标识，防止多个子fragment调用此方法
-            accountViewModel.lastLoggedTokenCaChe.observe(this, {
-                if (it != null) { // token 仍有效 使用本地缓存重新获取token后登录
-                    intent.putExtra(ConstantUtil.KEY_TOKEN, it)
-                    autoLoginWithToken()
-                } else {
-                    accountViewModel.lastLoggedUserInfoCache.observe(this, { infoCache ->
-                        // token 已无效 使用本地缓存重新获取token后登录
-                        if (infoCache != null) {
-                            intent.putExtra(ConstantUtil.KEY_USER_INFO, infoCache)
-                            autoReLoginWithCache()
-                        }
-                    })
+            val token = accountViewModel.lastLoggedTokenCaChe.value
+            if (token != null) { // token 仍有效 使用本地缓存重新获取token后登录
+                intent.putExtra(ConstantUtil.KEY_TOKEN, token)
+                autoLoginWithToken()
+            } else {
+                // token 已无效 使用本地缓存重新获取token后登录
+                val infoCache = accountViewModel.lastLoggedUserInfoCache.value
+                if (infoCache != null) {
+                    intent.putExtra(ConstantUtil.KEY_USER_INFO, infoCache)
+                    autoReLoginWithCache()
                 }
-            })
+            }
         }
     }
 
@@ -390,6 +387,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 2、用户信息修改后回到MainActivity
      */
     private fun autoLoginWithToken() {
+        for (listener in mOnLoginStateChangedListeners) {
+            listener.onLogging()
+        }
+
         val token: DomainToken = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken
         if (token.access_token != null) {
             loginViewModel.getUserInfo(token.access_token).observe(this, {
@@ -510,6 +511,14 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
          *  [ConstantUtil.KEY_USER_INFO] 我的用户信息 类型为[DomainUserInfo.DataBean]
          */
         fun onLoginStateChanged(intent: Intent)
+
+        /**
+         * 正在登录 以及 登录结束 的回调
+         * @param isLogging
+         * true 正在登录
+         * false 登录结束
+         */
+        fun onLogging()
     }
 
     /**
@@ -594,16 +603,11 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     override fun onIMReceiveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
         // 保存收到的消息
-        try {
-            val myID = (application as Application).getCachedMyInfo()
-            imViewModel.saveInstanceMessage(ChatHistory(fingerprint, senderID, myID.toString(), typeu, content, Date(), 0))
-        } catch (e: NullPointerException) {
-            val myID = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo
-            val uid = myID?.data?.userId
-            if (uid != null) {
-                imViewModel.saveInstanceMessage(ChatHistory(fingerprint, senderID, uid.toString(), typeu, content, Date(), 0))
-            }
+        val myID = (application as Application).getCachedMyInfo()
+        if (myID != null) {
+            imViewModel.saveReceivedMessage(ChatHistory(fingerprint, senderID, myID.userId.toString(), typeu, content, Date(), 0))
         }
+
     }
 
     override fun onIMErrorResponse(errorCode: Int, message: String) {

@@ -304,5 +304,6 @@
     <string name="connecting">正在连接</string>
     <string name="noMessageYet">还没有消息哦</string>
     <string name="systemBusy">系统繁忙，请稍后再试</string>
+    <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;删除&#160;&#160;&#160;&#160;&#160;&#160;</string>
 
 </resources>

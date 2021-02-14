@@ -47,8 +47,9 @@ public class SSBPagerAdapter extends FragmentPagerAdapter implements SSBBaseFrag
     public void onSSBDataLenChanged(int total, int page) {
         if (mContext instanceof SSBActivity) {
             if (page == ((SSBActivity) mContext).getCurrentItem()) {
-                if (mOnSSBDataLenChangedIntermediaryListener != null)
+                if (mOnSSBDataLenChangedIntermediaryListener != null) {
                     mOnSSBDataLenChangedIntermediaryListener.onSSBDataLenChangedIntermediary(total);
+                }
             }
         }
     }

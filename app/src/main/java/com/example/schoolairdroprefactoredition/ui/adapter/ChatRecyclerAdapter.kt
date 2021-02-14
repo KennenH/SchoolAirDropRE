@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.ui.adapter
 import android.view.View
 import android.widget.ImageView
 import com.blankj.utilcode.constant.TimeConstants
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
 import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate
@@ -20,7 +21,7 @@ import com.example.schoolairdroprefactoredition.utils.TimeUtil
 import com.lxj.xpopup.XPopup
 import java.util.*
 
-class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private val counterpartInfo: DomainSimpleUserInfo?) : BaseDelegateMultiAdapter<ChatHistory, BaseViewHolder>() {
+class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private var counterpartInfo: DomainSimpleUserInfo?) : BaseDelegateMultiAdapter<ChatHistory, BaseViewHolder>() {
 
     companion object {
         /**
@@ -83,8 +84,8 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
      * 更新的消息一定是我发送的消息
      * 我接受到的消息一定是发送和接收成功了的
      */
-    fun updateStatus(position: Int, @MessageSendStatus status: Int) {
-        val holder = recyclerView.findViewHolderForAdapterPosition(position)
+    fun updateStatus(item: ChatHistory, @MessageSendStatus status: Int) {
+        val holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(getItemPosition(item)))
         val sending = holder?.itemView?.findViewById<View>(R.id.send_sending)
         val failed = holder?.itemView?.findViewById<View>(R.id.send_failed)
         when (status) {
@@ -123,9 +124,8 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
     /**
      * 对方的头像url
      */
-    private val counterpartUrl by lazy {
-        ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(counterpartInfo?.userAvatar)
-    }
+    private var counterpartUrl: String? = null
+
 
     init {
         setMultiTypeDelegate(ChatEntityDelegate(myInfo?.userId.toString()))
@@ -197,6 +197,9 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
                 // 获取头像view
                 val avatarView = holder.itemView.findViewById<ImageView>(R.id.receive_avatar)
                 // 加载头像
+                if (counterpartUrl == null) {
+                    counterpartUrl = ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(counterpartInfo?.userAvatar)
+                }
                 ImageUtil.loadRoundedImage(avatarView, counterpartUrl)
                 // 消息内容
                 holder.setText(R.id.receive_text, item.message)
@@ -212,6 +215,9 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
                 // 获取头像view
                 val avatarView = holder.itemView.findViewById<ImageView>(R.id.receive_avatar)
                 // 加载头像
+                if (counterpartUrl == null) {
+                    counterpartUrl = ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(counterpartInfo?.userAvatar)
+                }
                 ImageUtil.loadRoundedImage(avatarView, counterpartUrl)
                 // 获取图片view
                 val imageView = holder.itemView.findViewById<ImageView>(R.id.receive_image)
@@ -245,16 +251,16 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
             // 判断消息的发送方
             return if (history.sender_id == myID) {
                 // 判断消息的类型
-                if (history.message_type == ConstantUtil.MESSAGE_TYPE_TEXT) {
-                    ITEM_CHAT_SEND
-                } else {
+                if (history.message_type == ConstantUtil.MESSAGE_TYPE_IMAGE) {
                     ITEM_CHAT_SEND_IMAGE
+                } else {
+                    ITEM_CHAT_SEND
                 }
             } else {
-                if (history.message_type == ConstantUtil.MESSAGE_TYPE_TEXT) {
-                    ITEM_CHAT_RECEIVE
-                } else {
+                if (history.message_type == ConstantUtil.MESSAGE_TYPE_IMAGE) {
                     ITEM_CHAT_RECEIVE_IMAGE
+                } else {
+                    ITEM_CHAT_RECEIVE
                 }
             }
         }

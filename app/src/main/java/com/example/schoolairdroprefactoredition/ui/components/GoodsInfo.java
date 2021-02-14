@@ -8,7 +8,7 @@ import android.view.View;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsDetailBinding;
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo;
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
@@ -57,7 +57,7 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
         binding.goodsSellerInfo.setVisibility(GONE);
     }
 
-    public void setData(HomeGoodsListInfo.DataBean baseInfo, GoodsDetailInfo.DataBean detailInfo) {
+    public void setData(DomainPurchasing.DataBean baseInfo, GoodsDetailInfo.DataBean detailInfo) {
         if (baseInfo != null && detailInfo != null) {
             try {
                 boolean negotiable = baseInfo.getGoods_is_quotable() == 1;// 是否可议价

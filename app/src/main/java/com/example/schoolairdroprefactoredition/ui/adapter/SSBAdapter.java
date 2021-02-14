@@ -8,14 +8,14 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ItemSsbSellingBinding;
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 
 import org.jetbrains.annotations.NotNull;
 
-public class SSBAdapter extends BaseQuickAdapter<HomeGoodsListInfo.DataBean, BaseViewHolder> {
+public class SSBAdapter extends BaseQuickAdapter<DomainPurchasing.DataBean, BaseViewHolder> {
 
     private OnSSBItemActionListener mOnSSBItemActionListener;
 
@@ -29,7 +29,7 @@ public class SSBAdapter extends BaseQuickAdapter<HomeGoodsListInfo.DataBean, Bas
     }
 
     @Override
-    protected void convert(@NotNull BaseViewHolder holder, HomeGoodsListInfo.DataBean bean) {
+    protected void convert(@NotNull BaseViewHolder holder, DomainPurchasing.DataBean bean) {
         if (bean != null) {
             final ItemSsbSellingBinding binding = ItemSsbSellingBinding.bind(holder.itemView);
             final boolean isQuotable = bean.getGoods_is_quotable() == 1;
@@ -88,7 +88,7 @@ public class SSBAdapter extends BaseQuickAdapter<HomeGoodsListInfo.DataBean, Bas
     }
 
     public interface OnSSBItemActionListener {
-        void onItemActionButtonClick(View view, HomeGoodsListInfo.DataBean bean);
+        void onItemActionButtonClick(View view, DomainPurchasing.DataBean bean);
     }
 
     public void setOnSSBItemActionListener(OnSSBItemActionListener listener) {

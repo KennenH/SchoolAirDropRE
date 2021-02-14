@@ -25,6 +25,7 @@ import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecor
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class HomePlaygroundFragment extends BaseChildFragment implements
         BaseStateViewModel.OnRequestListener,
@@ -103,15 +104,6 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
     }
 
     @Override
-    public void getAutoLoadMoreData(AMapLocation aMapLocation) {
-        //        homeContentFragmentViewModel.getHomeNews().observe(getViewLifecycleOwner(), data -> {
-//            mHomeNewsRecyclerAdapter.addData(data);
-//            showContentContainer();
-//            recycler.finishLoading();
-//        });
-    }
-
-    @Override
     public void onError() {
         showPlaceHolder(StatePlaceHolder.TYPE_ERROR);
     }
@@ -140,4 +132,8 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
         }
     }
 
+    @Override
+    public void getAutoLoadMoreData(@NotNull EndlessRecyclerView recycler, @Nullable AMapLocation aMapLocation) {
+
+    }
 }

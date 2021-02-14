@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.schoolairdroprefactoredition.cache.SearchHistories;
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.domain.SearchSuggestionBean;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISearchCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.SearchImpl;
@@ -20,7 +20,7 @@ public class SearchViewModel extends BaseStateViewModel implements ISearchCallba
 
     private final SearchImpl mSearchImpl;
 
-    private final MutableLiveData<List<HomeGoodsListInfo.DataBean>> mSearchResults = new MutableLiveData<>();
+    private final MutableLiveData<List<DomainPurchasing.DataBean>> mSearchResults = new MutableLiveData<>();
     private final MutableLiveData<SearchHistories> mSearchHistories = new MutableLiveData<>();
     private final MutableLiveData<SearchSuggestionBean> mSearchSuggestions = new MutableLiveData<>();
 
@@ -30,7 +30,7 @@ public class SearchViewModel extends BaseStateViewModel implements ISearchCallba
     }
 
     @Override
-    public void onSearchResultLoaded(List<HomeGoodsListInfo.DataBean> beans) {
+    public void onSearchResultLoaded(List<DomainPurchasing.DataBean> beans) {
         mSearchResults.postValue(beans);
     }
 
@@ -48,12 +48,12 @@ public class SearchViewModel extends BaseStateViewModel implements ISearchCallba
         mSearchImpl.deleteHistories();
     }
 
-    public LiveData<List<HomeGoodsListInfo.DataBean>> getSearchResult() {
+    public LiveData<List<DomainPurchasing.DataBean>> getSearchResult() {
         mSearchImpl.getSearchResult(page++, lastLongitude, lastLatitude, lastSearchedKey, true);
         return mSearchResults;
     }
 
-    public LiveData<List<HomeGoodsListInfo.DataBean>> getSearchResult(double longitude, double latitude, String key) {
+    public LiveData<List<DomainPurchasing.DataBean>> getSearchResult(double longitude, double latitude, String key) {
         page = 0;
         lastSearchedKey = key;
         lastLongitude = longitude;

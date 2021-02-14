@@ -6,7 +6,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainResult;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -27,21 +27,21 @@ public interface Api {
      */
     @FormUrlEncoded
     @POST("goods/getNearByGoods")
-    Call<HomeGoodsListInfo> getGoodsInfo(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("page") int page, @Field("longitude") Double longitude, @Field("latitude") Double latitude);
+    Call<DomainPurchasing> getGoodsInfo(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("page") int page, @Field("longitude") Double longitude, @Field("latitude") Double latitude);
 
     /**
      * 使用用户id获取用户在售信息
      */
     @FormUrlEncoded
     @POST("goods/getGoodsOnSaleByClient")
-    Call<HomeGoodsListInfo> getUserSellingByID(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("uid") int userID);
+    Call<DomainPurchasing> getUserSellingByID(@Field("client_id") String clientID, @Field("client_secret") String clientSecret, @Field("uid") int userID);
 
     /**
      * 使用token获取本人在售物品列表
      */
     @FormUrlEncoded
     @POST("goods/getGoodsOnSale")
-    Call<HomeGoodsListInfo> getMySellingGoods(@Field("user_id") int uid);
+    Call<DomainPurchasing> getMySellingGoods(@Field("user_id") int uid);
 
     /**
      * 使用GoodID获取物品详细信息
@@ -103,12 +103,12 @@ public interface Api {
      */
     @FormUrlEncoded
     @POST("goods/searchGoods")
-    Call<HomeGoodsListInfo> searchGoods(@Field("client_id") String clientID,
-                                        @Field("client_secret") String clientSecret,
-                                        @Field("page") int page,
-                                        @Field("longitude") Double longitude,
-                                        @Field("latitude") Double latitude,
-                                        @Field("keyWords") String keyWord);
+    Call<DomainPurchasing> searchGoods(@Field("client_id") String clientID,
+                                       @Field("client_secret") String clientSecret,
+                                       @Field("page") int page,
+                                       @Field("longitude") Double longitude,
+                                       @Field("latitude") Double latitude,
+                                       @Field("keyWords") String keyWord);
 
     /**
      * 上传用户头像

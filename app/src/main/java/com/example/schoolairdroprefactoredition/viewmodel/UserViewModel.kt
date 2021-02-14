@@ -16,26 +16,22 @@ class UserViewModel : ViewModel() {
         UserRepository.getInstance()
     }
 
-    val userInfoLoadState = MutableLiveData<LoadState>()
-
     private val userBaseInfo = MutableLiveData<DomainUserInfo.DataBean>()
 
-    fun getUserBaseInfoByID(userID: Int): LiveData<DomainUserInfo.DataBean> {
+    /**
+     * 使用user id获取用户基本信息
+     * todo 用户信息获取成功后应该进行缓存
+     */
+    fun getUserBaseInfoByID(userID: Int): LiveData<DomainUserInfo.DataBean?> {
         viewModelScope.launch {
             userRepository.getUserInfoById(userID) { success, response ->
                 if (success) {
                     userBaseInfo.postValue(response)
-                    userInfoLoadState.value = LoadState.SUCCESS
                 } else {
-                    userInfoLoadState.value = LoadState.ERROR
+                    userBaseInfo.postValue(null)
                 }
             }
         }
         return userBaseInfo
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.cancel()
     }
 }

@@ -3,20 +3,16 @@ package com.example.schoolairdroprefactoredition.database.pojo
 import androidx.room.Entity
 
 /**
- * 消息数量列表
- * 仅有最后一条消息的指纹和发送人
+ * 消息会话列表
+ * 仅有最后一条消息的指纹和对方基本信息
  * 不要直接使用该表，通过[ChatOfflineNumDetail]查询详细信息
  */
-@Entity(tableName = "offline", primaryKeys = ["sender_id", "receiver_id"])
+@Entity(tableName = "offline_num", primaryKeys = ["counterpart_id", "my_id"])
 data class ChatOfflineNum(
 
-        val sender_id: String,
+        val counterpart_id: String,
 
-        val sender_name: String,
-
-        val sender_avatar: String,
-
-        val receiver_id: String,
+        val my_id: String,
 
         val unread_num: Int,
 
@@ -32,4 +28,8 @@ data class ChatOfflineNum(
          * 0 不显示
          */
         val display: Int
-)
+) {
+        override fun toString(): String {
+                return "ChatOfflineNum(counterpart_id='$counterpart_id', my_id='$my_id', unread_num=$unread_num, latest_fingerprint='$latest_fingerprint', display=$display)"
+        }
+}

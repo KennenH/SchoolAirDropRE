@@ -108,6 +108,10 @@ public class ImageUtil {
      * 将url修正为开头不带 / 的
      */
     public static String fixUrl(String url) {
+        if (url == null) {
+            return null;
+        }
+
         if (url.startsWith("/")) {
             return url.substring(1);
         } else {

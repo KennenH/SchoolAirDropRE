@@ -1,7 +1,7 @@
 package com.example.schoolairdroprefactoredition.presenter.impl;
 
 import com.example.schoolairdroprefactoredition.cache.SearchHistories;
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry;
 import com.example.schoolairdroprefactoredition.api.base.RetrofitManager;
 import com.example.schoolairdroprefactoredition.api.Api;
@@ -71,13 +71,13 @@ public class SearchImpl implements ISearchPresenter {
 
         Retrofit retrofit = RetrofitManager.getInstance().getRetrofit();
         Api api = retrofit.create(Api.class);
-        Call<HomeGoodsListInfo> task = api.searchGoods(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page, longitude, latitude, key);
-        task.enqueue(new CallBackWithRetry<HomeGoodsListInfo>(task) {
+        Call<DomainPurchasing> task = api.searchGoods(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page, longitude, latitude, key);
+        task.enqueue(new CallBackWithRetry<DomainPurchasing>(task) {
             @Override
-            public void onResponse(Call<HomeGoodsListInfo> call, Response<HomeGoodsListInfo> response) {
+            public void onResponse(Call<DomainPurchasing> call, Response<DomainPurchasing> response) {
                 int code = response.code();
                 if (code == HttpURLConnection.HTTP_OK) {
-                    HomeGoodsListInfo info = response.body();
+                    DomainPurchasing info = response.body();
 
 //                    try {
 //                        Log.d("SearchImpl", "请求成功 -- > " + response.body().string());

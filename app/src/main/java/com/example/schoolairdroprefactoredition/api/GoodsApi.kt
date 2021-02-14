@@ -3,7 +3,7 @@ package com.example.schoolairdroprefactoredition.api
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -19,8 +19,11 @@ interface GoodsApi {
             @Field("client_secret") clientSecret: String,
             @Field("page") page: Int,
             @Field("longitude") longitude: Double?,
-            @Field("latitude") latitude: Double?): Call<HomeGoodsListInfo>
+            @Field("latitude") latitude: Double?): Call<DomainPurchasing>
 
+    /**
+     * 获取物品详细信息
+     */
     @FormUrlEncoded
     @POST("goods/getGoodsDetailInfo")
     fun getGoodsDetail(
@@ -56,11 +59,13 @@ interface GoodsApi {
                     @Part brandNew: MultipartBody.Part,
                     @Part price: MultipartBody.Part): Call<DomainResult>
 
-
+    /**
+     * 获取用户个人在售
+     */
     @FormUrlEncoded
     @POST("goods/getGoodsOnSaleByClient")
     fun getGoodsOnSaleByClient(
-            @Header("Authorization") token: String,
+            @Field("user_id") userID: Int,
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String): Call<DomainGoodsInfo>
 }

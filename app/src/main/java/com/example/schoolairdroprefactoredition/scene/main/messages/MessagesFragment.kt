@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.databinding.FragmentMessagesBinding
@@ -17,12 +20,17 @@ import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
-import com.example.schoolairdroprefactoredition.ui.adapter.HomeMessagesRecyclerAdapter
+import com.example.schoolairdroprefactoredition.ui.adapter.MessagesRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.MessageViewModel
+import com.example.schoolairdroprefactoredition.viewmodel.UserViewModel
 import com.github.ybq.android.spinkit.SpinKitView
+import com.xiaomi.push.it
+import com.yanzhenjie.recyclerview.SwipeMenuItem
+import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import net.x52im.mobileimsdk.server.protocal.Protocal
 import java.util.*
+import kotlin.collections.ArrayList
 
 class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, Application.IMListener {
 
@@ -32,7 +40,7 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
     annotation class MessageState {
         companion object {
             /**
-             * 没有请求任务，刷新当前状态
+             * 刷新当前状态
              */
             var REFRESH = 0
 
@@ -40,36 +48,31 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
              * 正在连接服务器或者等待数据回调
              */
             var LOADING = 1
-
-            /**
-             * 已与服务器断开连接
-             */
-            var DISCONNECTED = 2
         }
     }
 
     /**
      * 当前是否已连接IM系统
      */
-    private var isConnected = false
+    private var isConnected = true
 
     private var title: TextView? = null
 
     private var loading: SpinKitView? = null
 
-    private var recyclerView: RecyclerView? = null
+    private var recyclerView: SwipeRecyclerView? = null
 
     private var empty: View? = null
 
-    private val homeMessagesRecyclerAdapter by lazy {
-        HomeMessagesRecyclerAdapter()
+    private val mMessagesRecyclerAdapter by lazy {
+        MessagesRecyclerAdapter(messageViewModel)
     }
 
     private val manager by lazy {
         LinearLayoutManager(context, RecyclerView.VERTICAL, false)
     }
 
-    private val viewModel by lazy {
+    private val messageViewModel by lazy {
         MessageViewModel.MessageViewModelFactory((activity?.application as Application).chatRepository).create(MessageViewModel::class.java)
     }
 
@@ -90,9 +93,27 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
         empty = binding.messagesEmpty
 
         recyclerView?.layoutManager = manager
-        recyclerView?.adapter = homeMessagesRecyclerAdapter
+        recyclerView?.setSwipeMenuCreator { _, rightMenu, position ->
+            val delete = SwipeMenuItem(context)
+            delete.text = getString(R.string.delete)
+            delete.textSize = SizeUtils.dp2px(5f)
+            delete.setTextColor(resources.getColor(R.color.whiteAlways, context?.theme))
+            delete.setBackgroundColor(resources.getColor(R.color.colorPrimaryRed, context?.theme))
+            delete.height = MATCH_PARENT
+            rightMenu.addMenuItem(delete)
+        }
+        recyclerView?.setOnItemMenuClickListener { menuBridge, adapterPosition ->
+            // 任何操作之前都必须先关闭菜单，否则会出现菜单混乱
+            menuBridge.closeMenu()
 
-        viewModel.offlineNumLoadState.observe(viewLifecycleOwner) {
+            // 隐藏第position个会话
+            mMessagesRecyclerAdapter.removeAt(adapterPosition)
+            val counterpartId = mMessagesRecyclerAdapter.getCounterpartIdAt(adapterPosition)
+            messageViewModel.swipeToHideChannel(counterpartId)
+        }
+        recyclerView?.adapter = mMessagesRecyclerAdapter
+
+        messageViewModel.offlineNumLoadState.observe(viewLifecycleOwner) {
             when {
                 it == LoadState.LOADING -> {
                     updateMessageState(MessageState.LOADING)
@@ -109,10 +130,10 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
 
         if (userInfo != null) {
             // 观察本地消息数量列表
-            viewModel.getChatList(userInfo.userId.toString()).observe(viewLifecycleOwner, {
+            messageViewModel.getChatList(userInfo.userId.toString()).observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
                     empty?.visibility = View.GONE
-                    homeMessagesRecyclerAdapter.setList(it)
+                    mMessagesRecyclerAdapter.setList(it)
                 } else {
                     empty?.visibility = View.VISIBLE
                 }
@@ -121,12 +142,9 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
 
         if (token != null) {
             updateMessageState(MessageState.LOADING)
-
-            // 获取服务器离线消息数量
-            viewModel.getOfflineNumOnline(token).observe(viewLifecycleOwner) {
+            messageViewModel.getOfflineNumOnline(token).observe(viewLifecycleOwner) {
                 // 将服务器离线消息数量合并入本地服务器，此时本地服务器数据改变，理论上将会自动刷新消息列表
-                viewModel.saveOfflineNum(it)
-
+                messageViewModel.saveOfflineNum(it)
                 updateMessageState(MessageState.REFRESH)
             }
         }
@@ -146,10 +164,6 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
                 } else {
                     title?.text = getString(R.string.disconnect)
                 }
-            }
-            MessageState.DISCONNECTED -> {
-                loading?.visibility = View.INVISIBLE
-                title?.text = getString(R.string.disconnect)
             }
             MessageState.LOADING -> {
                 loading?.visibility = View.VISIBLE
@@ -174,22 +188,30 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
 
         // 登录状态发生变化时，若发现是退出，则将消息列表清空
         if (token != null && userInfo != null) {
-            // 观察本地消息数量列表
-            viewModel.getChatList(userInfo.userId.toString()).observe(viewLifecycleOwner, {
-                homeMessagesRecyclerAdapter.setList(it)
+            // 重新观察本地消息数量列表
+            messageViewModel.getChatList(userInfo.userId.toString()).observe(viewLifecycleOwner, {
+                if (it.isNotEmpty()) {
+                    empty?.visibility = View.GONE
+                    mMessagesRecyclerAdapter.setList(it)
+                } else {
+                    empty?.visibility = View.VISIBLE
+                }
             })
 
             updateMessageState(MessageState.LOADING)
             // 获取服务器离线消息数量
-            viewModel.getOfflineNumOnline(token).observe(viewLifecycleOwner) {
+            messageViewModel.getOfflineNumOnline(token).observe(viewLifecycleOwner) {
                 // 将服务器离线消息数量合并入本地服务器，此时本地服务器数据改变，理论上将会自动刷新消息列表
-                viewModel.saveOfflineNum(it)
-
+                messageViewModel.saveOfflineNum(it)
                 updateMessageState(MessageState.REFRESH)
             }
         } else {
-            homeMessagesRecyclerAdapter.setList(ArrayList())
+            mMessagesRecyclerAdapter.setList(ArrayList())
         }
+    }
+
+    override fun onLogging() {
+        updateMessageState(MessageState.LOADING)
     }
 
     override fun onIMStartLogin() {
@@ -215,7 +237,6 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
     }
 
     override fun onIMReceiveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
-        // do nothing
     }
 
     override fun onIMErrorResponse(errorCode: Int, message: String) {

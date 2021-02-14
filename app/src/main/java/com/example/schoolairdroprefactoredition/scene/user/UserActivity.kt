@@ -35,7 +35,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         val originBackgroundWidth = ScreenUtils.getAppScreenWidth()
 
         /**
-         * 拉动这么多距离的时候会使背景
+         * 拉动这么多距离的时候会使背景放大
          */
         const val animOffset = 40
 
@@ -144,8 +144,12 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
 
         if (userInfo == null && sellerID != -1) {
             userViewModel.getUserBaseInfoByID(sellerID).observe(this) {
-                intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
-                setUserInfo(it)
+                if (it != null) {
+                    intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
+                    setUserInfo(it)
+                } else {
+                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
+                }
             }
         } else if (userInfo != null && sellerID == -1) {
             setUserInfo(userInfo)
@@ -216,7 +220,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
 
             // 在售
             R.id.user_more_selling -> {
-                SSBActivity.start(this@UserActivity, token, userInfo, 0, isModifiable || isMine)
+                SSBActivity.start(this@UserActivity, userInfo, 0, isModifiable || isMine)
             }
 
             // 帖子
@@ -227,13 +231,17 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
     }
 
     /**
-     * 在拉动页面时背景图随着手指下滑距离而改变大小
+     * 在拉动页面时背景图
+     * 随着手指下滑而放大
+     * 随手指上滑而移动
      */
     override fun onOverDragging(isDragging: Boolean, percent: Float, offset: Int, height: Int, maxDragHeight: Int) {
         if (offset >= animOffset) {
             val extraOffset = offset - animOffset
             val width = (originBackgroundHeight + extraOffset) / originBackgroundHeight * originBackgroundWidth
             user_background.layoutParams = ConstraintLayout.LayoutParams(width, originBackgroundHeight + extraOffset)
+        } else if (offset <= -animOffset) {
+            user_background.translationY = offset.toFloat()
         }
     }
 

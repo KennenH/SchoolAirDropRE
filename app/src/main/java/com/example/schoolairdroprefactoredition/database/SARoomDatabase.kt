@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
     LastFromUserInformation::class],
         views = [
             ChatOfflineNumDetail::class],
-        version = 2,
+        version = 5,
         exportSchema = true)
 abstract class SARoomDatabase : RoomDatabase() {
 
@@ -27,10 +27,10 @@ abstract class SARoomDatabase : RoomDatabase() {
     private class DatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {
             super.onCreate(db)
-            INSTANCE?.let { saRoomDatabase ->
+            INSTANCE?.let {
                 scope.launch {
-
                     // 每次app打开的时候都会做的事情
+//                    it.clearAllTables()
                 }
             }
         }

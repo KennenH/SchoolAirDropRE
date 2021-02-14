@@ -66,7 +66,6 @@
             android:layout_height="wrap_content"
             android:background="@drawable/chat_my_9"
             android:gravity="center_vertical"
-            android:text="建行卡省的就卡死的啊实打啊实打奥氏啊实打奥氏打飒飒的奥氏大苏啊实打啊实打啊实打打"
             android:layout_marginEnd="@dimen/general_padding_small"
             android:letterSpacing="0.08"
             android:lineSpacingExtra="1dp"

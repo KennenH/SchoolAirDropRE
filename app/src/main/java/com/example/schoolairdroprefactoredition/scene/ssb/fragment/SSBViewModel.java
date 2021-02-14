@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.example.schoolairdroprefactoredition.domain.DomainPostInfo;
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.presenter.callback.ISSBCallback;
 import com.example.schoolairdroprefactoredition.presenter.impl.SSBImpl;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
@@ -16,7 +16,7 @@ public class SSBViewModel extends BaseStateViewModel implements ISSBCallback {
 
     private final SSBImpl ssbImpl;
 
-    private final MutableLiveData<HomeGoodsListInfo> mSelling = new MutableLiveData<>();
+    private final MutableLiveData<DomainPurchasing> mSelling = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mUnListItemResult = new MutableLiveData<>();
     private final MutableLiveData<Boolean> mUpdateItemResult = new MutableLiveData<>();
 
@@ -31,7 +31,7 @@ public class SSBViewModel extends BaseStateViewModel implements ISSBCallback {
         ssbImpl.registerCallback(this);
     }
 
-    public LiveData<HomeGoodsListInfo> getSelling(int userID) {
+    public LiveData<DomainPurchasing> getSelling(int userID) {
         ssbImpl.getSellingList(userID);
         return mSelling;
     }
@@ -41,13 +41,13 @@ public class SSBViewModel extends BaseStateViewModel implements ISSBCallback {
         return mUnListItemResult;
     }
 
-    public LiveData<HomeGoodsListInfo> getSellingByID(int userID) {
+    public LiveData<DomainPurchasing> getSellingByID(int userID) {
         ssbImpl.getSellingByUID(userID);
         return mSelling;
     }
 
     @Override
-    public void onSellingLoaded(HomeGoodsListInfo selling) {
+    public void onSellingLoaded(DomainPurchasing selling) {
         mSelling.postValue(selling);
     }
 

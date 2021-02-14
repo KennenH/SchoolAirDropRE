@@ -10,7 +10,6 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
-import java.util.List;
 
 public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends BaseQuickAdapter<T, VH> {
 
@@ -18,10 +17,6 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
 
     public BaseFooterAdapter(int layoutResId) {
         super(layoutResId);
-    }
-
-    public BaseFooterAdapter(int layoutResId, @org.jetbrains.annotations.Nullable List<T> data) {
-        super(layoutResId, data);
     }
 
     @Override

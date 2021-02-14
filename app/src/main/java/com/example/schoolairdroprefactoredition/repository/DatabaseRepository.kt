@@ -12,7 +12,7 @@ import retrofit2.Response
 import java.net.HttpURLConnection
 import java.util.*
 
-class ChatAllRepository(private val chatHistoryDao: ChatHistoryDao) {
+class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
 
     fun getChatList(receiverID: String): Flow<List<ChatOfflineNumDetail>> {
         return chatHistoryDao.getChatList(receiverID)
@@ -55,44 +55,6 @@ class ChatAllRepository(private val chatHistoryDao: ChatHistoryDao) {
         }
     }
 
-    /**
-     * 获取本地用户信息缓存
-     */
-    fun getUserInfoCache(userID: Int): UserCache? {
-        val userInfo = chatHistoryDao.getUserInfo(userID)
-        return if (userInfo.isNotEmpty()) {
-            userInfo[0]
-        } else {
-            null
-        }
-    }
-
-    /**
-     * 获取服务器用户信息
-     */
-    fun getUserInfoOnline(userID: Int, onResult: (success: Boolean, response: DomainUserInfo.DataBean?) -> Unit) {
-        RetrofitClient.userApi.getUserInfoByID(userID).apply {
-            enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
-                override fun onFailureAllRetries() {
-                    onResult(false, null)
-                }
-
-                override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        if (response.isSuccessful) {
-                            val body = response.body()
-                            onResult(true, body?.data)
-                        } else {
-                            onResult(false, null)
-                        }
-                    } else {
-                        onResult(false, null)
-                    }
-                }
-            })
-        }
-    }
-
     fun getOfflineNum(token: DomainToken, onResult: (success: Boolean, response: DomainOfflineNum?) -> Unit) {
         RetrofitClient.imApi.getOfflineNum(token.access_token).apply {
             enqueue(object : CallBackWithRetry<DomainOfflineNum>(this@apply) {
@@ -119,18 +81,18 @@ class ChatAllRepository(private val chatHistoryDao: ChatHistoryDao) {
     }
 
     @WorkerThread
-    suspend fun saveLatestMessage(lastFromUserInformation: LastFromUserInformation) {
+    suspend fun hideChannel(counterpartId: String) {
+        chatHistoryDao.setDisplay(counterpartId, 0)
+    }
+
+    @WorkerThread
+    suspend fun saveLastMessage(lastFromUserInformation: LastFromUserInformation) {
         chatHistoryDao.saveLastMessage(lastFromUserInformation)
     }
 
     @WorkerThread
-    suspend fun saveLatestMessage(lastFromUserInformation: List<LastFromUserInformation>) {
+    suspend fun saveLastMessage(lastFromUserInformation: List<LastFromUserInformation>) {
         chatHistoryDao.saveLastMessage(lastFromUserInformation)
-    }
-
-    @WorkerThread
-    suspend fun saveUserCache(userCache: UserCache) {
-        chatHistoryDao.saveUserInfo(userCache)
     }
 
     @WorkerThread
@@ -139,13 +101,39 @@ class ChatAllRepository(private val chatHistoryDao: ChatHistoryDao) {
     }
 
     @WorkerThread
-    suspend fun saveHistory(histories: List<ChatHistory>) {
-        chatHistoryDao.saveChat(histories)
+    suspend fun saveUserCache(userCaches: List<UserCache>) {
+        chatHistoryDao.saveUserCache(userCaches)
     }
 
     @WorkerThread
-    suspend fun saveHistory(history: ChatHistory) {
+    suspend fun saveUserCache(userCache: UserCache) {
+        chatHistoryDao.saveUserCache(userCache)
+    }
+
+    @WorkerThread
+    suspend fun getUserCache(userID: Int): UserCache? {
+        return chatHistoryDao.getUserCache(userID)
+    }
+
+    /**
+     * @param isSentFromCounterpart
+     * 是否是对方发来的消息，即该消息是否是我接收到的
+     */
+    @WorkerThread
+    suspend fun saveHistory(history: ChatHistory, isSentFromCounterpart: Boolean) {
+        // 保存消息本身
         chatHistoryDao.saveChat(history)
+        // 更新消息列表
+        if (isSentFromCounterpart) {
+            chatHistoryDao.saveOfflineNum(ChatOfflineNum(history.sender_id, history.receiver_id, 1, history.fingerprint, 1), true)
+        } else {
+            chatHistoryDao.saveOfflineNum(ChatOfflineNum(history.receiver_id, history.sender_id, 1, history.fingerprint, 1), false)
+        }
+    }
+
+    @WorkerThread
+    suspend fun saveHistory(histories: List<ChatHistory>) {
+        chatHistoryDao.saveChat(histories)
     }
 
     @WorkerThread

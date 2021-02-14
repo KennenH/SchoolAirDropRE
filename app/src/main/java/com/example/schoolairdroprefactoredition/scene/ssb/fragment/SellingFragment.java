@@ -15,7 +15,7 @@ import androidx.core.content.res.ResourcesCompat;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.databinding.SheetSsbItemMoreBinding;
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
@@ -107,7 +107,7 @@ public class SellingFragment extends SSBBaseFragment implements SSBActivity.OnLo
      * 修改物品信息 下架物品等
      */
     @Override
-    public void onItemAction(View view, HomeGoodsListInfo.DataBean bean) {
+    public void onItemAction(View view, DomainPurchasing.DataBean bean) {
         if (isMine) {
             try {
                 dialog = new BottomSheetDialog(getContext());

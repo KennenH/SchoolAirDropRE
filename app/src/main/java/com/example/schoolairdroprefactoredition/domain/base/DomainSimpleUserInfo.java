@@ -2,6 +2,8 @@ package com.example.schoolairdroprefactoredition.domain.base;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.Serializable;
 
 public class DomainSimpleUserInfo implements Serializable {
@@ -21,6 +23,7 @@ public class DomainSimpleUserInfo implements Serializable {
         this.userId = userId;
     }
 
+    @Nullable
     public String getUserName() {
         return userName;
     }
@@ -29,6 +32,7 @@ public class DomainSimpleUserInfo implements Serializable {
         this.userName = userName;
     }
 
+    @Nullable
     public String getUserAvatar() {
         return userAvatar;
     }

@@ -47,8 +47,16 @@ object ConstantUtil {
     const val SCHOOL_AIR_DROP_BASE_URL_IM = "http://81.69.14.64:2020/"
     const val LOCAL_BASE_URL = "http://10.0.2.2:2020/"
 
+    /**
+     * IP
+     */
     const val SCHOOL_AIR_DROP_IP = "81.69.14.64"
     const val LOCAL_IP = "10.0.2.2"
+
+    /**
+     * 默认头像url
+     */
+    const val DEFAULT_AVATAR = "uploads/img/user/default/default.jpg"
 
     /**
      * 图片上传类型 聊天

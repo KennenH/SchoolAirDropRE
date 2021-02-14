@@ -15,7 +15,7 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
@@ -44,7 +44,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
          * @param isFromSelling 详见{@link GoodsInfo#hideSellerInfo()}
          */
         fun start(context: Context,
-                  goodsBaseInfo: HomeGoodsListInfo.DataBean,
+                  goodsBaseInfo: DomainPurchasing.DataBean,
                   isFromSelling: Boolean) {
             val intent = Intent(context, GoodsActivity::class.java)
             intent.apply {
@@ -72,7 +72,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     private var isNotMine = false
 
     private val goodsInfo by lazy {
-        intent.getSerializableExtra(ConstantUtil.KEY_GOODS_BASE_INFO) as HomeGoodsListInfo.DataBean
+        intent.getSerializableExtra(ConstantUtil.KEY_GOODS_BASE_INFO) as DomainPurchasing.DataBean
     }
 
     /**

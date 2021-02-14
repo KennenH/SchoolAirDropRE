@@ -12,10 +12,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.application.Application;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo.DataBean;
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
@@ -44,7 +45,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     protected SSBAdapter mAdapter;
 
     protected com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding binding;
-    protected List<HomeGoodsListInfo.DataBean> mList;
+    protected List<DomainPurchasing.DataBean> mList;
 
     protected OnSSBDataLenChangedListener mOnSSBDataLenChangedListener;
 
@@ -108,7 +109,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     /**
      * 子fragment在获取网络数据之后调用
      */
-    protected void loadData(HomeGoodsListInfo data) {
+    protected void loadData(DomainPurchasing data) {
         mList = data.getData();
         if (mList.size() == 0)
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY);
@@ -123,7 +124,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
      */
     protected DomainToken getToken() {
         try {
-            return (DomainToken) getActivity().getIntent().getExtras().getSerializable(ConstantUtil.KEY_TOKEN);
+            return ((Application) getActivity().getApplication()).getCachedToken();
         } catch (NullPointerException ignored) {
         }
         return null;
@@ -180,11 +181,11 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
      * item上右下角的三个点按钮的操作
      * 在售列表中为 {修改物品信息} 和 {下架物品}
      */
-    protected void onItemAction(View view, HomeGoodsListInfo.DataBean bean) {
+    protected void onItemAction(View view, DomainPurchasing.DataBean bean) {
     }
 
     @Override
-    public void onItemActionButtonClick(View view, HomeGoodsListInfo.DataBean bean) {
+    public void onItemActionButtonClick(View view, DomainPurchasing.DataBean bean) {
         onItemAction(view, bean);
     }
 

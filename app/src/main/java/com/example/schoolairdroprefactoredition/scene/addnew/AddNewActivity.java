@@ -3,8 +3,6 @@ package com.example.schoolairdroprefactoredition.scene.addnew;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.view.LayoutInflater;
@@ -35,7 +33,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo;
-import com.example.schoolairdroprefactoredition.domain.HomeGoodsListInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter;
@@ -56,9 +54,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.FAILED_ADD;
-import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.FAILED_MODIFY;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.LOCATION_FAILED_NEW_ITEM;
-import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_MODIFY;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_NEW_ITEM;
 import static com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips.SUCCESS_NEW_POST;
 
@@ -67,7 +63,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     /**
      * 发布物品或新帖子
      * 添加物品或帖子使用该方法
-     * 修改物品使用{@link AddNewActivity#start(Context, HomeGoodsListInfo.DataBean)}
+     * 修改物品使用{@link AddNewActivity#start(Context, DomainPurchasing.DataBean)}
      *
      * @param type 页面类型 one of {@link AddNewType#ADD_ITEM} {@link AddNewType#ADD_POST}
      */
@@ -83,7 +79,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
      *
      * @param goodsInfo 物品基本信息
      */
-    public static void start(Context context, HomeGoodsListInfo.DataBean goodsInfo) {
+    public static void start(Context context, DomainPurchasing.DataBean goodsInfo) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.MODIFY_ITEM);
         bundle.putSerializable(ConstantUtil.KEY_GOODS_BASE_INFO, goodsInfo);
@@ -95,7 +91,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
      * 若不知道这个bundle里需要传什么参数，请按情况使用以下打开方式
      * <p>
      * 新增物品或帖子: {@link AddNewActivity#start(Context, int)}
-     * 修改物品信息: {@link AddNewActivity#start(Context, HomeGoodsListInfo.DataBean)}
+     * 修改物品信息: {@link AddNewActivity#start(Context, DomainPurchasing.DataBean)}
      */
     private static void start(Context context, Bundle bundle) {
         Intent intent = new Intent(context, AddNewActivity.class);
@@ -135,7 +131,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     private float mHWRatio = 1.0f;
     private List<LocalMedia> mPicSetSelected = new ArrayList<>();
 
-    private HomeGoodsListInfo.DataBean goodsBaseInfo;
+    private DomainPurchasing.DataBean goodsBaseInfo;
     private GoodsDetailInfo.DataBean goodsDetailInfo;
 
     private boolean isDraftRestored = true;
@@ -155,7 +151,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
         addNewViewModel = new ViewModelProvider(this).get(AddNewViewModel.class);
         goodsViewModel = new ViewModelProvider(this).get(GoodsViewModel.class);
 
-        goodsBaseInfo = (HomeGoodsListInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_BASE_INFO);
+        goodsBaseInfo = (DomainPurchasing.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_BASE_INFO);
         addNewType = getIntent().getIntExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.ADD_ITEM);
 
         binding.savedDraft.setVisibility(View.GONE);

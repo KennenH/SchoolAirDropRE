@@ -11,7 +11,7 @@ import java.util.*
  * 每一条记录就是一条消息
  */
 @TypeConverters(DateConverter::class)
-@Entity(tableName = "chat_history")
+@Entity(tableName = "offline")
 data class ChatHistory(
         /**
          * 消息的指纹码
@@ -21,11 +21,15 @@ data class ChatHistory(
 
         /**
          * 发送方id
+         *
+         * 具体到消息的发送者id和接收方id可能是对方也可能是对方
          */
         val sender_id: String,
 
         /**
          * 接收方id 对于一个用户来说一定是自己的id
+         *
+         * 具体到消息的发送者id和接收方id可能是对方也可能是对方
          */
         val receiver_id: String,
 
@@ -52,4 +56,8 @@ data class ChatHistory(
          * 1 发送失败
          */
         val status: Int
-)
+){
+        override fun toString(): String {
+                return "ChatHistory(fingerprint='$fingerprint', sender_id='$sender_id', receiver_id='$receiver_id', message_type=$message_type, message='$message', send_time=$send_time, status=$status)"
+        }
+}

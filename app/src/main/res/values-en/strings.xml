@@ -273,4 +273,5 @@
     <string name="connecting">Connecting</string>
     <string name="noMessageYet">Nothing here</string>
     <string name="systemBusy">Please try again later</string>
+    <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;Delete&#160;&#160;&#160;&#160;&#160;&#160;</string>
 </resources>
