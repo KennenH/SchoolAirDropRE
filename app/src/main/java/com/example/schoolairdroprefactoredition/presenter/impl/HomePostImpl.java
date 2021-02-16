@@ -25,9 +25,9 @@ public class HomePostImpl implements IHomePostPresenter {
         list.add("https://dss0.bdstatic.com/-0U0bnSm1A5BphGlnYG/tam-ogel/920152b13571a9a38f7f3c98ec5a6b3f_122_122.jpg");
         list.add("https://dss0.bdstatic.com/-0U0bnSm1A5BphGlnYG/tam-ogel/6bfe4659c6f3715ad5fa3ebde90ac123_259_194.jpg");
         list.add("https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1606042040652&di=38cf0771633e1235ad6ce15ababccf93&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201410%2F22%2F20141022073033_nBdWH.jpeg");
-        list.add("http://106.54.110.46:8000/assets/goods/img/UmMHekJlINW5BYhL_1.jpg");
-        list.add("http://106.54.110.46:8000/assets/goods/img/UmMHekJlINW5BYhL_2.jpg");
-        list.add("http://106.54.110.46:8000/assets/goods/img/UmMHekJlINW5BYhL_3.jpg");
+        list.add("https://www.cleverfiles.com/howto/wp-content/uploads/2018/03/minion.jpg");
+        list.add("http://www.personal.psu.edu/kbl5192/jpg.jpg");
+        list.add("http://yamataka01.web.fc2.com/02/_1327.jpg");
 
         for (int i = 0; i < 12; i++) {
             data[i] = new BaseHomeNewsEntity();

@@ -4,18 +4,18 @@ import androidx.annotation.DrawableRes;
 
 public class MorePanelBean {
 
-    public static final int CAMERA = 200; // item 相机
-    public static final int ALBUM = 300; // item 照片
+    public static final int CAMERA = 200; // 相机 按钮唯一标识码
+    public static final int ALBUM = 300; // 照片 按钮唯一标识码
 
-    public MorePanelBean(int icon, int item) {
+    public MorePanelBean(int icon, int itemID) {
         this.icon = icon;
-        this.item = item;
+        this.itemID = itemID;
     }
 
     @DrawableRes
     private int icon;
 
-    private int item;
+    private int itemID;
 
     public int getIcon() {
         return icon;
@@ -25,11 +25,11 @@ public class MorePanelBean {
         this.icon = icon;
     }
 
-    public int getItem() {
-        return item;
+    public int getItemID() {
+        return itemID;
     }
 
-    public void setItem(int item) {
-        this.item = item;
+    public void setItemID(int itemID) {
+        this.itemID = itemID;
     }
 }

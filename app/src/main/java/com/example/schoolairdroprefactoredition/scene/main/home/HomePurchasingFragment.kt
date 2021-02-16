@@ -12,6 +12,7 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
+import com.example.schoolairdroprefactoredition.viewmodel.PurchasingViewModel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 
 class HomePurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataListener {

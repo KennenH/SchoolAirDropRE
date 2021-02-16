@@ -21,13 +21,23 @@ class UploadRepository private constructor() {
                 }
     }
 
+    /**
+     * 上传图片
+     *
+     * @param type
+     * [ConstantUtil.UPLOAD_TYPE_AVATAR]
+     * [ConstantUtil.UPLOAD_TYPE_GOODS]
+     * [ConstantUtil.UPLOAD_TYPE_IM]
+     * [ConstantUtil.UPLOAD_TYPE_POST]
+     */
     fun uploadImage(context: Context,
-                    images: List<String>,
+                    imagesLocalPath: List<String>,
                     type: Int,
-                    onResult: (success: Boolean, response: DomainUploadImage?) -> Unit) {
-        val multipartList = ArrayList<MultipartBody.Part>(images.size)
-        for (image in images) {
-            val part = if (images.indexOf(image) == 0 && type == ConstantUtil.UPLOAD_TYPE_GOODS || type == ConstantUtil.UPLOAD_TYPE_POST) {
+                    onResult: (response: DomainUploadImage?) -> Unit) {
+        val multipartList = ArrayList<MultipartBody.Part>(imagesLocalPath.size)
+
+        for ((index, image) in imagesLocalPath.withIndex()) {
+            val part = if (index == 0 && type == ConstantUtil.UPLOAD_TYPE_GOODS || type == ConstantUtil.UPLOAD_TYPE_POST) {
                 FileUtil.createPartWithPath(context, ConstantUtil.KEY_UPLOAD_COVER, image, type != ConstantUtil.UPLOAD_TYPE_AVATAR)
             } else {
                 FileUtil.createPartWithPath(context, "", image, type != ConstantUtil.UPLOAD_TYPE_AVATAR)
@@ -40,22 +50,21 @@ class UploadRepository private constructor() {
         RetrofitClient.uploadApi.uploadImages(multipartList, type).apply {
             enqueue(object : CallBackWithRetry<DomainUploadImage>(this@apply) {
                 override fun onFailureAllRetries() {
-                    onResult(false, null)
+                    onResult(null)
                 }
 
                 override fun onResponse(call: Call<DomainUploadImage>, response: Response<DomainUploadImage>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val body = response.body()
                         if (body?.code == 200) {
-                            onResult(true, body)
+                            onResult(body)
                         } else {
-                            onResult(false, null)
+                            onResult(null)
                         }
                     } else {
-                        onResult(false, null)
+                        onResult(null)
                     }
                 }
-
             })
         }
     }

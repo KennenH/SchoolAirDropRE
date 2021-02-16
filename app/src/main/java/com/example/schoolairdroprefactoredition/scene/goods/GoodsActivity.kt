@@ -40,15 +40,15 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
          * 1、账号本人信息由KEY_AUTHORIZE从服务器获取，但是它可为空即在未登录状态查看物品信息
          * 2、物品信息由KEY_GOODS_ID从服务器获取，不可以为空
          *
-         * @param goodsBaseInfo 物品基本信息
+         * @param goodsInfo 物品封面信息
          * @param isFromSelling 详见{@link GoodsInfo#hideSellerInfo()}
          */
         fun start(context: Context,
-                  goodsBaseInfo: DomainPurchasing.DataBean,
+                  goodsInfo: DomainPurchasing.DataBean,
                   isFromSelling: Boolean) {
             val intent = Intent(context, GoodsActivity::class.java)
             intent.apply {
-                putExtra(ConstantUtil.KEY_GOODS_BASE_INFO, goodsBaseInfo)
+                putExtra(ConstantUtil.KEY_GOODS_INFO, goodsInfo)
                 putExtra(KEY_IS_FROM_SELLING, isFromSelling)
             }
 
@@ -69,10 +69,12 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     /**
      * 是否不是我的物品
      */
-    private var isNotMine = false
+    private val isNotMine by lazy {
+        goodsInfo.goods_id != (application as Application).getCachedMyInfo()?.userId
+    }
 
     private val goodsInfo by lazy {
-        intent.getSerializableExtra(ConstantUtil.KEY_GOODS_BASE_INFO) as DomainPurchasing.DataBean
+        intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO) as DomainPurchasing.DataBean
     }
 
     /**
@@ -123,8 +125,6 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
      * 则判定为是自己的物品，则隐藏底部交互按钮
      */
     private fun validateInfo() {
-        val myInfo = (application as Application).getCachedMyInfo()
-
         // 若从用户信息页面进入的在售页面，则隐藏卖家信息，原因见方法本身
         if (intent.getBooleanExtra(KEY_IS_FROM_SELLING, false)) {
             goods_info_container.hideSellerInfo()
@@ -133,11 +133,10 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
         goodsViewModel.getGoodsDetailByID(goodsInfo.goods_id)
                 .observe(this@GoodsActivity) {
                     goodsDetailInfo = it
-                    isNotMine = it.data[0].uid != myInfo?.userId
 
                     showActionButtons(isNotMine)
                     goods_info_container.setData(goodsInfo, it.data[0])
-                    goods_button_right.setFavor(it.isIs_in_favor)
+//                    goods_button_right.setFavor()
                     goods_info_container.stopShimming()
                 }
     }
@@ -190,22 +189,16 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
             val userInfo = goodsDetailInfo?.data?.get(0)
             val user = DomainUserInfo.DataBean()
             if (userInfo != null) {
-                user.userName = goodsInfo.seller_info
-                user.userAvatar = userInfo.seller_img
-                user.userId = userInfo.uid
+                user.userName = goodsInfo.user_name
+                user.userAvatar = goodsInfo.user_avatar
+                user.userId = goodsInfo.user_id
                 ChatActivity.start(this@GoodsActivity, user)
             }
         }
     }
 
     override fun onUserInfoClick(view: View?) {
-        val userID = goodsDetailInfo?.data?.get(0)?.uid
-
-        if (userID != null) {
-            UserActivity.start(this@GoodsActivity, userID)
-        } else {
-            LogUtils.d(goodsDetailInfo.toString())
-        }
+        UserActivity.start(this@GoodsActivity, goodsInfo.user_id)
     }
 
     override fun onLeftButtonClick() {

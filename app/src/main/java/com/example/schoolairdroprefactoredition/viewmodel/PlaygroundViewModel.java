@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.scene.main.home;
+package com.example.schoolairdroprefactoredition.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -10,7 +10,8 @@ import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity
 
 import java.util.List;
 
-public class HomePlaygroundFragmentViewModel extends BaseStateViewModel implements IHomeNewsCallback {
+public class PlaygroundViewModel extends BaseStateViewModel implements IHomeNewsCallback {
+
     private int page;
     private double longitude;
     private double latitude;
@@ -18,7 +19,7 @@ public class HomePlaygroundFragmentViewModel extends BaseStateViewModel implemen
 
     private final MutableLiveData<List<BaseHomeNewsEntity>> mHomeNews = new MutableLiveData<>();
 
-    public HomePlaygroundFragmentViewModel() {
+    public PlaygroundViewModel() {
         mHomeImpl = new HomePostImpl();
         mHomeImpl.registerCallback(this);
     }

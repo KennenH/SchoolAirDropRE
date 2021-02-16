@@ -1,45 +1,32 @@
 package com.example.schoolairdroprefactoredition.domain;
 
-import com.google.gson.annotations.SerializedName;
-
 import java.io.Serializable;
 import java.util.List;
 
 public class GoodsDetailInfo implements Serializable {
 
-    /**
-     * success : true
-     * message : browse success
-     * data : [{"goods_img_set":"assets/goods/img/RvH7nlsdYFjA2coI_1.jpg","goods_description":"不会让别人看到别人","seller_img":"/assets/user/avatars/14_20201209000844.jpg"}]
-     */
+    @Override
+    public String toString() {
+        return "GoodsDetailInfo{" +
+                "code=" + code +
+                ", msg='" + msg + '\'' +
+                ", time=" + time +
+                ", data=" + data +
+                '}';
+    }
 
-    private boolean success;
-    private String message;
-
-    /**
-     * goods_img_set : assets/goods/img/RvH7nlsdYFjA2coI_1.jpg
-     * goods_description : 不会让别人看到别人
-     * seller_img : /assets/user/avatars/14_20201209000844.jpg
-     */
+    private int code;
+    private String msg;
+    private long time;
 
     private List<DataBean> data;
 
-    private boolean is_in_favor;
-
-    public boolean isSuccess() {
-        return success;
+    public String getMsg() {
+        return msg;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 
     public List<DataBean> getData() {
@@ -50,65 +37,63 @@ public class GoodsDetailInfo implements Serializable {
         this.data = data;
     }
 
-    public boolean isIs_in_favor() {
-        return is_in_favor;
-    }
-
-    public void setIs_in_favor(boolean is_in_favor) {
-        this.is_in_favor = is_in_favor;
-    }
-
     public static class DataBean implements Serializable {
 
         @Override
         public String toString() {
             return "DataBean{" +
-                    "goods_img_set='" + goods_img_set + '\'' +
-                    ", goods_description='" + goods_description + '\'' +
-                    ", seller_img='" + seller_img + '\'' +
-                    ", uid=" + uid +
+                    "goods_images='" + goods_images + '\'' +
+                    ", goods_content='" + goods_content + '\'' +
+                    ", goods_watch_count=" + goods_watch_count +
+                    ", goods_favor_count=" + goods_favor_count +
+                    ", goods_chat_count=" + goods_chat_count +
                     '}';
         }
 
-        @SerializedName("goods_img_set")
-        private String goods_img_set;
-        @SerializedName("goods_description")
-        private String goods_description;
-        @SerializedName("seller_img")
-        private String seller_img;
-        @SerializedName("uid")
-        private int uid;
+        private String goods_images;
+        private String goods_content;
+        private int goods_watch_count;
+        private int goods_favor_count;
+        private int goods_chat_count;
 
-        public int getUid() {
-            return uid;
+        public int getGoods_favor_count() {
+            return goods_favor_count;
         }
 
-        public void setUid(int uid) {
-            this.uid = uid;
+        public void setGoods_favor_count(int goods_favor_count) {
+            this.goods_favor_count = goods_favor_count;
         }
 
-        public String getGoods_img_set() {
-            return goods_img_set;
+        public int getGoods_chat_count() {
+            return goods_chat_count;
         }
 
-        public void setGoods_img_set(String goods_img_set) {
-            this.goods_img_set = goods_img_set;
+        public void setGoods_chat_count(int goods_chat_count) {
+            this.goods_chat_count = goods_chat_count;
         }
 
-        public String getGoods_description() {
-            return goods_description;
+        public int getGoods_watch_count() {
+            return goods_watch_count;
         }
 
-        public void setGoods_description(String goods_description) {
-            this.goods_description = goods_description;
+        public void setGoods_watch_count(int goods_watch_count) {
+            this.goods_watch_count = goods_watch_count;
         }
 
-        public String getSeller_img() {
-            return seller_img;
+        public String getGoods_images() {
+            return goods_images;
         }
 
-        public void setSeller_img(String seller_img) {
-            this.seller_img = seller_img;
+        public void setGoods_images(String goods_images) {
+            this.goods_images = goods_images;
+        }
+
+        public String getGoods_content() {
+            return goods_content;
+        }
+
+        public void setGoods_content(String goods_content) {
+            this.goods_content = goods_content;
         }
     }
 }

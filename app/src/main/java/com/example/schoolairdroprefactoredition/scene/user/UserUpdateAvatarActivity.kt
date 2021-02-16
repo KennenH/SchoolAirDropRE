@@ -13,19 +13,19 @@ import com.blankj.utilcode.util.ImageUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel
 import com.example.schoolairdroprefactoredition.utils.*
+import com.example.schoolairdroprefactoredition.viewmodel.UserAvatarViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.luck.picture.lib.PictureSelector
 import kotlinx.android.synthetic.main.activity_user_update_avatar.*
 import java.util.*
 
-class UserUpdateAvatarActivityKt : AppCompatActivity(), View.OnLongClickListener, View.OnClickListener {
+class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, View.OnClickListener {
 
     companion object {
         fun start(context: Context) {
-            val intent = Intent(context, UserUpdateAvatarActivityKt::class.java)
+            val intent = Intent(context, UserUpdateAvatarActivity::class.java)
             if (context is AppCompatActivity) {
                 context.startActivityForResult(intent, UserActivity.REQUEST_UPDATE)
             }
@@ -36,7 +36,7 @@ class UserUpdateAvatarActivityKt : AppCompatActivity(), View.OnLongClickListener
     }
 
     private val mLoading by lazy {
-        MyUtil.loading(this@UserUpdateAvatarActivityKt)
+        MyUtil.loading(this@UserUpdateAvatarActivity)
     }
 
     private val info by lazy {
@@ -71,10 +71,10 @@ class UserUpdateAvatarActivityKt : AppCompatActivity(), View.OnLongClickListener
 
         mDialog.setContentView(binding.root)
         binding.apply {
-            takePhoto.setOnClickListener(this@UserUpdateAvatarActivityKt)
-            selectFromAlbum.setOnClickListener(this@UserUpdateAvatarActivityKt)
-            saveToAlbum.setOnClickListener(this@UserUpdateAvatarActivityKt)
-            cancel.setOnClickListener(this@UserUpdateAvatarActivityKt)
+            takePhoto.setOnClickListener(this@UserUpdateAvatarActivity)
+            selectFromAlbum.setOnClickListener(this@UserUpdateAvatarActivity)
+            saveToAlbum.setOnClickListener(this@UserUpdateAvatarActivity)
+            cancel.setOnClickListener(this@UserUpdateAvatarActivity)
         }
     }
 
@@ -129,8 +129,8 @@ class UserUpdateAvatarActivityKt : AppCompatActivity(), View.OnLongClickListener
                     mLoading.show()
                     viewModel.updateAvatar(token?.access_token, photo.androidQToPath ?: photo.path)
                             .observe(this, {
-                                if (it.isSuccess) {
-                                    updateAvatar(it.user_img_path)
+                                if (it != null) {
+                                    updateAvatar(it)
                                 } else {
                                     mLoading.dismissWith {
                                         DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)

@@ -55,25 +55,29 @@
                 android:id="@+id/recycler_container"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                app:srlEnablePreviewInEditMode="true"
                 android:layout_above="@+id/bottom_action"
                 android:background="@color/white"
                 app:layout_constraintBottom_toTopOf="@+id/bottom_action"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srlEnableAutoLoadMore="false"
                 app:srlEnableOverScrollDrag="true"
+                app:srlEnablePreviewInEditMode="true"
                 app:srlEnableRefresh="true">
 
-                <!-- todo 简单刷新头 -->
+                <com.github.ybq.android.spinkit.SpinKitView
+                    style="@style/SpinKitView.Small.FadingCircle"
+                    android:layout_width="match_parent"
+                    android:padding="@dimen/general_padding_large"
+                    android:layout_height="wrap_content" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@color/white"
-                    tools:listitem="@layout/item_chat_send"
                     android:overScrollMode="never"
-                    android:tag="recycler_view" />
+                    android:tag="recycler_view"
+                    tools:listitem="@layout/item_chat_send" />
             </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 
             <androidx.constraintlayout.widget.ConstraintLayout

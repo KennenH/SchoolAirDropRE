@@ -4,6 +4,7 @@ import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
+import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import retrofit2.Call
 import retrofit2.Response
@@ -23,13 +24,18 @@ class PurchasingRepository private constructor() {
      * 请求附近在售的数据
      */
     fun getNearbyGoods(page: Int, longitude: Double, latitude: Double, onResult: (response: DomainPurchasing?) -> Unit) {
-        RetrofitClient.goodsApi.getNearByGoods(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page, longitude, latitude)
+        RetrofitClient.goodsApi.getNearByGoods(
+                ConstantUtil.CLIENT_ID,
+                ConstantUtil.CLIENT_SECRET,
+                page,
+                if (!AppConfig.IS_DEBUG) longitude else 120.124,
+                if (!AppConfig.IS_DEBUG) latitude else 30.91231)
                 .apply {
                     enqueue(object : CallBackWithRetry<DomainPurchasing>(this@apply) {
                         override fun onResponse(call: Call<DomainPurchasing>, response: Response<DomainPurchasing>) {
                             if (response.code() == HttpURLConnection.HTTP_OK) {
                                 val body = response.body()
-                                if (body != null && body.isSuccess) {
+                                if (body != null && body.code == 200) {
                                     onResult(body)
                                 } else {
                                     onResult(null)

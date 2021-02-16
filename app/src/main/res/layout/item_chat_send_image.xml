@@ -43,7 +43,7 @@
             android:layout_width="18dp"
             android:layout_height="18dp"
             android:src="@drawable/ic_attention_normal"
-            android:visibility="gone"
+            android:visibility="invisible"
             app:tint="@color/red" />
 
         <com.github.ybq.android.spinkit.SpinKitView
@@ -62,6 +62,7 @@
             android:layout_marginStart="@dimen/general_padding"
             android:layout_marginEnd="@dimen/general_padding_small"
             android:adjustViewBounds="true"
+            android:maxWidth="200dp"
             android:maxHeight="200dp"
             android:minWidth="50dp"
             android:minHeight="50dp"

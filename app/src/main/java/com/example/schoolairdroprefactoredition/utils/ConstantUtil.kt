@@ -28,9 +28,19 @@ object ConstantUtil {
     const val AMAP_LOCATION = "amapLocation"
 
     /**
-     * data fetch num
+     * 默认获取数据一页
      */
     const val DATA_FETCH_DEFAULT_SIZE = 10
+
+    /**
+     * 可议价 物品类型
+     */
+    const val GOODS_TYPE_BARGAIN = "bargain"
+
+    /**
+     * 二手 物品类型
+     */
+    const val GOODS_TYPE_SECONDHAND = "secondHand"
 
     /**
      * 移动端接口密码
@@ -42,7 +52,7 @@ object ConstantUtil {
     /**
      * 校园空投 网络接口base url
      */
-    const val SCHOOL_AIR_DROP_BASE_URL_NEW = "http://81.69.14.64:8000/"
+    const val SCHOOL_AIR_DROP_BASE_URL_DEPRECATED = "http://81.69.14.64:8000/"
     const val SCHOOL_AIR_DROP_BASE_URL = "http://81.69.14.64:8080/"
     const val SCHOOL_AIR_DROP_BASE_URL_IM = "http://81.69.14.64:2020/"
     const val LOCAL_BASE_URL = "http://10.0.2.2:2020/"
@@ -163,14 +173,11 @@ object ConstantUtil {
     const val KEY_USER_SIMPLE_INFO = "UserSimpleInfo"
 
     /**
-     * 获取[com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo]
+     * 获取物品封面信息 键
+     *
+     * 物品封面信息不包括图片集、物品详细描述
      */
-    const val KEY_GOODS_INFO = "GoodsInfo"
-
-    /**
-     * 获取物品封面信息键
-     */
-    const val KEY_GOODS_BASE_INFO = "key_goods_base_info"
+    const val KEY_GOODS_INFO = "key_goods_base_info"
 
     /**
      * 打开用户个人信息页面时是否可修改信息

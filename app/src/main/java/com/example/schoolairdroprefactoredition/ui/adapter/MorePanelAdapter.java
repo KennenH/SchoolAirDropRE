@@ -22,14 +22,18 @@ public class MorePanelAdapter extends BaseQuickAdapter<MorePanelBean, BaseViewHo
         holder.setImageResource(R.id.icon, bean.getIcon());
 
         holder.itemView.setOnClickListener(v -> {
-            switch (bean.getItem()) {
+            switch (bean.getItemID()) {
+                // 相册
                 case MorePanelBean.ALBUM:
-                    if (getContext() instanceof AppCompatActivity)
-                        MyUtil.pickPhotoFromAlbum((AppCompatActivity) getContext(), ChatActivity.TAKE_PHOTO, 6, false, false, false);
+                    if (getContext() instanceof AppCompatActivity) {
+                        MyUtil.pickPhotoFromAlbum((AppCompatActivity) getContext(), ChatActivity.PICK_ALBUM, 6, false, false, false);
+                    }
                     break;
+                // 相机
                 case MorePanelBean.CAMERA:
-                    if (getContext() instanceof AppCompatActivity)
-                        MyUtil.takePhoto((AppCompatActivity) getContext(), ChatActivity.PICK_PHOTO, false);
+                    if (getContext() instanceof AppCompatActivity) {
+                        MyUtil.takePhoto((AppCompatActivity) getContext(), ChatActivity.TAKE_PHOTO, false);
+                    }
                     break;
             }
         });

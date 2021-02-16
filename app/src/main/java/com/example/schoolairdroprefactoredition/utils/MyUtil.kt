@@ -104,6 +104,11 @@ object MyUtil {
                 .forResult(requestCode)
     }
 
+    /**
+     * @param isSquare 是否正方形剪裁
+     * @param isCircle 是否圆形剪裁
+     * @param isCropWithoutSpecificShape 是否剪裁但不指定形状
+     */
     @JvmStatic
     fun pickPhotoFromAlbum(activity: Activity?, requestCode: Int, maxSelect: Int, isSquare: Boolean = false, isCircle: Boolean = false, isCropWithoutSpecificShape: Boolean = false) {
         val animStyle = PictureWindowAnimationStyle()
@@ -257,7 +262,7 @@ object MyUtil {
      */
     @JvmStatic
     fun getArrayFromString(picSet: String): List<String> {
-        return listOf(*picSet.split("&".toRegex()).toTypedArray())
+        return picSet.split(',')
     }
 
     class ImageLoader : XPopupImageLoader {

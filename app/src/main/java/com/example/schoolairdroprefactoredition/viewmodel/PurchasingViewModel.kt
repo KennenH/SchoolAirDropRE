@@ -1,9 +1,10 @@
-package com.example.schoolairdroprefactoredition.scene.main.home
+package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.repository.PurchasingRepository
 import kotlinx.coroutines.launch
@@ -12,14 +13,8 @@ class PurchasingViewModel : ViewModel() {
 
     private var nowPage = 0
 
-    /**
-     * 默认为中国计量大学生活园区
-     */
     private var longitude = 120.36055
 
-    /**
-     * 默认为中国计量大学生活园区
-     */
     private var latitude = 30.31747
 
     private val purchasingRepository by lazy {

@@ -19,7 +19,7 @@ public class RetrofitManager {
 
     private RetrofitManager() {
         mRetrofit = new Retrofit.Builder()
-                .baseUrl(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW)
+                .baseUrl(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_DEPRECATED)
                 .client(new OkHttpClient.Builder()
                         .readTimeout(4, TimeUnit.SECONDS)
                         .connectTimeout(4, TimeUnit.SECONDS)

@@ -22,6 +22,7 @@ import com.example.schoolairdroprefactoredition.ui.adapter.HomePostsRecyclerAdap
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
+import com.example.schoolairdroprefactoredition.viewmodel.PlaygroundViewModel;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
 
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +32,7 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
         BaseStateViewModel.OnRequestListener,
         HomePostsRecyclerAdapter.OnNoMoreDataListener, HomePostsRecyclerAdapter.OnHomePostActionClickListener {
 
-    private HomePlaygroundFragmentViewModel homeContentFragmentViewModel;
+    private PlaygroundViewModel homeContentFragmentViewModel;
 
     private HomePostsRecyclerAdapter mHomePostsRecyclerAdapter;
 
@@ -45,7 +46,7 @@ public class HomePlaygroundFragment extends BaseChildFragment implements
 
     @Override
     public void initView(FragmentHomeContentBinding binding) {
-        homeContentFragmentViewModel = new ViewModelProvider(this).get(HomePlaygroundFragmentViewModel.class);
+        homeContentFragmentViewModel = new ViewModelProvider(this).get(PlaygroundViewModel.class);
         homeContentFragmentViewModel.setOnRequestListener(this);
 
         mHomeRecycler = binding.homeRecycler;

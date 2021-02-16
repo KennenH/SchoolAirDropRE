@@ -5,11 +5,8 @@ import android.app.Application
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Process
-import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
-import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
 import com.example.schoolairdroprefactoredition.database.SARoomDatabase
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
@@ -64,29 +61,67 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
     /**
      * 发送文本消息
      *
-     * 若以发送则返回消息指纹码，否则返回空
-     * 返回null代表消息根本没有发送，而不是发送失败
-     *
-     * @param userID 对方的id
-     * @return 发送的消息的指纹，若为null表示消息未被发送
+     * application作为app顶层类生命周期最长，只要application不被销毁也意味着app没有被杀死
      */
-    fun doSendTextMessage(userID: String?, myId: String?, content: String, weakAdapter: WeakReference<ChatRecyclerAdapter>) {
-        if (userID != null && content.trim() != "") {
-            // 为本条消息创建消息指纹
-            val fingerprint = Protocal.genFingerPrint()
-            // 为新发送的消息new一个对象
-            val chat = ChatHistory(fingerprint, myId.toString(), userID, 0, content, Date(), 0)
-            // 获取adapter和recycler view的弱引用
-            val adapter = weakAdapter.get()
-            // 将发送的消息显示到消息框中
-            adapter?.addData(0, chat)
-            // 保存自己发送的消息
-            chatViewModel.saveSentMessage(chat)
-            // 框架异步发送消息
-            object : LocalDataSender.SendCommonDataAsync(content, userID, fingerprint, ConstantUtil.MESSAGE_TYPE_TEXT) {
-                override fun onPostExecute(p0: Int?) {
+    fun sendTextMessage(userID: String, myID: String, content: String, weakAdapter: WeakReference<ChatRecyclerAdapter>) {
+        // 为本条消息创建消息指纹
+        val fingerprint = Protocal.genFingerPrint()
+        // 为新发送的消息new一个对象
+        val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_TEXT, content, Date(), 0)
+        // 获取adapter和recycler view的弱引用
+        val adapter = weakAdapter.get()
+        // 将发送的消息显示到消息框中
+        adapter?.addData(0, chat)
+        // 更新发送状态
+        adapter?.updateStatus(chat, ChatRecyclerAdapter.MessageSendStatus.SENDING)
+        // 保存自己发送的消息
+        chatViewModel.saveSentMessage(chat)
+        // 框架异步发送消息
+        object : LocalDataSender.SendCommonDataAsync(content, userID, fingerprint, ConstantUtil.MESSAGE_TYPE_TEXT) {
+            override fun onPostExecute(code: Int?) {
+                if (code == 0) {
+                    adapter?.updateStatus(chat, ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
+                } else {
+                    adapter?.updateStatus(chat, ChatRecyclerAdapter.MessageSendStatus.FAILED)
                 }
-            }.execute()
+            }
+        }.execute()
+    }
+
+    /**
+     * 发送图片消息
+     */
+    fun sendImageMessage(userID: String, myID: String, imagePaths: List<String>, weakAdapter: WeakReference<ChatRecyclerAdapter>) {
+        val adapter = weakAdapter.get()
+        // 先暂时保存这几个new出来的chat对象，后面图片发送完毕之后发送消息还要使用
+        val chatList = ArrayList<ChatHistory>(imagePaths.size)
+        for (path in imagePaths) {
+            val fingerprint = Protocal.genFingerPrint()
+            val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_IMAGE, path, Date(), 0)
+            chatList.add(chat)
+            adapter?.addData(0, chat)
+            chatViewModel.saveSentMessage(chat)
+            // 更新发送状态
+            adapter?.updateStatus(chat, ChatRecyclerAdapter.MessageSendStatus.SENDING)
+        }
+        // 获取多图的字符路径，统一以逗号分隔
+        val pathsString = chatViewModel.uploadImage(imagePaths).value
+        val pathList = pathsString?.split(',')
+        pathList?.let {
+            for ((index, path) in pathList.withIndex()) {
+
+                LogUtils.d("path$index -- > $path")
+
+//                object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
+//                    override fun onPostExecute(code: Int?) {
+//                        if (code == 0) {
+//                            adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
+//                        } else {
+//                            adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.FAILED)
+//                        }
+//                    }
+//                }.execute()
+            }
         }
     }
 
@@ -105,7 +140,7 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
     }
 
     private val chatViewModel by lazy {
-        ChatViewModel.ChatViewModelFactory(chatRepository).create(ChatViewModel::class.java)
+        ChatViewModel.ChatViewModelFactory(chatRepository, this).create(ChatViewModel::class.java)
     }
 
     /**

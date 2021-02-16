@@ -39,7 +39,9 @@ class MessagesRecyclerAdapter(private val viewModel: MessageViewModel) : BaseQui
             // 若为空则获取用户信息
             val userInfo = viewModel.getUserBaseInfo(item.counterpart_id.toInt()).value
             userInfo?.let {
-                LogUtils.d("已获取网络用户信息")
+
+                LogUtils.d("已获取网络用户信息 -- > ${userInfo.toString()}")
+
                 ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + it.user_avatar)
                 holder.setText(R.id.messages_user_name, it.user_id.toString())
             }

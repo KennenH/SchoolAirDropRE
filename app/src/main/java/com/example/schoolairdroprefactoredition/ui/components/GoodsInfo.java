@@ -7,12 +7,15 @@ import android.view.View;
 
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsDetailBinding;
-import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo;
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
+import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.facebook.shimmer.ShimmerFrameLayout;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListener {
 
@@ -60,8 +63,11 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
     public void setData(DomainPurchasing.DataBean baseInfo, GoodsDetailInfo.DataBean detailInfo) {
         if (baseInfo != null && detailInfo != null) {
             try {
-                boolean negotiable = baseInfo.getGoods_is_quotable() == 1;// 是否可议价
-                boolean secondHand = baseInfo.getGoods_is_brandNew() == 0;// 是否二手
+                final String[] goodsType = baseInfo.getGoods_type().split(",");
+                ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(goodsType));
+                boolean negotiable = arrayList.contains(ConstantUtil.GOODS_TYPE_BARGAIN);// 是否可议价
+                boolean secondHand = arrayList.contains(ConstantUtil.GOODS_TYPE_SECONDHAND);// 是否二手
+
                 if (negotiable && secondHand) {
                     binding.goodsName.setText(getContext().getResources().getString(R.string.itemNS, baseInfo.getGoods_name()));
                 } else if (negotiable) {
@@ -73,12 +79,12 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
                 }
 
                 binding.goodsPrice.setPrice(baseInfo.getGoods_price());
-                binding.goodsPager.setData(MyUtil.getArrayFromString(detailInfo.getGoods_img_set()), false);
-                binding.goodsDescription.setText(detailInfo.getGoods_description());
+                binding.goodsPager.setData(MyUtil.getArrayFromString(detailInfo.getGoods_images()), false);
+                binding.goodsDescription.setText(detailInfo.getGoods_content());
 
-                if (baseInfo.getSeller_info() != null) {
-                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(detailInfo.getSeller_img()));
-                    binding.goodsUserName.setText(baseInfo.getSeller_info());
+                if (baseInfo.getUser_name() != null) {
+                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(baseInfo.getUser_avatar()));
+                    binding.goodsUserName.setText(baseInfo.getUser_name());
                 } else {
                     binding.goodsSellerInfo.setVisibility(GONE);
                 }

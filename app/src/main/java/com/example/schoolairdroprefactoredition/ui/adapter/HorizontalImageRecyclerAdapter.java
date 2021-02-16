@@ -25,7 +25,7 @@ public class HorizontalImageRecyclerAdapter extends BaseQuickAdapter<LocalMedia,
         String realPath = s.getAndroidQToPath() == null ? s.getPath() : s.getAndroidQToPath();
 
         // 检查图片路径是否以base url开头
-        if (realPath.startsWith(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW) || realPath.startsWith(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL)) {
+        if (realPath.startsWith(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL)) {
             image.setImageRemotePath(realPath); // 若是则为服务器图片
         } else {
             image.setImageLocalPath(realPath); // 否则为本地图片

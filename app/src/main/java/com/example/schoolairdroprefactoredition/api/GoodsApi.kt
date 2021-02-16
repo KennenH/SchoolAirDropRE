@@ -13,7 +13,7 @@ interface GoodsApi {
      * 获取附近在售的商品
      */
     @FormUrlEncoded
-    @POST("goods/getNearByGoods")
+    @POST("appapi/goods/getNearByGoods")
     fun getNearByGoods(
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String,
@@ -25,7 +25,7 @@ interface GoodsApi {
      * 获取物品详细信息
      */
     @FormUrlEncoded
-    @POST("goods/getGoodsDetailInfo")
+    @POST("appapi/goods/getGoodsDetailInfo")
     fun getGoodsDetail(
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String,
@@ -47,7 +47,7 @@ interface GoodsApi {
      * @param description 物品描述
      */
     @Multipart
-    @POST("goods/upload")
+    @POST("appapi/goods/upload")
     fun postNewItem(@Header("Authorization") token: String,
                     @Part cover: MultipartBody.Part,
                     @Part picSet: MultipartBody.Part,
@@ -63,7 +63,7 @@ interface GoodsApi {
      * 获取用户个人在售
      */
     @FormUrlEncoded
-    @POST("goods/getGoodsOnSaleByClient")
+    @POST("appapi/goods/getGoodsOnSaleByClient")
     fun getGoodsOnSaleByClient(
             @Field("user_id") userID: Int,
             @Field("client_id") clientID: String,

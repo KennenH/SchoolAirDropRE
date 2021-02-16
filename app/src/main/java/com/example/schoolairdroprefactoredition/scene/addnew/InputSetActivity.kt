@@ -12,8 +12,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnFocusChangeListener
-import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.KeyboardUtils
 import com.example.schoolairdroprefactoredition.R
@@ -22,25 +20,70 @@ import kotlinx.android.synthetic.main.activity_selling_add_set.*
 import kotlin.math.abs
 
 class InputSetActivity : ImmersionStatusBarActivity() {
+
     companion object {
 
-        const val RESULT_CODE = 100
+        /**
+         * OnActivityResult的请求码 请求码
+         */
+        const val REQUEST_CODE = 94683
 
-        const val RESULT = "Result"
-        const val TITLE = "Title"
-        const val TYPE = "Type"
-        const val CONTENT = "Content"
 
-        const val TYPE_TITLE = 0 // 类型 仅一行
-        const val TYPE_DESCRIPTION = 1 // 类型 多行
+        /**
+         * 返回结果 键
+         */
+        const val RESULT = "KEY_Result"
 
+        /**
+         * 标题显示的文字 键
+         */
+        const val TITLE = "KEY_Title"
+
+        /**
+         * 页面输入类型 键
+         */
+        const val TYPE = "KEY_Type"
+
+        /**
+         * 页面进入时已输入的内容 键
+         */
+        const val CONTENT = "KEY_Content"
+
+
+        /**
+         * 标题 页面输入类型
+         *
+         * 标题类型不能输入换行字符
+         */
+        const val TYPE_TITLE = 0
+
+        /**
+         * 详述 页面输入类型
+         *
+         * 详述类型可以输入若干行文字和任意字符
+         */
+        const val TYPE_DESCRIPTION = 1
+
+
+        /**
+         * 标题 输入最大字数限制
+         */
         private const val MAX_TITLE = 30
+
+        /**
+         * 详述 输入最大字数限制
+         */
         private const val MAX_DESCRIPTION = 500
 
         /**
+         * 完成 菜单项
+         */
+        private var doneMenu: MenuItem? = null
+
+        /**
          * @param context context
-         * @param type    类型 one of [InputSetActivity.TYPE_TITLE] [InputSetActivity.TYPE_DESCRIPTION]
-         * @param input   已有输入 方便用户修改而不是全部重写
+         * @param type    页面输入类型 one of [InputSetActivity.TYPE_TITLE] [InputSetActivity.TYPE_DESCRIPTION]
+         * @param input   之前已有的输入 方便用户修改而不是全部重写
          * @param title   标题
          */
         fun start(context: Context, type: Int, input: String?, title: String?) {
@@ -48,9 +91,8 @@ class InputSetActivity : ImmersionStatusBarActivity() {
             intent.putExtra(TITLE, title) // 页面显示的标题
             intent.putExtra(TYPE, type) // 输入的类型
             intent.putExtra(CONTENT, input) // 输入框的内容
-            (context as AppCompatActivity).startActivityForResult(intent, RESULT_CODE)
+            (context as AppCompatActivity).startActivityForResult(intent, REQUEST_CODE)
         }
-
     }
 
     private val type by lazy {
@@ -75,9 +117,8 @@ class InputSetActivity : ImmersionStatusBarActivity() {
             input.minLines = 5
         }
 
-        input_warning.visibility = View.GONE
+        input_warning.visibility = View.INVISIBLE
         input.gravity = Gravity.START or Gravity.TOP
-
         input.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {
                 // do nothing
@@ -91,9 +132,11 @@ class InputSetActivity : ImmersionStatusBarActivity() {
                 if (type == TYPE_TITLE) {
                     input_tip.text = getString(R.string.textRemainCount, MAX_TITLE - input.text.length)
                     if (s.toString().contains(" ") or s.toString().contains("\n")) {
-                        input.visibility = View.VISIBLE
+                        doneMenu?.isEnabled = false
+                        input_warning.visibility = View.VISIBLE
                     } else {
-                        input_warning.visibility = View.GONE
+                        doneMenu?.isEnabled = true
+                        input_warning.visibility = View.INVISIBLE
                     }
                 } else {
                     input_tip.text = getString(R.string.textRemainCount, MAX_DESCRIPTION - input.text.length)
@@ -101,11 +144,11 @@ class InputSetActivity : ImmersionStatusBarActivity() {
             }
         })
 
-        input.onFocusChangeListener = OnFocusChangeListener { v: View?, hasFocus: Boolean ->
+        input.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
             if (hasFocus) {
-                KeyboardUtils.showSoftInput(v!!)
+                KeyboardUtils.showSoftInput(this)
             } else {
-                KeyboardUtils.hideSoftInput(v!!)
+                KeyboardUtils.hideSoftInput(this)
             }
         }
 
@@ -122,7 +165,6 @@ class InputSetActivity : ImmersionStatusBarActivity() {
     }
 
     private fun sendData() {
-        val intent = Intent()
         intent.putExtra(RESULT, input.text.toString())
         intent.putExtra(TYPE, type)
         setResult(RESULT_OK, intent)
@@ -130,7 +172,7 @@ class InputSetActivity : ImmersionStatusBarActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.toolbar_done, menu)
-        menu.getItem(0).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+        doneMenu = menu.getItem(0).also { it.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS) }
         return true
     }
 
@@ -144,10 +186,12 @@ class InputSetActivity : ImmersionStatusBarActivity() {
             finish()
             return true
         } else if (id == R.id.done) {
-            if (input_warning.visibility != View.VISIBLE) {
+            return if (input_warning.visibility != View.VISIBLE) {
                 sendData()
                 finish()
-                return true
+                true
+            } else {
+                false
             }
         }
         return super.onOptionsItemSelected(item)

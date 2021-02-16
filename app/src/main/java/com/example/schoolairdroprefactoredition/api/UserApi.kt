@@ -56,5 +56,11 @@ interface UserApi {
     @POST("appapi/user/updateUserName")
     fun updateUserName(@Header("Authorization") token: String, @Field("user_name") name: String): Call<DomainResult>
 
+    /**
+     * 修改用户头像
+     */
+    @FormUrlEncoded
+    @POST("appapi/user/updateUserAvatar")
+    fun updateUserAvatar(@Header("Authorization") token: String, @Field("user_avatar") avatar: String): Call<DomainResult>
 
 }

@@ -82,7 +82,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     public static void start(Context context, DomainPurchasing.DataBean goodsInfo) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.MODIFY_ITEM);
-        bundle.putSerializable(ConstantUtil.KEY_GOODS_BASE_INFO, goodsInfo);
+        bundle.putSerializable(ConstantUtil.KEY_GOODS_INFO, goodsInfo);
         start(context, bundle);
     }
 
@@ -151,7 +151,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
         addNewViewModel = new ViewModelProvider(this).get(AddNewViewModel.class);
         goodsViewModel = new ViewModelProvider(this).get(GoodsViewModel.class);
 
-        goodsBaseInfo = (DomainPurchasing.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_BASE_INFO);
+        goodsBaseInfo = (DomainPurchasing.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
         addNewType = getIntent().getIntExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.ADD_ITEM);
 
         binding.savedDraft.setVisibility(View.GONE);
@@ -290,7 +290,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == InputSetActivity.RESULT_CODE) { // 输入页面返回
+            if (requestCode == InputSetActivity.REQUEST_CODE) { // 输入页面内容返回
                 if (data != null) {
                     int type = data.getIntExtra(InputSetActivity.TYPE, InputSetActivity.TYPE_TITLE);
                     if (type == InputSetActivity.TYPE_TITLE) {

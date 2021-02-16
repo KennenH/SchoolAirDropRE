@@ -42,7 +42,7 @@ public class SSBImpl implements ISSBPresenter {
                 if (mCallback != null)
                     if (code == HttpURLConnection.HTTP_OK) {
                         DomainPurchasing info = response.body();
-                        if (info != null && info.isSuccess()) {
+                        if (info != null && info.getCode() == 200) {
                             mCallback.onSellingLoaded(info);
                         } else mCallback.onError();
                     } else mCallback.onError();
@@ -115,7 +115,7 @@ public class SSBImpl implements ISSBPresenter {
 //                    }
 
                     if (mCallback != null)
-                        if (info != null && info.isSuccess()) {
+                        if (info != null && info.getCode() == 200) {
                             mCallback.onSellingLoaded(info);
                         } else
                             mCallback.onError();

@@ -61,7 +61,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         binding.placeHolder.addOnPlaceHolderActionListener(this);
 
         mAdapter = new SSBAdapter(getActivity().getIntent().getBooleanExtra(ConstantUtil.KEY_IS_MINE, false));
-        mAdapter.setOnSSBItemActionListener(this);
+        mAdapter.addOnSSBItemActionListener(this);
         binding.ssbRecycler.addItemDecoration(new MarginItemDecoration());
         binding.ssbRecycler.setAdapter(mAdapter);
         binding.ssbRecycler.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -193,7 +193,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     public void onDestroy() {
         super.onDestroy();
         if (mAdapter != null) {
-            mAdapter.setOnSSBItemActionListener(null);
+            mAdapter.addOnSSBItemActionListener(null);
         }
         mOnSSBDataLenChangedListener = null;
     }

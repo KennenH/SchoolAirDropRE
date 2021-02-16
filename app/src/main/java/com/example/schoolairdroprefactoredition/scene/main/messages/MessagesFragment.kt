@@ -106,10 +106,13 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
             // 任何操作之前都必须先关闭菜单，否则会出现菜单混乱
             menuBridge.closeMenu()
 
-            // 隐藏第position个会话
-            mMessagesRecyclerAdapter.removeAt(adapterPosition)
-            val counterpartId = mMessagesRecyclerAdapter.getCounterpartIdAt(adapterPosition)
-            messageViewModel.swipeToHideChannel(counterpartId)
+            // 若点击的是菜单中的第一个按钮，即删除，则隐藏会话
+            if (menuBridge.position == 0) {
+                // 隐藏第position个会话
+                mMessagesRecyclerAdapter.removeAt(adapterPosition)
+                val counterpartId = mMessagesRecyclerAdapter.getCounterpartIdAt(adapterPosition)
+                messageViewModel.swipeToHideChannel(counterpartId)
+            }
         }
         recyclerView?.adapter = mMessagesRecyclerAdapter
 
@@ -129,7 +132,7 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
         val userInfo = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
 
         if (userInfo != null) {
-            // 观察本地消息数量列表
+            // 观察本地消息数量列表，消息列表页面所有数据显示都通过该观察者，所以只需要在此判断数量显示即可
             messageViewModel.getChatList(userInfo.userId.toString()).observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
                     empty?.visibility = View.GONE
@@ -140,9 +143,9 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
             })
         }
 
-        if (token != null) {
-            updateMessageState(MessageState.LOADING)
-            messageViewModel.getOfflineNumOnline(token).observe(viewLifecycleOwner) {
+        updateMessageState(MessageState.LOADING)
+        messageViewModel.getOfflineNumOnline(token).observe(viewLifecycleOwner) {
+            if (it != null) {
                 // 将服务器离线消息数量合并入本地服务器，此时本地服务器数据改变，理论上将会自动刷新消息列表
                 messageViewModel.saveOfflineNum(it)
                 updateMessageState(MessageState.REFRESH)
@@ -187,11 +190,11 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
         val userInfo = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
 
         // 登录状态发生变化时，若发现是退出，则将消息列表清空
-        if (token != null && userInfo != null) {
-            // 重新观察本地消息数量列表
+        if (userInfo != null) {
+            // 重新观察本地消息数量列表，消息列表页面所有数据显示都通过该观察者，所以只需要在此判断数量显示即可
             messageViewModel.getChatList(userInfo.userId.toString()).observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
-                    empty?.visibility = View.GONE
+                    empty?.visibility = View.INVISIBLE
                     mMessagesRecyclerAdapter.setList(it)
                 } else {
                     empty?.visibility = View.VISIBLE
@@ -201,12 +204,15 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
             updateMessageState(MessageState.LOADING)
             // 获取服务器离线消息数量
             messageViewModel.getOfflineNumOnline(token).observe(viewLifecycleOwner) {
-                // 将服务器离线消息数量合并入本地服务器，此时本地服务器数据改变，理论上将会自动刷新消息列表
-                messageViewModel.saveOfflineNum(it)
-                updateMessageState(MessageState.REFRESH)
+                if (it != null) {
+                    // 将服务器离线消息数量合并入本地服务器，此时本地服务器数据改变，理论上将会自动刷新消息列表
+                    messageViewModel.saveOfflineNum(it)
+                    updateMessageState(MessageState.REFRESH)
+                }
             }
         } else {
             mMessagesRecyclerAdapter.setList(ArrayList())
+            empty?.visibility = View.VISIBLE
         }
     }
 

@@ -43,17 +43,19 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
         return databaseRepository.getChatList(receiverID).asLiveData()
     }
 
-    fun getOfflineNumOnline(token: DomainToken): LiveData<DomainOfflineNum> {
-        offlineNumLoadState.value = LoadState.LOADING
-        viewModelScope.launch {
-            databaseRepository.getOfflineNum(token) { success, response ->
-                if (success) {
-                    offlineNumLoadState.value = LoadState.SUCCESS
-                    offlineNumLiveData.value = response
-                } else {
-                    offlineNumLoadState.value = LoadState.ERROR
+    fun getOfflineNumOnline(token: DomainToken?): LiveData<DomainOfflineNum?> {
+        if (token != null) {
+            viewModelScope.launch {
+                databaseRepository.getOfflineNum(token) { success, response ->
+                    if (success) {
+                        offlineNumLiveData.postValue(response)
+                    } else {
+                        offlineNumLiveData.postValue(null)
+                    }
                 }
             }
+        } else {
+            offlineNumLiveData.postValue(null)
         }
         return offlineNumLiveData
     }

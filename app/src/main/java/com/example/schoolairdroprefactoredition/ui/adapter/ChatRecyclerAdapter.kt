@@ -85,7 +85,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
      * 我接受到的消息一定是发送和接收成功了的
      */
     fun updateStatus(item: ChatHistory, @MessageSendStatus status: Int) {
-        val holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(getItemPosition(item)))
+        val holder = recyclerView.findViewHolderForAdapterPosition(getItemPosition(item))
         val sending = holder?.itemView?.findViewById<View>(R.id.send_sending)
         val failed = holder?.itemView?.findViewById<View>(R.id.send_failed)
         when (status) {

@@ -82,7 +82,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
     public void onClick(View v) {
         int id = v.getId();
         if (id == R.id.user_avatar) {
-            UserUpdateAvatarActivityKt.Companion.start(this);
+            UserUpdateAvatarActivity.Companion.start(this);
         } else if (id == R.id.userName) {
             UserUpdateNameActivity.Companion.start(this);
         }

@@ -38,10 +38,10 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
             // 将封面图片加入图片集中，为的是确保服务器收到的数组第一张图片是封面
             picSet.add(cover)
             // 先上传图片
-            uploadRepository.uploadImage(getApplication(), picSet, ConstantUtil.UPLOAD_TYPE_GOODS) { success, response ->
-                if (success) {
-                    val cov = response?.data?.cover
-                    val pics = response?.data?.images
+            uploadRepository.uploadImage(getApplication(), picSet, ConstantUtil.UPLOAD_TYPE_GOODS) { response ->
+                if (response != null) {
+                    val cov = response.data?.cover
+                    val pics = response.data?.images
                     if (cov != null && pics != null) {
                         // 图片上传成功之后将服务器返回的图片路径再发送
                         sellingAddNewRepository.submitNewItem(token, cov, pics,

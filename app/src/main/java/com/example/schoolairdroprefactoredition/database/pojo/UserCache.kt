@@ -25,4 +25,8 @@ data class UserCache(
 //         * 用于推送的设备id
 //         */
 //        val registration_id: String
-)
+) {
+        override fun toString(): String {
+                return "UserCache(user_id=$user_id, user_name='$user_name', user_avatar='$user_avatar')"
+        }
+}

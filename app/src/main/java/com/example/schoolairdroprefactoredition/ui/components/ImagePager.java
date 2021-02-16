@@ -82,7 +82,7 @@ public class ImagePager extends ConstraintLayout implements ViewPager.OnPageChan
             if (isIncludeBaseUrl) {
                 mData.add(pic);
             } else {
-                mData.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_NEW + ImageUtil.fixUrl(pic));
+                mData.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(pic));
             }
         }
 

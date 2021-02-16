@@ -16,12 +16,13 @@ class HomeGoodsRecyclerAdapter : BaseFooterAdapter<DomainPurchasing.DataBean, Ba
     override fun convert(holder: BaseViewHolder, item: DomainPurchasing.DataBean) {
         try {
             val binding = ItemHomeGoodsInfoBinding.bind(holder.itemView)
-            val negotiable = item.goods_is_quotable == 1
-            val secondHand = item.goods_is_brandNew == 0
+            val goodsType = item.goods_type.split(',')
+            val negotiable = goodsType.contains(ConstantUtil.GOODS_TYPE_BARGAIN)
+            val secondHand = goodsType.contains(ConstantUtil.GOODS_TYPE_SECONDHAND)
 
-            ImageUtil.loadRoundedImage(binding.itemImage, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(item.goods_img_cover))
+            ImageUtil.loadRoundedImage(binding.itemImage, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(item.goods_cover_image))
             binding.itemPrice.setPrice(item.goods_price)
-            binding.itemSeller.text = item.seller_info
+            binding.itemSeller.text = item.user_name
             if (context is AppCompatActivity) {
                 binding.root.setOnClickListener {
                     GoodsActivity.start(context, item, false)
