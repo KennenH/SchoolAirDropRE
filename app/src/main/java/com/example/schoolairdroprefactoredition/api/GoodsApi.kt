@@ -42,8 +42,7 @@ interface GoodsApi {
      * @param price       价格
      * @param longitude   经度
      * @param latitude    纬度
-     * @param negotiable  是否可议价
-     * @param brandNew    是否全新
+     * @param goodsType   物品类型
      * @param description 物品描述
      */
     @Multipart
@@ -55,8 +54,7 @@ interface GoodsApi {
                     @Part description: MultipartBody.Part,
                     @Part longitude: MultipartBody.Part,
                     @Part latitude: MultipartBody.Part,
-                    @Part negotiable: MultipartBody.Part,
-                    @Part brandNew: MultipartBody.Part,
+                    @Part goodsType: MultipartBody.Part,
                     @Part price: MultipartBody.Part): Call<DomainResult>
 
     /**

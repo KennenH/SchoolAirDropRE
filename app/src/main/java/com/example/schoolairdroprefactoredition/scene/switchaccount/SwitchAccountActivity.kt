@@ -12,7 +12,7 @@ import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
-import com.example.schoolairdroprefactoredition.scene.main.AccountViewModel
+import com.example.schoolairdroprefactoredition.viewmodel.AccountViewModel
 import com.example.schoolairdroprefactoredition.ui.adapter.SwitchAccountRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.AnimUtil
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil

@@ -18,10 +18,6 @@ class GoodsRepository private constructor() {
                 }
     }
 
-    fun getNearByGoods() {
-
-    }
-
     fun getGoodsDetail(goodsID: Int,
                        onResult: (success: Boolean, response: GoodsDetailInfo?) -> Unit) {
         RetrofitClient.goodsApi.getGoodsDetail(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, goodsID).apply {

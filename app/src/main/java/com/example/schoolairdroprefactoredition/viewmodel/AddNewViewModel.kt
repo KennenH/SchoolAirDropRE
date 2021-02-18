@@ -15,13 +15,13 @@ import kotlinx.coroutines.launch
 
 class AddNewViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val mSubmitItemResult = MutableLiveData<Boolean>()
+    private val submitItemLiveData = MutableLiveData<Boolean>()
 
-    private val mSubmitPostResult = MutableLiveData<Boolean>()
+    private val submitPostLiveData = MutableLiveData<Boolean>()
 
-    private val mRestoredItemDraft = MutableLiveData<NewItemDraftCache>()
+    private val restoredItemDraftLiveData = MutableLiveData<NewItemDraftCache>()
 
-    private val mRestoredPostDraft = MutableLiveData<NewPostDraftCache>()
+    private val restoredPostDraftLiveData = MutableLiveData<NewPostDraftCache>()
 
     private val sellingAddNewRepository: SellingAddNewRepository = SellingAddNewRepository.getInstance()
 
@@ -38,6 +38,19 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
             // 将封面图片加入图片集中，为的是确保服务器收到的数组第一张图片是封面
             picSet.add(cover)
             // 先上传图片
+            uploadRepository.doUpload(token, picSet, ConstantUtil.UPLOAD_TYPE_GOODS) { paths ->
+                if (paths != null) {
+                    sellingAddNewRepository.submitNewItem(token, paths[0], paths.subList(1, paths.size).joinToString(","),
+                            title, description,
+                            longitude, latitude,
+                            isBrandNew, isQuotable, price) {
+                        submitItemLiveData.postValue(it)
+                    }
+                } else {
+                    submitItemLiveData.postValue(false)
+                }
+            }
+
             uploadRepository.uploadImage(getApplication(), picSet, ConstantUtil.UPLOAD_TYPE_GOODS) { response ->
                 if (response != null) {
                     val cov = response.data?.cover
@@ -48,17 +61,17 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                                 title, description,
                                 longitude, latitude,
                                 isBrandNew, isQuotable, price) {
-                            mSubmitItemResult.postValue(it)
+                            submitItemLiveData.postValue(it)
                         }
                     } else {
-                        mSubmitItemResult.postValue(false)
+                        submitItemLiveData.postValue(false)
                     }
                 } else {
-                    mSubmitItemResult.postValue(false)
+                    submitItemLiveData.postValue(false)
                 }
             }
         }
-        return mSubmitItemResult
+        return submitItemLiveData
     }
 
     /**
@@ -79,7 +92,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                 getApplication()) {
 
         }
-        return mSubmitPostResult
+        return submitPostLiveData
     }
 
     /**
@@ -95,10 +108,10 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
     fun restoreItemDraft(): LiveData<NewItemDraftCache> {
         viewModelScope.launch {
             sellingAddNewRepository.restoreItemDraft {
-                mRestoredItemDraft.postValue(it)
+                restoredItemDraftLiveData.postValue(it)
             }
         }
-        return mRestoredItemDraft
+        return restoredItemDraftLiveData
     }
 
     /**
@@ -116,10 +129,10 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
     fun restorePostDraft(): LiveData<NewPostDraftCache> {
         viewModelScope.launch {
             sellingAddNewRepository.restorePostDraft {
-                mRestoredPostDraft.postValue(it)
+                restoredPostDraftLiveData.postValue(it)
             }
         }
-        return mRestoredPostDraft
+        return restoredPostDraftLiveData
     }
 
     /**

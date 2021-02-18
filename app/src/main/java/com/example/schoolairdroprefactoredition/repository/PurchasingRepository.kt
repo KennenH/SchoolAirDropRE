@@ -28,8 +28,8 @@ class PurchasingRepository private constructor() {
                 ConstantUtil.CLIENT_ID,
                 ConstantUtil.CLIENT_SECRET,
                 page,
-                if (!AppConfig.IS_DEBUG) longitude else 120.124,
-                if (!AppConfig.IS_DEBUG) latitude else 30.91231)
+                if (!AppConfig.IS_DEBUG) longitude else 120.365150,
+                if (!AppConfig.IS_DEBUG) latitude else 30.315306)
                 .apply {
                     enqueue(object : CallBackWithRetry<DomainPurchasing>(this@apply) {
                         override fun onResponse(call: Call<DomainPurchasing>, response: Response<DomainPurchasing>) {

@@ -14,9 +14,6 @@ import com.example.schoolairdroprefactoredition.utils.ImageUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-
 public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListener {
 
     private final ComponentGoodsDetailBinding binding;
@@ -63,10 +60,8 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
     public void setData(DomainPurchasing.DataBean baseInfo, GoodsDetailInfo.DataBean detailInfo) {
         if (baseInfo != null && detailInfo != null) {
             try {
-                final String[] goodsType = baseInfo.getGoods_type().split(",");
-                ArrayList<String> arrayList = new ArrayList<>(Arrays.asList(goodsType));
-                boolean negotiable = arrayList.contains(ConstantUtil.GOODS_TYPE_BARGAIN);// 是否可议价
-                boolean secondHand = arrayList.contains(ConstantUtil.GOODS_TYPE_SECONDHAND);// 是否二手
+                boolean negotiable = baseInfo.isGoods_is_bargain();// 是否可议价
+                boolean secondHand = baseInfo.isGoods_is_secondHande();// 是否二手
 
                 if (negotiable && secondHand) {
                     binding.goodsName.setText(getContext().getResources().getString(R.string.itemNS, baseInfo.getGoods_name()));
@@ -81,10 +76,13 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
                 binding.goodsPrice.setPrice(baseInfo.getGoods_price());
                 binding.goodsPager.setData(MyUtil.getArrayFromString(detailInfo.getGoods_images()), false);
                 binding.goodsDescription.setText(detailInfo.getGoods_content());
+                binding.goodsPopularity.setWatches(detailInfo.getGoods_watch_count());
+                binding.goodsPopularity.setLikes(detailInfo.getGoods_favor_count());
+                binding.goodsPopularity.setComments(detailInfo.getGoods_chat_count());
 
-                if (baseInfo.getUser_name() != null) {
-                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(baseInfo.getUser_avatar()));
-                    binding.goodsUserName.setText(baseInfo.getUser_name());
+                if (baseInfo.getSeller().getUser_name() != null) {
+                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(baseInfo.getSeller().getUser_avatar()));
+                    binding.goodsUserName.setText(baseInfo.getSeller().getUser_name());
                 } else {
                     binding.goodsSellerInfo.setVisibility(GONE);
                 }

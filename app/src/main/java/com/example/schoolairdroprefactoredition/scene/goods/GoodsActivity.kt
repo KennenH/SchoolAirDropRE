@@ -189,16 +189,16 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
             val userInfo = goodsDetailInfo?.data?.get(0)
             val user = DomainUserInfo.DataBean()
             if (userInfo != null) {
-                user.userName = goodsInfo.user_name
-                user.userAvatar = goodsInfo.user_avatar
-                user.userId = goodsInfo.user_id
+                user.userName = goodsInfo.seller.user_name
+                user.userAvatar = goodsInfo.seller.user_avatar
+                user.userId = goodsInfo.seller.user_id
                 ChatActivity.start(this@GoodsActivity, user)
             }
         }
     }
 
     override fun onUserInfoClick(view: View?) {
-        UserActivity.start(this@GoodsActivity, goodsInfo.user_id)
+        UserActivity.start(this@GoodsActivity, goodsInfo.seller.user_id)
     }
 
     override fun onLeftButtonClick() {

@@ -1,12 +1,14 @@
 package com.example.schoolairdroprefactoredition.repository
 
 import android.content.Context
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewPostDraftCache
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.luck.picture.lib.entity.LocalMedia
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -27,26 +29,26 @@ class SellingAddNewRepository {
     }
 
     fun submitNewItem(token: String, cover: String, picSet: String,
-                      title: String, description: String,
+                      title: String, content: String,
                       longitude: Double, latitude: Double,
                       isBrandNew: Boolean, isQuotable: Boolean, price: Float,
                       onResult: (success: Boolean) -> Unit) {
 
         val goodsName = MultipartBody.Part.createFormData("goods_name", title)
-        val goodsCover = MultipartBody.Part.createFormData("goods_cover", cover)
-        val goodsSet = MultipartBody.Part.createFormData("goods_img_set", picSet)
-        val goodsDes = MultipartBody.Part.createFormData("goods_description", description)
+        val goodsCover = MultipartBody.Part.createFormData("goods_cover_image", cover)
+        val goodsSet = MultipartBody.Part.createFormData("goods_images", picSet)
+        val goodsContent = MultipartBody.Part.createFormData("goods_content", content)
         val goodsLongitude = MultipartBody.Part.createFormData("goods_longitude", longitude.toString())
         val goodsLatitude = MultipartBody.Part.createFormData("goods_latitude", latitude.toString())
-        val goodsBrandNew = MultipartBody.Part.createFormData("goods_is_brandNew", if (isBrandNew) "1" else "0")
-        val goodsQuotable = MultipartBody.Part.createFormData("goods_is_quotable", if (isQuotable) "1" else "0")
+        val goodsType = MultipartBody.Part.createFormData("goods_type", MyUtil.getGoodsType(isQuotable, !isBrandNew))
         val goodsPrice = MultipartBody.Part.createFormData("goods_price", price.toString())
+
         RetrofitClient.goodsApi.postNewItem(
                 token,
                 goodsCover, goodsSet,
-                goodsName, goodsDes,
+                goodsName, goodsContent,
                 goodsLongitude, goodsLatitude,
-                goodsQuotable, goodsBrandNew, goodsPrice).apply {
+                goodsType, goodsPrice).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                 override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
@@ -56,13 +58,8 @@ class SellingAddNewRepository {
                         } else {
                             onResult(false)
                         }
-//                    try {
-//                        LogUtils.d(response.body().string());
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-
                     } else {
+                        LogUtils.d(response.errorBody()?.string())
                         onResult(false)
                     }
                 }

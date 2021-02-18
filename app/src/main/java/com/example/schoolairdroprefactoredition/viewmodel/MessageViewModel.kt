@@ -35,14 +35,19 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
     }
 
     /**
-     * 获取消息列表
-     * 是本地未读和离线未读合并的
+     * 从本地获取消息列表
+     *
+     * 是本地未读和网络离线在本地混合之后的
      */
     fun getChatList(receiverID: String): LiveData<List<ChatOfflineNumDetail>> {
-        LogUtils.d("消息列表改变，正在获取消息列表")
         return databaseRepository.getChatList(receiverID).asLiveData()
     }
 
+    /**
+     * 获取网络离线消息数量
+     *
+     * 不能直接显示，要和本地消息列表混合之后再查询
+     */
     fun getOfflineNumOnline(token: DomainToken?): LiveData<DomainOfflineNum?> {
         if (token != null) {
             viewModelScope.launch {
@@ -94,17 +99,17 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
                             offlineBean.message,
                             offlineBean.sendTime,
                             1))
-
-                    // 装配最后一条消息
-                    lastFromUserInformation.add(LastFromUserInformation(
-                            offlineNum.senderId,
-                            offlineNum.fingerPrint,
-                            offlineNum.offline.size == ConstantUtil.DATA_FETCH_DEFAULT_SIZE
-                    ))
-
-                    // 装配用户信息
-                    senderInfo.add(UserCache(offlineNum.senderId.toInt(), offlineNum.senderInfo.senderName, offlineNum.senderInfo.senderAvatar))
                 }
+
+                // 装配最后一条消息
+                lastFromUserInformation.add(LastFromUserInformation(
+                        offlineNum.senderId,
+                        offlineNum.fingerPrint,
+                        offlineNum.offline.size == ConstantUtil.DATA_FETCH_DEFAULT_SIZE
+                ))
+
+                // 装配用户信息
+                senderInfo.add(UserCache(offlineNum.senderId.toInt(), offlineNum.senderInfo.senderName, offlineNum.senderInfo.senderAvatar))
             }
 
             // 保存所有装配好的信息

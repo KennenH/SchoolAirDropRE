@@ -17,7 +17,7 @@ import java.lang.IllegalArgumentException
  * 用以保存从服务器二次拉取的离线消息
  * 首次拉取在MessageFragment被初始化的时候便
  */
-class ChatViewModel(private val chatLocalRepository: DatabaseRepository, application: Application) : AndroidViewModel(application) {
+class ChatViewModel(private val databaseRepository: DatabaseRepository, application: Application) : AndroidViewModel(application) {
 
     private val uploadRepository by lazy {
         UploadRepository.getInstance()
@@ -47,19 +47,24 @@ class ChatViewModel(private val chatLocalRepository: DatabaseRepository, applica
     /**
      * 聊天图片的live data
      */
-    private val uploadLiveDate = MutableLiveData<String?>()
+    private val uploadLiveDate = MutableLiveData<List<String>?>()
 
     /**
      * 上传聊天的图片
      *
      * 图片上传成功之后服务器将会返回图片的路径，再将消息的typeu置为1，消息内容置为获取到的图片路径
      */
-    fun uploadImage(imagePaths: List<String>): LiveData<String?> {
-        uploadRepository.uploadImage(
-                getApplication(),
-                imagePaths,
-                ConstantUtil.UPLOAD_TYPE_IM) { response ->
-            uploadLiveDate.postValue(response?.data?.images)
+    fun uploadImage(token: String?, imagePaths: List<String>): LiveData<List<String>?> {
+        if (token != null) {
+            uploadRepository.doUpload(token, imagePaths, ConstantUtil.UPLOAD_TYPE_IM) {
+                if (it != null) {
+                    uploadLiveDate.postValue(it)
+                } else {
+                    uploadLiveDate.postValue(null)
+                }
+            }
+        } else {
+            uploadLiveDate.postValue(null)
         }
         return uploadLiveDate
     }
@@ -71,7 +76,7 @@ class ChatViewModel(private val chatLocalRepository: DatabaseRepository, applica
      */
     fun saveSentMessage(history: ChatHistory) {
         viewModelScope.launch {
-            chatLocalRepository.saveHistory(history, false)
+            databaseRepository.saveHistory(history, false)
         }
     }
 
@@ -80,7 +85,7 @@ class ChatViewModel(private val chatLocalRepository: DatabaseRepository, applica
      */
     fun ackOfflineNum(receiverID: String, senderID: String) {
         viewModelScope.launch {
-            chatLocalRepository.ackOfflineNum(receiverID, senderID)
+            databaseRepository.ackOfflineNum(receiverID, senderID)
         }
     }
 
@@ -89,7 +94,7 @@ class ChatViewModel(private val chatLocalRepository: DatabaseRepository, applica
      */
     private fun saveReceivedOffline(offline: List<DomainOffline.DataBean>) {
         viewModelScope.launch {
-            chatLocalRepository.saveHistory(MessageUtil.offlineToChatHistory(offline))
+            databaseRepository.saveHistory(MessageUtil.offlineToChatHistory(offline))
         }
     }
 
@@ -100,30 +105,36 @@ class ChatViewModel(private val chatLocalRepository: DatabaseRepository, applica
      * 然后去获取本地数据并显示
      * 此时判断pullFlag，若为true则从服务器上预拉取数据并保存至本地
      * 然后保存离线消息数据和更新[LastFromUserInformation]的信息
+     *
+     * @param startFingerprint 从哪一条消息开始检索 指纹码
      */
-    fun getChat(token: String?, receiverID: String, senderID: String, start: String? = null): LiveData<List<ChatHistory>> {
+    fun getChat(token: String?, receiverID: String, senderID: String, startFingerprint: String? = null): LiveData<List<ChatHistory>> {
         viewModelScope.launch {
-            // 获取用户最早消息的指纹和是否还有来自这个用户的消息的标志
-//            val lastMessage = chatLocalRepository.getLastFromUserInformation(senderID)
-//            val fingerprint = lastMessage?.fingerprint
-            // 获取本地默认数量条数据
-            chatLiveData.postValue(chatLocalRepository.getChatLocal(receiverID, senderID, start))
-            // 若上一次保存的flag是true则预拉取服务器数据，若离线消息数量拉取时便小于默认值则无需对于该
-            // 用户额外拉取
-//            if (lastMessage != null && lastMessage.pull_flag && fingerprint != null) {
-//                chatLocalRepository.getChatRemote(token, senderID, fingerprint, ackList) { success, response ->
-//                    if (success && response != null) {
-//                        val data = response.data
-//                        // 保存获取到的数据
-//                        saveReceivedOffline(data)
-//                        // 保存这一批消息中最早的消息的指纹
-//                        viewModelScope.launch {
-//                            chatLocalRepository.saveLastMessage(
-//                                    LastFromUserInformation(senderID, data.first().fingerPrint, data.size >= ConstantUtil.DATA_FETCH_DEFAULT_SIZE))
-//                        }
-//                    }
-//                }
-//            }
+            // 获取本地聊天记录
+            chatLiveData.postValue(databaseRepository.getChatLocal(receiverID, senderID, startFingerprint))
+
+            // 获取服务器离线
+            if (token != null) {
+                // 获取用户最早消息的指纹和是否还有来自这个用户的消息的标志
+                val lastMessage = databaseRepository.getLastFromUserInformation(senderID)
+                val fingerprint = lastMessage?.fingerprint
+                // 若上一次保存的flag是true则预拉取服务器数据，若离线消息数量拉取时便小于默认值则无需对于该
+                // 用户额外拉取
+                if (lastMessage != null && lastMessage.pull_flag && fingerprint != null) {
+                    databaseRepository.getChatRemote(token, senderID, fingerprint, ackList) { success, response ->
+                        if (success && response != null) {
+                            val data = response.data
+                            // 保存获取到的数据
+                            saveReceivedOffline(data)
+                            // 保存这一批消息中最早的消息的指纹
+                            viewModelScope.launch {
+                                databaseRepository.saveLastMessage(
+                                        LastFromUserInformation(senderID, data.first().fingerPrint, data.size >= ConstantUtil.DATA_FETCH_DEFAULT_SIZE))
+                            }
+                        }
+                    }
+                }
+            }
         }
         return chatLiveData
     }

@@ -5,10 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.schoolairdroprefactoredition.domain.DomainUploadImage
 import com.example.schoolairdroprefactoredition.repository.UploadRepository
 import com.example.schoolairdroprefactoredition.repository.UserAvatarRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 
 class UserAvatarViewModel(application: Application) : AndroidViewModel(application) {
@@ -24,21 +24,19 @@ class UserAvatarViewModel(application: Application) : AndroidViewModel(applicati
     }
 
     fun updateAvatar(token: String?, avatarLocalPath: String): LiveData<String?> {
-        viewModelScope.launch {
-            if (token != null) {
-                val localPath = ArrayList<String>(1).also { it.add(avatarLocalPath) }
-                uploadRepository.uploadImage(getApplication(), localPath, ConstantUtil.UPLOAD_TYPE_AVATAR) { uploadPath ->
-                    if (uploadPath != null) {
-                        userAvatarRepository.updateAvatar(token, uploadPath.data.images) {
-                            updateLiveData.postValue(uploadPath.data.images)
-                        }
+        if (token != null) {
+            viewModelScope.launch {
+                val array = ArrayList<String>(1).also { it.add(avatarLocalPath) }
+                uploadRepository.doUpload(token, array, ConstantUtil.UPLOAD_TYPE_AVATAR) {
+                    if (it != null) {
+                        updateLiveData.postValue(it[0])
                     } else {
                         updateLiveData.postValue(null)
                     }
                 }
-            } else {
-                updateLiveData.postValue(null)
             }
+        } else {
+            updateLiveData.postValue(null)
         }
         return updateLiveData
     }

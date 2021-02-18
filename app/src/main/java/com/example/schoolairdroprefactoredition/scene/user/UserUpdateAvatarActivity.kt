@@ -127,7 +127,8 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
                     val photo = PictureSelector.obtainMultipleResult(data)[0]
 
                     mLoading.show()
-                    viewModel.updateAvatar(token?.access_token, photo.androidQToPath ?: photo.path)
+                    viewModel.updateAvatar(token?.access_token, photo.androidQToPath
+                            ?: photo.path)
                             .observe(this, {
                                 if (it != null) {
                                     updateAvatar(it)

@@ -64,6 +64,11 @@ object ConstantUtil {
     const val LOCAL_IP = "10.0.2.2"
 
     /**
+     * 网络请求成功码
+     */
+    const val HTTP_OK = 200
+
+    /**
      * 默认头像url
      */
     const val DEFAULT_AVATAR = "uploads/img/user/default/default.jpg"
@@ -71,22 +76,22 @@ object ConstantUtil {
     /**
      * 图片上传类型 聊天
      */
-    const val UPLOAD_TYPE_IM = 0
+    const val UPLOAD_TYPE_IM = "im"
 
     /**
      * 图片上传类型 聊天
      */
-    const val UPLOAD_TYPE_GOODS = 0
+    const val UPLOAD_TYPE_GOODS = "goods"
 
     /**
      * 图片上传类型 帖子
      */
-    const val UPLOAD_TYPE_POST = 0
+    const val UPLOAD_TYPE_POST = "post"
 
     /**
      * 图片上传类型 头像
      */
-    const val UPLOAD_TYPE_AVATAR = 0
+    const val UPLOAD_TYPE_AVATAR = "avatar"
 
     /**
      * 图片上传时若为物品和帖子，需要传递封面的键

@@ -12,9 +12,9 @@ import com.example.schoolairdroprefactoredition.utils.NumberUtil;
 
 public class GoodsPopularity extends ConstraintLayout {
 
-    private TextView mComments;
-    private TextView mLikes;
-    private TextView mWatches;
+    private final TextView mComments;
+    private final TextView mLikes;
+    private final TextView mWatches;
 
     public GoodsPopularity(Context context) {
         this(context, null);

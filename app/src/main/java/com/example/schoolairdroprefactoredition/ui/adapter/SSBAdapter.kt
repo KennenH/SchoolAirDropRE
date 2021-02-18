@@ -15,19 +15,18 @@ class SSBAdapter(private val isMine: Boolean) : BaseQuickAdapter<DomainPurchasin
 
     private var mOnSSBItemActionListeners = ArrayList<OnSSBItemActionListener>()
 
-    override fun convert(holder: BaseViewHolder, bean: DomainPurchasing.DataBean?) {
-        if (bean != null) {
+    override fun convert(holder: BaseViewHolder, item: DomainPurchasing.DataBean?) {
+        if (item != null) {
             val binding = ItemSsbSellingBinding.bind(holder.itemView)
-            val goodsType = bean.goods_type.split(',')
-            val isQuotable = goodsType.contains(ConstantUtil.GOODS_TYPE_BARGAIN)
-            val isSecondHand = goodsType.contains(ConstantUtil.GOODS_TYPE_SECONDHAND)
+            val isQuotable = item.isGoods_is_bargain
+            val isSecondHand = item.isGoods_is_secondHande
 
             if (isQuotable && isSecondHand) {
-                binding.ssbSellingGoodsTitle.text = context.getString(R.string.itemNSs, bean.goods_name)
+                binding.ssbSellingGoodsTitle.text = context.getString(R.string.itemNSs, item.goods_name)
             } else if (isQuotable) {
-                binding.ssbSellingGoodsTitle.text = context.getString(R.string.itemNs, bean.goods_name)
+                binding.ssbSellingGoodsTitle.text = context.getString(R.string.itemNs, item.goods_name)
             } else {
-                binding.ssbSellingGoodsTitle.text = context.getString(R.string.itemSs, bean.goods_name)
+                binding.ssbSellingGoodsTitle.text = context.getString(R.string.itemSs, item.goods_name)
             }
 
             binding.goodsLocation.setLocationName(context.getString(R.string.gettingGoodsLocation))
@@ -53,11 +52,11 @@ class SSBAdapter(private val isMine: Boolean) : BaseQuickAdapter<DomainPurchasin
 //                    200, GeocodeSearch.AMAP);
 //            mGeocodeSearch.getFromLocationAsyn(query);
 
-            ImageUtil.loadRoundedImage(binding.ssbSellingGoodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(bean.goods_cover_image))
-            binding.ssbSellingGoodsPrice.setPrice(bean.goods_price)
+            ImageUtil.loadRoundedImage(binding.ssbSellingGoodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(item.goods_cover_image))
+            binding.ssbSellingGoodsPrice.setPrice(item.goods_price)
 
             if (context is AppCompatActivity) {
-                holder.itemView.setOnClickListener { start(context, bean, true) }
+                holder.itemView.setOnClickListener { start(context, item, true) }
             }
 
             if (!isMine) {
@@ -67,7 +66,7 @@ class SSBAdapter(private val isMine: Boolean) : BaseQuickAdapter<DomainPurchasin
                     // 弹出更多动作的弹窗
 
                     for (listener in mOnSSBItemActionListeners) {
-                        listener.onItemActionButtonClick(v, bean)
+                        listener.onItemActionButtonClick(v, item)
                     }
                 }
             }

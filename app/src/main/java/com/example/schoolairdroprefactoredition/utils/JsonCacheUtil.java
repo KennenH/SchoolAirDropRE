@@ -72,9 +72,9 @@ public class JsonCacheUtil {
     }
 
     /**
-     * 删除
+     * 删除键对应的值
      *
-     * @param key
+     * @param key 要删除的值对应的键
      */
     public void deleteCache(String key) {
         mSharePreferences.edit().remove(key).apply();

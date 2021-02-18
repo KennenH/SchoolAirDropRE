@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.scene.main;
+package com.example.schoolairdroprefactoredition.viewmodel;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

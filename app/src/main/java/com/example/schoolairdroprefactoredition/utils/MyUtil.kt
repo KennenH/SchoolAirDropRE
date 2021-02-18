@@ -265,6 +265,20 @@ object MyUtil {
         return picSet.split(',')
     }
 
+    /**
+     * 获取物品类型
+     */
+    fun getGoodsType(quotable: Boolean, secondHand: Boolean): String {
+        if (quotable && secondHand) {
+            return ConstantUtil.GOODS_TYPE_BARGAIN + "," + ConstantUtil.GOODS_TYPE_SECONDHAND
+        } else if (quotable) {
+            return ConstantUtil.GOODS_TYPE_BARGAIN
+        } else if (secondHand) {
+            return ConstantUtil.GOODS_TYPE_SECONDHAND
+        }
+        return ""
+    }
+
     class ImageLoader : XPopupImageLoader {
         override fun loadImage(position: Int, url: Any, imageView: ImageView) {
             Glide.with(imageView)

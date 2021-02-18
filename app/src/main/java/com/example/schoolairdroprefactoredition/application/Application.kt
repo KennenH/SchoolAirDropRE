@@ -89,7 +89,7 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
     }
 
     /**
-     * 发送图片消息
+     * 发送图片消息 多图
      */
     fun sendImageMessage(userID: String, myID: String, imagePaths: List<String>, weakAdapter: WeakReference<ChatRecyclerAdapter>) {
         val adapter = weakAdapter.get()
@@ -105,8 +105,7 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
             adapter?.updateStatus(chat, ChatRecyclerAdapter.MessageSendStatus.SENDING)
         }
         // 获取多图的字符路径，统一以逗号分隔
-        val pathsString = chatViewModel.uploadImage(imagePaths).value
-        val pathList = pathsString?.split(',')
+        val pathList = chatViewModel.uploadImage(getCachedToken()?.access_token, imagePaths).value
         pathList?.let {
             for ((index, path) in pathList.withIndex()) {
 
@@ -205,7 +204,7 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
     private fun initAdapt() {
         AutoSize.initCompatMultiProcess(this)
         val config = AutoSizeConfig.getInstance()
-                .setLog(true)
+                .setLog(false)
                 .setDesignWidthInDp(360)
                 .setDesignHeightInDp(640)
                 .setUseDeviceSize(true)

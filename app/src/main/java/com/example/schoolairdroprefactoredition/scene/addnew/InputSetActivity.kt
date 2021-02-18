@@ -26,7 +26,7 @@ class InputSetActivity : ImmersionStatusBarActivity() {
         /**
          * OnActivityResult的请求码 请求码
          */
-        const val REQUEST_CODE = 94683
+        const val REQUEST_CODE = 77
 
 
         /**
