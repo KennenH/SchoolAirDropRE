@@ -173,10 +173,10 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         user_background.setImageResource(R.drawable.logo_placeholder)
 
         ImageUtil.loadRoundImage(user_avatar,
-                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(this.userInfo?.userAvatar),
+                ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(this.userInfo?.userAvatar),
                 R.drawable.placeholder_round)
 
-        ImageUtil.loadImage(user_background, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(this.userInfo?.userAvatar),
+        ImageUtil.loadImage(user_background, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(this.userInfo?.userAvatar),
                 R.drawable.logo_placeholder)
 
         userName.text = this.userInfo?.userName
@@ -212,7 +212,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
             R.id.user_avatar -> {
                 XPopup.Builder(this@UserActivity)
                         .asImageViewer(v as ImageView,
-                                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(userInfo?.userAvatar),
+                                ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(userInfo?.userAvatar),
                                 false, -1, -1, ScreenUtils.getAppScreenWidth(),
                                 true, ImageLoader())
                         .show()

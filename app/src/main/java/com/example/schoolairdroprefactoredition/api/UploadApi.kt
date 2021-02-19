@@ -1,10 +1,7 @@
 package com.example.schoolairdroprefactoredition.api
 
-import com.example.schoolairdroprefactoredition.domain.DomainUpload
-import com.example.schoolairdroprefactoredition.domain.DomainUploadImage
 import com.example.schoolairdroprefactoredition.domain.DomainUploadPath
 import com.example.schoolairdroprefactoredition.domain.DomainUploadToken
-import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -13,25 +10,9 @@ import retrofit2.http.*
  */
 interface UploadApi {
     /**
-     * 上传多图通用接口
-     */
-    @Deprecated("使用七牛云上传")
-    @Multipart
-    @POST("appapi/ajax/uploadImages")
-    fun upload(@Part images: List<MultipartBody.Part>, @Part type: MultipartBody.Part): Call<DomainUploadImage>
-
-    /**
-     * 上传单图通用接口
-     */
-    @Deprecated("使用七牛云上传")
-    @Multipart
-    @POST("appapi/ajax/upload")
-    fun upload(@Part image: MultipartBody.Part, @Part type: MultipartBody.Part): Call<DomainUpload>
-
-    /**
      * 获取七牛云上传凭证
      */
-    @POST("")
+    @POST("appapi/ajax/uploadtoken")
     fun getUploadToken(@Header("Authorization") token: String): Call<DomainUploadToken>
 
     /**

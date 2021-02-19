@@ -10,30 +10,35 @@ import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.luck.picture.lib.entity.LocalMedia
-import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
 import java.util.*
 
-class SellingAddNewRepository {
+class AddNewRepository {
 
-    private val mJsonCacheUtil = JsonCacheUtil.newInstance()
+    private val mJsonCacheUtil = JsonCacheUtil.getInstance()
 
     companion object {
-        private var INSTANCE: SellingAddNewRepository? = null
+        private var INSTANCE: AddNewRepository? = null
         fun getInstance() = INSTANCE
-                ?: SellingAddNewRepository().also {
+                ?: AddNewRepository().also {
                     INSTANCE = it
                 }
     }
 
+    /**
+     * 上传物品
+     *
+     * 不包含图片上传
+     */
     fun submitNewItem(token: String, cover: String, picSet: String,
                       title: String, content: String,
                       longitude: Double, latitude: Double,
                       isBrandNew: Boolean, isQuotable: Boolean, price: Float,
                       onResult: (success: Boolean) -> Unit) {
 
+        /*
         val goodsName = MultipartBody.Part.createFormData("goods_name", title)
         val goodsCover = MultipartBody.Part.createFormData("goods_cover_image", cover)
         val goodsSet = MultipartBody.Part.createFormData("goods_images", picSet)
@@ -42,13 +47,15 @@ class SellingAddNewRepository {
         val goodsLatitude = MultipartBody.Part.createFormData("goods_latitude", latitude.toString())
         val goodsType = MultipartBody.Part.createFormData("goods_type", MyUtil.getGoodsType(isQuotable, !isBrandNew))
         val goodsPrice = MultipartBody.Part.createFormData("goods_price", price.toString())
+        */
 
         RetrofitClient.goodsApi.postNewItem(
                 token,
-                goodsCover, goodsSet,
-                goodsName, goodsContent,
-                goodsLongitude, goodsLatitude,
-                goodsType, goodsPrice).apply {
+                cover, picSet,
+                title, content,
+                longitude.toString(), latitude.toString(),
+                MyUtil.getGoodsType(isQuotable, !isBrandNew),
+                price.toString()).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                 override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
@@ -71,6 +78,11 @@ class SellingAddNewRepository {
         }
     }
 
+    /**
+     * 上传帖子
+     *
+     * 不包含图片上传
+     */
     fun submitNewPost(
             token: String, cover: String,
             hwRatio: Float, picSet: List<String>,
@@ -81,6 +93,9 @@ class SellingAddNewRepository {
 
     }
 
+    /**
+     * 保存物品页面的草稿
+     */
     fun saveItemDraft(cover: String, picSet: List<LocalMedia>, title: String, description: String, price: String, isQuotable: Boolean, isSecondHand: Boolean) {
         var draft = mJsonCacheUtil.getValue(NewItemDraftCache.KEY, NewItemDraftCache::class.java)
         if (draft == null) {
@@ -96,6 +111,9 @@ class SellingAddNewRepository {
         mJsonCacheUtil.saveCache(NewItemDraftCache.KEY, draft)
     }
 
+    /**
+     * 保存帖子页面的草稿
+     */
     fun savePostDraft(cover: String, hwRatio: Float, picSet: List<LocalMedia>, tag: String, anonymous: Boolean, title: String, content: String) {
         var draft = mJsonCacheUtil.getValue(NewPostDraftCache.KEY, NewPostDraftCache::class.java)
         if (draft == null) draft = NewPostDraftCache()
@@ -109,19 +127,31 @@ class SellingAddNewRepository {
         mJsonCacheUtil.saveCache(NewPostDraftCache.KEY, draft)
     }
 
+    /**
+     * 删除物品页面草稿
+     */
     fun deleteItemDraft() {
         mJsonCacheUtil.saveCache(NewItemDraftCache.KEY, null)
     }
 
+    /**
+     * 删除帖子页面草稿
+     */
     fun deletePostDraft() {
         mJsonCacheUtil.saveCache(NewPostDraftCache.KEY, null)
     }
 
+    /**
+     * 恢复物品页面草稿
+     */
     fun restoreItemDraft(onResult: (response: NewItemDraftCache?) -> Unit) {
         val draft = mJsonCacheUtil.getValue(NewItemDraftCache.KEY, NewItemDraftCache::class.java)
         onResult(draft)
     }
 
+    /**
+     * 恢复帖子页面草稿
+     */
     fun restorePostDraft(onResult: (response: NewPostDraftCache?) -> Unit) {
         val draft = mJsonCacheUtil.getValue(NewPostDraftCache.KEY, NewPostDraftCache::class.java)
         onResult(draft)

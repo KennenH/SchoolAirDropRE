@@ -8,7 +8,6 @@ import androidx.lifecycle.viewModelScope
 import com.example.schoolairdroprefactoredition.repository.UploadRepository
 import com.example.schoolairdroprefactoredition.repository.UserAvatarRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import kotlinx.coroutines.cancelAndJoin
 import kotlinx.coroutines.launch
 
 class UserAvatarViewModel(application: Application) : AndroidViewModel(application) {
@@ -27,9 +26,17 @@ class UserAvatarViewModel(application: Application) : AndroidViewModel(applicati
         if (token != null) {
             viewModelScope.launch {
                 val array = ArrayList<String>(1).also { it.add(avatarLocalPath) }
-                uploadRepository.doUpload(token, array, ConstantUtil.UPLOAD_TYPE_AVATAR) {
+                // 上传图片至七牛云
+                uploadRepository.upload(token, array, ConstantUtil.UPLOAD_TYPE_AVATAR) {
                     if (it != null) {
-                        updateLiveData.postValue(it[0])
+                        // 修改服务器上用户的头像路径
+                        userAvatarRepository.updateAvatar(token, it[0]) { updateResult ->
+                            if (updateResult) {
+                                updateLiveData.postValue(it[0])
+                            } else {
+                                updateLiveData.postValue(null)
+                            }
+                        }
                     } else {
                         updateLiveData.postValue(null)
                     }

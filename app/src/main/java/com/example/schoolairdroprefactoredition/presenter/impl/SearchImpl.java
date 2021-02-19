@@ -33,7 +33,7 @@ public class SearchImpl implements ISearchPresenter {
 
     private ISearchCallback mCallback;
 
-    private final JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
+    private final JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.getInstance();
 
     private int historyMaxStack = 10;
 

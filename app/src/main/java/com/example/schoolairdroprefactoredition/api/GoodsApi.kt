@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.api
 
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
@@ -58,6 +57,31 @@ interface GoodsApi {
                     @Part price: MultipartBody.Part): Call<DomainResult>
 
     /**
+     * 上传新的物品
+     *
+     * @param token       token
+     * @param cover       封面
+     * @param picSet      图片集
+     * @param title       标题
+     * @param price       价格
+     * @param longitude   经度
+     * @param latitude    纬度
+     * @param goodsType   物品类型
+     * @param description 物品描述
+     */
+    @FormUrlEncoded
+    @POST("appapi/goods/uploadGoods")
+    fun postNewItem(@Header("Authorization") token: String,
+                    @Field("goods_cover_image") cover: String,
+                    @Field("goods_images") picSet: String,
+                    @Field("goods_name") title: String,
+                    @Field("goods_content") description: String,
+                    @Field("goods_longitude") longitude: String,
+                    @Field("goods_latitude") latitude: String,
+                    @Field("goods_type") goodsType: String,
+                    @Field("goods_price") price: String): Call<DomainResult>
+
+    /**
      * 获取用户个人在售
      */
     @FormUrlEncoded
@@ -65,5 +89,5 @@ interface GoodsApi {
     fun getGoodsOnSaleByClient(
             @Field("user_id") userID: Int,
             @Field("client_id") clientID: String,
-            @Field("client_secret") clientSecret: String): Call<DomainGoodsInfo>
+            @Field("client_secret") clientSecret: String): Call<DomainPurchasing>
 }

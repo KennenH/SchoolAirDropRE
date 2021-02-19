@@ -54,9 +54,9 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository, applicat
      *
      * 图片上传成功之后服务器将会返回图片的路径，再将消息的typeu置为1，消息内容置为获取到的图片路径
      */
-    fun uploadImage(token: String?, imagePaths: List<String>): LiveData<List<String>?> {
+    fun sendImageMessage(token: String?, imagePaths: List<String>): LiveData<List<String>?> {
         if (token != null) {
-            uploadRepository.doUpload(token, imagePaths, ConstantUtil.UPLOAD_TYPE_IM) {
+            uploadRepository.upload(token, imagePaths, ConstantUtil.UPLOAD_TYPE_IM) {
                 if (it != null) {
                     uploadLiveDate.postValue(it)
                 } else {
@@ -115,12 +115,11 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository, applicat
 
             // 获取服务器离线
             if (token != null) {
-                // 获取用户最早消息的指纹和是否还有来自这个用户的消息的标志
-                val lastMessage = databaseRepository.getLastFromUserInformation(senderID)
-                val fingerprint = lastMessage?.fingerprint
-                // 若上一次保存的flag是true则预拉取服务器数据，若离线消息数量拉取时便小于默认值则无需对于该
-                // 用户额外拉取
-                if (lastMessage != null && lastMessage.pull_flag && fingerprint != null) {
+                // 获取来自该用户上一批获取的最早消息的指纹和是否还有来自这个用户的消息的标志
+                val earliestPulledMessageFromThisUser = databaseRepository.getLastFromUserInformation(senderID)
+                val fingerprint = earliestPulledMessageFromThisUser?.fingerprint
+                // 若上一次保存的flag是true则预拉取服务器数据，若离线消息数量拉取时已经小于默认值则无需对于该用户额外拉取
+                if (earliestPulledMessageFromThisUser != null && earliestPulledMessageFromThisUser.pull_flag && fingerprint != null) {
                     databaseRepository.getChatRemote(token, senderID, fingerprint, ackList) { success, response ->
                         if (success && response != null) {
                             val data = response.data

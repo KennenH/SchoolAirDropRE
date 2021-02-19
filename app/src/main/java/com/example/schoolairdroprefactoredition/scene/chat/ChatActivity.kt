@@ -170,6 +170,14 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
     private var isSendShowing = false
 
     /**
+     * 是否第一次进入页面调用scrollToFirst
+     *
+     * 因为在进入页面之后view model将会观察后续的getChat操作
+     * 但是后续的getChat不能调用scrollToFirst
+     */
+    private var isFirstGetChat = true
+
+    /**
      * 键盘高度，框架会将其自动更新为正确值
      */
     private var mUnfilledHeight = 0
@@ -208,11 +216,14 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
                     } else {
                         recycler_container.finishRefresh(true)
                     }
-
+                    // 将本地消息显示在对话列表中
                     mChatRecyclerAdapter.addData(mChatRecyclerAdapter.data.size, it)
+                    if (isFirstGetChat) {
+                        isFirstGetChat = false
+                        recycler_view.scrollToPosition(0)
+                    }
                     // ack会话消息数量
                     chatViewModel.ackOfflineNum(myInfo?.userId.toString(), counterpartInfo?.userId.toString())
-                    scrollToFirst()
                 }
     }
 
@@ -247,6 +258,8 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
                         myInfo?.userId.toString(),
                         pathWrapper.also { it.add(path) },
                         WeakReference(mChatRecyclerAdapter))
+                // 将镜头置于最新消息处
+                scrollToFirst()
             } else if (requestCode == PICK_ALBUM) {
                 // 相册选择照片返回
                 val pictures = PictureSelector.obtainMultipleResult(data)
@@ -260,6 +273,8 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
                         myInfo?.userId.toString(),
                         pathsWrapper,
                         WeakReference(mChatRecyclerAdapter))
+                // 将镜头置于最新消息处
+                scrollToFirst()
             }
         }
     }

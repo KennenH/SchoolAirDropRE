@@ -14,7 +14,7 @@ class SettingsGeneralViewModel : ViewModel() {
     private val mIsDarkTheme = MutableLiveData<Boolean>()
 
     private val mJsonCacheUtil by lazy {
-        JsonCacheUtil.newInstance()
+        JsonCacheUtil.getInstance()
     }
 
     /**

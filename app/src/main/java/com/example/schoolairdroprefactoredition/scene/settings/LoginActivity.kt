@@ -144,9 +144,12 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      * 最后使用token换取用户信息
      */
     private fun loginWithAlipay() {
-        viewModel.getPublicKey().observe(this, { key ->
-            if (key != null) {
-                viewModel.authorizeWithAlipayID(key.cookie, AppConfig.USER_ALIPAY, key.public_key)
+        viewModel.getPublicKey().observe(this, {
+            if (it != null) {
+                viewModel.authorizeWithAlipayID(
+//                        it.cookie,
+                        AppConfig.USER_ALIPAY,
+                        it.public_key)
                         .observe(this, { token ->
                             if (token != null) {
 

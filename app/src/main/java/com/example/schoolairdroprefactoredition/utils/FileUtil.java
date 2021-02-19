@@ -10,6 +10,7 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.blankj.utilcode.util.UriUtils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -28,6 +29,21 @@ import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
 public class FileUtil {
+
+    /**
+     * 获取路径或者uri指向的文件
+     *
+     * @param pathOrUri 文件路径或者uri
+     * @return 文件
+     */
+    public static File getFile(String pathOrUri) {
+        if (!isUriPath(pathOrUri)) {
+            return new File(pathOrUri);
+        } else {
+            return UriUtils.uri2File(Uri.parse(pathOrUri));
+        }
+    }
+
     /**
      * 压缩图片转换为base64
      *

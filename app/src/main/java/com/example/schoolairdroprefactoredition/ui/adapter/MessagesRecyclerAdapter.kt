@@ -28,9 +28,9 @@ class MessagesRecyclerAdapter(private val viewModel: MessageViewModel) : BaseQui
     override fun convert(holder: BaseViewHolder, item: ChatOfflineNumDetail) {
         // 头像显示，空则显示默认作为替代
         if (item.counterpart_avatar != null) {
-            ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ConstantUtil.DEFAULT_AVATAR)
+            ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.QINIU_BASE_URL + ConstantUtil.DEFAULT_AVATAR)
         } else {
-            ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(item.counterpart_avatar))
+            ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.counterpart_avatar))
         }
 
         // 用户名称显示，空则显示用户id作为替代
@@ -39,10 +39,9 @@ class MessagesRecyclerAdapter(private val viewModel: MessageViewModel) : BaseQui
             // 若为空则获取用户信息
             val userInfo = viewModel.getUserBaseInfo(item.counterpart_id.toInt()).value
             userInfo?.let {
+                LogUtils.d("已获取网络用户信息 -- > $userInfo")
 
-                LogUtils.d("已获取网络用户信息 -- > ${userInfo.toString()}")
-
-                ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + it.user_avatar)
+                ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.QINIU_BASE_URL + it.user_avatar)
                 holder.setText(R.id.messages_user_name, it.user_id.toString())
             }
         } else {

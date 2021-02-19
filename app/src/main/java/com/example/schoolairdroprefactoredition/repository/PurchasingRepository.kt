@@ -6,6 +6,7 @@ import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.qiniu.android.utils.LogUtil
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -33,6 +34,8 @@ class PurchasingRepository private constructor() {
                 .apply {
                     enqueue(object : CallBackWithRetry<DomainPurchasing>(this@apply) {
                         override fun onResponse(call: Call<DomainPurchasing>, response: Response<DomainPurchasing>) {
+                            LogUtils.d("session -- > ${response.headers()["Set-Cookie"]}")
+
                             if (response.code() == HttpURLConnection.HTTP_OK) {
                                 val body = response.body()
                                 if (body != null && body.code == 200) {

@@ -114,6 +114,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         ParentPurchasingFragment.newInstance()
     }
 
+    private var gettingPublicKey = false
+
     /**
      * app登录状态改变监听器
      */
@@ -407,7 +409,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      */
     private fun autoReLoginWithCache() {
 //        val userInfo: DomainUserInfo.DataBean = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean
-        var gettingPublicKey = false
         loginViewModel.getPublicKey().observe(this@MainActivity, { publicK ->
             if (!gettingPublicKey) {
                 gettingPublicKey = true
@@ -423,7 +424,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     @Synchronized
     private fun authorizeWithAlipayID(publicK: DomainAuthorizeGet) {
         loginViewModel.authorizeWithAlipayID(
-                publicK.cookie,
+//                publicK.cookie,
                 AppConfig.USER_ALIPAY,
                 publicK.public_key)
                 .observe(this@MainActivity, { token ->

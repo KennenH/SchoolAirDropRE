@@ -80,7 +80,7 @@ class HomePurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDa
             showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME)
             return
         }
-        purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observe(viewLifecycleOwner, {
+        purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observe(viewLifecycleOwner) {
             if (it != null) {
                 // 回调成功
                 if (it.data.isEmpty()) {
@@ -93,7 +93,7 @@ class HomePurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDa
                 // 回调失败，获取到null
                 showPlaceHolder(StatePlaceHolder.TYPE_ERROR)
             }
-        })
+        }
     }
 
     override fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?) {

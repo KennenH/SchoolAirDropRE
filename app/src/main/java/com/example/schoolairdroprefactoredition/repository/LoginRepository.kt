@@ -1,13 +1,16 @@
 package com.example.schoolairdroprefactoredition.repository
 
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.utils.RSACoder
 import com.mob.pushsdk.MobPush
+import com.qiniu.android.utils.LogUtil
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -23,6 +26,9 @@ class LoginRepository private constructor() {
                 }
     }
 
+    /**
+     * 获取公钥
+     */
     fun getPublicKey(onResult: (success: Boolean, response: DomainAuthorizeGet?) -> Unit) {
         RetrofitClient.userApi.getPublicKey().apply {
             enqueue(object : CallBackWithRetry<DomainAuthorizeGet>(this@apply) {
@@ -34,12 +40,12 @@ class LoginRepository private constructor() {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val result = response.body()
                         if (response.isSuccessful && result != null) {
-                            val cookie = response.headers().get("Set-Cookie")
-                            val session = cookie?.substring(0, cookie.indexOf(';'))
-                            result.cookie = session
+
+                            LogUtils.d("session -- > ${response.headers()["Set-Cookie"]}")
+
+//                            result.cookie = session
                             onResult(true, result)
                         } else {
-//                            LogUtils.d(response.errorBody()?.string())
                             onResult(false, null)
                         }
                     } else {
@@ -52,7 +58,7 @@ class LoginRepository private constructor() {
     }
 
     fun authorizeWithAlipayID(
-            cookies: String,
+//            cookies: String,
             rawAlipayID: String,
             publicKey: String,
             onResult: (success: Boolean, response: DomainToken?) -> Unit) {
@@ -61,7 +67,7 @@ class LoginRepository private constructor() {
 //                onResult(false, null)
 //            } else
             RetrofitClient.userApi.authorizeWithAlipayID(
-                    cookies,
+//                    cookies,
                     ConstantUtil.CLIENT_GRANT_TYPE,
                     ConstantUtil.CLIENT_ID,
                     ConstantUtil.CLIENT_SECRET,

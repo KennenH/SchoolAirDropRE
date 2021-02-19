@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class AccountViewModel extends ViewModel {
 
-    private final JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.newInstance();
+    private final JsonCacheUtil mJsonCacheUtil = JsonCacheUtil.getInstance();
 
     /**
      * 获取上次登录的用户的基本信息

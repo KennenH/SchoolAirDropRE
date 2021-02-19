@@ -94,7 +94,7 @@ public class JsonCacheUtil {
         }
     }
 
-    public static JsonCacheUtil newInstance() {
+    public static JsonCacheUtil getInstance() {
         if (jsonCacheUtil == null) {
             jsonCacheUtil = new JsonCacheUtil();
         }

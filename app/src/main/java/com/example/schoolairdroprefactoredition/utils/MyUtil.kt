@@ -74,7 +74,7 @@ object MyUtil {
         PictureSelector.create(fragment)
                 .openCamera(PictureMimeType.ofImage())
                 .isEnableCrop(true)
-                .compressQuality(60)
+                .compressQuality(80)
                 .rotateEnabled(false)
                 .isCompress(true)
                 .minimumCompressSize(100) // 小于多少kb的图片不压缩
@@ -93,7 +93,7 @@ object MyUtil {
                 .openCamera(PictureMimeType.ofImage())
                 .isEnableCrop(true)
                 .circleDimmedLayer(isCircle)
-                .compressQuality(60)
+                .compressQuality(80)
                 .rotateEnabled(false)
                 .isCompress(true)
                 .minimumCompressSize(100) // 小于多少kb的图片不压缩

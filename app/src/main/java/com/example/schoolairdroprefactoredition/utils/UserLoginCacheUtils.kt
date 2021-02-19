@@ -8,7 +8,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 class UserLoginCacheUtils {
     companion object {
         val instance = UserLoginCacheUtils()
-        val mJsonCacheUtil: JsonCacheUtil = JsonCacheUtil.newInstance()
+        val mJsonCacheUtil: JsonCacheUtil = JsonCacheUtil.getInstance()
     }
 
     /**

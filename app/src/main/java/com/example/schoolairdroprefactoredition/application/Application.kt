@@ -104,22 +104,25 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
             // 更新发送状态
             adapter?.updateStatus(chat, ChatRecyclerAdapter.MessageSendStatus.SENDING)
         }
-        // 获取多图的字符路径，统一以逗号分隔
-        val pathList = chatViewModel.uploadImage(getCachedToken()?.access_token, imagePaths).value
-        pathList?.let {
-            for ((index, path) in pathList.withIndex()) {
 
-                LogUtils.d("path$index -- > $path")
-
-//                object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
-//                    override fun onPostExecute(code: Int?) {
-//                        if (code == 0) {
-//                            adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
-//                        } else {
-//                            adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.FAILED)
-//                        }
-//                    }
-//                }.execute()
+        val pathList = chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).value
+        pathList.let {
+            if (it != null) {
+                for ((index, path) in it.withIndex()) {
+                    object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
+                        override fun onPostExecute(code: Int?) {
+                            if (code == 0) {
+                                adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
+                            } else {
+                                adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.FAILED)
+                            }
+                        }
+                    }.execute()
+                }
+            } else {
+                for (history in chatList) {
+                    adapter?.updateStatus(history, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+                }
             }
         }
     }
@@ -186,14 +189,14 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
      * 默认为白色，且不跟随系统
      */
     private fun initAppTheme() {
-        val mJsonCacheUtil = JsonCacheUtil.newInstance()
+        val mJsonCacheUtil = JsonCacheUtil.getInstance()
         var settings = mJsonCacheUtil.getValue(UserSettingsCache.KEY, UserSettingsCache::class.java)
         if (settings == null) settings = UserSettingsCache(false)
         AppCompatDelegate.setDefaultNightMode(if (settings.isDarkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
     }
 
     fun setAppTheme(isDarkTheme: Boolean) {
-        val mJsonCacheUtil = JsonCacheUtil.newInstance()
+        val mJsonCacheUtil = JsonCacheUtil.getInstance()
         var settings = mJsonCacheUtil.getValue(UserSettingsCache.KEY, UserSettingsCache::class.java)
         if (settings == null) settings = UserSettingsCache(false)
         AppCompatDelegate.setDefaultNightMode(if (isDarkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)

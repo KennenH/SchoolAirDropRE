@@ -52,7 +52,7 @@ class SSBAdapter(private val isMine: Boolean) : BaseQuickAdapter<DomainPurchasin
 //                    200, GeocodeSearch.AMAP);
 //            mGeocodeSearch.getFromLocationAsyn(query);
 
-            ImageUtil.loadRoundedImage(binding.ssbSellingGoodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(item.goods_cover_image))
+            ImageUtil.loadRoundedImage(binding.ssbSellingGoodsAvatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.goods_cover_image))
             binding.ssbSellingGoodsPrice.setPrice(item.goods_price)
 
             if (context is AppCompatActivity) {

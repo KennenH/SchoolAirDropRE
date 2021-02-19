@@ -29,7 +29,7 @@ interface UserApi {
 //    @POST("authorize/login")
     @POST("appapi/auth/login")
     fun authorizeWithAlipayID(
-            @Header("Cookie") sessionID: String,
+//            @Header("Cookie") sessionID: String,
             @Field("grant_type") grantType: String,
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String,

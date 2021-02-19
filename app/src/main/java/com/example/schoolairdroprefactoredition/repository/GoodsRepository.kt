@@ -4,6 +4,7 @@ import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.qiniu.android.utils.LogUtil
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -35,6 +36,7 @@ class GoodsRepository private constructor() {
                             onResult(false, null)
                         }
                     } else {
+                        LogUtil.d(response.errorBody()?.string())
                         onResult(false, null)
                     }
                 }

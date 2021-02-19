@@ -33,9 +33,4 @@ class GoodsViewModel : ViewModel() {
         }
         return goodsDetail
     }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.cancel()
-    }
 }

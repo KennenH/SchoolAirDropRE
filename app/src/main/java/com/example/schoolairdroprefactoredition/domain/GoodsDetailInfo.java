@@ -19,6 +19,22 @@ public class GoodsDetailInfo implements Serializable {
     private String msg;
     private long time;
 
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public long getTime() {
+        return time;
+    }
+
+    public void setTime(long time) {
+        this.time = time;
+    }
+
     private List<DataBean> data;
 
     public String getMsg() {

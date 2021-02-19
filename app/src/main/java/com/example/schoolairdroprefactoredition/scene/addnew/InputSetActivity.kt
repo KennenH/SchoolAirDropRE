@@ -28,7 +28,6 @@ class InputSetActivity : ImmersionStatusBarActivity() {
          */
         const val REQUEST_CODE = 77
 
-
         /**
          * 返回结果 键
          */
@@ -131,7 +130,7 @@ class InputSetActivity : ImmersionStatusBarActivity() {
             override fun afterTextChanged(s: Editable) {
                 if (type == TYPE_TITLE) {
                     input_tip.text = getString(R.string.textRemainCount, MAX_TITLE - input.text.length)
-                    if (s.toString().contains(" ") or s.toString().contains("\n")) {
+                    if (s.toString().contains(" ") || s.toString().contains("\n")) {
                         doneMenu?.isEnabled = false
                         input_warning.visibility = View.VISIBLE
                     } else {
@@ -144,11 +143,11 @@ class InputSetActivity : ImmersionStatusBarActivity() {
             }
         })
 
-        input.onFocusChangeListener = OnFocusChangeListener { _: View?, hasFocus: Boolean ->
+        input.onFocusChangeListener = OnFocusChangeListener { view: View, hasFocus: Boolean ->
             if (hasFocus) {
-                KeyboardUtils.showSoftInput(this)
+                KeyboardUtils.showSoftInput(view)
             } else {
-                KeyboardUtils.hideSoftInput(this)
+                KeyboardUtils.hideSoftInput(view)
             }
         }
 
@@ -159,9 +158,7 @@ class InputSetActivity : ImmersionStatusBarActivity() {
         }
 
         input.setText(content)
-        if (!input.hasFocus()) {
-            input.requestFocus()
-        }
+        input.requestFocus()
     }
 
     private fun sendData() {

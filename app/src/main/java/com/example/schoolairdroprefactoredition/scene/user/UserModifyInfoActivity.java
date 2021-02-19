@@ -73,7 +73,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
      */
     private void setUserInfo(DomainUserInfo.DataBean info) {
         if (info != null) {
-            binding.userAvatar.setIconImage(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(info.getUserAvatar()));
+            binding.userAvatar.setIconImage(ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(info.getUserAvatar()));
             binding.userName.setDescription(info.getUserName());
         }
     }

@@ -130,15 +130,13 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
             goods_info_container.hideSellerInfo()
         }
 
-        goodsViewModel.getGoodsDetailByID(goodsInfo.goods_id)
-                .observe(this@GoodsActivity) {
-                    goodsDetailInfo = it
-
-                    showActionButtons(isNotMine)
-                    goods_info_container.setData(goodsInfo, it.data[0])
-//                    goods_button_right.setFavor()
-                    goods_info_container.stopShimming()
-                }
+        val detail = goodsViewModel.getGoodsDetailByID(goodsInfo.goods_id).value
+        detail?.let {
+            goodsDetailInfo = it
+            showActionButtons(isNotMine)
+            goods_info_container.setData(goodsInfo, it.data[0])
+            goods_info_container.stopShimming()
+        }
     }
 
     /**

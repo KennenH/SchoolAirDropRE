@@ -17,6 +17,9 @@ class UserAvatarRepository {
                 }
     }
 
+    /**
+     * 修改服务器上头像的路径和全名
+     */
     fun updateAvatar(token: String, avatarRemotePath: String, onResult: (Boolean) -> Unit) {
         RetrofitClient.userApi.updateUserAvatar(token, avatarRemotePath).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {

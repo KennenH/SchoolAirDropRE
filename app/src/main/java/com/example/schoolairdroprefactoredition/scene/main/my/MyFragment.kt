@@ -86,7 +86,7 @@ class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener
             mAvatar?.setImageResource(R.drawable.ic_logo_alpha)
             mName?.text = getString(R.string.pleaseLogin)
         } else if (info != null) { // 设置页面数据
-            ImageUtil.loadRoundedImageColorfulPlaceholder(mAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(info.userAvatar))
+            ImageUtil.loadRoundedImageColorfulPlaceholder(mAvatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(info.userAvatar))
             mName?.text = info.userName
         }
     }

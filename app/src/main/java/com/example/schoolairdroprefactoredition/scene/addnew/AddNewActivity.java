@@ -29,11 +29,10 @@ import com.blankj.utilcode.util.KeyboardUtils;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.application.Application;
 import com.example.schoolairdroprefactoredition.databinding.ActivitySellingAddNewBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo;
-import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity;
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter;
@@ -125,10 +124,22 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
 
     private HorizontalImageRecyclerAdapter mAdapter;
 
-    private int request; // 相册访问码
+    /**
+     * 当未授权时保存请求码，授权完毕后按照保存的请求码进行操作
+     */
+    private int request;
 
-    private String mCoverPath = "";
+    /**
+     * 图片宽高比 高：宽
+     */
     private float mHWRatio = 1.0f;
+    /**
+     * 当前页面保存的封面路径
+     */
+    private String mCoverPath = "";
+    /**
+     * 当前页面保存的图片集路径
+     */
     private List<LocalMedia> mPicSetSelected = new ArrayList<>();
 
     private DomainPurchasing.DataBean goodsBaseInfo;
@@ -302,7 +313,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
             } else if (requestCode == REQUEST_CODE_COVER) { // 封面选择返回
                 if (data != null) {
                     LocalMedia cover = PictureSelector.obtainMultipleResult(data).get(0);
-                    String qPath = cover.getAndroidQToPath();
+                    String qPath = cover.getPath();
                     mCoverPath = qPath == null ? cover.getCutPath() : qPath;
                     mHWRatio = (float) cover.getHeight() / (float) cover.getWidth();
                     binding.cover.setImageLocalPath(mCoverPath);
@@ -374,8 +385,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                     showLoading(() -> {
                                 ArrayList<String> mPicSetPaths = new ArrayList<>();
                                 for (LocalMedia localMedia : mPicSetSelected) {
-                                    String qPath = localMedia.getAndroidQToPath();
-                                    mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
+                                    mPicSetPaths.add(localMedia.getPath());
                                 }
 
                                 addNewViewModel.submitItem(token.getAccess_token(), mCoverPath, mPicSetPaths,
@@ -406,10 +416,10 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
             }
         } else if (addNewType == AddNewType.MODIFY_ITEM) { // 修改物品
             showLoading(() -> {
+                // TODO: 2021/2/19 修改物品 还没写完 或许不提供修改接口了
                 List<String> mPicSetPaths = new ArrayList<>();
                 for (LocalMedia localMedia : mPicSetSelected) {
-                    String qPath = localMedia.getAndroidQToPath();
-                    mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
+                    mPicSetPaths.add(localMedia.getPath());
                 }
             });
         }
@@ -427,8 +437,7 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
                 showLoading(() -> {
                             List<String> mPicSetPaths = new ArrayList<>();
                             for (LocalMedia localMedia : mPicSetSelected) {
-                                String qPath = localMedia.getAndroidQToPath();
-                                mPicSetPaths.add(qPath == null ? localMedia.getPath() : qPath);
+                                mPicSetPaths.add(localMedia.getPath());
                             }
 
                             addNewViewModel.submitPost(token.getAccess_token(), mCoverPath, mHWRatio, mPicSetPaths,
@@ -510,7 +519,13 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     @Override
     protected void onPause() {
         super.onPause();
+        saveDraft();
+    }
 
+    /**
+     * 保存页面草稿
+     */
+    private void saveDraft() {
         if (addNewType == AddNewType.ADD_ITEM) { // 保存物品表单
             if (!isSubmit && (!mCoverPath.trim().equals("")
                     || mPicSetSelected.size() > 0
@@ -619,34 +634,29 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
      */
     private void initGoodsInfo() {
         if (goodsBaseInfo == null) return;
-
-        goodsViewModel.getGoodsDetailByID(goodsBaseInfo.getGoods_id()).observe(this, detail -> {
-            goodsDetailInfo = detail.getData().get(0);
-        });
-
-        DomainGoodsInfo.DataBean goodsInfo = (DomainGoodsInfo.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
-
+        goodsDetailInfo = goodsViewModel.getGoodsDetailByID(goodsBaseInfo.getGoods_id()).getValue().getData().get(0);
+        DomainPurchasing.DataBean goodsInfo = (DomainPurchasing.DataBean) getIntent().getSerializableExtra(ConstantUtil.KEY_GOODS_INFO);
         try {
-            mCoverPath = ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(goodsInfo.getGoods_img_cover());
+            mCoverPath = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(goodsInfo.getGoods_cover_image());
             binding.cover.setImageRemotePath(mCoverPath);
-            List<String> picSet = goodsInfo.getGoods_img_set() == null || goodsInfo.getGoods_img_set().trim().equals("") ?
-                    new ArrayList<>() : MyUtil.getArrayFromString(goodsInfo.getGoods_img_set());
+            List<String> picSet = goodsDetailInfo.getGoods_images() == null || goodsDetailInfo.getGoods_images().trim().equals("") ?
+                    new ArrayList<>() : MyUtil.getArrayFromString(goodsDetailInfo.getGoods_images());
 
             for (int i = 0; i < picSet.size(); i++) {
                 LocalMedia media = new LocalMedia();
-                media.setPath(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(picSet.get(i)));
+                media.setPath(ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(picSet.get(i)));
                 mPicSetSelected.add(media);
             }
             mAdapter.setList(mPicSetSelected);
             binding.optionTitle.setText(goodsInfo.getGoods_name());
             binding.priceInput.setText(goodsInfo.getGoods_price());
-            if (goodsInfo.getGoods_is_brandNew() == 0) {
+            if (goodsInfo.isGoods_is_secondHande()) {
                 binding.optionSecondHand.toggle();
             }
-            if (goodsInfo.getGoods_is_quotable() == 1) {
+            if (goodsInfo.isGoods_is_bargain()) {
                 binding.optionNegotiable.toggle();
             }
-            binding.optionDescription.setText(goodsInfo.getGoods_description());
+            binding.optionDescription.setText(goodsDetailInfo.getGoods_content());
         } catch (NullPointerException ignored) {
             DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorLoadItemInfo);
         }
@@ -798,8 +808,9 @@ public class AddNewActivity extends PermissionBaseActivity implements View.OnCli
     public void onPicSetClick(ImageView source, int pos) {
         List<Object> data = new ArrayList<>();
         List<LocalMedia> adapterData = mAdapter.getData();
-        for (LocalMedia pic : adapterData)
-            data.add(pic.getPath() == null ? pic.getAndroidQToPath() : pic.getPath());
+        for (LocalMedia pic : adapterData) {
+            data.add(pic.getPath());
+        }
 
         new XPopup.Builder(this)
                 .isDarkTheme(true)

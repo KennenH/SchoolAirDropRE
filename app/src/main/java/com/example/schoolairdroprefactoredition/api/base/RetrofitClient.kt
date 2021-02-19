@@ -1,7 +1,11 @@
 package com.example.schoolairdroprefactoredition.api.base
 
+import com.blankj.utilcode.util.Utils
 import com.example.schoolairdroprefactoredition.api.*
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.franmontiel.persistentcookiejar.PersistentCookieJar
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
@@ -9,11 +13,9 @@ import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
 
-//    private val dispatcher: Dispatcher = Dispatcher()
-
     private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
             .connectTimeout(2500, TimeUnit.MILLISECONDS)
-//            .dispatcher(dispatcher.also { dispatcher.maxRequests = 1 })
+            .cookieJar(PersistentCookieJar(SetCookieCache(), SharedPrefsCookiePersistor(Utils.getApp().applicationContext)))
             .build()
 
     private val retrofit: Retrofit = Retrofit.Builder()

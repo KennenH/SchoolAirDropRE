@@ -81,7 +81,7 @@ public class GoodsInfo extends ShimmerFrameLayout implements View.OnClickListene
                 binding.goodsPopularity.setComments(detailInfo.getGoods_chat_count());
 
                 if (baseInfo.getSeller().getUser_name() != null) {
-                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(baseInfo.getSeller().getUser_avatar()));
+                    ImageUtil.loadRoundedImage(binding.goodsAvatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(baseInfo.getSeller().getUser_avatar()));
                     binding.goodsUserName.setText(baseInfo.getSeller().getUser_name());
                 } else {
                     binding.goodsSellerInfo.setVisibility(GONE);

@@ -43,6 +43,7 @@
             android:name=".scene.user.UserActivity"
             android:label="" />
         <activity android:name=".scene.user.UserUpdateAvatarActivity" />
+        <activity android:name=".scene.user.UserUpdateNameActivity" />
         <activity android:name=".scene.why.WhyActivity" />
         <activity
             android:name=".scene.post.PostActivity"

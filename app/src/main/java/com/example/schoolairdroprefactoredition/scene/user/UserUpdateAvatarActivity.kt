@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding
@@ -18,6 +19,7 @@ import com.example.schoolairdroprefactoredition.viewmodel.UserAvatarViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.luck.picture.lib.PictureSelector
+import com.qiniu.android.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_user_update_avatar.*
 import java.util.*
 
@@ -67,7 +69,7 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
 
         avatar.setOnLongClickListener(this)
 
-        ImageUtil.loadImage(avatar, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(info?.userAvatar), R.drawable.ic_logo_alpha_white)
+        ImageUtil.loadImage(avatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(info?.userAvatar), R.drawable.ic_logo_alpha_white)
 
         mDialog.setContentView(binding.root)
         binding.apply {
@@ -122,7 +124,7 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
             when (requestCode) {
-                REQUEST_ALBUM,
+                REQUEST_ALBUM, // 相册选择头像回调
                 REQUEST_CAMERA -> { // 相机修改头像回调
                     val photo = PictureSelector.obtainMultipleResult(data)[0]
 
@@ -146,7 +148,7 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
     private fun updateAvatar(avatarUrl: String) {
         mLoading.dismissWith { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successAvatar) }
         ImageUtil.loadRoundImage(avatar,
-                ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(avatarUrl),
+                ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(avatarUrl),
                 R.drawable.ic_logo_alpha_white)
         info?.userAvatar = avatarUrl
 

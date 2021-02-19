@@ -53,13 +53,13 @@ class LoginViewModel : ViewModel() {
      * 使用alipay id登录
      */
     fun authorizeWithAlipayID(
-            cookies: String,
+//            cookies: String,
             rawAlipayID: String,
             publicKey: String,
     ): LiveData<DomainToken> {
         viewModelScope.launch {
             mainRepository.authorizeWithAlipayID(
-                    cookies,
+//                    cookies,
                     rawAlipayID,
                     publicKey,
             ) { success, response ->
@@ -105,10 +105,5 @@ class LoginViewModel : ViewModel() {
     fun logout() {
         UserLoginCacheUtils.instance.deleteCache(UserTokenCache.KEY)
         UserLoginCacheUtils.instance.deleteCache(UserInfoCache.KEY)
-    }
-
-    override fun onCleared() {
-        super.onCleared()
-        viewModelScope.cancel()
     }
 }

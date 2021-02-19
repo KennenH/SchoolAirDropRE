@@ -5,25 +5,41 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewPostDraftCache
-import com.example.schoolairdroprefactoredition.repository.SellingAddNewRepository
+import com.example.schoolairdroprefactoredition.repository.AddNewRepository
 import com.example.schoolairdroprefactoredition.repository.UploadRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.luck.picture.lib.entity.LocalMedia
+import com.qiniu.android.utils.LogUtil
 import kotlinx.coroutines.launch
 
 class AddNewViewModel(application: Application) : AndroidViewModel(application) {
 
+    /**
+     * 上传物品 结果
+     * 成功 true 失败 false
+     */
     private val submitItemLiveData = MutableLiveData<Boolean>()
 
+    /**
+     * 上传帖子 结果
+     * 成功 true 失败 false
+     */
     private val submitPostLiveData = MutableLiveData<Boolean>()
 
+    /**
+     * 恢复上传物品页面草稿 结果
+     */
     private val restoredItemDraftLiveData = MutableLiveData<NewItemDraftCache>()
 
+    /**
+     * 恢复上传帖子页面草稿 结果
+     */
     private val restoredPostDraftLiveData = MutableLiveData<NewPostDraftCache>()
 
-    private val sellingAddNewRepository: SellingAddNewRepository = SellingAddNewRepository.getInstance()
+    private val addNewRepository: AddNewRepository = AddNewRepository.getInstance()
 
     private val uploadRepository: UploadRepository = UploadRepository.getInstance()
 
@@ -37,34 +53,15 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             // 将封面图片加入图片集中，为的是确保服务器收到的数组第一张图片是封面
             picSet.add(cover)
-            // 先上传图片
-            uploadRepository.doUpload(token, picSet, ConstantUtil.UPLOAD_TYPE_GOODS) { paths ->
+            // 上传图片
+            uploadRepository.upload(token, picSet, ConstantUtil.UPLOAD_TYPE_GOODS) { paths ->
                 if (paths != null) {
-                    sellingAddNewRepository.submitNewItem(token, paths[0], paths.subList(1, paths.size).joinToString(","),
+                    // 上传物品
+                    addNewRepository.submitNewItem(token, paths.last(), paths.subList(0, paths.size - 1).joinToString(","),
                             title, description,
                             longitude, latitude,
                             isBrandNew, isQuotable, price) {
                         submitItemLiveData.postValue(it)
-                    }
-                } else {
-                    submitItemLiveData.postValue(false)
-                }
-            }
-
-            uploadRepository.uploadImage(getApplication(), picSet, ConstantUtil.UPLOAD_TYPE_GOODS) { response ->
-                if (response != null) {
-                    val cov = response.data?.cover
-                    val pics = response.data?.images
-                    if (cov != null && pics != null) {
-                        // 图片上传成功之后将服务器返回的图片路径再发送
-                        sellingAddNewRepository.submitNewItem(token, cov, pics,
-                                title, description,
-                                longitude, latitude,
-                                isBrandNew, isQuotable, price) {
-                            submitItemLiveData.postValue(it)
-                        }
-                    } else {
-                        submitItemLiveData.postValue(false)
                     }
                 } else {
                     submitItemLiveData.postValue(false)
@@ -84,13 +81,13 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                    title: String,
                    content: String,
                    longitude: Double, latitude: Double): LiveData<Boolean> {
-        sellingAddNewRepository.submitNewPost(
+
+        addNewRepository.submitNewPost(
                 token, cover,
                 HWRatio, picSet,
                 title, content,
                 longitude, latitude,
                 getApplication()) {
-
         }
         return submitPostLiveData
     }
@@ -99,7 +96,9 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
      * 保存用户物品草稿
      */
     fun saveItemDraft(cover: String, picSet: List<LocalMedia>, title: String, description: String, price: String, isQuotable: Boolean, isSecondHand: Boolean) {
-        sellingAddNewRepository.saveItemDraft(cover, picSet, title, description, price, isQuotable, isSecondHand)
+        viewModelScope.launch {
+            addNewRepository.saveItemDraft(cover, picSet, title, description, price, isQuotable, isSecondHand)
+        }
     }
 
     /**
@@ -107,7 +106,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun restoreItemDraft(): LiveData<NewItemDraftCache> {
         viewModelScope.launch {
-            sellingAddNewRepository.restoreItemDraft {
+            addNewRepository.restoreItemDraft {
                 restoredItemDraftLiveData.postValue(it)
             }
         }
@@ -119,7 +118,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun savePostDraft(cover: String, hwRatio: Float, picSet: List<LocalMedia>, tag: String, anonymous: Boolean, title: String, content: String) {
         viewModelScope.launch {
-            sellingAddNewRepository.savePostDraft(cover, hwRatio, picSet, tag, anonymous, title, content)
+            addNewRepository.savePostDraft(cover, hwRatio, picSet, tag, anonymous, title, content)
         }
     }
 
@@ -128,7 +127,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun restorePostDraft(): LiveData<NewPostDraftCache> {
         viewModelScope.launch {
-            sellingAddNewRepository.restorePostDraft {
+            addNewRepository.restorePostDraft {
                 restoredPostDraftLiveData.postValue(it)
             }
         }
@@ -139,13 +138,17 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
      * 删除物品草稿
      */
     fun deleteItemDraft() {
-        sellingAddNewRepository.deleteItemDraft()
+        viewModelScope.launch {
+            addNewRepository.deleteItemDraft()
+        }
     }
 
     /**
      * 删除帖子草稿
      */
     fun deletePostDraft() {
-        sellingAddNewRepository.deletePostDraft()
+        viewModelScope.launch {
+            addNewRepository.deletePostDraft()
+        }
     }
 }

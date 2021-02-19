@@ -58,6 +58,11 @@ object ConstantUtil {
     const val LOCAL_BASE_URL = "http://10.0.2.2:2020/"
 
     /**
+     * 七牛云图片基础url
+     */
+    const val QINIU_BASE_URL = "http://res.schoolairdrop.com/"
+
+    /**
      * IP
      */
     const val SCHOOL_AIR_DROP_IP = "81.69.14.64"
@@ -72,6 +77,11 @@ object ConstantUtil {
      * 默认头像url
      */
     const val DEFAULT_AVATAR = "uploads/img/user/default/default.jpg"
+
+    /**
+     * 若文件不存在后缀，则默认为jpeg格式
+     */
+    const val JPEG = "jpeg"
 
     /**
      * 图片上传类型 聊天
@@ -91,7 +101,7 @@ object ConstantUtil {
     /**
      * 图片上传类型 头像
      */
-    const val UPLOAD_TYPE_AVATAR = "avatar"
+    const val UPLOAD_TYPE_AVATAR = "user"
 
     /**
      * 图片上传时若为物品和帖子，需要传递封面的键

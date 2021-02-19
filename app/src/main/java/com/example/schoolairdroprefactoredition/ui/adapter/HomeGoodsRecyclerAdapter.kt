@@ -19,7 +19,7 @@ class HomeGoodsRecyclerAdapter : BaseFooterAdapter<DomainPurchasing.DataBean, Ba
             val negotiable = item.isGoods_is_bargain
             val secondHand = item.isGoods_is_secondHande
 
-            ImageUtil.loadRoundedImage(binding.itemImage, ConstantUtil.SCHOOL_AIR_DROP_BASE_URL + ImageUtil.fixUrl(item.goods_cover_image))
+            ImageUtil.loadRoundedImage(binding.itemImage, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.goods_cover_image))
             binding.itemPrice.setPrice(item.goods_price)
             binding.itemSeller.text = item.seller.user_name
             if (context is AppCompatActivity) {
