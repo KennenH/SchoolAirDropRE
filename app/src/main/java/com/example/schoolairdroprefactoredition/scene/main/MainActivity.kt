@@ -159,19 +159,13 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         super.onResume()
         when {
             mPurchasing.isVisible -> {
-                if (navView.selectedItemId != R.id.navigation_purchasing) {
-                    navView.selectedItemId = R.id.navigation_purchasing
-                }
+                navView.selectedItemId = R.id.navigation_purchasing
             }
             mPlaza.isVisible -> {
-                if (navView.selectedItemId != R.id.navigation_playground) {
-                    navView.selectedItemId = R.id.navigation_playground
-                }
+                navView.selectedItemId = R.id.navigation_playground
             }
             mMessages.isVisible -> {
-                if (navView.selectedItemId != R.id.navigation_message) {
-                    navView.selectedItemId = R.id.navigation_message
-                }
+                navView.selectedItemId = R.id.navigation_message
             }
             mMy.isVisible -> {
                 navView.selectedItemId = R.id.navigation_my
@@ -459,7 +453,12 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 return true
             }
             R.id.navigation_message -> {
-                showFragment(mMessages)
+                val token = (application as Application).getCachedToken()
+                if (token != null) {
+                    showFragment(mMessages)
+                } else {
+                    LoginActivity.start(this)
+                }
                 return true
             }
             R.id.navigation_my -> {

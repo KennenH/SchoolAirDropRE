@@ -274,4 +274,5 @@
     <string name="noMessageYet">Nothing here</string>
     <string name="systemBusy">Please try again later</string>
     <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;Delete&#160;&#160;&#160;&#160;&#160;&#160;</string>
+    <string name="recyclerFooter">[img src=ic_line/]&#160;&#160;&#160;&#160;you are up to date&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
 </resources>

@@ -99,7 +99,10 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
 
     private fun init() {
         mResultAdapter.setOnNoMoreDataListener(this)
+
+        mHistoryAdapter.removeHeaderView(mHistoryHeader)
         mHistoryAdapter.addHeaderView(mHistoryHeader)
+
         binding?.run {
             // set layout manager
             searchHistory.layoutManager = LinearLayoutManager(context)

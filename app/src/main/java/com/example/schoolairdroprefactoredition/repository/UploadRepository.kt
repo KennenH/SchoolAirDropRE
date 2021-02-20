@@ -40,6 +40,11 @@ class UploadRepository private constructor() {
          */
         const val UPLOAD_PREFIX = "tmp"
 
+        /**
+         * 图片全部上传完毕的返回 message
+         */
+        const val UPLOAD_SUCCESS = "move file success"
+
         private var INSTANCE: UploadRepository? = null
         fun getInstance() = INSTANCE
                 ?: UploadRepository().also {
@@ -179,6 +184,9 @@ class UploadRepository private constructor() {
      * @param onResult          上传成功返回按上传顺序排列的图片路径，失败返回null
      */
     private fun uploadFileToQiNiu(fileLocalEntities: List<File?>, fileKeysAndTaskID: DomainUploadPath, uploadToken: String, onResult: (response: List<String>?) -> Unit) {
+        // 获取数量
+        val size = fileLocalEntities.size
+
         // 初始化上传管理类
         val uploadManager = UploadManager(Configuration
                 .Builder()
@@ -214,19 +222,31 @@ class UploadRepository private constructor() {
                         val response = uploadManager.syncPut(fileLocalEntity, fileFinalNames[index], uploadToken, null)
                         if (response.isOK) {
                             // 上传成功，发送图片的文件名至subscribe里的成功回调
-                            it.onNext(fileFinalNames[index++])
-                            it.onComplete()
+                            it.onNext(fileFinalNames[index])
+
+                            // 若最后一张图片上传完毕时返回错误message则仍旧判定为上传失败
+                            // 有可能是我们服务器出问题了
+                            if (index == size - 1 && response.message != UPLOAD_SUCCESS) {
+                                LogUtils.d("所有图片均上传完毕，但是未收到来自服务器的成功回调，上传判定为失败 abandoned")
+                                it.onError(IOException(response.error))
+                            } else {
+                                it.onComplete()
+                            }
                         } else {
                             // 上传失败，发送至subscribe中的失败回调，退出上传流程
+                            LogUtils.d("图片上传失败 abandoned")
                             it.onError(IOException(response.error))
                         }
+
+                        // 下一张图片
+                        index++
                     }).subscribeOn(Schedulers.io())
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     // 成功的回调将会回到这里
                     responsePath.add(it)
-                    if (responsePath.size == fileLocalEntities.size) {
+                    if (responsePath.size == size) {
                         onResult(responsePath)
                         LogUtils.d("所有图片上传完毕，即将开始调用服务器接口")
                     }

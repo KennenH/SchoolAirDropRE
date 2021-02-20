@@ -226,7 +226,7 @@
     <string name="restoreDraft">恢复草稿</string>
     <string name="draftCleared">已清除输入，在本页面关闭之前仍可恢复</string>
     <string name="plsEnterQuotePrice">请输入报价</string>
-    <string name="recyclerFooter" translatable="false">[img src=ic_line/]&#160;&#160;&#160;&#160;没有啦&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
+    <string name="recyclerFooter">[img src=ic_line/]&#160;&#160;&#160;&#160;没有啦&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
     <string name="postMyTopic">发布我的话题</string>
     <string name="unListItem">确定下架该物品?</string>
     <string name="attention">注意</string>

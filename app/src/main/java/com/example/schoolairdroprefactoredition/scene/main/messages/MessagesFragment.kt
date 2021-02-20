@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.main.messages
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -77,8 +78,8 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
         MessageViewModel.MessageViewModelFactory((activity?.application as Application).chatRepository).create(MessageViewModel::class.java)
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
         if (activity is MainActivity) {
             (activity as MainActivity).addOnLoginActivityListener(this)
             (activity?.application as Application).addOnIMListener(this)
@@ -156,6 +157,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
                     title?.text = getString(R.string.disconnect)
                 }
             }
+
             MessageState.LOADING -> {
                 loading?.visibility = View.VISIBLE
                 title?.text = getString(R.string.loading)

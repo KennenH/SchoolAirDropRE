@@ -14,8 +14,10 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
+import com.qiniu.android.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_selling_add_set.*
 import kotlin.math.abs
 
@@ -130,7 +132,10 @@ class InputSetActivity : ImmersionStatusBarActivity() {
             override fun afterTextChanged(s: Editable) {
                 if (type == TYPE_TITLE) {
                     input_tip.text = getString(R.string.textRemainCount, MAX_TITLE - input.text.length)
+
+                    // 若含有空格或者换行符，将会提示无法提交
                     if (s.toString().contains(" ") || s.toString().contains("\n")) {
+                        LogUtils.d("文本存在空白字符 -- >|$s|")
                         doneMenu?.isEnabled = false
                         input_warning.visibility = View.VISIBLE
                     } else {
@@ -161,6 +166,9 @@ class InputSetActivity : ImmersionStatusBarActivity() {
         input.requestFocus()
     }
 
+    /**
+     * 将用户输入返回给上一个页面
+     */
     private fun sendData() {
         intent.putExtra(RESULT, input.text.toString())
         intent.putExtra(TYPE, type)
@@ -177,7 +185,7 @@ class InputSetActivity : ImmersionStatusBarActivity() {
         val id = item.itemId
         if (id == android.R.id.home) {
             // 当本次修改后文本长度与上次保存的文本长度差超过10时默认为保存而不是丢弃修改
-            if (abs(input.text.length - content.length) > 10) {
+            if (abs(input.text.length - (content?.length ?: 0)) > 10) {
                 sendData()
             }
             finish()
