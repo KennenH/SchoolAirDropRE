@@ -8,6 +8,9 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.LogUtils
@@ -131,7 +134,7 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
                     mLoading.show()
                     viewModel.updateAvatar(token?.access_token, photo.androidQToPath
                             ?: photo.path)
-                            .observe(this, {
+                            .observeOnce(this, {
                                 if (it != null) {
                                     updateAvatar(it)
                                 } else {
@@ -193,5 +196,17 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
                 mDialog.dismiss()
             }
         }
+    }
+
+    /**
+     * 仅观察一次的观察者
+     */
+    private fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
+        observe(lifecycleOwner, object : Observer<T> {
+            override fun onChanged(t: T?) {
+                removeObserver(this)
+                observer.onChanged(t)
+            }
+        })
     }
 }

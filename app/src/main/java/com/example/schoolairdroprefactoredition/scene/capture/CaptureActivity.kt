@@ -16,13 +16,14 @@ import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.scene.base.BaseActivity
 import com.jaeger.library.StatusBarUtil
 import com.journeyapps.barcodescanner.CaptureManager
 import com.journeyapps.barcodescanner.DecoratedBarcodeView.TorchListener
 import kotlinx.android.synthetic.main.activity_capture.*
 import kotlinx.android.synthetic.main.custom_barcode_scanner.*
 
-class CaptureActivity : AppCompatActivity(), TorchListener {
+class CaptureActivity : BaseActivity(), TorchListener {
 
     companion object {
         const val TRANSLATION_DURATION = 2000L

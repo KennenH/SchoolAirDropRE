@@ -336,7 +336,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
         }
         int finalRequest = request;
         new XPopup.Builder(this)
-                .isDarkTheme(isDarkTheme)
+                .isDarkTheme(isDarkTheme())
                 .asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
                         , () -> {
                             switch (permission) {
@@ -385,7 +385,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
      */
     private void popUpToSettingsForPermission(@StringRes int res, @PermissionConstants.Permission String permission) {
         new XPopup.Builder(this)
-                .isDarkTheme(isDarkTheme)
+                .isDarkTheme(isDarkTheme())
                 .asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
                         , () -> { // 点击确定，引导至系统设置
                             switch (permission) {

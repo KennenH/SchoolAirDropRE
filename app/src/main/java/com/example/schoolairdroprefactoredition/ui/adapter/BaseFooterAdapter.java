@@ -42,7 +42,7 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
     }
 
     /**
-     * 在没有更多数据时添加尾巴
+     * 在没有更多数据时添加没有更多数据提示的尾巴
      */
     private void addNoMoreFooter() {
         if (mOnNoMoreDataListener != null) {

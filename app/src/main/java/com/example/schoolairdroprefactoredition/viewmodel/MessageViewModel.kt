@@ -19,8 +19,6 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
 
     private var offlineNumLiveData = MutableLiveData<DomainOfflineNum>()
 
-    var offlineNumLoadState = MutableLiveData<LoadState>()
-
     private val userRepository by lazy {
         UserRepository.getInstance()
     }
@@ -109,7 +107,7 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
                 ))
 
                 // 装配用户信息
-                senderInfo.add(UserCache(offlineNum.senderId.toInt(), offlineNum.senderInfo.senderName, offlineNum.senderInfo.senderAvatar))
+                senderInfo.add(UserCache(offlineNum.senderId.toInt(), offlineNum.senderInfo.senderName, offlineNum.senderInfo.senderAvatar, null, null, null))
             }
 
             // 保存所有装配好的信息
@@ -136,20 +134,29 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
      */
     fun getUserBaseInfo(userId: Int): LiveData<UserCache?> {
         viewModelScope.launch {
-            userRepository.getUserInfoById(userId) { success, response ->
-                if (success) {
-                    // 网络获取成功则返回并保存
-                    response?.let {
-                        val userCache = UserCache(it.userId, it.userName, it.userAvatar)
-                        userCacheLiveData.postValue(userCache)
-                        viewModelScope.launch {
-                            databaseRepository.saveUserCache(userCache)
+            databaseRepository.getUserCache(userId)
+                    .let { cache ->
+                        if (cache != null) {
+                            // 若有缓存直接使用缓存，无需获取网络信息
+                            userCacheLiveData.value = cache
+                        } else {
+                            // 若无缓存才去获取
+                            userRepository.getUserInfoById(userId) { success, response ->
+                                if (success) {
+                                    // 网络获取成功则返回并保存
+                                    response?.let {
+                                        val userCache = UserCache(it.userId, it.userName, it.userAvatar, it.createtime, it.userGoodsOnSaleCount, it.userContactCount)
+                                        userCacheLiveData.postValue(userCache)
+                                        viewModelScope.launch {
+                                            databaseRepository.saveUserCache(userCache)
+                                        }
+                                    }
+                                } else {
+                                    userCacheLiveData.postValue(null)
+                                }
+                            }
                         }
                     }
-                } else {
-                    userCacheLiveData.postValue(null)
-                }
-            }
         }
         return userCacheLiveData
     }

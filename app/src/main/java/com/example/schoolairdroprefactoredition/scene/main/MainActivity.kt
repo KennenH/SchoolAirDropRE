@@ -27,7 +27,7 @@ import com.example.schoolairdroprefactoredition.scene.main.home.ParentPlayground
 import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasingFragment
 import com.example.schoolairdroprefactoredition.scene.main.messages.MessagesFragment
 import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
-import com.example.schoolairdroprefactoredition.scene.search.SearchFragment
+import com.example.schoolairdroprefactoredition.scene.main.search.SearchFragment
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.utils.AppConfig
@@ -85,7 +85,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 搜索 页面
      */
     private val mSearch by lazy {
-        SearchFragment.newInstance()
+        SearchFragment.getInstance()
     }
 
     /**
@@ -113,8 +113,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     private val mPurchasing by lazy {
         ParentPurchasingFragment.newInstance()
     }
-
-    private var gettingPublicKey = false
 
     /**
      * app登录状态改变监听器
@@ -202,7 +200,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
                 UserActivity.REQUEST_UPDATE -> {
                     if (data?.getBooleanExtra(ConstantUtil.KEY_UPDATED, false) as Boolean) {
-                        autoLoginWithToken()
+                        obtainMyInfo()
                     }
                 }
             }
@@ -230,7 +228,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         }
 
         home_add_fab.setOnClickListener {
-            AddNewActivity.start(this, AddNewActivity.AddNewType.ADD_POST)
+            AddNewActivity.start(this, AddNewActivity.AddNewType.ADD_ITEM)
         }
 
         navView.setOnNavigationItemSelectedListener(this@MainActivity)
@@ -370,7 +368,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
             val token = accountViewModel.lastLoggedTokenCaChe.value
             if (token != null) { // token 仍有效 使用本地缓存重新获取token后登录
                 intent.putExtra(ConstantUtil.KEY_TOKEN, token)
-                autoLoginWithToken()
+                obtainMyInfo()
             } else {
                 // token 已无效 使用本地缓存重新获取token后登录
                 val infoCache = accountViewModel.lastLoggedUserInfoCache.value
@@ -383,19 +381,19 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     /**
-     * 用当前获取的公钥加密alipay并登录
+     * 使用当前token获取用户信息
      * 在以下情形调用
      * 1、有缓存情况下打开app时
      * 2、用户信息修改后回到MainActivity
      */
-    private fun autoLoginWithToken() {
+    private fun obtainMyInfo() {
         for (listener in mOnLoginStateChangedListeners) {
             listener.onLogging()
         }
 
-        val token: DomainToken = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken
-        if (token.access_token != null) {
-            loginViewModel.getUserInfo(token.access_token).observe(this, {
+        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken
+        if (token?.access_token != null) {
+            loginViewModel.getUserInfo(token.access_token).observeOnce(this, {
                 intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
 
                 loginStateChanged(it, token)
@@ -409,10 +407,11 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      */
     private fun autoReLoginWithCache() {
 //        val userInfo: DomainUserInfo.DataBean = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean
-        loginViewModel.getPublicKey().observe(this@MainActivity, { publicK ->
-            if (!gettingPublicKey) {
-                gettingPublicKey = true
-                authorizeWithAlipayID(publicK)
+        loginViewModel.getPublicKey().observeOnce(this@MainActivity, { publicK ->
+            publicK.let {
+                if (it != null) {
+                    authorizeWithAlipayID(it)
+                }
             }
         })
     }
@@ -424,12 +423,15 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     @Synchronized
     private fun authorizeWithAlipayID(publicK: DomainAuthorizeGet) {
         loginViewModel.authorizeWithAlipayID(
-//                publicK.cookie,
                 AppConfig.USER_ALIPAY,
                 publicK.public_key)
-                .observe(this@MainActivity, { token ->
-                    intent.putExtra(ConstantUtil.KEY_TOKEN, token)
-                    autoLoginWithToken()
+                .observeOnce(this@MainActivity, {
+                    it.let {
+                        if (it != null) {
+                            intent.putExtra(ConstantUtil.KEY_TOKEN, it)
+                            obtainMyInfo()
+                        }
+                    }
                 })
     }
 

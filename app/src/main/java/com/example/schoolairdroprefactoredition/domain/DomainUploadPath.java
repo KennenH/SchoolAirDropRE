@@ -53,7 +53,7 @@ public class DomainUploadPath implements Serializable {
         public String toString() {
             return "DataBean{" +
                     "keys=" + keys +
-                    ", path='" + path + '\'' +
+                    ", path='" + taskId + '\'' +
                     '}';
         }
 
@@ -63,9 +63,9 @@ public class DomainUploadPath implements Serializable {
         private List<String> keys;
 
         /**
-         * 文件路径前缀
+         * 任务组
          */
-        private String path;
+        private String taskId;
 
         public List<String> getKeys() {
             return keys;
@@ -75,12 +75,12 @@ public class DomainUploadPath implements Serializable {
             this.keys = keys;
         }
 
-        public String getPath() {
-            return path;
+        public String getTaskId() {
+            return taskId;
         }
 
-        public void setPath(String path) {
-            this.path = path;
+        public void setTaskId(String taskId) {
+            this.taskId = taskId;
         }
     }
 }

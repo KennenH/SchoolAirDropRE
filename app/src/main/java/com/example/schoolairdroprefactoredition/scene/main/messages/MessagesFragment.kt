@@ -19,6 +19,7 @@ import com.example.schoolairdroprefactoredition.databinding.FragmentMessagesBind
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.base.LoadState
+import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.MessagesRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -32,7 +33,7 @@ import net.x52im.mobileimsdk.server.protocal.Protocal
 import java.util.*
 import kotlin.collections.ArrayList
 
-class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, Application.IMListener {
+class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListener, Application.IMListener {
 
     /**
      * 移动端IM的状态
@@ -115,19 +116,6 @@ class MessagesFragment : Fragment(), MainActivity.OnLoginStateChangedListener, A
             }
         }
         recyclerView?.adapter = mMessagesRecyclerAdapter
-
-        messageViewModel.offlineNumLoadState.observe(viewLifecycleOwner) {
-            when {
-                it == LoadState.LOADING -> {
-                    updateMessageState(MessageState.LOADING)
-                }
-
-                it == LoadState.ERROR -> {
-                    updateMessageState(MessageState.REFRESH)
-                }
-            }
-        }
-
         val token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken
         val userInfo = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
 

@@ -18,9 +18,9 @@ data class ChatOfflineNumDetail(
 
         val counterpart_id: String,
 
-        val counterpart_name: String?,
+        var counterpart_name: String?,
 
-        val counterpart_avatar: String?,
+        var counterpart_avatar: String?,
 
         val my_id: String,
 

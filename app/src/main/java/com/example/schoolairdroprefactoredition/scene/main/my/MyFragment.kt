@@ -14,6 +14,7 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
+import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
 import com.example.schoolairdroprefactoredition.scene.capture.CaptureActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity.OnLoginStateChangedListener
@@ -25,7 +26,7 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.google.zxing.integration.android.IntentIntegrator
 
-class MyFragment : Fragment(), View.OnClickListener, OnLoginStateChangedListener {
+class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedListener {
 
     companion object {
         fun newInstance(): MyFragment {

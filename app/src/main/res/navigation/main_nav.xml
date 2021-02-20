@@ -58,5 +58,5 @@
 
     <fragment
         android:id="@+id/home_search"
-        android:name="com.example.schoolairdroprefactoredition.scene.search.SearchFragment"></fragment>
+        android:name="com.example.schoolairdroprefactoredition.scene.main.search.SearchFragment"></fragment>
 </navigation>

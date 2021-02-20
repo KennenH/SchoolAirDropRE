@@ -12,22 +12,19 @@ import kotlinx.coroutines.launch
 
 class GoodsViewModel : ViewModel() {
 
-    val mQuoteState = MutableLiveData<LoadState>()
-
-    private val goodsDetail = MutableLiveData<GoodsDetailInfo>()
+    private val goodsDetail = MutableLiveData<GoodsDetailInfo?>()
 
     private val goodsRepository by lazy {
         GoodsRepository.getInstance()
     }
 
-    fun getGoodsDetailByID(goodsID: Int): LiveData<GoodsDetailInfo> {
+    fun getGoodsDetailByID(goodsID: Int): LiveData<GoodsDetailInfo?> {
         viewModelScope.launch {
             goodsRepository.getGoodsDetail(goodsID) { success, response ->
                 if (success) {
                     goodsDetail.postValue(response)
-                    mQuoteState.value = LoadState.SUCCESS
                 } else {
-                    mQuoteState.value = LoadState.ERROR
+                    goodsDetail.postValue(null)
                 }
             }
         }

@@ -80,7 +80,7 @@ class HomePurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDa
             showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME)
             return
         }
-        purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observe(viewLifecycleOwner) {
+        purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observeOnce(viewLifecycleOwner) {
             if (it != null) {
                 // 回调成功
                 if (it.data.isEmpty()) {
@@ -101,7 +101,7 @@ class HomePurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDa
             DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
             return
         }
-        purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observe(viewLifecycleOwner, {
+        purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observeOnce(viewLifecycleOwner, {
             refreshLayout.finishRefresh()
             showContentContainer()
             if (it != null) {
@@ -114,7 +114,7 @@ class HomePurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDa
     }
 
     override fun getAutoLoadMoreData(recycler: EndlessRecyclerView, aMapLocation: AMapLocation?) {
-        purchasingViewModel.getGoodsInfo().observe(viewLifecycleOwner, {
+        purchasingViewModel.getGoodsInfo().observeOnce(viewLifecycleOwner, {
             recycler.finishLoading()
             showContentContainer()
             if (it != null) {

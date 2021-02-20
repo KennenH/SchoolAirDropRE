@@ -28,7 +28,7 @@ public class SSBPagerAdapter extends FragmentPagerAdapter implements SSBBaseFrag
     @NonNull
     @Override
     public Fragment getItem(int position) {
-        SellingFragment fragmentSelling = SellingFragment.newInstance(isMine);
+        SellingFragment fragmentSelling = SellingFragment.Companion.newInstance(isMine);
         fragmentSelling.setOnSSBDataLenChangedListener(this);
         return fragmentSelling;
     }

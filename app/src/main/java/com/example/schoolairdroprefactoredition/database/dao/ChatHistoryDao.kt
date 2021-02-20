@@ -32,7 +32,7 @@ interface ChatHistoryDao {
      * 查询本地用户信息缓存
      */
     @Query("select * from user_info where user_id = :userID")
-    fun getUserCache(userID: Int): UserCache?
+    suspend fun getUserCache(userID: Int): UserCache?
 
     /**
      * 保存用户信息缓存

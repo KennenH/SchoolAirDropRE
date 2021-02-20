@@ -10,9 +10,7 @@ import android.view.View
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.BarUtils
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
@@ -25,6 +23,7 @@ import com.example.schoolairdroprefactoredition.utils.MyUtil.ImageLoader
 import com.example.schoolairdroprefactoredition.viewmodel.UserViewModel
 import com.lxj.xpopup.XPopup
 import kotlinx.android.synthetic.main.activity_user.*
+import java.util.*
 
 class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDragEventHeader.OnHeaderOverDragEventListener {
 
@@ -84,7 +83,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
     }
 
     private val userViewModel by lazy {
-        ViewModelProvider(this).get(UserViewModel::class.java)
+        UserViewModel.UserViewModelFactory((application as Application).chatRepository).create(UserViewModel::class.java)
     }
 
     /**
@@ -143,7 +142,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         val sellerID = intent.getIntExtra(ConstantUtil.KEY_USER_ID, -1)
 
         if (userInfo == null && sellerID != -1) {
-            userViewModel.getUserBaseInfoByID(sellerID).observe(this) {
+            userViewModel.getUserBaseInfoByID(sellerID).observeOnce(this) {
                 if (it != null) {
                     intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
                     setUserInfo(it)
@@ -179,6 +178,14 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         ImageUtil.loadImage(user_background, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(this.userInfo?.userAvatar),
                 R.drawable.logo_placeholder)
 
+        userInfo?.createtime?.let { millis ->
+            val calendar = Calendar.getInstance().also { it.timeInMillis = millis }
+            user_join_time.text = getString(
+                    R.string.userJoinTime,
+                    calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH),
+                    calendar.get(Calendar.DAY_OF_MONTH))
+        }
         userName.text = this.userInfo?.userName
         user_more_selling.text = userInfo?.userGoodsOnSaleCount.toString()
         user_more_posts.text = userInfo?.userContactCount.toString()

@@ -1,10 +1,10 @@
 package com.example.schoolairdroprefactoredition.scene.addnew
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.scene.base.BaseActivity
 
-class SelectPostTagActivity : AppCompatActivity() {
+class SelectPostTagActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

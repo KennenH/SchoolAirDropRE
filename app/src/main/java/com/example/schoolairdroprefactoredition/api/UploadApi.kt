@@ -16,7 +16,7 @@ interface UploadApi {
     fun getUploadToken(@Header("Authorization") token: String): Call<DomainUploadToken>
 
     /**
-     * 获取上传图片的路径前缀和文件名
+     * 获取上传图片的文件名和taskId，文件路径前缀固定为tmp
      *
      * @param type 图片类型 one of below
      * [com.example.schoolairdroprefactoredition.utils.ConstantUtil.UPLOAD_TYPE_AVATAR] 头像
@@ -26,6 +26,6 @@ interface UploadApi {
      * @param amount 需要上传的图片数量
      */
     @FormUrlEncoded
-    @POST("appapi/ajax/queryforpath")
+    @POST("appapi/ajax/dispatchUploadTask")
     fun getImagePath(@Field("img_type") type: String, @Field("amount") amount: Int): Call<DomainUploadPath>
 }

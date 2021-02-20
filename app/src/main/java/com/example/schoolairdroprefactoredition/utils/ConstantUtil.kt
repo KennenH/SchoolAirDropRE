@@ -33,6 +33,18 @@ object ConstantUtil {
     const val DATA_FETCH_DEFAULT_SIZE = 10
 
     /**
+     * retrofit 最大缓存数量
+     */
+    const val CACHE_SIZE = (10 * 1024 * 1024).toLong()
+
+    /**
+     * 缓存最大寿命(单位 s)
+     *
+     * 当缓存时间超过最大寿命时将被丢弃 30天
+     */
+    const val CACHE_MAX_AGE = (30 * 24 * 60 * 60).toLong()
+
+    /**
      * 可议价 物品类型
      */
     const val GOODS_TYPE_BARGAIN = "bargain"

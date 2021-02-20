@@ -39,7 +39,7 @@ interface UserApi {
     /**
      * 使用token获取用户信息
      */
-    @POST("appapi/user/getinfo")
+    @POST("appapi/user/getInfo")
     fun getMyUserInfo(@Header("Authorization") token: String): Call<DomainUserInfo>
 
     /**
@@ -47,7 +47,7 @@ interface UserApi {
      */
     @FormUrlEncoded
     @POST("appapi/user/getInfoByUid")
-    fun getUserInfoByID(@Field("uid") userID: Int): Call<DomainUserInfo>
+    fun getUserInfoByID(@Field("user_id") userID: Int): Call<DomainUserInfo>
 
     /**
      * 修改用户名字

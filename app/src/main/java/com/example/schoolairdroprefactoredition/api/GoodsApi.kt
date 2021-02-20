@@ -1,13 +1,34 @@
 package com.example.schoolairdroprefactoredition.api
 
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
-import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
 
 interface GoodsApi {
+
+    /**
+     * 下架我的在售物品
+     */
+    @FormUrlEncoded
+    @POST("appapi/goods/deleteGoods")
+    fun deleteGoods(@Header("Authorization") token: String,
+                    @Field("goods_id") goodsID: Int): Call<DomainResult>
+
+    /**
+     * 搜索关键字物品
+     */
+    @FormUrlEncoded
+    @POST("appapi/goods/searchGoods")
+    fun searchGoods(@Field("client_id") clientID: String,
+                    @Field("client_secret") clientSecret: String,
+                    @Field("page") page: Int,
+                    @Field("longitude") longitude: Double,
+                    @Field("latitude") latitude: Double,
+                    @Field("keyWords") keyWord: String): Call<DomainPurchasing>
+
     /**
      * 获取附近在售的商品
      */

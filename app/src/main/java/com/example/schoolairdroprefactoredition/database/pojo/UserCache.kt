@@ -12,6 +12,11 @@ data class UserCache(
 
         val user_avatar: String,
 
+        val user_create_time: Long?,
+
+        val user_goods_count: Int?,
+
+        val user_post_count: Int?
 //        val user_alipay: String,
 
         /**
@@ -27,6 +32,6 @@ data class UserCache(
 //        val registration_id: String
 ) {
         override fun toString(): String {
-                return "UserCache(user_id=$user_id, user_name='$user_name', user_avatar='$user_avatar')"
+                return "UserCache(user_id=$user_id, user_name='$user_name', user_avatar='$user_avatar', user_create_time=$user_create_time, user_goods_count=$user_goods_count, user_post_count=$user_post_count)"
         }
 }

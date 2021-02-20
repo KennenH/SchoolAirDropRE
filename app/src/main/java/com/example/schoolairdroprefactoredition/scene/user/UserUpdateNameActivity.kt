@@ -103,7 +103,7 @@ class UserUpdateNameActivity : ImmersionStatusBarActivity() {
             val token = (application as Application).getCachedToken()
             if (token != null && token.access_token != null) {
                 viewModel.rename(token.access_token, input.text.toString().trim())
-                        .observe(this, {
+                        .observeOnce(this, {
                             if (it) {
                                 sendData(myInfo)
                             } else {

@@ -12,7 +12,7 @@ import com.example.schoolairdroprefactoredition.R;
 /**
  * 重写切换动画，将所有子页面都以fragment打开
  */
-public class TransitionBaseFragment extends Fragment {
+public class TransitionBaseFragment extends BaseFragment {
     protected void transact(FragmentManager manager, @NonNull Fragment fragment, @Nullable String tag) {
         manager.beginTransaction()
                 // 这四个参数的意思分别是

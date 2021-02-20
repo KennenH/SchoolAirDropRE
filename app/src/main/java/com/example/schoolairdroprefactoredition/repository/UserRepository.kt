@@ -19,6 +19,9 @@ class UserRepository private constructor() {
                 }
     }
 
+    /**
+     * user id获取用户信息
+     */
     fun getUserInfoById(userID: Int, onResult: (success: Boolean, response: DomainUserInfo.DataBean?) -> Unit) {
         RetrofitClient.userApi.getUserInfoByID(userID).apply {
             enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {

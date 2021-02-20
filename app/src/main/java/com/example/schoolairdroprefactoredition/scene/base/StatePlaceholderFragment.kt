@@ -6,7 +6,7 @@ import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.lxj.xpopup.impl.LoadingPopupView
 
-abstract class StatePlaceholderFragment : Fragment() {
+abstract class StatePlaceholderFragment : BaseFragment() {
 
     protected val mLoading: LoadingPopupView by lazy {
         MyUtil.loading(context)

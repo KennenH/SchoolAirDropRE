@@ -11,36 +11,33 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.application.Application;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
-import com.example.schoolairdroprefactoredition.domain.DomainToken;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo.DataBean;
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
+import com.example.schoolairdroprefactoredition.domain.DomainToken;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo.DataBean;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter;
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder;
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
-import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration;
+import com.example.schoolairdroprefactoredition.viewmodel.SellingViewModel;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
-
-import javadz.beanutils.BeanUtils;
 
 public abstract class SSBBaseFragment extends StatePlaceholderFragment
         implements BaseStateViewModel.OnRequestListener,
-        StatePlaceHolder.OnPlaceHolderRefreshListener, SSBViewModel.OnSSBActionListener,
+        StatePlaceHolder.OnPlaceHolderRefreshListener,
         SSBAdapter.OnSSBItemActionListener {
 
     public static final int SELLING_POS = 0;
 
-    protected SSBViewModel viewModel;
+    protected SellingViewModel viewModel;
 
     protected SSBAdapter mAdapter;
 
@@ -53,9 +50,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding.inflate(inflater, container, false);
-        viewModel = new ViewModelProvider(this).get(SSBViewModel.class);
-        viewModel.setOnRequestListener(this);
-        viewModel.setOnSSBActionListener(this);
+        viewModel = new ViewModelProvider(this).get(SellingViewModel.class);
 
         binding.ssbRecycler.setLayoutManager(new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false));
         binding.placeHolder.addOnPlaceHolderActionListener(this);
@@ -130,15 +125,14 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         return null;
     }
 
+    @Nullable
     protected DataBean getUserInfo() {
-        DataBean info = new DataBean();
+        DomainUserInfo.DataBean userInfo = null;
         try {
-            BeanUtils.copyProperties(info, getActivity().getIntent().getExtras().getSerializable(ConstantUtil.KEY_USER_INFO));
-        } catch (IllegalAccessException | InvocationTargetException | NullPointerException e) {
-            e.printStackTrace();
-            info = null;
+            userInfo = (DataBean) getActivity().getIntent().getExtras().getSerializable(ConstantUtil.KEY_USER_INFO);
+        } catch (Exception ignored) {
         }
-        return info;
+        return userInfo;
     }
 
     /**
@@ -172,11 +166,6 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         dismissLoading(() -> showPlaceholder(StatePlaceHolder.TYPE_ERROR));
     }
 
-    @Override
-    public void onActionFailed() {
-        DialogUtil.showCenterDialog(getContext(), DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown);
-    }
-
     /**
      * item上右下角的三个点按钮的操作
      * 在售列表中为 {修改物品信息} 和 {下架物品}
@@ -193,7 +182,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
     public void onDestroy() {
         super.onDestroy();
         if (mAdapter != null) {
-            mAdapter.addOnSSBItemActionListener(null);
+            mAdapter.addOnSSBItemActionListener(this);
         }
         mOnSSBDataLenChangedListener = null;
     }

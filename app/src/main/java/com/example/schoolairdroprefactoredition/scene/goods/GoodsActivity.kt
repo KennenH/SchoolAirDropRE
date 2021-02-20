@@ -95,16 +95,6 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
         goods_info_container.setOnUserInfoClickListener(this)
         goods_button_left.setOnButtonClickListener(this)
         goods_button_right.setOnButtonClickListener(this)
-
-        goodsViewModel.mQuoteState.observe(this, {
-            when (it) {
-                LoadState.ERROR -> {
-                    goods_info_container.stopShimming()
-                    DialogUtil.showCenterDialog(this@GoodsActivity, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
-                }
-            }
-        })
-
         validateInfo()
     }
 
@@ -130,12 +120,16 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
             goods_info_container.hideSellerInfo()
         }
 
-        val detail = goodsViewModel.getGoodsDetailByID(goodsInfo.goods_id).value
-        detail?.let {
-            goodsDetailInfo = it
-            showActionButtons(isNotMine)
-            goods_info_container.setData(goodsInfo, it.data[0])
-            goods_info_container.stopShimming()
+        goodsViewModel.getGoodsDetailByID(goodsInfo.goods_id).observeOnce(this) {
+            if (it != null) {
+                goodsDetailInfo = it
+                showActionButtons(isNotMine)
+                goods_info_container.setData(goodsInfo, it.data)
+                goods_info_container.stopShimming()
+            } else {
+                goods_info_container.stopShimming()
+                DialogUtil.showCenterDialog(this@GoodsActivity, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
+            }
         }
     }
 
@@ -184,7 +178,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
         if ((application as Application).getCachedToken() == null) {
             login()
         } else {
-            val userInfo = goodsDetailInfo?.data?.get(0)
+            val userInfo = goodsDetailInfo?.data
             val user = DomainUserInfo.DataBean()
             if (userInfo != null) {
                 user.userName = goodsInfo.seller.user_name

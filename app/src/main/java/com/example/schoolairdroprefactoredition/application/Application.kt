@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Process
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.LifecycleObserver
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
 import com.example.schoolairdroprefactoredition.database.SARoomDatabase
@@ -35,7 +36,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEvent {
+class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEvent{
 
     companion object {
         open class LogoutAsync() : AsyncTask<Any?, Int?, Int?>() {
@@ -341,6 +342,8 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
         // 发送退出登录包
         object : LogoutAsync(this@Application) {}.execute()
     }
+
+
 
     /**
      * IM系统事件监听器

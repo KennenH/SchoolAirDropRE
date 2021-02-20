@@ -107,7 +107,7 @@
                     android:layout_marginTop="@dimen/general_padding_large"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:text="#2020年8月1日加入"
+                    android:text="#"
                     android:textColor="@color/primaryEvenDarker"
                     android:textSize="12dp"
                     app:layout_constraintEnd_toStartOf="@+id/guideline2"

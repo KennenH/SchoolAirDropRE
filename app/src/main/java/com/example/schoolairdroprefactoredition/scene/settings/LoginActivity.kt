@@ -13,8 +13,6 @@ import com.blankj.utilcode.util.NetworkUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.utils.AnimUtil
 import com.example.schoolairdroprefactoredition.utils.AppConfig
@@ -52,6 +50,11 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      */
     private var isExiting = false
 
+    /**
+     * 防止登录成功后用户信息获取失败再次登录，当有token的时候直接获取用户信息即可
+     */
+    private var token: DomainToken? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -78,21 +81,20 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
         } else {
             setContentView(R.layout.activity_login)
             (application as Application).addOnApplicationLoginListener(this)
-
-            viewModel.getLoadState().observe(this, {
-                if (it === LoadState.LOADING) {
-                    showLoading()
-                } else if (it === LoadState.ERROR) {
-                    isLogging = false
-                    dismissLoading { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLogin) }
-                }
-            })
             login_with_alipay.isEnabled = false
             cancel.setOnClickListener(this)
             checkbox.setOnCheckedChangeListener(this)
             checkbox.isChecked = false
             login_with_alipay.setOnClickListener(this)
         }
+    }
+
+    /**
+     * 登录失败，将正在登录的标志置回false
+     */
+    private fun loginError() {
+        isLogging = false
+        dismissLoading { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLogin) }
     }
 
     override fun onBackPressed() {
@@ -116,15 +118,27 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     override fun onClick(v: View) {
         when (v.id) {
             R.id.login_with_alipay -> {
-                showLoading()
-                if (NetworkUtils.isConnected()) {
-                    if (!isLogging) {
-                        isLogging = true
-                        loginWithAlipay()
+                // 暂时禁用提交按钮防止短时间内提交多次
+                v.isEnabled = false
+
+
+                // 开始转圈圈，这个调用里一旦出错中断了，必须调用loginError来提示用户登录请求中断
+                showLoading {
+                    // 如果没网直接error
+                    if (NetworkUtils.isConnected()) {
+                        // 这里是唯一能将这个变量置为true的地方，失败或者功能之后一定要调用loginError
+                        // 否则用户再点也没办法登录了
+                        if (!isLogging) {
+                            isLogging = true
+                            loginWithAlipay()
+                        }
+                    } else {
+                        loginError()
                     }
-                } else {
-                    dismissLoading { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_NETWORK, R.string.dialogNetWorkError) }
                 }
+
+                // 已经在网络请求了，可以放开提交按钮了
+                v.isEnabled = true
             }
 
             R.id.cancel -> {
@@ -144,39 +158,40 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      * 最后使用token换取用户信息
      */
     private fun loginWithAlipay() {
-        viewModel.getPublicKey().observe(this, {
-            if (it != null) {
-                viewModel.authorizeWithAlipayID(
-//                        it.cookie,
-                        AppConfig.USER_ALIPAY,
-                        it.public_key)
-                        .observe(this, { token ->
-                            if (token != null) {
+        if (token != null) {
+            // 如果之前某种情况登录成功但是用户信息获取失败，直接获取用户信息即可
+            getUserInfoWithToken(token)
+        } else {
+            // 页面中没有token
+            viewModel.getPublicKey().observeOnce(this, {
+                if (it != null) {
+                    viewModel.authorizeWithAlipayID(
+                            AppConfig.USER_ALIPAY, it.public_key).observeOnce(this, { token ->
+                        if (token != null) {
+                            // todo comment this when release
+                            LogUtils.d("token -- > $token")
 
-                                // todo comment this when release
-                                LogUtils.d("token -- > $token")
-
-                                getUserInfoWithToken(token)
-                            }
-                        })
-            } else {
-                isLogging = false
-                dismissLoading()
-
-                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
-            }
-        })
+                            // 登录成功了，也不需要把isLogging置回false了
+                            getUserInfoWithToken(token)
+                        } else {
+                            loginError()
+                        }
+                    })
+                } else {
+                    loginError()
+                }
+            })
+        }
     }
 
     /**
      * 使用token获取用户信息
      */
     private fun getUserInfoWithToken(token: DomainToken?) {
+        // 要是登录了发现token没了那也没救了
         if (token != null) {
-            viewModel.getUserInfo(token.access_token).observe(this, {
+            viewModel.getUserInfo(token.access_token).observeOnce(this@LoginActivity, {
                 if (it != null) {
-                    isLogging = false
-
                     // token换取的user info
                     intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
                     intent.putExtra(ConstantUtil.KEY_TOKEN, token)
@@ -186,15 +201,16 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
                         isExiting = true
                         dismissLoading()
                         finish()
-                        AnimUtil.activityExitAnimDown(this)
+                        AnimUtil.activityExitAnimDown(this@LoginActivity)
+                    }
+                } else {
+                    dismissLoading {
+                        DialogUtil.showCenterDialog(this@LoginActivity, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
                     }
                 }
             })
         } else {
-            isLogging = false
-            dismissLoading()
-
-            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
+            loginError()
         }
     }
 

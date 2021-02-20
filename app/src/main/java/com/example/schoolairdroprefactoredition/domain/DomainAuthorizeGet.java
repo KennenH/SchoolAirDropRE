@@ -14,7 +14,6 @@ public class DomainAuthorizeGet implements Serializable {
     public String toString() {
         return "DomainAuthorizeGet{" +
                 "public_key='" + public_key + '\'' +
-                ", cookie='" + cookie + '\'' +
                 '}';
     }
 
@@ -33,7 +32,6 @@ public class DomainAuthorizeGet implements Serializable {
 
 
     private String public_key;
-    private String cookie;
 
     public String getPublic_key() {
         return public_key;
@@ -41,14 +39,6 @@ public class DomainAuthorizeGet implements Serializable {
 
     public void setPublic_key(String public_key) {
         this.public_key = public_key;
-    }
-
-    public String getCookie() {
-        return cookie;
-    }
-
-    public void setCookie(String session_id) {
-        this.cookie = session_id;
     }
 
     public boolean isSuccess() {

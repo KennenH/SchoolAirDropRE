@@ -17,32 +17,24 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
 
-    private val loadState = MutableLiveData<LoadState>()
-
-    private val mPublicKey = MutableLiveData<DomainAuthorizeGet>()
-    private val mAuthorize = MutableLiveData<DomainToken>()
-    private val mUserInfo = MutableLiveData<DomainUserInfo.DataBean>()
+    private val mPublicKey = MutableLiveData<DomainAuthorizeGet?>()
+    private val mAuthorize = MutableLiveData<DomainToken?>()
+    private val mUserInfo = MutableLiveData<DomainUserInfo.DataBean?>()
 
     private val mainRepository by lazy {
         LoginRepository.getInstance()
     }
 
-    fun getLoadState(): LiveData<LoadState> {
-        return loadState
-    }
-
     /**
      * 获取RSA公钥
      */
-    fun getPublicKey(): LiveData<DomainAuthorizeGet> {
+    fun getPublicKey(): LiveData<DomainAuthorizeGet?> {
         viewModelScope.launch {
-            loadState.value = LoadState.LOADING
             mainRepository.getPublicKey { success, response ->
                 if (success) {
                     mPublicKey.postValue(response)
-                    loadState.value = LoadState.SUCCESS
                 } else {
-                    loadState.value = LoadState.ERROR
+                    mPublicKey.postValue(null)
                 }
             }
         }
@@ -53,23 +45,19 @@ class LoginViewModel : ViewModel() {
      * 使用alipay id登录
      */
     fun authorizeWithAlipayID(
-//            cookies: String,
             rawAlipayID: String,
             publicKey: String,
-    ): LiveData<DomainToken> {
+    ): LiveData<DomainToken?> {
         viewModelScope.launch {
             mainRepository.authorizeWithAlipayID(
-//                    cookies,
                     rawAlipayID,
                     publicKey,
             ) { success, response ->
                 if (success) {
                     mAuthorize.postValue(response)
-                    loadState.value = LoadState.SUCCESS
                 } else {
-                    loadState.value = LoadState.ERROR
+                    mAuthorize.postValue(null)
                 }
-
                 if (response != null) {
                     UserLoginCacheUtils.instance.saveUserToken(response)
                 }
@@ -81,14 +69,13 @@ class LoginViewModel : ViewModel() {
     /**
      * 使用token获取用户信息
      */
-    fun getUserInfo(token: String): LiveData<DomainUserInfo.DataBean> {
+    fun getUserInfo(token: String): LiveData<DomainUserInfo.DataBean?> {
         viewModelScope.launch {
             mainRepository.getUserInfo(token) { success, response ->
                 if (success) {
                     mUserInfo.postValue(response)
-                    loadState.value = LoadState.SUCCESS
                 } else {
-                    loadState.value = LoadState.ERROR
+                    mUserInfo.postValue(null)
                 }
 
                 if (response != null) {

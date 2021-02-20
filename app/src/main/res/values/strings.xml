@@ -24,22 +24,22 @@
     <string name="itemSs">"[img src=ic_secondhand_small/] %s"</string>
 
 
-    <!--  substitutions  -->
+    <!--  substitutions 在需要指定位置的时候，百分号在前，美元号在后，不要搞混了  -->
     <string name="unprocessedSub">未处理(%d)</string>
     <string name="processedSub">已处理(%d)</string>
     <string name="orderID">订单编号 : %s</string>
-    <string name="orderCreation">创建时间 : $1%d-$2%d-$3%d</string>
-    <string name="orderExpiration">失效时间 : $1%d-$2%d-$3%d</string>
+    <string name="orderCreation">创建时间 : %1$d-%2$d-%3$d</string>
+    <string name="orderExpiration">失效时间 : %1$d-%2$d-%3$d</string>
     <string name="alipayAccount">支付宝账号 : %s</string>
     <string name="statistics">统计(%d)</string>
-    <string name="userJoinTime">#$1%d年$2%d月$3%d日加入</string>
-    <string name="time">$1%d年$2%d月$3%d日</string>
+    <string name="userJoinTime">#%1$d年%2$d月%3$d日加入</string>
+    <string name="time">%1$d年%2$d月%3$d日</string>
     <string name="loggedIn">已登录 %s</string>
-    <string name="remainingTime">$1%d:$2%d:$3%d</string>
+    <string name="remainingTime">%1$d:%2$d:%3$d</string>
     <string name="textRemainCount">剩余%d字可输入</string>
     <string name="toBeAgreedPosition">与%s待约定地点的物品</string>
     <string name="noItemToAgree">没有与%s待约定地点的物品</string>
-    <string name="countDown" translatable="false">$1%d:$2%d:$3%d</string>
+    <string name="countDown" translatable="false">%1$d:%2$d:%3$d</string>
 
     <!--    shared element transition name -->
     <string name="sharedElementPostActivityWrapper" translatable="false">PostActivitySharedWrapper</string>

@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.repository
 
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
@@ -19,6 +20,9 @@ class GoodsRepository private constructor() {
                 }
     }
 
+    /**
+     * 获取物品剩下的信息
+     */
     fun getGoodsDetail(goodsID: Int,
                        onResult: (success: Boolean, response: GoodsDetailInfo?) -> Unit) {
         RetrofitClient.goodsApi.getGoodsDetail(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, goodsID).apply {

@@ -40,9 +40,6 @@ class LoginRepository private constructor() {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val result = response.body()
                         if (response.isSuccessful && result != null) {
-
-                            LogUtils.d("session -- > ${response.headers()["Set-Cookie"]}")
-
 //                            result.cookie = session
                             onResult(true, result)
                         } else {
@@ -58,7 +55,6 @@ class LoginRepository private constructor() {
     }
 
     fun authorizeWithAlipayID(
-//            cookies: String,
             rawAlipayID: String,
             publicKey: String,
             onResult: (success: Boolean, response: DomainToken?) -> Unit) {

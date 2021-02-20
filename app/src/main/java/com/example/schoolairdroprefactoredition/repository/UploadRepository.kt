@@ -10,6 +10,7 @@ import com.example.schoolairdroprefactoredition.utils.FileUtil
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import com.qiniu.android.common.FixedZone
 import com.qiniu.android.storage.*
+import com.qiniu.android.utils.LogUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
@@ -22,16 +23,32 @@ import java.net.HttpURLConnection
 
 class UploadRepository private constructor() {
 
-    private val jsonCacheUtil by lazy {
-        JsonCacheUtil.getInstance()
-    }
-
     companion object {
+
+        /**
+         * 键 上传额外参数
+         */
+        const val UPLOAD_PARAM_FILE_KEY = "file_key"
+
+        /**
+         * 任务id 上传额外参数
+         */
+        const val UPLOAD_PARAM_TASK_ID = "task_id"
+
+        /**
+         * 固定上传至临时文件夹
+         */
+        const val UPLOAD_PREFIX = "tmp"
+
         private var INSTANCE: UploadRepository? = null
         fun getInstance() = INSTANCE
                 ?: UploadRepository().also {
                     INSTANCE = it
                 }
+    }
+
+    private val jsonCacheUtil by lazy {
+        JsonCacheUtil.getInstance()
     }
 
     /**
@@ -40,7 +57,7 @@ class UploadRepository private constructor() {
      * 分三步进行，任何一步出问题都将返回null，成功后的结果将按照传进来的顺序返回所有图片的路径
      * 1、获取七牛云上传凭证 [getQiNiuToken]
      * 2、获取上传图片的服务器路径前缀和文件名 [requestForImagePath]
-     * 3、上传图片 [uploadFile]
+     * 3、上传图片 [uploadFileToQiNiu]
      *
      * @param token app用户验证token
      * @param fileLocalPaths 要上传的图片的本地路径
@@ -60,7 +77,7 @@ class UploadRepository private constructor() {
                 requestForImagePath(type, fileLocalPaths.size) { uploadPaths ->
                     if (uploadPaths != null) {
                         // 执行上传操作
-                        uploadFile(fileLocalList, uploadPaths, uploadToken.data.token) {
+                        uploadFileToQiNiu(fileLocalList, uploadPaths, uploadToken.data.token) {
                             if (it != null) {
                                 onResult(it)
                             } else {
@@ -137,8 +154,6 @@ class UploadRepository private constructor() {
                                 // 缓存新获取的upload token，有效至expire到期前3分钟
                                 jsonCacheUtil.saveCache(DomainUploadToken.UPLOAD_TOKEN_KEY, body, body.data.expire * 1000 - 180_000)
                                 onResult(body)
-
-                                LogUtils.d("getQiNiuToken 获取成功 -- > ${body.data.token}")
                             } else {
                                 LogUtils.d(response.message())
                                 onResult(null)
@@ -154,16 +169,16 @@ class UploadRepository private constructor() {
     }
 
     /**
-     * 上传文件
+     * 上传文件至七牛云
      *
      * 默认为多图模式，上传单图使用list包裹后传入即可
      *
      * @param fileLocalEntities 图片本地文件
-     * @param fileRemotePaths      图片将要放到服务器上的路径和名字
-     * @param uploadToken    图片上传所需要的七牛云凭证
-     * @param onResult 上传成功返回按上传顺序排列的图片路径，失败返回null
+     * @param fileKeysAndTaskID 图片将要放到服务器上的名字和任务id
+     * @param uploadToken       图片上传所需要的七牛云凭证
+     * @param onResult          上传成功返回按上传顺序排列的图片路径，失败返回null
      */
-    private fun uploadFile(fileLocalEntities: List<File?>, fileRemotePaths: DomainUploadPath, uploadToken: String, onResult: (response: List<String>?) -> Unit) {
+    private fun uploadFileToQiNiu(fileLocalEntities: List<File?>, fileKeysAndTaskID: DomainUploadPath, uploadToken: String, onResult: (response: List<String>?) -> Unit) {
         // 初始化上传管理类
         val uploadManager = UploadManager(Configuration
                 .Builder()
@@ -176,12 +191,11 @@ class UploadRepository private constructor() {
         val fileFinalNames = ArrayList<String>()
 
         // 根据文件名、路径前缀和后缀将文件全名拼接出来
-        val filePrefix = fileRemotePaths.data.path // 路径前缀
-        val fileNamesWithoutExtension = fileRemotePaths.data.keys // 文件名
+        val fileKeys = fileKeysAndTaskID.data.keys // keys 文件名
         for ((i, fileLocalEntity) in fileLocalEntities.withIndex()) {
             //获取文件后缀保证在服务器上的文件格式与本地一致，若无则默认为jpg
             val extension = if (fileLocalEntity?.extension.isNullOrEmpty()) ConstantUtil.JPEG else fileLocalEntity?.extension
-            fileFinalNames.add((filePrefix + fileNamesWithoutExtension[i] + "." + extension))
+            fileFinalNames.add((UPLOAD_PREFIX + fileKeys[i] + "." + extension))
         }
 
         // 上传的图片index
@@ -191,6 +205,11 @@ class UploadRepository private constructor() {
                 .fromIterable(fileLocalEntities)
                 .concatMap { fileLocalEntity ->
                     Observable.create(ObservableOnSubscribe<String> {
+                        // 七牛云回调额外参数 设置图片的key和taskid
+                        val uploadOptions = UploadOptions.defaultOptions()
+                        uploadOptions.params[UPLOAD_PARAM_FILE_KEY] = fileKeys[index]
+                        uploadOptions.params[UPLOAD_PARAM_TASK_ID] = fileKeysAndTaskID.data.taskId
+
                         // 同步上传，以确保上传顺序和list顺序一致
                         val response = uploadManager.syncPut(fileLocalEntity, fileFinalNames[index], uploadToken, null)
                         if (response.isOK) {
@@ -198,10 +217,7 @@ class UploadRepository private constructor() {
                             it.onNext(fileFinalNames[index++])
                             it.onComplete()
                         } else {
-                            // TODO: 2021/2/19 将之前上传成功的图片删除
-
                             // 上传失败，发送至subscribe中的失败回调，退出上传流程
-                            LogUtils.d("第${index}张图片上传出错 abandoned")
                             it.onError(IOException(response.error))
                         }
                     }).subscribeOn(Schedulers.io())
@@ -212,6 +228,7 @@ class UploadRepository private constructor() {
                     responsePath.add(it)
                     if (responsePath.size == fileLocalEntities.size) {
                         onResult(responsePath)
+                        LogUtils.d("所有图片上传完毕，即将开始调用服务器接口")
                     }
                 }) {
                     LogUtils.d(it.message)

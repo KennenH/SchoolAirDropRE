@@ -6,9 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import com.amap.api.location.AMapLocation
 import com.blankj.utilcode.constant.PermissionConstants
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding
+import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity.OnLocationListener
@@ -17,7 +21,7 @@ import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 
-abstract class BaseChildFragment : Fragment(), OnLocationListener, EndlessRecyclerView.OnLoadMoreListener, OnRefreshListener {
+abstract class BaseChildFragment : BaseFragment(), OnLocationListener, EndlessRecyclerView.OnLoadMoreListener, OnRefreshListener {
 
     companion object {
         /**
@@ -197,5 +201,4 @@ abstract class BaseChildFragment : Fragment(), OnLocationListener, EndlessRecycl
             locateWithoutRequest() // 自动请求MainActivity的定位
         }
     }
-
 }

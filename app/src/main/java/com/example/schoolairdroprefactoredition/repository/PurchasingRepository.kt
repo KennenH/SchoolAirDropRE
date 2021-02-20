@@ -34,8 +34,6 @@ class PurchasingRepository private constructor() {
                 .apply {
                     enqueue(object : CallBackWithRetry<DomainPurchasing>(this@apply) {
                         override fun onResponse(call: Call<DomainPurchasing>, response: Response<DomainPurchasing>) {
-                            LogUtils.d("session -- > ${response.headers()["Set-Cookie"]}")
-
                             if (response.code() == HttpURLConnection.HTTP_OK) {
                                 val body = response.body()
                                 if (body != null && body.code == 200) {

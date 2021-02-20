@@ -146,7 +146,7 @@
     <string name="monthlyAssessmentDes">Credit monthly evaluation based on your transactions in the most recent month</string>
     <string name="reportAssessmentDes">Credit feedback evaluation based on user feedback and review verification</string>
     <string name="textRemainCount">Up to %d characters can be entered</string>
-    <string name="remainingTime">$1%d:$2%d:$3%d</string>
+    <string name="remainingTime">%1$d:%2$d:%3$d</string>
     <string name="warningForSeller">If the countdown ends and the seller fails to complete the delivery, the seller\'s credit score will be deducted.</string>
     <string name="receivingCode">[img src=ic_qr/] Receiving QR Code</string>
     <string name="notMatchDescription">Item not match the description</string>

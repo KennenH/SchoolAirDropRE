@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
 public class GoodsDetailInfo implements Serializable {
 
@@ -35,7 +34,7 @@ public class GoodsDetailInfo implements Serializable {
         this.time = time;
     }
 
-    private List<DataBean> data;
+    private DataBean data;
 
     public String getMsg() {
         return msg;
@@ -45,11 +44,11 @@ public class GoodsDetailInfo implements Serializable {
         this.msg = msg;
     }
 
-    public List<DataBean> getData() {
+    public DataBean getData() {
         return data;
     }
 
-    public void setData(List<DataBean> data) {
+    public void setData(DataBean data) {
         this.data = data;
     }
 
@@ -71,6 +70,35 @@ public class GoodsDetailInfo implements Serializable {
         private int goods_watch_count;
         private int goods_favor_count;
         private int goods_chat_count;
+        private SellerBean seller;
+
+        public SellerBean getSeller() {
+            return seller;
+        }
+
+        public void setSeller(SellerBean seller) {
+            this.seller = seller;
+        }
+
+        public static class SellerBean implements Serializable {
+            @Override
+            public String toString() {
+                return "SellerBean{" +
+                        "last_login_time='" + last_login_time + '\'' +
+                        '}';
+            }
+
+            private String last_login_time;
+
+            public String getLast_login_time() {
+                return last_login_time;
+            }
+
+            public void setLast_login_time(String last_login_time) {
+                this.last_login_time = last_login_time;
+            }
+        }
+
 
         public int getGoods_favor_count() {
             return goods_favor_count;
