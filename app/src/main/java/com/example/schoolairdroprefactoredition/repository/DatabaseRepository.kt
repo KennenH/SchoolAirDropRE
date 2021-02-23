@@ -88,13 +88,13 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
     }
 
     @WorkerThread
-    suspend fun saveLastMessage(lastFromUserInformation: LastFromUserInformation) {
-        chatHistoryDao.saveLastMessage(lastFromUserInformation)
+    suspend fun saveLastMessage(pullFlag: PullFlag) {
+        chatHistoryDao.updatePullFlag(pullFlag)
     }
 
     @WorkerThread
-    suspend fun saveLastMessage(lastFromUserInformation: List<LastFromUserInformation>) {
-        chatHistoryDao.saveLastMessage(lastFromUserInformation)
+    suspend fun saveLastMessage(pullFlag: List<PullFlag>) {
+        chatHistoryDao.updatePullFlag(pullFlag)
     }
 
     @WorkerThread
@@ -147,8 +147,8 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
     }
 
     @WorkerThread
-    suspend fun getLastFromUserInformation(senderID: String): LastFromUserInformation? {
-        return chatHistoryDao.getLastFromUserInformation(senderID)
+    suspend fun getPullFlag(senderID: String): PullFlag? {
+        return chatHistoryDao.getPullFlag(senderID)
     }
 
 }

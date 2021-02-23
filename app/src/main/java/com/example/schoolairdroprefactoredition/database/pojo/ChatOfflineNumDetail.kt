@@ -33,4 +33,8 @@ data class ChatOfflineNumDetail(
         val send_time: Long,
 
         val unread_num: Int
-)
+) {
+    override fun toString(): String {
+        return "ChatOfflineNumDetail(counterpart_id='$counterpart_id', counterpart_name=$counterpart_name, counterpart_avatar=$counterpart_avatar, my_id='$my_id', message_type=$message_type, message='$message', send_time=$send_time, unread_num=$unread_num)"
+    }
+}

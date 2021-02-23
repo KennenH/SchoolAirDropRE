@@ -27,6 +27,7 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.MessageViewModel
 import com.example.schoolairdroprefactoredition.viewmodel.UserViewModel
 import com.github.ybq.android.spinkit.SpinKitView
+import com.qiniu.android.utils.LogUtil
 import com.xiaomi.push.it
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 import com.yanzhenjie.recyclerview.SwipeRecyclerView
@@ -111,9 +112,16 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
             // 若点击的是菜单中的第一个按钮，即删除，则隐藏会话
             if (menuBridge.position == 0) {
                 // 隐藏第position个会话
-                mMessagesRecyclerAdapter.removeAt(adapterPosition)
-                mMessagesRecyclerAdapter.getCounterpartIdAt(adapterPosition)?.let {
-                    messageViewModel.swipeToHideChannel(it)
+                // 2021/2/23 Bug Fix： 这里如果直接调用data[adapterPosition]会莫名其妙 NPE crash
+                //           update： 只能多此一举地进行一次遍历才能正常
+                for ((index, datum) in mMessagesRecyclerAdapter.data.withIndex()) {
+                    if (index == adapterPosition) {
+                        mMessagesRecyclerAdapter.removeAt(adapterPosition)
+                        if (mMessagesRecyclerAdapter.data.isEmpty()) {
+                            empty?.visibility = View.VISIBLE
+                        }
+                        messageViewModel.swipeToHideChannel(datum.counterpart_id)
+                    }
                 }
             }
         }

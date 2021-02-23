@@ -136,28 +136,28 @@ interface ChatHistoryDao {
     suspend fun ackOfflineNum(receiverID: String, senderID: String)
 
     /**
-     * 更新来自某个用户的是否还有离线消息标志
+     * 更新对于某个用户是否需要继续获取离线消息和ack
      *
-     * 用于在聊天界面下拉加载更多的时候判断，若true则发起请求，否则仅需本地查询即可
+     * 用于进入聊天页面时和聊天界面下拉加载更多的时候判断，若true则发起请求，否则仅需本地查询即可
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveLastMessage(lastFromUserInformation: LastFromUserInformation)
+    suspend fun updatePullFlag(pullFlag: PullFlag)
 
     /**
-     * 批量更新来自某个用户的是否还有离线消息标志
+     * 更新对于某个用户是否需要继续获取离线消息和ack
      *
-     * 用于在聊天界面下拉加载更多的时候判断，若true则发起请求，否则仅需本地查询即可
+     * 用于进入聊天页面时和聊天界面下拉加载更多的时候判断，若true则发起请求，否则仅需本地查询即可
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun saveLastMessage(lastFromUserInformation: List<LastFromUserInformation>)
+    suspend fun updatePullFlag(pullFlag: List<PullFlag>)
 
     /**
-     * 获取来自某个用户的是否还有更多离线消息标志
+     * 获取对于某个用户是否需要继续拉取消息或ack
      *
      * 用于在聊天界面下拉加载更多的时候判断，若true则发起请求，否则仅需本地查询即可
      */
-    @Query("select * from last_messages where user_id = :senderID")
-    suspend fun getLastFromUserInformation(senderID: String): LastFromUserInformation?
+    @Query("select * from pull_flag where user_id = :senderID")
+    suspend fun getPullFlag(senderID: String): PullFlag?
 
     /**
      * 设置与某个用户的会话显示与隐藏，亦即将display置1与置0

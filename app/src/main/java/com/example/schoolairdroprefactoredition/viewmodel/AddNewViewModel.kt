@@ -53,7 +53,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                    isBrandNew: Boolean, isQuotable: Boolean, price: Float): LiveData<Boolean> {
         viewModelScope.launch {
             // 将封面图片加入图片集中，为的是确保服务器收到的数组第一张图片是封面
-            picSet.add(cover)
+            picSet.add(0, cover)
             // 上传图片
             uploadRepository.upload(token, picSet, ConstantUtil.UPLOAD_TYPE_GOODS) { taskAndKeys ->
                 if (taskAndKeys != null) {

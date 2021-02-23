@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.domain;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 public class DomainAuthorizeGet implements Serializable {
@@ -10,6 +12,7 @@ public class DomainAuthorizeGet implements Serializable {
 
     private boolean success;
 
+    @NotNull
     @Override
     public String toString() {
         return "DomainAuthorizeGet{" +

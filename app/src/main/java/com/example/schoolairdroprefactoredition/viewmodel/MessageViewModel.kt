@@ -72,7 +72,7 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
             // 消息记录数组
             val historyList: ArrayList<ChatHistory> = ArrayList()
             // 最后一条消息数组
-            val lastFromUserInformation: ArrayList<LastFromUserInformation> = ArrayList()
+            val pullFlag: ArrayList<PullFlag> = ArrayList()
             // 用户基本信息
             val senderInfo: ArrayList<UserCache> = ArrayList()
 
@@ -99,10 +99,9 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
                 }
 
                 // 装配最后一条消息
-                lastFromUserInformation.add(LastFromUserInformation(
+                pullFlag.add(PullFlag(
                         offlineNum.senderId,
-                        offlineNum.offline.size == ConstantUtil.DATA_FETCH_DEFAULT_SIZE
-                ))
+                        offlineNum.offline.isNotEmpty()))
 
                 // 装配用户信息
                 senderInfo.add(UserCache(offlineNum.senderId.toInt(), offlineNum.senderInfo.senderName, offlineNum.senderInfo.senderAvatar, null, null, null))
@@ -110,7 +109,7 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
 
             // 保存所有装配好的信息
             databaseRepository.saveUserCache(senderInfo)
-            databaseRepository.saveLastMessage(lastFromUserInformation)
+            databaseRepository.saveLastMessage(pullFlag)
             databaseRepository.saveOfflineNum(numList)
             databaseRepository.saveHistory(historyList)
         }

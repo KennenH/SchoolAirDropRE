@@ -481,8 +481,11 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
         val firstVisible = mChatLayoutManager.findFirstVisibleItemPosition()
         if (firstVisible > 20) {
             recycler_view.scrollToPosition(10)
+            recycler_view.stopScroll()
         }
-        recycler_view.smoothScrollToPosition(0)
+        recycler_view.postDelayed({
+            recycler_view.smoothScrollToPosition(0)
+        }, 300)
     }
 
     /////////////////////////////////////////////////////////////////////////////////////

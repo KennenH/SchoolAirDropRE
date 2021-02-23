@@ -189,7 +189,7 @@
     <string name="clearInput">Clear Input</string>
     <string name="dialogNetWorkError">Network Error</string>
     <string name="restoreDraft">Restore</string>
-    <string name="draftCleared">Input cleared, The draft will not be restored after switching App, closing the page, entering the input or picture selection page</string>
+    <string name="draftCleared">Input cleared, the draft will be deleted after opening other pages</string>
     <string name="plsEnterQuotePrice">Please Enter Quote Price</string>
     <string name="errorNewsEmptyHome">No nearby topic</string>
     <string name="postMyTopic">Post My Topic</string>

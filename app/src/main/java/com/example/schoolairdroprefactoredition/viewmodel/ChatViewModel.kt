@@ -2,20 +2,16 @@ package com.example.schoolairdroprefactoredition.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.blankj.utilcode.util.TimeUtils
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
-import com.example.schoolairdroprefactoredition.database.pojo.LastFromUserInformation
-import com.example.schoolairdroprefactoredition.database.pojo.UserCache
+import com.example.schoolairdroprefactoredition.database.pojo.PullFlag
 import com.example.schoolairdroprefactoredition.domain.DomainOffline
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.repository.UploadRepository
-import com.example.schoolairdroprefactoredition.repository.UserRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.MessageUtil
+import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
-import java.util.*
 
 /**
  * 聊天页面使用的view model
@@ -100,24 +96,26 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository, applicat
     /**
      * 获取与某用户的历史记录
      * 方法流程：
-     * 先找到来自这个用户的[LastFromUserInformation]
+     * 先找到来自这个用户的[PullFlag]
      * 然后去获取本地数据并显示
      * 此时判断pullFlag，若为true则从服务器上预拉取数据并保存至本地
-     * 然后保存离线消息数据和更新[LastFromUserInformation]的信息
+     * 然后保存离线消息数据和更新[PullFlag]的信息
      *
-     * @param startTime 从该临界时间开始检索
+     * @param startTime 从该临界时间开始检索更早地消息
      */
     fun getChat(token: String?, receiverID: String, senderID: String, startTime: Long? = null): LiveData<List<ChatHistory>> {
         viewModelScope.launch {
             // 获取本地聊天记录
             chatLiveData.postValue(databaseRepository.getChatLocal(receiverID, senderID, startTime))
 
-            // 获取服务器离线
+            // 获取服务器离线并ack上一批显示的消息
+            // 2021/2/23  Bug fix： 以获取的离线数量小于默认值设置flag来判断是否需要请求会有问题，最后一次
+            // 请求必定小于默认值，这部分离线消息将永远无法被ack
+            //            update ： 将flag设置为false的逻辑改为只有当获取到的离线数量为0时才不再请求
             if (token != null) {
-                // 获取来自该用户上一批获取的最早消息的时间和是否还有来自这个用户的消息的标志
-                val earliestPulledMessageFromThisUser = databaseRepository.getLastFromUserInformation(senderID)
-                // 若上一次保存的flag是true则预拉取服务器数据，若离线消息数量拉取时已经小于默认值则无需对于该用户额外拉取
-                if (earliestPulledMessageFromThisUser != null && earliestPulledMessageFromThisUser.pull_flag) {
+                val pullFlag = databaseRepository.getPullFlag(senderID)
+                // 若上一次保存的flag是true则预拉取服务器数据并ack上一批获取的离线消息
+                if (pullFlag != null && pullFlag.pull_flag) {
                     databaseRepository.getChatRemote(token, senderID, startTime
                             ?: System.currentTimeMillis()) { success, response ->
                         if (success && response != null) {
@@ -127,12 +125,14 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository, applicat
                             // 保存这一批消息中最早的消息的指纹
                             viewModelScope.launch {
                                 databaseRepository.saveLastMessage(
-                                        LastFromUserInformation(senderID, data.size >= ConstantUtil.DATA_FETCH_DEFAULT_SIZE))
+                                        // 只要获取到的离线不是0就为true
+                                        PullFlag(senderID, data.isNotEmpty()))
                             }
                         }
                     }
                 }
             }
+            joinAll()
         }
         return chatLiveData
     }
