@@ -49,57 +49,35 @@ interface GoodsApi {
     fun getGoodsDetail(
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String,
-            @Field("goods_id") goodsID: Int
-    ): Call<GoodsDetailInfo>
+            @Field("goods_id") goodsID: Int): Call<GoodsDetailInfo>
 
     /**
      * 上传新的物品
      *
+     * @param taskID      任务id
+     * @param coverKey    封面的key
+     * @param picSetKeys  图片集的keys，以逗号分隔的key字符串
      * @param token       token
-     * @param cover       封面
-     * @param picSet      图片集
      * @param title       标题
      * @param price       价格
      * @param longitude   经度
      * @param latitude    纬度
-     * @param goodsType   物品类型
-     * @param description 物品描述
-     */
-    @Multipart
-    @POST("appapi/goods/upload")
-    fun postNewItem(@Header("Authorization") token: String,
-                    @Part cover: MultipartBody.Part,
-                    @Part picSet: MultipartBody.Part,
-                    @Part title: MultipartBody.Part,
-                    @Part description: MultipartBody.Part,
-                    @Part longitude: MultipartBody.Part,
-                    @Part latitude: MultipartBody.Part,
-                    @Part goodsType: MultipartBody.Part,
-                    @Part price: MultipartBody.Part): Call<DomainResult>
-
-    /**
-     * 上传新的物品
-     *
-     * @param token       token
-     * @param cover       封面
-     * @param picSet      图片集
-     * @param title       标题
-     * @param price       价格
-     * @param longitude   经度
-     * @param latitude    纬度
-     * @param goodsType   物品类型
+     * @param quotable    是否可议价
+     * @param secondHand  是否是二手
      * @param description 物品描述
      */
     @FormUrlEncoded
     @POST("appapi/goods/uploadGoods")
     fun postNewItem(@Header("Authorization") token: String,
-                    @Field("goods_cover_image") cover: String,
-                    @Field("goods_images") picSet: String,
+                    @Field("task_id") taskID: String,
+                    @Field("cover_file_key") coverKey: String,
+                    @Field("content_file_keys") picSetKeys: String,
                     @Field("goods_name") title: String,
                     @Field("goods_content") description: String,
                     @Field("goods_longitude") longitude: String,
                     @Field("goods_latitude") latitude: String,
-                    @Field("goods_type") goodsType: String,
+                    @Field("goods_is_quotable") quotable: Int,
+                    @Field("goods_is_secondHand") secondHand: Int,
                     @Field("goods_price") price: String): Call<DomainResult>
 
     /**

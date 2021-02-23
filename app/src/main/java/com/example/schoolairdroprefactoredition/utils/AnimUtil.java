@@ -60,9 +60,7 @@ public class AnimUtil {
     }
 
     /**
-     * View 从上至下展开动画
-     *
-     * @param v
+     * View 从上至下展开组件动画
      */
     public static void expand(final View v) {
         int matchParentMeasureSpec = View.MeasureSpec.makeMeasureSpec(((View) v.getParent()).getWidth(), View.MeasureSpec.EXACTLY);
@@ -91,9 +89,7 @@ public class AnimUtil {
     }
 
     /**
-     * View 由下至上折叠动画
-     *
-     * @param v
+     * View 由下至上折叠组件动画
      */
     public static void collapse(final View v) {
         final int initialHeight = v.getMeasuredHeight();

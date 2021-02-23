@@ -68,16 +68,18 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
      * 2、若为他人的物品则使用用户id获取
      */
     private fun getSelling() {
-        userInfo.let { info ->
-            if (info != null) {
+        userID.let { id ->
+            if (id != -1) {
                 showPlaceholder(StatePlaceHolder.TYPE_LOADING)
-                viewModel.getSelling(info.userId).observeOnce(viewLifecycleOwner) {
+                viewModel.getSelling(id).observeOnce(viewLifecycleOwner) {
                     it?.let {
                         loadData(it)
                         dataLenOnChange(SELLING_POS)
                     }
                 }
-            } else showPlaceholder(StatePlaceHolder.TYPE_ERROR)
+            } else {
+                showPlaceholder(StatePlaceHolder.TYPE_ERROR)
+            }
         }
     }
 

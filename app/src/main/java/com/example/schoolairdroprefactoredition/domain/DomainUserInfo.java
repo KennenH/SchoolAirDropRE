@@ -67,10 +67,13 @@ public class DomainUserInfo implements Serializable {
         @Override
         public String toString() {
             return "DataBean{" +
-                    "user_id=" + userId +
-                    ", user_name='" + userName + '\'' +
-                    ", user_gender='" + userGender + '\'' +
-                    ", user_avatar='" + userAvatar + '\'' +
+                    "userId=" + userId +
+                    ", userName='" + userName + '\'' +
+                    ", userAvatar='" + userAvatar + '\'' +
+                    ", userGender='" + userGender + '\'' +
+                    ", createtime=" + createtime +
+                    ", userGoodsOnSaleCount=" + userGoodsOnSaleCount +
+                    ", userContactCount=" + userContactCount +
                     '}';
         }
 

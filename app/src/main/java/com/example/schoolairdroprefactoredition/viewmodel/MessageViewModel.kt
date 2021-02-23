@@ -5,7 +5,6 @@ import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.database.pojo.*
 import com.example.schoolairdroprefactoredition.domain.DomainOfflineNum
 import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.repository.UserRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -102,7 +101,6 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
                 // 装配最后一条消息
                 lastFromUserInformation.add(LastFromUserInformation(
                         offlineNum.senderId,
-                        offlineNum.fingerPrint,
                         offlineNum.offline.size == ConstantUtil.DATA_FETCH_DEFAULT_SIZE
                 ))
 
@@ -111,10 +109,10 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
             }
 
             // 保存所有装配好的信息
+            databaseRepository.saveUserCache(senderInfo)
             databaseRepository.saveLastMessage(lastFromUserInformation)
             databaseRepository.saveOfflineNum(numList)
             databaseRepository.saveHistory(historyList)
-            databaseRepository.saveUserCache(senderInfo)
         }
     }
 
@@ -137,12 +135,15 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
             databaseRepository.getUserCache(userId)
                     .let { cache ->
                         if (cache != null) {
+                            LogUtils.d("已获取用户信息本地缓存")
                             // 若有缓存直接使用缓存，无需获取网络信息
                             userCacheLiveData.value = cache
                         } else {
-                            // 若无缓存才去获取
+                            LogUtils.d("本地未检测到用户缓存，正在进行网络数据请求")
+                            // 若无缓存便去获取一次即可，进入个人主页才去请求更新用户信息
                             userRepository.getUserInfoById(userId) { success, response ->
                                 if (success) {
+                                    LogUtils.d("网络请求用户信息成功，数据已缓存")
                                     // 网络获取成功则返回并保存
                                     response?.let {
                                         val userCache = UserCache(it.userId, it.userName, it.userAvatar, it.createtime, it.userGoodsOnSaleCount, it.userContactCount)

@@ -10,7 +10,6 @@ import java.util.*
  * 消息记录表
  * 每一条记录就是一条消息
  */
-@TypeConverters(DateConverter::class)
 @Entity(tableName = "offline")
 data class ChatHistory(
         /**
@@ -48,7 +47,7 @@ data class ChatHistory(
         /**
          * 发送时间
          */
-        val send_time: Date,
+        val send_time: Long,
 
         /**
          * 消息的状态

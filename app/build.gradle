@@ -37,6 +37,13 @@ android {
     buildFeatures {
         viewBinding = true
     }
+
+    android.applicationVariants.all {
+        variant ->
+            variant.outputs.all {
+                outputFileName = "校园空投-vBeta.apk"
+            }
+    }
 }
 
 // mob push

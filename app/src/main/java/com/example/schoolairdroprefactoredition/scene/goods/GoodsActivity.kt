@@ -153,6 +153,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == LoginActivity.LOGIN) {
+                // 在物品页面登录后返回
                 if (data != null) {
                     (application as Application).cacheMyInfoAndToken(
                             data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean,
@@ -178,14 +179,11 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
         if ((application as Application).getCachedToken() == null) {
             login()
         } else {
-            val userInfo = goodsDetailInfo?.data
-            val user = DomainUserInfo.DataBean()
-            if (userInfo != null) {
-                user.userName = goodsInfo.seller.user_name
-                user.userAvatar = goodsInfo.seller.user_avatar
-                user.userId = goodsInfo.seller.user_id
-                ChatActivity.start(this@GoodsActivity, user)
-            }
+            val counterpartInfo = DomainUserInfo.DataBean()
+            counterpartInfo.userId = goodsInfo.seller.user_id
+            counterpartInfo.userName = goodsInfo.seller.user_name
+            counterpartInfo.userAvatar = goodsInfo.seller.user_avatar
+            ChatActivity.start(this@GoodsActivity, counterpartInfo)
         }
     }
 
@@ -202,6 +200,6 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     }
 
     override fun onRightButtonClick() {
-
+        // todo 报价?
     }
 }

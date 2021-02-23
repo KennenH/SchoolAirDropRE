@@ -21,7 +21,7 @@ public class AccountViewModel extends ViewModel {
      */
     public LiveData<DomainUserInfo.DataBean> getLastLoggedUserInfoCache() {
         MutableLiveData<DomainUserInfo.DataBean> mUserInfoCache = new MutableLiveData<>();
-        UserInfoCache userInfoCache = mJsonCacheUtil.getValue(UserInfoCache.KEY, UserInfoCache.class);
+        UserInfoCache userInfoCache = mJsonCacheUtil.getCache(UserInfoCache.KEY, UserInfoCache.class);
         if (userInfoCache == null) {
             userInfoCache = new UserInfoCache();
         }
@@ -34,7 +34,7 @@ public class AccountViewModel extends ViewModel {
      */
     public LiveData<DomainToken> getLastLoggedTokenCaChe() {
         MutableLiveData<DomainToken> mTokenCache = new MutableLiveData<>();
-        UserTokenCache userTokenCache = mJsonCacheUtil.getValue(UserTokenCache.KEY, UserTokenCache.class);
+        UserTokenCache userTokenCache = mJsonCacheUtil.getCache(UserTokenCache.KEY, UserTokenCache.class);
         if (userTokenCache == null) {
             userTokenCache = new UserTokenCache();
         }
@@ -47,7 +47,7 @@ public class AccountViewModel extends ViewModel {
      */
     public LiveData<ArrayList<DomainUserInfo.DataBean>> getAllUserCacheOnThisDevice() {
         MutableLiveData<ArrayList<DomainUserInfo.DataBean>> mAllUsers = new MutableLiveData<>();
-        UserInfoCache userInfoCache = mJsonCacheUtil.getValue(UserInfoCache.KEY, UserInfoCache.class);
+        UserInfoCache userInfoCache = mJsonCacheUtil.getCache(UserInfoCache.KEY, UserInfoCache.class);
         if (userInfoCache == null) {
             userInfoCache = new UserInfoCache();
         }

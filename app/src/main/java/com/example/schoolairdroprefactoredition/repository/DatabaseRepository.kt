@@ -6,6 +6,7 @@ import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.database.dao.ChatHistoryDao
 import com.example.schoolairdroprefactoredition.database.pojo.*
 import com.example.schoolairdroprefactoredition.domain.*
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.Response
@@ -19,9 +20,9 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
     }
 
     /**
-     * 获取本地数据库数据
+     * 获取本地数据库消息
      */
-    suspend fun getChatLocal(receiverID: String, senderID: String, start: String?): List<ChatHistory> {
+    suspend fun getChatLocal(receiverID: String, senderID: String, start: Long?): List<ChatHistory> {
         return if (start == null) {
             chatHistoryDao.getLatestChat(receiverID, senderID)
         } else {
@@ -30,10 +31,10 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
     }
 
     /**
-     * 获取服务器消息
+     * 获取某个临界时间之前的（早的，旧的）消息
      */
-    fun getChatRemote(token: String, senderID: String, fingerprint: String, ackList: List<String>? = null, onResult: (success: Boolean, response: DomainOffline?) -> Unit) {
-        RetrofitClient.imApi.getOffline(token, senderID, fingerprint, ackList).apply {
+    fun getChatRemote(token: String, senderID: String, start: Long, onResult: (success: Boolean, response: DomainOffline?) -> Unit) {
+        RetrofitClient.imApi.getOffline(token, senderID, start).apply {
             enqueue(object : CallBackWithRetry<DomainOffline>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(false, null)
@@ -42,7 +43,7 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
                 override fun onResponse(call: Call<DomainOffline>, response: Response<DomainOffline>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val body = response.body()
-                        if (body != null && body.isSuccess) {
+                        if (body != null && body.code == ConstantUtil.HTTP_OK) {
                             onResult(true, body)
                         } else {
                             onResult(false, null)
@@ -55,6 +56,9 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
         }
     }
 
+    /**
+     * 获取离线消息数量，即离线消息列表
+     */
     fun getOfflineNum(token: DomainToken, onResult: (success: Boolean, response: DomainOfflineNum?) -> Unit) {
         RetrofitClient.imApi.getOfflineNum(token.access_token).apply {
             enqueue(object : CallBackWithRetry<DomainOfflineNum>(this@apply) {
@@ -65,15 +69,13 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
                 override fun onResponse(call: Call<DomainOfflineNum>, response: Response<DomainOfflineNum>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val body = response.body()
-                        if (body != null) {
-                            if (body.isSuccess) {
-                                onResult(true, body)
-                            } else {
-                                onResult(false, null)
-                            }
+                        if (body != null && body.code == ConstantUtil.HTTP_OK) {
+                            onResult(true, body)
                         } else {
                             onResult(false, null)
                         }
+                    } else {
+                        onResult(false, null)
                     }
                 }
             })
@@ -111,7 +113,7 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
     }
 
     @WorkerThread
-    suspend fun getUserCache(userID: Int): UserCache? {
+    suspend fun getUserCache(userID: Int):  UserCache? {
         return chatHistoryDao.getUserCache(userID)
     }
 
@@ -125,6 +127,9 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
         chatHistoryDao.saveChat(history)
         // 更新消息列表
         if (isSentFromCounterpart) {
+            // !!重要!!  必须先保存用户信息，即使只有id也要保存，详见方法本身
+            chatHistoryDao.saveFirstUserCache(UserCache(history.sender_id.toInt(), null, null, null, null, null))
+
             chatHistoryDao.saveOfflineNum(ChatOfflineNum(history.sender_id, history.receiver_id, 1, history.fingerprint, 1), true)
         } else {
             chatHistoryDao.saveOfflineNum(ChatOfflineNum(history.receiver_id, history.sender_id, 1, history.fingerprint, 1), false)

@@ -96,6 +96,7 @@
             android:drawablePadding="@dimen/general_padding"
             android:ellipsize="end"
             android:textColor="@color/whiteAlways"
+            android:text="这是来自服务器的警告"
             android:textSize="@dimen/textSizeNormal"
             app:drawableStartCompat="@drawable/ic_attention_small"
             app:drawableTint="@color/whiteAlways"

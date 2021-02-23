@@ -91,11 +91,6 @@ object ConstantUtil {
     const val DEFAULT_AVATAR = "uploads/img/user/default/default.jpg"
 
     /**
-     * 若文件不存在后缀，则默认为jpeg格式
-     */
-    const val JPEG = "jpeg"
-
-    /**
      * 图片上传类型 聊天
      */
     const val UPLOAD_TYPE_IM = "im"

@@ -58,6 +58,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        token = (application as Application).getCachedToken()
         val info = (application as Application).getCachedMyInfo()
         // 已登录时
         if (info != null) {
@@ -163,16 +164,18 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
             getUserInfoWithToken(token)
         } else {
             // 页面中没有token
-            viewModel.getPublicKey().observeOnce(this, {
-                if (it != null) {
+            viewModel.getPublicKey().observeOnce(this, { publicKey ->
+                if (publicKey != null) {
                     viewModel.authorizeWithAlipayID(
-                            AppConfig.USER_ALIPAY, it.public_key).observeOnce(this, { token ->
-                        if (token != null) {
+                            AppConfig.USER_ALIPAY, publicKey.public_key).observeOnce(this, { authorizedToken ->
+                        if (authorizedToken != null) {
+                            token = authorizedToken
+
                             // todo comment this when release
-                            LogUtils.d("token -- > $token")
+                            LogUtils.d("authorizedToken -- > $authorizedToken")
 
                             // 登录成功了，也不需要把isLogging置回false了
-                            getUserInfoWithToken(token)
+                            getUserInfoWithToken(authorizedToken)
                         } else {
                             loginError()
                         }

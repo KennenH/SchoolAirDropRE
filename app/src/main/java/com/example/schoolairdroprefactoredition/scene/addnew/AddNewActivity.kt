@@ -49,7 +49,7 @@ import com.lxj.xpopup.core.ImageViewerPopupView
 import kotlinx.android.synthetic.main.activity_selling_add_new.*
 import java.util.*
 
-class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocationListener, OnPicSetClickListener {
+class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocationListener, OnPicSetClickListener, Application.OnApplicationLoginListener {
 
     companion object {
         /**
@@ -67,7 +67,10 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
          * 添加物品或帖子使用该方法
          * 修改物品使用[AddNewActivity.start]
          *
-         * @param type 页面类型 one of [AddNewType.ADD_ITEM] [AddNewType.ADD_POST]
+         * @param type 页面类型
+         * one of
+         * [AddNewType.ADD_ITEM] 上架物品
+         * [AddNewType.ADD_POST] 新增帖子
          */
         fun start(context: Context?, @AddNewType type: Int) {
             if (context == null) return
@@ -81,7 +84,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
          * 修改物品信息
          * 添加物品或帖子使用[AddNewActivity.start]
          *
-         * @param goodsInfo 物品基本信息
+         * @param goodsInfo 要修改的物品的信息 类型[DomainPurchasing.DataBean]
          */
         fun start(context: Context?, goodsInfo: DomainPurchasing.DataBean?) {
             if (context == null) return
@@ -148,7 +151,10 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
     private var mAmapLocation: AMapLocation? = null
 
-    private val mAdapter by lazy {
+    /**
+     * 图片集横向recycler的adapter
+     */
+    private val mPicSetHorizontalAdapter by lazy {
         HorizontalImageRecyclerAdapter()
     }
 
@@ -176,7 +182,6 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     /**
      * 草稿内容是否已被恢复
      *
-     *
      * 若手动清除则置为false，手动恢复置为true
      */
     private var isDraftRestored = true
@@ -194,12 +199,19 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      */
     private var hasDraft = false
 
+    /**
+     * 页面新增的类型
+     */
     @AddNewType
-    private var addNewType = AddNewType.ADD_ITEM // 页面新增类型
+    private var addNewType = AddNewType.ADD_ITEM
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_selling_add_new)
         setSupportActionBar(findViewById(R.id.toolbar))
+
+        // 当app在外部登录时将会收到通知
+        (application as Application).addOnApplicationLoginListener(this)
 
         goodsBaseInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO) as? DomainPurchasing.DataBean
         addNewType = intent.getIntExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.ADD_ITEM)
@@ -257,9 +269,9 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL)
             }
         })
-        mAdapter.setOnPicSetClickListener(this)
-        mAdapter.addFooterView(add)
-        pic_set.adapter = mAdapter
+        mPicSetHorizontalAdapter.setOnPicSetClickListener(this)
+        mPicSetHorizontalAdapter.addFooterView(add)
+        pic_set.adapter = mPicSetHorizontalAdapter
         requestPermission(PermissionConstants.LOCATION, RequestType.AUTO)
         initPageAccordingToType()
     }
@@ -339,11 +351,6 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         }
     }
 
-    override fun albumDenied() {
-        super.albumDenied()
-
-    }
-
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
@@ -366,7 +373,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             } else if (requestCode == REQUEST_CODE_PIC_SET) { // 图片集选择返回
                 if (data != null) {
                     mPicSetSelected.addAll(PictureSelector.obtainMultipleResult(data))
-                    mAdapter.setList(mPicSetSelected)
+                    mPicSetHorizontalAdapter.setList(mPicSetSelected)
                 }
             } else if (requestCode == LoginActivity.LOGIN) { // 在本页面打开登录页面登录并返回
                 if (data != null) {
@@ -527,7 +534,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             focusView = title_title
             pass = false
         }
-        if (mAdapter.data.size < 1) {
+        if (mPicSetHorizontalAdapter.data.size < 1) {
             AnimUtil.primaryBackgroundViewBlinkRed(this, pic_set)
             focusView = pic_set_title
             pass = false
@@ -556,8 +563,22 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
     /**
      * 保存页面草稿
+     *
+     * 当用户将之前的草稿清除之后，保存草稿操作将会覆盖之前的草稿，因此应该将撤销清除的横幅去掉以表面草稿已不可恢复
      */
     private fun saveDraft() {
+        // 若草稿被清除，走到这一步时表明草稿将不可被恢复了，因为会被接下来的保存操作所覆盖
+        if (hasDraft && !isDraftRestored) { // 存在草稿且没有被恢复，说明是被用户手动清除了
+            // 恢复草稿的横幅还在，那就把它关闭
+            if (saved_draft.visibility == View.VISIBLE) {
+                saved_draft.visibility = View.GONE
+            }
+            // 把标题颜色设置为当前没有草稿
+            draft_tip_toggle.setTextColor(resources.getColor(R.color.primaryText, theme))
+            hasDraft = false
+        }
+
+        // 保存草稿
         if (addNewType == AddNewType.ADD_ITEM) { // 保存物品表单
             if (!isSubmitSuccess && (mCoverPath.trim() != ""
                             || mPicSetSelected.size > 0 || option_title.text.toString().trim() != ""
@@ -599,14 +620,17 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     private fun restoreItemDraft() {
         addNewViewModel.restoreItemDraft().observeOnce(this, { draftCache: NewItemDraftCache? ->
             if (draftCache != null) {
+                // 将页面当前有草稿置为true
                 hasDraft = true
-                saved_draft.visibility = View.VISIBLE // 显示草稿恢复提示
+                // 显示草稿已经恢复的提示
+                saved_draft.visibility = View.VISIBLE
+
                 mCoverPath = draftCache.cover
                 mPicSetSelected = draftCache.picSet
                 if (mCoverPath != "") {
                     cover.setImageLocalPath(mCoverPath)
                 }
-                mAdapter.setList(mPicSetSelected)
+                mPicSetHorizontalAdapter.setList(mPicSetSelected)
                 option_title.text = draftCache.title
                 option_description.text = draftCache.description
                 price_input.setText(draftCache.price)
@@ -642,7 +666,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 if (mCoverPath != "") {
                     cover.setImageLocalPath(mCoverPath)
                 }
-                mAdapter.setList(mPicSetSelected)
+                mPicSetHorizontalAdapter.setList(mPicSetSelected)
                 option_title.text = draftCache.title
                 option_description.text = draftCache.content
             }
@@ -675,7 +699,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                             mPicSetSelected.add(media)
                         }
 
-                        mAdapter.setList(mPicSetSelected)
+                        mPicSetHorizontalAdapter.setList(mPicSetSelected)
                         option_title.text = goodsInfo.goods_name
                         price_input.setText(goodsInfo.goods_price)
                         if (goodsInfo.isGoods_is_secondHande) {
@@ -699,7 +723,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     private fun clearDraft() {
         mCoverPath = ""
         mPicSetSelected.clear()
-        mAdapter.setList(mPicSetSelected)
+        mPicSetHorizontalAdapter.setList(mPicSetSelected)
         cover.clearImage(true)
         option_title.text = ""
         price_input.setText("")
@@ -761,6 +785,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         } else if (id == R.id.option_description) {
             start(this, InputSetActivity.TYPE_DESCRIPTION, option_description.text.toString(), getString(R.string.goods_description))
         } else if (id == R.id.saved_close) {
+            // 点击横幅关闭按钮，将页面标题颜色置为主题色以提示用户页面中存在可恢复的草稿
             AnimUtil.collapse(saved_draft)
             AnimUtil.textColorAnim(this, draft_tip_toggle, R.color.primaryText, R.color.colorAccent)
         } else if (id == R.id.draft_action) {
@@ -776,6 +801,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 }
             }
         } else if (id == R.id.draft_tip_toggle) {
+            // 页面中有草稿且横幅已被关闭时点击页面标题将可以展示横幅
             if (hasDraft && saved_draft.visibility != View.VISIBLE) {
                 AnimUtil.expand(saved_draft)
                 AnimUtil.textColorAnim(this, draft_tip_toggle, R.color.colorAccent, R.color.primaryText)
@@ -799,6 +825,9 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         }
     }
 
+    /**
+     * 页面被销毁，将定位对象都置为null
+     */
     public override fun onDestroy() {
         super.onDestroy()
         if (mClient != null) {
@@ -827,8 +856,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      */
     override fun onPicSetClick(source: ImageView, pos: Int) {
         val data: MutableList<Any> = ArrayList()
-        val adapterData: List<LocalMedia> = mAdapter.data
-        for (pic in adapterData) {
+        for (pic in mPicSetHorizontalAdapter.data) {
             data.add(pic.path)
         }
         XPopup.Builder(this)
@@ -849,5 +877,9 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         ImageLoader()
                 )
                 .show()
+    }
+
+    override fun onApplicationLoginStateChange(isLogged: Boolean) {
+        // todo app 登录回调
     }
 }

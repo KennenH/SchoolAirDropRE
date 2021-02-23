@@ -35,10 +35,12 @@ class OverDragEventHeader : View, RefreshHeader {
     }
 
     override fun onMoving(isDragging: Boolean, percent: Float, offset: Int, height: Int, maxDragHeight: Int) {
+        // 拉下时回调offset
         mOnHeaderOverDragEventListener?.onOverDragging(isDragging, percent, offset, height, maxDragHeight)
     }
 
     override fun onReleased(refreshLayout: RefreshLayout, height: Int, maxDragHeight: Int) {
+        // 手指释放时立即归回原位
         refreshLayout.finishRefresh()
     }
 

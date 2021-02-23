@@ -3,9 +3,10 @@ package com.example.schoolairdroprefactoredition.database.pojo
 import androidx.room.Entity
 
 /**
- * 消息会话列表
- * 仅有最后一条消息的指纹和对方基本信息
- * 不要直接使用该表，通过[ChatOfflineNumDetail]查询详细信息
+ * 消息列表 摘要（仅包含保存所必要的数据，需要[ChatOfflineNumDetail]查找出详细信息才能显示）
+ *
+ * 仅有最后一条消息的指纹和会话的基本信息
+ * 通过[ChatOfflineNumDetail]查询详细信息后才能显示
  */
 @Entity(tableName = "offline_num", primaryKeys = ["counterpart_id", "my_id"])
 data class ChatOfflineNum(
@@ -29,7 +30,7 @@ data class ChatOfflineNum(
          */
         val display: Int
 ) {
-        override fun toString(): String {
-                return "ChatOfflineNum(counterpart_id='$counterpart_id', my_id='$my_id', unread_num=$unread_num, latest_fingerprint='$latest_fingerprint', display=$display)"
-        }
+    override fun toString(): String {
+        return "ChatOfflineNum(counterpart_id='$counterpart_id', my_id='$my_id', unread_num=$unread_num, latest_fingerprint='$latest_fingerprint', display=$display)"
+    }
 }

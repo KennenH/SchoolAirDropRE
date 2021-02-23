@@ -44,11 +44,13 @@ public class DecimalFilter implements InputFilter {
         Matcher matcher1 = mPattern1.matcher(newVal);
         Matcher matcher2 = mPattern2.matcher(newVal);
 
-        if (matcher2.matches())
+        if (matcher2.matches()) {
             return "0.";
+        }
 
-        if (matcher.matches() || matcher1.matches())
+        if (matcher.matches() || matcher1.matches()) {
             return null;
+        }
 
         if (TextUtils.isEmpty(source)) {
             return dest.subSequence(dstart, dend);

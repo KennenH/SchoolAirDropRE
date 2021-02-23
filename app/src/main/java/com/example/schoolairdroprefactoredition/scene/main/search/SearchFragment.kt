@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
 import androidx.constraintlayout.widget.ConstraintSet
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +14,6 @@ import androidx.transition.*
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.SearchHistories
 import com.example.schoolairdroprefactoredition.databinding.FragmentSearchPrelayoutBinding
-import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
 import com.example.schoolairdroprefactoredition.ui.adapter.BaseFooterAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderFooterOnlyRecyclerAdapter
@@ -169,8 +167,8 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
         if (key.trim() != "") {
             binding?.search?.closeSearch()
             showPlaceHolder(StatePlaceHolder.TYPE_LOADING)
-            searchViewModel.getSearchResult(longitude, latitude, key).observeOnce(viewLifecycleOwner, { data: List<DomainPurchasing.DataBean?> ->
-                if (data.isEmpty()) {
+            searchViewModel.getSearchResult(longitude, latitude, key).observeOnce(viewLifecycleOwner, { data ->
+                if (data.isNullOrEmpty()) {
                     showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_SEARCH)
                 } else {
                     mResultAdapter.setList(data)
@@ -256,8 +254,10 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
      */
     override fun autoLoadMore(recycler: EndlessRecyclerView) {
         searchViewModel.getSearchResult().observeOnce(viewLifecycleOwner) {
-            mResultAdapter.addData(it)
             recycler.finishLoading()
+            if (it != null) {
+                mResultAdapter.addData(it)
+            }
         }
     }
 

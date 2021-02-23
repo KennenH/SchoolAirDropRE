@@ -17,7 +17,7 @@ class MessageUtil {
                     protocal.to,
                     protocal.typeu,
                     protocal.dataContent,
-                    Date(),
+                    System.currentTimeMillis(),
                     0)
         }
 

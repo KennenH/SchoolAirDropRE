@@ -117,7 +117,7 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
             }
 
             R.id.my_selling -> {
-                SSBActivity.start(context, getInfo(), 0, true)
+                SSBActivity.start(context, getInfo()?.userId, 0, true)
             }
 
             R.id.my_posts -> {

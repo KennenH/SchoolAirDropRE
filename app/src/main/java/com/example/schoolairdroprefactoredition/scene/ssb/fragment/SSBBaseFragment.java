@@ -15,8 +15,6 @@ import com.example.schoolairdroprefactoredition.application.Application;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo;
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo.DataBean;
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment;
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel;
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity;
@@ -125,11 +123,10 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
         return null;
     }
 
-    @Nullable
-    protected DataBean getUserInfo() {
-        DomainUserInfo.DataBean userInfo = null;
+    protected int getUserID() {
+        int userInfo = -1;
         try {
-            userInfo = (DataBean) getActivity().getIntent().getExtras().getSerializable(ConstantUtil.KEY_USER_INFO);
+            userInfo = getActivity().getIntent().getExtras().getInt(ConstantUtil.KEY_USER_ID);
         } catch (Exception ignored) {
         }
         return userInfo;

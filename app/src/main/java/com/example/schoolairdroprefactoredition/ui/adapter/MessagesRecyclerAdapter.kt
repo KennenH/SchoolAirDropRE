@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.ui.adapter
 
-import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
@@ -10,43 +9,47 @@ import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.example.schoolairdroprefactoredition.utils.TimeUtil
-import com.example.schoolairdroprefactoredition.viewmodel.MessageViewModel
-import com.example.schoolairdroprefactoredition.viewmodel.UserViewModel
+import java.util.*
 
 /**
- * 主页消息列表的Adapter
+ * 主页下消息列表子页面的Adapter
  */
-class MessagesRecyclerAdapter(private val viewModel: MessageViewModel) : BaseQuickAdapter<ChatOfflineNumDetail, BaseViewHolder>(R.layout.item_home_messages) {
+class MessagesRecyclerAdapter : BaseQuickAdapter<ChatOfflineNumDetail, BaseViewHolder>(R.layout.item_home_messages) {
 
     /**
      * 获取第position个会话的对方id
      */
-    fun getCounterpartIdAt(position: Int): String {
-        return data[position].counterpart_id
+    fun getCounterpartIdAt(position: Int): String? {
+        return if (data.size > position) {
+            data[position]?.counterpart_id
+        } else {
+            null
+        }
     }
 
     override fun convert(holder: BaseViewHolder, item: ChatOfflineNumDetail) {
-        // 头像显示，空则显示默认作为替代
-        if (item.counterpart_avatar != null) {
-            ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.QINIU_BASE_URL + ConstantUtil.DEFAULT_AVATAR)
-        } else {
-            ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.counterpart_avatar))
+        // 加载头像
+        item.counterpart_avatar.let {
+            if (it != null) {
+                // 当头像url不为空时直接显示
+                ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.QINIU_BASE_URL + it)
+            } else {
+                // 头像为空，先显示默认头像，等待外部将数据加载完毕
+                ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.QINIU_BASE_URL + ConstantUtil.DEFAULT_AVATAR)
+                // todo 想办法从外面获取用户信息
+            }
         }
 
-        // 用户名称显示，空则显示用户id作为替代
-        if (item.counterpart_name == null) {
-            holder.setText(R.id.messages_user_name, item.counterpart_id)
-            // 若为空则获取用户信息
-            val userInfo = viewModel.getUserBaseInfo(item.counterpart_id.toInt()).value
-            userInfo?.let {
-                LogUtils.d("已获取网络用户信息 -- > $it")
-                item.counterpart_avatar = it.user_avatar
-                item.counterpart_name = it.user_name
-                ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.QINIU_BASE_URL + it.user_avatar)
-                holder.setText(R.id.messages_user_name, it.user_id.toString())
+        // 显示名字
+        item.counterpart_name.let {
+            if (it != null) {
+                // 当名字字段不为空时直接显示
+                holder.setText(R.id.messages_user_name, it)
+            } else {
+                // 否则先显示用户id作为placeholder
+                holder.setText(R.id.messages_user_name, item.counterpart_id)
+                // todo 想办法从外面获取用户信息
             }
-        } else {
-            holder.setText(R.id.messages_user_name, item.counterpart_name)
         }
 
         // 显示未读数量
@@ -59,7 +62,7 @@ class MessagesRecyclerAdapter(private val viewModel: MessageViewModel) : BaseQui
         }
 
         // 显示时间
-        holder.setText(R.id.messages_send_time, TimeUtil.getChatTimeSpanByNow(item.send_time))
+        holder.setText(R.id.messages_send_time, TimeUtil.getChatTimeSpanByNow(Date(item.send_time)))
 
         // 若消息类型为0则直接显示文本内容，若为1则为图片则仅显示为 [图片]
         if (item.message_type == 0 || item.message_type == -1) {
@@ -70,11 +73,11 @@ class MessagesRecyclerAdapter(private val viewModel: MessageViewModel) : BaseQui
 
         // 点击聊天，进入聊天界面
         holder.itemView.setOnClickListener {
-            val userInfo = DomainUserInfo.DataBean()
-            userInfo.userId = item.counterpart_id.toInt()
-            userInfo.userAvatar = item.counterpart_avatar
-            userInfo.userName = item.counterpart_name
-            ChatActivity.start(context, userInfo)
+            val counterpartInfo = DomainUserInfo.DataBean()
+            counterpartInfo.userId = item.counterpart_id.toInt()
+            counterpartInfo.userName = item.counterpart_name
+            counterpartInfo.userAvatar = item.counterpart_avatar
+            ChatActivity.start(context, counterpartInfo)
         }
     }
 }

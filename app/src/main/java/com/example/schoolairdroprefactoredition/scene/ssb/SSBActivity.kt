@@ -2,27 +2,19 @@ package com.example.schoolairdroprefactoredition.scene.ssb
 
 import android.content.Context
 import android.content.Intent
-import android.content.pm.ActivityInfo
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentPagerAdapter
 import com.blankj.utilcode.util.KeyboardUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.databinding.ActivitySsbBinding
-import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBPagerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBPagerAdapter.OnSSBDataLenChangedIntermediaryListener
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import javadz.beanutils.BeanUtils
 import kotlinx.android.synthetic.main.activity_ssb.*
-import java.lang.reflect.InvocationTargetException
 
 class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener, OnSSBDataLenChangedIntermediaryListener {
 
@@ -37,10 +29,11 @@ class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener, OnSSBDat
          * 2、登录查看自己的页面 有token
          * 3、登录查看他人的页面 有token
          */
-        fun start(context: Context?, info: DomainUserInfo.DataBean?, page: Int, isMine: Boolean) {
-            if (info == null) return
+        fun start(context: Context?, userID: Int?, page: Int, isMine: Boolean) {
+            if (userID == null) return
+
             val intent = Intent(context, SSBActivity::class.java)
-            intent.putExtra(ConstantUtil.KEY_USER_INFO, info)
+            intent.putExtra(ConstantUtil.KEY_USER_ID, userID)
             intent.putExtra(ConstantUtil.KEY_IS_MINE, isMine)
             intent.putExtra(PAGE_INDEX, page)
             if (context is AppCompatActivity) {

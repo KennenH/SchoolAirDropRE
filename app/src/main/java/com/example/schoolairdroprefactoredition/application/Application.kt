@@ -6,7 +6,6 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Process
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.lifecycle.LifecycleObserver
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
 import com.example.schoolairdroprefactoredition.database.SARoomDatabase
@@ -68,7 +67,7 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
         // 为本条消息创建消息指纹
         val fingerprint = Protocal.genFingerPrint()
         // 为新发送的消息new一个对象
-        val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_TEXT, content, Date(), 0)
+        val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_TEXT, content, System.currentTimeMillis(), 0)
         // 获取adapter和recycler view的弱引用
         val adapter = weakAdapter.get()
         // 将发送的消息显示到消息框中
@@ -98,7 +97,7 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
         val chatList = ArrayList<ChatHistory>(imagePaths.size)
         for (path in imagePaths) {
             val fingerprint = Protocal.genFingerPrint()
-            val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_IMAGE, path, Date(), 0)
+            val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_IMAGE, path, System.currentTimeMillis(), 0)
             chatList.add(chat)
             adapter?.addData(0, chat)
             chatViewModel.saveSentMessage(chat)
@@ -106,26 +105,26 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
             adapter?.updateStatus(chat, ChatRecyclerAdapter.MessageSendStatus.SENDING)
         }
 
-        val pathList = chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).value
-        pathList.let {
-            if (it != null) {
-                for ((index, path) in it.withIndex()) {
-                    object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
-                        override fun onPostExecute(code: Int?) {
-                            if (code == 0) {
-                                adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
-                            } else {
-                                adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.FAILED)
-                            }
-                        }
-                    }.execute()
-                }
-            } else {
-                for (history in chatList) {
-                    adapter?.updateStatus(history, ChatRecyclerAdapter.MessageSendStatus.FAILED)
-                }
-            }
-        }
+//        val pathList = chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).value
+//        pathList.let {
+//            if (it != null) {
+//                for ((index, path) in it.withIndex()) {
+//                    object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
+//                        override fun onPostExecute(code: Int?) {
+//                            if (code == 0) {
+//                                adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
+//                            } else {
+//                                adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.FAILED)
+//                            }
+//                        }
+//                    }.execute()
+//                }
+//            } else {
+//                for (history in chatList) {
+//                    adapter?.updateStatus(history, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+//                }
+//            }
+//        }
     }
 
     private val applicationScope = CoroutineScope(SupervisorJob())
@@ -191,14 +190,14 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
      */
     private fun initAppTheme() {
         val mJsonCacheUtil = JsonCacheUtil.getInstance()
-        var settings = mJsonCacheUtil.getValue(UserSettingsCache.KEY, UserSettingsCache::class.java)
+        var settings = mJsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
         if (settings == null) settings = UserSettingsCache(false)
         AppCompatDelegate.setDefaultNightMode(if (settings.isDarkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
     }
 
     fun setAppTheme(isDarkTheme: Boolean) {
         val mJsonCacheUtil = JsonCacheUtil.getInstance()
-        var settings = mJsonCacheUtil.getValue(UserSettingsCache.KEY, UserSettingsCache::class.java)
+        var settings = mJsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
         if (settings == null) settings = UserSettingsCache(false)
         AppCompatDelegate.setDefaultNightMode(if (isDarkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
         settings.isDarkTheme = isDarkTheme

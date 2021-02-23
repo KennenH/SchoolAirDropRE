@@ -21,6 +21,9 @@ import com.qiniu.android.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_selling_add_set.*
 import kotlin.math.abs
 
+/**
+ * [AddNewActivity]页面进入的输入标题和详细信息的页面
+ */
 class InputSetActivity : ImmersionStatusBarActivity() {
 
     companion object {
@@ -32,16 +35,26 @@ class InputSetActivity : ImmersionStatusBarActivity() {
 
         /**
          * 返回结果 键
+         *
+         * 在返回的页面OnActivity中获取结果值的键
          */
         const val RESULT = "KEY_Result"
 
         /**
-         * 标题显示的文字 键
+         * 页面标题显示的文字 键
+         *
+         * one of
+         * [R.string.title] 标题
+         * [R.string.goods_description] 物品描述
          */
         const val TITLE = "KEY_Title"
 
         /**
          * 页面输入类型 键
+         *
+         * 选取以下对应的值之一
+         * [TYPE_TITLE] 标题
+         * [TYPE_DESCRIPTION] 详细描述
          */
         const val TYPE = "KEY_Type"
 
@@ -54,6 +67,7 @@ class InputSetActivity : ImmersionStatusBarActivity() {
         /**
          * 标题 页面输入类型
          *
+         * 是页面类型键对应的值之一[TYPE]
          * 标题类型不能输入换行字符
          */
         const val TYPE_TITLE = 0
@@ -61,6 +75,7 @@ class InputSetActivity : ImmersionStatusBarActivity() {
         /**
          * 详述 页面输入类型
          *
+         * 是页面类型键对应的值之一[TYPE]
          * 详述类型可以输入若干行文字和任意字符
          */
         const val TYPE_DESCRIPTION = 1
@@ -83,9 +98,12 @@ class InputSetActivity : ImmersionStatusBarActivity() {
 
         /**
          * @param context context
-         * @param type    页面输入类型 one of [InputSetActivity.TYPE_TITLE] [InputSetActivity.TYPE_DESCRIPTION]
-         * @param input   之前已有的输入 方便用户修改而不是全部重写
-         * @param title   标题
+         * @param type    页面输入类型 见[TYPE]
+         * @param input   之前已有的输入 方便用户修改而不是全部重写 见[CONTENT]
+         * @param title   标题 见[TITLE]
+         *
+         * requestCode [InputSetActivity.REQUEST_CODE]
+         * 在OnActivity中获取结果的键 [InputSetActivity.RESULT]
          */
         fun start(context: Context, type: Int, input: String?, title: String?) {
             val intent = Intent(context, InputSetActivity::class.java)
@@ -135,7 +153,6 @@ class InputSetActivity : ImmersionStatusBarActivity() {
 
                     // 若含有空格或者换行符，将会提示无法提交
                     if (s.toString().contains(" ") || s.toString().contains("\n")) {
-                        LogUtils.d("文本存在空白字符 -- >|$s|")
                         doneMenu?.isEnabled = false
                         input_warning.visibility = View.VISIBLE
                     } else {

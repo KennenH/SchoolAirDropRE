@@ -13,7 +13,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.ImageUtils
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding
@@ -22,7 +21,6 @@ import com.example.schoolairdroprefactoredition.viewmodel.UserAvatarViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.luck.picture.lib.PictureSelector
-import com.qiniu.android.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_user_update_avatar.*
 import java.util.*
 
@@ -32,7 +30,7 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
         fun start(context: Context) {
             val intent = Intent(context, UserUpdateAvatarActivity::class.java)
             if (context is AppCompatActivity) {
-                context.startActivityForResult(intent, UserActivity.REQUEST_UPDATE)
+                context.startActivityForResult(intent, UserActivity.REQUEST_UPDATE_MY)
             }
         }
 

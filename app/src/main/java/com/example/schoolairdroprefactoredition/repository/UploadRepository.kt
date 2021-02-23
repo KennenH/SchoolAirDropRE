@@ -10,7 +10,6 @@ import com.example.schoolairdroprefactoredition.utils.FileUtil
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import com.qiniu.android.common.FixedZone
 import com.qiniu.android.storage.*
-import com.qiniu.android.utils.LogUtil
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.ObservableOnSubscribe
@@ -28,22 +27,17 @@ class UploadRepository private constructor() {
         /**
          * 键 上传额外参数
          */
-        const val UPLOAD_PARAM_FILE_KEY = "file_key"
+        const val UPLOAD_PARAM_FILE_KEY = "x:file_key"
 
         /**
          * 任务id 上传额外参数
          */
-        const val UPLOAD_PARAM_TASK_ID = "task_id"
+        const val UPLOAD_PARAM_TASK_ID = "x:task_id"
 
         /**
          * 固定上传至临时文件夹
          */
-        const val UPLOAD_PREFIX = "tmp"
-
-        /**
-         * 图片全部上传完毕的返回 message
-         */
-        const val UPLOAD_SUCCESS = "move file success"
+        const val UPLOAD_PREFIX = "tmp/"
 
         private var INSTANCE: UploadRepository? = null
         fun getInstance() = INSTANCE
@@ -66,9 +60,10 @@ class UploadRepository private constructor() {
      *
      * @param token app用户验证token
      * @param fileLocalPaths 要上传的图片的本地路径
-     * @param onResult 成功后按照传入的顺序返回图片路径，失败null
+     * @param onResult 上传图片时请求到的task id和file keys
+     *
      */
-    fun upload(token: String, fileLocalPaths: List<String>, type: String, onResult: (response: List<String>?) -> Unit) {
+    fun upload(token: String, fileLocalPaths: List<String>, type: String, onResult: (taskAndKeys: DomainUploadPath.DataBean?) -> Unit) {
         // 将文件路径转换为本地文件
         val fileLocalList = ArrayList<File>(fileLocalPaths.size).apply {
             for (localPath in fileLocalPaths) {
@@ -79,12 +74,12 @@ class UploadRepository private constructor() {
         getQiNiuToken(token) { uploadToken ->
             if (uploadToken != null) {
                 // 获取将要上传的图片在服务器上的路径前缀和文件名
-                requestForImagePath(type, fileLocalPaths.size) { uploadPaths ->
-                    if (uploadPaths != null) {
+                requestForImagePath(type, fileLocalPaths.size) { taskAndKeysWrapper ->
+                    if (taskAndKeysWrapper != null) {
                         // 执行上传操作
-                        uploadFileToQiNiu(fileLocalList, uploadPaths, uploadToken.data.token) {
-                            if (it != null) {
-                                onResult(it)
+                        uploadFileToQiNiu(fileLocalList, taskAndKeysWrapper, uploadToken.data.token) {
+                            if (it) {
+                                onResult(taskAndKeysWrapper.data)
                             } else {
                                 onResult(null)
                             }
@@ -141,7 +136,7 @@ class UploadRepository private constructor() {
      */
     private fun getQiNiuToken(token: String, onResult: (response: DomainUploadToken?) -> Unit) {
         // 从本地sp获取
-        val localUploadToken = jsonCacheUtil.getValue(DomainUploadToken.UPLOAD_TOKEN_KEY, DomainUploadToken::class.java)
+        val localUploadToken = jsonCacheUtil.getCache(DomainUploadToken.UPLOAD_TOKEN_KEY, DomainUploadToken::class.java)
         if (localUploadToken != null) {
             onResult(localUploadToken)
         } else {
@@ -181,9 +176,9 @@ class UploadRepository private constructor() {
      * @param fileLocalEntities 图片本地文件
      * @param fileKeysAndTaskID 图片将要放到服务器上的名字和任务id
      * @param uploadToken       图片上传所需要的七牛云凭证
-     * @param onResult          上传成功返回按上传顺序排列的图片路径，失败返回null
+     * @param onResult          是否所有图片上传成功
      */
-    private fun uploadFileToQiNiu(fileLocalEntities: List<File?>, fileKeysAndTaskID: DomainUploadPath, uploadToken: String, onResult: (response: List<String>?) -> Unit) {
+    private fun uploadFileToQiNiu(fileLocalEntities: List<File?>, fileKeysAndTaskID: DomainUploadPath, uploadToken: String, onResult: (success: Boolean) -> Unit) {
         // 获取数量
         val size = fileLocalEntities.size
 
@@ -200,10 +195,8 @@ class UploadRepository private constructor() {
 
         // 根据文件名、路径前缀和后缀将文件全名拼接出来
         val fileKeys = fileKeysAndTaskID.data.keys // keys 文件名
-        for ((i, fileLocalEntity) in fileLocalEntities.withIndex()) {
-            //获取文件后缀保证在服务器上的文件格式与本地一致，若无则默认为jpg
-            val extension = if (fileLocalEntity?.extension.isNullOrEmpty()) ConstantUtil.JPEG else fileLocalEntity?.extension
-            fileFinalNames.add((UPLOAD_PREFIX + fileKeys[i] + "." + extension))
+        for (fileKey in fileKeys) {
+            fileFinalNames.add(UPLOAD_PREFIX + fileKey)
         }
 
         // 上传的图片index
@@ -219,23 +212,15 @@ class UploadRepository private constructor() {
                         uploadOptions.params[UPLOAD_PARAM_TASK_ID] = fileKeysAndTaskID.data.taskId
 
                         // 同步上传，以确保上传顺序和list顺序一致
-                        val response = uploadManager.syncPut(fileLocalEntity, fileFinalNames[index], uploadToken, null)
-                        if (response.isOK) {
+                        val putResult = uploadManager.syncPut(fileLocalEntity, fileFinalNames[index], uploadToken, uploadOptions)
+                        if (putResult.isOK) {
                             // 上传成功，发送图片的文件名至subscribe里的成功回调
                             it.onNext(fileFinalNames[index])
-
-                            // 若最后一张图片上传完毕时返回错误message则仍旧判定为上传失败
-                            // 有可能是我们服务器出问题了
-                            if (index == size - 1 && response.message != UPLOAD_SUCCESS) {
-                                LogUtils.d("所有图片均上传完毕，但是未收到来自服务器的成功回调，上传判定为失败 abandoned")
-                                it.onError(IOException(response.error))
-                            } else {
-                                it.onComplete()
-                            }
+                            it.onComplete()
                         } else {
                             // 上传失败，发送至subscribe中的失败回调，退出上传流程
                             LogUtils.d("图片上传失败 abandoned")
-                            it.onError(IOException(response.error))
+                            it.onError(IOException(putResult.error))
                         }
 
                         // 下一张图片
@@ -247,12 +232,11 @@ class UploadRepository private constructor() {
                     // 成功的回调将会回到这里
                     responsePath.add(it)
                     if (responsePath.size == size) {
-                        onResult(responsePath)
-                        LogUtils.d("所有图片上传完毕，即将开始调用服务器接口")
+                        onResult(true)
                     }
                 }) {
                     LogUtils.d(it.message)
-                    onResult(null)
+                    onResult(false)
                 }
     }
 }

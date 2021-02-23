@@ -4,6 +4,7 @@ import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.cache.SearchHistories
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
+import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import retrofit2.Call
@@ -34,7 +35,7 @@ class SearchRepository {
      * 保存搜索历史记录
      */
     private fun saveHistory(history: String) {
-        var histories = mJsonCacheUtil.getValue(SearchHistories.KEY, SearchHistories::class.java)
+        var histories = mJsonCacheUtil.getCache(SearchHistories.KEY, SearchHistories::class.java)
         // 如果之前已经有了这个关键字，去掉之前的，也是为了省去排序的麻烦，保证最新的搜索关键字一定处于第一个位置
         var list: MutableList<String>? = null
         if (histories != null && histories.historyList != null) {
@@ -75,8 +76,10 @@ class SearchRepository {
         }
 
         RetrofitClient.goodsApi.searchGoods(
-                ConstantUtil.CLIENT_ID,
-                ConstantUtil.CLIENT_SECRET, page, longitude, latitude, key).apply {
+                ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page,
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGTITUDE.toDouble() else longitude,
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE.toDouble() else latitude,
+                key).apply {
             enqueue(object : CallBackWithRetry<DomainPurchasing>(this@apply) {
                 override fun onResponse(call: Call<DomainPurchasing>, response: Response<DomainPurchasing>) {
                     val code = response.code()
@@ -99,7 +102,7 @@ class SearchRepository {
      * 获取搜索历史
      */
     fun getSearchHistory(onResult: (SearchHistories?) -> Unit): SearchHistories? {
-        val histories = mJsonCacheUtil.getValue(SearchHistories.KEY, SearchHistories::class.java)
+        val histories = mJsonCacheUtil.getCache(SearchHistories.KEY, SearchHistories::class.java)
         return if (histories != null && histories.historyList != null && histories.historyList.size > 0) {
             histories
         } else {
@@ -111,8 +114,8 @@ class SearchRepository {
      * 获取搜索建议
      */
     fun getSearchSuggestion(key: String) {
-        val histories = mJsonCacheUtil.getValue(SearchHistories.KEY, SearchHistories::class.java).historyList
-        //        mCallback.onSearchSuggestionLoaded(items);
+        val histories = mJsonCacheUtil.getCache(SearchHistories.KEY, SearchHistories::class.java)?.historyList
+
     }
 
     /**

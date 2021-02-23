@@ -27,7 +27,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
     public static void start(Context context) {
         Intent intent = new Intent(context, UserModifyInfoActivity.class);
         if (context instanceof AppCompatActivity) {
-            ((AppCompatActivity) context).startActivityForResult(intent, UserActivity.REQUEST_UPDATE);
+            ((AppCompatActivity) context).startActivityForResult(intent, UserActivity.REQUEST_UPDATE_MY);
         }
     }
 
@@ -47,7 +47,7 @@ public class UserModifyInfoActivity extends ImmersionStatusBarActivity implement
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == UserActivity.REQUEST_UPDATE) {
+            if (requestCode == UserActivity.REQUEST_UPDATE_MY) {
                 if (data != null) {
                     DomainUserInfo.DataBean newInfo = (DomainUserInfo.DataBean) data.getSerializableExtra(ConstantUtil.KEY_USER_INFO);
                     getIntent().putExtra(ConstantUtil.KEY_USER_INFO, newInfo);

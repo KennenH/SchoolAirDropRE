@@ -19,9 +19,10 @@ import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.example.schoolairdroprefactoredition.utils.TimeUtil
 import com.lxj.xpopup.XPopup
+import javadz.beanutils.BeanUtils
 import java.util.*
 
-class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private var counterpartInfo: DomainSimpleUserInfo?) : BaseDelegateMultiAdapter<ChatHistory, BaseViewHolder>() {
+class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterpartInfo: DomainSimpleUserInfo?) : BaseDelegateMultiAdapter<ChatHistory, BaseViewHolder>() {
 
     companion object {
         /**
@@ -72,11 +73,28 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
     }
 
     /**
+     * 对方的基本信息
+     */
+    private var mCounterpartInfo: DomainSimpleUserInfo? = counterpartInfo
+
+    /**
      * 上一条消息的时间
      *
      * 当上一条消息与即将要显示的消息间隔不超过5分钟时，将不会显示下一条消息的时间
      */
     private var lastMessageTime: Date? = null
+
+    /**
+     * 重新设置对方信息
+     *
+     * 比如从聊天页面进入对方的个人主页获取了用户信息之后返回到聊天页面
+     * 用户缓存信息可能会被更新，此时需要重新设置对方的信息以刷新ui
+     */
+    fun setCounterPartInfo(counterpartInfo: DomainUserInfo.DataBean?) {
+        if (counterpartInfo != null) {
+            BeanUtils.copyProperties(mCounterpartInfo, counterpartInfo)
+        }
+    }
 
     /**
      * 更新消息发送状态
@@ -154,6 +172,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
     }
 
     override fun convert(holder: BaseViewHolder, item: ChatHistory) {
+        val date = Date(item.send_time)
         when (holder.itemViewType) {
             // 我发送的文本消息
             ITEM_CHAT_SEND -> {
@@ -164,7 +183,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
                 // 加载头像
                 ImageUtil.loadRoundedImage(avatarView, myAvatarUrl)
                 // 显示时间
-                showTime(holder, item.send_time, true)
+                showTime(holder, date, true)
                 // 点击头像打开个人主页
                 avatarView.setOnClickListener {
                     UserActivity.start(context, myInfo?.userId)
@@ -179,7 +198,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
                 // 获取图片的 view
                 val imageView = holder.itemView.findViewById<ImageView>(R.id.send_image)
                 // 显示时间
-                showTime(holder, item.send_time, true)
+                showTime(holder, date, true)
                 // 加载图片
                 ImageUtil.loadRoundedImage(imageView, item.message)
                 // 点击头像进入个人主页
@@ -200,16 +219,16 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
                 val avatarView = holder.itemView.findViewById<ImageView>(R.id.receive_avatar)
                 // 加载头像
                 if (counterpartUrl == null) {
-                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(counterpartInfo?.userAvatar)
+                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(mCounterpartInfo?.userAvatar)
                 }
                 ImageUtil.loadRoundedImage(avatarView, counterpartUrl)
                 // 消息内容
                 holder.setText(R.id.receive_text, item.message)
                 // 设置时间
-                showTime(holder, item.send_time, false)
+                showTime(holder, date, false)
                 // 点击头像进入个人主页
                 avatarView.setOnClickListener {
-                    UserActivity.start(context, counterpartInfo?.userId)
+                    UserActivity.start(context, mCounterpartInfo?.userId)
                 }
             }
             // 我收到的图片消息
@@ -218,18 +237,18 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
                 val avatarView = holder.itemView.findViewById<ImageView>(R.id.receive_avatar)
                 // 加载头像
                 if (counterpartUrl == null) {
-                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(counterpartInfo?.userAvatar)
+                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(mCounterpartInfo?.userAvatar)
                 }
                 ImageUtil.loadRoundedImage(avatarView, counterpartUrl)
                 // 获取图片view
                 val imageView = holder.itemView.findViewById<ImageView>(R.id.receive_image)
                 // 设置时间
-                showTime(holder, item.send_time, false)
+                showTime(holder, date, false)
                 // 加载图片
                 ImageUtil.loadRoundedImage(imageView, item.message)
                 // 点击头像进入个人主页
                 avatarView.setOnClickListener {
-                    UserActivity.start(context, counterpartInfo?.userId)
+                    UserActivity.start(context, mCounterpartInfo?.userId)
                 }
                 // 点击图片查看
                 imageView.setOnClickListener {
@@ -274,5 +293,4 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, private 
                     .addItemType(ITEM_CHAT_RECEIVE_IMAGE, R.layout.item_chat_receive_image)
         }
     }
-
 }

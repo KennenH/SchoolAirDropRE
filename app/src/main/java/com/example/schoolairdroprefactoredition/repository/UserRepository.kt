@@ -28,9 +28,6 @@ class UserRepository private constructor() {
                 override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         if (response.isSuccessful) {
-
-                            LogUtils.d("session -- > ${response.headers()["Set-Cookie"]}")
-
                             val body = response.body()
                             onResult(true, body?.data)
                         } else {

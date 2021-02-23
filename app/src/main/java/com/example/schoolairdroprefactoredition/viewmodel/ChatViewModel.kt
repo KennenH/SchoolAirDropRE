@@ -2,15 +2,20 @@ package com.example.schoolairdroprefactoredition.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.blankj.utilcode.util.TimeUtils
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.database.pojo.LastFromUserInformation
+import com.example.schoolairdroprefactoredition.database.pojo.UserCache
 import com.example.schoolairdroprefactoredition.domain.DomainOffline
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.repository.UploadRepository
+import com.example.schoolairdroprefactoredition.repository.UserRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.MessageUtil
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
+import java.util.*
 
 /**
  * 聊天页面使用的view model
@@ -22,13 +27,6 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository, applicat
     private val uploadRepository by lazy {
         UploadRepository.getInstance()
     }
-
-    /**
-     * 下一批将要被ack的消息组
-     *
-     * todo 如何解决已被ack的消息多次去ack浪费服务器资源，要么本地存一个是否ack的表，自己发送和在线收到的默认已经ack
-     */
-    private val ackList = ArrayList<String>()
 
     class ChatViewModelFactory(private val repository: DatabaseRepository, private val application: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
@@ -58,7 +56,8 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository, applicat
         if (token != null) {
             uploadRepository.upload(token, imagePaths, ConstantUtil.UPLOAD_TYPE_IM) {
                 if (it != null) {
-                    uploadLiveDate.postValue(it)
+                    // todo
+//                    uploadLiveDate.postValue(null)
                 } else {
                     uploadLiveDate.postValue(null)
                 }
@@ -106,21 +105,21 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository, applicat
      * 此时判断pullFlag，若为true则从服务器上预拉取数据并保存至本地
      * 然后保存离线消息数据和更新[LastFromUserInformation]的信息
      *
-     * @param startFingerprint 从哪一条消息开始检索 指纹码
+     * @param startTime 从该临界时间开始检索
      */
-    fun getChat(token: String?, receiverID: String, senderID: String, startFingerprint: String? = null): LiveData<List<ChatHistory>> {
+    fun getChat(token: String?, receiverID: String, senderID: String, startTime: Long? = null): LiveData<List<ChatHistory>> {
         viewModelScope.launch {
             // 获取本地聊天记录
-            chatLiveData.postValue(databaseRepository.getChatLocal(receiverID, senderID, startFingerprint))
+            chatLiveData.postValue(databaseRepository.getChatLocal(receiverID, senderID, startTime))
 
             // 获取服务器离线
             if (token != null) {
-                // 获取来自该用户上一批获取的最早消息的指纹和是否还有来自这个用户的消息的标志
+                // 获取来自该用户上一批获取的最早消息的时间和是否还有来自这个用户的消息的标志
                 val earliestPulledMessageFromThisUser = databaseRepository.getLastFromUserInformation(senderID)
-                val fingerprint = earliestPulledMessageFromThisUser?.fingerprint
                 // 若上一次保存的flag是true则预拉取服务器数据，若离线消息数量拉取时已经小于默认值则无需对于该用户额外拉取
-                if (earliestPulledMessageFromThisUser != null && earliestPulledMessageFromThisUser.pull_flag && fingerprint != null) {
-                    databaseRepository.getChatRemote(token, senderID, fingerprint, ackList) { success, response ->
+                if (earliestPulledMessageFromThisUser != null && earliestPulledMessageFromThisUser.pull_flag) {
+                    databaseRepository.getChatRemote(token, senderID, startTime
+                            ?: System.currentTimeMillis()) { success, response ->
                         if (success && response != null) {
                             val data = response.data
                             // 保存获取到的数据
@@ -128,7 +127,7 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository, applicat
                             // 保存这一批消息中最早的消息的指纹
                             viewModelScope.launch {
                                 databaseRepository.saveLastMessage(
-                                        LastFromUserInformation(senderID, data.first().fingerPrint, data.size >= ConstantUtil.DATA_FETCH_DEFAULT_SIZE))
+                                        LastFromUserInformation(senderID, data.size >= ConstantUtil.DATA_FETCH_DEFAULT_SIZE))
                             }
                         }
                     }

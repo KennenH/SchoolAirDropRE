@@ -22,14 +22,14 @@ interface IMApi {
      * 当有临界消息指纹时代表二次拉取，否则表示进入页面时的首次拉取
      * 二次拉取可以带消息指纹列表用以ack离线消息
      * 被ack的消息以后将不再被发送
-     * @param fingerprint 从这条消息开始找
-     * @param ackList 需要ack的离线消息指纹列表
+     * @param startTime 从这个临界时间开始找接下来n条数据，既然是从这条消息开始找，说明前端一定保存并处理了此消息
+     * 之前的所有消息，所以该消息也作为ack的依据
      */
     @FormUrlEncoded
     @POST("im/offline/pull")
-    fun getOffline(@Header("Authorization") token: String,
-                   @Field("sender_id") senderID: String,
-                   @Field("start") fingerprint: String,
-                   @Field("ack") ackList: List<String>?): Call<DomainOffline>
+    fun getOffline(
+            @Header("Authorization") token: String,
+            @Field("sender_id") senderID: String,
+            @Field("start") startTime: Long): Call<DomainOffline>
 
 }

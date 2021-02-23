@@ -201,8 +201,8 @@
     <string name="connectionLost">连接中断 请重试</string>
     <string name="submitSuccess">提交成功</string>
     <string name="submitFailed">提交失败</string>
-    <string name="submitSuccessTip">物品进入审核阶段，审核完毕后将会通知你。</string>
-    <string name="submitFailedTip">上传物品时遇到错误。表单已自动保存，建议稍后重试提交。</string>
+    <string name="submitSuccessTip">建议稍后去首页搜索是否可以看到你的物品，若多次搜索无法找到，可能是上传时定位错误，可以下架物品后重新上传。</string>
+    <string name="submitFailedTip">可能是土豆正在维护或者过于繁忙。表单已自动保存，建议稍后重试。</string>
     <string name="modifySuccessTip">修改过的物品将重新进行审核，审核完毕后将会通知你。</string>
     <string name="modifyFailedTip">可能是土豆服务器不给力或者正在维护。修改物品的表单不会保存，建议稍后再试。</string>
     <string name="OK">好</string>
@@ -217,14 +217,14 @@
     <string name="nothingThere">啥也没有…</string>
     <string name="dialogSuccess">完成</string>
     <string name="dialogFailed">出错啦</string>
-    <string name="errorLoading">加载出错啦…</string>
+    <string name="errorLoading">加载出错</string>
     <string name="finalPrice">成交价</string>
     <string name="SendMessage">发送消息</string>
     <string name="draftRecovered">已恢复上次编辑的表单</string>
     <string name="clearInput">清空输入</string>
     <string name="dialogNetWorkError">网络错误</string>
     <string name="restoreDraft">恢复草稿</string>
-    <string name="draftCleared">已清除输入，在本页面关闭之前仍可恢复</string>
+    <string name="draftCleared">已清除输入，在切换App、关闭页面、进入输入或者图片选择页面后草稿将不可恢复</string>
     <string name="plsEnterQuotePrice">请输入报价</string>
     <string name="recyclerFooter">[img src=ic_line/]&#160;&#160;&#160;&#160;没有啦&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
     <string name="postMyTopic">发布我的话题</string>
@@ -270,7 +270,7 @@
     <string name="eventStep4">4/4 交易即将完成</string>
     <string name="negotiatePrice">协商价格</string>
     <string name="transactionCancelReason">原因</string>
-    <string name="transhBin">回收站</string>
+    <string name="trashBin">回收站</string>
     <string name="currentAccount">当前账号</string>
     <string name="agreeAboveAgreementAndStartToUse">同意并开始使用</string>
     <string name="disagreeAndQuit">拒绝并退出校园空投</string>
@@ -279,11 +279,11 @@
     <string name="privacyAndService">隐私政策与服务条款</string>
     <string name="pleaseAgreeAboveTermsFirst">请先阅读并同意以上条款</string>
     <string name="corrupted">已中断</string>
-    <string name="complished">已完成</string>
+    <string name="completed">已完成</string>
     <string name="termsOfServiceAgreeFailed">啊哦，条约走丢了</string>
     <string name="addNewGoodsError">发送请求时出错，若多次失败请更新版本</string>
     <string name="plaza">广场</string>
-    <string name="doNotPostIllegalContent">请不要发布违反学校规章、国家法律的语言和物品，请仔细检查表单各项内容</string>
+    <string name="doNotPostIllegalContent">请不要发布违反学校规章、国家法律的文字和物品，请仔细检查表单各项内容</string>
     <string name="addNewPost">发布帖子</string>
     <string name="submitPostLocationFailedTip">当前定位结果异常，帖子很可能无法被其他同学看到。表单已自动保存，建议稍后重试提交。</string>
     <string name="newPostSuccessTip">帖子已发表至广场。</string>
@@ -305,5 +305,6 @@
     <string name="noMessageYet">还没有消息哦</string>
     <string name="systemBusy">系统繁忙，请稍后再试</string>
     <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;删除&#160;&#160;&#160;&#160;&#160;&#160;</string>
+    <string name="illegalName">名字中包含非法字符</string>
 
 </resources>

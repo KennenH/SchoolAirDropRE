@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.LogUtils
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
@@ -28,12 +29,14 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.base.DomainSimpleUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.scene.chat.panel.PanelMore
+import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.MorePanelAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.decoration.DecorationUtil
 import com.example.schoolairdroprefactoredition.utils.decoration.GridItemDecoration
 import com.example.schoolairdroprefactoredition.viewmodel.ChatViewModel
+import com.example.schoolairdroprefactoredition.viewmodel.UserViewModel
 import com.luck.picture.lib.PictureSelector
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
@@ -55,34 +58,13 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
         /**
          * @param userInfo 对方的用户信息
          */
-        fun start(context: Context, userInfo: DomainUserInfo.DataBean?) {
-            if (userInfo == null) {
-                return
-            }
-
-            val simpleInfo = DomainSimpleUserInfo()
-            BeanUtils.copyProperties(simpleInfo, userInfo)
-
+        fun start(context: Context, userInfo: DomainUserInfo.DataBean) {
+            val simpleUserInfo = DomainSimpleUserInfo()
+            BeanUtils.copyProperties(simpleUserInfo, userInfo)
             val intent = Intent(context, ChatActivity::class.java)
-
-            intent.putExtra(ConstantUtil.KEY_USER_SIMPLE_INFO, simpleInfo)
+            intent.putExtra(ConstantUtil.KEY_USER_SIMPLE_INFO, simpleUserInfo)
             context.startActivity(intent)
         }
-
-//        fun startForTest(context: Context) {
-//            val userInfo = DomainUserInfo.DataBean()
-//            userInfo.userId = 7
-//            userInfo.userName = "user_7"
-//            userInfo.userAvatar = "/uploads/img/user/default/default.jpg"
-//
-//            val simpleInfo = DomainSimpleUserInfo()
-//            BeanUtils.copyProperties(simpleInfo, userInfo)
-//
-//            val intent = Intent(context, ChatActivity::class.java)
-//
-//            intent.putExtra(ConstantUtil.KEY_USER_SIMPLE_INFO, simpleInfo)
-//            context.startActivity(intent)
-//        }
 
         const val TAKE_PHOTO = 5972 // 拍照 请求码
         const val PICK_ALBUM = 9236 // 从相册选择照片 请求码
@@ -133,6 +115,10 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
 
     private val chatViewModel by lazy {
         ChatViewModel.ChatViewModelFactory((application as Application).chatRepository, application).create(ChatViewModel::class.java)
+    }
+
+    private val userViewModel by lazy {
+        UserViewModel.UserViewModelFactory((application as Application).chatRepository).create(UserViewModel::class.java)
     }
 
     private val mChatLayoutManager by lazy {
@@ -186,11 +172,8 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
      * 正在对话的用户信息
      */
     private val counterpartInfo by lazy {
-        intent.getSerializableExtra(ConstantUtil.KEY_USER_SIMPLE_INFO) as? DomainSimpleUserInfo
+        intent.getSerializableExtra(ConstantUtil.KEY_USER_SIMPLE_INFO) as DomainSimpleUserInfo
     }
-
-    // todo 来自其他用户的消息数量，当在和一个用户的聊天页面时其他人发来消息，便在左上角显示消息数量
-    private var newMessagesFromOthers = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -204,11 +187,22 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
 
         val token = (application as Application).getCachedToken()
         val myInfo = (application as Application).getCachedMyInfo()
+
+        // 若用户信息不全，则获取用户基本信息并缓存
+        if (counterpartInfo.userName == null || counterpartInfo.userAvatar == null) {
+            userViewModel.getUserInfo(counterpartInfo.userId).observe(this) {
+                it?.let {
+                    user_name.text = it.userName
+                    mChatRecyclerAdapter.setCounterPartInfo(it)
+                }
+            }
+        }
+
         // 观察本地消息记录
         chatViewModel.getChat(
                 token?.access_token,
                 myInfo?.userId.toString(),
-                counterpartInfo?.userId.toString())
+                counterpartInfo.userId.toString())
                 .observe(this) {
                     // 刷新完毕要调用完成刷新操作
                     if (it.size < ConstantUtil.DATA_FETCH_DEFAULT_SIZE) {
@@ -222,9 +216,16 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
                         isFirstGetChat = false
                         recycler_view.scrollToPosition(0)
                     }
-                    // ack会话消息数量
-                    chatViewModel.ackOfflineNum(myInfo?.userId.toString(), counterpartInfo?.userId.toString())
                 }
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        // ack来自对方的消息数量
+        chatViewModel.ackOfflineNum(
+                (application as Application).getCachedMyInfo()?.userId.toString(),
+                counterpartInfo.userId.toString())
     }
 
     override fun onBackPressed() {
@@ -247,34 +248,39 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == TAKE_PHOTO) {
-                // 拍照返回
-                val picture = PictureSelector.obtainMultipleResult(data)[0]
-                val path = picture.androidQToPath ?: picture.path
-                val pathWrapper = ArrayList<String>(1)
-                val myInfo = (application as Application).getCachedMyInfo()
-                (application as Application).sendImageMessage(
-                        counterpartInfo?.userId.toString(),
-                        myInfo?.userId.toString(),
-                        pathWrapper.also { it.add(path) },
-                        WeakReference(mChatRecyclerAdapter))
-                // 将镜头置于最新消息处
-                scrollToFirst()
-            } else if (requestCode == PICK_ALBUM) {
-                // 相册选择照片返回
-                val pictures = PictureSelector.obtainMultipleResult(data)
-                val pathsWrapper = ArrayList<String>(pictures.size)
-                for (picture in pictures) {
-                    pathsWrapper.add(picture.androidQToPath ?: picture.path)
+            when (requestCode) {
+                TAKE_PHOTO -> { // 拍照返回
+                    val picture = PictureSelector.obtainMultipleResult(data)[0]
+                    val path = picture.androidQToPath ?: picture.path
+                    val pathWrapper = ArrayList<String>(1)
+                    val myInfo = (application as Application).getCachedMyInfo()
+                    (application as Application).sendImageMessage(
+                            counterpartInfo.userId.toString(),
+                            myInfo?.userId.toString(),
+                            pathWrapper.also { it.add(path) },
+                            WeakReference(mChatRecyclerAdapter))
+                    // 将镜头置于最新消息处
+                    scrollToFirst()
                 }
-                val myInfo = (application as Application).getCachedMyInfo()
-                (application as Application).sendImageMessage(
-                        counterpartInfo?.userId.toString(),
-                        myInfo?.userId.toString(),
-                        pathsWrapper,
-                        WeakReference(mChatRecyclerAdapter))
-                // 将镜头置于最新消息处
-                scrollToFirst()
+                PICK_ALBUM -> { // 相册选择照片返回
+                    val pictures = PictureSelector.obtainMultipleResult(data)
+                    val pathsWrapper = ArrayList<String>(pictures.size)
+                    for (picture in pictures) {
+                        pathsWrapper.add(picture.androidQToPath ?: picture.path)
+                    }
+                    val myInfo = (application as Application).getCachedMyInfo()
+                    (application as Application).sendImageMessage(
+                            counterpartInfo.userId.toString(),
+                            myInfo?.userId.toString(),
+                            pathsWrapper,
+                            WeakReference(mChatRecyclerAdapter))
+                    // 将镜头置于最新消息处
+                    scrollToFirst()
+                }
+                UserActivity.REQUEST_UPDATE_INFO -> { // 进入对方的个人主页，更新对方的用户信息
+                    LogUtils.d("从用户个人主页返回，重新获取用户信息")
+                    userViewModel.getUserInfo(counterpartInfo.userId)
+                }
             }
         }
     }
@@ -293,14 +299,14 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
             chatViewModel.getChat(
                     token.access_token,
                     myInfo?.userId.toString(),
-                    counterpartInfo?.userId.toString(),
-                    mChatRecyclerAdapter.data.last().fingerprint)
+                    counterpartInfo.userId.toString(),
+                    mChatRecyclerAdapter.data.last().send_time)
         }
     }
 
-///////////////////////////////////////////////////////////////////////////////
-////////////////////////////////// 初始化页面 //////////////////////////////////
-//↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    ///////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////////// 初始化页面 //////////////////////////////////
+    //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     /**
      * 初始化动画
      */
@@ -370,7 +376,7 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
                 edit_view.setText("")
                 // 委托顶层类发送消息
                 (application as Application).sendTextMessage(
-                        counterpartInfo?.userId.toString(),
+                        counterpartInfo.userId.toString(),
                         myInfo.userId.toString(),
                         content,
                         WeakReference(mChatRecyclerAdapter))
@@ -412,7 +418,7 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
      * 初始化所有RV
      */
     private fun initRecyclerLists() {
-        user_name.text = counterpartInfo?.userName ?: counterpartInfo?.userId.toString()
+        user_name.text = counterpartInfo.userName ?: counterpartInfo.userId.toString()
         chat_bar_send.visibility = View.GONE
 
         // 聊天列表倒序manager
@@ -440,9 +446,9 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
 
         morePanelAdapter.notifyDataSetChanged()
     }
-// ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑//
-////////////////////////////////// 初始化页面 //////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////
+    // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑//
+    ////////////////////////////////// 初始化页面 //////////////////////////////////
+    ///////////////////////////////////////////////////////////////////////////////
 
     /**
      * 显示发送按钮，隐藏Addition按钮
@@ -480,8 +486,8 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
     }
 
     /////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////// 回调方法 ///////////////////////////////////////
-//↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    //////////////////////////////////// 回调方法 ///////////////////////////////////////
+    //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
     override fun onIMStartLogin() {
         // do nothing
     }
@@ -505,10 +511,11 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
     override fun onIMReceiveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
         val myInfo = (application as Application).getCachedMyInfo()
         // 若正好是对方用户发来的消息则将其显示在聊天框中
-        if (senderID == counterpartInfo?.userId.toString()) {
-            mChatRecyclerAdapter.addData(0, ChatHistory(fingerprint, senderID, myInfo?.userId.toString(), typeu, content, Date(), 0))
-            // 若当前已经在最底下，则列表将会自动跟踪至最新消息处
-            if (!recycler_view.canScrollVertically(-1)) {
+        if (senderID == counterpartInfo.userId.toString()) {
+            mChatRecyclerAdapter.addData(0, ChatHistory(fingerprint, senderID, myInfo?.userId.toString(), typeu, content, System.currentTimeMillis(), 0))
+            // 若当前已经在最底下或者键盘处于被开启状态，则列表将会自动跟踪至最新消息处
+            if (KeyboardUtils.isSoftInputVisible(this)
+                    || !recycler_view.canScrollVertically(1)) {
                 scrollToFirst()
             }
         }
@@ -523,7 +530,7 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
             val myInfo = (application as Application).getCachedMyInfo()
             val token = (application as Application).getCachedToken()
             if (myInfo != null && token != null) {
-                chatViewModel.getChat(token.access_token, myInfo.userId.toString(), counterpartInfo?.userId.toString())
+                chatViewModel.getChat(token.access_token, myInfo.userId.toString(), counterpartInfo.userId.toString())
                 mChatRecyclerAdapter.updateMyUserInfo(myInfo)
             }
         }

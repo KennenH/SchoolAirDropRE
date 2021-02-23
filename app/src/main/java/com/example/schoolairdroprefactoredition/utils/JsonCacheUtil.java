@@ -11,6 +11,8 @@ import com.blankj.utilcode.util.Utils;
 import com.example.schoolairdroprefactoredition.cache.CacheWithDuration;
 import com.google.gson.Gson;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
@@ -55,7 +57,7 @@ public class JsonCacheUtil {
      *
      * @param key      键
      * @param value    值
-     * @param duration 有效时间 ms
+     * @param duration 有效时间 单位ms
      */
     public void saveCache(String key, Object value, long duration) {
         SharedPreferences.Editor editor = mSharePreferences.edit();
@@ -80,7 +82,15 @@ public class JsonCacheUtil {
         mSharePreferences.edit().remove(key).apply();
     }
 
-    public <T> T getValue(String key, Class<T> clazz) {
+    /**
+     * 获取对于键的值缓存
+     *
+     * @param key   键
+     * @param clazz 值所对应的类
+     * @return 键对应的值
+     */
+    @Nullable
+    public <T> T getCache(String key, Class<T> clazz) {
         String valueWithDuration = mSharePreferences.getString(key, null);
         if (valueWithDuration == null) return null;
 

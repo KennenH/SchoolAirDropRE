@@ -67,7 +67,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
     private var empty: View? = null
 
     private val mMessagesRecyclerAdapter by lazy {
-        MessagesRecyclerAdapter(messageViewModel)
+        MessagesRecyclerAdapter()
     }
 
     private val manager by lazy {
@@ -112,8 +112,9 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
             if (menuBridge.position == 0) {
                 // 隐藏第position个会话
                 mMessagesRecyclerAdapter.removeAt(adapterPosition)
-                val counterpartId = mMessagesRecyclerAdapter.getCounterpartIdAt(adapterPosition)
-                messageViewModel.swipeToHideChannel(counterpartId)
+                mMessagesRecyclerAdapter.getCounterpartIdAt(adapterPosition)?.let {
+                    messageViewModel.swipeToHideChannel(it)
+                }
             }
         }
         recyclerView?.adapter = mMessagesRecyclerAdapter
@@ -137,8 +138,8 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
             if (it != null) {
                 // 将服务器离线消息数量合并入本地服务器，此时本地服务器数据改变，理论上将会自动刷新消息列表
                 messageViewModel.saveOfflineNum(it)
-                updateMessageState(MessageState.REFRESH)
             }
+            updateMessageState(MessageState.REFRESH)
         }
 
         return binding.root
@@ -197,8 +198,8 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
                 if (it != null) {
                     // 将服务器离线消息数量合并入本地服务器，此时本地服务器数据改变，理论上将会自动刷新消息列表
                     messageViewModel.saveOfflineNum(it)
-                    updateMessageState(MessageState.REFRESH)
                 }
+                updateMessageState(MessageState.REFRESH)
             }
         } else {
             mMessagesRecyclerAdapter.setList(ArrayList())
@@ -233,6 +234,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
     }
 
     override fun onIMReceiveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
+        // do nothing
     }
 
     override fun onIMErrorResponse(errorCode: Int, message: String) {

@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.schoolairdroprefactoredition.repository.UserNameRepository
 import kotlinx.coroutines.launch
 
-class ResultViewModel : ViewModel() {
+class UserRenameViewModel : ViewModel() {
 
     private val mRenameResult = MutableLiveData<Boolean>()
 

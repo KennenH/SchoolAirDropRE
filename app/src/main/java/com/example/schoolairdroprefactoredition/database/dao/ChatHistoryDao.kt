@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.database.dao
 
 import androidx.room.*
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.database.pojo.*
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import kotlinx.coroutines.flow.Flow
@@ -10,38 +9,53 @@ import kotlinx.coroutines.flow.Flow
 interface ChatHistoryDao {
 
     /**
-     * 获取未读消息数量
-     * 包括网络和在线
+     * 获取消息列表
+     *
+     * [com.example.schoolairdroprefactoredition.scene.main.messages.MessagesFragment]观察此数据变化
+     * 当有来自其他人的消息被接收时或自己的消息发送时消息列表将会自动变化
      */
     @Query("select * from offline_num_detail where my_id = :receiverID order by send_time desc")
     fun getChatList(receiverID: String): Flow<List<ChatOfflineNumDetail>>
 
     /**
      * 获取默认数量条最新消息
+     *
+     * 仅在打开聊天界面时调用一次
      */
     @Query("select * from offline where (receiver_id = :receiverID and sender_id = :senderID) or (receiver_id = :senderID and sender_id = :receiverID) order by send_time desc limit " + ConstantUtil.DATA_FETCH_DEFAULT_SIZE)
     suspend fun getLatestChat(receiverID: String, senderID: String): List<ChatHistory>
 
     /**
-     * 获取特定消息之后的默认数量条消息
+     * 获取特定时间戳之后的默认数量条消息
+     *
+     * 用于下拉获取更多的逻辑
      */
-    @Query("select * from offline where (receiver_id = :receiverID and sender_id = :senderID or receiver_id = :senderID and sender_id = :receiverID) and send_time < (select send_time from offline where fingerprint = :fp) order by send_time desc limit " + ConstantUtil.DATA_FETCH_DEFAULT_SIZE)
-    suspend fun getChat(receiverID: String, senderID: String, fp: String): List<ChatHistory>
+    @Query("select * from offline where (receiver_id = :receiverID and sender_id = :senderID or receiver_id = :senderID and sender_id = :receiverID) and send_time < :start order by send_time desc limit " + ConstantUtil.DATA_FETCH_DEFAULT_SIZE)
+    suspend fun getChat(receiverID: String, senderID: String, start: Long): List<ChatHistory>
 
     /**
      * 查询本地用户信息缓存
      */
     @Query("select * from user_info where user_id = :userID")
-    suspend fun getUserCache(userID: Int): UserCache?
+    suspend fun getUserCache(userID: Int):  UserCache?
 
     /**
-     * 保存用户信息缓存
+     * 保存单个用户信息缓存
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveUserCache(userCache: UserCache)
 
     /**
-     * 保存用户信息缓存
+     * 当该用户信息未在本地被缓存时，需要将其id放入本地数据库，否则消息列表将不会更新，因为消息列表的视图依赖于用户信息
+     *
+     * 2021/2/22 Bug fix 此视图查询依赖于用户表，当对方是没有遇到过的用户，即本地没有该用户的缓存时，对方发来在线的第一条消息，将不会更新消息列表，因此所有发来消息的用户，尽管只有用户id，也要保存用户信息
+     * 另见消息列表视图[ChatOfflineNumDetail]
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun saveFirstUserCache(userCache: UserCache)
+
+    /**
+     * 批量保存用户信息缓存
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveUserCache(userCaches: List<UserCache>)
@@ -57,6 +71,25 @@ interface ChatHistoryDao {
     suspend fun saveOfflineNum(offlineNums: List<ChatOfflineNum>)
 
     /**
+     * 更新消息列表，当消息列表中已经存在会话时将变为更新会话，否则将插入一条新的
+     *
+     * @param isSentFromCounterpart 这条消息是否是来自对方的
+     */
+    @Transaction
+    suspend fun saveOfflineNum(offlineNum: ChatOfflineNum, isSentFromCounterpart: Boolean) {
+        val result = insertOfflineNum(offlineNum)
+        if (result == -1L) {
+            if (isSentFromCounterpart) {
+                // 消息来自对方
+                updateOfflineNumFromCounterpart(offlineNum.counterpart_id, offlineNum.my_id, offlineNum.latest_fingerprint)
+            } else {
+                // 消息是我自己发出的
+                updateOfflineNumFromMe(offlineNum.counterpart_id, offlineNum.my_id, offlineNum.latest_fingerprint)
+            }
+        }
+    }
+
+    /**
      * 插入消息列表
      *
      * 不要直接使用该方法，使用[saveOfflineNum]
@@ -65,27 +98,20 @@ interface ChatHistoryDao {
     suspend fun insertOfflineNum(offlineNum: ChatOfflineNum): Long
 
     /**
-     * 更新消息列表
+     * 收到来自对方的消息时更新消息列表
      *
      * 不要直接使用该方法，使用[saveOfflineNum]
      */
     @Query("update offline_num set unread_num = unread_num + 1, latest_fingerprint = :fingerprint, display = 1 where counterpart_id = :counterpartId and my_id = :myID")
     suspend fun updateOfflineNumFromCounterpart(counterpartId: String, myID: String, fingerprint: String)
 
+    /**
+     * 我自己发送消息时更新消息列表
+     *
+     * 不压迫直接使用该方法，使用[saveOfflineNum]
+     */
     @Query("update offline_num set latest_fingerprint = :fingerprint, display = 1 where counterpart_id = :counterpartId and my_id = :myID")
-    suspend fun updateOfflineNumFromMy(counterpartId: String, myID: String, fingerprint: String)
-
-    @Transaction
-    suspend fun saveOfflineNum(offlineNum: ChatOfflineNum, isSentFromCounterpart: Boolean) {
-        val result = insertOfflineNum(offlineNum)
-        if (result == -1L) {
-            if (isSentFromCounterpart) {
-                updateOfflineNumFromCounterpart(offlineNum.counterpart_id, offlineNum.my_id, offlineNum.latest_fingerprint)
-            } else {
-                updateOfflineNumFromMy(offlineNum.counterpart_id, offlineNum.my_id, offlineNum.latest_fingerprint)
-            }
-        }
-    }
+    suspend fun updateOfflineNumFromMe(counterpartId: String, myID: String, fingerprint: String)
 
     /**
      * 保存收到的实时消息的或者网络请求到的离线消息
@@ -104,25 +130,31 @@ interface ChatHistoryDao {
     suspend fun saveChat(history: ChatHistory)
 
     /**
-     * ack未读消息数量，将来自sender的消息未读数置为0
+     * ack未读消息数量，将来自某个用户的消息未读数置为0，即在消息列表上展示的红色圈圈中的数字，若为0则不显示红圈
      */
     @Query("update offline_num set unread_num = 0 where counterpart_id = :senderID and my_id = :receiverID")
     suspend fun ackOfflineNum(receiverID: String, senderID: String)
 
     /**
-     * 更新来自某个用户的最后一条消息指纹以及是否还有离线消息标志
+     * 更新来自某个用户的是否还有离线消息标志
+     *
+     * 用于在聊天界面下拉加载更多的时候判断，若true则发起请求，否则仅需本地查询即可
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveLastMessage(lastFromUserInformation: LastFromUserInformation)
 
     /**
-     * 更新来自某个用户的最后一条消息指纹以及是否还有离线消息标志
+     * 批量更新来自某个用户的是否还有离线消息标志
+     *
+     * 用于在聊天界面下拉加载更多的时候判断，若true则发起请求，否则仅需本地查询即可
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveLastMessage(lastFromUserInformation: List<LastFromUserInformation>)
 
     /**
-     * 获取最后一条消息指纹和离线消息标志
+     * 获取来自某个用户的是否还有更多离线消息标志
+     *
+     * 用于在聊天界面下拉加载更多的时候判断，若true则发起请求，否则仅需本地查询即可
      */
     @Query("select * from last_messages where user_id = :senderID")
     suspend fun getLastFromUserInformation(senderID: String): LastFromUserInformation?

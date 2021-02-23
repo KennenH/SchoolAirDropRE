@@ -8,9 +8,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.blankj.utilcode.util.BarUtils
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
@@ -39,10 +41,20 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         const val animOffset = 40
 
         /**
-         * 请求码
-         * 请求更新用户信息
+         * 请求更新我的用户信息 请求码
+         *
+         * 此更新不同于下面的更新，是我手动更新用户信息，比如修改头像名字等的更新，更新后返回首页将会重新
+         * 获取我的用户信息
          */
-        const val REQUEST_UPDATE = 520
+        const val REQUEST_UPDATE_MY = 520
+
+        /**
+         * 请求更新别人的用户信息 请求码
+         *
+         * 不同与上面的更新的是，此更新非手动，而是自动完成，进入页面后网络请求了对方的用户信息，有可能更新对方
+         * 的用户信息，此时回到上一个页面，便可以用最新的用户信息来填充ui
+         */
+        const val REQUEST_UPDATE_INFO = 1314
 
         /**
          * ********* 注意 *********
@@ -60,7 +72,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
             val intent = Intent(context, UserActivity::class.java)
             intent.putExtra(ConstantUtil.KEY_INFO_MODIFIABLE, true)
             if (context is AppCompatActivity) {
-                context.startActivityForResult(intent, REQUEST_UPDATE)
+                context.startActivityForResult(intent, REQUEST_UPDATE_MY)
             }
         }
 
@@ -78,7 +90,11 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
             val intent = Intent(context, UserActivity::class.java)
             intent.putExtra(ConstantUtil.KEY_USER_ID, userID)
             intent.putExtra(ConstantUtil.KEY_INFO_MODIFIABLE, false)
-            context.startActivity(intent)
+            context.run {
+                if (this is AppCompatActivity) {
+                    startActivityForResult(intent, REQUEST_UPDATE_INFO)
+                }
+            }
         }
     }
 
@@ -93,9 +109,11 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         intent.getBooleanExtra(ConstantUtil.KEY_INFO_MODIFIABLE, false)
     }
 
-    private val token by lazy {
-        (application as Application).getCachedToken()
-    }
+//    private val token by lazy {
+//        (application as Application).getCachedToken()
+//    }
+
+    private var myInfo: DomainUserInfo.DataBean? = null
 
     private var userInfo: DomainUserInfo.DataBean? = null
 
@@ -121,11 +139,11 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                if (requestCode == REQUEST_UPDATE) {
-                    userInfo = data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
-                    intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
+                if (requestCode == REQUEST_UPDATE_MY) { // 修改用户信息返回
+                    myInfo = data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
+                    intent.putExtra(ConstantUtil.KEY_USER_INFO, myInfo)
 
-                    setUserInfo(userInfo)
+                    setUserInfo(myInfo)
 
                     data.putExtra(ConstantUtil.KEY_UPDATED, true)
                     setResult(Activity.RESULT_OK, data)
@@ -138,20 +156,19 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         BarUtils.setStatusBarLightMode(this@UserActivity, !isDarkTheme)
         BarUtils.setNavBarLightMode(this@UserActivity, !isDarkTheme)
 
-        userInfo = (application as Application).getCachedMyInfo()
-        val sellerID = intent.getIntExtra(ConstantUtil.KEY_USER_ID, -1)
-
-        if (userInfo == null && sellerID != -1) {
-            userViewModel.getUserBaseInfoByID(sellerID).observeOnce(this) {
+        // 获取传递进来的userID，若有，则代表这不是从 `我的` 页面进入的个人主页
+        val userID = intent.getIntExtra(ConstantUtil.KEY_USER_ID, -1)
+        if (userID != -1) { // 如果传了userID，说明这个个人主页是别人的，去获取用户信息
+            userViewModel.getUserInfo(userID, true).observe(this) {
                 if (it != null) {
+                    userInfo = it
                     intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
-                    setUserInfo(it)
-                } else {
-                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
                 }
+                setUserInfo(it)
             }
-        } else if (userInfo != null && sellerID == -1) {
-            setUserInfo(userInfo)
+        } else {
+            // 没传userID说明是我自己的页面，直接获取我的信息
+            setUserInfo((application as Application).getCachedMyInfo())
         }
 
         user_background_over_drag_header.setOnHeaderOverDragEventListener(this)
@@ -164,21 +181,24 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
      * 使用用户信息装填ui界面
      * 在 用户第一次进入页面时 以及 用户修改信息后返回时调用
      */
-    private fun setUserInfo(userInfo: DomainUserInfo.DataBean? = null) {
-        this.userInfo = userInfo
-                ?: (application as Application).getCachedMyInfo()
+    private fun setUserInfo(userInfo: DomainUserInfo.DataBean?) {
+        if (userInfo == null) {
+            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
+            return
+        }
 
         user_avatar.setActualImageResource(R.drawable.placeholder_round)
         user_background.setImageResource(R.drawable.logo_placeholder)
 
         ImageUtil.loadRoundImage(user_avatar,
-                ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(this.userInfo?.userAvatar),
+                ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(userInfo.userAvatar),
                 R.drawable.placeholder_round)
 
-        ImageUtil.loadImage(user_background, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(this.userInfo?.userAvatar),
+        ImageUtil.loadImage(user_background, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(userInfo.userAvatar),
                 R.drawable.logo_placeholder)
 
-        userInfo?.createtime?.let { millis ->
+        userInfo.createtime.let { millis ->
+            if (millis == -1L) return
             val calendar = Calendar.getInstance().also { it.timeInMillis = millis }
             user_join_time.text = getString(
                     R.string.userJoinTime,
@@ -186,9 +206,9 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
                     calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH))
         }
-        userName.text = this.userInfo?.userName
-        user_more_selling.text = userInfo?.userGoodsOnSaleCount.toString()
-        user_more_posts.text = userInfo?.userContactCount.toString()
+        userName.text = userInfo.userName
+        user_more_selling.text = userInfo.userGoodsOnSaleCount.toString()
+        user_more_posts.text = userInfo.userContactCount.toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -227,12 +247,13 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
 
             // 在售
             R.id.user_more_selling -> {
-                SSBActivity.start(this@UserActivity, userInfo, 0, isModifiable || isMine)
+                SSBActivity.start(this@UserActivity, userInfo?.userId, 0, isModifiable || isMine)
             }
 
             // 帖子
             R.id.user_more_posts -> {
-                // TODO: 2020/12/5 查看该用户帖子
+                Toast.makeText(this, "功能尚在开发", Toast.LENGTH_SHORT).show()
+                // TODO: 2020/12/5 点击进入用户发表的帖子
             }
         }
     }
@@ -240,15 +261,13 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
     /**
      * 在拉动页面时背景图
      * 随着手指下滑而放大
-     * 随手指上滑而移动
      */
     override fun onOverDragging(isDragging: Boolean, percent: Float, offset: Int, height: Int, maxDragHeight: Int) {
         if (offset >= animOffset) {
+            // 下拉到一定程度放大并移动图片
             val extraOffset = offset - animOffset
             val width = (originBackgroundHeight + extraOffset) / originBackgroundHeight * originBackgroundWidth
             user_background.layoutParams = ConstraintLayout.LayoutParams(width, originBackgroundHeight + extraOffset)
-        } else if (offset <= -animOffset) {
-            user_background.translationY = offset.toFloat()
         }
     }
 

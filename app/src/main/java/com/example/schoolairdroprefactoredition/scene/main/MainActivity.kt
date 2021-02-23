@@ -152,27 +152,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 //        setMainActivitySaturation0()
     }
 
-    /**
-     * 当app可见时检查当前页面与导航栏指向页面一致
-     */
-    override fun onResume() {
-        super.onResume()
-        when {
-            mPurchasing.isVisible -> {
-                navView.selectedItemId = R.id.navigation_purchasing
-            }
-            mPlaza.isVisible -> {
-                navView.selectedItemId = R.id.navigation_playground
-            }
-            mMessages.isVisible -> {
-                navView.selectedItemId = R.id.navigation_message
-            }
-            mMy.isVisible -> {
-                navView.selectedItemId = R.id.navigation_my
-            }
-        }
-    }
-
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
@@ -192,7 +171,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                     loginStateChanged(userInfo, token)
                 }
 
-                UserActivity.REQUEST_UPDATE -> {
+                UserActivity.REQUEST_UPDATE_MY -> {
                     if (data?.getBooleanExtra(ConstantUtil.KEY_UPDATED, false) as Boolean) {
                         obtainMyInfo()
                     }
@@ -442,6 +421,9 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         mClient.startLocation()
     }
 
+    /**
+     * 导航栏点击切换fragment页面
+     */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.navigation_purchasing -> {
@@ -453,6 +435,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 return true
             }
             R.id.navigation_message -> {
+                // 当未登录时
                 val token = (application as Application).getCachedToken()
                 if (token != null) {
                     showFragment(mMessages)
@@ -607,7 +590,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         // 保存收到的消息
         val myID = (application as Application).getCachedMyInfo()
         if (myID != null) {
-            imViewModel.saveReceivedMessage(ChatHistory(fingerprint, senderID, myID.userId.toString(), typeu, content, Date(), 0))
+            imViewModel.saveReceivedMessage(ChatHistory(fingerprint, senderID, myID.userId.toString(), typeu, content, System.currentTimeMillis(), 0))
         }
 
     }

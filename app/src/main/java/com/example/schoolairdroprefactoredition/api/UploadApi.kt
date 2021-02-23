@@ -9,10 +9,11 @@ import retrofit2.http.*
  * 上传图片单独api
  */
 interface UploadApi {
+
     /**
      * 获取七牛云上传凭证
      */
-    @POST("appapi/ajax/uploadtoken")
+    @POST("appapi/ajax/uploadToken")
     fun getUploadToken(@Header("Authorization") token: String): Call<DomainUploadToken>
 
     /**

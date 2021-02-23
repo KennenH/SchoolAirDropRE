@@ -10,7 +10,6 @@ import com.example.schoolairdroprefactoredition.database.pojo.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-
 @Database(entities = [
     ChatHistory::class,
     ChatOfflineNum::class,
@@ -18,7 +17,7 @@ import kotlinx.coroutines.launch
     LastFromUserInformation::class],
         views = [
             ChatOfflineNumDetail::class],
-        version = 6,
+        version = 9,
         exportSchema = true)
 abstract class SARoomDatabase : RoomDatabase() {
 

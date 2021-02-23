@@ -78,7 +78,7 @@
                 android:text="@string/noSpaceAndLineBreak"
                 android:textColor="@color/colorPrimaryRed"
                 android:textSize="@dimen/textSizeNormal"
-                android:visibility="visible"
+                android:visibility="invisible"
                 app:drawableStartCompat="@drawable/ic_attention_small"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
