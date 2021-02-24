@@ -77,7 +77,7 @@ class SearchRepository {
 
         RetrofitClient.goodsApi.searchGoods(
                 ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page,
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGTITUDE.toDouble() else longitude,
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE.toDouble() else longitude,
                 if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE.toDouble() else latitude,
                 key).apply {
             enqueue(object : CallBackWithRetry<DomainPurchasing>(this@apply) {

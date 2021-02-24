@@ -88,13 +88,13 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
      * 修改物品信息 下架物品等
      */
     public override fun onItemAction(view: View, bean: DomainPurchasing.DataBean) {
-        if (isMine) return
+        if (!isMine) return
 
         context?.let { c ->
+            val binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(context))
+
             dialog = BottomSheetDialog(c)
             dialog?.setContentView(binding.root)
-
-            val binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(context))
             binding.apply {
                 modify.setOnClickListener {
                     AddNewActivity.start(context, bean.goods_id)

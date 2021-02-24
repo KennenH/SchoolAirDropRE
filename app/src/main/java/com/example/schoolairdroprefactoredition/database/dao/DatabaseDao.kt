@@ -6,7 +6,7 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface ChatHistoryDao {
+interface DatabaseDao {
 
     /**
      * 获取消息列表
@@ -22,7 +22,7 @@ interface ChatHistoryDao {
      *
      * 仅在打开聊天界面时调用一次
      */
-    @Query("select * from offline where (receiver_id = :receiverID and sender_id = :senderID) or (receiver_id = :senderID and sender_id = :receiverID) order by send_time desc limit " + ConstantUtil.DATA_FETCH_DEFAULT_SIZE)
+    @Query("select * from offline where (receiver_id = :receiverID and sender_id = :senderID) or (receiver_id = :senderID and sender_id = :receiverID) order by send_time desc limit " + ConstantUtil.DEFAULT_PAGE_SIZE)
     suspend fun getLatestChat(receiverID: String, senderID: String): List<ChatHistory>
 
     /**
@@ -30,14 +30,14 @@ interface ChatHistoryDao {
      *
      * 用于下拉获取更多的逻辑
      */
-    @Query("select * from offline where (receiver_id = :receiverID and sender_id = :senderID or receiver_id = :senderID and sender_id = :receiverID) and send_time < :start order by send_time desc limit " + ConstantUtil.DATA_FETCH_DEFAULT_SIZE)
+    @Query("select * from offline where (receiver_id = :receiverID and sender_id = :senderID or receiver_id = :senderID and sender_id = :receiverID) and send_time < :start order by send_time desc limit " + ConstantUtil.DEFAULT_PAGE_SIZE)
     suspend fun getChat(receiverID: String, senderID: String, start: Long): List<ChatHistory>
 
     /**
      * 查询本地用户信息缓存
      */
-    @Query("select * from user_info where user_id = :userID")
-    suspend fun getUserCache(userID: Int):  UserCache?
+    @Query("select * from user_info where user_id = :userID limit 1")
+    suspend fun getUserCache(userID: Int): UserCache?
 
     /**
      * 保存单个用户信息缓存
@@ -65,7 +65,7 @@ interface ChatHistoryDao {
      * 发送者接收者复合主键已存在则直接替换
      *
      * 获取离线消息数量时更新消息列表
-     * 本方法可以设置会话可见性，另见[setDisplay]
+     * 本方法可以设置会话可见性，另见[setChannelDisplay]
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun saveOfflineNum(offlineNums: List<ChatOfflineNum>)
@@ -156,7 +156,7 @@ interface ChatHistoryDao {
      *
      * 用于在聊天界面下拉加载更多的时候判断，若true则发起请求，否则仅需本地查询即可
      */
-    @Query("select * from pull_flag where user_id = :senderID")
+    @Query("select * from pull_flag where user_id = :senderID limit 1")
     suspend fun getPullFlag(senderID: String): PullFlag?
 
     /**
@@ -180,5 +180,23 @@ interface ChatHistoryDao {
      * @param display 0 隐藏 1 显示
      */
     @Query("update offline_num set display = :display where counterpart_id = :counterpartId")
-    suspend fun setDisplay(counterpartId: String, display: Int)
+    suspend fun setChannelDisplay(counterpartId: String, display: Int)
+
+    /**
+     * 添加物品收藏
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun addFavorite(favorite: Favorite)
+
+    /**
+     * 取消物品收藏
+     */
+    @Delete
+    suspend fun removeFavorite(favorite: Favorite)
+
+    /**
+     * 查询物品是否
+     */
+    @Query("select exists(select goods_id from favorite where goods_id = :goodsID)")
+    suspend fun isFavorite(goodsID: Int): Boolean
 }

@@ -30,7 +30,7 @@ object ConstantUtil {
     /**
      * 默认获取数据一页
      */
-    const val DATA_FETCH_DEFAULT_SIZE = 10
+    const val DEFAULT_PAGE_SIZE = 15
 
     /**
      * retrofit 最大缓存数量

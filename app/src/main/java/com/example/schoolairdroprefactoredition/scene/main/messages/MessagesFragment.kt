@@ -8,8 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.TextView
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
@@ -19,23 +17,18 @@ import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.databinding.FragmentMessagesBinding
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.MessagesRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.MessageViewModel
-import com.example.schoolairdroprefactoredition.viewmodel.UserViewModel
 import com.github.ybq.android.spinkit.SpinKitView
-import com.qiniu.android.utils.LogUtil
-import com.xiaomi.push.it
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import net.x52im.mobileimsdk.server.protocal.Protocal
-import java.util.*
 import kotlin.collections.ArrayList
 
-class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListener, Application.IMListener {
+class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListener, Application.IMListener, MessagesRecyclerAdapter.UserInfoRequestListener {
 
     /**
      * 移动端IM的状态
@@ -95,6 +88,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
         loading = binding.messagesTitleLoading
         empty = binding.messagesEmpty
 
+        mMessagesRecyclerAdapter.setUserInfoRequestListener(this)
         recyclerView?.layoutManager = manager
         recyclerView?.setSwipeMenuCreator { _, rightMenu, position ->
             val delete = SwipeMenuItem(context)
@@ -247,5 +241,23 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
 
     override fun onIMErrorResponse(errorCode: Int, message: String) {
         // do nothing
+    }
+
+    /**
+     * 用户信息的观察者是否已被添加
+     */
+    private var isUserInfoObserving = false
+
+    /**
+     * messageAdapter在显示用户信息时发现信息不全，请求外部获取
+     */
+    override fun onUserInfoRequest(userID: String, myID: String) {
+        if (!isUserInfoObserving) {
+            messageViewModel.getUserCache(userID.toInt()).observe(viewLifecycleOwner) {
+                messageViewModel.getChatList(myID)
+            }
+        } else {
+            messageViewModel.getUserCache(userID.toInt())
+        }
     }
 }

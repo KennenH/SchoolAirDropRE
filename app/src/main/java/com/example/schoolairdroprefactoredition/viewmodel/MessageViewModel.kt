@@ -7,7 +7,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainOfflineNum
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.repository.UserRepository
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 import kotlin.collections.ArrayList
@@ -20,6 +20,10 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
 
     private val userRepository by lazy {
         UserRepository.getInstance()
+    }
+
+    private val jsonCacheUtil by lazy {
+        JsonCacheUtil.getInstance()
     }
 
     class MessageViewModelFactory(private val repository: DatabaseRepository) : ViewModelProvider.Factory {
@@ -118,7 +122,7 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
     /**
      * 侧滑删除会话，即将会话的display置为0
      *
-     * 何时置1详见[com.example.schoolairdroprefactoredition.database.dao.ChatHistoryDao]
+     * 何时置1详见[com.example.schoolairdroprefactoredition.database.dao.DatabaseDao]
      */
     fun swipeToHideChannel(counterpartId: String) {
         viewModelScope.launch {
@@ -127,22 +131,19 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
     }
 
     /**
-     * 获取用户基本信息
+     * 获取用户缓存，当有缓存存在直接使用缓存
      */
-    fun getUserBaseInfo(userId: Int): LiveData<UserCache?> {
+    fun getUserCache(userId: Int): LiveData<UserCache?> {
         viewModelScope.launch {
             databaseRepository.getUserCache(userId)
                     .let { cache ->
-                        if (cache != null) {
-                            LogUtils.d("已获取用户信息本地缓存")
+                        if (cache?.user_avatar != null && cache.user_name != null) {
                             // 若有缓存直接使用缓存，无需获取网络信息
                             userCacheLiveData.value = cache
                         } else {
-                            LogUtils.d("本地未检测到用户缓存，正在进行网络数据请求")
                             // 若无缓存便去获取一次即可，进入个人主页才去请求更新用户信息
                             userRepository.getUserInfoById(userId) { success, response ->
                                 if (success) {
-                                    LogUtils.d("网络请求用户信息成功，数据已缓存")
                                     // 网络获取成功则返回并保存
                                     response?.let {
                                         val userCache = UserCache(it.userId, it.userName, it.userAvatar, it.createtime, it.userGoodsOnSaleCount, it.userContactCount)

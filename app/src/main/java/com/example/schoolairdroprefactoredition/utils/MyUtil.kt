@@ -38,25 +38,11 @@ object MyUtil {
         return ((ScreenUtils.getAppScreenWidth() - items * size) / (2f * items + 2)).toInt()
     }
 
-    /**
-     * 分页每页固定数量item获取本页数组上限
-     *
-     * @param total       总共item数量
-     * @param itemPerPage 每页item数
-     * @param position    当前页
-     * @return 当前数组上限（exclusive）
-     */
-    @JvmStatic
-    fun gridItemBounds(total: Int, itemPerPage: Int, position: Int): Int {
-        return min((position + 1) * itemPerPage, total)
-    }
-
     @JvmStatic
     fun loading(context: Context?): LoadingPopupView {
         return XPopup.Builder(context)
                 .dismissOnBackPressed(true)
                 .dismissOnTouchOutside(false)
-                .dismissOnBackPressed(false)
                 .setPopupCallback(object : SimpleCallback() {
                     override fun onShow(popupView: BasePopupView) {
                         if (context is AppCompatActivity) {

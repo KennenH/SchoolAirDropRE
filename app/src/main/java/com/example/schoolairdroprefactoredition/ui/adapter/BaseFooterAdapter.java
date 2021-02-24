@@ -27,7 +27,7 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
         }
 
         removeAllFooterView();
-        if (list != null && list.size() < ConstantUtil.DATA_FETCH_DEFAULT_SIZE) {
+        if (list != null && list.size() < ConstantUtil.DEFAULT_PAGE_SIZE) {
             addNoMoreFooter();
         }
     }
@@ -36,7 +36,7 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
     public void addData(@NotNull Collection<? extends T> newData) {
         super.addData(newData);
         removeAllFooterView();
-        if (newData.size() < ConstantUtil.DATA_FETCH_DEFAULT_SIZE) {
+        if (newData.size() < ConstantUtil.DEFAULT_PAGE_SIZE) {
             addNoMoreFooter();
         }
     }

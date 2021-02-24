@@ -25,7 +25,6 @@ import com.example.schoolairdroprefactoredition.cache.NewPostDraftCache
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips
 import com.example.schoolairdroprefactoredition.scene.addnew.InputSetActivity.Companion.start
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
@@ -37,7 +36,6 @@ import com.example.schoolairdroprefactoredition.ui.components.AddPicItem
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem.OnItemAddPicActionListener
 import com.example.schoolairdroprefactoredition.utils.*
 import com.example.schoolairdroprefactoredition.utils.MyUtil.ImageLoader
-import com.example.schoolairdroprefactoredition.utils.MyUtil.getArrayFromString
 import com.example.schoolairdroprefactoredition.utils.MyUtil.pickPhotoFromAlbum
 import com.example.schoolairdroprefactoredition.utils.filters.DecimalFilter
 import com.example.schoolairdroprefactoredition.viewmodel.AddNewViewModel
@@ -248,7 +246,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 if (cover.imagePath != null && "" != cover.imagePath) {
                     XPopup.Builder(this@AddNewActivity)
                             .isDarkTheme(true)
-                            .asImageViewer(cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, ImageLoader())
+                            .asImageViewer(cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, R.color.black, ImageLoader())
                             .show()
                 } else {
                     request = REQUEST_CODE_COVER
@@ -302,7 +300,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 tag_title.visibility = View.GONE
                 option_tag_wrapper.visibility = View.GONE
                 option_anonymous.visibility = View.GONE
-                initGoodsInfo()
+//                initGoodsInfo()
             }
         }
     }
@@ -681,40 +679,40 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      * 在使用物品信息填充页面
      */
     private fun initGoodsInfo() {
-        goodsBaseInfo?.let { baseInfo ->
-            goodsViewModel.getGoodsDetailByID(baseInfo.goods_id).observeOnce(this) { goodsDetailInfo ->
-                goodsDetailInfo.let { detailInfo ->
-                    if (detailInfo != null) {
-                        val goodsInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO) as DomainPurchasing.DataBean
-                        mCoverPath = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(goodsInfo.goods_cover_image)
-                        cover.setImageRemotePath(mCoverPath)
-
-                        val picSet =
-                                if (detailInfo.data.goods_images == null || detailInfo.data.goods_images.trim() == "") ArrayList()
-                                else getArrayFromString(detailInfo.data.goods_images)
-
-                        for (i in picSet.indices) {
-                            val media = LocalMedia()
-                            media.path = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(picSet[i])
-                            mPicSetSelected.add(media)
-                        }
-
-                        mPicSetHorizontalAdapter.setList(mPicSetSelected)
-                        option_title.text = goodsInfo.goods_name
-                        price_input.setText(goodsInfo.goods_price)
-                        if (goodsInfo.isGoods_is_secondHande) {
-                            option_secondHand.toggle()
-                        }
-                        if (goodsInfo.isGoods_is_bargain) {
-                            option_negotiable.toggle()
-                        }
-                        option_description.text = detailInfo.data.goods_content
-                    } else {
-                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorLoadItemInfo)
-                    }
-                }
-            }
-        }
+//        goodsBaseInfo?.let { baseInfo ->
+//            goodsViewModel.getGoodsDetailByID(baseInfo.goods_id).observeOnce(this) { goodsDetailInfo ->
+//                goodsDetailInfo.let { detailInfo ->
+//                    if (detailInfo != null) {
+//                        val goodsInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO) as DomainPurchasing.DataBean
+//                        mCoverPath = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(goodsInfo.goods_cover_image)
+//                        cover.setImageRemotePath(mCoverPath)
+//
+//                        val picSet =
+//                                if (detailInfo.data.goods_images == null || detailInfo.data.goods_images.trim() == "") ArrayList()
+//                                else getArrayFromString(detailInfo.data.goods_images)
+//
+//                        for (i in picSet.indices) {
+//                            val media = LocalMedia()
+//                            media.path = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(picSet[i])
+//                            mPicSetSelected.add(media)
+//                        }
+//
+//                        mPicSetHorizontalAdapter.setList(mPicSetSelected)
+//                        option_title.text = goodsInfo.goods_name
+//                        price_input.setText(goodsInfo.goods_price)
+//                        if (goodsInfo.isGoods_is_secondHande) {
+//                            option_secondHand.toggle()
+//                        }
+//                        if (goodsInfo.isGoods_is_bargain) {
+//                            option_negotiable.toggle()
+//                        }
+//                        option_description.text = detailInfo.data.goods_content
+//                    } else {
+//                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorLoadItemInfo)
+//                    }
+//                }
+//            }
+//        }
     }
 
     /**
@@ -871,6 +869,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         -1,
                         -1,
                         true,
+                        R.color.black,
                         { popupView: ImageViewerPopupView, position1: Int ->
                             popupView.updateSrcView(pic_set.getChildAt(position1).findViewById(R.id.image))
                         },

@@ -1,9 +1,12 @@
 package com.example.schoolairdroprefactoredition.domain;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 public class GoodsDetailInfo implements Serializable {
 
+    @NotNull
     @Override
     public String toString() {
         return "GoodsDetailInfo{" +
@@ -17,6 +20,16 @@ public class GoodsDetailInfo implements Serializable {
     private int code;
     private String msg;
     private long time;
+
+    private boolean isFavorite;
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
+    }
 
     public int getCode() {
         return code;

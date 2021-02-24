@@ -15,14 +15,14 @@ import androidx.room.DatabaseView
  * 2021/2/23  Bug fix: 按照上一个bug修复方案，每有一个会话，查出的每个会话数量就会重复一遍
  *            update: 将消息列表的查询和用户信息的查询用左外连接分开，这样便是用户信息表为空也没关系
  */
-@DatabaseView(viewName = "offline_num_detail", value = "select offline_num.counterpart_id, user_info.user_name , user_info.user_avatar, offline_num.my_id, offline.message_type, offline.message, offline.send_time, offline_num.unread_num from offline_num, offline left join user_info on user_id = offline.sender_id where offline_num.latest_fingerprint = offline.fingerprint and offline_num.display = 1 ")
+@DatabaseView(viewName = "offline_num_detail", value = "select offline_num.counterpart_id, user_info.user_name as counterpart_name, user_info.user_avatar as counterpart_avatar, offline_num.my_id, offline.message_type, offline.message, offline.send_time, offline_num.unread_num from offline_num, offline left join user_info on user_id = offline_num.counterpart_id where offline_num.latest_fingerprint = offline.fingerprint and offline_num.display = 1 ")
 data class ChatOfflineNumDetail(
 
         val counterpart_id: String,
 
-        var counterpart_name: String?,
+        val counterpart_name: String?,
 
-        var counterpart_avatar: String?,
+        val counterpart_avatar: String?,
 
         val my_id: String,
 

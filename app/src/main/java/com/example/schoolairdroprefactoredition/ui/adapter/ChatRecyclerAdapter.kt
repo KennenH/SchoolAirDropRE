@@ -209,7 +209,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 imageView.setOnClickListener {
                     XPopup.Builder(context)
                             .isDarkTheme(true)
-                            .asImageViewer(imageView, item.message, false, -1, -1, -1, true, MyUtil.ImageLoader())
+                            .asImageViewer(imageView, item.message, false, -1, -1, -1, true, R.color.black, MyUtil.ImageLoader())
                             .show()
                 }
             }
@@ -219,7 +219,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 val avatarView = holder.itemView.findViewById<ImageView>(R.id.receive_avatar)
                 // 加载头像
                 if (counterpartUrl == null) {
-                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(mCounterpartInfo?.userAvatar)
+                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + (ImageUtil.fixUrl(mCounterpartInfo?.userAvatar) ?: ConstantUtil.DEFAULT_AVATAR)
                 }
                 ImageUtil.loadRoundedImage(avatarView, counterpartUrl)
                 // 消息内容
@@ -237,7 +237,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 val avatarView = holder.itemView.findViewById<ImageView>(R.id.receive_avatar)
                 // 加载头像
                 if (counterpartUrl == null) {
-                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(mCounterpartInfo?.userAvatar)
+                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + (ImageUtil.fixUrl(mCounterpartInfo?.userAvatar) ?: ConstantUtil.DEFAULT_AVATAR)
                 }
                 ImageUtil.loadRoundedImage(avatarView, counterpartUrl)
                 // 获取图片view
@@ -254,7 +254,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 imageView.setOnClickListener {
                     XPopup.Builder(context)
                             .isDarkTheme(true)
-                            .asImageViewer(imageView, item.message, false, -1, -1, -1, true, MyUtil.ImageLoader())
+                            .asImageViewer(imageView, item.message, false, -1, -1, -1, true, R.color.black, MyUtil.ImageLoader())
                             .show()
                 }
             }

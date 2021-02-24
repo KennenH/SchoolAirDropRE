@@ -241,7 +241,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
                         .asImageViewer(v as ImageView,
                                 ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(userInfo?.userAvatar),
                                 false, -1, -1, ScreenUtils.getAppScreenWidth(),
-                                true, ImageLoader())
+                                true, R.color.black, ImageLoader())
                         .show()
             }
 

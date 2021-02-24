@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.ui.adapter
 
+import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
@@ -16,15 +17,20 @@ import java.util.*
  */
 class MessagesRecyclerAdapter : BaseQuickAdapter<ChatOfflineNumDetail, BaseViewHolder>(R.layout.item_home_messages) {
 
+    private var mUserInfoRequestListener: UserInfoRequestListener? = null
+
     /**
-     * 获取第position个会话的对方id
+     * 用户信息请求
      */
-    fun getCounterpartIdAt(position: Int): String? {
-        return if (data.size > position) {
-            data[position]?.counterpart_id
-        } else {
-            null
-        }
+    interface UserInfoRequestListener {
+        /**
+         * 当adapter中的用户信息不足时请求外部获取
+         */
+        fun onUserInfoRequest(userID: String, myID: String)
+    }
+
+    fun setUserInfoRequestListener(listener: UserInfoRequestListener) {
+        mUserInfoRequestListener = listener
     }
 
     override fun convert(holder: BaseViewHolder, item: ChatOfflineNumDetail) {
@@ -36,7 +42,7 @@ class MessagesRecyclerAdapter : BaseQuickAdapter<ChatOfflineNumDetail, BaseViewH
             } else {
                 // 头像为空，先显示默认头像，等待外部将数据加载完毕
                 ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.messages_avatar), ConstantUtil.QINIU_BASE_URL + ConstantUtil.DEFAULT_AVATAR)
-                // todo 想办法从外面获取用户信息
+                mUserInfoRequestListener?.onUserInfoRequest(item.counterpart_id, item.my_id)
             }
         }
 
@@ -48,7 +54,6 @@ class MessagesRecyclerAdapter : BaseQuickAdapter<ChatOfflineNumDetail, BaseViewH
             } else {
                 // 否则先显示用户id作为placeholder
                 holder.setText(R.id.messages_user_name, item.counterpart_id)
-                // todo 想办法从外面获取用户信息
             }
         }
 

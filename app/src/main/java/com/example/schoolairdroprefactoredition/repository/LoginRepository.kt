@@ -1,20 +1,16 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.blankj.utilcode.util.LogUtils
-import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
+import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
+import com.example.schoolairdroprefactoredition.domain.DomainToken
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.utils.RSACoder
 import com.mob.pushsdk.MobPush
-import com.qiniu.android.utils.LogUtil
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
-
 
 class LoginRepository private constructor() {
 
@@ -63,7 +59,6 @@ class LoginRepository private constructor() {
 //                onResult(false, null)
 //            } else
             RetrofitClient.userApi.authorizeWithAlipayID(
-//                    cookies,
                     ConstantUtil.CLIENT_GRANT_TYPE,
                     ConstantUtil.CLIENT_ID,
                     ConstantUtil.CLIENT_SECRET,

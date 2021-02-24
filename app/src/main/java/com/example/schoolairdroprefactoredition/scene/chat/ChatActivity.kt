@@ -205,7 +205,7 @@ class ChatActivity : ImmersionStatusBarActivity(), Application.IMListener, OnRef
                 counterpartInfo.userId.toString())
                 .observe(this) {
                     // 刷新完毕要调用完成刷新操作
-                    if (it.size < ConstantUtil.DATA_FETCH_DEFAULT_SIZE) {
+                    if (it.size < ConstantUtil.DEFAULT_PAGE_SIZE) {
                         recycler_container.finishRefreshWithNoMoreData()
                     } else {
                         recycler_container.finishRefresh(true)

@@ -3,7 +3,7 @@ package com.example.schoolairdroprefactoredition.repository
 import androidx.annotation.WorkerThread
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
-import com.example.schoolairdroprefactoredition.database.dao.ChatHistoryDao
+import com.example.schoolairdroprefactoredition.database.dao.DatabaseDao
 import com.example.schoolairdroprefactoredition.database.pojo.*
 import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -13,10 +13,13 @@ import retrofit2.Response
 import java.net.HttpURLConnection
 import java.util.*
 
-class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
+class DatabaseRepository(private val databaseDao: DatabaseDao) {
 
+    /**
+     * 获取消息列表
+     */
     fun getChatList(receiverID: String): Flow<List<ChatOfflineNumDetail>> {
-        return chatHistoryDao.getChatList(receiverID)
+        return databaseDao.getChatList(receiverID)
     }
 
     /**
@@ -24,9 +27,9 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
      */
     suspend fun getChatLocal(receiverID: String, senderID: String, start: Long?): List<ChatHistory> {
         return if (start == null) {
-            chatHistoryDao.getLatestChat(receiverID, senderID)
+            databaseDao.getLatestChat(receiverID, senderID)
         } else {
-            chatHistoryDao.getChat(receiverID, senderID, start)
+            databaseDao.getChat(receiverID, senderID, start)
         }
     }
 
@@ -84,37 +87,37 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
 
     @WorkerThread
     suspend fun hideChannel(counterpartId: String) {
-        chatHistoryDao.setDisplay(counterpartId, 0)
+        databaseDao.setChannelDisplay(counterpartId, 0)
     }
 
     @WorkerThread
     suspend fun saveLastMessage(pullFlag: PullFlag) {
-        chatHistoryDao.updatePullFlag(pullFlag)
+        databaseDao.updatePullFlag(pullFlag)
     }
 
     @WorkerThread
     suspend fun saveLastMessage(pullFlag: List<PullFlag>) {
-        chatHistoryDao.updatePullFlag(pullFlag)
+        databaseDao.updatePullFlag(pullFlag)
     }
 
     @WorkerThread
     suspend fun saveOfflineNum(offlineNums: List<ChatOfflineNum>) {
-        chatHistoryDao.saveOfflineNum(offlineNums)
+        databaseDao.saveOfflineNum(offlineNums)
     }
 
     @WorkerThread
     suspend fun saveUserCache(userCaches: List<UserCache>) {
-        chatHistoryDao.saveUserCache(userCaches)
+        databaseDao.saveUserCache(userCaches)
     }
 
     @WorkerThread
     suspend fun saveUserCache(userCache: UserCache) {
-        chatHistoryDao.saveUserCache(userCache)
+        databaseDao.saveUserCache(userCache)
     }
 
     @WorkerThread
-    suspend fun getUserCache(userID: Int):  UserCache? {
-        return chatHistoryDao.getUserCache(userID)
+    suspend fun getUserCache(userID: Int): UserCache? {
+        return databaseDao.getUserCache(userID)
     }
 
     /**
@@ -124,31 +127,42 @@ class DatabaseRepository(private val chatHistoryDao: ChatHistoryDao) {
     @WorkerThread
     suspend fun saveHistory(history: ChatHistory, isSentFromCounterpart: Boolean) {
         // 保存消息本身
-        chatHistoryDao.saveChat(history)
+        databaseDao.saveChat(history)
         // 更新消息列表
         if (isSentFromCounterpart) {
-            // !!重要!!  必须先保存用户信息，即使只有id也要保存，详见方法本身
-            chatHistoryDao.saveFirstUserCache(UserCache(history.sender_id.toInt(), null, null, null, null, null))
-
-            chatHistoryDao.saveOfflineNum(ChatOfflineNum(history.sender_id, history.receiver_id, 1, history.fingerprint, 1), true)
+            databaseDao.saveOfflineNum(ChatOfflineNum(history.sender_id, history.receiver_id, 1, history.fingerprint, 1), true)
         } else {
-            chatHistoryDao.saveOfflineNum(ChatOfflineNum(history.receiver_id, history.sender_id, 1, history.fingerprint, 1), false)
+            databaseDao.saveOfflineNum(ChatOfflineNum(history.receiver_id, history.sender_id, 1, history.fingerprint, 1), false)
         }
     }
 
     @WorkerThread
     suspend fun saveHistory(histories: List<ChatHistory>) {
-        chatHistoryDao.saveChat(histories)
+        databaseDao.saveChat(histories)
     }
 
     @WorkerThread
     suspend fun ackOfflineNum(receiverID: String, senderID: String) {
-        chatHistoryDao.ackOfflineNum(receiverID, senderID)
+        databaseDao.ackOfflineNum(receiverID, senderID)
     }
 
     @WorkerThread
     suspend fun getPullFlag(senderID: String): PullFlag? {
-        return chatHistoryDao.getPullFlag(senderID)
+        return databaseDao.getPullFlag(senderID)
     }
 
+    @WorkerThread
+    suspend fun addFavorite(favorite: Favorite) {
+        databaseDao.addFavorite(favorite)
+    }
+
+    @WorkerThread
+    suspend fun removeFavorite(favorite: Favorite) {
+        databaseDao.removeFavorite(favorite)
+    }
+
+    @WorkerThread
+    suspend fun isFavorite(goodsID: Int): Boolean {
+        return databaseDao.isFavorite(goodsID)
+    }
 }

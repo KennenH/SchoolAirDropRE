@@ -2,6 +2,8 @@ package com.example.schoolairdroprefactoredition.domain;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 
 /**
@@ -64,6 +66,7 @@ public class DomainUserInfo implements Serializable {
 
     public static class DataBean implements Serializable {
 
+        @NotNull
         @Override
         public String toString() {
             return "DataBean{" +

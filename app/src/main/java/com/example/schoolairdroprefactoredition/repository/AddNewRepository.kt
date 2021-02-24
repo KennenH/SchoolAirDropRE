@@ -9,7 +9,6 @@ import com.example.schoolairdroprefactoredition.cache.NewPostDraftCache
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
-import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.luck.picture.lib.entity.LocalMedia
 import retrofit2.Call
 import retrofit2.Response
@@ -43,7 +42,7 @@ class AddNewRepository {
                 token, taskID,
                 coverKey, picSetKeys,
                 title, content,
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGTITUDE else longitude.toString(),
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE else longitude.toString(),
                 if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE else latitude.toString(),
                 if (isQuotable) 1 else 0, if (!isBrandNew) 1 else 0,
                 price.toString()).apply {

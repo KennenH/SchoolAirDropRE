@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.*
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.SearchHistories
 import com.example.schoolairdroprefactoredition.databinding.FragmentSearchPrelayoutBinding
@@ -18,7 +19,6 @@ import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
 import com.example.schoolairdroprefactoredition.ui.adapter.BaseFooterAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderFooterOnlyRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeGoodsRecyclerAdapter
-import com.example.schoolairdroprefactoredition.ui.adapter.SearchSuggestionRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
 import com.example.schoolairdroprefactoredition.ui.components.SearchBar.OnSearchActionListener
 import com.example.schoolairdroprefactoredition.ui.components.SearchHistoryHeader
@@ -48,9 +48,9 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
         HeaderFooterOnlyRecyclerAdapter()
     }
 
-    private val mSuggestionAdapter by lazy {
-        SearchSuggestionRecyclerAdapter()
-    }
+//    private val mSuggestionAdapter by lazy {
+//        SearchSuggestionRecyclerAdapter()
+//    }
 
     private val mResultAdapter by lazy {
         HomeGoodsRecyclerAdapter()
@@ -104,12 +104,12 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
         binding?.run {
             // set layout manager
             searchHistory.layoutManager = LinearLayoutManager(context)
-            searchSuggestion.layoutManager = LinearLayoutManager(context)
+//            searchSuggestion.layoutManager = LinearLayoutManager(context)
             searchResult.layoutManager = LinearLayoutManager(context)
 
             // set adapter
             searchHistory.adapter = mHistoryAdapter
-            searchSuggestion.adapter = mSuggestionAdapter
+//            searchSuggestion.adapter = mSuggestionAdapter
             searchResult.adapter = mResultAdapter
 
             search.setOnSearchActionListener(this@SearchFragment)
@@ -119,11 +119,11 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
                     if (newState == RecyclerView.SCROLL_STATE_DRAGGING) binding?.search?.closeSearch()
                 }
             })
-            searchSuggestion.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
-                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING) binding?.search?.closeSearch()
-                }
-            })
+//            searchSuggestion.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+//                override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+//                    if (newState == RecyclerView.SCROLL_STATE_DRAGGING) binding?.search?.closeSearch()
+//                }
+//            })
             searchResult.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     if (newState == RecyclerView.SCROLL_STATE_DRAGGING) binding?.search?.closeSearch()
@@ -203,7 +203,7 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
         isSuggestionShowing = false
         isResultShowing = false
         binding?.apply {
-            searchSuggestion.visibility = View.GONE
+//            searchSuggestion.visibility = View.GONE
             searchResult.visibility = View.GONE
             searchHistory.visibility = View.VISIBLE
             searchPlaceHolder.visibility = View.GONE
@@ -217,7 +217,7 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
         binding?.apply {
             searchHistory.visibility = View.GONE
             searchResult.visibility = View.GONE
-            searchSuggestion.visibility = View.VISIBLE
+//            searchSuggestion.visibility = View.VISIBLE
             searchPlaceHolder.visibility = View.GONE
         }
     }
@@ -228,7 +228,7 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
         isResultShowing = true
         binding?.apply {
             searchHistory.visibility = View.GONE
-            searchSuggestion.visibility = View.GONE
+//            searchSuggestion.visibility = View.GONE
             searchResult.visibility = View.VISIBLE
             searchPlaceHolder.visibility = View.GONE
         }
@@ -240,7 +240,7 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
         isResultShowing = false
         binding?.apply {
             searchHistory.visibility = View.GONE
-            searchSuggestion.visibility = View.GONE
+//            searchSuggestion.visibility = View.GONE
             searchResult.visibility = View.GONE
             searchPlaceHolder.visibility = View.VISIBLE
             searchPlaceHolder.setPlaceholderType(type)
@@ -268,7 +268,8 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
     override fun onInputChanged(input: String) {
         if (input.trim() == "") {
             showHistory()
-        } else showSuggestion()
+        }
+//        else showSuggestion()
     }
 
     override fun onFocusChanged(v: View, hasFocus: Boolean) {

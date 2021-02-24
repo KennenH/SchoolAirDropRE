@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.schoolairdroprefactoredition.database.dao.ChatHistoryDao
+import com.example.schoolairdroprefactoredition.database.dao.DatabaseDao
 import com.example.schoolairdroprefactoredition.database.pojo.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -14,14 +14,15 @@ import kotlinx.coroutines.launch
     ChatHistory::class,
     ChatOfflineNum::class,
     UserCache::class,
-    PullFlag::class],
+    PullFlag::class,
+    Favorite::class],
         views = [
             ChatOfflineNumDetail::class],
-        version = 10,
+        version = 13,
         exportSchema = true)
 abstract class SARoomDatabase : RoomDatabase() {
 
-    abstract fun chatHistoryDao(): ChatHistoryDao
+    abstract fun chatHistoryDao(): DatabaseDao
 
     private class DatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {

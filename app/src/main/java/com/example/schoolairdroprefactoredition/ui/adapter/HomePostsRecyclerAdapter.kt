@@ -63,14 +63,14 @@ class HomePostsRecyclerAdapter : BaseMultiItemQuickAdapter<BaseHomeNewsEntity, B
             listener.onNoMoreDataRefresh()
         }
         removeAllFooterView()
-        if (list != null && list.size < ConstantUtil.DATA_FETCH_DEFAULT_SIZE) {
+        if (list != null && list.size < ConstantUtil.DEFAULT_PAGE_SIZE) {
             addFooter()
         }
     }
 
     override fun addData(newData: Collection<BaseHomeNewsEntity>) {
         super.addData(newData)
-        if (newData.size < ConstantUtil.DATA_FETCH_DEFAULT_SIZE) {
+        if (newData.size < ConstantUtil.DEFAULT_PAGE_SIZE) {
             addFooter()
         }
     }

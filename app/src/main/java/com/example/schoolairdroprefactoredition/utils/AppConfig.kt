@@ -11,12 +11,12 @@ object AppConfig {
     const val IS_DEBUG = true
 
     /**
-     * debug模式下的默认中国计量大学
+     * debug模式下默认中国计量大学
      */
-    const val DEBUG_LONGTITUDE = "120.36236895096818"
+    const val DEBUG_LONGITUDE = "120.36236895096818"
 
     /**
-     * debug模式下的默认中国计量大学
+     * debug模式下默认中国计量大学
      */
     const val DEBUG_LATITUDE = "30.318141927801996"
 
@@ -29,6 +29,4 @@ object AppConfig {
      * clz
      */
     const val USER_ALIPAY = "19858120611"
-
-
 }

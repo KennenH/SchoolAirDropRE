@@ -135,7 +135,6 @@ public class ImagePager extends ConstraintLayout implements ViewPager.OnPageChan
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
             final ImageView pic = new ImageView(getContext());
-
             if (isOtherResourceFitFirst && position == 0) {
                 pic.setAdjustViewBounds(true);
                 pic.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -180,20 +179,20 @@ public class ImagePager extends ConstraintLayout implements ViewPager.OnPageChan
                     .into(pic);
 
             pic.setOnClickListener(v -> {
-                if (SystemClock.elapsedRealtime() - lastClickTime < ConstantUtil.MENU_CLICK_GAP)
-                    return;
+                if (SystemClock.elapsedRealtime() - lastClickTime < ConstantUtil.MENU_CLICK_GAP) return;
                 lastClickTime = SystemClock.elapsedRealtime();
 
                 new XPopup.Builder(getContext())
                         .hasStatusBar(false)
-                        .asImageViewer(pic, position, mData, false, false, -1, -1, -1, true, (popupView, position1) -> {
+                        .asImageViewer(pic, position, mData, false, false, -1, -1, -1, true, R.color.black, (popupView, position1) -> {
                             popupView.updateSrcView((ImageView) binding.goodsPagerPager.getChildAt(position1));
                         }, new MyUtil.ImageLoader())
                         .show();
             });
 
-            if (pic.getParent() instanceof ViewGroup)
+            if (pic.getParent() instanceof ViewGroup) {
                 ((ViewGroup) pic.getParent()).removeView(pic);
+            }
 
             container.addView(pic);
             return pic;

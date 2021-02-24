@@ -14,12 +14,12 @@ import com.github.ybq.android.spinkit.SpinKitView;
 
 public class ButtonDouble extends LinearLayout {
 
-    private static int FAVORED = R.drawable.favorite_red;
-    private static int UNFAVORED = R.drawable.outline_favorite_24;
+    private static final int FAVORED = R.drawable.favorite_red;
+    private static final int UNFAVORED = R.drawable.outline_favorite_24;
 
-    private ImageView mButtonLeft;
-    private ImageView mButtonRight;
-    private SpinKitView mLoading;
+    private final ImageView mButtonLeft;
+    private final ImageView mButtonRight;
+    private final SpinKitView mLoading;
 
     private OnButtonClickListener mOnButtonClickListener;
 

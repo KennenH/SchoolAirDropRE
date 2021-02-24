@@ -8,16 +8,13 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.BarUtils
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
-import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
@@ -61,7 +58,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     }
 
     private val goodsViewModel by lazy {
-        ViewModelProvider(this@GoodsActivity).get(GoodsViewModel::class.java)
+        GoodsViewModel.GoodsViewModelFactory((application as Application).chatRepository).create(GoodsViewModel::class.java)
     }
 
     private var dialog: BottomSheetDialog? = null
@@ -121,13 +118,13 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
         }
 
         goodsViewModel.getGoodsDetailByID(goodsInfo.goods_id).observeOnce(this) {
+            goods_info_container.stopShimming()
             if (it != null) {
                 goodsDetailInfo = it
                 showActionButtons(isNotMine)
                 goods_info_container.setData(goodsInfo, it.data)
-                goods_info_container.stopShimming()
+                goods_button_right.setFavor(it.isFavorite)
             } else {
-                goods_info_container.stopShimming()
                 DialogUtil.showCenterDialog(this@GoodsActivity, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
             }
         }
@@ -192,11 +189,8 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     }
 
     override fun onLeftButtonClick() {
-        if ((application as Application).getCachedToken() == null) {
-            login()
-        } else {
-            goods_button_right.toggleFavor()
-        }
+        goods_button_right.toggleFavor()
+        goodsViewModel.toggleGoodsFavorite(goodsInfo.goods_id)
     }
 
     override fun onRightButtonClick() {

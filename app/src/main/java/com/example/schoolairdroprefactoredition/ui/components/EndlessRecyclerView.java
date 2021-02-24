@@ -69,7 +69,7 @@ public class EndlessRecyclerView extends RecyclerView {
             }
 
             // 是否需要加载新数据
-            if (!isLoading && totalItemCount - pastVisibleItem < ConstantUtil.DATA_FETCH_DEFAULT_SIZE / 2) {
+            if (!isLoading && totalItemCount - pastVisibleItem < ConstantUtil.DEFAULT_PAGE_SIZE / 2) {
                 // 正在加载标志，防止重复加载
                 isLoading = true;
                 // 加载新数据

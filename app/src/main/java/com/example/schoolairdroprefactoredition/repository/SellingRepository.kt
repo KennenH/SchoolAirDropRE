@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.repository
 
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
@@ -55,6 +56,7 @@ class SellingRepository {
         RetrofitClient.goodsApi.deleteGoods(token, goodsID.toInt()).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                 override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
+                    LogUtils.d(response.errorBody()?.string())
                     onResult(response.code() == HttpURLConnection.HTTP_OK)
                 }
 
