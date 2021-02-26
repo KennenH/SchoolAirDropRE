@@ -62,23 +62,23 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
     /**
      * 获取离线消息数量，即离线消息列表
      */
-    fun getOfflineNum(token: DomainToken, onResult: (success: Boolean, response: DomainOfflineNum?) -> Unit) {
+    fun getOfflineNum(token: DomainToken, onResult: (response: DomainOfflineNum?) -> Unit) {
         RetrofitClient.imApi.getOfflineNum(token.access_token).apply {
             enqueue(object : CallBackWithRetry<DomainOfflineNum>(this@apply) {
                 override fun onFailureAllRetries() {
-                    onResult(false, null)
+                    onResult(null)
                 }
 
                 override fun onResponse(call: Call<DomainOfflineNum>, response: Response<DomainOfflineNum>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val body = response.body()
                         if (body != null && body.code == ConstantUtil.HTTP_OK) {
-                            onResult(true, body)
+                            onResult(body)
                         } else {
-                            onResult(false, null)
+                            onResult(null)
                         }
                     } else {
-                        onResult(false, null)
+                        onResult(null)
                     }
                 }
             })
@@ -86,8 +86,9 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
     }
 
     @WorkerThread
-    suspend fun hideChannel(counterpartId: String) {
-        databaseDao.setChannelDisplay(counterpartId, 0)
+    suspend fun hideChannel(myID: String, counterpartId: String) {
+        databaseDao.setChannelDisplay(myID, counterpartId, 0)
+        databaseDao.ackOfflineNum(counterpartId, myID)
     }
 
     @WorkerThread

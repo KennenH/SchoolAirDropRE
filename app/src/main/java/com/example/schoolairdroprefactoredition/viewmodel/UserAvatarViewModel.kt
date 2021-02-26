@@ -12,8 +12,6 @@ import kotlinx.coroutines.launch
 
 class UserAvatarViewModel(application: Application) : AndroidViewModel(application) {
 
-    private val updateLiveData = MutableLiveData<String?>()
-
     private val userAvatarRepository by lazy {
         UserAvatarRepository.getInstance()
     }
@@ -22,20 +20,19 @@ class UserAvatarViewModel(application: Application) : AndroidViewModel(applicati
         UploadRepository.getInstance()
     }
 
+    /**
+     * 更新用户头像
+     */
     fun updateAvatar(token: String?, avatarLocalPath: String): LiveData<String?> {
+        val updateLiveData = MutableLiveData<String?>()
         if (token != null) {
             viewModelScope.launch {
-                val array = ArrayList<String>(1).also { it.add(avatarLocalPath) }
+                val localPath = ArrayList<String>(1).also { it.add(avatarLocalPath) }
                 // 上传图片至七牛云
-                uploadRepository.upload(token, array, ConstantUtil.UPLOAD_TYPE_AVATAR) {
-                    if (it != null) {
-                        // 修改服务器上用户的头像路径 todo
-                        userAvatarRepository.updateAvatar(token, "") { updateResult ->
-//                            if (updateResult) {
-//                                updateLiveData.postValue(it)
-//                            } else {
-//                                updateLiveData.postValue(null)
-//                            }
+                uploadRepository.upload(token, localPath, ConstantUtil.UPLOAD_TYPE_AVATAR) { taskAndKeys ->
+                    if (taskAndKeys != null) {
+                        userAvatarRepository.updateAvatar(token, taskAndKeys.taskId, taskAndKeys.keys[0]) {
+                            updateLiveData.postValue(it)
                         }
                     } else {
                         updateLiveData.postValue(null)

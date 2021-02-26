@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.domain;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -49,11 +51,12 @@ public class DomainUploadPath implements Serializable {
 
     public static class DataBean implements Serializable {
 
+        @NotNull
         @Override
         public String toString() {
             return "DataBean{" +
                     "keys=" + keys +
-                    ", path='" + taskId + '\'' +
+                    ", taskId='" + taskId + '\'' +
                     '}';
         }
 

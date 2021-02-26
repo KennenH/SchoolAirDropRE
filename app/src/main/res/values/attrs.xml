@@ -23,7 +23,7 @@
         <attr name="PI_background" format="reference" />
     </declare-styleable>
 
-    <declare-styleable name="SellingOption">
+    <declare-styleable name="OptionItem">
         <attr name="SO_checked" format="boolean" />
         <attr name="SO_title" format="string" />
         <attr name="SO_description" format="string" />

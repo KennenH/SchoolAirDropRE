@@ -12,6 +12,9 @@ import androidx.appcompat.widget.SwitchCompat;
 import com.example.schoolairdroprefactoredition.R;
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto;
 
+/**
+ * 有两个选项，一个是可以带箭头的点击设置的选项按钮，一个是带开关的可以开启关闭的选项按钮
+ */
 public class OptionItem extends ConstraintLayoutAuto {
 
     private final TextView mTitle;
@@ -48,14 +51,14 @@ public class OptionItem extends ConstraintLayoutAuto {
     }
 
     private void initAttrs(Context context, AttributeSet attrs) {
-        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.SellingOption);
+        TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.OptionItem);
         if (attrs == null) return;
 
-        isCheck = ta.getBoolean(R.styleable.SellingOption_SO_checked, isCheck);
-        isSwitch = ta.getBoolean(R.styleable.SellingOption_SO_isSwitch, isSwitch);
-        isShowArrow = ta.getBoolean(R.styleable.SellingOption_SO_clickable, isShowArrow);
-        title = ta.getString(R.styleable.SellingOption_SO_title);
-        description = ta.getString(R.styleable.SellingOption_SO_description);
+        isCheck = ta.getBoolean(R.styleable.OptionItem_SO_checked, isCheck);
+        isSwitch = ta.getBoolean(R.styleable.OptionItem_SO_isSwitch, isSwitch);
+        isShowArrow = ta.getBoolean(R.styleable.OptionItem_SO_clickable, isShowArrow);
+        title = ta.getString(R.styleable.OptionItem_SO_title);
+        description = ta.getString(R.styleable.OptionItem_SO_description);
 
         ta.recycle();
     }

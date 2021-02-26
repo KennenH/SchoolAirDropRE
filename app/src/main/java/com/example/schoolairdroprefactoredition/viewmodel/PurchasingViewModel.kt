@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.repository.PurchasingRepository
 import kotlinx.coroutines.launch
@@ -21,14 +20,13 @@ class PurchasingViewModel : ViewModel() {
         PurchasingRepository.getInstance()
     }
 
-    private val purchasingList = MutableLiveData<DomainPurchasing>()
-
     /**
      * 第一次获取物品信息或者下拉刷新
      *
      * 成功则获取到淘物信息，否则将会返回null
      */
     fun getGoodsInfo(longitude: Double, latitude: Double): LiveData<DomainPurchasing?> {
+        val purchasingLiveData = MutableLiveData<DomainPurchasing>()
         viewModelScope.launch {
             // 刷新时重置页码
             nowPage = 0
@@ -36,10 +34,10 @@ class PurchasingViewModel : ViewModel() {
             this@PurchasingViewModel.longitude = longitude
             this@PurchasingViewModel.latitude = latitude
             purchasingRepository.getNearbyGoods(nowPage, longitude, latitude) { response ->
-                purchasingList.postValue(response)
+                purchasingLiveData.postValue(response)
             }
         }
-        return purchasingList
+        return purchasingLiveData
     }
 
     /**
@@ -48,11 +46,12 @@ class PurchasingViewModel : ViewModel() {
      * 成功则获取到淘物信息，否则将会返回null
      */
     fun getGoodsInfo(): LiveData<DomainPurchasing> {
+        val purchasingLiveData = MutableLiveData<DomainPurchasing>()
         viewModelScope.launch {
             purchasingRepository.getNearbyGoods(++nowPage, longitude, latitude) { response ->
-                purchasingList.postValue(response)
+                purchasingLiveData.postValue(response)
             }
         }
-        return purchasingList
+        return purchasingLiveData
     }
 }

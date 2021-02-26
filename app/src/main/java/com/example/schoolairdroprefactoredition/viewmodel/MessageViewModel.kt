@@ -14,16 +14,10 @@ import kotlin.collections.ArrayList
 
 class MessageViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
 
-    private var userCacheLiveData = MutableLiveData<UserCache>()
-
-    private var offlineNumLiveData = MutableLiveData<DomainOfflineNum>()
+    private val userCacheLiveData = MutableLiveData<UserCache>()
 
     private val userRepository by lazy {
         UserRepository.getInstance()
-    }
-
-    private val jsonCacheUtil by lazy {
-        JsonCacheUtil.getInstance()
     }
 
     class MessageViewModelFactory(private val repository: DatabaseRepository) : ViewModelProvider.Factory {
@@ -45,88 +39,14 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
     }
 
     /**
-     * 获取网络离线消息数量
-     *
-     * 不能直接显示，要和本地消息列表混合之后再查询
-     */
-    fun getOfflineNumOnline(token: DomainToken?): LiveData<DomainOfflineNum?> {
-        if (token != null) {
-            viewModelScope.launch {
-                databaseRepository.getOfflineNum(token) { success, response ->
-                    if (success) {
-                        offlineNumLiveData.postValue(response)
-                    } else {
-                        offlineNumLiveData.postValue(null)
-                    }
-                }
-            }
-        } else {
-            offlineNumLiveData.postValue(null)
-        }
-        return offlineNumLiveData
-    }
-
-    /**
-     * 保存服务器离线消息数量以及最新10条消息，合并入本地数据库
-     */
-    fun saveOfflineNum(offlineNums: DomainOfflineNum) {
-        viewModelScope.launch {
-            // 消息数量数组
-            val numList: ArrayList<ChatOfflineNum> = ArrayList()
-            // 消息记录数组
-            val historyList: ArrayList<ChatHistory> = ArrayList()
-            // 最后一条消息数组
-            val pullFlag: ArrayList<PullFlag> = ArrayList()
-            // 用户基本信息
-            val senderInfo: ArrayList<UserCache> = ArrayList()
-
-            val data = offlineNums.data
-            for (offlineNum in data) {
-                // 装配消息数量
-                numList.add(ChatOfflineNum(
-                        offlineNum.senderId,
-                        offlineNum.receiverId,
-                        offlineNum.offlineNum,
-                        offlineNum.fingerPrint,
-                        1))
-
-                // 装配消息记录
-                for (offlineBean in offlineNum.offline) {
-                    historyList.add(ChatHistory(
-                            offlineBean.fingerPrint,
-                            offlineNum.senderId,
-                            offlineNum.receiverId,
-                            offlineBean.messageType,
-                            offlineBean.message,
-                            offlineBean.sendTime,
-                            1))
-                }
-
-                // 装配最后一条消息
-                pullFlag.add(PullFlag(
-                        offlineNum.senderId,
-                        offlineNum.offline.isNotEmpty()))
-
-                // 装配用户信息
-                senderInfo.add(UserCache(offlineNum.senderId.toInt(), offlineNum.senderInfo.senderName, offlineNum.senderInfo.senderAvatar, null, null, null))
-            }
-
-            // 保存所有装配好的信息
-            databaseRepository.saveUserCache(senderInfo)
-            databaseRepository.saveLastMessage(pullFlag)
-            databaseRepository.saveOfflineNum(numList)
-            databaseRepository.saveHistory(historyList)
-        }
-    }
-
-    /**
      * 侧滑删除会话，即将会话的display置为0
+     * 同时会将该用户的本地未读消息ack
      *
      * 何时置1详见[com.example.schoolairdroprefactoredition.database.dao.DatabaseDao]
      */
-    fun swipeToHideChannel(counterpartId: String) {
+    fun swipeToHideChannel(myID: String, counterpartID: String) {
         viewModelScope.launch {
-            databaseRepository.hideChannel(counterpartId)
+            databaseRepository.hideChannel(myID, counterpartID)
         }
     }
 

@@ -34,8 +34,6 @@ public class SettingsNotificationFragment extends TransitionBaseFragment impleme
 
     private PageItem mReceiveNew;
     private PageItem mReceiveInApp;
-    private PageItem mVibrate;
-    private PageItem mSounds;
 
     @Nullable
     @Override
@@ -44,13 +42,9 @@ public class SettingsNotificationFragment extends TransitionBaseFragment impleme
 
         mReceiveNew = root.findViewById(R.id.settings_notification_receive);
         mReceiveInApp = root.findViewById(R.id.settings_notification_in_app);
-        mVibrate = root.findViewById(R.id.settings_notification_vibrate);
-        mSounds = root.findViewById(R.id.settings_notification_sounds);
 
         mReceiveNew.setOnClickListener(this);
         mReceiveInApp.setOnClickListener(this);
-        mVibrate.setOnClickListener(this);
-        mSounds.setOnClickListener(this);
 
         return root;
     }
@@ -65,12 +59,6 @@ public class SettingsNotificationFragment extends TransitionBaseFragment impleme
                 break;
             case R.id.settings_notification_in_app:
                 mReceiveInApp.toggle();
-                break;
-            case R.id.settings_notification_vibrate:
-                mVibrate.toggle();
-                break;
-            case R.id.settings_notification_sounds:
-                mSounds.toggle();
                 break;
         }
     }

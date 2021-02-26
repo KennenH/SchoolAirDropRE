@@ -56,7 +56,6 @@ class SellingRepository {
         RetrofitClient.goodsApi.deleteGoods(token, goodsID.toInt()).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                 override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
-                    LogUtils.d(response.errorBody()?.string())
                     onResult(response.code() == HttpURLConnection.HTTP_OK)
                 }
 

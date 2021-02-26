@@ -1,30 +1,59 @@
 package com.example.schoolairdroprefactoredition.domain;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
+
 public class DomainAvatarUpdateResult {
-    /**
-     * success : true
-     */
 
-    private boolean success;
-    /**
-     * user_img_path : http://106.54.110.46/Avatars/100001.jpg
-     */
+    private int code;
 
-    private String user_img_path;
+    private String msg;
 
-    public boolean isSuccess() {
-        return success;
+    private DataBean data;
+
+    public DataBean getData() {
+        return data;
     }
 
-    public void setSuccess(boolean success) {
-        this.success = success;
+    public void setData(DataBean data) {
+        this.data = data;
     }
 
-    public String getUser_img_path() {
-        return user_img_path;
+    public static class DataBean implements Serializable {
+
+        @NotNull
+        @Override
+        public String toString() {
+            return "DataBean{" +
+                    "avatar_url='" + avatar_url + '\'' +
+                    '}';
+        }
+
+        private String avatar_url;
+
+        public String getAvatar_url() {
+            return avatar_url;
+        }
+
+        public void setAvatar_url(String avatar_url) {
+            this.avatar_url = avatar_url;
+        }
     }
 
-    public void setUser_img_path(String user_img_path) {
-        this.user_img_path = user_img_path;
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }

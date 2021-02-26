@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
 import com.example.schoolairdroprefactoredition.databinding.SheetSsbItemMoreBinding
@@ -18,6 +19,7 @@ import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.qiniu.android.utils.LogUtil
 
 class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
 
@@ -104,13 +106,15 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
                 offShelf.setOnClickListener {
                     DialogUtil.showConfirm(context, getString(R.string.attention), getString(R.string.unListItem)) {
                         if (token != null) {
+                            mLoading.show()
                             viewModel.deleteGoods(token.access_token, bean.goods_id.toString())
                                     .observeOnce(viewLifecycleOwner, {
-                                        if (it) {
-                                            getSelling()
-                                            DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successUnlist)
-                                        } else {
-                                            DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
+                                        mLoading.dismissWith {
+                                            if (it) {
+                                                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successUnlist)
+                                            } else {
+                                                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
+                                            }
                                         }
                                     })
                         } else {

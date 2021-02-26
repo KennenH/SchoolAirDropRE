@@ -179,8 +179,8 @@ interface DatabaseDao {
      *
      * @param display 0 隐藏 1 显示
      */
-    @Query("update offline_num set display = :display where counterpart_id = :counterpartId")
-    suspend fun setChannelDisplay(counterpartId: String, display: Int)
+    @Query("update offline_num set display = :display where counterpart_id = :counterpartId and my_id = :myID")
+    suspend fun setChannelDisplay(myID: String, counterpartId: String, display: Int)
 
     /**
      * 添加物品收藏

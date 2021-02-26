@@ -10,12 +10,10 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.databinding.FragmentMessagesBinding
-import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
@@ -28,7 +26,7 @@ import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import net.x52im.mobileimsdk.server.protocal.Protocal
 import kotlin.collections.ArrayList
 
-class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListener, Application.IMListener, MessagesRecyclerAdapter.UserInfoRequestListener {
+class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListener, Application.IMListener, MessagesRecyclerAdapter.UserInfoRequestListener, MainActivity.OnOfflineNumStateChangeListener {
 
     /**
      * 移动端IM的状态
@@ -75,7 +73,10 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (activity is MainActivity) {
-            (activity as MainActivity).addOnLoginActivityListener(this)
+            (activity as MainActivity).apply {
+                addOnLoginActivityListener(this@MessagesFragment)
+                setOnPullingOfflineNum(this@MessagesFragment)
+            }
             (activity?.application as Application).addOnIMListener(this)
         }
     }
@@ -88,44 +89,44 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
         loading = binding.messagesTitleLoading
         empty = binding.messagesEmpty
 
+        val myInfo = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
         mMessagesRecyclerAdapter.setUserInfoRequestListener(this)
-        recyclerView?.layoutManager = manager
-        recyclerView?.setSwipeMenuCreator { _, rightMenu, position ->
-            val delete = SwipeMenuItem(context)
-            delete.text = getString(R.string.delete)
-            delete.textSize = SizeUtils.dp2px(5f)
-            delete.setTextColor(resources.getColor(R.color.whiteAlways, context?.theme))
-            delete.setBackgroundColor(resources.getColor(R.color.colorPrimaryRed, context?.theme))
-            delete.height = MATCH_PARENT
-            rightMenu.addMenuItem(delete)
-        }
-        recyclerView?.setOnItemMenuClickListener { menuBridge, adapterPosition ->
-            // 任何操作之前都必须先关闭菜单，否则会出现菜单混乱
-            menuBridge.closeMenu()
-
-            // 若点击的是菜单中的第一个按钮，即删除，则隐藏会话
-            if (menuBridge.position == 0) {
-                // 隐藏第position个会话
-                // 2021/2/23 Bug Fix： 这里如果直接调用data[adapterPosition]会莫名其妙 NPE crash
-                //           update： 只能多此一举地进行一次遍历才能正常
-                for ((index, datum) in mMessagesRecyclerAdapter.data.withIndex()) {
-                    if (index == adapterPosition) {
-                        mMessagesRecyclerAdapter.removeAt(adapterPosition)
-                        if (mMessagesRecyclerAdapter.data.isEmpty()) {
-                            empty?.visibility = View.VISIBLE
+        recyclerView?.apply {
+            layoutManager = manager
+            setSwipeMenuCreator { _, rightMenu, position ->
+                val delete = SwipeMenuItem(context)
+                delete.text = getString(R.string.delete)
+                delete.textSize = SizeUtils.dp2px(5f)
+                delete.setTextColor(resources.getColor(R.color.whiteAlways, context?.theme))
+                delete.setBackgroundColor(resources.getColor(R.color.colorPrimaryRed, context?.theme))
+                delete.height = MATCH_PARENT
+                rightMenu.addMenuItem(delete)
+            }
+            setOnItemMenuClickListener { menuBridge, adapterPosition ->
+                // 任何操作之前都必须先关闭菜单，否则会出现菜单混乱
+                menuBridge.closeMenu()
+                // 若点击的是菜单中的第一个按钮，即删除，则隐藏会话
+                if (menuBridge.position == 0) {
+                    // 隐藏第position个会话
+                    // 2021/2/23 Bug Fix： 这里如果直接调用data[adapterPosition]会莫名其妙 NPE crash
+                    //           update： 只能多此一举地进行一次遍历才能正常
+                    for ((index, datum) in mMessagesRecyclerAdapter.data.withIndex()) {
+                        if (index == adapterPosition) {
+                            mMessagesRecyclerAdapter.removeAt(adapterPosition)
+                            if (mMessagesRecyclerAdapter.data.isEmpty()) {
+                                empty?.visibility = View.VISIBLE
+                            }
+                            messageViewModel.swipeToHideChannel(myInfo?.userId.toString(), datum.counterpart_id)
                         }
-                        messageViewModel.swipeToHideChannel(datum.counterpart_id)
                     }
                 }
             }
+            // 这一步设置adapter必须在上面两个步骤之后，否则会crash
+            adapter = mMessagesRecyclerAdapter
         }
-        recyclerView?.adapter = mMessagesRecyclerAdapter
-        val token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken
-        val userInfo = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
-
-        if (userInfo != null) {
+        if (myInfo != null) {
             // 观察本地消息数量列表，消息列表页面所有数据显示都通过该观察者，所以只需要在此判断数量显示即可
-            messageViewModel.getChatList(userInfo.userId.toString()).observe(viewLifecycleOwner, {
+            messageViewModel.getChatList(myInfo.userId.toString()).observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
                     empty?.visibility = View.GONE
                     mMessagesRecyclerAdapter.setList(it)
@@ -134,16 +135,6 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
                 }
             })
         }
-
-        updateMessageState(MessageState.LOADING)
-        messageViewModel.getOfflineNumOnline(token).observe(viewLifecycleOwner) {
-            if (it != null) {
-                // 将服务器离线消息数量合并入本地服务器，此时本地服务器数据改变，理论上将会自动刷新消息列表
-                messageViewModel.saveOfflineNum(it)
-            }
-            updateMessageState(MessageState.REFRESH)
-        }
-
         return binding.root
     }
 
@@ -179,7 +170,6 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
     }
 
     override fun onLoginStateChanged(intent: Intent) {
-        val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken
         val userInfo = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
 
         // 登录状态发生变化时，若发现是退出，则将消息列表清空
@@ -193,16 +183,6 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
                     empty?.visibility = View.VISIBLE
                 }
             })
-
-            updateMessageState(MessageState.LOADING)
-            // 获取服务器离线消息数量
-            messageViewModel.getOfflineNumOnline(token).observe(viewLifecycleOwner) {
-                if (it != null) {
-                    // 将服务器离线消息数量合并入本地服务器，此时本地服务器数据改变，理论上将会自动刷新消息列表
-                    messageViewModel.saveOfflineNum(it)
-                }
-                updateMessageState(MessageState.REFRESH)
-            }
         } else {
             mMessagesRecyclerAdapter.setList(ArrayList())
             empty?.visibility = View.VISIBLE
@@ -259,5 +239,16 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
         } else {
             messageViewModel.getUserCache(userID.toInt())
         }
+    }
+
+    /********************************************************************/
+    /*********************主页获取离线消息数量状态回调**********************/
+    /********************************************************************/
+    override fun onPullingOfflineNum() {
+        updateMessageState(MessageState.LOADING)
+    }
+
+    override fun onPullDone() {
+        updateMessageState(MessageState.REFRESH)
     }
 }

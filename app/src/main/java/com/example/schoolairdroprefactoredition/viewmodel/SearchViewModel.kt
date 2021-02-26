@@ -21,8 +21,6 @@ class SearchViewModel : ViewModel() {
         SearchRepository.getInstance()
     }
 
-    private val mSearchResults = MutableLiveData<List<DomainPurchasing.DataBean>?>()
-
     private val mSearchHistories = MutableLiveData<SearchHistories>()
 
     private val mSearchSuggestions = MutableLiveData<SearchSuggestionBean>()
@@ -38,6 +36,7 @@ class SearchViewModel : ViewModel() {
      * 在输入关键词之后上拉加载更多
      */
     fun getSearchResult(): LiveData<List<DomainPurchasing.DataBean>?> {
+        val mSearchResults = MutableLiveData<List<DomainPurchasing.DataBean>?>()
         mSearchRepository.doSearchGoods(++page, lastLongitude, lastLatitude, lastSearchedKey, true) {
             mSearchResults.postValue(it?.data)
         }
@@ -48,6 +47,7 @@ class SearchViewModel : ViewModel() {
      * 输入关键词后的第一次搜索
      */
     fun getSearchResult(longitude: Double, latitude: Double, key: String): LiveData<List<DomainPurchasing.DataBean>?> {
+        val mSearchResults = MutableLiveData<List<DomainPurchasing.DataBean>?>()
         // 初始化页面号以及保存搜索关键字和地点
         page = 0
         lastSearchedKey = key

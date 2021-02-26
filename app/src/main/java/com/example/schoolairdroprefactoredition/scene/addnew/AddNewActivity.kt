@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.scene.addnew
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.text.InputFilter
 import android.view.*
@@ -18,6 +19,7 @@ import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
@@ -187,7 +189,6 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     /**
      * 是否已经提交并且成功了
      *
-     *
      * 成功之后将不会对页面内容进行缓存
      */
     private var isSubmitSuccess = false
@@ -246,7 +247,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 if (cover.imagePath != null && "" != cover.imagePath) {
                     XPopup.Builder(this@AddNewActivity)
                             .isDarkTheme(true)
-                            .asImageViewer(cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, R.color.black, ImageLoader())
+                            .asImageViewer(cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, getColor(R.color.blackAlways), ImageLoader())
                             .show()
                 } else {
                     request = REQUEST_CODE_COVER
@@ -341,7 +342,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             pickPhotoFromAlbum(
                     this,
                     REQUEST_CODE_PIC_SET,
-                    8,
+                    12,
                     isSquare = false,
                     isCircle = false,
                     isCropWithoutSpecificShape = false
@@ -423,7 +424,12 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     /**
      * 提交物品表单
      */
+    @Synchronized
     private fun submitItem() {
+        // 若已经提交完成，则直接返回
+        if (isSubmitSuccess) {
+            return
+        }
         if (addNewType == AddNewType.ADD_ITEM) { // 新增物品
             val token = (application as Application).getCachedToken()
             if (token != null) {
@@ -437,20 +443,17 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                             mPicSetPaths.add(localMedia.path)
                         }
 
-                        isSubmitSuccess = false
                         addNewViewModel.submitItem(token.access_token, mCoverPath, mPicSetPaths,
                                 option_title.text.toString(), option_description.text.toString(),
                                 mAmapLocation!!.longitude, mAmapLocation!!.latitude,
                                 !option_secondHand.isChecked, option_negotiable.isChecked, price_input.text.toString().toFloat())
                                 .observeOnce(this) { result: Boolean ->
-                                    if (!isSubmitSuccess) {
-                                        dismissLoading {
-                                            AddNewResultActivity.start(this, result, if (result) AddNewResultTips.SUCCESS_NEW_ITEM else AddNewResultTips.FAILED_ADD)
-                                            if (result) {
-                                                isSubmitSuccess = true // 发送已完毕标志
-                                                finish()
-                                                AnimUtil.activityExitAnimDown(this)
-                                            }
+                                    dismissLoading {
+                                        AddNewResultActivity.start(this, result, if (result) AddNewResultTips.SUCCESS_NEW_ITEM else AddNewResultTips.FAILED_ADD)
+                                        if (result) {
+                                            isSubmitSuccess = true // 发送已完毕标志
+                                            finish()
+                                            AnimUtil.activityExitAnimDown(this)
                                         }
                                     }
                                 }
@@ -869,7 +872,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         -1,
                         -1,
                         true,
-                        R.color.black,
+                        getColor(R.color.blackAlways),
                         { popupView: ImageViewerPopupView, position1: Int ->
                             popupView.updateSrcView(pic_set.getChildAt(position1).findViewById(R.id.image))
                         },

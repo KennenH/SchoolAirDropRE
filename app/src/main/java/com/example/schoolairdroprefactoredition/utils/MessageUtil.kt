@@ -3,7 +3,6 @@ package com.example.schoolairdroprefactoredition.utils
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.domain.DomainOffline
 import net.x52im.mobileimsdk.server.protocal.Protocal
-import java.util.*
 import kotlin.collections.ArrayList
 
 class MessageUtil {
@@ -28,12 +27,12 @@ class MessageUtil {
             val histories = ArrayList<ChatHistory>()
             for (bean in offline) {
                 histories.add(ChatHistory(
-                        bean.fingerPrint,
-                        bean.senderID,
-                        bean.receiverID,
-                        bean.messageType,
+                        bean.finger_print,
+                        bean.sender_id,
+                        bean.receiver_id,
+                        bean.message_type,
                         bean.message,
-                        bean.sendTime,
+                        bean.send_time,
                         0))
             }
             return histories

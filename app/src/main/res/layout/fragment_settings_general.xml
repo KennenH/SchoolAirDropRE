@@ -20,6 +20,7 @@
                 android:id="@+id/settingsGeneralDarkTheme"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:PI_icon="@drawable/ic_dark_theme"
                 app:PI_isSwitch="true"
                 app:PI_title="@string/darkTheme" />
 

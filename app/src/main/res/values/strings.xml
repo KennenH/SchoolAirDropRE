@@ -235,7 +235,7 @@
     <string name="errorUnknown">未知错误</string>
     <string name="successFavorite">物品已收藏</string>
     <string name="errorLogin">登录失败</string>
-    <string name="successUnlist">物品已下架</string>
+    <string name="successUnlist">物品已下架，可能需要半分钟左右来处理</string>
     <string name="successAvatar">头像已更新</string>
     <string name="successSave">图片已保存</string>
     <string name="sellingHideByUser">已隐藏</string>
@@ -274,7 +274,7 @@
     <string name="currentAccount">当前账号</string>
     <string name="agreeAboveAgreementAndStartToUse">同意并开始使用</string>
     <string name="disagreeAndQuit">拒绝并退出校园空投</string>
-    <string name="serviceTip">在开始之前，请仔细阅读我们的服务条款和隐私政策(包含第三方服务)</string>
+    <string name="serviceTip">开始之前，请仔细阅读我们的服务条款和隐私政策(包含第三方服务)</string>
     <string name="haveReadAndAgreeTerms">我已认真阅读并同意以上服务条款和隐私政策</string>
     <string name="privacyAndService">隐私政策与服务条款</string>
     <string name="pleaseAgreeAboveTermsFirst">请先阅读并同意以上条款</string>
@@ -282,7 +282,7 @@
     <string name="completed">已完成</string>
     <string name="termsOfServiceAgreeFailed">啊哦，条约走丢了</string>
     <string name="addNewGoodsError">发送请求时出错，若多次失败请更新版本</string>
-    <string name="plaza">广场</string>
+    <string name="plaza">求购</string>
     <string name="doNotPostIllegalContent">请不要发布违反学校规章、国家法律的文字和物品，请仔细检查表单各项内容</string>
     <string name="addNewPost">发布帖子</string>
     <string name="submitPostLocationFailedTip">当前定位结果异常，帖子很可能无法被其他同学看到。表单已自动保存，建议稍后重试提交。</string>

@@ -74,7 +74,7 @@ class UploadRepository private constructor() {
         getQiNiuToken(token) { uploadToken ->
             if (uploadToken != null) {
                 // 获取将要上传的图片在服务器上的路径前缀和文件名
-                requestForImagePath(type, fileLocalPaths.size) { taskAndKeysWrapper ->
+                requestForImagePath(token, type, fileLocalPaths.size) { taskAndKeysWrapper ->
                     if (taskAndKeysWrapper != null) {
                         // 执行上传操作
                         uploadFileToQiNiu(fileLocalList, taskAndKeysWrapper, uploadToken.data.token) {
@@ -101,8 +101,8 @@ class UploadRepository private constructor() {
      * @param amount 将要上传的图片的数量
      * @param onResult 成功返回图片路径前缀和n张图片的名字，失败null
      */
-    private fun requestForImagePath(type: String, amount: Int, onResult: (response: DomainUploadPath?) -> Unit) {
-        RetrofitClient.uploadApi.getImagePath(type, amount).apply {
+    private fun requestForImagePath(token: String, type: String, amount: Int, onResult: (response: DomainUploadPath?) -> Unit) {
+        RetrofitClient.uploadApi.getImagePath(token, type, amount).apply {
             enqueue(object : CallBackWithRetry<DomainUploadPath>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null)

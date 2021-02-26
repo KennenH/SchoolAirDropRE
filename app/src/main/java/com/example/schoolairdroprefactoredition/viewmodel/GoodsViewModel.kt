@@ -18,8 +18,6 @@ class GoodsViewModel(private val databaseRepository: DatabaseRepository) : ViewM
         }
     }
 
-    private val goodsDetail = MutableLiveData<GoodsDetailInfo?>()
-
     private val goodsRepository by lazy {
         GoodsRepository.getInstance()
     }
@@ -28,6 +26,7 @@ class GoodsViewModel(private val databaseRepository: DatabaseRepository) : ViewM
      * 获取物品详细信息
      */
     fun getGoodsDetailByID(goodsID: Int): LiveData<GoodsDetailInfo?> {
+        val goodsDetail = MutableLiveData<GoodsDetailInfo?>()
         viewModelScope.launch {
             goodsRepository.getGoodsDetail(goodsID) { success, response ->
                 if (success) {

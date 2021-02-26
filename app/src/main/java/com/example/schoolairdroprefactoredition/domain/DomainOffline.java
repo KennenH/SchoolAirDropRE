@@ -61,56 +61,56 @@ public class DomainOffline implements Serializable {
         @Override
         public String toString() {
             return "DataBean{" +
-                    "offlineID=" + offlineID +
-                    ", fingerPrint='" + fingerPrint + '\'' +
-                    ", senderID='" + senderID + '\'' +
-                    ", receiverID='" + receiverID + '\'' +
+                    "offline_id=" + offline_id +
+                    ", finger_print='" + finger_print + '\'' +
+                    ", sender_id='" + sender_id + '\'' +
+                    ", receiver_id='" + receiver_id + '\'' +
                     ", message='" + message + '\'' +
-                    ", messageType=" + messageType +
-                    ", sendTime='" + sendTime + '\'' +
+                    ", message_type=" + message_type +
+                    ", send_time=" + send_time +
                     ", received=" + received +
                     '}';
         }
 
-        private int offlineID;
-        private String fingerPrint;
-        private String senderID;
-        private String receiverID;
+        private int offline_id;
+        private String finger_print;
+        private String sender_id;
+        private String receiver_id;
         private String message;
-        private int messageType;
-        private long sendTime;
+        private int message_type;
+        private long send_time;
         private int received;
 
-        public int getOfflineID() {
-            return offlineID;
+        public int getOffline_id() {
+            return offline_id;
         }
 
-        public void setOfflineID(int offlineID) {
-            this.offlineID = offlineID;
+        public void setOffline_id(int offline_id) {
+            this.offline_id = offline_id;
         }
 
-        public String getFingerPrint() {
-            return fingerPrint;
+        public String getFinger_print() {
+            return finger_print;
         }
 
-        public void setFingerPrint(String fingerPrint) {
-            this.fingerPrint = fingerPrint;
+        public void setFinger_print(String finger_print) {
+            this.finger_print = finger_print;
         }
 
-        public String getSenderID() {
-            return senderID;
+        public String getSender_id() {
+            return sender_id;
         }
 
-        public void setSenderID(String senderID) {
-            this.senderID = senderID;
+        public void setSender_id(String sender_id) {
+            this.sender_id = sender_id;
         }
 
-        public String getReceiverID() {
-            return receiverID;
+        public String getReceiver_id() {
+            return receiver_id;
         }
 
-        public void setReceiverID(String receiverID) {
-            this.receiverID = receiverID;
+        public void setReceiver_id(String receiver_id) {
+            this.receiver_id = receiver_id;
         }
 
         public String getMessage() {
@@ -121,20 +121,20 @@ public class DomainOffline implements Serializable {
             this.message = message;
         }
 
-        public int getMessageType() {
-            return messageType;
+        public int getMessage_type() {
+            return message_type;
         }
 
-        public void setMessageType(int messageType) {
-            this.messageType = messageType;
+        public void setMessage_type(int message_type) {
+            this.message_type = message_type;
         }
 
-        public long getSendTime() {
-            return sendTime;
+        public long getSend_time() {
+            return send_time;
         }
 
-        public void setSendTime(long sendTime) {
-            this.sendTime = sendTime;
+        public void setSend_time(long send_time) {
+            this.send_time = send_time;
         }
 
         public int getReceived() {

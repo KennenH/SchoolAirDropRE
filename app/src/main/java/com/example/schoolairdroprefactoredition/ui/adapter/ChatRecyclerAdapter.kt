@@ -3,14 +3,12 @@ package com.example.schoolairdroprefactoredition.ui.adapter
 import android.view.View
 import android.widget.ImageView
 import com.blankj.utilcode.constant.TimeConstants
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
 import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
-import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.domain.base.DomainSimpleUserInfo
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
@@ -209,7 +207,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 imageView.setOnClickListener {
                     XPopup.Builder(context)
                             .isDarkTheme(true)
-                            .asImageViewer(imageView, item.message, false, -1, -1, -1, true, R.color.black, MyUtil.ImageLoader())
+                            .asImageViewer(imageView, item.message, false, -1, -1, -1, true, context.getColor(R.color.blackAlways), MyUtil.ImageLoader())
                             .show()
                 }
             }
@@ -254,7 +252,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 imageView.setOnClickListener {
                     XPopup.Builder(context)
                             .isDarkTheme(true)
-                            .asImageViewer(imageView, item.message, false, -1, -1, -1, true, R.color.black, MyUtil.ImageLoader())
+                            .asImageViewer(imageView, item.message, false, -1, -1, -1, true, context.getColor(R.color.blackAlways), MyUtil.ImageLoader())
                             .show()
                 }
             }

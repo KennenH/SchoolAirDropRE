@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.scene.user
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -161,7 +162,6 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         if (userID != -1) { // 如果传了userID，说明这个个人主页是别人的，去获取用户信息
             userViewModel.getUserInfo(userID, true).observe(this) {
                 if (it != null) {
-                    userInfo = it
                     intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
                 }
                 setUserInfo(it)
@@ -182,6 +182,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
      * 在 用户第一次进入页面时 以及 用户修改信息后返回时调用
      */
     private fun setUserInfo(userInfo: DomainUserInfo.DataBean?) {
+        this.userInfo = userInfo
         if (userInfo == null) {
             DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
             return
@@ -241,7 +242,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
                         .asImageViewer(v as ImageView,
                                 ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(userInfo?.userAvatar),
                                 false, -1, -1, ScreenUtils.getAppScreenWidth(),
-                                true, R.color.black, ImageLoader())
+                                true, getColor(R.color.blackAlways), ImageLoader())
                         .show()
             }
 

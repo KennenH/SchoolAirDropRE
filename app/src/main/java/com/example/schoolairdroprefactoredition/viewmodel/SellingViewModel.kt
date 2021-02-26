@@ -15,23 +15,27 @@ class SellingViewModel : ViewModel() {
 
     private val sellingRepository = SellingRepository.getInstance()
 
-    private val deleteGoodsResultLiveData = MutableLiveData<Boolean>()
-    private val updateGoodsResulLiveData = MutableLiveData<Boolean>()
-
-    private val sellingLiveData = MutableLiveData<DomainPurchasing?>()
     private val postsLiveData = MutableLiveData<DomainPostInfo?>()
 
     private val deletePostResultLiveData = MutableLiveData<Boolean>()
     private val updatePostResultLiveData = MutableLiveData<Boolean>()
 
+    /**
+     * 下架物品
+     */
     fun deleteGoods(token: String, goodsID: String): LiveData<Boolean> {
+        val deleteGoodsResultLiveData = MutableLiveData<Boolean>()
         sellingRepository.deleteGoods(token, goodsID) {
             deleteGoodsResultLiveData.postValue(it)
         }
         return deleteGoodsResultLiveData
     }
 
+    /**
+     * 获取用户在售物品
+     */
     fun getSelling(userID: Int): LiveData<DomainPurchasing?> {
+        val sellingLiveData = MutableLiveData<DomainPurchasing?>()
         sellingRepository.getSelling(userID) {
             sellingLiveData.postValue(it)
         }

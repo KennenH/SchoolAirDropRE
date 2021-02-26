@@ -9,13 +9,12 @@ import kotlinx.coroutines.launch
 
 class UserRenameViewModel : ViewModel() {
 
-    private val mRenameResult = MutableLiveData<Boolean>()
-
     private val userNameRepository by lazy {
         UserNameRepository.getInstance()
     }
 
     fun rename(token: String, name: String): LiveData<Boolean> {
+        val mRenameResult = MutableLiveData<Boolean>()
         viewModelScope.launch {
             userNameRepository.rename(token, name) {
                 mRenameResult.postValue(it)

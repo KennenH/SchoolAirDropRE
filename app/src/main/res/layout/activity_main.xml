@@ -47,7 +47,7 @@
                 android:contentDescription="@string/add"
                 android:scaleType="center"
                 android:src="@drawable/ic_add"
-                android:tint="@color/whiteAlways"
+                app:backgroundTint="@color/colorAccent"
                 app:elevation="0dp"
                 app:fabCustomSize="40dp"
                 app:maxImageSize="15dp" />

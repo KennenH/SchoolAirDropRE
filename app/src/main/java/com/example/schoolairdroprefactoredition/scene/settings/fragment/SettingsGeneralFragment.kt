@@ -34,8 +34,10 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (generalViewModel.getIsDarkTheme().value == true) {
-            settingsGeneralDarkTheme.select()
+        generalViewModel.getIsDarkTheme().observeOnce(viewLifecycleOwner) {
+            if (it) {
+                settingsGeneralDarkTheme.select()
+            }
         }
 
         settingsGeneralStorage.setOnClickListener(this@SettingsGeneralFragment)

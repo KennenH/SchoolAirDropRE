@@ -8,23 +8,23 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.Application
 import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding
+import com.example.schoolairdroprefactoredition.scene.base.BaseActivity
 import com.example.schoolairdroprefactoredition.utils.*
 import com.example.schoolairdroprefactoredition.viewmodel.UserAvatarViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.luck.picture.lib.PictureSelector
 import kotlinx.android.synthetic.main.activity_user_update_avatar.*
 import java.util.*
 
-class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, View.OnClickListener {
+class UserUpdateAvatarActivity : BaseActivity(), View.OnLongClickListener, View.OnClickListener {
 
     companion object {
         fun start(context: Context) {
@@ -58,7 +58,7 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
         BottomSheetDialog(this)
     }
 
-    private val binding by lazy {
+    private val bottomSheetBinding by lazy {
         SheetAvatarBinding.inflate(LayoutInflater.from(this))
     }
 
@@ -72,8 +72,8 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
 
         ImageUtil.loadImage(avatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(info?.userAvatar), R.drawable.ic_logo_alpha_white)
 
-        mDialog.setContentView(binding.root)
-        binding.apply {
+        mDialog.setContentView(bottomSheetBinding.root)
+        bottomSheetBinding.apply {
             takePhoto.setOnClickListener(this@UserUpdateAvatarActivity)
             selectFromAlbum.setOnClickListener(this@UserUpdateAvatarActivity)
             saveToAlbum.setOnClickListener(this@UserUpdateAvatarActivity)
@@ -101,13 +101,15 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * 显示上传头像的选项，可以相册和拍照
+     */
     private fun showAvatarDialog() {
-        val view: View? = mDialog.delegate.findViewById(com.google.android.material.R.id.design_bottom_sheet)
-        view?.background = ResourcesCompat.getDrawable(resources, R.drawable.transparent, theme)
-        val bottomSheetBehavior: BottomSheetBehavior<View>
+        val view = mDialog.delegate.findViewById<View?>(com.google.android.material.R.id.design_bottom_sheet)
         if (view != null) {
-            bottomSheetBehavior = BottomSheetBehavior.from(view)
+            val bottomSheetBehavior = BottomSheetBehavior.from(view)
             bottomSheetBehavior.skipCollapsed = true
+            bottomSheetBehavior.isDraggable = false
             bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
                     mDialog.dismiss()
@@ -148,7 +150,7 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
 
     private fun updateAvatar(avatarUrl: String) {
         mLoading.dismissWith { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successAvatar) }
-        ImageUtil.loadRoundImage(avatar,
+        ImageUtil.loadImage(avatar,
                 ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(avatarUrl),
                 R.drawable.ic_logo_alpha_white)
         info?.userAvatar = avatarUrl
@@ -194,17 +196,5 @@ class UserUpdateAvatarActivity : AppCompatActivity(), View.OnLongClickListener, 
                 mDialog.dismiss()
             }
         }
-    }
-
-    /**
-     * 仅观察一次的观察者
-     */
-    private fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
-        observe(lifecycleOwner, object : Observer<T> {
-            override fun onChanged(t: T?) {
-                removeObserver(this)
-                observer.onChanged(t)
-            }
-        })
     }
 }

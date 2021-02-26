@@ -11,8 +11,6 @@ import kotlinx.coroutines.launch
 
 class SettingsGeneralViewModel : ViewModel() {
 
-    private val mIsDarkTheme = MutableLiveData<Boolean>()
-
     private val mJsonCacheUtil by lazy {
         JsonCacheUtil.getInstance()
     }
@@ -21,6 +19,7 @@ class SettingsGeneralViewModel : ViewModel() {
      * 是否为暗黑主题
      */
     fun getIsDarkTheme(): LiveData<Boolean> {
+        val mIsDarkTheme = MutableLiveData<Boolean>()
         viewModelScope.launch {
             val settings = mJsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
             mIsDarkTheme.postValue(settings?.isDarkTheme)

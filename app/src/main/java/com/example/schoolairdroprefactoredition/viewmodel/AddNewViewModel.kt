@@ -18,18 +18,6 @@ import kotlinx.coroutines.launch
 class AddNewViewModel(application: Application) : AndroidViewModel(application) {
 
     /**
-     * 上传物品 结果
-     * 成功 true 失败 false
-     */
-    private val submitItemLiveData = MutableLiveData<Boolean>()
-
-    /**
-     * 上传帖子 结果
-     * 成功 true 失败 false
-     */
-    private val submitPostLiveData = MutableLiveData<Boolean>()
-
-    /**
      * 恢复上传物品页面草稿 结果
      */
     private val restoredItemDraftLiveData = MutableLiveData<NewItemDraftCache>()
@@ -51,6 +39,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                    title: String, description: String,
                    longitude: Double, latitude: Double,
                    isBrandNew: Boolean, isQuotable: Boolean, price: Float): LiveData<Boolean> {
+        val submitItemLiveData = MutableLiveData<Boolean>()
         viewModelScope.launch {
             // 将封面图片加入图片集中，为的是确保服务器收到的数组第一张图片是封面
             picSet.add(0, cover)
@@ -84,7 +73,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                    title: String,
                    content: String,
                    longitude: Double, latitude: Double): LiveData<Boolean> {
-
+        val submitPostLiveData = MutableLiveData<Boolean>()
         addNewRepository.submitNewPost(
                 token, cover,
                 HWRatio, picSet,

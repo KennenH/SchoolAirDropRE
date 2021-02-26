@@ -28,5 +28,5 @@ interface UploadApi {
      */
     @FormUrlEncoded
     @POST("appapi/ajax/dispatchUploadTask")
-    fun getImagePath(@Field("img_type") type: String, @Field("amount") amount: Int): Call<DomainUploadPath>
+    fun getImagePath(@Header("Authorization") token: String, @Field("img_type") type: String, @Field("amount") amount: Int): Call<DomainUploadPath>
 }

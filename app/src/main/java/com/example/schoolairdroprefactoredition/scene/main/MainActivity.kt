@@ -125,6 +125,11 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     private var mOnLocationListeners: ArrayList<OnLocationListener> = ArrayList()
 
     /**
+     * 拉取离线消息数量状态监听器
+     */
+    private var mOnOfflineNumStateChangeListener: OnOfflineNumStateChangeListener? = null
+
+    /**
      * 本页面初始化前询问用户是否同意服务协议
      *
      * 同意后将页面初始化代码写在
@@ -288,7 +293,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                             .show(fragment)
                             .commit()
                 }
-            } else if (fragment.isAdded) {
+            } else if (fragment.isVisible) {
                 when (fragment) {
                     mPurchasing -> {
                         mPurchasing.pageScrollToTop()
@@ -428,28 +433,28 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         when (item.itemId) {
             R.id.navigation_purchasing -> {
                 showFragment(mPurchasing)
-                return true
             }
             R.id.navigation_playground -> {
                 showFragment(mPlaza)
-                return true
             }
             R.id.navigation_message -> {
                 // 当未登录时
                 val token = (application as Application).getCachedToken()
                 if (token != null) {
+                    // 清空badge然后显示消息列表页面
+                    navView.getOrCreateBadge(R.id.navigation_message).apply {
+                        this.isVisible = false
+                    }
                     showFragment(mMessages)
                 } else {
                     LoginActivity.start(this)
                 }
-                return true
             }
             R.id.navigation_my -> {
                 showFragment(mMy)
-                return true
             }
         }
-        return false
+        return true
     }
 
     /**
@@ -466,7 +471,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
 
     /*************************************************************************************/
-    /**************************************listeners**************************************/
+    /******************************listeners and callbacks********************************/
     /*************************************************************************************/
     /**
      * <p>
@@ -499,9 +504,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
         /**
          * 正在登录 以及 登录结束 的回调
-         * @param isLogging
-         * true 正在登录
-         * false 登录结束
          */
         fun onLogging()
     }
@@ -522,18 +524,48 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 并且根据app登录状态来改变IM系统的登录状态
      */
     private fun loginStateChanged(userInfo: DomainUserInfo.DataBean?, token: DomainToken?) {
+        // app中保存登录信息
         (application as Application).cacheMyInfoAndToken(userInfo, token)
 
+        // 为监听登录状态的页面进行回调
         for (listener in mOnLoginStateChangedListeners) {
             listener.onLoginStateChanged(intent)
         }
 
-        // 若为登录app回调，则登录IM，否则退出IM
+        // 若为登录app，则登录IM，否则退出IM
         if (userInfo != null && token != null) {
+            // 主页开始获取用户离线消息数量，若有，则为消息图片加上小红点
+            imViewModel.getOfflineNumOnline(token, mOnOfflineNumStateChangeListener).observe(this) {
+                if (it && navView.selectedItemId != R.id.navigation_message) {
+                    navView.getOrCreateBadge(R.id.navigation_message).apply {
+                        this.backgroundColor = getColor(R.color.colorPrimaryRed)
+                        this.isVisible = true
+                    }
+                }
+            }
             (application as Application).doLoginIM()
         } else {
             (application as Application).doLogoutIM()
         }
+    }
+
+    /**
+     * 主页获取离线消息数量的状态回调
+     */
+    interface OnOfflineNumStateChangeListener {
+        /**
+         * 正在拉取离线消息
+         */
+        fun onPullingOfflineNum()
+
+        /**
+         * 离线消息数量拉取完成
+         */
+        fun onPullDone()
+    }
+
+    fun setOnPullingOfflineNum(listener: OnOfflineNumStateChangeListener) {
+        this.mOnOfflineNumStateChangeListener = listener
     }
 
     /**

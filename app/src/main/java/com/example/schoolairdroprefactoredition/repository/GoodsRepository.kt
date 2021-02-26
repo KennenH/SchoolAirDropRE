@@ -1,9 +1,8 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.blankj.utilcode.util.LogUtils
-import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
+import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import retrofit2.Call
 import retrofit2.Response
@@ -39,7 +38,6 @@ class GoodsRepository private constructor() {
                             onResult(false, null)
                         }
                     } else {
-                        LogUtils.d(response.errorBody()?.string())
                         onResult(false, null)
                     }
                 }

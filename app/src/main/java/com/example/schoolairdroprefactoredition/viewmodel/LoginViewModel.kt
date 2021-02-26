@@ -17,10 +17,6 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
 
-    private val mPublicKey = MutableLiveData<DomainAuthorizeGet?>()
-    private val mAuthorize = MutableLiveData<DomainToken?>()
-    private val mUserInfo = MutableLiveData<DomainUserInfo.DataBean?>()
-
     private val mainRepository by lazy {
         LoginRepository.getInstance()
     }
@@ -29,6 +25,7 @@ class LoginViewModel : ViewModel() {
      * 获取RSA公钥
      */
     fun getPublicKey(): LiveData<DomainAuthorizeGet?> {
+        val mPublicKey = MutableLiveData<DomainAuthorizeGet?>()
         viewModelScope.launch {
             mainRepository.getPublicKey { success, response ->
                 if (success) {
@@ -48,6 +45,7 @@ class LoginViewModel : ViewModel() {
             rawAlipayID: String,
             publicKey: String,
     ): LiveData<DomainToken?> {
+        val mAuthorize = MutableLiveData<DomainToken?>()
         viewModelScope.launch {
             mainRepository.authorizeWithAlipayID(
                     rawAlipayID,
@@ -70,6 +68,7 @@ class LoginViewModel : ViewModel() {
      * 使用token获取用户信息
      */
     fun getUserInfo(token: String): LiveData<DomainUserInfo.DataBean?> {
+        val mUserInfo = MutableLiveData<DomainUserInfo.DataBean?>()
         viewModelScope.launch {
             mainRepository.getUserInfo(token) { success, response ->
                 if (success) {
