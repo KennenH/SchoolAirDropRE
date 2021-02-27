@@ -53,7 +53,7 @@
                 app:tint="@color/red" />
 
             <com.github.ybq.android.spinkit.SpinKitView
-                android:id="@+id/send_loading"
+                android:id="@+id/send_sending"
                 style="@style/SpinKitView.Small.ChasingDots"
                 android:layout_width="18dp"
                 android:layout_height="18dp"

@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.database.dao
 
 import androidx.room.*
 import com.example.schoolairdroprefactoredition.database.pojo.*
+import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import kotlinx.coroutines.flow.Flow
 
@@ -179,7 +180,7 @@ interface DatabaseDao {
      *
      * @param display 0 隐藏 1 显示
      */
-    @Query("update offline_num set display = :display where counterpart_id = :counterpartId and my_id = :myID")
+    @Query("update offline_num set display = :display where counterpart_id = :counterpartId and my_id = :myID ")
     suspend fun setChannelDisplay(myID: String, counterpartId: String, display: Int)
 
     /**
@@ -195,8 +196,14 @@ interface DatabaseDao {
     suspend fun removeFavorite(favorite: Favorite)
 
     /**
-     * 查询物品是否
+     * 查询物品是否被收藏
      */
-    @Query("select exists(select goods_id from favorite where goods_id = :goodsID)")
+    @Query("select exists(select goods_id from favorite where goods_id = :goodsID limit 1)")
     suspend fun isFavorite(goodsID: Int): Boolean
+
+    /**
+     * 更新消息发送状态
+     */
+    @Query("update offline set status = :status where fingerprint = :fingerprint")
+    suspend fun updateMessageStatus(fingerprint: String, @ChatRecyclerAdapter.MessageSendStatus status: Int)
 }

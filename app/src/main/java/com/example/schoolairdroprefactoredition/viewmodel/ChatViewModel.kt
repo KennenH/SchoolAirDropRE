@@ -7,6 +7,7 @@ import com.example.schoolairdroprefactoredition.database.pojo.PullFlag
 import com.example.schoolairdroprefactoredition.domain.DomainOffline
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.repository.UploadRepository
+import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.MessageUtil
 import kotlinx.coroutines.joinAll
@@ -39,6 +40,15 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository, applicat
     private val chatLiveData = MutableLiveData<List<ChatHistory>>()
 
     /**
+     * 更新消息发送状态
+     */
+    fun updateMessageStatus(fingerprint: String,@ChatRecyclerAdapter.MessageSendStatus status: Int) {
+        viewModelScope.launch {
+            databaseRepository.updateMessageStatus(fingerprint, status)
+        }
+    }
+
+    /**
      * 上传聊天的图片
      *
      * 图片上传成功之后服务器将会返回图片的路径，再将消息的typeu置为1，消息内容置为获取到的图片路径
@@ -48,8 +58,9 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository, applicat
         if (token != null) {
             uploadRepository.upload(token, imagePaths, ConstantUtil.UPLOAD_TYPE_IM) {
                 if (it != null) {
-                    // todo
-//                    uploadLiveDate.postValue(null)
+                    uploadRepository.moveIMImage(token, it.taskId, it.keys.joinToString(",")) {
+                        uploadLiveDate.postValue(null)
+                    }
                 } else {
                     uploadLiveDate.postValue(null)
                 }

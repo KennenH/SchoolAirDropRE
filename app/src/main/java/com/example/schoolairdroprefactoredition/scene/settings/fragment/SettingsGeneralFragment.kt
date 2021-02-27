@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment
 import com.example.schoolairdroprefactoredition.ui.components.PageItem
@@ -27,6 +27,11 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
         }
     }
 
+    /**
+     * 暗黑模式按钮是否已经初始化
+     */
+    private var isDarkThemeInitialized = false
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return LayoutInflater.from(context).inflate(R.layout.fragment_settings_general, container, false).rootView
     }
@@ -38,6 +43,7 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
             if (it) {
                 settingsGeneralDarkTheme.select()
             }
+            isDarkThemeInitialized = true
         }
 
         settingsGeneralStorage.setOnClickListener(this@SettingsGeneralFragment)
@@ -57,9 +63,11 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
     }
 
     override fun onPageItemToggled() {
-        if (activity?.application is Application) {
-            (activity?.application as Application).setAppTheme(settingsGeneralDarkTheme.isItemSelected)
+        if (isDarkThemeInitialized) {
+            if (activity?.application is SAApplication) {
+                (activity?.application as SAApplication).setAppTheme(settingsGeneralDarkTheme.isItemSelected)
+            }
+            activity?.supportFragmentManager?.popBackStack()
         }
-        activity?.supportFragmentManager?.popBackStack()
     }
 }

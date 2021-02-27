@@ -1,7 +1,7 @@
 package com.example.schoolairdroprefactoredition.im
 
 import android.content.Context
-import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import net.x52im.mobileimsdk.android.ClientCoreSDK
 import net.x52im.mobileimsdk.android.conf.ConfigEntity
@@ -40,10 +40,10 @@ class IMClientManager private constructor(private var context: Context?) {
             ClientCoreSDK.getInstance().init(context)
 
             // 设置事件回调
-            if (context is Application) {
-                ClientCoreSDK.getInstance().chatBaseEvent = context as Application
-                ClientCoreSDK.getInstance().chatMessageEvent = context as Application
-                ClientCoreSDK.getInstance().messageQoSEvent = context as Application
+            if (context is SAApplication) {
+                ClientCoreSDK.getInstance().chatBaseEvent = context as SAApplication
+                ClientCoreSDK.getInstance().chatMessageEvent = context as SAApplication
+                ClientCoreSDK.getInstance().messageQoSEvent = context as SAApplication
             }
             init = true
         }

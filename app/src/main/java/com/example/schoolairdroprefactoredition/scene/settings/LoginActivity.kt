@@ -11,7 +11,7 @@ import com.blankj.utilcode.util.ClickUtils
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.utils.AnimUtil
@@ -22,7 +22,7 @@ import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_logged_in.*
 import kotlinx.android.synthetic.main.activity_login.*
 
-class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, CompoundButton.OnCheckedChangeListener, Application.OnApplicationLoginListener {
+class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, CompoundButton.OnCheckedChangeListener, SAApplication.OnApplicationLoginListener {
 
     companion object {
         const val LOGIN = 39726 // 请求码 网络登录请求
@@ -42,6 +42,8 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
 
     /**
      * 防止正在登录时重复发起登录请求
+     *
+     * 只需在登录失败时重置为false，成功后将自动关闭页面，无需将其重置
      */
     private var isLogging = false
 
@@ -58,8 +60,8 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        token = (application as Application).getCachedToken()
-        val info = (application as Application).getCachedMyInfo()
+        token = (application as SAApplication).getCachedToken()
+        val info = (application as SAApplication).getCachedMyInfo()
         // 已登录时
         if (info != null) {
             setContentView(R.layout.activity_logged_in)
@@ -81,7 +83,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
             ClickUtils.applyPressedViewAlpha(close, 0.6f)
         } else {
             setContentView(R.layout.activity_login)
-            (application as Application).addOnApplicationLoginListener(this)
+            (application as SAApplication).addOnApplicationLoginListener(this)
             login_with_alipay.isEnabled = false
             cancel.setOnClickListener(this)
             checkbox.setOnCheckedChangeListener(this)
@@ -122,7 +124,6 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
                 // 暂时禁用提交按钮防止短时间内提交多次
                 v.isEnabled = false
 
-
                 // 开始转圈圈，这个调用里一旦出错中断了，必须调用loginError来提示用户登录请求中断
                 showLoading {
                     // 如果没网直接error
@@ -158,6 +159,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      * 两次请求获取token信息
      * 最后使用token换取用户信息
      */
+    @Synchronized
     private fun loginWithAlipay() {
         if (token != null) {
             // 如果之前某种情况登录成功但是用户信息获取失败，直接获取用户信息即可
@@ -237,6 +239,4 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
             AnimUtil.activityExitAnimDown(this)
         }
     }
-
-
 }

@@ -68,7 +68,8 @@
                     android:layout_height="40dp"
                     android:layout_marginTop="@dimen/general_padding_bit_larger"
                     android:contentDescription="@string/avatar"
-                    android:src="@drawable/avatar"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/pk"
                     app:layout_constraintStart_toStartOf="@id/posts_title"
                     app:layout_constraintTop_toBottomOf="@id/posts_title" />
 

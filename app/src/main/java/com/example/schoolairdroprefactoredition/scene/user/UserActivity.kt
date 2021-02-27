@@ -3,7 +3,6 @@ package com.example.schoolairdroprefactoredition.scene.user
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -13,10 +12,9 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.blankj.utilcode.util.BarUtils
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
@@ -100,7 +98,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
     }
 
     private val userViewModel by lazy {
-        UserViewModel.UserViewModelFactory((application as Application).chatRepository).create(UserViewModel::class.java)
+        UserViewModel.UserViewModelFactory((application as SAApplication).chatRepository).create(UserViewModel::class.java)
     }
 
     /**
@@ -168,7 +166,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
             }
         } else {
             // 没传userID说明是我自己的页面，直接获取我的信息
-            setUserInfo((application as Application).getCachedMyInfo())
+            setUserInfo((application as SAApplication).getCachedMyInfo())
         }
 
         user_background_over_drag_header.setOnHeaderOverDragEventListener(this)

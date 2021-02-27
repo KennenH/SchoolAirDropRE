@@ -51,7 +51,7 @@ data class ChatHistory(
          * 0 接收正常或已发送，在代表发送时不一定成功，待IM框架回调后方可得知
          * 1 发送失败
          */
-        val status: Int,
+        var status: Int,
 ) {
     override fun toString(): String {
         return "ChatHistory(fingerprint='$fingerprint', sender_id='$sender_id', receiver_id='$receiver_id', message_type=$message_type, message='$message', send_time=$send_time, status=$status)"

@@ -17,6 +17,9 @@ class UserNameRepository private constructor() {
                 }
     }
 
+    /**
+     * 修改用户名
+     */
     fun rename(token: String, name: String, onResult: (success: Boolean) -> Unit) {
         RetrofitClient.userApi.updateUserName(token, name).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {

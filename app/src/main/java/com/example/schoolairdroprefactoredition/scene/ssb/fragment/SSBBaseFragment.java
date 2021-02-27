@@ -11,7 +11,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.schoolairdroprefactoredition.application.Application;
+import com.example.schoolairdroprefactoredition.application.SAApplication;
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding;
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing;
 import com.example.schoolairdroprefactoredition.domain.DomainToken;
@@ -117,7 +117,7 @@ public abstract class SSBBaseFragment extends StatePlaceholderFragment
      */
     protected DomainToken getToken() {
         try {
-            return ((Application) getActivity().getApplication()).getCachedToken();
+            return ((SAApplication) getActivity().getApplication()).getCachedToken();
         } catch (NullPointerException ignored) {
         }
         return null;

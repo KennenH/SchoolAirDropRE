@@ -9,6 +9,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainOfflineNum
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
+import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 
@@ -91,7 +92,7 @@ class InstanceMessageViewModel(private val databaseRepository: DatabaseRepositor
                             offlineBean.messageType,
                             offlineBean.message,
                             offlineBean.sendTime,
-                            1))
+                            ChatRecyclerAdapter.MessageSendStatus.SUCCESS))
                 }
 
                 // 装配最后一条消息
@@ -108,6 +109,26 @@ class InstanceMessageViewModel(private val databaseRepository: DatabaseRepositor
             databaseRepository.saveLastMessage(pullFlag)
             databaseRepository.saveOfflineNum(numList)
             databaseRepository.saveHistory(historyList)
+        }
+    }
+
+    /**
+     * 更新未被收到的消息数组状态
+     */
+    fun messagesLost(fingerprints: List<String>) {
+        viewModelScope.launch {
+            for (fingerprint in fingerprints) {
+                databaseRepository.updateMessageStatus(fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+            }
+        }
+    }
+
+    /**
+     * 更新已被收到的消息状态
+     */
+    fun messageBeReceived(fingerprint: String) {
+        viewModelScope.launch {
+            databaseRepository.updateMessageStatus(fingerprint, ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
         }
     }
 }

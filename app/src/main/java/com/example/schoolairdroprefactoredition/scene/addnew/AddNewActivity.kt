@@ -2,7 +2,6 @@ package com.example.schoolairdroprefactoredition.scene.addnew
 
 import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.text.InputFilter
 import android.view.*
@@ -19,9 +18,8 @@ import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewPostDraftCache
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
@@ -49,7 +47,7 @@ import com.lxj.xpopup.core.ImageViewerPopupView
 import kotlinx.android.synthetic.main.activity_selling_add_new.*
 import java.util.*
 
-class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocationListener, OnPicSetClickListener, Application.OnApplicationLoginListener {
+class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocationListener, OnPicSetClickListener, SAApplication.OnApplicationLoginListener {
 
     companion object {
         /**
@@ -210,7 +208,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         setSupportActionBar(findViewById(R.id.toolbar))
 
         // 当app在外部登录时将会收到通知
-        (application as Application).addOnApplicationLoginListener(this)
+        (application as SAApplication).addOnApplicationLoginListener(this)
 
         goodsBaseInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO) as? DomainPurchasing.DataBean
         addNewType = intent.getIntExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.ADD_ITEM)
@@ -377,7 +375,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             } else if (requestCode == LoginActivity.LOGIN) { // 在本页面打开登录页面登录并返回
                 if (data != null) {
                     setResult(RESULT_OK, data)
-                    (application as Application).cacheMyInfoAndToken(
+                    (application as SAApplication).cacheMyInfoAndToken(
                             data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean,
                             data.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken)
                     try {
@@ -431,7 +429,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             return
         }
         if (addNewType == AddNewType.ADD_ITEM) { // 新增物品
-            val token = (application as Application).getCachedToken()
+            val token = (application as SAApplication).getCachedToken()
             if (token != null) {
                 if (mAmapLocation == null) {
 //                            dismissLoading(() ->
@@ -478,7 +476,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      * 提交新帖表单
      */
     private fun submitPost() {
-        val token = (application as Application).getCachedToken()
+        val token = (application as SAApplication).getCachedToken()
         if (token != null) {
             if (mAmapLocation == null) {
                 AddNewResultActivity.start(this, false, AddNewResultTips.LOCATION_FAILED_NEW_ITEM)

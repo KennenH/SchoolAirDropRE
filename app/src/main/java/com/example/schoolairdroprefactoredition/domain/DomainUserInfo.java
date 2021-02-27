@@ -13,6 +13,7 @@ import java.io.Serializable;
  */
 public class DomainUserInfo implements Serializable {
 
+    @NotNull
     @Override
     public String toString() {
         return "DomainUserInfo{" +

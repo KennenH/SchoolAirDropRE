@@ -50,7 +50,8 @@
                 app:backgroundTint="@color/colorAccent"
                 app:elevation="0dp"
                 app:fabCustomSize="40dp"
-                app:maxImageSize="15dp" />
+                app:maxImageSize="15dp"
+                app:tint="@color/whiteAlways" />
         </com.google.android.material.bottomnavigation.BottomNavigationView>
     </LinearLayout>
 

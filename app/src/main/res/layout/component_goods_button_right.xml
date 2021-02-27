@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -17,58 +16,47 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center">
+        <!--        <androidx.constraintlayout.widget.ConstraintLayout-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_gravity="center"-->
+        <!--            android:gravity="center">-->
 
-            <ImageView
-                android:id="@+id/button_one"
-                android:layout_width="@dimen/icon_normal_with_general_padding"
-                android:layout_height="@dimen/icon_normal_with_general_padding"
-                android:background="@drawable/bg_half_round_bottom_left"
-                android:paddingTop="@dimen/general_padding_bit_larger"
-                android:paddingBottom="@dimen/general_padding_bit_larger"
-                android:src="@drawable/outline_favorite_24"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/button_one"
+            android:layout_width="@dimen/icon_normal_with_general_padding"
+            android:layout_height="@dimen/icon_normal_with_general_padding"
+            android:background="@drawable/round_rect_button"
+            android:paddingTop="@dimen/general_padding_bit_larger"
+            android:paddingBottom="@dimen/general_padding_bit_larger"
+            android:src="@drawable/outline_favorite_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <com.github.ybq.android.spinkit.SpinKitView
-                android:id="@+id/loading"
-                style="@style/SpinKitView.Small.FadingCircle"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:visibility="invisible"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="@+id/button_one"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/button_one" />
+        <!--            <View-->
+        <!--                android:id="@+id/line"-->
+        <!--                android:layout_width="@dimen/line"-->
+        <!--                android:layout_height="@dimen/general_padding_larger"-->
+        <!--                android:background="@color/whiteAlways"-->
+        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                app:layout_constraintStart_toEndOf="@id/button_one"-->
+        <!--                app:layout_constraintTop_toTopOf="parent" />-->
 
-            <View
-                android:id="@+id/line"
-                android:layout_width="@dimen/line"
-                android:layout_height="@dimen/general_padding_larger"
-                android:background="@color/whiteAlways"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/button_one"
-                app:layout_constraintTop_toTopOf="parent" />
+        <!--            <ImageView-->
+        <!--                android:id="@+id/button_two"-->
+        <!--                android:layout_width="@dimen/icon_normal_with_general_padding"-->
+        <!--                android:layout_height="@dimen/icon_normal_with_general_padding"-->
+        <!--                android:background="@drawable/bg_half_round_bottom_right"-->
+        <!--                android:paddingTop="@dimen/general_padding_bit_larger"-->
+        <!--                android:paddingBottom="@dimen/general_padding_bit_larger"-->
+        <!--                android:src="@drawable/ic_quote"-->
+        <!--                app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--                app:layout_constraintEnd_toEndOf="parent"-->
+        <!--                app:layout_constraintStart_toEndOf="@id/line"-->
+        <!--                app:layout_constraintTop_toTopOf="parent"-->
+        <!--                app:tint="@color/whiteAlways" />-->
 
-            <ImageView
-                android:id="@+id/button_two"
-                android:layout_width="@dimen/icon_normal_with_general_padding"
-                android:layout_height="@dimen/icon_normal_with_general_padding"
-                android:background="@drawable/bg_half_round_bottom_right"
-                android:paddingTop="@dimen/general_padding_bit_larger"
-                android:paddingBottom="@dimen/general_padding_bit_larger"
-                android:src="@drawable/ic_quote"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/line"
-                app:layout_constraintTop_toTopOf="parent"
-                app:tint="@color/whiteAlways" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        <!--        </androidx.constraintlayout.widget.ConstraintLayout>-->
     </com.lihang.ShadowLayout>
 </merge>

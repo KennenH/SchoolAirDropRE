@@ -38,22 +38,26 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/send_avatar">
 
-        <ImageView
-            android:id="@+id/send_failed"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
-            android:src="@drawable/ic_attention_normal"
-            android:visibility="invisible"
-            app:tint="@color/red" />
-
-        <com.github.ybq.android.spinkit.SpinKitView
-            android:id="@+id/send_sending"
-            style="@style/SpinKitView.Small.FadingCircle"
-            android:layout_width="18dp"
-            android:layout_height="18dp"
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/general_padding"
-            android:layout_marginEnd="@dimen/general_padding"
-            android:visibility="gone" />
+            android:layout_marginEnd="@dimen/general_padding">
+
+            <ImageView
+                android:id="@+id/send_failed"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
+                android:src="@drawable/ic_attention_normal"
+                android:visibility="invisible"
+                app:tint="@color/red" />
+
+            <com.github.ybq.android.spinkit.SpinKitView
+                android:id="@+id/send_sending"
+                style="@style/SpinKitView.Small.FadingCircle"
+                android:layout_width="18dp"
+                android:layout_height="18dp" />
+        </FrameLayout>
 
         <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/send_image"

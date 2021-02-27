@@ -8,42 +8,31 @@ import android.widget.LinearLayout;
 
 import com.example.schoolairdroprefactoredition.R;
 
-public class ButtonSingle extends LinearLayout {
-
-    private ImageView mButtonOne;
+public class ButtonLeft extends LinearLayout {
 
     private OnButtonClickListener mOnButtonClickListener;
 
-    public ButtonSingle(Context context) {
+    public ButtonLeft(Context context) {
         this(context, null);
     }
 
-    public ButtonSingle(Context context, AttributeSet attrs) {
+    public ButtonLeft(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public ButtonSingle(Context context, AttributeSet attrs, int defStyleAttr) {
+    public ButtonLeft(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.component_goods_button_left, this, true);
 
-        mButtonOne = findViewById(R.id.button_one);
+        final ImageView mButtonOne = findViewById(R.id.button_one);
         mButtonOne.setOnClickListener(v -> {
             if (mOnButtonClickListener != null)
-                mOnButtonClickListener.onButtonClick();
+                mOnButtonClickListener.onLeftButtonClick();
         });
     }
 
-    /**
-     * must be drawable
-     *
-     * @param res drawable res
-     */
-    public void setImage(int res) {
-        mButtonOne.setImageResource(res);
-    }
-
     public interface OnButtonClickListener {
-        void onButtonClick();
+        void onLeftButtonClick();
     }
 
     public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {

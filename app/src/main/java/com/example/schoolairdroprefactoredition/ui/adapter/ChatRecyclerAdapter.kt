@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.ui.adapter
 import android.view.View
 import android.widget.ImageView
 import com.blankj.utilcode.constant.TimeConstants
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
 import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate
@@ -100,23 +101,28 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
      * 更新的消息一定是我发送的消息
      * 我接受到的消息一定是发送和接收成功了的
      */
-    fun updateStatus(item: ChatHistory, @MessageSendStatus status: Int) {
-        recyclerView.post {
-            val holder = recyclerView.getChildViewHolder(recyclerView.getChildAt(getItemPosition(item)))
-            val sending = holder?.itemView?.findViewById<View>(R.id.send_sending)
-            val failed = holder?.itemView?.findViewById<View>(R.id.send_failed)
-            when (status) {
-                MessageSendStatus.FAILED -> {
-                    sending?.visibility = View.INVISIBLE
-                    failed?.visibility = View.VISIBLE
-                }
-                MessageSendStatus.SUCCESS -> {
-                    sending?.visibility = View.INVISIBLE
-                    failed?.visibility = View.INVISIBLE
-                }
-                MessageSendStatus.SENDING -> {
-                    sending?.visibility = View.VISIBLE
-                    failed?.visibility = View.INVISIBLE
+    @Synchronized
+    fun updateStatus(fingerprint: String, @MessageSendStatus status: Int) {
+        for ((index, datum) in data.withIndex()) {
+            if (datum.fingerprint == fingerprint) {
+                datum.status = status
+                notifyItemChanged(index)
+                return // 找到了直接返回
+            }
+        }
+    }
+
+    /**
+     * 批量更新消息发送失败，只有失败时使用该方法，其余都使用以上更新方法
+     */
+    @Synchronized
+    fun updateStatus(fingerprints: List<String>) {
+        for (fingerprint in fingerprints) {
+            for ((index, datum) in data.withIndex()) {
+                if (datum.fingerprint == fingerprint) {
+                    datum.status = MessageSendStatus.FAILED
+                    notifyItemChanged(index)
+                    break // 找到了直接找下一个
                 }
             }
         }
@@ -169,6 +175,30 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
         lastMessageTime = time
     }
 
+    /**
+     * 显示状态视图
+     *
+     * 正在发送显示小菊花、发送成功隐藏所有、发送失败显示感叹号
+     */
+    private fun showStatusView(holder: BaseViewHolder, item: ChatHistory) {
+        val sending = holder.itemView.findViewById<View?>(R.id.send_sending)
+        val failed = holder.itemView.findViewById<View?>(R.id.send_failed)
+        when (item.status) {
+            MessageSendStatus.SENDING -> {
+                sending?.visibility = View.VISIBLE
+                failed?.visibility = View.INVISIBLE
+            }
+            MessageSendStatus.FAILED -> {
+                sending?.visibility = View.INVISIBLE
+                failed?.visibility = View.VISIBLE
+            }
+            MessageSendStatus.SUCCESS -> {
+                sending?.visibility = View.INVISIBLE
+                failed?.visibility = View.INVISIBLE
+            }
+        }
+    }
+
     override fun convert(holder: BaseViewHolder, item: ChatHistory) {
         val date = Date(item.send_time)
         when (holder.itemViewType) {
@@ -186,6 +216,8 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 avatarView.setOnClickListener {
                     UserActivity.start(context, myInfo?.userId)
                 }
+                // 显示发送状态
+                showStatusView(holder, item)
             }
             // 我发送的图片消息
             ITEM_CHAT_SEND_IMAGE -> {
@@ -210,6 +242,8 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                             .asImageViewer(imageView, item.message, false, -1, -1, -1, true, context.getColor(R.color.blackAlways), MyUtil.ImageLoader())
                             .show()
                 }
+                // 显示发送状态
+                showStatusView(holder, item)
             }
             // 我收到的文本消息
             ITEM_CHAT_RECEIVE -> {
@@ -217,7 +251,8 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 val avatarView = holder.itemView.findViewById<ImageView>(R.id.receive_avatar)
                 // 加载头像
                 if (counterpartUrl == null) {
-                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + (ImageUtil.fixUrl(mCounterpartInfo?.userAvatar) ?: ConstantUtil.DEFAULT_AVATAR)
+                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + (ImageUtil.fixUrl(mCounterpartInfo?.userAvatar)
+                            ?: ConstantUtil.DEFAULT_AVATAR)
                 }
                 ImageUtil.loadRoundedImage(avatarView, counterpartUrl)
                 // 消息内容
@@ -235,7 +270,8 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 val avatarView = holder.itemView.findViewById<ImageView>(R.id.receive_avatar)
                 // 加载头像
                 if (counterpartUrl == null) {
-                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + (ImageUtil.fixUrl(mCounterpartInfo?.userAvatar) ?: ConstantUtil.DEFAULT_AVATAR)
+                    counterpartUrl = ConstantUtil.QINIU_BASE_URL + (ImageUtil.fixUrl(mCounterpartInfo?.userAvatar)
+                            ?: ConstantUtil.DEFAULT_AVATAR)
                 }
                 ImageUtil.loadRoundedImage(avatarView, counterpartUrl)
                 // 获取图片view

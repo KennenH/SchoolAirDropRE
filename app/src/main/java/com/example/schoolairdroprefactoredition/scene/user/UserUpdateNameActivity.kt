@@ -14,12 +14,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
+import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.example.schoolairdroprefactoredition.utils.RegExrUtil
 import com.example.schoolairdroprefactoredition.viewmodel.UserRenameViewModel
 import kotlinx.android.synthetic.main.activity_selling_add_set.*
@@ -53,6 +55,10 @@ class UserUpdateNameActivity : ImmersionStatusBarActivity() {
      * 当[input_warning]可见时按钮将不可用
      */
     private var doneMenu: MenuItem? = null
+
+    private val loading by lazy {
+        MyUtil.loading(this)
+    }
 
     /**
      * 仅匹配中文、字母、数字和下划线
@@ -88,39 +94,27 @@ class UserUpdateNameActivity : ImmersionStatusBarActivity() {
     }
 
     private fun init() {
-        val myInfo = (application as Application).getCachedMyInfo()
+        val myInfo = (application as SAApplication).getCachedMyInfo()
         set_title.setText(R.string.setName)
 
         input.apply {
             filters = arrayOf(InputFilter.LengthFilter(8))
-            inputType = EditorInfo.TYPE_NULL
             input_warning.setText(R.string.illegalName)
             setLines(1)
-
-            addTextChangedListener {
-                object : TextWatcher {
-                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        // do nothing
-                    }
-
-                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        // do nothing
-                    }
-
-                    override fun afterTextChanged(p0: Editable?) {
-                        input_tip.text = getString(R.string.textRemainCount, MAX_NAME_LENGTH - input.text.length)
-                        if (!noSpecialsPattern.matcher(text).matches()) {
-                            // 含有特殊字符，禁用提交按钮
-                            doneMenu?.isEnabled = false
-                            input_warning.visibility = View.VISIBLE
-                        } else {
-                            doneMenu?.isEnabled = true
-                            input_warning.visibility = View.INVISIBLE
-                        }
-                    }
+            addTextChangedListener({ _, _, _, _ -> }, { _, _, _, _ -> }, {
+                LogUtils.d("after text changed")
+                input_tip.text = getString(R.string.textRemainCount, MAX_NAME_LENGTH - input.text.length)
+                if (!noSpecialsPattern.matcher(input.text).matches()) {
+                    LogUtils.d("字符输入非法")
+                    // 含有特殊字符，禁用提交按钮
+                    doneMenu?.isEnabled = false
+                    input_warning.visibility = View.VISIBLE
+                } else {
+                    LogUtils.d("字符输入合法")
+                    doneMenu?.isEnabled = true
+                    input_warning.visibility = View.INVISIBLE
                 }
-            }
-
+            })
             setOnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {
                     KeyboardUtils.showSoftInput(v)
@@ -158,19 +152,22 @@ class UserUpdateNameActivity : ImmersionStatusBarActivity() {
      * 修改用户名
      */
     private fun rename() {
-        val myInfo = (application as Application).getCachedMyInfo()
+        val myInfo = (application as SAApplication).getCachedMyInfo()
         KeyboardUtils.hideSoftInput(this)
         if (input.text.toString().trim() == myInfo?.userName) {
             finish()
         } else {
-            val token = (application as Application).getCachedToken()
+            loading.show()
+            val token = (application as SAApplication).getCachedToken()
             if (token != null && token.access_token != null) {
                 viewModel.rename(token.access_token, input.text.toString().trim())
                         .observeOnce(this, {
-                            if (it) {
-                                sendData(myInfo)
-                            } else {
-                                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
+                            loading.dismissWith {
+                                if (it) {
+                                    sendData(myInfo)
+                                } else {
+                                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
+                                }
                             }
                         })
             }

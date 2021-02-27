@@ -29,7 +29,7 @@
         </androidx.core.widget.NestedScrollView>
     </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
 
-    <com.example.schoolairdroprefactoredition.ui.components.ButtonSingle
+    <com.example.schoolairdroprefactoredition.ui.components.ButtonLeft
         android:id="@+id/goods_button_left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
-    <com.example.schoolairdroprefactoredition.ui.components.ButtonDouble
+    <com.example.schoolairdroprefactoredition.ui.components.ButtonRight
         android:id="@+id/goods_button_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.ui.adapter
 
+import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -69,11 +71,32 @@ class MessagesRecyclerAdapter : BaseQuickAdapter<ChatOfflineNumDetail, BaseViewH
         // 显示时间
         holder.setText(R.id.messages_send_time, TimeUtil.getChatTimeSpanByNow(Date(item.send_time)))
 
-        // 若消息类型为0则直接显示文本内容，若为1则为图片则仅显示为 [图片]
-        if (item.message_type == 0 || item.message_type == -1) {
-            holder.setText(R.id.messages_abstract, item.message)
-        } else if (item.message_type == 1) {
-            holder.setText(R.id.messages_abstract, context.getString(R.string.picture))
+        // 获取消息显示视图
+        val messageAbstract = holder.itemView.findViewById<TextView>(R.id.messages_abstract)
+        // 若消息类型为0（或者-1，为测试消息）则直接显示文本内容，若为1则为图片则仅显示为 [图片]
+        if (item.message_type == ConstantUtil.MESSAGE_TYPE_TEXT || item.message_type == -1) {
+            messageAbstract.text = item.message
+        } else if (item.message_type == ConstantUtil.MESSAGE_TYPE_IMAGE) {
+            messageAbstract.text = context.getString(R.string.picture)
+        }
+
+        when (item.status) {
+            // 正在发送状态
+            ChatRecyclerAdapter.MessageSendStatus.SENDING -> {
+                messageAbstract.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_sending,
+                        0, 0, 0)
+            }
+            // 发送成功状态
+            ChatRecyclerAdapter.MessageSendStatus.SUCCESS -> {
+                messageAbstract.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0)
+            }
+            // 发送失败状态
+            ChatRecyclerAdapter.MessageSendStatus.FAILED -> {
+                messageAbstract.setCompoundDrawablesWithIntrinsicBounds(
+                        R.drawable.ic_attention_small_red,
+                        0, 0, 0)
+            }
         }
 
         // 点击聊天，进入聊天界面

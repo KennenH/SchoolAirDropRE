@@ -46,13 +46,22 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <com.example.schoolairdroprefactoredition.ui.components.PageItem
-                android:id="@+id/userName"
+                android:id="@+id/user_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/general_padding_large"
                 app:PI_description="空小投"
                 app:PI_title="@string/name"
                 app:layout_constraintTop_toBottomOf="@+id/user_avatar" />
+
+            <com.example.schoolairdroprefactoredition.ui.components.PageItem
+                android:id="@+id/user_gender"
+                app:PI_title="@string/sex"
+                app:PI_description="@string/male"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/general_padding_large"
+                app:layout_constraintTop_toBottomOf="@+id/user_name" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>

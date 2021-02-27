@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.blankj.utilcode.util.BarUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
@@ -19,16 +19,15 @@ import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarAct
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
-import com.example.schoolairdroprefactoredition.ui.components.ButtonDouble
-import com.example.schoolairdroprefactoredition.ui.components.ButtonSingle
+import com.example.schoolairdroprefactoredition.ui.components.ButtonRight
+import com.example.schoolairdroprefactoredition.ui.components.ButtonLeft
 import com.example.schoolairdroprefactoredition.ui.components.GoodsInfo.OnUserInfoClickListener
 import com.example.schoolairdroprefactoredition.utils.*
 import com.example.schoolairdroprefactoredition.viewmodel.GoodsViewModel
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_goods.*
 import kotlinx.android.synthetic.main.activity_logged_in.*
 
-class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickListener, OnUserInfoClickListener, ButtonDouble.OnButtonClickListener {
+class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickListener, OnUserInfoClickListener, ButtonRight.OnButtonClickListener {
 
     companion object {
         const val KEY_IS_FROM_SELLING = "fromSelling?"
@@ -58,16 +57,14 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
     }
 
     private val goodsViewModel by lazy {
-        GoodsViewModel.GoodsViewModelFactory((application as Application).chatRepository).create(GoodsViewModel::class.java)
+        GoodsViewModel.GoodsViewModelFactory((application as SAApplication).chatRepository).create(GoodsViewModel::class.java)
     }
-
-    private var dialog: BottomSheetDialog? = null
 
     /**
      * 是否不是我的物品
      */
     private val isNotMine by lazy {
-        goodsInfo.goods_id != (application as Application).getCachedMyInfo()?.userId
+        goodsInfo.goods_id != (application as SAApplication).getCachedMyInfo()?.userId
     }
 
     private val goodsInfo by lazy {
@@ -152,7 +149,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
             if (requestCode == LoginActivity.LOGIN) {
                 // 在物品页面登录后返回
                 if (data != null) {
-                    (application as Application).cacheMyInfoAndToken(
+                    (application as SAApplication).cacheMyInfoAndToken(
                             data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean,
                             data.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken)
 
@@ -172,8 +169,16 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onButtonClick() {
-        if ((application as Application).getCachedToken() == null) {
+    override fun onUserInfoClick(view: View?) {
+        UserActivity.start(this@GoodsActivity, goodsInfo.seller.user_id)
+    }
+
+
+    /**
+     * 点击左下角的聊天按钮
+     */
+    override fun onLeftButtonClick() {
+        if ((application as SAApplication).getCachedToken() == null) {
             login()
         } else {
             val counterpartInfo = DomainUserInfo.DataBean()
@@ -184,16 +189,11 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonSingle.OnButtonClickLi
         }
     }
 
-    override fun onUserInfoClick(view: View?) {
-        UserActivity.start(this@GoodsActivity, goodsInfo.seller.user_id)
-    }
-
-    override fun onLeftButtonClick() {
+    /**
+     * 点击右下角的收藏按钮
+     */
+    override fun onRightButtonClick() {
         goods_button_right.toggleFavor()
         goodsViewModel.toggleGoodsFavorite(goodsInfo.goods_id)
-    }
-
-    override fun onRightButtonClick() {
-        // todo 报价?
     }
 }

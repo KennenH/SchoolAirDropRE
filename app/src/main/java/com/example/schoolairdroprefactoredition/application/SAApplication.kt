@@ -6,6 +6,8 @@ import android.content.Context
 import android.os.AsyncTask
 import android.os.Process
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.*
+import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
 import com.example.schoolairdroprefactoredition.database.SARoomDatabase
@@ -35,7 +37,7 @@ import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 
-class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEvent{
+class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEvent, LifecycleObserver {
 
     companion object {
         open class LogoutAsync() : AsyncTask<Any?, Int?, Int?>() {
@@ -67,23 +69,17 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
         // 为本条消息创建消息指纹
         val fingerprint = Protocal.genFingerPrint()
         // 为新发送的消息new一个对象
-        val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_TEXT, content, System.currentTimeMillis(), 0)
+        val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_TEXT, content, System.currentTimeMillis(), ChatRecyclerAdapter.MessageSendStatus.SENDING)
         // 获取adapter和recycler view的弱引用
         val adapter = weakAdapter.get()
         // 将发送的消息显示到消息框中
         adapter?.addData(0, chat)
-        // 更新发送状态
-        adapter?.updateStatus(chat, ChatRecyclerAdapter.MessageSendStatus.SENDING)
         // 保存自己发送的消息
         chatViewModel.saveSentMessage(chat)
         // 框架异步发送消息
         object : LocalDataSender.SendCommonDataAsync(content, userID, fingerprint, ConstantUtil.MESSAGE_TYPE_TEXT) {
             override fun onPostExecute(code: Int?) {
-                if (code == 0) {
-                    adapter?.updateStatus(chat, ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
-                } else {
-                    adapter?.updateStatus(chat, ChatRecyclerAdapter.MessageSendStatus.FAILED)
-                }
+                if (code != 0) chatViewModel.updateMessageStatus(fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
             }
         }.execute()
     }
@@ -97,34 +93,27 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
         val chatList = ArrayList<ChatHistory>(imagePaths.size)
         for (path in imagePaths) {
             val fingerprint = Protocal.genFingerPrint()
-            val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_IMAGE, path, System.currentTimeMillis(), 0)
+            val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_IMAGE, path, System.currentTimeMillis(), ChatRecyclerAdapter.MessageSendStatus.SENDING)
             chatList.add(chat)
             adapter?.addData(0, chat)
             chatViewModel.saveSentMessage(chat)
-            // 更新发送状态
-            adapter?.updateStatus(chat, ChatRecyclerAdapter.MessageSendStatus.SENDING)
         }
 
-//        val pathList = chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).value
-//        pathList.let {
-//            if (it != null) {
-//                for ((index, path) in it.withIndex()) {
-//                    object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
-//                        override fun onPostExecute(code: Int?) {
-//                            if (code == 0) {
-//                                adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
-//                            } else {
-//                                adapter?.updateStatus(chatList[index], ChatRecyclerAdapter.MessageSendStatus.FAILED)
-//                            }
-//                        }
-//                    }.execute()
-//                }
-//            } else {
-//                for (history in chatList) {
-//                    adapter?.updateStatus(history, ChatRecyclerAdapter.MessageSendStatus.FAILED)
-//                }
-//            }
-//        }
+        chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).observeOnce {
+            if (it != null) {
+                for ((index, path) in it.withIndex()) {
+                    object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
+                        override fun onPostExecute(code: Int?) {
+                            if (code != 0) chatViewModel.updateMessageStatus(chatList[index]?.fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+                        }
+                    }.execute()
+                }
+            } else {
+                for (history in chatList) {
+                    chatViewModel.updateMessageStatus(history.fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+                }
+            }
+        }
     }
 
     private val applicationScope = CoroutineScope(SupervisorJob())
@@ -175,6 +164,8 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
         initMiPush()
         initAppTheme()
         initIM()
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
     }
 
     /**
@@ -290,6 +281,16 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
     /***************************** 监听器和回调方法 *******************************/
     /*****************************************************************************/
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    fun onAppResume() {
+        // app 进入前台
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    fun onAppPause() {
+        // app 进入后台
+    }
+
     /**
      * app登录状态回调
      */
@@ -339,9 +340,8 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
         }
 
         // 发送退出登录包
-        object : LogoutAsync(this@Application) {}.execute()
+        object : LogoutAsync(this@SAApplication) {}.execute()
     }
-
 
 
     /**
@@ -424,4 +424,17 @@ class Application : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEv
             listener.onIMErrorResponse(errorCode, message)
         }
     }
+
+    /**
+     * 仅观察一次的观察者
+     */
+    fun <T> LiveData<T>.observeOnce(observer: Observer<T>) {
+        observeForever(object : Observer<T> {
+            override fun onChanged(t: T?) {
+                removeObserver(this)
+                observer.onChanged(t)
+            }
+        })
+    }
+
 }

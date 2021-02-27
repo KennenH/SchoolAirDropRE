@@ -46,8 +46,15 @@ interface UserApi {
      * 修改用户名字
      */
     @FormUrlEncoded
-    @POST("appapi/user/updateUserName")
+    @POST("appapi/user/updateUserInfo")
     fun updateUserName(@Header("Authorization") token: String, @Field("user_name") name: String): Call<DomainResult>
+
+    /**
+     * 修改用户性别
+     */
+    @FormUrlEncoded
+    @POST("appapi/user/updateUserInfo")
+    fun updateUserGender(@Header("Authorization") token: String, @Field("user_gender") gender: Boolean): Call<DomainResult>
 
     /**
      * 修改用户头像

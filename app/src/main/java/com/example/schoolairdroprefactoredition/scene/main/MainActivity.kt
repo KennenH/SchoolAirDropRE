@@ -15,7 +15,7 @@ import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
@@ -30,6 +30,7 @@ import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
 import com.example.schoolairdroprefactoredition.scene.main.search.SearchFragment
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
+import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.AccountViewModel
@@ -42,7 +43,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
-        AMapLocationListener, Application.IMListener {
+        AMapLocationListener, SAApplication.IMListener {
 
     companion object {
         /**
@@ -70,7 +71,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     private val imViewModel by lazy {
-        InstanceMessageViewModel.InstanceViewModelFactory((application as Application).chatRepository).create(InstanceMessageViewModel::class.java)
+        InstanceMessageViewModel.InstanceViewModelFactory((application as SAApplication).chatRepository).create(InstanceMessageViewModel::class.java)
     }
 
     private val mClient by lazy {
@@ -195,7 +196,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     private fun initListener() {
-        (application as Application).addOnIMListener(this@MainActivity)
+        (application as SAApplication).addOnIMListener(this@MainActivity)
 
         mPlaza.setOnSearchBarClickedListener {
             showSearch()
@@ -414,6 +415,19 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     /**
+     * 显示或隐藏消息按钮上的红点角标
+     *
+     * 当前页面不是消息页面时，当有新消息到来会在消息的角标上标出红点
+     * 当当前页面切换为消息页面时，将角标隐藏
+     */
+    private fun showBadge(show: Boolean) {
+        navView.getOrCreateBadge(R.id.navigation_message).apply {
+            if (mMessages.isVisible && show) return
+            isVisible = show
+        }
+    }
+
+    /**
      * 开始定位
      * 结果回调在[MainActivity.onLocationChanged]中
      */
@@ -439,12 +453,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
             }
             R.id.navigation_message -> {
                 // 当未登录时
-                val token = (application as Application).getCachedToken()
+                val token = (application as SAApplication).getCachedToken()
                 if (token != null) {
                     // 清空badge然后显示消息列表页面
-                    navView.getOrCreateBadge(R.id.navigation_message).apply {
-                        this.isVisible = false
-                    }
+                    showBadge(false)
                     showFragment(mMessages)
                 } else {
                     LoginActivity.start(this)
@@ -525,7 +537,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      */
     private fun loginStateChanged(userInfo: DomainUserInfo.DataBean?, token: DomainToken?) {
         // app中保存登录信息
-        (application as Application).cacheMyInfoAndToken(userInfo, token)
+        (application as SAApplication).cacheMyInfoAndToken(userInfo, token)
 
         // 为监听登录状态的页面进行回调
         for (listener in mOnLoginStateChangedListeners) {
@@ -537,15 +549,12 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
             // 主页开始获取用户离线消息数量，若有，则为消息图片加上小红点
             imViewModel.getOfflineNumOnline(token, mOnOfflineNumStateChangeListener).observe(this) {
                 if (it && navView.selectedItemId != R.id.navigation_message) {
-                    navView.getOrCreateBadge(R.id.navigation_message).apply {
-                        this.backgroundColor = getColor(R.color.colorPrimaryRed)
-                        this.isVisible = true
-                    }
+                    showBadge(true)
                 }
             }
-            (application as Application).doLoginIM()
+            (application as SAApplication).doLoginIM()
         } else {
-            (application as Application).doLogoutIM()
+            (application as SAApplication).doLogoutIM()
         }
     }
 
@@ -611,18 +620,23 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     override fun onIMMessageLost(lostMessages: ArrayList<Protocal>) {
-        // do nothing
+        imViewModel.messagesLost(ArrayList<String>(lostMessages.size).also {
+            for (lostMessage in lostMessages) {
+                it.add(lostMessage.fp)
+            }
+        })
     }
 
     override fun onIMMessageBeReceived(fingerprint: String) {
-        // do nothing
+        imViewModel.messageBeReceived(fingerprint)
     }
 
     override fun onIMReceiveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
         // 保存收到的消息
-        val myID = (application as Application).getCachedMyInfo()
+        val myID = (application as SAApplication).getCachedMyInfo()
         if (myID != null) {
-            imViewModel.saveReceivedMessage(ChatHistory(fingerprint, senderID, myID.userId.toString(), typeu, content, System.currentTimeMillis(), 0))
+            imViewModel.saveReceivedMessage(ChatHistory(fingerprint, senderID, myID.userId.toString(), typeu, content, System.currentTimeMillis(), ChatRecyclerAdapter.MessageSendStatus.SUCCESS))
+            showBadge(true)
         }
 
     }

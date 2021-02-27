@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentMessagesBinding
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
@@ -26,7 +26,7 @@ import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import net.x52im.mobileimsdk.server.protocal.Protocal
 import kotlin.collections.ArrayList
 
-class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListener, Application.IMListener, MessagesRecyclerAdapter.UserInfoRequestListener, MainActivity.OnOfflineNumStateChangeListener {
+class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListener, SAApplication.IMListener, MessagesRecyclerAdapter.UserInfoRequestListener, MainActivity.OnOfflineNumStateChangeListener {
 
     /**
      * 移动端IM的状态
@@ -67,7 +67,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
     }
 
     private val messageViewModel by lazy {
-        MessageViewModel.MessageViewModelFactory((activity?.application as Application).chatRepository).create(MessageViewModel::class.java)
+        MessageViewModel.MessageViewModelFactory((activity?.application as SAApplication).chatRepository).create(MessageViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -77,7 +77,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
                 addOnLoginActivityListener(this@MessagesFragment)
                 setOnPullingOfflineNum(this@MessagesFragment)
             }
-            (activity?.application as Application).addOnIMListener(this)
+            (activity?.application as SAApplication).addOnIMListener(this)
         }
     }
 
@@ -95,7 +95,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
             layoutManager = manager
             setSwipeMenuCreator { _, rightMenu, position ->
                 val delete = SwipeMenuItem(context)
-                delete.text = getString(R.string.delete)
+                delete.text = context?.getString(R.string.delete)
                 delete.textSize = SizeUtils.dp2px(5f)
                 delete.setTextColor(resources.getColor(R.color.whiteAlways, context?.theme))
                 delete.setBackgroundColor(resources.getColor(R.color.colorPrimaryRed, context?.theme))
@@ -140,21 +140,23 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
 
     /**
      * 更新消息页面的标题显示
+     *
+     * 该页面监听了主页面的离线消息数量接口的调用，当主页面在进行拉取离线的时候本页面的标题将会显示正在加载
      */
     private fun updateMessageState(@MessageState state: Int) {
         when (state) {
             MessageState.REFRESH -> {
                 loading?.visibility = View.INVISIBLE
                 if (isConnected) {
-                    title?.text = getString(R.string.messages)
+                    title?.text = context?.getString(R.string.messages)
                 } else {
-                    title?.text = getString(R.string.disconnect)
+                    title?.text = context?.getString(R.string.disconnect)
                 }
             }
 
             MessageState.LOADING -> {
                 loading?.visibility = View.VISIBLE
-                title?.text = getString(R.string.loading)
+                title?.text = context?.getString(R.string.loading)
             }
         }
     }

@@ -6,6 +6,7 @@ import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.database.dao.DatabaseDao
 import com.example.schoolairdroprefactoredition.database.pojo.*
 import com.example.schoolairdroprefactoredition.domain.*
+import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
@@ -165,5 +166,10 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
     @WorkerThread
     suspend fun isFavorite(goodsID: Int): Boolean {
         return databaseDao.isFavorite(goodsID)
+    }
+
+    @WorkerThread
+    suspend fun updateMessageStatus(fingerprint: String,@ChatRecyclerAdapter.MessageSendStatus status: Int) {
+        databaseDao.updateMessageStatus(fingerprint, status)
     }
 }

@@ -2,24 +2,12 @@ package com.example.schoolairdroprefactoredition.utils
 
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.domain.DomainOffline
+import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import net.x52im.mobileimsdk.server.protocal.Protocal
 import kotlin.collections.ArrayList
 
 class MessageUtil {
     companion object {
-        /**
-         * 将[Protocal]转换为[ChatHistory]
-         */
-        fun protocalToChatHistory(protocal: Protocal): ChatHistory {
-            return ChatHistory(protocal.fp,
-                    protocal.from,
-                    protocal.to,
-                    protocal.typeu,
-                    protocal.dataContent,
-                    System.currentTimeMillis(),
-                    0)
-        }
-
         /**
          * 将服务器的离线消息[DomainOffline.DataBean]转换为本地数据类型[ChatHistory]
          */
@@ -33,7 +21,7 @@ class MessageUtil {
                         bean.message_type,
                         bean.message,
                         bean.send_time,
-                        0))
+                        ChatRecyclerAdapter.MessageSendStatus.SUCCESS))
             }
             return histories
         }

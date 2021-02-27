@@ -7,19 +7,16 @@ import android.graphics.Bitmap
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.ViewModelProvider
 import com.blankj.utilcode.util.ImageUtils
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.application.Application
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.SheetAvatarBinding
 import com.example.schoolairdroprefactoredition.scene.base.BaseActivity
 import com.example.schoolairdroprefactoredition.utils.*
 import com.example.schoolairdroprefactoredition.viewmodel.UserAvatarViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.luck.picture.lib.PictureSelector
 import kotlinx.android.synthetic.main.activity_user_update_avatar.*
 import java.util.*
@@ -43,11 +40,11 @@ class UserUpdateAvatarActivity : BaseActivity(), View.OnLongClickListener, View.
     }
 
     private val info by lazy {
-        (application as Application).getCachedMyInfo()
+        (application as SAApplication).getCachedMyInfo()
     }
 
     private val token by lazy {
-        (application as Application).getCachedToken()
+        (application as SAApplication).getCachedToken()
     }
 
     private val viewModel by lazy {

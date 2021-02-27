@@ -239,4 +239,11 @@ class UploadRepository private constructor() {
                     onResult(false)
                 }
     }
+
+    /**
+     * 移动在七牛云上的图片
+     */
+    fun moveIMImage(token: String, taskID: String, keys: String, onResult:()->Unit) {
+
+    }
 }
