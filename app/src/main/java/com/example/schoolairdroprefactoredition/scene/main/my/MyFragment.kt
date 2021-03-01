@@ -4,16 +4,24 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.marginTop
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.BarUtils
+import com.blankj.utilcode.util.LogUtils
+import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.custom.InAppFloatAnimator
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
+import com.example.schoolairdroprefactoredition.scene.base.BaseActivity
 import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
 import com.example.schoolairdroprefactoredition.scene.capture.CaptureActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
@@ -25,6 +33,11 @@ import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.google.zxing.integration.android.IntentIntegrator
+import com.lzf.easyfloat.EasyFloat
+import com.lzf.easyfloat.anim.AppFloatDefaultAnimator
+import com.lzf.easyfloat.enums.ShowPattern
+import com.lzf.easyfloat.enums.SidePattern
+import com.lzf.easyfloat.interfaces.FloatCallbacks
 
 class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedListener {
 
@@ -41,8 +54,8 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
     override fun onAttach(context: Context) {
         super.onAttach(context)
         if (activity is MainActivity) {
-            (activity as MainActivity).addOnLoginActivityListener(this)
-            (activity as MainActivity).autoLogin()
+            (activity as? MainActivity)?.addOnLoginActivityListener(this)
+            (activity as? MainActivity)?.autoLogin()
         }
     }
 
@@ -104,12 +117,15 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
                 }
             }
 
-            R.id.my_likes ->                 // list my likes
-            {
-                IntentIntegrator.forSupportFragment(this@MyFragment)
-                        .setCaptureActivity(CaptureActivity::class.java)
-                        .setBeepEnabled(false)
-                        .initiateScan()
+            R.id.my_likes -> {
+                // 打开扫描页面
+//                IntentIntegrator.forSupportFragment(this@MyFragment)
+//                        .setCaptureActivity(CaptureActivity::class.java)
+//                        .setBeepEnabled(false)
+//                        .initiateScan()
+                if (activity is BaseActivity) {
+                    (activity as BaseActivity).showFloatWindow("没想到会这么好笑", "8")
+                }
             }
 
             R.id.my_settings -> {
@@ -136,5 +152,10 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
 
     override fun onLogging() {
         // do nothing
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity as? MainActivity)?.removeOnLoginActivityListener(this)
     }
 }

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.lihang.ShadowLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:hl_cornerRadius="@dimen/general_padding"
+    app:hl_layoutBackground="@color/colorAccent"
+    app:hl_shadowColor="@color/blackShadow"
+    app:hl_shadowLimit="@dimen/general_padding"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/float_in_app_title"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="@string/receiveANewMessage"
+            android:layout_margin="@dimen/general_padding_larger"
+            android:textColor="@color/whiteAlways"
+            android:textSize="@dimen/textSizeLarge"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/float_in_app_content"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:ellipsize="end"
+            android:lines="1"
+            android:textColor="@color/whiteAlways"
+            android:textSize="@dimen/textSizeNormal"
+            app:layout_constraintEnd_toEndOf="@+id/float_in_app_title"
+            app:layout_constraintStart_toStartOf="@+id/float_in_app_title"
+            app:layout_constraintTop_toBottomOf="@+id/float_in_app_title"
+            tools:text="kennenx:再低一点能不能出再低一点能不能出再低一点能不能出" />
+
+        <View
+            android:layout_width="35dp"
+            android:layout_height="3.5dp"
+            android:layout_marginTop="@dimen/general_padding_large"
+            android:layout_marginBottom="@dimen/general_padding_large"
+            android:background="@drawable/bg_rounded_white_always"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/float_in_app_content"
+            app:layout_constraintStart_toStartOf="@+id/float_in_app_content"
+            app:layout_constraintTop_toBottomOf="@+id/float_in_app_content" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.lihang.ShadowLayout>

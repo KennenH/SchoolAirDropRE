@@ -14,6 +14,7 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
@@ -39,11 +40,12 @@ import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
 import net.x52im.mobileimsdk.server.protocal.Protocal
+import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
-        AMapLocationListener, SAApplication.IMListener {
+        AMapLocationListener, SAApplication.IMListener, SAApplication.OnAppStatusChangeListener {
 
     companion object {
         /**
@@ -71,7 +73,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     private val imViewModel by lazy {
-        InstanceMessageViewModel.InstanceViewModelFactory((application as SAApplication).chatRepository).create(InstanceMessageViewModel::class.java)
+        InstanceMessageViewModel.InstanceViewModelFactory((application as SAApplication).databaseRepository).create(InstanceMessageViewModel::class.java)
     }
 
     private val mClient by lazy {
@@ -188,6 +190,9 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     override fun onDestroy() {
         super.onDestroy()
+        (application as? SAApplication)?.removeOnIMListener(this@MainActivity)
+        (application as? SAApplication)?.removeOnAppStatusChangeListener(this@MainActivity)
+
         mClient.stopLocation()
         mClient.unRegisterLocationListener(this@MainActivity)
 
@@ -196,7 +201,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     private fun initListener() {
-        (application as SAApplication).addOnIMListener(this@MainActivity)
+        (application as? SAApplication)?.addOnAppStatusChangeListener(this@MainActivity)
 
         mPlaza.setOnSearchBarClickedListener {
             showSearch()
@@ -372,7 +377,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
         val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken
         if (token?.access_token != null) {
-            loginViewModel.getUserInfo(token.access_token).observeOnce(this, {
+            loginViewModel.getMyInfo(token.access_token).observeOnce(this, {
                 intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
 
                 loginStateChanged(it, token)
@@ -531,6 +536,13 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     /**
+     * 移除接收登录结果回调的监听器
+     */
+    fun removeOnLoginActivityListener(listener: OnLoginStateChangedListener) {
+        mOnLoginStateChangedListeners.remove(listener)
+    }
+
+    /**
      * 为监听登录状态改变的监听器回调登录状态
      *
      * 并且根据app登录状态来改变IM系统的登录状态
@@ -547,7 +559,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         // 若为登录app，则登录IM，否则退出IM
         if (userInfo != null && token != null) {
             // 主页开始获取用户离线消息数量，若有，则为消息图片加上小红点
-            imViewModel.getOfflineNumOnline(token, mOnOfflineNumStateChangeListener).observe(this) {
+            imViewModel.getOfflineNumOnline(token, WeakReference(mOnOfflineNumStateChangeListener)).observe(this) {
                 if (it && navView.selectedItemId != R.id.navigation_message) {
                     showBadge(true)
                 }
@@ -607,18 +619,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     /*****************************************************************************************/
     /************************************** IM listeners**************************************/
     /*****************************************************************************************/
-    override fun onIMStartLogin() {
-        // do nothing
-    }
-
-    override fun onIMLoginResponse(code: Int) {
-        // do nothing
-    }
-
-    override fun onIMLinkDisconnect(code: Int) {
-        // do nothing
-    }
-
     override fun onIMMessageLost(lostMessages: ArrayList<Protocal>) {
         imViewModel.messagesLost(ArrayList<String>(lostMessages.size).also {
             for (lostMessage in lostMessages) {
@@ -632,17 +632,26 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     override fun onIMReceiveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
+        super.onIMReceiveMessage(fingerprint, senderID, content, typeu)
         // 保存收到的消息
-        val myID = (application as SAApplication).getCachedMyInfo()
+        val myID = (application as? SAApplication)?.getCachedMyInfo()
         if (myID != null) {
             imViewModel.saveReceivedMessage(ChatHistory(fingerprint, senderID, myID.userId.toString(), typeu, content, System.currentTimeMillis(), ChatRecyclerAdapter.MessageSendStatus.SUCCESS))
             showBadge(true)
         }
-
     }
 
-    override fun onIMErrorResponse(errorCode: Int, message: String) {
-        // do nothing
+    /**
+     * app进入前台
+     */
+    override fun onAppEnterForeground() {
+        val token = (application as? SAApplication)?.getCachedToken()
+        imViewModel.getOfflineNumOnline(token, WeakReference(mOnOfflineNumStateChangeListener))
     }
 
+    /**
+     * app进入后台
+     */
+    override fun onAppEnterBackground() {
+    }
 }

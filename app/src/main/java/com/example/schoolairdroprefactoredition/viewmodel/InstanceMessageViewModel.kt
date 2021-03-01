@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.*
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.database.pojo.ChatOfflineNum
 import com.example.schoolairdroprefactoredition.database.pojo.PullFlag
@@ -12,6 +13,7 @@ import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
+import java.lang.ref.WeakReference
 
 class InstanceMessageViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
 
@@ -43,8 +45,9 @@ class InstanceMessageViewModel(private val databaseRepository: DatabaseRepositor
      * 不能直接显示，要和本地消息列表混合之后再查询
      * @return 是否有离线消息
      */
-    fun getOfflineNumOnline(token: DomainToken?, listener: MainActivity.OnOfflineNumStateChangeListener?): LiveData<Boolean> {
+    fun getOfflineNumOnline(token: DomainToken?, weakListener: WeakReference<MainActivity.OnOfflineNumStateChangeListener>?): LiveData<Boolean> {
         if (token != null) {
+            val listener = weakListener?.get()
             listener?.onPullingOfflineNum()
             viewModelScope.launch {
                 databaseRepository.getOfflineNum(token) { response ->

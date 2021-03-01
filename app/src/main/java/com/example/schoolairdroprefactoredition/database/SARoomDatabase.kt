@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
         exportSchema = true)
 abstract class SARoomDatabase : RoomDatabase() {
 
-    abstract fun chatHistoryDao(): DatabaseDao
+    abstract fun databaseDao(): DatabaseDao
 
     private class DatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
         override fun onCreate(db: SupportSQLiteDatabase) {

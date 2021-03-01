@@ -34,7 +34,7 @@ abstract class TabBaseFragment : StatePlaceholderFragment() {
     /**
      * 获取Tab上的数据
      */
-    open protected fun getTabData(binding: FragmentRecyclerBinding?, index: Int?) {
+    protected open fun getTabData(binding: FragmentRecyclerBinding?, index: Int?) {
         var token: DomainToken? = null
         try {
             token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken

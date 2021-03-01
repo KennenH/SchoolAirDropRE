@@ -4,7 +4,7 @@
     package="com.example.schoolairdroprefactoredition">
 
     <uses-sdk tools:overrideLibrary="com.google.zxing.client.android" />
-    <!-- 用于进行网络定位 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 用于访问GPS定位 -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位 -->
@@ -72,7 +72,7 @@
             android:name=".scene.user.UserModifyInfoActivity"
             android:label="" />
         <activity
-            android:name=".scene.tab.likes.LikesActivity"
+            android:name=".scene.tab.LikesActivity"
             android:label="" />
         <activity
             android:name=".scene.addnew.AddNewResultActivity"

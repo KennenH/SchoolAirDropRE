@@ -9,10 +9,8 @@ import com.example.schoolairdroprefactoredition.cache.UserTokenCache
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.repository.LoginRepository
 import com.example.schoolairdroprefactoredition.utils.UserLoginCacheUtils
-import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
@@ -67,14 +65,14 @@ class LoginViewModel : ViewModel() {
     /**
      * 使用token获取用户信息
      */
-    fun getUserInfo(token: String): LiveData<DomainUserInfo.DataBean?> {
-        val mUserInfo = MutableLiveData<DomainUserInfo.DataBean?>()
+    fun getMyInfo(token: String): LiveData<DomainUserInfo.DataBean?> {
+        val myInfo = MutableLiveData<DomainUserInfo.DataBean?>()
         viewModelScope.launch {
-            mainRepository.getUserInfo(token) { success, response ->
+            mainRepository.getMyInfo(token) { success, response ->
                 if (success) {
-                    mUserInfo.postValue(response)
+                    myInfo.postValue(response)
                 } else {
-                    mUserInfo.postValue(null)
+                    myInfo.postValue(null)
                 }
 
                 if (response != null) {
@@ -82,7 +80,7 @@ class LoginViewModel : ViewModel() {
                 }
             }
         }
-        return mUserInfo
+        return myInfo
     }
 
     /**

@@ -26,7 +26,6 @@ class UserAvatarRepository {
         RetrofitClient.userApi.updateUserAvatar(token, taskID, avatar).apply {
             enqueue(object : CallBackWithRetry<DomainAvatarUpdateResult>(this@apply) {
                 override fun onResponse(call: Call<DomainAvatarUpdateResult>, response: Response<DomainAvatarUpdateResult>) {
-                    LogUtils.d(response.errorBody()?.string())
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val body = response.body()
                         if (body != null && body.code == ConstantUtil.HTTP_OK) {

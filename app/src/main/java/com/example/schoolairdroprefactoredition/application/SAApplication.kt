@@ -5,11 +5,15 @@ import android.app.Application
 import android.content.Context
 import android.os.AsyncTask
 import android.os.Process
+import android.view.MotionEvent
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.LogUtils
+import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
+import com.example.schoolairdroprefactoredition.custom.InAppFloatAnimator
 import com.example.schoolairdroprefactoredition.database.SARoomDatabase
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.domain.DomainToken
@@ -17,10 +21,15 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.im.IMClientManager
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
+import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.viewmodel.ChatViewModel
 import com.facebook.drawee.backends.pipeline.Fresco
+import com.lzf.easyfloat.EasyFloat
+import com.lzf.easyfloat.anim.DefaultAnimator
+import com.lzf.easyfloat.enums.ShowPattern
+import com.lzf.easyfloat.enums.SidePattern
 import com.xiaomi.channel.commonutils.logger.LoggerInterface
 import com.xiaomi.mipush.sdk.MiPushClient
 import kotlinx.android.synthetic.main.activity_chat.*
@@ -88,6 +97,7 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
      * 发送图片消息 多图
      */
     fun sendImageMessage(userID: String, myID: String, imagePaths: List<String>, weakAdapter: WeakReference<ChatRecyclerAdapter>) {
+        if (userID == myID) return
         val adapter = weakAdapter.get()
         // 先暂时保存这几个new出来的chat对象，后面图片发送完毕之后发送消息还要使用
         val chatList = ArrayList<ChatHistory>(imagePaths.size)
@@ -99,18 +109,20 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
             chatViewModel.saveSentMessage(chat)
         }
 
-        chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).observeOnce {
-            if (it != null) {
-                for ((index, path) in it.withIndex()) {
-                    object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
-                        override fun onPostExecute(code: Int?) {
-                            if (code != 0) chatViewModel.updateMessageStatus(chatList[index]?.fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
-                        }
-                    }.execute()
-                }
-            } else {
-                for (history in chatList) {
-                    chatViewModel.updateMessageStatus(history.fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+        if (userID != myID) {
+            chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).observeOnce {
+                if (it != null) {
+                    for ((index, path) in it.withIndex()) {
+                        object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
+                            override fun onPostExecute(code: Int?) {
+                                if (code != 0) chatViewModel.updateMessageStatus(chatList[index]?.fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+                            }
+                        }.execute()
+                    }
+                } else {
+                    for (history in chatList) {
+                        chatViewModel.updateMessageStatus(history.fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+                    }
                 }
             }
         }
@@ -122,8 +134,8 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
         SARoomDatabase.getDatabase(this, applicationScope)
     }
 
-    val chatRepository by lazy {
-        DatabaseRepository(schoolAirdropDatabase.chatHistoryDao())
+    val databaseRepository by lazy {
+        DatabaseRepository(schoolAirdropDatabase.databaseDao())
     }
 
     private val chatClientManager by lazy {
@@ -131,8 +143,13 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
     }
 
     private val chatViewModel by lazy {
-        ChatViewModel.ChatViewModelFactory(chatRepository, this).create(ChatViewModel::class.java)
+        ChatViewModel.ChatViewModelFactory(databaseRepository).create(ChatViewModel::class.java)
     }
+
+    /**
+     * 监听app进入前后台的监听者们
+     */
+    private val appRuntimeStatusListeners: ArrayList<OnAppStatusChangeListener> = ArrayList()
 
     /**
      * IM事件回调的监听者们
@@ -164,8 +181,13 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
         initMiPush()
         initAppTheme()
         initIM()
+        initInAppFloat()
 
-        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this) // 给予application感知app进入前后台的能力
+    }
+
+    private fun initInAppFloat() {
+        EasyFloat.init(this, AppConfig.IS_DEBUG) // 浮窗初始化
     }
 
     /**
@@ -281,14 +303,55 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
     /***************************** 监听器和回调方法 *******************************/
     /*****************************************************************************/
 
+    /**
+     * app 进入前台回调
+     */
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onAppResume() {
-        // app 进入前台
+        LogUtils.d("app 进入前台")
+        for (listener in appRuntimeStatusListeners) {
+            listener.onAppEnterForeground()
+        }
     }
 
+    /**
+     * app 进入后台回调
+     */
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     fun onAppPause() {
-        // app 进入后台
+        LogUtils.d("app 进入后台")
+        for (listener in appRuntimeStatusListeners) {
+            listener.onAppEnterBackground()
+        }
+    }
+
+    /**
+     * 添加一个app运行状态的监听器
+     */
+    fun addOnAppStatusChangeListener(listener: OnAppStatusChangeListener) {
+        appRuntimeStatusListeners.add(listener)
+    }
+
+    /**
+     * 移除app运行状态监听器
+     */
+    fun removeOnAppStatusChangeListener(listener: OnAppStatusChangeListener) {
+        appRuntimeStatusListeners.remove(listener)
+    }
+
+    /**
+     * app运行状态改变
+     */
+    interface OnAppStatusChangeListener {
+        /**
+         * app 进入前台
+         */
+        fun onAppEnterForeground()
+
+        /**
+         * app 进入后台
+         */
+        fun onAppEnterBackground()
     }
 
     /**
@@ -301,8 +364,18 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
         fun onApplicationLoginStateChange(isLogged: Boolean)
     }
 
+    /**
+     * 添加app登录状态监听器
+     */
     fun addOnApplicationLoginListener(listener: OnApplicationLoginListener) {
         applicationLoginStateListeners.add(listener)
+    }
+
+    /**
+     * 移除app登录状态监听器
+     */
+    fun removeOnApplicationLoginListener(listener: OnApplicationLoginListener) {
+        applicationLoginStateListeners.remove(listener)
     }
 
     /**
@@ -310,6 +383,13 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
      */
     fun addOnIMListener(imListener: IMListener) {
         eventIMListeners.add(imListener)
+    }
+
+    /**
+     * 移除im监听器
+     */
+    fun removeOnIMListener(imListener: IMListener) {
+        eventIMListeners.remove(imListener)
     }
 
     /**
@@ -414,6 +494,7 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
     }
 
     override fun onRecieveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
+        LogUtils.d(eventIMListeners.size)
         for (listener in eventIMListeners) {
             listener.onIMReceiveMessage(fingerprint, senderID, content, typeu)
         }

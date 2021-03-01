@@ -208,7 +208,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         setSupportActionBar(findViewById(R.id.toolbar))
 
         // 当app在外部登录时将会收到通知
-        (application as SAApplication).addOnApplicationLoginListener(this)
+        (application as? SAApplication)?.addOnApplicationLoginListener(this)
 
         goodsBaseInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO) as? DomainPurchasing.DataBean
         addNewType = intent.getIntExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.ADD_ITEM)
@@ -829,6 +829,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      */
     public override fun onDestroy() {
         super.onDestroy()
+        (application as? SAApplication)?.removeOnApplicationLoginListener(this)
         if (mClient != null) {
             mClient?.stopLocation()
             mClient?.unRegisterLocationListener(this)

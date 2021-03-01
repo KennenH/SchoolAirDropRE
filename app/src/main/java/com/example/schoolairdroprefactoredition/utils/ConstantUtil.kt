@@ -174,24 +174,24 @@ object ConstantUtil {
     const val KEY_USER_INFO = "UserInfo"
 
     /**
-     * !!!!!!!!!!!!!!!!!!!!!
-     *   尽量不要使用该键
-     * !!!!!!!!!!!!!!!!!!!!!
+     * 尽量不要使用该键获取来用户信息，否则两个键混用很容易造成cast失败而崩溃
+     * 一般条件下使用[ConstantUtil.KEY_USER_INFO]来获取完整的用户信息，即
+     * [com.example.schoolairdroprefactoredition.domain.DomainUserInfo.DataBean]
+     *
      * 使用该键获取用户信息的页面在这里记录，之后若有，也在这里添加
      * [com.example.schoolairdroprefactoredition.scene.chat.ChatActivity]
      *
      *
-     * 只有完美契合一下情况时才考虑使用该Key作为页面用户信息获取键
-     * 1、对于进入该页面的页面：
-     * 进入该页面的方式中有若干方式 没有办法 或者 没有好的办法 或者 综合考虑完全没必要 来获取完整的
-     * [com.example.schoolairdroprefactoredition.domain.DomainUserInfo.DataBean]
-     * 2、对于该页面：
+     * 只有完美契合已下情况时才考虑使用该Key作为页面用户信息获取键
+     * 1、对于进入目标页面的页面：
+     * 进入目标页面的方式中有若干方式 没有办法 或者 没有好的办法 或者 综合考虑完全没必要 来获取完整的用户信息
+     * 2、对于目标页面：
      * 该页面只需要userId、userName、userAvatar三个用户信息
-     * 3、对于由该页面进入的页面：
-     * 由该页面进入的 大部分页面都不需要完整的用户信息 或者 大部分页面本身逻辑就不需要完整的信息即可正常
+     * 3、对于由目标页面进入的页面：
+     * 由目标页面进入的 大部分页面都不需要完整的用户信息 或者 大部分页面本身逻辑就不需要完整的信息即可正常
      * 打开 或者 这部分页面本身就是使用userId去获取完整用户信息的页面
      */
-    @Deprecated("并没有被遗弃，只是为了引起注意，请查看详细说明")
+    @Deprecated("只是为了引起注意")
     const val KEY_USER_SIMPLE_INFO = "UserSimpleInfo"
 
     /**

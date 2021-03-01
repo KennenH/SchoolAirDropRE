@@ -56,7 +56,8 @@
                 android:id="@+id/send_sending"
                 style="@style/SpinKitView.Small.FadingCircle"
                 android:layout_width="18dp"
-                android:layout_height="18dp" />
+                android:layout_height="18dp"
+                app:SpinKit_Color="@color/primaryText" />
         </FrameLayout>
 
         <com.facebook.drawee.view.SimpleDraweeView

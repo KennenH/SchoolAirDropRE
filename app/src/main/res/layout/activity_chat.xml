@@ -56,7 +56,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:background="@color/white"
-                android:layout_marginBottom="@dimen/general_padding_tiny"
                 app:layout_constraintBottom_toTopOf="@+id/bottom_action"
                 app:layout_constraintTop_toTopOf="parent"
                 app:srlEnableAutoLoadMore="false"
@@ -67,8 +66,9 @@
                 <com.github.ybq.android.spinkit.SpinKitView
                     style="@style/SpinKitView.Small.FadingCircle"
                     android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:padding="@dimen/general_padding_large"
-                    android:layout_height="wrap_content" />
+                    app:SpinKit_Color="@color/primaryText" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recycler_view"

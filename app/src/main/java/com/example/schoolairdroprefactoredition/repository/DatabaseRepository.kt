@@ -169,7 +169,12 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
     }
 
     @WorkerThread
-    suspend fun updateMessageStatus(fingerprint: String,@ChatRecyclerAdapter.MessageSendStatus status: Int) {
+    suspend fun updateMessageStatus(fingerprint: String, @ChatRecyclerAdapter.MessageSendStatus status: Int) {
         databaseDao.updateMessageStatus(fingerprint, status)
+    }
+
+    @WorkerThread
+    suspend fun getFavorites(): List<Favorite> {
+        return databaseDao.getFavorites()
     }
 }

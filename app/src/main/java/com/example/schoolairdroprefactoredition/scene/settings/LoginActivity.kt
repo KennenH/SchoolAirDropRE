@@ -83,7 +83,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
             ClickUtils.applyPressedViewAlpha(close, 0.6f)
         } else {
             setContentView(R.layout.activity_login)
-            (application as SAApplication).addOnApplicationLoginListener(this)
+            (application as? SAApplication)?.addOnApplicationLoginListener(this)
             login_with_alipay.isEnabled = false
             cancel.setOnClickListener(this)
             checkbox.setOnCheckedChangeListener(this)
@@ -195,7 +195,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     private fun getUserInfoWithToken(token: DomainToken?) {
         // 要是登录了发现token没了那也没救了
         if (token != null) {
-            viewModel.getUserInfo(token.access_token).observeOnce(this@LoginActivity, {
+            viewModel.getMyInfo(token.access_token).observeOnce(this@LoginActivity, {
                 if (it != null) {
                     // token换取的user info
                     intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
@@ -238,5 +238,10 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
             finish()
             AnimUtil.activityExitAnimDown(this)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (application as? SAApplication)?.removeOnApplicationLoginListener(this)
     }
 }

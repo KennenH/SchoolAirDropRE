@@ -54,7 +54,8 @@
 
             <com.github.ybq.android.spinkit.SpinKitView
                 android:id="@+id/send_sending"
-                style="@style/SpinKitView.Small.ChasingDots"
+                app:SpinKit_Color="@color/primaryText"
+                style="@style/SpinKitView.Small.FadingCircle"
                 android:layout_width="18dp"
                 android:layout_height="18dp"
                 android:visibility="invisible" />
@@ -64,9 +65,9 @@
             android:id="@+id/send_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/general_padding_small"
             android:background="@drawable/chat_my_9"
             android:gravity="center_vertical"
-            android:layout_marginEnd="@dimen/general_padding_small"
             android:letterSpacing="0.08"
             android:lineSpacingExtra="1dp"
             android:textColor="@color/whiteAlways"

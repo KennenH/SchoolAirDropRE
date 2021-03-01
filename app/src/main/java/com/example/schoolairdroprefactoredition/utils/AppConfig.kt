@@ -21,7 +21,7 @@ object AppConfig {
     const val DEBUG_LATITUDE = "30.318141927801996"
 
     /**
-     * 默认登录的用户
+     * Debug模式下固定登录的用户
      *
      *
      * 19858120611

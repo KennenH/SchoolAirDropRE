@@ -27,6 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/general_padding"
                 android:visibility="invisible"
+                app:SpinKit_Color="@color/primaryText"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/messages_title"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -68,16 +69,16 @@
                 android:id="@+id/messages_empty"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/noMessageYet"
                 android:drawablePadding="@dimen/general_padding_large"
                 android:gravity="center"
-                android:textSize="@dimen/textSizeLarge"
+                android:text="@string/noMessageYet"
                 android:textColor="@color/primaryText"
+                android:textSize="@dimen/textSizeLarge"
+                app:drawableTopCompat="@drawable/ic_empty_news"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:drawableTopCompat="@drawable/ic_empty_news" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>

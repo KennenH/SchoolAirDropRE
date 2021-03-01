@@ -57,7 +57,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
     }
 
     private val goodsViewModel by lazy {
-        GoodsViewModel.GoodsViewModelFactory((application as SAApplication).chatRepository).create(GoodsViewModel::class.java)
+        GoodsViewModel.GoodsViewModelFactory((application as SAApplication).databaseRepository).create(GoodsViewModel::class.java)
     }
 
     /**

@@ -276,4 +276,5 @@
     <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;Delete&#160;&#160;&#160;&#160;&#160;&#160;</string>
     <string name="recyclerFooter">[img src=ic_line/]&#160;&#160;&#160;&#160;no more data&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
     <string name="illegalName">Illegal Name</string>
+    <string name="receiveANewMessage">Receive New Message</string>
 </resources>

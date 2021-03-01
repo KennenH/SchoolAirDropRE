@@ -63,4 +63,11 @@ interface UserApi {
     @POST("appapi/user/updateAvatar")
     fun updateUserAvatar(@Header("Authorization") token: String, @Field("task_id") taskID: String, @Field("avatar") key: String): Call<DomainAvatarUpdateResult>
 
+    /**
+     * 校验token是否过期
+     */
+    @FormUrlEncoded
+    @POST("appapi/auth/connect")
+    fun verifyConnect(@Header("Authorization") token: String)
+
 }

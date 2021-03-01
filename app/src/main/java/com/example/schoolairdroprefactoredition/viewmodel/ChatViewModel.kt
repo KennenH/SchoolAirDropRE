@@ -19,16 +19,16 @@ import java.lang.IllegalArgumentException
  * 用以保存从服务器二次拉取的离线消息
  * 首次拉取在MessageFragment被初始化的时候便
  */
-class ChatViewModel(private val databaseRepository: DatabaseRepository, application: Application) : AndroidViewModel(application) {
+class ChatViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
 
     private val uploadRepository by lazy {
         UploadRepository.getInstance()
     }
 
-    class ChatViewModelFactory(private val repository: DatabaseRepository, private val application: Application) : ViewModelProvider.Factory {
+    class ChatViewModelFactory(private val repository: DatabaseRepository) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(ChatViewModel::class.java)) {
-                return ChatViewModel(repository, application) as T
+                return ChatViewModel(repository) as T
             }
             throw IllegalArgumentException("Unknown ViewModel Class")
         }
@@ -42,7 +42,7 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository, applicat
     /**
      * 更新消息发送状态
      */
-    fun updateMessageStatus(fingerprint: String,@ChatRecyclerAdapter.MessageSendStatus status: Int) {
+    fun updateMessageStatus(fingerprint: String, @ChatRecyclerAdapter.MessageSendStatus status: Int) {
         viewModelScope.launch {
             databaseRepository.updateMessageStatus(fingerprint, status)
         }

@@ -67,7 +67,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
     }
 
     private val messageViewModel by lazy {
-        MessageViewModel.MessageViewModelFactory((activity?.application as SAApplication).chatRepository).create(MessageViewModel::class.java)
+        MessageViewModel.MessageViewModelFactory((activity?.application as SAApplication).databaseRepository).create(MessageViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -77,7 +77,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
                 addOnLoginActivityListener(this@MessagesFragment)
                 setOnPullingOfflineNum(this@MessagesFragment)
             }
-            (activity?.application as SAApplication).addOnIMListener(this)
+            (activity?.application as? SAApplication)?.addOnIMListener(this)
         }
     }
 
@@ -252,5 +252,11 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
 
     override fun onPullDone() {
         updateMessageState(MessageState.REFRESH)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (activity?.application as? SAApplication)?.removeOnIMListener(this)
+        (activity as? MainActivity)?.removeOnLoginActivityListener(this)
     }
 }

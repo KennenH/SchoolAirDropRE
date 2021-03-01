@@ -83,16 +83,16 @@
             android:padding="@dimen/general_padding_large"
             android:text="@string/relocate"
             android:textColor="@color/whiteAlways"
-            android:textSize="@dimen/textSizeLarge"
-            />
+            android:textSize="@dimen/textSizeLarge" />
 
         <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/relocating"
             style="@style/SpinKitView.Small.FadingCircle"
             android:layout_width="match_parent"
-            android:visibility="gone"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:background="@drawable/button_rounded_translucent" />
+            android:background="@drawable/button_rounded_translucent"
+            android:visibility="gone"
+            app:SpinKit_Color="@color/primaryText" />
     </FrameLayout>
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

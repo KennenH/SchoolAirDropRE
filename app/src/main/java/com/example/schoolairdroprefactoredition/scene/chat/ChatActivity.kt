@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.LogUtils
 import com.effective.android.panel.PanelSwitchHelper
 import com.effective.android.panel.interfaces.ContentScrollMeasurer
 import com.effective.android.panel.interfaces.listener.OnEditFocusChangeListener
@@ -56,6 +55,21 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
 
     companion object {
         /**
+         * 以对方的用户id开始聊天，若有缓存则只需访问一次数据库，若无则需要请求一次服务器
+         *
+         * @param userID 对方的用户id
+         */
+        fun start(context: Context, userID: Int) {
+            context.startActivity(Intent(context, ChatActivity::class.java).also { intent ->
+                intent.putExtra(ConstantUtil.KEY_USER_SIMPLE_INFO, DomainSimpleUserInfo().also {
+                    it.userId = userID
+                })
+            })
+        }
+
+        /**
+         * 以对方的用户信息开始聊天，无需任何数据库操作和网络请求
+         *
          * @param userInfo 对方的用户信息
          */
         fun start(context: Context, userInfo: DomainUserInfo.DataBean) {
@@ -114,11 +128,11 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
     }
 
     private val chatViewModel by lazy {
-        ChatViewModel.ChatViewModelFactory((application as SAApplication).chatRepository, application).create(ChatViewModel::class.java)
+        ChatViewModel.ChatViewModelFactory((application as SAApplication).databaseRepository).create(ChatViewModel::class.java)
     }
 
     private val userViewModel by lazy {
-        UserViewModel.UserViewModelFactory((application as SAApplication).chatRepository).create(UserViewModel::class.java)
+        UserViewModel.UserViewModelFactory((application as SAApplication).databaseRepository).create(UserViewModel::class.java)
     }
 
     private val mChatLayoutManager by lazy {
@@ -161,7 +175,7 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
      * 因为在进入页面之后view model将会观察后续的getChat操作
      * 但是后续的getChat不能调用scrollToFirst
      */
-    private var isFirstGetChat = true
+    private var isFirstCall = true
 
     /**
      * 键盘高度，框架会将其自动更新为正确值
@@ -170,6 +184,9 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
 
     /**
      * 正在对话的用户信息
+     *
+     * 只包含 用户id、用户名字和用户头像url，具体见[ConstantUtil.KEY_USER_SIMPLE_INFO]
+     * 也可仅仅只包含 用户id，其他用户信息由缓存获取，因此此域不可在本类中使用除获取用户id的方法
      */
     private val counterpartInfo by lazy {
         intent.getSerializableExtra(ConstantUtil.KEY_USER_SIMPLE_INFO) as DomainSimpleUserInfo
@@ -179,7 +196,7 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
 
-        (application as SAApplication).addOnApplicationLoginListener(this)
+        (application as? SAApplication)?.addOnApplicationLoginListener(this)
         setSupportActionBar(toolbar)
         initRecyclerLists()
         initListeners()
@@ -198,7 +215,7 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
             }
         }
 
-        // 观察本地消息记录
+        // 观察本地消息记录，刷新时再次调用，每次观察结果都获取默认条数消息
         chatViewModel.getChat(
                 token?.access_token,
                 myInfo?.userId.toString(),
@@ -212,8 +229,10 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
                     }
                     // 将本地消息显示在对话列表中
                     mChatRecyclerAdapter.addData(mChatRecyclerAdapter.data.size, it)
-                    if (isFirstGetChat) {
-                        isFirstGetChat = false
+
+                    // 第一次获取数据时
+                    if (isFirstCall) {
+                        isFirstCall = false
                         recycler_view.scrollToPosition(0)
                     }
                 }
@@ -222,10 +241,16 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
     override fun onPause() {
         super.onPause()
 
-        // ack来自对方的消息数量
+        // ack来自对方的消息数量，否则在本页面时收到的消息也会使未读数量累加
         chatViewModel.ackOfflineNum(
                 (application as SAApplication).getCachedMyInfo()?.userId.toString(),
                 counterpartInfo.userId.toString())
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        (application as? SAApplication)?.removeOnApplicationLoginListener(this)
+        (application as? SAApplication)?.removeOnIMListener(this)
     }
 
     override fun onBackPressed() {
@@ -251,7 +276,7 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
             when (requestCode) {
                 TAKE_PHOTO -> { // 拍照返回
                     val picture = PictureSelector.obtainMultipleResult(data)[0]
-                    val path = picture.androidQToPath ?: picture.path
+                    val path = picture.cutPath ?: picture.path
                     val pathWrapper = ArrayList<String>(1)
                     val myInfo = (application as SAApplication).getCachedMyInfo()
                     (application as SAApplication).sendImageMessage(
@@ -266,7 +291,7 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
                     val pictures = PictureSelector.obtainMultipleResult(data)
                     val pathsWrapper = ArrayList<String>(pictures.size)
                     for (picture in pictures) {
-                        pathsWrapper.add(picture.androidQToPath ?: picture.path)
+                        pathsWrapper.add(picture.cutPath ?: picture.path)
                     }
                     val myInfo = (application as SAApplication).getCachedMyInfo()
                     (application as SAApplication).sendImageMessage(
@@ -278,7 +303,6 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
                     scrollToFirst()
                 }
                 UserActivity.REQUEST_UPDATE_INFO -> { // 进入对方的个人主页，更新对方的用户信息
-                    LogUtils.d("从用户个人主页返回，重新获取用户信息")
                     userViewModel.getUserInfo(counterpartInfo.userId)
                 }
             }
@@ -346,9 +370,6 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
      * 初始化监听事件
      */
     private fun initListeners() {
-        // 监听IM聊天系统回调
-        (application as SAApplication).addOnIMListener(this)
-
         // 随意调用一个方法以初始化helper
         mHelper.resetState()
 
@@ -493,18 +514,6 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
     /////////////////////////////////////////////////////////////////////////////////////
     //////////////////////////////////// 回调方法 ///////////////////////////////////////
     //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
-    override fun onIMStartLogin() {
-        // do nothing
-    }
-
-    override fun onIMLoginResponse(code: Int) {
-        // do nothing
-    }
-
-    override fun onIMLinkDisconnect(code: Int) {
-        // do nothing
-    }
-
     override fun onIMMessageLost(lostMessages: ArrayList<Protocal>) {
         // 该回调仅为聊天界面的item更新，消息列表的item会自动更新，无需任何回调
         mChatRecyclerAdapter.updateStatus(ArrayList<String>().also {
@@ -530,10 +539,6 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
                 scrollToFirst()
             }
         }
-    }
-
-    override fun onIMErrorResponse(errorCode: Int, message: String) {
-        // do nothing
     }
 
     override fun onApplicationLoginStateChange(isLogged: Boolean) {

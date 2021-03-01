@@ -20,7 +20,7 @@ class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener, OnSSBDat
 
     companion object {
         const val SELLING = R.string.selling
-        const val POSTS = R.string.posts
+        const val POSTS = R.string.plaza
         const val PAGE_INDEX = "SSBPage?Index"
 
         /**

@@ -306,5 +306,6 @@
     <string name="systemBusy">系统繁忙，请稍后再试</string>
     <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;删除&#160;&#160;&#160;&#160;&#160;&#160;</string>
     <string name="illegalName">名字中包含非法字符</string>
+    <string name="receiveANewMessage">收到一条新消息</string>
 
 </resources>

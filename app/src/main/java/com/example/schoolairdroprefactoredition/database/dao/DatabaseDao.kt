@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.database.dao
 
 import androidx.room.*
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.database.pojo.*
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -17,6 +18,15 @@ interface DatabaseDao {
      */
     @Query("select * from offline_num_detail where my_id = :receiverID order by send_time desc")
     fun getChatList(receiverID: String): Flow<List<ChatOfflineNumDetail>>
+
+//    /**
+//     * 获取与某人会话中的最新插入的消息，可能是来自对方的，也可能是我自己发送的
+//     *
+//     * 在每次接收到消息以及我自己发送消息的时候就更新一次
+//     * todo 在room支持union时将or替换
+//     */
+//    @Query("select * from offline where (sender_id = :myID and receiver_id = :counterpartID or receiver_id = :myID and sender_id = :counterpartID) and send_time > :start order by send_time desc")
+//    fun getOneLatestMessage(myID: String, counterpartID: String, start: Long): Flow<List<ChatHistory>>
 
     /**
      * 获取默认数量条最新消息
@@ -206,4 +216,10 @@ interface DatabaseDao {
      */
     @Query("update offline set status = :status where fingerprint = :fingerprint")
     suspend fun updateMessageStatus(fingerprint: String, @ChatRecyclerAdapter.MessageSendStatus status: Int)
+
+    /**
+     * 获取设备上收藏的所有物品id
+     */
+    @Query("select * from favorite")
+    suspend fun getFavorites(): List<Favorite>
 }

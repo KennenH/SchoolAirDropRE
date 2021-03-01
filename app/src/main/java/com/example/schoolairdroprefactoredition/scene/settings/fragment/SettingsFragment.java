@@ -40,7 +40,6 @@ public class SettingsFragment extends TransitionBaseFragment implements View.OnC
     private FragmentSettingsHomeBinding binding;
 
     private String notificationName;
-    private String alipayBindingName;
     private String privacyName;
     private String generalName;
     private String aboutName;
@@ -62,7 +61,6 @@ public class SettingsFragment extends TransitionBaseFragment implements View.OnC
         super.onAttach(context);
 
         notificationName = getResources().getString(R.string.notification);
-        alipayBindingName = getResources().getString(R.string.alipayAccountText);
         privacyName = getResources().getString(R.string.privacy);
         generalName = getResources().getString(R.string.general);
         aboutName = getResources().getString(R.string.about);
@@ -131,6 +129,8 @@ public class SettingsFragment extends TransitionBaseFragment implements View.OnC
             binding.settingsHomeSwitchAccount.setVisibility(View.VISIBLE);
             binding.settingsHomeSignOut.setVisibility(View.VISIBLE);
         } else {
+            binding.settingsHomePrivacy.setVisibility(View.GONE);
+            binding.settingsHomeNotification.setVisibility(View.GONE);
             binding.settingsHomeSwitchAccount.setVisibility(View.GONE);
             binding.settingsHomeSignOut.setVisibility(View.GONE);
         }

@@ -98,7 +98,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
     }
 
     private val userViewModel by lazy {
-        UserViewModel.UserViewModelFactory((application as SAApplication).chatRepository).create(UserViewModel::class.java)
+        UserViewModel.UserViewModelFactory((application as SAApplication).databaseRepository).create(UserViewModel::class.java)
     }
 
     /**
@@ -111,8 +111,6 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
 //    private val token by lazy {
 //        (application as Application).getCachedToken()
 //    }
-
-    private var myInfo: DomainUserInfo.DataBean? = null
 
     private var userInfo: DomainUserInfo.DataBean? = null
 
@@ -139,13 +137,12 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         if (resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 if (requestCode == REQUEST_UPDATE_MY) { // 修改用户信息返回
-                    myInfo = data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
-                    intent.putExtra(ConstantUtil.KEY_USER_INFO, myInfo)
-
-                    setUserInfo(myInfo)
-
-                    data.putExtra(ConstantUtil.KEY_UPDATED, true)
-                    setResult(Activity.RESULT_OK, data)
+                    (data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean)?.let {
+                        intent.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
+                        setUserInfo(userInfo)
+                        data.putExtra(ConstantUtil.KEY_UPDATED, true)
+                        setResult(Activity.RESULT_OK, data)
+                    }
                 }
             }
         }
