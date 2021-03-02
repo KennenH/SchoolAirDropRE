@@ -32,7 +32,7 @@ public class HomeNavigatorAdapter extends CommonNavigatorAdapter {
         if (page == PURCHASING) {
             menu = new String[]{context.getString(R.string.purchasing)};
         } else {
-            menu = new String[]{context.getString(R.string.plaza)};
+            menu = new String[]{context.getString(R.string.inquiry)};
         }
         mList = Arrays.asList(menu);
     }

@@ -89,4 +89,12 @@ interface GoodsApi {
             @Field("user_id") userID: Int,
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String): Call<DomainPurchasing>
+
+    /**
+     * 获取收藏物品详情
+     */
+    @FormUrlEncoded
+    @POST("appapi/goods/")
+    fun getFavoriteGoodsDetail(
+            @Field("goods_ids") goodsIDs: String)
 }

@@ -31,9 +31,6 @@ class UserRepository private constructor() {
         RetrofitClient.userApi.getUserInfoByID(userID).apply {
             enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
                 override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
-
-                    LogUtils.d(response.errorBody()?.string())
-
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         if (response.isSuccessful) {
                             // 保存再次请求的限制，防止频繁调用请求

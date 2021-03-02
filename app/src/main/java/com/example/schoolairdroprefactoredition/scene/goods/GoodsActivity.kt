@@ -11,6 +11,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import com.blankj.utilcode.util.BarUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
+import com.example.schoolairdroprefactoredition.database.pojo.Favorite
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
@@ -193,7 +194,28 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
      * 点击右下角的收藏按钮
      */
     override fun onRightButtonClick() {
-        goods_button_right.toggleFavor()
-        goodsViewModel.toggleGoodsFavorite(goodsInfo.goods_id)
+        val detailData = goodsDetailInfo?.data
+        if (detailData != null) {
+            showLoading()
+            goodsViewModel.toggleGoodsFavorite(Favorite(
+                    goodsInfo.goods_id,
+                    goodsInfo.goods_name,
+                    goodsInfo.goods_cover_image,
+                    detailData.goods_images,
+                    detailData.goods_content,
+                    goodsInfo.goods_price,
+                    goodsInfo.isGoods_is_bargain,
+                    goodsInfo.isGoods_is_secondHande
+            )).observeOnce(this) {
+                dismissLoading {
+                    goods_button_right.toggleFavor()
+                    if (it) {
+                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.favorDone)
+                    } else {
+                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.unfavorDone)
+                    }
+                }
+            }
+        }
     }
 }

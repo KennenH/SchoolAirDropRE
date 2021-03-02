@@ -123,9 +123,7 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
 //                        .setCaptureActivity(CaptureActivity::class.java)
 //                        .setBeepEnabled(false)
 //                        .initiateScan()
-                if (activity is BaseActivity) {
-                    (activity as BaseActivity).showFloatWindow("没想到会这么好笑", "8")
-                }
+
             }
 
             R.id.my_settings -> {

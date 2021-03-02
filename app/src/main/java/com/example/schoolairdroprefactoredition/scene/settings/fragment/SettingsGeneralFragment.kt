@@ -9,14 +9,14 @@ import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment
 import com.example.schoolairdroprefactoredition.ui.components.PageItem
-import com.example.schoolairdroprefactoredition.viewmodel.SettingsGeneralViewModel
+import com.example.schoolairdroprefactoredition.viewmodel.SettingsViewModel
 import kotlinx.android.synthetic.main.fragment_settings_general.*
 
 class SettingsGeneralFragment : TransitionBaseFragment(),
         View.OnClickListener, PageItem.OnPageItemSelectedListener {
 
     private val generalViewModel by lazy {
-        ViewModelProvider(this).get(SettingsGeneralViewModel::class.java)
+        ViewModelProvider(this).get(SettingsViewModel::class.java)
     }
 
     companion object {
@@ -39,12 +39,10 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        generalViewModel.getIsDarkTheme().observeOnce(viewLifecycleOwner) {
-            if (it) {
-                settingsGeneralDarkTheme.select()
-            }
-            isDarkThemeInitialized = true
+        if (generalViewModel.isDarkTheme() == true) {
+            settingsGeneralDarkTheme.select()
         }
+        isDarkThemeInitialized = true
 
         settingsGeneralStorage.setOnClickListener(this@SettingsGeneralFragment)
         settingsGeneralDarkTheme.setOnClickListener(this@SettingsGeneralFragment)

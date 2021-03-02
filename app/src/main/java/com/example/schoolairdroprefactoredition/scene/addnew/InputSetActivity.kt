@@ -128,12 +128,13 @@ class InputSetActivity : ImmersionStatusBarActivity() {
         setSupportActionBar(findViewById(R.id.toolbar))
 
         val title = intent.getStringExtra(TITLE)
-
         set_title.text = title
         if (type == TYPE_TITLE) {
             input.maxLines = 2
+            input_attention.text = getString(R.string.titleQuestionTip)
         } else {
             input.minLines = 5
+            input_attention.text = getString(R.string.descriptionQuestionTip)
         }
 
         input_warning.visibility = View.INVISIBLE

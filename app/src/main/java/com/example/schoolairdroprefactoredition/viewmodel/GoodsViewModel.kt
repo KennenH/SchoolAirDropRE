@@ -22,6 +22,9 @@ class GoodsViewModel(private val databaseRepository: DatabaseRepository) : ViewM
         GoodsRepository.getInstance()
     }
 
+
+    private val favoriteGoodsLiveData: MutableLiveData<Boolean> = MutableLiveData()
+
     /**
      * 获取物品详细信息
      */
@@ -46,16 +49,23 @@ class GoodsViewModel(private val databaseRepository: DatabaseRepository) : ViewM
 
     /**
      * 切换物品收藏状态
+     *
+     * @return
+     * true 收藏成功
+     * false 取消收藏成功
      */
-    fun toggleGoodsFavorite(goodsID: Int) {
+    fun toggleGoodsFavorite(favorite: Favorite): LiveData<Boolean> {
         viewModelScope.launch {
-            databaseRepository.isFavorite(goodsID).let {
+            databaseRepository.isFavorite(favorite.goods_id).let {
                 if (it) {
-                    databaseRepository.removeFavorite(Favorite(goodsID))
+                    databaseRepository.removeFavorite(favorite.goods_id)
+                    favoriteGoodsLiveData.postValue(false)
                 } else {
-                    databaseRepository.addFavorite(Favorite(goodsID))
+                    databaseRepository.addFavorite(favorite)
+                    favoriteGoodsLiveData.postValue(true)
                 }
             }
         }
+        return favoriteGoodsLiveData
     }
 }

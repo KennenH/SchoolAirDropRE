@@ -67,6 +67,7 @@ public class GoodsDetailInfo implements Serializable {
 
     public static class DataBean implements Serializable {
 
+        @NotNull
         @Override
         public String toString() {
             return "DataBean{" +

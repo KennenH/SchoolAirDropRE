@@ -70,7 +70,7 @@ public class BaseParentFragment extends StatePlaceholderFragment implements Stat
     @Override
     public void onHomePostMyPosts(View view) {
         if (getActivity() instanceof MainActivity) {
-            AddNewActivity.Companion.start(getContext(), AddNewActivity.AddNewType.ADD_POST);
+            AddNewActivity.Companion.start(getContext(), AddNewActivity.AddNewType.ADD_INQUIRY);
         }
     }
 

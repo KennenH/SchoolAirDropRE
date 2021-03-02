@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.repository
 
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.cache.SearchHistories
@@ -72,6 +73,7 @@ class SearchRepository {
             onResult: (DomainPurchasing?) -> Unit) {
         // 若不是上拉加载更多，说明该关键字为新关键字，需要保存
         if (!isLoadMore) {
+            LogUtils.d("保存搜索记录")
             saveHistory(key)
         }
 
@@ -101,7 +103,7 @@ class SearchRepository {
     /**
      * 获取搜索历史
      */
-    fun getSearchHistory(onResult: (SearchHistories?) -> Unit): SearchHistories? {
+    fun getSearchHistory(): SearchHistories? {
         val histories = mJsonCacheUtil.getCache(SearchHistories.KEY, SearchHistories::class.java)
         return if (histories != null && histories.historyList != null && histories.historyList.size > 0) {
             histories

@@ -12,15 +12,15 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBPagerAdapter
-import com.example.schoolairdroprefactoredition.ui.adapter.SSBPagerAdapter.OnSSBDataLenChangedIntermediaryListener
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import kotlinx.android.synthetic.main.activity_ssb.*
 
-class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener, OnSSBDataLenChangedIntermediaryListener {
+class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener {
 
     companion object {
         const val SELLING = R.string.selling
-        const val POSTS = R.string.plaza
+        const val INQUIRY = R.string.inquiry
+        const val FAVORITE = R.string.likes
         const val PAGE_INDEX = "SSBPage?Index"
 
         /**
@@ -47,8 +47,7 @@ class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener, OnSSBDat
     private var mOnLoginStateChangeListener: OnLoginStateChangeListener? = null
 
     private val mPagerAdapter by lazy {
-        SSBPagerAdapter(this,
-                supportFragmentManager,
+        SSBPagerAdapter(supportFragmentManager,
                 FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT,
                 intent.getBooleanExtra(ConstantUtil.KEY_IS_MINE, false))
     }
@@ -68,7 +67,6 @@ class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener, OnSSBDat
                 KeyboardUtils.hideSoftInput(this@SSBActivity)
             }
         }
-        mPagerAdapter.setOnSSBDataLenChangedIntermediaryListener(this)
 
         ssb_pager.offscreenPageLimit = 2
         ssb_pager.adapter = mPagerAdapter
@@ -93,10 +91,6 @@ class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener, OnSSBDat
      */
     fun getCurrentItem(): Int {
         return ssb_pager.currentItem
-    }
-
-    override fun onSSBDataLenChangedIntermediary(total: Int) {
-        ssb_filter.setDataStatistics(total)
     }
 
     /**

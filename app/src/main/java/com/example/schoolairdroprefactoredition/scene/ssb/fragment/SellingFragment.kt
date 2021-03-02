@@ -10,6 +10,7 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
 import com.example.schoolairdroprefactoredition.databinding.SheetSsbItemMoreBinding
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity.OnLoginStateChangeListener
@@ -25,9 +26,9 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
 
     companion object {
         fun newInstance(isMine: Boolean): SellingFragment {
-            return SellingFragment().apply {
-                arguments = Bundle().apply {
-                    putBoolean(ConstantUtil.KEY_IS_MINE, isMine)
+            return SellingFragment().also { fragment ->
+                fragment.arguments = Bundle().also { bundle ->
+                    bundle.putBoolean(ConstantUtil.KEY_IS_MINE, isMine)
                 }
             }
         }
@@ -52,7 +53,7 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
     /**
      * 初始化
      */
-    override fun init(binding: FragmentSsbBinding) {
+    override fun init(binding: FragmentSsbBinding?) {
         setHasOptionsMenu(isMine)
         getSelling()
     }
@@ -70,13 +71,13 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
      * 2、若为他人的物品则使用用户id获取
      */
     private fun getSelling() {
-        userID.let { id ->
+        val userID = activity?.intent?.getIntExtra(ConstantUtil.KEY_USER_ID, -1)
+        userID?.let { id ->
             if (id != -1) {
                 showPlaceholder(StatePlaceHolder.TYPE_LOADING)
                 viewModel.getSelling(id).observeOnce(viewLifecycleOwner) {
                     it?.let {
                         loadData(it)
-                        dataLenOnChange(SELLING_POS)
                     }
                 }
             } else {
@@ -89,25 +90,21 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
      * 在售物品更多设置
      * 修改物品信息 下架物品等
      */
-    public override fun onItemAction(view: View, bean: DomainPurchasing.DataBean) {
+    override fun onItemAction(view: View, bean: DomainPurchasing.DataBean?) {
         if (!isMine) return
 
         context?.let { c ->
             val binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(context))
+            val token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken?
 
             dialog = BottomSheetDialog(c)
             dialog?.setContentView(binding.root)
             binding.apply {
-                modify.setOnClickListener {
-                    AddNewActivity.start(context, bean.goods_id)
-                    dialog?.dismiss()
-                }
-
                 offShelf.setOnClickListener {
                     DialogUtil.showConfirm(context, getString(R.string.attention), getString(R.string.unListItem)) {
                         if (token != null) {
                             mLoading.show()
-                            viewModel.deleteGoods(token.access_token, bean.goods_id.toString())
+                            viewModel.deleteGoods(token.access_token, bean?.goods_id.toString())
                                     .observeOnce(viewLifecycleOwner, {
                                         mLoading.dismissWith {
                                             if (it) {

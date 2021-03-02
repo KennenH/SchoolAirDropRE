@@ -157,7 +157,7 @@ public class SettingsFragment extends TransitionBaseFragment implements View.OnC
         } else if (id == R.id.settings_home_privacy) {
             transact(manager, SettingsPrivacyFragment.newInstance(bundle), privacyName);
         } else if (id == R.id.settings_home_notification) {
-            transact(manager, SettingsNotificationFragment.newInstance(bundle), notificationName);
+            transact(manager, SettingsNotificationFragment.Companion.newInstance(bundle), notificationName);
         } else if (id == R.id.settings_home_general) {
             transact(manager, SettingsGeneralFragment.Companion.newInstance(bundle), generalName);
         } else if (id == R.id.settings_home_about) {

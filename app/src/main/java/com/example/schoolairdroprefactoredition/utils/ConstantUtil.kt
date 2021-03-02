@@ -88,7 +88,7 @@ object ConstantUtil {
     /**
      * 默认头像url
      */
-    const val DEFAULT_AVATAR = "uploads/img/user/default/default.jpg"
+    const val DEFAULT_AVATAR = "assets/img/avatar.png"
 
     /**
      * 图片上传类型 聊天

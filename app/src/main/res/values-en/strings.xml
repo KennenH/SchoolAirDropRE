@@ -28,7 +28,7 @@
     <string name="receiveNewMessages">Receive New Messages</string>
     <string name="vibrate">Vibrate</string>
     <string name="sounds">Sounds</string>
-    <string name="receiveInAppMessages">Receive In-App Messages</string>
+    <string name="displayInAppFloat">Display In-App Float Window</string>
     <string name="language">Language</string>
     <string name="storage">Storage</string>
     <string name="allowAddViaAlipay">Allow Finding Me Via Alipay ID</string>
@@ -114,7 +114,7 @@
     <string name="time">%2$d %3$d, %1$d</string>
     <string name="cover">Cover</string>
     <string name="picSet">Picture Set</string>
-    <string name="locating">Locating…</string>
+    <string name="locating">Locating</string>
     <string name="errorRetry">Retry</string>
     <string name="postMyItem">Post My Item</string>
     <string name="errorNetLocation">Something Went Wrong…</string>
@@ -245,7 +245,7 @@
     <string name="completed">Finished</string>
     <string name="termsOfServiceAgreeFailed">Ah oh, the treaty is lost</string>
     <string name="addNewGoodsError">Error adding new item, try to update the version if it fails multiple times</string>
-    <string name="plaza">Plaza</string>
+    <string name="inquiry">Inquiry</string>
     <string name="doNotPostIllegalContent">Please do not post articles and items that violate school rules and national laws. Please check the contents of the form again</string>
     <string name="phonePermissionContent">This function is required when receiving message notifications. If not allowed, you will not be able to accept important notices.</string>
     <string name="modifyFailedTip">It may be that the server is under maintenance. The form for modifying the item will not be saved. It is recommended to try again later.</string>
@@ -254,12 +254,12 @@
     <string name="confirmTransaction">Confirm Receipt</string>
     <string name="buyerReceiveQRCode">Buyer Receiving Code</string>
     <string name="pleaseConfirmPurchase">Please confirm the purchase before scanning QR</string>
-    <string name="addNewPost">Add New Post</string>
+    <string name="addNewInquiry">Post Inquiry</string>
     <string name="submitPostLocationFailedTip">The current location result is abnormal, and the post may not be searched by other students on campus. The form has been automatically saved. It is recommended to retry the submission later.</string>
     <string name="newPostSuccessTip">The post has been posted to the Plaza.</string>
     <string name="why">Why?</string>
-    <string name="errorLoadItemInfo">Error Loading Item Infomation</string>
-    <string name="postTitleSaySth">Say Something</string>
+    <string name="errorLoadItemInfo">Error Loading Item Information</string>
+    <string name="postTitleSaySth">Describe your specific requirements</string>
     <string name="posts">Posts</string>
     <string name="noSpaceAndLineBreak">Please do not enter spaces and line breaks</string>
     <string name="selectMostSuitableTagForUPost">Please choose a tag that best summarizes the content of your post.</string>
@@ -277,4 +277,10 @@
     <string name="recyclerFooter">[img src=ic_line/]&#160;&#160;&#160;&#160;no more data&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
     <string name="illegalName">Illegal Name</string>
     <string name="receiveANewMessage">Receive New Message</string>
+    <string name="postInquiry">Post Inquiry</string>
+    <string name="favorDone">Favored</string>
+    <string name="unfavorDone">Unfavored</string>
+    <string name="descriptionDisplayInAppFloat">After opening, when the App is in the foreground, the floating window will be displayed when a message is received</string>
+    <string name="titleQuestionTip">The title is an important basis for keyword matching when searching</string>
+    <string name="descriptionQuestionTip">The search will not cover the  description, but the detailed description will improve the buyer’s understanding of the item and greatly increase the probability of the item being sold</string>
 </resources>

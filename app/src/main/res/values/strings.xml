@@ -73,7 +73,7 @@
     <string name="receiveNewMessages">接收新消息</string>
     <string name="vibrate">振动</string>
     <string name="sounds">声音</string>
-    <string name="receiveInAppMessages">接收站内信</string>
+    <string name="displayInAppFloat">显示App内浮窗提示</string>
     <string name="language">语言</string>
     <string name="storage">存储空间</string>
     <string name="allowAddViaAlipay">允许通过支付宝添加我</string>
@@ -165,7 +165,7 @@
     <string name="waitingForPay">待付款</string>
     <string name="cover">封面</string>
     <string name="picSet">图片集</string>
-    <string name="locating">正在获取定位…</string>
+    <string name="locating">获取定位中</string>
     <string name="errorNetLocation">网络或定位出错啦</string>
     <string name="errorGoodsEmptyHome">附近还没有人发布过物品 快去发布你自己的物品吧</string>
     <string name="errorNewsEmptyHome">没有附近话题</string>
@@ -282,15 +282,15 @@
     <string name="completed">已完成</string>
     <string name="termsOfServiceAgreeFailed">啊哦，条约走丢了</string>
     <string name="addNewGoodsError">发送请求时出错，若多次失败请更新版本</string>
-    <string name="plaza">求购</string>
+    <string name="inquiry">求购</string>
     <string name="doNotPostIllegalContent">请不要发布违反学校规章、国家法律的文字和物品，请仔细检查表单各项内容</string>
-    <string name="addNewPost">发布帖子</string>
+    <string name="addNewInquiry">发布求购</string>
     <string name="submitPostLocationFailedTip">当前定位结果异常，帖子很可能无法被其他同学看到。表单已自动保存，建议稍后重试提交。</string>
     <string name="newPostSuccessTip">帖子已发表至广场。</string>
     <string name="why">为什么?</string>
     <string name="whyMyAppKeepBug">为什么我的校园空投总是报错、闪退、出现各种奇怪的bug?</string>
     <string name="errorLoadItemInfo">加载物品信息出错</string>
-    <string name="postTitleSaySth">说点儿啥吧</string>
+    <string name="postTitleSaySth">描述一下你的具体要求</string>
     <string name="posts">帖子</string>
     <string name="noSpaceAndLineBreak">请不要输入空格及换行符</string>
     <string name="selectMostSuitableTagForUPost">请选择一个最能概括你帖子内容的标签。</string>
@@ -307,5 +307,11 @@
     <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;删除&#160;&#160;&#160;&#160;&#160;&#160;</string>
     <string name="illegalName">名字中包含非法字符</string>
     <string name="receiveANewMessage">收到一条新消息</string>
+    <string name="postInquiry">发布求购</string>
+    <string name="favorDone">已收藏</string>
+    <string name="unfavorDone">已取消</string>
+    <string name="descriptionDisplayInAppFloat">开启后当App在前台时收到消息将显示浮窗</string>
+    <string name="titleQuestionTip">标题是附近同学搜索时关键词匹配的重要依据</string>
+    <string name="descriptionQuestionTip">搜索将不会覆盖物品描述，但详细的描述将提高买家对物品的了解程度，大幅提高物品出售概率</string>
 
 </resources>

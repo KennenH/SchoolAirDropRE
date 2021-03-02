@@ -57,6 +57,7 @@ public class SearchHistoryHeader extends ConstraintLayout implements View.OnClic
      * 组合方法
      */
     public void showAfterUpdate(List<String> histories) {
+        if (histories == null) return;
         updateHistories(histories);
         showHistories();
     }

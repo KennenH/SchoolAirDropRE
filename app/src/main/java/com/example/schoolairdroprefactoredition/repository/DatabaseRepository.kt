@@ -159,8 +159,8 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
     }
 
     @WorkerThread
-    suspend fun removeFavorite(favorite: Favorite) {
-        databaseDao.removeFavorite(favorite)
+    suspend fun removeFavorite(goodsID: Int) {
+        databaseDao.removeFavorite(goodsID)
     }
 
     @WorkerThread

@@ -133,10 +133,7 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
             refresh.visibility = View.INVISIBLE
         }
 
-        searchViewModel.getSearchHistories().observeOnce(viewLifecycleOwner, {
-            mHistoryHeader.showAfterUpdate(it.historyList)
-        })
-
+        mHistoryHeader.showAfterUpdate(searchViewModel.getSearchHistories()?.historyList)
         mHistoryHeader.setOnHistoryActionListener(object : OnHistoryActionListener {
             override fun onDeleteHistory() {
                 searchViewModel.deleteHistories()
@@ -175,9 +172,7 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
                     showResult()
                 }
             })
-            searchViewModel.getSearchHistories().observeOnce(viewLifecycleOwner, { histories: SearchHistories ->
-                mHistoryHeader.showAfterUpdate(histories.historyList)
-            })
+            mHistoryHeader.showAfterUpdate(searchViewModel.getSearchHistories()?.historyList)
         }
     }
 

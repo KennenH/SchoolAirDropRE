@@ -60,8 +60,8 @@ public class ParentPlaygroundFragment extends BaseParentFragment
 
         binding.homeSearchBar.setOnClickListener(this);
         binding.homeTopAdd.setOnClickListener(this);
-        binding.homeTopAdd.setText(R.string.addNewPost);
-        binding.homeTopAdd.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_pen, 0, 0, 0);
+        binding.homeTopAdd.setText(R.string.postInquiry);
+        binding.homeTopAdd.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_ask_for_buy, 0, 0, 0);
 
         return binding.getRoot();
     }

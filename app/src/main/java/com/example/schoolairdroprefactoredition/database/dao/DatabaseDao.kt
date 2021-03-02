@@ -202,8 +202,8 @@ interface DatabaseDao {
     /**
      * 取消物品收藏
      */
-    @Delete
-    suspend fun removeFavorite(favorite: Favorite)
+    @Query("delete from favorite where goods_id = :goodsID")
+    suspend fun removeFavorite(goodsID: Int)
 
     /**
      * 查询物品是否被收藏

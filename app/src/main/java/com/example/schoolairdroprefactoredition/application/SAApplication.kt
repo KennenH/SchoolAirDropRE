@@ -204,14 +204,14 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
     private fun initAppTheme() {
         val mJsonCacheUtil = JsonCacheUtil.getInstance()
         var settings = mJsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
-        if (settings == null) settings = UserSettingsCache(false)
+        if (settings == null) settings = UserSettingsCache()
         AppCompatDelegate.setDefaultNightMode(if (settings.isDarkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
     }
 
     fun setAppTheme(isDarkTheme: Boolean) {
         val mJsonCacheUtil = JsonCacheUtil.getInstance()
         var settings = mJsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
-        if (settings == null) settings = UserSettingsCache(false)
+        if (settings == null) settings = UserSettingsCache()
         AppCompatDelegate.setDefaultNightMode(if (isDarkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
         settings.isDarkTheme = isDarkTheme
         mJsonCacheUtil.saveCache(UserSettingsCache.KEY, settings)

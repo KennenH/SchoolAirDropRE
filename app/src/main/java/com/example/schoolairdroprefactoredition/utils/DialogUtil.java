@@ -14,12 +14,6 @@ import com.lxj.xpopup.interfaces.OnConfirmListener;
 public class DialogUtil {
 
     /**
-     * 是否正在显示标识
-     * 若是则丢弃下一个到来的同级别请求
-     */
-    private static boolean isShowingFlag = false;
-
-    /**
      * 显示确认对话框
      *
      * @param title           标题
@@ -45,7 +39,6 @@ public class DialogUtil {
      * @param type one of {@link DIALOG_TYPE}
      */
     public static void showCenterDialog(Context context, @DIALOG_TYPE int type, @StringRes int tip) {
-        isShowingFlag = true;
         switch (type) {
             case DialogUtil.DIALOG_TYPE.SUCCESS:
                 showSuccess(context, tip);
@@ -56,6 +49,8 @@ public class DialogUtil {
             case DialogUtil.DIALOG_TYPE.ERROR_NETWORK:
                 showNetWorkError(context, tip);
                 break;
+            case DIALOG_TYPE.FAVOR:
+                showFailed(context, tip);
             default:
                 showUnknown(context, tip);
                 break;
@@ -70,6 +65,7 @@ public class DialogUtil {
         int FAILED = 234;
         int ERROR_UNKNOWN = 345;
         int ERROR_NETWORK = 456;
+        int FAVOR = 567;
     }
 
     /**
@@ -89,7 +85,8 @@ public class DialogUtil {
                     protected int getPopupLayoutId() {
                         return R.layout.dialog_center_success;
                     }
-                }).show().delayDismissWith(1000, () -> isShowingFlag = false);
+                }).show().delayDismissWith(1000, () -> {
+        });
     }
 
     /**
@@ -109,7 +106,8 @@ public class DialogUtil {
                     protected int getPopupLayoutId() {
                         return R.layout.dialog_center_failed;
                     }
-                }).show().delayDismissWith(1000, () -> isShowingFlag = false);
+                }).show().delayDismissWith(1000, () -> {
+        });
     }
 
     /**
@@ -129,7 +127,29 @@ public class DialogUtil {
                     protected int getPopupLayoutId() {
                         return R.layout.dialog_center_error_network;
                     }
-                }).show().delayDismissWith(1000, () -> isShowingFlag = false);
+                }).show().delayDismissWith(1000, () -> {
+        });
+    }
+
+    /**
+     * 显示收藏结果提示框
+     */
+    private static void showFavor(Context context, @StringRes int tip) {
+        new XPopup.Builder(context)
+                .isClickThrough(true)
+                .asCustom(new BasePopupView(context) {
+                    @Override
+                    protected void init() {
+                        super.init();
+                        ((TextView) findViewById(R.id.dialog_txt)).setText(tip);
+                    }
+
+                    @Override
+                    protected int getPopupLayoutId() {
+                        return R.layout.dialog_center_favorite;
+                    }
+                }).show().delayDismissWith(1000, () -> {
+        });
     }
 
     /**
@@ -149,6 +169,7 @@ public class DialogUtil {
                     protected int getPopupLayoutId() {
                         return R.layout.dialog_center_attention;
                     }
-                }).show().delayDismissWith(1000, () -> isShowingFlag = false);
+                }).show().delayDismissWith(1000, () -> {
+        });
     }
 }

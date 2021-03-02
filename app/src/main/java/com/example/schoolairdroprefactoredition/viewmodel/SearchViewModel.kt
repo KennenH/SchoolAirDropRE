@@ -60,11 +60,8 @@ class SearchViewModel : ViewModel() {
         return mSearchResults
     }
 
-    fun getSearchHistories(): LiveData<SearchHistories> {
-        mSearchRepository.getSearchHistory {
-            mSearchHistories.postValue(it)
-        }
-        return mSearchHistories
+    fun getSearchHistories(): SearchHistories? {
+        return mSearchRepository.getSearchHistory()
     }
 
     fun getSearchSuggestion(input: String): LiveData<SearchSuggestionBean> {

@@ -39,7 +39,6 @@ import com.example.schoolairdroprefactoredition.utils.MyUtil.ImageLoader
 import com.example.schoolairdroprefactoredition.utils.MyUtil.pickPhotoFromAlbum
 import com.example.schoolairdroprefactoredition.utils.filters.DecimalFilter
 import com.example.schoolairdroprefactoredition.viewmodel.AddNewViewModel
-import com.example.schoolairdroprefactoredition.viewmodel.GoodsViewModel
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
 import com.lxj.xpopup.XPopup
@@ -68,7 +67,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
          * @param type 页面类型
          * one of
          * [AddNewType.ADD_ITEM] 上架物品
-         * [AddNewType.ADD_POST] 新增帖子
+         * [AddNewType.ADD_INQUIRY] 新增帖子
          */
         fun start(context: Context?, @AddNewType type: Int) {
             if (context == null) return
@@ -129,18 +128,14 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             const val MODIFY_ITEM = 456
 
             /**
-             * 上传新帖子 页面类型
+             * 发布求购 页面类型
              */
-            const val ADD_POST = 234
+            const val ADD_INQUIRY = 234
         }
     }
 
     private val addNewViewModel by lazy {
         ViewModelProvider(this).get(AddNewViewModel::class.java)
-    }
-
-    private val goodsViewModel by lazy {
-        ViewModelProvider(this).get(GoodsViewModel::class.java)
     }
 
     private var mClient: AMapLocationClient? = null
@@ -285,12 +280,12 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 option_anonymous.visibility = View.GONE
                 restoreItemDraft()
             }
-            AddNewType.ADD_POST -> {
+            AddNewType.ADD_INQUIRY -> {
                 price_title.visibility = View.GONE
                 option_price.visibility = View.GONE
                 option_negotiable.visibility = View.GONE
                 option_secondHand.visibility = View.GONE
-                draft_tip_toggle.setText(R.string.addNewPost)
+                draft_tip_toggle.setText(R.string.addNewInquiry)
                 detail_title.setText(R.string.postTitleSaySth)
                 restorePostDraft()
             }
@@ -326,7 +321,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         isCircle = false,
                         isCropWithoutSpecificShape = false
                 )
-            } else if (addNewType == AddNewType.ADD_POST) {
+            } else if (addNewType == AddNewType.ADD_INQUIRY) {
                 pickPhotoFromAlbum(
                         this,
                         REQUEST_CODE_COVER,
@@ -411,8 +406,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      */
     private fun submit() {
         if (checkFormIsLegal()) {
-            if (addNewType == AddNewType.ADD_POST) {
-                submitPost()
+            if (addNewType == AddNewType.ADD_INQUIRY) {
+//                submitPost()
             } else {
                 submitItem()
             }
@@ -475,40 +470,40 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     /**
      * 提交新帖表单
      */
-    private fun submitPost() {
-        val token = (application as SAApplication).getCachedToken()
-        if (token != null) {
-            if (mAmapLocation == null) {
-                AddNewResultActivity.start(this, false, AddNewResultTips.LOCATION_FAILED_NEW_ITEM)
-            } else {
-                showLoading {
-                    val mPicSetPaths: MutableList<String> = ArrayList()
-                    for (localMedia in mPicSetSelected) {
-                        mPicSetPaths.add(localMedia.path)
-                    }
-                    addNewViewModel.submitPost(token.access_token, mCoverPath, mHWRatio, mPicSetPaths,
-                            option_title.text.toString(), option_description.text.toString(),
-                            mAmapLocation!!.longitude, mAmapLocation!!.latitude)
-                            .observeOnce(this, { result: Boolean ->
-                                // 这里有一个bug 当提交响应失败后 再在同一个页面重试之后成功 将会多次弹出成功提示页面 但实际只提交成功了一次
-                                // 所以这里加一个标志变量 打开一次页面最多只能成功一次 因此成功后即不再弹出
-                                if (!isSubmitSuccess) {
-                                    dismissLoading {
-                                        AddNewResultActivity.start(this, result, if (result) AddNewResultTips.SUCCESS_NEW_POST else AddNewResultTips.FAILED_ADD)
-                                        if (result) {
-                                            isSubmitSuccess = true // 发送已完毕标志
-                                            finish()
-                                            AnimUtil.activityExitAnimDown(this)
-                                        }
-                                    }
-                                }
-                            })
-                }
-            }
-        } else {
-            start(this)
-        }
-    }
+//    private fun submitPost() {
+//        val token = (application as SAApplication).getCachedToken()
+//        if (token != null) {
+//            if (mAmapLocation == null) {
+//                AddNewResultActivity.start(this, false, AddNewResultTips.LOCATION_FAILED_NEW_ITEM)
+//            } else {
+//                showLoading {
+//                    val mPicSetPaths: MutableList<String> = ArrayList()
+//                    for (localMedia in mPicSetSelected) {
+//                        mPicSetPaths.add(localMedia.path)
+//                    }
+//                    addNewViewModel.submitPost(token.access_token, mCoverPath, mHWRatio, mPicSetPaths,
+//                            option_title.text.toString(), option_description.text.toString(),
+//                            mAmapLocation!!.longitude, mAmapLocation!!.latitude)
+//                            .observeOnce(this, { result: Boolean ->
+//                                // 这里有一个bug 当提交响应失败后 再在同一个页面重试之后成功 将会多次弹出成功提示页面 但实际只提交成功了一次
+//                                // 所以这里加一个标志变量 打开一次页面最多只能成功一次 因此成功后即不再弹出
+//                                if (!isSubmitSuccess) {
+//                                    dismissLoading {
+//                                        AddNewResultActivity.start(this, result, if (result) AddNewResultTips.SUCCESS_NEW_POST else AddNewResultTips.FAILED_ADD)
+//                                        if (result) {
+//                                            isSubmitSuccess = true // 发送已完毕标志
+//                                            finish()
+//                                            AnimUtil.activityExitAnimDown(this)
+//                                        }
+//                                    }
+//                                }
+//                            })
+//                }
+//            }
+//        } else {
+//            start(this)
+//        }
+//    }
 
     /**
      * 检查表单填写是否完整
@@ -523,7 +518,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             focusView = option_description_wrapper
             pass = false
         }
-        if (addNewType != AddNewType.ADD_POST && price_input.text.toString().trim() == "") {
+        if (addNewType != AddNewType.ADD_INQUIRY && price_input.text.toString().trim() == "") {
             AnimUtil.primaryBackgroundViewBlinkRed(this, option_price)
             focusView = price_title
             pass = false
@@ -595,7 +590,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             } else {
                 addNewViewModel.deleteItemDraft()
             }
-        } else if (addNewType == AddNewType.ADD_POST) { // 保存帖子表单
+        } else if (addNewType == AddNewType.ADD_INQUIRY) { // 保存帖子表单
             if (!isSubmitSuccess && (mCoverPath.trim() != ""
                             || mPicSetSelected.size > 0 || option_title.text.toString().trim() != ""
                             || option_description.text.toString().trim() != "")) {
