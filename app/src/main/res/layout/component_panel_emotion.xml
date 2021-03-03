@@ -1,16 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/emoji_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:splitMotionEvents="false">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/emoji_recycler"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:overScrollMode="never" />
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/emoji_logo"
+            android:layout_width="@dimen/error_placeholder"
+            android:layout_height="@dimen/error_placeholder"
+            android:src="@drawable/ic_logo_alpha"
+            app:layout_constraintBottom_toTopOf="@id/emoji_tip"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed"
+            app:tint="@color/primaryDarker" />
+
+        <TextView
+            android:id="@+id/emoji_tip"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/general_padding_larger"
+            android:text="@string/useEmojiInstead"
+            android:textColor="@color/primaryDarkest"
+            android:textSize="@dimen/textSizeNormal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/emoji_logo" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/emoji_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:visibility="gone" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
 

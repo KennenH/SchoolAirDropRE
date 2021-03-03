@@ -94,4 +94,8 @@ class SSBAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainPurchasi
     fun addOnSSBItemActionListener(listener: OnSSBItemActionListener) {
         mOnSSBItemActionListeners.add(listener)
     }
+
+    fun removeOnSSBItemActionListener(listener: OnSSBItemActionListener) {
+        mOnSSBItemActionListeners.remove(listener)
+    }
 }

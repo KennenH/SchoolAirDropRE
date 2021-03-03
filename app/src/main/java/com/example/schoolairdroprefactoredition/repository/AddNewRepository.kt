@@ -42,8 +42,8 @@ class AddNewRepository {
                 token, taskID,
                 coverKey, picSetKeys,
                 title, content,
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE else longitude.toString(),
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE else latitude.toString(),
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE.toString() else longitude.toString(),
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE.toString() else latitude.toString(),
                 if (isQuotable) 1 else 0, if (!isBrandNew) 1 else 0,
                 price.toString()).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {

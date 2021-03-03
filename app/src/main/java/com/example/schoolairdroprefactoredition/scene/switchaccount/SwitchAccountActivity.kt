@@ -53,10 +53,7 @@ class SwitchAccountActivity : ImmersionStatusBarActivity() {
             layoutManager = LinearLayoutManager(this@SwitchAccountActivity, RecyclerView.VERTICAL, false)
         }
 
-        val value = accountViewModel.allUserCacheOnThisDevice.value
-        value?.let {
-            accountRecyclerAdapter.setList(it)
-        }
+        accountRecyclerAdapter.setList(accountViewModel.allUserCacheOnThisDevice)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

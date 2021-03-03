@@ -56,6 +56,7 @@
 
             <com.example.schoolairdroprefactoredition.ui.components.PageItem
                 android:id="@+id/user_gender"
+                android:visibility="gone"
                 app:PI_title="@string/sex"
                 app:PI_description="@string/male"
                 android:layout_width="match_parent"

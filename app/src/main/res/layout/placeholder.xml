@@ -2,23 +2,10 @@
 <com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/placeholder_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white">
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.15" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/right"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.85" />
 
     <com.github.ybq.android.spinkit.SpinKitView
         android:id="@+id/loading"
@@ -34,54 +21,56 @@
 
     <ImageView
         android:id="@+id/imageView"
+        android:layout_width="@dimen/error_placeholder"
+        android:layout_height="@dimen/error_placeholder"
+        android:src="@drawable/ic_logo_alpha"
+        app:layout_constraintBottom_toTopOf="@id/textView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_chainStyle="packed"
+        app:tint="@color/primaryDarker" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/left"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/general_padding_larger"
-        android:src="@drawable/ic_empty"
-        app:layout_constraintBottom_toTopOf="@id/textView"
-        app:layout_constraintEnd_toStartOf="@+id/right"
-        app:layout_constraintStart_toStartOf="@+id/left"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.15" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.85" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_even_larger"
         android:gravity="center"
-        android:textColor="@color/primaryText"
-        android:textSize="@dimen/textSizeLarge"
-        app:layout_constraintBottom_toTopOf="@id/refresh"
+        android:textColor="@color/primaryDarkest"
+        android:textSize="@dimen/textSizeLarger"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/placeholderTip"
         app:layout_constraintEnd_toStartOf="@+id/right"
         app:layout_constraintStart_toStartOf="@+id/left"
         app:layout_constraintTop_toBottomOf="@+id/imageView"
-        tools:text="@string/errorLoading" />
-
-    <ImageView
-        android:id="@+id/refresh"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="@dimen/general_padding_larger"
-        android:src="@drawable/ic_refresh"
-        app:layout_constraintBottom_toTopOf="@id/button"
-        app:layout_constraintEnd_toStartOf="@+id/right"
-        app:layout_constraintStart_toStartOf="@+id/left"
-        app:layout_constraintTop_toBottomOf="@+id/textView" />
+        tools:text="@string/permissionDenied" />
 
     <TextView
-        android:id="@+id/button"
+        android:id="@+id/placeholderTip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/general_padding_larger"
-        android:background="@drawable/button_rounded_theme"
-        android:gravity="center"
-        android:padding="@dimen/general_padding_large"
-        android:textColor="@color/whiteAlways"
+        android:layout_marginTop="@dimen/general_padding"
+        android:text="@string/tapWhiteToRetry"
+        android:textColor="@color/primaryDarkest"
         android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/right"
         app:layout_constraintStart_toStartOf="@+id/left"
-        app:layout_constraintTop_toBottomOf="@id/refresh"
-        tools:text="@string/postMyItem" />
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
-import android.app.Application
 import androidx.lifecycle.*
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.database.pojo.PullFlag
@@ -12,7 +11,6 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.MessageUtil
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-import java.lang.IllegalArgumentException
 
 /**
  * 聊天页面使用的view model

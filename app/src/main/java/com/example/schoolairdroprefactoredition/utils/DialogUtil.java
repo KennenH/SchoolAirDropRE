@@ -50,7 +50,8 @@ public class DialogUtil {
                 showNetWorkError(context, tip);
                 break;
             case DIALOG_TYPE.FAVOR:
-                showFailed(context, tip);
+                showFavor(context, tip);
+                break;
             default:
                 showUnknown(context, tip);
                 break;

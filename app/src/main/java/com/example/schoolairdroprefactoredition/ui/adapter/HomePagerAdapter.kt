@@ -3,36 +3,36 @@ package com.example.schoolairdroprefactoredition.ui.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.example.schoolairdroprefactoredition.scene.main.home.HomePlaygroundFragment
-import com.example.schoolairdroprefactoredition.scene.main.home.HomePurchasingFragment
+import com.example.schoolairdroprefactoredition.scene.main.home.InquiryFragment
+import com.example.schoolairdroprefactoredition.scene.main.home.PurchasingFragment
 import java.util.*
 
 class HomePagerAdapter(fm: FragmentManager, private val pageType: Int) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     companion object {
-        const val PAGE_TYPE_PLAYGROUND = 9837 // 页面类型码 广场
+        const val PAGE_TYPE_INQUIRY = 9837 // 页面类型码 求购
         const val PAGE_TYPE_PURCHASING = 3557 // 页面类型码 淘物
-        const val PAGE_NUM_PLAYGROUND = 1 // 子页面数量 广场
+        const val PAGE_NUM_INQUIRY = 1 // 子页面数量 求购
         const val PAGE_NUM_PURCHASING = 1 // 子页面数量 淘物
     }
 
     /**
-     * 广场 子页面数组
+     * 求购 子页面数组
      */
-    private val mPlaygroundFragments: MutableList<HomePlaygroundFragment> = ArrayList(PAGE_NUM_PLAYGROUND)
+    private val mInquiryFragments: MutableList<InquiryFragment> = ArrayList(PAGE_NUM_INQUIRY)
 
     /**
      * 淘物 子页面数组
      */
-    private val mPurchasingFragments: MutableList<HomePurchasingFragment> = ArrayList(PAGE_NUM_PURCHASING)
+    private val mPurchasingFragments: MutableList<PurchasingFragment> = ArrayList(PAGE_NUM_PURCHASING)
 
     override fun getItem(position: Int): Fragment {
-        return if (pageType == PAGE_TYPE_PLAYGROUND) {
-            val fragment = HomePlaygroundFragment.newInstance()
-            mPlaygroundFragments.add(fragment)
+        return if (pageType == PAGE_TYPE_INQUIRY) {
+            val fragment = InquiryFragment.newInstance()
+            mInquiryFragments.add(fragment)
             fragment
         } else {
-            val fragment = HomePurchasingFragment.newInstance()
+            val fragment = PurchasingFragment.newInstance()
             mPurchasingFragments.add(fragment)
             fragment
         }
@@ -45,9 +45,11 @@ class HomePagerAdapter(fm: FragmentManager, private val pageType: Int) : Fragmen
      *
      * @param subFragmentIndex 要滑动的子页面在 广场 或者 淘物 的位置
      */
-    fun scrollToTop(subFragmentIndex: Int) {
-        if (pageType == PAGE_TYPE_PLAYGROUND) {
-            mPlaygroundFragments[subFragmentIndex].scrollToTop()
+    fun scrollToTop(subFragmentIndex: Int?) {
+        if (subFragmentIndex == null) return
+
+        if (pageType == PAGE_TYPE_INQUIRY) {
+            mInquiryFragments[subFragmentIndex].scrollToTop()
         } else {
             mPurchasingFragments[subFragmentIndex].scrollToTop()
         }
@@ -55,8 +57,8 @@ class HomePagerAdapter(fm: FragmentManager, private val pageType: Int) : Fragmen
 
     override fun getCount(): Int {
         return when (pageType) {
-            PAGE_TYPE_PLAYGROUND -> {
-                PAGE_NUM_PLAYGROUND
+            PAGE_TYPE_INQUIRY -> {
+                PAGE_NUM_INQUIRY
             }
             PAGE_TYPE_PURCHASING -> {
                 PAGE_NUM_PURCHASING

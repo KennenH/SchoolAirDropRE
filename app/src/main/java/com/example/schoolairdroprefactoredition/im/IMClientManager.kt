@@ -1,17 +1,17 @@
 package com.example.schoolairdroprefactoredition.im
 
-import android.content.Context
+import android.app.Application
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import net.x52im.mobileimsdk.android.ClientCoreSDK
 import net.x52im.mobileimsdk.android.conf.ConfigEntity
 
-class IMClientManager private constructor(private var context: Context?) {
+class IMClientManager private constructor(private var application: Application?) {
 
     companion object {
         private var INSTANCE: IMClientManager? = null
-        fun getInstance(context: Context?) = INSTANCE
-                ?: IMClientManager(context).also {
+        fun getInstance(application: Application?) = INSTANCE
+                ?: IMClientManager(application).also {
                     INSTANCE = it
                 }
     }
@@ -21,6 +21,9 @@ class IMClientManager private constructor(private var context: Context?) {
      */
     private var init = false
 
+    /**
+     * 初始化im sdk，每次登录前必须保证调用成功此方法，否则会报203未初始化错误
+     */
     fun initMobileIMSDK() {
         if (!init) {
             // 设置AppKey
@@ -37,26 +40,22 @@ class IMClientManager private constructor(private var context: Context?) {
             ClientCoreSDK.DEBUG = true
 
             // 【特别注意】请确保首先进行核心库的初始化（这是不同于iOS和Java端的地方)
-            ClientCoreSDK.getInstance().init(context)
+            ClientCoreSDK.getInstance().init(application)
 
             // 设置事件回调
-            if (context is SAApplication) {
-                ClientCoreSDK.getInstance().chatBaseEvent = context as SAApplication
-                ClientCoreSDK.getInstance().chatMessageEvent = context as SAApplication
-                ClientCoreSDK.getInstance().messageQoSEvent = context as SAApplication
+            if (application is SAApplication) {
+                ClientCoreSDK.getInstance().chatBaseEvent = application as SAApplication
+                ClientCoreSDK.getInstance().chatMessageEvent = application as SAApplication
+                ClientCoreSDK.getInstance().messageQoSEvent = application as SAApplication
             }
             init = true
         }
     }
 
-    init {
-        initMobileIMSDK()
-    }
-
     /**
      * 重置[init]标志位
      */
-    fun reflagInit() {
+    fun resetInit() {
         init = false
     }
 }

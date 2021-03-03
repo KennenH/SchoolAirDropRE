@@ -50,13 +50,28 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
         initListeners()
     }
 
-    /**！！！！
+    override fun onPause() {
+        super.onPause()
+        EasyFloat.dismiss(this)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        removeListeners()
+    }
+
+    /**
+     * ！！！！
      *  注意
      * ！！！！
      * 所有在这个Activity基类中注册的listener在子类activity中千万不要再注册，否则每次回调都会有两次
      */
     private fun initListeners() {
-        (application as SAApplication).addOnIMListener(this)
+        (application as? SAApplication)?.addOnIMListener(this)
+    }
+
+    private fun removeListeners() {
+        (application as? SAApplication)?.removeOnIMListener(this)
     }
 
     /**
@@ -74,7 +89,7 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
     /**
      * 显示浮窗
      */
-    fun showFloatWindow(content: String, userID: String) {
+    private fun showFloatWindow(content: String, userID: String) {
         EasyFloat.isShow(this@BaseActivity, IM_FLOAT_TAG)?.let {
             if (it) { // 正在显示，直接替换文本，刷新显示时间
                 EasyFloat.getFloatView(this@BaseActivity, IM_FLOAT_TAG)?.apply {
@@ -162,15 +177,13 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
         }
     }
 
-    override fun onPause() {
-        super.onPause()
-        EasyFloat.dismiss(this)
-    }
-
     override fun onIMStartLogin() {
     }
 
     override fun onIMLoginResponse(code: Int) {
+    }
+
+    override fun onObtainOfflineState(obtainStartOrDone: Boolean) {
     }
 
     override fun onIMLinkDisconnect(code: Int) {

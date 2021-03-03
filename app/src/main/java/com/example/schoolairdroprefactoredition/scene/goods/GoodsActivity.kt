@@ -61,13 +61,6 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
         GoodsViewModel.GoodsViewModelFactory((application as SAApplication).databaseRepository).create(GoodsViewModel::class.java)
     }
 
-    /**
-     * 是否不是我的物品
-     */
-    private val isNotMine by lazy {
-        goodsInfo.goods_id != (application as SAApplication).getCachedMyInfo()?.userId
-    }
-
     private val goodsInfo by lazy {
         intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO) as DomainPurchasing.DataBean
     }
@@ -119,7 +112,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
             goods_info_container.stopShimming()
             if (it != null) {
                 goodsDetailInfo = it
-                showActionButtons(isNotMine)
+                showActionButtons()
                 goods_info_container.setData(goodsInfo, it.data)
                 goods_button_right.setFavor(it.isFavorite)
             } else {
@@ -131,10 +124,11 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
     /**
      * 显示底部动作按钮
      */
-    private fun showActionButtons(show: Boolean) {
-        goods_button_left.visibility = if (show) View.VISIBLE else View.GONE
-        goods_button_right.visibility = if (show) View.VISIBLE else View.GONE
-        goods_info_container.showBottom(show)
+    private fun showActionButtons() {
+        val isGoodsMine = (application as? SAApplication)?.getCachedMyInfo()?.userId == goodsInfo.seller.user_id
+//        goods_button_left.visibility = if (!isGoodsMine) View.VISIBLE else View.GONE
+        goods_button_right.visibility = if (!isGoodsMine) View.VISIBLE else View.GONE
+        goods_info_container.showBottom(!isGoodsMine)
     }
 
     /**

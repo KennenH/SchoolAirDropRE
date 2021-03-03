@@ -32,6 +32,7 @@ import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.MorePanelAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.example.schoolairdroprefactoredition.utils.decoration.DecorationUtil
 import com.example.schoolairdroprefactoredition.utils.decoration.GridItemDecoration
 import com.example.schoolairdroprefactoredition.viewmodel.ChatViewModel
@@ -250,7 +251,6 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
     override fun onDestroy() {
         super.onDestroy()
         (application as? SAApplication)?.removeOnApplicationLoginListener(this)
-        (application as? SAApplication)?.removeOnIMListener(this)
     }
 
     override fun onBackPressed() {
@@ -393,16 +393,22 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
             if (myInfo != null) {
                 // 获取输入框内容
                 val content = edit_view.text.toString()
-                // 将输入框清空
-                edit_view.setText("")
-                // 委托顶层类发送消息
-                (application as SAApplication).sendTextMessage(
-                        counterpartInfo.userId.toString(),
-                        myInfo.userId.toString(),
-                        content,
-                        WeakReference(mChatRecyclerAdapter))
-                // 对话窗滑动至最新消息
-                scrollToFirst()
+                // 判断输入是否超长
+                if (content.length < ConstantUtil.IM_MAX_TEXT_LENGTH) {
+                    // 将输入框清空
+                    edit_view.setText("")
+                    // 委托顶层类发送消息
+                    (application as SAApplication).sendTextMessage(
+                            counterpartInfo.userId.toString(),
+                            myInfo.userId.toString(),
+                            content,
+                            WeakReference(mChatRecyclerAdapter))
+                    // 对话窗滑动至最新消息
+                    scrollToFirst()
+                } else {
+                    // 一次性发送字符长度超过最大值
+                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.imTextTooLong)
+                }
             }
         }
 

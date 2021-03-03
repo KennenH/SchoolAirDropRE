@@ -23,6 +23,15 @@ class LoginRepository private constructor() {
     }
 
     /**
+     * 每当app来到前台（不包括打开时）时调用token验证接口
+     */
+    fun connectWhenComesToForeground(token: String, onResult: () -> Unit) {
+        RetrofitClient.userApi.verifyToken(token).apply {
+
+        }
+    }
+
+    /**
      * 获取公钥
      */
     fun getPublicKey(onResult: (success: Boolean, response: DomainAuthorizeGet?) -> Unit) {
@@ -50,6 +59,9 @@ class LoginRepository private constructor() {
         }
     }
 
+    /**
+     * 通过alipayid登录
+     */
     fun authorizeWithAlipayID(
             rawAlipayID: String,
             publicKey: String,
@@ -85,6 +97,9 @@ class LoginRepository private constructor() {
         }
     }
 
+    /**
+     * 获取我的用户信息
+     */
     fun getMyInfo(token: String, onResult: (success: Boolean, response: DomainUserInfo.DataBean?) -> Unit) {
         RetrofitClient.userApi.getMyUserInfo(token).apply {
             enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {

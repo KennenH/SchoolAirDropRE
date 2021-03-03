@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.viewpager.widget.ViewPager
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeBinding
+import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment
 import com.example.schoolairdroprefactoredition.ui.adapter.HomeNavigatorAdapter
@@ -16,11 +17,15 @@ import com.google.android.material.appbar.AppBarLayout
 import net.lucode.hackware.magicindicator.ViewPagerHelper
 import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigator
 
-class ParentPurchasingFragment : BaseParentFragment(), View.OnClickListener {
+/**
+ * 首页中淘物tab下的所有子页面的父类，当前仅有淘物一个子页面
+ * [com.example.schoolairdroprefactoredition.scene.main.home.PurchasingFragment]
+ */
+class PurchasingParentFragment : BaseParentFragment(), View.OnClickListener {
 
     companion object {
-        fun newInstance(): ParentPurchasingFragment {
-            return ParentPurchasingFragment()
+        fun newInstance(): PurchasingParentFragment {
+            return PurchasingParentFragment()
         }
     }
 
@@ -66,7 +71,7 @@ class ParentPurchasingFragment : BaseParentFragment(), View.OnClickListener {
      * 当当前页面最后可见的item位置小于一定值时直接调用平滑滑动
      * 否则将先闪现至固定item位置处再平滑滚动
      *
-     * 详见 [HomePurchasingFragment.scrollToTop]
+     * 详见 [PurchasingFragment.scrollToTop]
      */
     fun pageScrollToTop() {
         if (mViewPager != null && mAppBarLayout != null) {
@@ -80,7 +85,15 @@ class ParentPurchasingFragment : BaseParentFragment(), View.OnClickListener {
         if (id == R.id.home_search_bar) {
             mOnSearchBarClickedListener?.onSearchBarClicked()
         } else if (id == R.id.home_top_add) {
-            onHomePostMyItem(v)
+            // if 当前子页面为我的在售
+            if (activity is MainActivity) {
+                AddNewActivity.start(context, AddNewActivity.AddNewType.ADD_ITEM)
+            }
+            // else if 当前子页面为我的求购
+//            if (activity is MainActivity) {
+//                AddNewActivity.start(context, AddNewActivity.AddNewType.ADD_INQUIRY)
+//            }
+            // else
         }
     }
 

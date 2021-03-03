@@ -22,7 +22,7 @@ public class HorizontalImageRecyclerAdapter extends BaseQuickAdapter<LocalMedia,
     @Override
     protected void convert(@NotNull BaseViewHolder holder, LocalMedia s) {
         AddPicItem image = (AddPicItem) holder.itemView.getRootView();
-        String realPath = s.getAndroidQToPath() == null ? s.getPath() : s.getAndroidQToPath();
+        String realPath = s.getCutPath() == null ? s.getPath() : s.getCutPath();
 
         // 检查图片路径是否以base url开头
         if (realPath.startsWith(ConstantUtil.QINIU_BASE_URL)) {

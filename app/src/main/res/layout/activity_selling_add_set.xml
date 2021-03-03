@@ -36,7 +36,6 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/general_padding_large"
             android:focusable="true">
 
             <EditText
@@ -58,6 +57,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/general_padding_large"
+                android:layout_marginTop="@dimen/general_padding_large"
                 android:layout_marginEnd="@dimen/general_padding_large"
                 android:drawablePadding="@dimen/general_padding_small"
                 android:text="@string/descriptionQuestionTip"

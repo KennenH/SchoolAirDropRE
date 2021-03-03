@@ -14,10 +14,8 @@ import android.view.View
 import android.view.View.OnFocusChangeListener
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
-import com.qiniu.android.utils.LogUtil
 import kotlinx.android.synthetic.main.activity_selling_add_set.*
 import kotlin.math.abs
 
@@ -45,7 +43,7 @@ class InputSetActivity : ImmersionStatusBarActivity() {
          *
          * one of
          * [R.string.title] 标题
-         * [R.string.goods_description] 物品描述
+         * [R.string.goodsDescription] 物品描述
          */
         const val TITLE = "KEY_Title"
 

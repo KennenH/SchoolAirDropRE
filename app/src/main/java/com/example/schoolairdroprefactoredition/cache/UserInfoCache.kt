@@ -43,15 +43,16 @@ class UserInfoCache {
     /**
      * 更新设备上已有的账号信息
      *
-     * 传入null时删除当前账号
-     *
+     * @param info 传入null时删除当前账号
      */
     fun updateUserAccount(info: DomainUserInfo.DataBean?) {
+        // 传入null，则将第一个账号（当前）删除
         if (info == null) {
             userList.removeFirstOrNull()
             return
         }
 
+        // 将已存在的相同账号先删除，也是为了省略排序和重新组装数据
         for ((index, i) in userList.withIndex()) {
             if (i.userId == info.userId) {
                 userList.removeAt(index)
@@ -59,20 +60,7 @@ class UserInfoCache {
             }
         }
 
-        // 当没有缓存账号或者第一个账号不为空白替代账号时直接在头部添加账号信息
-        // 否则，第一个账号应该是空白替代账号，直接将其替代
-        val first = userList.firstOrNull()
-        if (first == null) {
-            userList.add(0, info)
-        } else {
-            userList[0] = info
-        }
+        // 添加当前账号至第一个
+        userList.add(0, info)
     }
-
-    override fun toString(): String {
-        return "UserInfoCache{" +
-                "info=" + userList +
-                '}'
-    }
-
 }

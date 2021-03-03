@@ -2,18 +2,14 @@ package com.example.schoolairdroprefactoredition.application
 
 import android.app.ActivityManager
 import android.app.Application
-import android.content.Context
 import android.os.AsyncTask
 import android.os.Process
-import android.view.MotionEvent
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
-import com.example.schoolairdroprefactoredition.custom.InAppFloatAnimator
 import com.example.schoolairdroprefactoredition.database.SARoomDatabase
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.domain.DomainToken
@@ -25,14 +21,12 @@ import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.viewmodel.ChatViewModel
+import com.example.schoolairdroprefactoredition.viewmodel.InstanceMessageViewModel
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.lzf.easyfloat.EasyFloat
-import com.lzf.easyfloat.anim.DefaultAnimator
-import com.lzf.easyfloat.enums.ShowPattern
-import com.lzf.easyfloat.enums.SidePattern
 import com.xiaomi.channel.commonutils.logger.LoggerInterface
 import com.xiaomi.mipush.sdk.MiPushClient
-import kotlinx.android.synthetic.main.activity_chat.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import me.jessyan.autosize.AutoSize
@@ -43,17 +37,16 @@ import net.x52im.mobileimsdk.android.event.ChatMessageEvent
 import net.x52im.mobileimsdk.android.event.MessageQoSEvent
 import net.x52im.mobileimsdk.server.protocal.Protocal
 import java.lang.ref.WeakReference
-import java.util.*
 import kotlin.collections.ArrayList
 
 class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessageEvent, LifecycleObserver {
 
     companion object {
         open class LogoutAsync() : AsyncTask<Any?, Int?, Int?>() {
-            private var context: WeakReference<Context>? = null
+            private var application: Application? = null
 
-            constructor(context: Context) : this() {
-                this.context = WeakReference<Context>(context)
+            constructor(application: Application) : this() {
+                this.application = application
             }
 
             override fun doInBackground(vararg params: Any?): Int {
@@ -63,7 +56,8 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
                 } catch (e: Exception) {
                 }
 
-                IMClientManager.getInstance(context?.get()).reflagInit()
+                // 重置初始化标志符，否则会报203
+                IMClientManager.getInstance(application).resetInit()
                 return code
             }
         }
@@ -85,19 +79,21 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
         adapter?.addData(0, chat)
         // 保存自己发送的消息
         chatViewModel.saveSentMessage(chat)
-        // 框架异步发送消息
-        object : LocalDataSender.SendCommonDataAsync(content, userID, fingerprint, ConstantUtil.MESSAGE_TYPE_TEXT) {
-            override fun onPostExecute(code: Int?) {
-                if (code != 0) chatViewModel.updateMessageStatus(fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
-            }
-        }.execute()
+        // 不能给自己发送消息
+        if (userID != myID) {
+            // 框架异步发送消息
+            object : LocalDataSender.SendCommonDataAsync(content, userID, fingerprint, ConstantUtil.MESSAGE_TYPE_TEXT) {
+                override fun onPostExecute(code: Int?) {
+                    if (code != 0) chatViewModel.updateMessageStatus(fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+                }
+            }.execute()
+        }
     }
 
     /**
      * 发送图片消息 多图
      */
     fun sendImageMessage(userID: String, myID: String, imagePaths: List<String>, weakAdapter: WeakReference<ChatRecyclerAdapter>) {
-        if (userID == myID) return
         val adapter = weakAdapter.get()
         // 先暂时保存这几个new出来的chat对象，后面图片发送完毕之后发送消息还要使用
         val chatList = ArrayList<ChatHistory>(imagePaths.size)
@@ -109,6 +105,7 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
             chatViewModel.saveSentMessage(chat)
         }
 
+        // 不能给自己发消息
         if (userID != myID) {
             chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).observeOnce {
                 if (it != null) {
@@ -146,10 +143,24 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
         ChatViewModel.ChatViewModelFactory(databaseRepository).create(ChatViewModel::class.java)
     }
 
+    private val imViewModel by lazy {
+        InstanceMessageViewModel.InstanceViewModelFactory(databaseRepository).create(InstanceMessageViewModel::class.java)
+    }
+
     /**
      * 监听app进入前后台的监听者们
      */
     private val appRuntimeStatusListeners: ArrayList<OnAppStatusChangeListener> = ArrayList()
+
+    /**
+     * 是否需要在app进入前台的时候调用连接接口
+     *
+     * 1、第一次打开app时无需调用，之后每次进入后台时将它置为true
+     * 2、每次connect调用分为两个部分，第一部分为验证token是否过期，第二部分为拉取离线消息
+     * 3、验证token的调用有10秒钟的间隔
+     * 4、app进入前台时先检查im框架回调，若im在后台期间不曾断开连接，则无需拉取离线消息
+     */
+    private var isNeedVerifyTokenWhenComesToForeground = false
 
     /**
      * IM事件回调的监听者们
@@ -163,6 +174,11 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
      * 该回调用于和主页面距离比较远的，或者不由主页面管理的Activity页面
      */
     private val applicationLoginStateListeners: ArrayList<OnApplicationLoginListener> = ArrayList()
+
+    /**
+     * 当该监听器回调时需要主页面在消息列表的图标上显示小红点
+     */
+    private var shouldShowBadgeListener: OnShouldShowBadgeListener? = null
 
     /**
      * 我的用户基本信息
@@ -180,7 +196,6 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
         initAdapt()
         initMiPush()
         initAppTheme()
-        initIM()
         initInAppFloat()
 
         ProcessLifecycleOwner.get().lifecycle.addObserver(this) // 给予application感知app进入前后台的能力
@@ -188,13 +203,6 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
 
     private fun initInAppFloat() {
         EasyFloat.init(this, AppConfig.IS_DEBUG) // 浮窗初始化
-    }
-
-    /**
-     * 初始化聊天系统
-     */
-    private fun initIM() {
-        chatClientManager.initMobileIMSDK()
     }
 
     /**
@@ -304,22 +312,31 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
     /*****************************************************************************/
 
     /**
-     * app 进入前台回调
+     * app 进入前台回调，打开app时将不会被回调
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onAppResume() {
-        LogUtils.d("app 进入前台")
-        for (listener in appRuntimeStatusListeners) {
-            listener.onAppEnterForeground()
+        // 打开app时将不会回调
+        if (isNeedVerifyTokenWhenComesToForeground) {
+            // 登录im系统
+            doLoginIM()
+            for (listener in appRuntimeStatusListeners) {
+                listener.onAppEnterForeground()
+            }
         }
     }
 
     /**
      * app 进入后台回调
+     *
+     * 将[isNeedVerifyTokenWhenComesToForeground]置为true，下次回到前台调用验证token
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     fun onAppPause() {
-        LogUtils.d("app 进入后台")
+        // 下次app进入前台时将会执行验证token和登录im操作
+        isNeedVerifyTokenWhenComesToForeground = true
+        // 退出im系统，开始接收im离线消息
+        doLogoutIM()
         for (listener in appRuntimeStatusListeners) {
             listener.onAppEnterBackground()
         }
@@ -344,7 +361,7 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
      */
     interface OnAppStatusChangeListener {
         /**
-         * app 进入前台
+         * app 进入前台，不包含app刚刚打开时进入前台
          */
         fun onAppEnterForeground()
 
@@ -393,6 +410,20 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
     }
 
     /**
+     * 主页面需要显示badge的监听
+     */
+    interface OnShouldShowBadgeListener {
+        /**
+         * 回调时需要主页面在消息列表的图标上显示一个小红点以提示用户有未查看的消息
+         */
+        fun onShowBadge()
+    }
+
+    fun setOnShouldShowBadgeListener(listener: OnShouldShowBadgeListener) {
+        shouldShowBadgeListener = listener
+    }
+
+    /**
      * 登录IM系统
      */
     fun doLoginIM() {
@@ -406,6 +437,8 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
             listener.onApplicationLoginStateChange(true)
         }
 
+        // 每次登陆都必须初始化im sdk
+        chatClientManager.initMobileIMSDK()
         // 发送登录包
         object : LocalDataSender.SendLoginDataAsync(cachedMyInfo?.userId.toString(), cachedToken?.access_token?.substring(7)) {}.execute()
     }
@@ -419,8 +452,8 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
             listener.onApplicationLoginStateChange(false)
         }
 
-        // 发送退出登录包
-        object : LogoutAsync(this@SAApplication) {}.execute()
+        // 发送退出登录包，并重置初始化标志符
+        object : LogoutAsync(this) {}.execute()
     }
 
 
@@ -438,6 +471,15 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
          * 0为登录成功
          */
         fun onIMLoginResponse(code: Int)
+
+        /**
+         * 开始接收
+         *
+         * @param obtainStartOrDone
+         * true 正在获取离线消息
+         * false 离线消息获取完毕
+         */
+        fun onObtainOfflineState(obtainStartOrDone: Boolean)
 
         /**
          * 连接断开回调
@@ -470,6 +512,21 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
     }
 
     override fun onLoginResponse(code: Int) {
+        // im系统登陆成功
+        if (code == 0) {
+            // 消息列表显示拉取离线消息
+            for (listener in eventIMListeners) {
+                listener.onObtainOfflineState(true)
+            }
+            // 主页开始获取用户离线消息数量，若有，则为消息图片加上小红点
+            imViewModel.getOfflineNumOnline(cachedToken).observeOnce {
+                if (it) shouldShowBadgeListener?.onShowBadge()
+                // 离线消息获取完成
+                for (listener in eventIMListeners) {
+                    listener.onObtainOfflineState(false)
+                }
+            }
+        }
         for (listener in eventIMListeners) {
             listener.onIMLoginResponse(code)
         }
@@ -482,25 +539,47 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
     }
 
     override fun messagesLost(lostMessages: ArrayList<Protocal>) {
+        // 消息丢失，将正在发送的这些消息状态变为发送失败，正在发送的箭头图标改为感叹号
+        imViewModel.messagesLost(ArrayList<String>(lostMessages.size).also {
+            for (lostMessage in lostMessages) {
+                it.add(lostMessage.fp)
+            }
+        })
         for (listener in eventIMListeners) {
             listener.onIMMessageLost(lostMessages)
         }
     }
 
     override fun messagesBeReceived(fingerprint: String) {
+        // 更新这条正在发送的消息的状态为发送成功，发送的箭头图标消失
+        imViewModel.messageBeReceived(fingerprint)
         for (listener in eventIMListeners) {
             listener.onIMMessageBeReceived(fingerprint)
         }
     }
 
     override fun onRecieveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
-        LogUtils.d(eventIMListeners.size)
+        // 保存在线消息
+        cachedMyInfo?.let {
+            imViewModel.saveReceivedMessage(
+                    ChatHistory(
+                            fingerprint,
+                            senderID,
+                            it.userId.toString(),
+                            typeu,
+                            content,
+                            System.currentTimeMillis(),
+                            ChatRecyclerAdapter.MessageSendStatus.SUCCESS))
+            // 收到消息，通知主页面显示小红点
+            shouldShowBadgeListener?.onShowBadge()
+        }
         for (listener in eventIMListeners) {
             listener.onIMReceiveMessage(fingerprint, senderID, content, typeu)
         }
     }
 
     override fun onErrorResponse(errorCode: Int, message: String) {
+        LogUtils.d("error -- > $errorCode $message")
         for (listener in eventIMListeners) {
             listener.onIMErrorResponse(errorCode, message)
         }
@@ -517,5 +596,4 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
             }
         })
     }
-
 }

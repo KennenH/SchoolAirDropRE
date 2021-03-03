@@ -10,6 +10,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
@@ -36,12 +37,17 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
             /**
              * 刷新当前状态
              */
-            var REFRESH = 0
+            const val REFRESH = 0
 
             /**
-             * 正在连接服务器或者等待数据回调
+             * 正在连接app和im服务器
              */
-            var LOADING = 1
+            const val CONNECTING = 1
+
+            /**
+             * 正在拉取离线消息
+             */
+            const val OBTAINING_DATA = 2
         }
     }
 
@@ -77,8 +83,8 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
                 addOnLoginActivityListener(this@MessagesFragment)
                 setOnPullingOfflineNum(this@MessagesFragment)
             }
-            (activity?.application as? SAApplication)?.addOnIMListener(this)
         }
+        (activity?.application as? SAApplication)?.addOnIMListener(this)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
@@ -154,9 +160,14 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
                 }
             }
 
-            MessageState.LOADING -> {
+            MessageState.CONNECTING -> {
                 loading?.visibility = View.VISIBLE
-                title?.text = context?.getString(R.string.loading)
+                title?.text = context?.getString(R.string.connecting)
+            }
+
+            MessageState.OBTAINING_DATA -> {
+                loading?.visibility = View.VISIBLE
+                title?.text = getString(R.string.obtainingData)
             }
         }
     }
@@ -192,16 +203,24 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
     }
 
     override fun onLogging() {
-        updateMessageState(MessageState.LOADING)
+        updateMessageState(MessageState.CONNECTING)
     }
 
     override fun onIMStartLogin() {
-        updateMessageState(MessageState.LOADING)
+        updateMessageState(MessageState.CONNECTING)
     }
 
     override fun onIMLoginResponse(code: Int) {
         isConnected = code == 0
         updateMessageState(MessageState.REFRESH)
+    }
+
+    override fun onObtainOfflineState(obtainStartOrDone: Boolean) {
+        if (obtainStartOrDone) {
+            updateMessageState(MessageState.OBTAINING_DATA)
+        } else {
+            updateMessageState(MessageState.REFRESH)
+        }
     }
 
     override fun onIMLinkDisconnect(code: Int) {
@@ -247,7 +266,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
     /*********************主页获取离线消息数量状态回调**********************/
     /********************************************************************/
     override fun onPullingOfflineNum() {
-        updateMessageState(MessageState.LOADING)
+        updateMessageState(MessageState.CONNECTING)
     }
 
     override fun onPullDone() {

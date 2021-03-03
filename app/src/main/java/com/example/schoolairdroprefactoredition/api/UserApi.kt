@@ -68,6 +68,6 @@ interface UserApi {
      */
     @FormUrlEncoded
     @POST("appapi/auth/connect")
-    fun verifyConnect(@Header("Authorization") token: String)
+    fun verifyToken(@Header("Authorization") token: String)
 
 }

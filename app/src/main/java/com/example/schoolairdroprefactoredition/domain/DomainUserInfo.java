@@ -17,29 +17,18 @@ public class DomainUserInfo implements Serializable {
     @Override
     public String toString() {
         return "DomainUserInfo{" +
-                "time=" + time +
                 ", msg='" + msg + '\'' +
                 ", code=" + code +
                 ", data=" + data +
                 '}';
     }
 
-    @SerializedName("time")
-    private String time;
     @SerializedName("msg")
     private String msg;
     @SerializedName("code")
     private int code;
     @SerializedName("data")
     private DataBean data;
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
 
     public String getMsg() {
         return msg;
@@ -76,6 +65,7 @@ public class DomainUserInfo implements Serializable {
                     ", userAvatar='" + userAvatar + '\'' +
                     ", userGender='" + userGender + '\'' +
                     ", createtime=" + createtime +
+                    ", lastLoginTime='" + lastLoginTime + '\'' +
                     ", userGoodsOnSaleCount=" + userGoodsOnSaleCount +
                     ", userContactCount=" + userContactCount +
                     '}';
@@ -101,10 +91,20 @@ public class DomainUserInfo implements Serializable {
         private String userGender;
         @SerializedName("createtime")
         private long createtime;
+        @SerializedName("last_login_time")
+        private String lastLoginTime;
         @SerializedName("user_goodsOnSaleCount")
         private int userGoodsOnSaleCount;
         @SerializedName("user_contactCount")
         private int userContactCount;
+
+        public String getLastLoginTime() {
+            return lastLoginTime;
+        }
+
+        public void setLastLoginTime(String lastLoginTime) {
+            this.lastLoginTime = lastLoginTime;
+        }
 
         public long getCreatetime() {
             return createtime;

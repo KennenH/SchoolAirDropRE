@@ -15,11 +15,11 @@ import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.example.schoolairdroprefactoredition.viewmodel.PurchasingViewModel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 
-class HomePurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataListener {
+class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataListener {
 
     companion object {
-        fun newInstance(): HomePurchasingFragment {
-            return HomePurchasingFragment()
+        fun newInstance(): PurchasingFragment {
+            return PurchasingFragment()
         }
     }
 
@@ -43,7 +43,7 @@ class HomePurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDa
         mEndlessRecyclerView?.apply {
             layoutManager = mManager
             adapter = mHomeGoodsRecyclerAdapter
-            setOnLoadMoreListener(this@HomePurchasingFragment)
+            setOnLoadMoreListener(this@PurchasingFragment)
         }
 
         binding?.homeRefresh?.setOnRefreshListener(this)

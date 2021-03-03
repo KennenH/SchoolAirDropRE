@@ -33,6 +33,11 @@ object ConstantUtil {
     const val DEFAULT_PAGE_SIZE = 15
 
     /**
+     * 聊天界面一次性最大可发送的字符长度
+     */
+    const val IM_MAX_TEXT_LENGTH = 255
+
+    /**
      * retrofit 最大缓存数量
      */
     const val CACHE_SIZE = (10 * 1024 * 1024).toLong()

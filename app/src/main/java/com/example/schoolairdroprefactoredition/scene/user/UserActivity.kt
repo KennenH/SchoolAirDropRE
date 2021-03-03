@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ScreenUtils
+import com.blankj.utilcode.util.TimeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
@@ -202,6 +203,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
                     calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH))
         }
+        description.text = getString(R.string.lastActiveTime, userInfo.lastLoginTime)
         userName.text = userInfo.userName
         user_more_selling.text = userInfo.userGoodsOnSaleCount.toString()
         user_more_posts.text = userInfo.userContactCount.toString()

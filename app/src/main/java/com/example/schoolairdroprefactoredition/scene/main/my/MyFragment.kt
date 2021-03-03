@@ -31,6 +31,7 @@ import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.google.zxing.integration.android.IntentIntegrator
 import com.lzf.easyfloat.EasyFloat
@@ -135,7 +136,7 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
             }
 
             R.id.my_posts -> {
-                Toast.makeText(context, "working on it!", Toast.LENGTH_SHORT).show()
+                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAVOR, R.string.functionNotSupport)
             }
         }
     }

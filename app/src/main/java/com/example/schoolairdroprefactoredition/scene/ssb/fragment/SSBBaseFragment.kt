@@ -7,26 +7,20 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
-import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment
-import com.example.schoolairdroprefactoredition.scene.main.base.BaseStateViewModel.OnRequestListener
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter.OnSSBItemActionListener
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
-import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder.OnPlaceHolderRefreshListener
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration
 import com.example.schoolairdroprefactoredition.viewmodel.SellingViewModel
 
 abstract class SSBBaseFragment :
         StatePlaceholderFragment(),
-        OnRequestListener,
-        OnPlaceHolderRefreshListener,
-        OnSSBItemActionListener {
+        OnSSBItemActionListener, StatePlaceHolder.OnStatePlaceholderActionListener {
 
     companion object {
         /**
@@ -51,7 +45,6 @@ abstract class SSBBaseFragment :
         binding = FragmentSsbBinding.inflate(inflater, container, false)
         binding?.apply {
             ssbRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            placeHolder.addOnPlaceHolderActionListener(this@SSBBaseFragment)
             ssbRecycler.addItemDecoration(MarginItemDecoration())
             ssbRecycler.adapter = mAdapter
             ssbRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -68,8 +61,15 @@ abstract class SSBBaseFragment :
         return binding?.getRoot()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mAdapter.removeOnSSBItemActionListener(this)
+    }
+
     override fun getStatePlaceholder(): StatePlaceHolder? {
-        return binding?.placeHolder
+        return binding?.placeHolder.also {
+            it?.setOnStatePlaceholderActionListener(this)
+        }
     }
 
     override fun getContentContainer(): View? {
@@ -97,15 +97,6 @@ abstract class SSBBaseFragment :
      */
     abstract fun retryGrabOnlineData()
 
-
-    override fun onPlaceHolderRetry(view: View) {
-        retryGrabOnlineData()
-    }
-
-    override fun onError() {
-        dismissLoading { showPlaceholder(StatePlaceHolder.TYPE_ERROR) }
-    }
-
     /**
      * item上右下角的三个点按钮的操作
      * 在售列表中为 {下架物品}
@@ -116,8 +107,7 @@ abstract class SSBBaseFragment :
         onItemAction(view, bean)
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        mAdapter.addOnSSBItemActionListener(this)
+    override fun onRetry(view: View) {
+        retryGrabOnlineData()
     }
 }

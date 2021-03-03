@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">SchoolAirDrop</string>
+    <string name="app_name">SchoolAirdrop</string>
     <string name="my">My</string>
     <string name="home">Home</string>
     <string name="nearby">NearBy</string>
-    <string name="goods_description">Description</string>
+    <string name="goodsDescription">Description</string>
     <string name="search">Search</string>
     <string name="messages">Messages</string>
     <string name="mails">Mails</string>
@@ -36,7 +36,7 @@
     <string name="recommendAlipay">Recommend My Alipay Friends To Me</string>
     <string name="blacklist">Blacklist</string>
     <string name="userInfo">User Information</string>
-    <string name="recommedAlipauFriendDescription">After turning on,Alipay friends who have joined theSchoolAirDrop will be recommended to you</string>
+    <string name="recommedAlipauFriendDescription">After turning on,Alipay friends who have joined the SchoolAirdrop will be recommended to you</string>
     <string name="setAvatar">Set Avatar</string>
     <string name="setName">Set Name</string>
     <string name="more">More</string>
@@ -162,7 +162,7 @@
     <string name="GRANTPERMISSION">GRANT PERMISSION</string>
     <string name="RETRY">RE-TRY</string>
     <string name="logged">Logged</string>
-    <string name="app_name_with_icon">[img src=ic_logo_alpha_24/] SchoolAirDrop</string>
+    <string name="appNameWithLogo">[img src=ic_logo_alpha_24/] SchoolAirdrop</string>
     <string name="networkUnavailable">Network connection is unavailable\\nPlease check network connection</string>
     <string name="connectionLost">Connection lost, please try again</string>
     <string name="submitSuccess">Success</string>
@@ -174,14 +174,14 @@
     <string name="errorUpdateAvatar">Error Updating Avatar</string>
     <string name="imageSaved">Image Saved</string>
     <string name="errorUpdatingName">Error updating name</string>
-    <string name="nothingThere">Nothing…</string>
+    <string name="nothingThere">Nothing</string>
     <string name="dialogSuccess">Success</string>
     <string name="dialogFailed">Some Thing Went Wrong</string>
     <string name="errorLoading">Error Load Data</string>
     <string name="finalPrice">Final Price</string>
     <string name="goodsIsSecondHand">Item Is Second-hand</string>
     <string name="originPrice">Original Price</string>
-    <string name="emptySearch">Ah oh… There seems to be no similar items nearby</string>
+    <string name="emptySearch">There seems to be no similar items nearby</string>
     <string name="unLogged">Not Logged</string>
     <string name="InitiateQuote">Initiate A Quote</string>
     <string name="SendMessage">Send Message</string>
@@ -191,7 +191,7 @@
     <string name="restoreDraft">Restore</string>
     <string name="draftCleared">Input cleared, the draft will be deleted after opening other pages</string>
     <string name="plsEnterQuotePrice">Please Enter Quote Price</string>
-    <string name="errorNewsEmptyHome">No nearby topic</string>
+    <string name="errorInquiryEmpty">No nearby topic</string>
     <string name="postMyTopic">Post My Topic</string>
     <string name="unListItem">Are You Sure You Want To Off-Shelf This Item?</string>
     <string name="attention">Attention</string>
@@ -282,5 +282,12 @@
     <string name="unfavorDone">Unfavored</string>
     <string name="descriptionDisplayInAppFloat">After opening, when the App is in the foreground, the floating window will be displayed when a message is received</string>
     <string name="titleQuestionTip">The title is an important basis for keyword matching when searching</string>
-    <string name="descriptionQuestionTip">The search will not cover the  description, but the detailed description will improve the buyer’s understanding of the item and greatly increase the probability of the item being sold</string>
+    <string name="descriptionQuestionTip">The search will not cover the description, but a careful and detailed description can improve the buyer’s understanding of the item and also reflect the seller’s sincere attitude, thereby greatly increasing the probability of the item being sold</string>
+    <string name="functionNotSupport">Feature not supported</string>
+    <string name="workshopWithAppName">Blink SchoolAirdrop</string>
+    <string name="imTextTooLong">The input is too long</string>
+    <string name="lastActiveTime">Latest Active %s</string>
+    <string name="useEmojiInstead">Please use the Emoji that comes with your phone</string>
+    <string name="tapWhiteToRetry">Tap the blank space to try again</string>
+    <string name="obtainingData">Receiving</string>
 </resources>

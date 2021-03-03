@@ -2,10 +2,14 @@ package com.example.schoolairdroprefactoredition.scene.base
 
 import android.view.View
 import androidx.fragment.app.Fragment
+import androidx.viewpager.widget.ViewPager
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.lxj.xpopup.impl.LoadingPopupView
 
+/**
+ * layout中有placeholder的页面可以以此fragment为父类，
+ */
 abstract class StatePlaceholderFragment : BaseFragment() {
 
     protected val mLoading: LoadingPopupView by lazy {
@@ -22,12 +26,18 @@ abstract class StatePlaceholderFragment : BaseFragment() {
      */
     abstract fun getContentContainer(): View?
 
+    /**
+     * 显示占位视图
+     */
     fun showPlaceholder(type: Int) {
         getStatePlaceholder()?.setPlaceholderType(type)
         getStatePlaceholder()?.visibility = View.VISIBLE
         getContentContainer()?.visibility = View.GONE
     }
 
+    /**
+     * 显示
+     */
     fun showContentContainer() {
         getStatePlaceholder()?.visibility = View.GONE
         getContentContainer()?.visibility = View.VISIBLE

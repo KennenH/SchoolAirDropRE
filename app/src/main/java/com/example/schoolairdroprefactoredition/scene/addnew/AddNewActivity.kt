@@ -358,7 +358,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             } else if (requestCode == REQUEST_CODE_COVER) { // 封面选择返回
                 if (data != null) {
                     val coverMedia = PictureSelector.obtainMultipleResult(data)[0]
-                    mCoverPath = coverMedia.path ?: coverMedia.cutPath
+                    mCoverPath = coverMedia.cutPath ?: coverMedia.path
                     mHWRatio = coverMedia.height.toFloat() / coverMedia.width.toFloat()
                     cover.setImageLocalPath(mCoverPath)
                 }
@@ -373,10 +373,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     (application as SAApplication).cacheMyInfoAndToken(
                             data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean,
                             data.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken)
-                    try {
-                        submit()
-                    } catch (ignored: Exception) {
-                    }
+                    submit()
                 }
             }
         }
@@ -406,10 +403,10 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      */
     private fun submit() {
         if (checkFormIsLegal()) {
-            if (addNewType == AddNewType.ADD_INQUIRY) {
-//                submitPost()
-            } else {
+            if (addNewType == AddNewType.ADD_ITEM) {
                 submitItem()
+            } else {
+                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.functionNotSupport)
             }
         }
     }
@@ -433,7 +430,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     showLoading {
                         val mPicSetPaths = ArrayList<String>()
                         for (localMedia in mPicSetSelected) {
-                            mPicSetPaths.add(localMedia.path)
+                            mPicSetPaths.add(localMedia.cutPath)
                         }
 
                         addNewViewModel.submitItem(token.access_token, mCoverPath, mPicSetPaths,
@@ -455,55 +452,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             } else {
                 start(this)
             }
-        } else if (addNewType == AddNewType.MODIFY_ITEM) { // 修改物品
-            showLoading {
-
-                // TODO: 2021/2/19 修改物品 还没写完 或许不提供修改接口了
-                val mPicSetPaths: MutableList<String> = ArrayList()
-                for (localMedia in mPicSetSelected) {
-                    mPicSetPaths.add(localMedia.path)
-                }
-            }
         }
     }
-
-    /**
-     * 提交新帖表单
-     */
-//    private fun submitPost() {
-//        val token = (application as SAApplication).getCachedToken()
-//        if (token != null) {
-//            if (mAmapLocation == null) {
-//                AddNewResultActivity.start(this, false, AddNewResultTips.LOCATION_FAILED_NEW_ITEM)
-//            } else {
-//                showLoading {
-//                    val mPicSetPaths: MutableList<String> = ArrayList()
-//                    for (localMedia in mPicSetSelected) {
-//                        mPicSetPaths.add(localMedia.path)
-//                    }
-//                    addNewViewModel.submitPost(token.access_token, mCoverPath, mHWRatio, mPicSetPaths,
-//                            option_title.text.toString(), option_description.text.toString(),
-//                            mAmapLocation!!.longitude, mAmapLocation!!.latitude)
-//                            .observeOnce(this, { result: Boolean ->
-//                                // 这里有一个bug 当提交响应失败后 再在同一个页面重试之后成功 将会多次弹出成功提示页面 但实际只提交成功了一次
-//                                // 所以这里加一个标志变量 打开一次页面最多只能成功一次 因此成功后即不再弹出
-//                                if (!isSubmitSuccess) {
-//                                    dismissLoading {
-//                                        AddNewResultActivity.start(this, result, if (result) AddNewResultTips.SUCCESS_NEW_POST else AddNewResultTips.FAILED_ADD)
-//                                        if (result) {
-//                                            isSubmitSuccess = true // 发送已完毕标志
-//                                            finish()
-//                                            AnimUtil.activityExitAnimDown(this)
-//                                        }
-//                                    }
-//                                }
-//                            })
-//                }
-//            }
-//        } else {
-//            start(this)
-//        }
-//    }
 
     /**
      * 检查表单填写是否完整
@@ -558,7 +508,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     /**
      * 保存页面草稿
      *
-     * 当用户将之前的草稿清除之后，保存草稿操作将会覆盖之前的草稿，因此应该将撤销清除的横幅去掉以表面草稿已不可恢复
+     * 当用户将之前的草稿清除之后，在页面pause之后当前输入将会覆盖草稿，因此应该将撤销清除的横幅去掉以表面草稿已不可恢复
      */
     private fun saveDraft() {
         // 若草稿被清除，走到这一步时表明草稿将不可被恢复了，因为会被接下来的保存操作所覆盖
@@ -609,7 +559,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
     /**
      * 恢复物品草稿
-     * 在用户清除草稿之后再次恢复
+     * 在用户清除草稿之后页面调用pause之前可再次恢复
      */
     private fun restoreItemDraft() {
         addNewViewModel.restoreItemDraft().observeOnce(this, { draftCache: NewItemDraftCache? ->
@@ -647,7 +597,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
     /**
      * 恢复帖子草稿
-     * 清除后在关闭之前仍可恢复
+     * 清除后在页面被pause之前仍可恢复
      */
     private fun restorePostDraft() {
         addNewViewModel.restorePostDraft().observeOnce(this, { draftCache: NewPostDraftCache? ->
@@ -777,7 +727,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         } else if (id == R.id.option_secondHand) {
             option_secondHand.toggle()
         } else if (id == R.id.option_description) {
-            start(this, InputSetActivity.TYPE_DESCRIPTION, option_description.text.toString(), getString(R.string.goods_description))
+            start(this, InputSetActivity.TYPE_DESCRIPTION, option_description.text.toString(), getString(R.string.goodsDescription))
         } else if (id == R.id.saved_close) {
             // 点击横幅关闭按钮，将页面标题颜色置为主题色以提示用户页面中存在可恢复的草稿
             AnimUtil.collapse(saved_draft)
@@ -852,7 +802,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     override fun onPicSetClick(source: ImageView, pos: Int) {
         val data: MutableList<Any> = ArrayList()
         for (pic in mPicSetHorizontalAdapter.data) {
-            data.add(pic.path)
+            data.add(pic.cutPath)
         }
         XPopup.Builder(this)
                 .isDarkTheme(true)

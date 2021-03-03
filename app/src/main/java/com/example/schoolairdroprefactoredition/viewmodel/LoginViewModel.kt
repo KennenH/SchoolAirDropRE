@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
 
-    private val mainRepository by lazy {
+    private val loginRepository by lazy {
         LoginRepository.getInstance()
     }
 
@@ -25,7 +25,7 @@ class LoginViewModel : ViewModel() {
     fun getPublicKey(): LiveData<DomainAuthorizeGet?> {
         val mPublicKey = MutableLiveData<DomainAuthorizeGet?>()
         viewModelScope.launch {
-            mainRepository.getPublicKey { success, response ->
+            loginRepository.getPublicKey { success, response ->
                 if (success) {
                     mPublicKey.postValue(response)
                 } else {
@@ -45,7 +45,7 @@ class LoginViewModel : ViewModel() {
     ): LiveData<DomainToken?> {
         val mAuthorize = MutableLiveData<DomainToken?>()
         viewModelScope.launch {
-            mainRepository.authorizeWithAlipayID(
+            loginRepository.authorizeWithAlipayID(
                     rawAlipayID,
                     publicKey,
             ) { success, response ->
@@ -68,7 +68,7 @@ class LoginViewModel : ViewModel() {
     fun getMyInfo(token: String): LiveData<DomainUserInfo.DataBean?> {
         val myInfo = MutableLiveData<DomainUserInfo.DataBean?>()
         viewModelScope.launch {
-            mainRepository.getMyInfo(token) { success, response ->
+            loginRepository.getMyInfo(token) { success, response ->
                 if (success) {
                     myInfo.postValue(response)
                 } else {
@@ -89,5 +89,18 @@ class LoginViewModel : ViewModel() {
     fun logout() {
         UserLoginCacheUtils.instance.deleteCache(UserTokenCache.KEY)
         UserLoginCacheUtils.instance.deleteCache(UserInfoCache.KEY)
+    }
+
+//    private var connectLiveData: MutableLiveData<DomainConnect> = MutableLiveData()
+
+    /**
+     * app进入前台时检查token是否过期
+     */
+    fun connectWhenComesToForeground(token: String) {
+        viewModelScope.launch {
+            loginRepository.connectWhenComesToForeground(token){
+
+            }
+        }
     }
 }

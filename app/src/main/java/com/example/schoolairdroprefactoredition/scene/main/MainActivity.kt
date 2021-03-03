@@ -14,38 +14,33 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
-import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
-import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
-import com.example.schoolairdroprefactoredition.scene.main.home.ParentPlaygroundFragment
-import com.example.schoolairdroprefactoredition.scene.main.home.ParentPurchasingFragment
+import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment
+import com.example.schoolairdroprefactoredition.scene.main.home.InquiryParentFragment
+import com.example.schoolairdroprefactoredition.scene.main.home.PurchasingParentFragment
 import com.example.schoolairdroprefactoredition.scene.main.messages.MessagesFragment
 import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
 import com.example.schoolairdroprefactoredition.scene.main.search.SearchFragment
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
-import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.AccountViewModel
-import com.example.schoolairdroprefactoredition.viewmodel.InstanceMessageViewModel
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
-import net.x52im.mobileimsdk.server.protocal.Protocal
-import java.lang.ref.WeakReference
 import java.util.*
 import kotlin.collections.ArrayList
 
 class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigationItemSelectedListener,
-        AMapLocationListener, SAApplication.IMListener, SAApplication.OnAppStatusChangeListener {
+        AMapLocationListener, SAApplication.OnAppStatusChangeListener, SAApplication.OnShouldShowBadgeListener {
 
     companion object {
         /**
@@ -72,10 +67,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         ViewModelProvider(this).get(AccountViewModel::class.java)
     }
 
-    private val imViewModel by lazy {
-        InstanceMessageViewModel.InstanceViewModelFactory((application as SAApplication).databaseRepository).create(InstanceMessageViewModel::class.java)
-    }
-
     private val mClient by lazy {
         AMapLocationClient(this@MainActivity)
     }
@@ -95,7 +86,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 广场 页面
      */
     private val mPlaza by lazy {
-        ParentPlaygroundFragment.newInstance()
+        InquiryParentFragment.newInstance()
     }
 
     /**
@@ -114,7 +105,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 淘物 页面
      */
     private val mPurchasing by lazy {
-        ParentPurchasingFragment.newInstance()
+        PurchasingParentFragment.newInstance()
     }
 
     /**
@@ -190,7 +181,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     override fun onDestroy() {
         super.onDestroy()
-        (application as? SAApplication)?.removeOnIMListener(this@MainActivity)
         (application as? SAApplication)?.removeOnAppStatusChangeListener(this@MainActivity)
 
         mClient.stopLocation()
@@ -202,14 +192,19 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     private fun initListener() {
         (application as? SAApplication)?.addOnAppStatusChangeListener(this@MainActivity)
+        (application as? SAApplication)?.setOnShouldShowBadgeListener(this@MainActivity)
 
-        mPlaza.setOnSearchBarClickedListener {
-            showSearch()
-        }
+        mPlaza.setOnSearchBarClickedListener(object : BaseParentFragment.OnSearchBarClickedListener {
+            override fun onSearchBarClicked() {
+                showSearch()
+            }
+        })
 
-        mPurchasing.setOnSearchBarClickedListener {
-            showSearch()
-        }
+        mPurchasing.setOnSearchBarClickedListener(object : BaseParentFragment.OnSearchBarClickedListener {
+            override fun onSearchBarClicked() {
+                showSearch()
+            }
+        })
 
         home_add_fab.setOnClickListener {
             AddNewActivity.start(this, AddNewActivity.AddNewType.ADD_ITEM)
@@ -256,8 +251,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 读取手机缓存和账号设置
      */
     private fun initCache() {
-        val tokenCache = accountViewModel.lastLoggedTokenCaChe.value
-        val userInfoCache = accountViewModel.lastLoggedUserInfoCache.value
+        val tokenCache = accountViewModel.lastLoggedTokenCaChe
+        val userInfoCache = accountViewModel.lastLoggedUserInfoCache
         tokenCache?.let {
             intent.putExtra(ConstantUtil.KEY_TOKEN, it)
         }
@@ -349,13 +344,13 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     fun autoLogin() {
         if (!autoLogged) {
             autoLogged = true // 已自动登录标识，防止多个子fragment调用此方法
-            val token = accountViewModel.lastLoggedTokenCaChe.value
+            val token = accountViewModel.lastLoggedTokenCaChe
             if (token != null) { // token 仍有效 使用本地缓存重新获取token后登录
                 intent.putExtra(ConstantUtil.KEY_TOKEN, token)
                 obtainMyInfo()
             } else {
                 // token 已无效 使用本地缓存重新获取token后登录
-                val infoCache = accountViewModel.lastLoggedUserInfoCache.value
+                val infoCache = accountViewModel.lastLoggedUserInfoCache
                 if (infoCache != null) {
                     intent.putExtra(ConstantUtil.KEY_USER_INFO, infoCache)
                     autoReLoginWithCache()
@@ -390,7 +385,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 在app首次打开时调用
      */
     private fun autoReLoginWithCache() {
-//        val userInfo: DomainUserInfo.DataBean = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean
         loginViewModel.getPublicKey().observeOnce(this@MainActivity, { publicK ->
             publicK.let {
                 if (it != null) {
@@ -558,12 +552,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
         // 若为登录app，则登录IM，否则退出IM
         if (userInfo != null && token != null) {
-            // 主页开始获取用户离线消息数量，若有，则为消息图片加上小红点
-            imViewModel.getOfflineNumOnline(token, WeakReference(mOnOfflineNumStateChangeListener)).observe(this) {
-                if (it && navView.selectedItemId != R.id.navigation_message) {
-                    showBadge(true)
-                }
-            }
             (application as SAApplication).doLoginIM()
         } else {
             (application as SAApplication).doLogoutIM()
@@ -576,11 +564,15 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     interface OnOfflineNumStateChangeListener {
         /**
          * 正在拉取离线消息
+         *
+         * 通知消息列表标题显示正在加载
          */
         fun onPullingOfflineNum()
 
         /**
          * 离线消息数量拉取完成
+         *
+         * 通知消息列表标题完成加载状态
          */
         fun onPullDone()
     }
@@ -615,43 +607,25 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         mOnLocationListeners.add(listener)
     }
 
-
-    /*****************************************************************************************/
-    /************************************** IM listeners**************************************/
-    /*****************************************************************************************/
-    override fun onIMMessageLost(lostMessages: ArrayList<Protocal>) {
-        imViewModel.messagesLost(ArrayList<String>(lostMessages.size).also {
-            for (lostMessage in lostMessages) {
-                it.add(lostMessage.fp)
-            }
-        })
-    }
-
-    override fun onIMMessageBeReceived(fingerprint: String) {
-        imViewModel.messageBeReceived(fingerprint)
-    }
-
-    override fun onIMReceiveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
-        super.onIMReceiveMessage(fingerprint, senderID, content, typeu)
-        // 保存收到的消息
-        val myID = (application as? SAApplication)?.getCachedMyInfo()
-        if (myID != null) {
-            imViewModel.saveReceivedMessage(ChatHistory(fingerprint, senderID, myID.userId.toString(), typeu, content, System.currentTimeMillis(), ChatRecyclerAdapter.MessageSendStatus.SUCCESS))
-            showBadge(true)
+    /**
+     * app 进入前台
+     *
+     * 调用token验证接口
+     */
+    override fun onAppEnterForeground() {
+        (application as? SAApplication)?.getCachedToken()?.access_token?.let {
+//            loginViewModel.connectWhenComesToForeground(it)
         }
     }
 
     /**
-     * app进入前台
-     */
-    override fun onAppEnterForeground() {
-        val token = (application as? SAApplication)?.getCachedToken()
-        imViewModel.getOfflineNumOnline(token, WeakReference(mOnOfflineNumStateChangeListener))
-    }
-
-    /**
-     * app进入后台
+     * app 进入后台
      */
     override fun onAppEnterBackground() {
+        // do nothing
+    }
+
+    override fun onShowBadge() {
+        showBadge(true)
     }
 }

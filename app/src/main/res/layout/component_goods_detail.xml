@@ -99,7 +99,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/general_padding_large"
         android:gravity="center"
-        android:text="@string/goods_description"
+        android:text="@string/goodsDescription"
         android:textColor="@color/colorAccent"
         android:textSize="18dp"
         android:textStyle="bold"

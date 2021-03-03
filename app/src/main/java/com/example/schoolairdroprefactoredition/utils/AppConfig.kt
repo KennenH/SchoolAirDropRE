@@ -13,12 +13,12 @@ object AppConfig {
     /**
      * debug模式下默认中国计量大学
      */
-    const val DEBUG_LONGITUDE = "120.36236895096818"
+    const val DEBUG_LONGITUDE = 120.36236895096818
 
     /**
      * debug模式下默认中国计量大学
      */
-    const val DEBUG_LATITUDE = "30.318141927801996"
+    const val DEBUG_LATITUDE = 30.318141927801996
 
     /**
      * Debug模式下固定登录的用户
