@@ -68,7 +68,7 @@
     <string name="sent">Sent</string>
     <string name="agree">Agree</string>
     <string name="loginTip">Logging in with Alipay will get your account information, check the Service Terms to learn more</string>
-    <string name="loginWithAlipay">[img src=ic_alipay_20/] Log in with Alipay</string>
+    <string name="loginWithAlipay">Log in with Alipay</string>
     <string name="pending">Pending</string>
     <string name="expired">Expired</string>
     <string name="accepted">Accepted</string>
@@ -269,9 +269,9 @@
     <string name="anonymous">Anonymous</string>
     <string name="tag">Topic Tag</string>
     <string name="disconnect">Disconnect</string>
-    <string name="picture">[picture]</string>
+    <string name="picture">[Picture]</string>
     <string name="connecting">Connecting</string>
-    <string name="noMessageYet">Nothing here</string>
+    <string name="noMessageYet">No Message Yet</string>
     <string name="systemBusy">The system is busy, Please try again later</string>
     <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;Delete&#160;&#160;&#160;&#160;&#160;&#160;</string>
     <string name="recyclerFooter">[img src=ic_line/]&#160;&#160;&#160;&#160;no more data&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
@@ -290,4 +290,19 @@
     <string name="useEmojiInstead">Please use the Emoji that comes with your phone</string>
     <string name="tapWhiteToRetry">Tap the blank space to try again</string>
     <string name="obtainingData">Receiving</string>
+    <string name="goodsDeleted">Item has been removed</string>
+    <string name="simplifyYourKey">Please try to refine keywords</string>
+    <string name="handlingLocalMedia">Processing local image</string>
+    <string name="requestingCredentials">Requesting credentials</string>
+    <string name="resourceAllocating">Applying for resource allocation</string>
+    <string name="imagesUploadSuccess">Pictures uploaded successfully</string>
+    <string name="resourceAllocationFailed">Resource allocation failed</string>
+    <string name="inValidCredential">Invalid upload certificate</string>
+    <string name="uploadingIndexPicture">Uploading image %d</string>
+    <string name="uploadSuccess">Upload successfully</string>
+    <string name="requestingServer">Requesting server</string>
+    <string name="uploadFailedAtIndex">Error uploading image %d</string>
+    <string name="picturePrepareFailed">An unexpected problem occurred while processing the image file. Please try to select another image and try again.</string>
+    <string name="canFavorWithoutLogin">You can favor item without logging in</string>
+    <string name="canChatInGoodsPage">You can initiate a chat with the seller on the item page</string>
 </resources>

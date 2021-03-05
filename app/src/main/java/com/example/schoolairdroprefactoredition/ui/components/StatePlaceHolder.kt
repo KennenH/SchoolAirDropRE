@@ -8,7 +8,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.PlaceholderBinding
-import com.example.schoolairdroprefactoredition.domain.base.LoadState
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto
 import com.github.ybq.android.spinkit.SpinKitView
 
@@ -44,6 +43,7 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
     init {
         val binding = PlaceholderBinding.bind(LayoutInflater.from(context).inflate(R.layout.placeholder, this, true))
         binding.placeholderRoot.setOnClickListener(this)
+        binding.root.setOnClickListener(this)
         mIcon = binding.imageView
         mTip = binding.textView
         mLoading = binding.loading
@@ -108,11 +108,24 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
             // 没有物品 搜索
             TYPE_EMPTY_SEARCH -> {
                 mTip.setText(TIP_EMPTY_SEARCH)
+                setPlaceholderActionTip(context?.getString(R.string.simplifyYourKey))
             }
             // 未知错误
             else -> {
                 mTip.setText(TIP_ERROR)
             }
+        }
+    }
+
+    /**
+     * 设置占位图的小字提示部分
+     */
+    fun setPlaceholderActionTip(tip: String?) {
+        if (tip != null && type != TYPE_LOADING) {
+            mActionTip.visibility = View.VISIBLE
+            mActionTip.text = tip
+        } else {
+            mActionTip.visibility = View.GONE
         }
     }
 

@@ -9,13 +9,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.blankj.utilcode.util.BarUtils
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.database.pojo.Favorite
-import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
-import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
+import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
@@ -27,6 +25,7 @@ import com.example.schoolairdroprefactoredition.utils.*
 import com.example.schoolairdroprefactoredition.viewmodel.GoodsViewModel
 import kotlinx.android.synthetic.main.activity_goods.*
 import kotlinx.android.synthetic.main.activity_logged_in.*
+import java.net.HttpURLConnection
 
 class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickListener, OnUserInfoClickListener, ButtonRight.OnButtonClickListener {
 
@@ -34,18 +33,14 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
         const val KEY_IS_FROM_SELLING = "fromSelling?"
 
         /**
-         * 1、账号本人信息由KEY_AUTHORIZE从服务器获取，但是它可为空即在未登录状态查看物品信息
-         * 2、物品信息由KEY_GOODS_ID从服务器获取，不可以为空
-         *
-         * @param goodsInfo 物品封面信息
-         * @param isFromSelling 详见{@link GoodsInfo#hideSellerInfo()}
+         * @param goodsID 物品id
          */
         fun start(context: Context,
-                  goodsInfo: DomainPurchasing.DataBean,
+                  goodsID: Int,
                   isFromSelling: Boolean) {
             val intent = Intent(context, GoodsActivity::class.java)
             intent.apply {
-                putExtra(ConstantUtil.KEY_GOODS_INFO, goodsInfo)
+                putExtra(ConstantUtil.KEY_GOODS_ID, goodsID)
                 putExtra(KEY_IS_FROM_SELLING, isFromSelling)
             }
 
@@ -61,14 +56,14 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
         GoodsViewModel.GoodsViewModelFactory((application as SAApplication).databaseRepository).create(GoodsViewModel::class.java)
     }
 
-    private val goodsInfo by lazy {
-        intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO) as DomainPurchasing.DataBean
+    private val goodsID by lazy {
+        intent.getIntExtra(ConstantUtil.KEY_GOODS_ID, -1)
     }
 
     /**
      * 物品详细信息
      */
-    private var goodsDetailInfo: GoodsDetailInfo? = null
+    private var goodsInfo: DomainGoodsAllDetailInfo.Data? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,7 +78,28 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
         goods_info_container.setOnUserInfoClickListener(this)
         goods_button_left.setOnButtonClickListener(this)
         goods_button_right.setOnButtonClickListener(this)
-        validateInfo()
+
+        goodsViewModel.getGoodsAllDetailByID(goodsID).observeOnce(this) {
+            goods_info_container.stopShimming()
+            if (it != null) {
+                when (it.code) {
+                    ConstantUtil.HTTP_OK -> {
+                        goodsInfo = it.data
+                        goods_info_container.setData(goodsInfo)
+                        goods_button_right.setFavor(it.data.goods_is_favored)
+                        validateInfo()
+                    }
+                    ConstantUtil.HTTP_NOT_FOUND -> {
+                        DialogUtil.showCenterDialog(this@GoodsActivity, DialogUtil.DIALOG_TYPE.FAILED, R.string.goodsDeleted)
+                    }
+                    else -> {
+                        DialogUtil.showCenterDialog(this@GoodsActivity, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
+                    }
+                }
+            } else {
+                DialogUtil.showCenterDialog(this@GoodsActivity, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
+            }
+        }
     }
 
     /**
@@ -107,26 +123,15 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
         if (intent.getBooleanExtra(KEY_IS_FROM_SELLING, false)) {
             goods_info_container.hideSellerInfo()
         }
-
-        goodsViewModel.getGoodsDetailByID(goodsInfo.goods_id).observeOnce(this) {
-            goods_info_container.stopShimming()
-            if (it != null) {
-                goodsDetailInfo = it
-                showActionButtons()
-                goods_info_container.setData(goodsInfo, it.data)
-                goods_button_right.setFavor(it.isFavorite)
-            } else {
-                DialogUtil.showCenterDialog(this@GoodsActivity, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
-            }
-        }
+        showActionButtons()
     }
 
     /**
-     * 显示底部动作按钮
+     * 刷新底部动作按钮的显示
      */
     private fun showActionButtons() {
-        val isGoodsMine = (application as? SAApplication)?.getCachedMyInfo()?.userId == goodsInfo.seller.user_id
-//        goods_button_left.visibility = if (!isGoodsMine) View.VISIBLE else View.GONE
+        val isGoodsMine = (application as? SAApplication)?.getCachedMyInfo()?.userId == goodsInfo?.seller?.user_id
+        goods_button_left.visibility = if (!isGoodsMine) View.VISIBLE else View.GONE
         goods_button_right.visibility = if (!isGoodsMine) View.VISIBLE else View.GONE
         goods_info_container.showBottom(!isGoodsMine)
     }
@@ -165,7 +170,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
     }
 
     override fun onUserInfoClick(view: View?) {
-        UserActivity.start(this@GoodsActivity, goodsInfo.seller.user_id)
+        UserActivity.start(this@GoodsActivity, goodsInfo?.seller?.user_id)
     }
 
 
@@ -176,11 +181,13 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
         if ((application as SAApplication).getCachedToken() == null) {
             login()
         } else {
-            val counterpartInfo = DomainUserInfo.DataBean()
-            counterpartInfo.userId = goodsInfo.seller.user_id
-            counterpartInfo.userName = goodsInfo.seller.user_name
-            counterpartInfo.userAvatar = goodsInfo.seller.user_avatar
-            ChatActivity.start(this@GoodsActivity, counterpartInfo)
+            if (goodsInfo?.seller?.user_id != null) {
+                val counterpartInfo = DomainUserInfo.DataBean()
+                counterpartInfo.userId = goodsInfo?.seller?.user_id!!
+                counterpartInfo.userName = goodsInfo?.seller?.user_name
+                counterpartInfo.userAvatar = goodsInfo?.seller?.user_avatar
+                ChatActivity.start(this@GoodsActivity, counterpartInfo)
+            }
         }
     }
 
@@ -188,18 +195,22 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
      * 点击右下角的收藏按钮
      */
     override fun onRightButtonClick() {
-        val detailData = goodsDetailInfo?.data
-        if (detailData != null) {
+        if (goodsInfo?.goods_id != null &&
+                goodsInfo?.seller?.user_id != null &&
+                goodsInfo?.goods_name != null &&
+                goodsInfo?.goods_cover_image != null &&
+                goodsInfo?.goods_price != null &&
+                goodsInfo?.goods_is_bargain != null &&
+                goodsInfo?.goods_is_secondHand != null) {
             showLoading()
             goodsViewModel.toggleGoodsFavorite(Favorite(
-                    goodsInfo.goods_id,
-                    goodsInfo.goods_name,
-                    goodsInfo.goods_cover_image,
-                    detailData.goods_images,
-                    detailData.goods_content,
-                    goodsInfo.goods_price,
-                    goodsInfo.isGoods_is_bargain,
-                    goodsInfo.isGoods_is_secondHande
+                    goodsInfo?.goods_id!!,
+                    goodsInfo?.seller?.user_id!!,
+                    goodsInfo?.goods_name!!,
+                    goodsInfo?.goods_cover_image!!,
+                    goodsInfo?.goods_price.toString(),
+                    goodsInfo?.goods_is_bargain!!,
+                    goodsInfo?.goods_is_secondHand!!
             )).observeOnce(this) {
                 dismissLoading {
                     goods_button_right.toggleFavor()

@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment
@@ -108,6 +109,7 @@ abstract class SSBBaseFragment :
     }
 
     override fun onRetry(view: View) {
+        LogUtils.d("重试获取selling")
         retryGrabOnlineData()
     }
 }

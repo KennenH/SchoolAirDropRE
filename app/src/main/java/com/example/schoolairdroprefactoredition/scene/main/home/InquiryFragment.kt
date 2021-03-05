@@ -61,6 +61,10 @@ class InquiryFragment : BaseChildFragment(), InquiryRecyclerAdapter.OnNoMoreData
         }
     }
 
+    override fun getLocalCache() {
+        // TODO: 2021/3/5 获取本地缓存
+    }
+
     /**
      * 使列表滑动至顶部
      * 当当前页面最后可见的item位置小于一定值时直接调用平滑滑动

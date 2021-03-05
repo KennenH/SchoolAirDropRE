@@ -26,20 +26,19 @@ class PurchasingRepository private constructor() {
     fun getNearbyGoods(page: Int, longitude: Double, latitude: Double, onResult: (response: DomainPurchasing?) -> Unit) {
         RetrofitClient.goodsApi.getNearByGoods(
                 ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page,
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE.toDouble() else longitude,
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE.toDouble() else latitude)
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE else longitude,
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE else latitude)
                 .apply {
                     enqueue(object : CallBackWithRetry<DomainPurchasing>(this@apply) {
                         override fun onResponse(call: Call<DomainPurchasing>, response: Response<DomainPurchasing>) {
                             if (response.code() == HttpURLConnection.HTTP_OK) {
                                 val body = response.body()
-                                if (body != null && body.code == 200) {
+                                if (body != null && body.code == ConstantUtil.HTTP_OK) {
                                     onResult(body)
                                 } else {
                                     onResult(null)
                                 }
                             } else {
-                                LogUtils.d(response.errorBody()?.string())
                                 onResult(null)
                             }
                         }

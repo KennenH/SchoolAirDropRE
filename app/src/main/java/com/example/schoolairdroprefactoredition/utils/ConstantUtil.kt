@@ -91,6 +91,11 @@ object ConstantUtil {
     const val HTTP_OK = 200
 
     /**
+     * 不存在
+     */
+    const val HTTP_NOT_FOUND = 404
+
+    /**
      * 默认头像url
      */
     const val DEFAULT_AVATAR = "assets/img/avatar.png"
@@ -201,10 +206,13 @@ object ConstantUtil {
 
     /**
      * 获取物品封面信息 键
-     *
-     * 物品封面信息不包括图片集、物品详细描述
      */
-    const val KEY_GOODS_INFO = "key_goods_base_info"
+    const val KEY_GOODS_INFO = "key_goods_info"
+
+    /**
+     * 获取物品id 键
+     */
+    const val KEY_GOODS_ID = "key_goods_id"
 
     /**
      * 打开用户个人信息页面时是否可修改信息

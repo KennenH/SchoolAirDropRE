@@ -48,8 +48,8 @@
     <color name="colorCreditLowBg">#D3D3B9</color>
     <color name="colorCreditLow">#CD9D38</color>
     <color name="colorCreditLowDark">#B58012</color>
-    <color name="darkTransparent">#1E000000</color>
-    <color name="darkerTransparent">#80000000</color>
+    <color name="darkTransparent">#1F000000</color>
+    <color name="darkerTransparent">#99000000</color>
 
     <color name="placeholderBackground">#CDD0D3</color>
     <color name="placeholderLightDots">#9EC9F8</color>

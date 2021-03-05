@@ -3,12 +3,12 @@ package com.example.schoolairdroprefactoredition.scene.main.home
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
 import com.example.schoolairdroprefactoredition.ui.adapter.BaseFooterAdapter
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
-import com.example.schoolairdroprefactoredition.ui.adapter.HomeGoodsRecyclerAdapter
+import com.example.schoolairdroprefactoredition.ui.adapter.PurchasingRecyclerAdapter
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.location.AMapLocation
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
@@ -24,13 +24,13 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
     }
 
     private val purchasingViewModel by lazy {
-        ViewModelProvider(this).get(PurchasingViewModel::class.java)
+        PurchasingViewModel.PurchasingViewModelFactory((activity?.application as SAApplication).databaseRepository).create(PurchasingViewModel::class.java)
     }
 
     private var mEndlessRecyclerView: EndlessRecyclerView? = null
 
-    private val mHomeGoodsRecyclerAdapter by lazy {
-        HomeGoodsRecyclerAdapter()
+    private val purchasingRecyclerAdapter by lazy {
+        PurchasingRecyclerAdapter()
     }
 
     private val mManager by lazy {
@@ -38,11 +38,11 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
     }
 
     override fun initView(binding: FragmentHomeContentBinding?) {
-        mHomeGoodsRecyclerAdapter.setOnNoMoreDataListener(this)
+        purchasingRecyclerAdapter.setOnNoMoreDataListener(this)
         mEndlessRecyclerView = binding?.homeRecycler
         mEndlessRecyclerView?.apply {
             layoutManager = mManager
-            adapter = mHomeGoodsRecyclerAdapter
+            adapter = purchasingRecyclerAdapter
             setOnLoadMoreListener(this@PurchasingFragment)
         }
 
@@ -75,23 +75,48 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
         mEndlessRecyclerView?.setIsNoMoreData(false)
     }
 
+    /**
+     * 从缓存中获取占位数据
+     */
+    override fun getLocalCache() {
+        purchasingViewModel.getPurchasingCache().observeOnce(viewLifecycleOwner) { cache ->
+            cache?.data?.size?.let { size ->
+                if (size > 0) {
+                    purchasingRecyclerAdapter.setList(cache.data)
+                    showContentContainer()
+                }
+            }
+        }
+    }
+
+    /**
+     * 从服务器获取网络数据
+     */
     override fun getOnlineData(aMapLocation: AMapLocation?) {
         if (aMapLocation == null) {
-            showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME)
+            if (purchasingRecyclerAdapter.data.isEmpty()) {
+                showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME)
+            }
             return
         }
+
+        // 获取物品网络数据
         purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observeOnce(viewLifecycleOwner) {
             if (it != null) {
-                // 回调成功
-                if (it.data.isEmpty()) {
+                // 如果获取的物品数量为0且当前的adapter也尚没有数据则显示placeholder
+                if (it.data.isEmpty() && purchasingRecyclerAdapter.data.isEmpty()) {
                     showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME_GOODS)
                 } else {
-                    mHomeGoodsRecyclerAdapter.setList(it.data)
+                    purchasingRecyclerAdapter.setList(it.data)
                     showContentContainer()
                 }
             } else {
-                // 回调失败，获取到null
-                showPlaceHolder(StatePlaceHolder.TYPE_ERROR)
+                // 如果当前adapter没有数据且加载失败了则显示placeholder
+                if (purchasingRecyclerAdapter.data.isEmpty()) {
+                    showPlaceHolder(StatePlaceHolder.TYPE_ERROR)
+                } else {
+                    DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
+                }
             }
         }
     }
@@ -101,27 +126,26 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
             DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
             return
         }
-        purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observeOnce(viewLifecycleOwner, {
+        purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observeOnce(viewLifecycleOwner) {
             refreshLayout.finishRefresh()
             showContentContainer()
             if (it != null) {
-                mHomeGoodsRecyclerAdapter.setList(it.data)
+                purchasingRecyclerAdapter.setList(it.data)
             } else {
-                // 回调失败，获取到null
                 DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
             }
-        })
+        }
     }
 
     override fun getAutoLoadMoreData(recycler: EndlessRecyclerView, aMapLocation: AMapLocation?) {
-        purchasingViewModel.getGoodsInfo().observeOnce(viewLifecycleOwner, {
+        purchasingViewModel.getGoodsInfo().observeOnce(viewLifecycleOwner) {
             recycler.finishLoading()
             showContentContainer()
             if (it != null) {
-                mHomeGoodsRecyclerAdapter.addData(it.data)
+                purchasingRecyclerAdapter.addData(it.data)
             } else {
                 DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
             }
-        })
+        }
     }
 }

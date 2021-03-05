@@ -218,8 +218,32 @@ interface DatabaseDao {
     suspend fun updateMessageStatus(fingerprint: String, @ChatRecyclerAdapter.MessageSendStatus status: Int)
 
     /**
-     * 获取设备上收藏的所有物品id
+     * 获取设备上收藏的所有物品
      */
     @Query("select * from favorite")
     suspend fun getFavorites(): List<Favorite>
+
+    /**
+     * 查询设备上收藏的物品
+     */
+    @Query("select * from favorite where goods_name like :key")
+    suspend fun getFavorites(key: String): List<Favorite>
+
+    /**
+     * 保存进入app时第一次获取的淘物内容
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun savePurchasingCache(purchasing: List<PurchasingCache>)
+
+    /**
+     * 获取缓存的淘物信息
+     */
+    @Query("select * from purchasing")
+    suspend fun getPurchasingCache(): List<PurchasingCache>
+
+    /**
+     * 在获取了新的物品信息之后删除之前的缓存
+     */
+    @Query("delete from purchasing")
+    suspend fun deleteAllCachedPurchasing()
 }

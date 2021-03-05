@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.api
 
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
@@ -50,6 +51,16 @@ interface GoodsApi {
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String,
             @Field("goods_id") goodsID: Int): Call<GoodsDetailInfo>
+
+    /**
+     * 获取物品全部详细信息
+     */
+    @FormUrlEncoded
+    @POST("appapi/goods/getDetailInfo")
+    fun getGoodsAllDetail(
+            @Field("client_id") clientID: String,
+            @Field("client_secret") clientSecret: String,
+            @Field("goods_id") goodsID: Int): Call<DomainGoodsAllDetailInfo>
 
     /**
      * 上传新的物品

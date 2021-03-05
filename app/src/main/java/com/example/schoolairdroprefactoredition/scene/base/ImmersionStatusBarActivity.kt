@@ -73,6 +73,10 @@ open class ImmersionStatusBarActivity : BaseActivity() {
         }
     }
 
+    protected fun updateLoadingTip(tip: String) {
+        mLoading?.setTitle(tip)
+    }
+
     protected fun dismissLoading() {
         isRequestRunning = false
         mLoading?.smartDismiss()

@@ -19,9 +19,12 @@ class FavoriteViewModel(private val databaseRepository: DatabaseRepository) : Vi
 
     private val favoriteLiveData: MutableLiveData<List<Favorite>> = MutableLiveData()
 
-    fun getFavorites(): LiveData<List<Favorite>> {
+    /**
+     * 获取用户设备上所有收藏的物品
+     */
+    fun getFavorites(key: String? = null): LiveData<List<Favorite>> {
         viewModelScope.launch {
-            favoriteLiveData.postValue(databaseRepository.getFavorites())
+            favoriteLiveData.postValue(databaseRepository.getFavorites(key))
         }
         return favoriteLiveData
     }

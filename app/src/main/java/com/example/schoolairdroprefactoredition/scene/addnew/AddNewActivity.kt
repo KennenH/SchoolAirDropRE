@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
@@ -290,10 +292,10 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 restorePostDraft()
             }
             AddNewType.MODIFY_ITEM -> {
-                draft_tip_toggle.setText(R.string.modifyInfo)
-                tag_title.visibility = View.GONE
-                option_tag_wrapper.visibility = View.GONE
-                option_anonymous.visibility = View.GONE
+//                draft_tip_toggle.setText(R.string.modifyInfo)
+//                tag_title.visibility = View.GONE
+//                option_tag_wrapper.visibility = View.GONE
+//                option_anonymous.visibility = View.GONE
 //                initGoodsInfo()
             }
         }
@@ -430,27 +432,67 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     showLoading {
                         val mPicSetPaths = ArrayList<String>()
                         for (localMedia in mPicSetSelected) {
-                            mPicSetPaths.add(localMedia.cutPath)
+                            mPicSetPaths.add(localMedia.cutPath ?: localMedia.path)
                         }
 
                         addNewViewModel.submitItem(token.access_token, mCoverPath, mPicSetPaths,
                                 option_title.text.toString(), option_description.text.toString(),
                                 mAmapLocation!!.longitude, mAmapLocation!!.latitude,
                                 !option_secondHand.isChecked, option_negotiable.isChecked, price_input.text.toString().toFloat())
-                                .observeOnce(this) { result: Boolean ->
-                                    dismissLoading {
-                                        AddNewResultActivity.start(this, result, if (result) AddNewResultTips.SUCCESS_NEW_ITEM else AddNewResultTips.FAILED_ADD)
-                                        if (result) {
-                                            isSubmitSuccess = true // 发送已完毕标志
-                                            finish()
-                                            AnimUtil.activityExitAnimDown(this)
+                                .apply {
+                                    observe(this@AddNewActivity, object : Observer<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
+                                        override fun onChanged(response: Triple<Boolean, Pair<Int, Boolean>, Boolean>) {
+                                            if (!response.first) {
+                                                if (response.second.second) {
+                                                    updateLoadingTip(getString(response.second.first))
+                                                    showUploadResult(result = false)
+                                                } else if (response.second.first != -1) {
+                                                    updateLoadingTip(getString(R.string.uploadFailedAtIndex, response.second.first))
+                                                    showUploadResult(result = false, uploadError = true)
+                                                }
+                                                removeObserver(this) // 上传失败，中断流程，注销观察者
+                                            } else if (response.third) {
+                                                showUploadResult(true)
+                                                removeObserver(this) // 完成上传，注销观察者
+                                            } else {
+                                                if (response.second.second) {
+                                                    // pair中第二个Boolean为true则代表它是res id，可以直接显示
+                                                    updateLoadingTip(getString(response.second.first))
+                                                } else {
+                                                    // pair中第二个Boolean为false则代表是纯数字，是正在上传的图片的index+1，需要用占位字符
+                                                    updateLoadingTip(getString(R.string.uploadingIndexPicture, response.second.first))
+                                                }
+                                            }
                                         }
-                                    }
+                                    })
                                 }
                     }
                 }
             } else {
                 start(this)
+            }
+        }
+    }
+
+    /**
+     * 显示物品上传结果
+     *
+     * @param uploadError 是否是上传图片时出的错，如果是，则提示用户换一张图片再试试
+     */
+    private fun showUploadResult(result: Boolean, uploadError: Boolean = false) {
+        dismissLoading {
+            AddNewResultActivity.start(
+                    this@AddNewActivity,
+                    result,
+                    when {
+                        result -> AddNewResultTips.SUCCESS_NEW_ITEM
+                        uploadError -> AddNewResultTips.FAILED_PREPARE
+                        else -> AddNewResultTips.FAILED_ADD
+                    })
+            if (result) {
+                isSubmitSuccess = true // 发送已完毕标志
+                finish()
+                AnimUtil.activityExitAnimDown(this@AddNewActivity)
             }
         }
     }
@@ -802,7 +844,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     override fun onPicSetClick(source: ImageView, pos: Int) {
         val data: MutableList<Any> = ArrayList()
         for (pic in mPicSetHorizontalAdapter.data) {
-            data.add(pic.cutPath)
+            data.add(pic.cutPath ?: pic.path)
         }
         XPopup.Builder(this)
                 .isDarkTheme(true)

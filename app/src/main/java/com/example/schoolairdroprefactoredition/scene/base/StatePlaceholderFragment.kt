@@ -1,8 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.base
 
 import android.view.View
-import androidx.fragment.app.Fragment
-import androidx.viewpager.widget.ViewPager
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.lxj.xpopup.impl.LoadingPopupView
@@ -29,10 +27,11 @@ abstract class StatePlaceholderFragment : BaseFragment() {
     /**
      * 显示占位视图
      */
-    fun showPlaceholder(type: Int) {
+    fun showPlaceholder(type: Int, tip: String? = null) {
         getStatePlaceholder()?.setPlaceholderType(type)
         getStatePlaceholder()?.visibility = View.VISIBLE
         getContentContainer()?.visibility = View.GONE
+        getStatePlaceholder()?.setPlaceholderActionTip(tip)
     }
 
     /**

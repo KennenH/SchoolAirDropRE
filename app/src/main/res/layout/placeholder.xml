@@ -62,9 +62,10 @@
 
     <TextView
         android:id="@+id/placeholderTip"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/general_padding"
+        android:gravity="center"
         android:text="@string/tapWhiteToRetry"
         android:textColor="@color/primaryDarkest"
         android:textSize="@dimen/textSizeNormal"

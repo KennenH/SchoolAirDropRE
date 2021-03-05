@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.utils;
 
+import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.blankj.utilcode.util.UriUtils;
+import com.blankj.utilcode.util.Utils;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.transition.Transition;
@@ -37,10 +39,10 @@ public class FileUtil {
      * @return 文件
      */
     public static File getFile(String pathOrUri) {
-        if (!isUriPath(pathOrUri)) {
-            return new File(pathOrUri);
-        } else {
+        if (isUriPath(pathOrUri)) {
             return UriUtils.uri2File(Uri.parse(pathOrUri));
+        } else {
+            return new File(pathOrUri);
         }
     }
 
@@ -49,16 +51,17 @@ public class FileUtil {
      *
      * @param isNeedLarge 是否需要大图，若为头像则只需要小图即可
      */
-    public static File compressFile(Context context, String path, boolean isNeedLarge) throws IOException {
+    public static File compressFile(String path, boolean isNeedLarge) throws IOException {
         Bitmap bitmap;
+        Application application = Utils.getApp();
         if (isUriPath(path)) {
-            bitmap = BitmapFactory.decodeStream(context.getContentResolver().openInputStream(Uri.parse(path)));
+            bitmap = BitmapFactory.decodeStream(application.getContentResolver().openInputStream(Uri.parse(path)));
         } else {
             bitmap = BitmapFactory.decodeFile(path);
         }
         return isNeedLarge ?
-                bitmapToFile(context, scaleBitmap(bitmap, 1000, 1000), 80) :
-                bitmapToFile(context, scaleBitmap(bitmap, 350, 350), 100);
+                bitmapToFile(application, scaleBitmap(bitmap, 888, 888), 75) :
+                bitmapToFile(application, scaleBitmap(bitmap, 350, 350), 90);
     }
 
     /**
@@ -145,14 +148,13 @@ public class FileUtil {
     }
 
     /**
-     * @param context android view model 中的 application context
-     * @param key     字段名
-     * @param path    图片路径
+     * @param key  字段名
+     * @param path 图片路径
      * @return MultiPartBody.Part
      */
     @Nullable
-    public static MultipartBody.Part createPartWithPath(Context context, String key, String path, boolean isNeedLarge) throws IOException {
-        File file = compressFile(context, path, isNeedLarge);
+    public static MultipartBody.Part createPartWithPath(String key, String path, boolean isNeedLarge) throws IOException {
+        File file = compressFile(path, isNeedLarge);
         RequestBody body;
         if (file != null) {
             body = RequestBody.create(MediaType.parse("image/*"), file);
@@ -162,10 +164,10 @@ public class FileUtil {
         }
     }
 
-    public static MultipartBody.Builder addFileWithPath(Context context, String key, List<String> path, boolean isAddNewItem) throws IOException {
+    public static MultipartBody.Builder addFileWithPath(String key, List<String> path, boolean isAddNewItem) throws IOException {
         MultipartBody.Builder builder = new MultipartBody.Builder();
         for (String s : path) {
-            File file = compressFile(context, s, isAddNewItem);
+            File file = compressFile(s, isAddNewItem);
             RequestBody body;
             if (file != null) {
                 body = RequestBody.create(MediaType.parse("image/*"), file);

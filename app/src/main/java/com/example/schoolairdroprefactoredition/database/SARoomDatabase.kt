@@ -15,9 +15,10 @@ import kotlinx.coroutines.launch
     ChatOfflineNum::class,
     UserCache::class,
     PullFlag::class,
-    Favorite::class],
+    Favorite::class,
+    PurchasingCache::class],
         views = [ChatOfflineNumDetail::class],
-        version = 15,
+        version = 17,
         exportSchema = true)
 abstract class SARoomDatabase : RoomDatabase() {
 

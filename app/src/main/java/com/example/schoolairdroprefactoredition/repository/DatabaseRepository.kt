@@ -8,6 +8,8 @@ import com.example.schoolairdroprefactoredition.database.pojo.*
 import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.Response
@@ -15,6 +17,10 @@ import java.net.HttpURLConnection
 import java.util.*
 
 class DatabaseRepository(private val databaseDao: DatabaseDao) {
+
+    private val jsonCacheUtil by lazy {
+        JsonCacheUtil.getInstance()
+    }
 
     /**
      * 获取消息列表
@@ -114,6 +120,8 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
 
     @WorkerThread
     suspend fun saveUserCache(userCache: UserCache) {
+        // 保存再次请求的限制，防止频繁调用请求
+        jsonCacheUtil.saveCache(JsonCacheConstantUtil.IS_GET_USER_INFO_PRESENTLY + userCache.user_id, true, JsonCacheConstantUtil.NEXT_GET_TIME_SPAN)
         databaseDao.saveUserCache(userCache)
     }
 
@@ -174,7 +182,19 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
     }
 
     @WorkerThread
-    suspend fun getFavorites(): List<Favorite> {
-        return databaseDao.getFavorites()
+    suspend fun getFavorites(key: String?): List<Favorite> {
+        return if (key == null) databaseDao.getFavorites()
+        else databaseDao.getFavorites("%$key%")
+    }
+
+    @WorkerThread
+    suspend fun savePurchasingCache(purchasing: List<PurchasingCache>) {
+        databaseDao.deleteAllCachedPurchasing()
+        databaseDao.savePurchasingCache(purchasing)
+    }
+
+    @WorkerThread
+    suspend fun getPurchasingCache(): List<PurchasingCache> {
+        return databaseDao.getPurchasingCache()
     }
 }

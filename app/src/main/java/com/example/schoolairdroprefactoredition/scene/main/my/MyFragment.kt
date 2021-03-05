@@ -4,41 +4,25 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginTop
-import androidx.fragment.app.Fragment
-import com.blankj.utilcode.util.BarUtils
-import com.blankj.utilcode.util.LogUtils
-import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.custom.InAppFloatAnimator
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.scene.base.BaseActivity
 import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
-import com.example.schoolairdroprefactoredition.scene.capture.CaptureActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity.OnLoginStateChangedListener
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
+import com.example.schoolairdroprefactoredition.scene.favorite.FavoriteActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
-import com.google.zxing.integration.android.IntentIntegrator
-import com.lzf.easyfloat.EasyFloat
-import com.lzf.easyfloat.anim.AppFloatDefaultAnimator
-import com.lzf.easyfloat.enums.ShowPattern
-import com.lzf.easyfloat.enums.SidePattern
-import com.lzf.easyfloat.interfaces.FloatCallbacks
 
 class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedListener {
 
@@ -124,7 +108,7 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
 //                        .setCaptureActivity(CaptureActivity::class.java)
 //                        .setBeepEnabled(false)
 //                        .initiateScan()
-
+                FavoriteActivity.start(context)
             }
 
             R.id.my_settings -> {

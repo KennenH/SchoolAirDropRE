@@ -11,6 +11,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.amap.api.location.AMapLocation
 import com.blankj.utilcode.constant.PermissionConstants
+import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding
 import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
@@ -86,6 +87,9 @@ abstract class BaseChildFragment : BaseFragment(), OnLocationListener, EndlessRe
         super.onViewCreated(view, savedInstanceState)
         showPlaceHolder(StatePlaceHolder.TYPE_LOADING)
 
+        // 先获取本地缓存，代替placeholder的转圈
+        getLocalCache()
+        // 再去请求网络数据，在此之前必须先完成定位
         if (!requested) {
             requested = true
             locate(PermissionBaseActivity.RequestType.AUTO) // 自动请求MainActivity的定位
@@ -98,6 +102,8 @@ abstract class BaseChildFragment : BaseFragment(), OnLocationListener, EndlessRe
 
     /**
      * 定位相关的页面数据获取
+     *
+     * 当页面第一次加载以及主页面重新获取定位时将会被调用
      */
     private fun getPageDataIfLocated() {
         if (aMapLocation != null) {
@@ -112,7 +118,12 @@ abstract class BaseChildFragment : BaseFragment(), OnLocationListener, EndlessRe
     }
 
     /**
-     * 获取页面数据
+     * 该方法将在定位开始之前调用
+     */
+    abstract fun getLocalCache()
+
+    /**
+     * 获取页面数据，在设备获取定位之后调用
      */
     abstract fun getOnlineData(aMapLocation: AMapLocation?)
 
@@ -135,7 +146,7 @@ abstract class BaseChildFragment : BaseFragment(), OnLocationListener, EndlessRe
      */
     protected fun showPlaceHolder(type: Int) {
         if (parentFragment is BaseParentFragment) {
-            (parentFragment as BaseParentFragment).showPlaceholder(type)
+            (parentFragment as BaseParentFragment).showPlaceholder(type, context?.getString(R.string.tapWhiteToRetry))
         }
     }
 

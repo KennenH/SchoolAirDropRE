@@ -29,9 +29,11 @@ class PurchasingParentFragment : BaseParentFragment(), View.OnClickListener {
         }
     }
 
-    private var mViewPager: ViewPager? = null
+    private val purchasingPagerAdapter by lazy {
+        HomePagerAdapter(childFragmentManager, HomePagerAdapter.PAGE_TYPE_PURCHASING)
+    }
 
-    private var mHomePagerAdapter: HomePagerAdapter? = null
+    private var mViewPager: ViewPager? = null
 
     private var mAppBarLayout: AppBarLayout? = null
 
@@ -48,14 +50,13 @@ class PurchasingParentFragment : BaseParentFragment(), View.OnClickListener {
         mViewPager = binding.homeViewpager
         mAppBarLayout = binding.toolbarWrapper
 
-        mHomePagerAdapter = HomePagerAdapter(childFragmentManager, HomePagerAdapter.PAGE_TYPE_PURCHASING)
         setUpPlaceHolderHAndContainerView(binding.placeholder, binding.homeViewpager)
 
         val commonNavigator = CommonNavigator(context)
         val adapter = HomeNavigatorAdapter(context, binding.homeViewpager, HomeNavigatorAdapter.PURCHASING)
 
         commonNavigator.adapter = adapter
-        binding.homeViewpager.adapter = mHomePagerAdapter
+        binding.homeViewpager.adapter = purchasingPagerAdapter
         binding.homeIndicator.navigator = commonNavigator
         ViewPagerHelper.bind(binding.homeIndicator, binding.homeViewpager)
 
@@ -75,7 +76,7 @@ class PurchasingParentFragment : BaseParentFragment(), View.OnClickListener {
      */
     fun pageScrollToTop() {
         if (mViewPager != null && mAppBarLayout != null) {
-            mHomePagerAdapter?.scrollToTop(mViewPager?.currentItem ?: 0)
+            purchasingPagerAdapter.scrollToTop(mViewPager?.currentItem ?: 0)
             mAppBarLayout?.setExpanded(true, true)
         }
     }

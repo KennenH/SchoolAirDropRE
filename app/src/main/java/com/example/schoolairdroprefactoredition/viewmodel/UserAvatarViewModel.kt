@@ -29,7 +29,11 @@ class UserAvatarViewModel(application: Application) : AndroidViewModel(applicati
             viewModelScope.launch {
                 val localPath = ArrayList<String>(1).also { it.add(avatarLocalPath) }
                 // 上传图片至七牛云
-                uploadRepository.upload(token, localPath, ConstantUtil.UPLOAD_TYPE_AVATAR) { taskAndKeys ->
+                uploadRepository.upload(
+                        token,
+                        localPath,
+                        ConstantUtil.UPLOAD_TYPE_AVATAR,
+                        isNeedLarge = false) { _, _, taskAndKeys, _ ->
                     if (taskAndKeys != null) {
                         userAvatarRepository.updateAvatar(token, taskAndKeys.taskId, taskAndKeys.keys[0]) {
                             updateLiveData.postValue(it)

@@ -64,9 +64,9 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding"
         android:gravity="center"
         android:longClickable="false"
-        android:layout_marginStart="@dimen/general_padding"
         android:text="@string/app_name"
         android:textColor="@color/primaryText"
         android:textIsSelectable="false"
@@ -154,19 +154,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/guideline6" />
 
-    <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
+    <LinearLayout
         android:id="@+id/login_with_alipay"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@drawable/login"
         android:gravity="center"
+        android:orientation="horizontal"
         android:padding="@dimen/general_padding_large"
-        android:text="@string/loginWithAlipay"
-        android:textColor="@color/whiteAlways"
-        android:textIsSelectable="false"
-        android:textSize="18dp"
         app:layout_constraintBottom_toTopOf="@+id/guideline6"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
-        app:layout_constraintStart_toStartOf="@+id/guideline1" />
+        app:layout_constraintStart_toStartOf="@+id/guideline1">
 
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_alipay_20" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/general_padding"
+            android:includeFontPadding="false"
+            android:text="@string/loginWithAlipay"
+            android:textColor="@color/whiteAlways"
+            android:textIsSelectable="false"
+            android:textSize="@dimen/textSizeNormal" />
+
+    </LinearLayout>
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

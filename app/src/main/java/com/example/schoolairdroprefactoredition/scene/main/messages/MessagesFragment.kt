@@ -10,15 +10,15 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentMessagesBinding
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
+import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.MessagesRecyclerAdapter
+import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.MessageViewModel
 import com.github.ybq.android.spinkit.SpinKitView
@@ -27,7 +27,7 @@ import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import net.x52im.mobileimsdk.server.protocal.Protocal
 import kotlin.collections.ArrayList
 
-class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListener, SAApplication.IMListener, MessagesRecyclerAdapter.UserInfoRequestListener, MainActivity.OnOfflineNumStateChangeListener {
+class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateChangedListener, SAApplication.IMListener, MessagesRecyclerAdapter.UserInfoRequestListener, MainActivity.OnOfflineNumStateChangeListener {
 
     /**
      * 移动端IM的状态
@@ -62,7 +62,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
 
     private var recyclerView: SwipeRecyclerView? = null
 
-    private var empty: View? = null
+    private var placeholder: StatePlaceHolder? = null
 
     private val mMessagesRecyclerAdapter by lazy {
         MessagesRecyclerAdapter()
@@ -74,6 +74,14 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
 
     private val messageViewModel by lazy {
         MessageViewModel.MessageViewModelFactory((activity?.application as SAApplication).databaseRepository).create(MessageViewModel::class.java)
+    }
+
+    override fun getStatePlaceholder(): StatePlaceHolder? {
+        return placeholder
+    }
+
+    override fun getContentContainer(): View? {
+        return recyclerView
     }
 
     override fun onAttach(context: Context) {
@@ -93,7 +101,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
         title = binding.messagesTitle
         recyclerView = binding.messagesRecycler
         loading = binding.messagesTitleLoading
-        empty = binding.messagesEmpty
+        placeholder = binding.messagesEmpty
 
         val myInfo = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
         mMessagesRecyclerAdapter.setUserInfoRequestListener(this)
@@ -120,7 +128,7 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
                         if (index == adapterPosition) {
                             mMessagesRecyclerAdapter.removeAt(adapterPosition)
                             if (mMessagesRecyclerAdapter.data.isEmpty()) {
-                                empty?.visibility = View.VISIBLE
+                                placeholder?.visibility = View.VISIBLE
                             }
                             messageViewModel.swipeToHideChannel(myInfo?.userId.toString(), datum.counterpart_id)
                         }
@@ -134,10 +142,10 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
             // 观察本地消息数量列表，消息列表页面所有数据显示都通过该观察者，所以只需要在此判断数量显示即可
             messageViewModel.getChatList(myInfo.userId.toString()).observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
-                    empty?.visibility = View.GONE
+                    showContentContainer()
                     mMessagesRecyclerAdapter.setList(it)
                 } else {
-                    empty?.visibility = View.VISIBLE
+                    showPlaceholder(StatePlaceHolder.TYPE_EMPTY, context?.getString(R.string.canChatInGoodsPage))
                 }
             })
         }
@@ -190,15 +198,14 @@ class MessagesFragment : BaseFragment(), MainActivity.OnLoginStateChangedListene
             // 重新观察本地消息数量列表，消息列表页面所有数据显示都通过该观察者，所以只需要在此判断数量显示即可
             messageViewModel.getChatList(userInfo.userId.toString()).observe(viewLifecycleOwner, {
                 if (it.isNotEmpty()) {
-                    empty?.visibility = View.INVISIBLE
+                    showContentContainer()
                     mMessagesRecyclerAdapter.setList(it)
                 } else {
-                    empty?.visibility = View.VISIBLE
+                    showPlaceholder(StatePlaceHolder.TYPE_EMPTY, context?.getString(R.string.canChatInGoodsPage))
                 }
             })
         } else {
-            mMessagesRecyclerAdapter.setList(ArrayList())
-            empty?.visibility = View.VISIBLE
+            showPlaceholder(StatePlaceHolder.TYPE_EMPTY, context?.getString(R.string.canChatInGoodsPage))
         }
     }
 

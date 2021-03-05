@@ -7,6 +7,7 @@ import android.view.*
 import androidx.core.content.res.ResourcesCompat
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
 import com.example.schoolairdroprefactoredition.databinding.SheetSsbItemMoreBinding
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
@@ -108,6 +109,7 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
                                     .observeOnce(viewLifecycleOwner, {
                                         mLoading.dismissWith {
                                             if (it) {
+                                                (activity?.application as SAApplication).getCachedMyInfo()?.userGoodsOnSaleCount?.minus(1)
                                                 DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successUnlist)
                                             } else {
                                                 DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)

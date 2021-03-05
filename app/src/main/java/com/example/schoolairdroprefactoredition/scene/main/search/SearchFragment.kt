@@ -11,19 +11,18 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.*
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.cache.SearchHistories
 import com.example.schoolairdroprefactoredition.databinding.FragmentSearchPrelayoutBinding
 import com.example.schoolairdroprefactoredition.scene.base.BaseFragment
 import com.example.schoolairdroprefactoredition.ui.adapter.BaseFooterAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.HeaderFooterOnlyRecyclerAdapter
-import com.example.schoolairdroprefactoredition.ui.adapter.HomeGoodsRecyclerAdapter
+import com.example.schoolairdroprefactoredition.ui.adapter.PurchasingRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
 import com.example.schoolairdroprefactoredition.ui.components.SearchBar.OnSearchActionListener
 import com.example.schoolairdroprefactoredition.ui.components.SearchHistoryHeader
 import com.example.schoolairdroprefactoredition.ui.components.SearchHistoryHeader.OnHistoryActionListener
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
+import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.SearchViewModel
 import java.util.*
@@ -53,16 +52,16 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
 //    }
 
     private val mResultAdapter by lazy {
-        HomeGoodsRecyclerAdapter()
+        PurchasingRecyclerAdapter()
     }
 
     private val mHistoryHeader by lazy {
         SearchHistoryHeader(context)
     }
 
-    private var longitude = 0.0
+    private var longitude = AppConfig.DEBUG_LONGITUDE
 
-    private var latitude = 0.0
+    private var latitude = AppConfig.DEBUG_LATITUDE
 
     private var isHistoryShowing = false
 

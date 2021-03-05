@@ -1,6 +1,8 @@
 package com.example.schoolairdroprefactoredition.repository
 
+import android.app.Application
 import com.blankj.utilcode.util.LogUtils
+import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainUploadPath
@@ -53,43 +55,65 @@ class UploadRepository private constructor() {
     /**
      * 上传图片
      *
-     * 分三步进行，任何一步出问题都将返回null，成功后的结果将按照传进来的顺序返回所有图片的路径
+     * 分三步进行，成功后的结果将按照传进来的顺序返回所有图片的路径
      * 1、获取七牛云上传凭证 [getQiNiuToken]
      * 2、获取上传图片的服务器路径前缀和文件名 [requestForImagePath]
      * 3、上传图片 [uploadFileToQiNiu]
      *
      * @param token app用户验证token
      * @param fileLocalPaths 要上传的图片的本地路径
-     * @param onResult 上传图片时请求到的task id和file keys
+     * @param isNeedLarge 是否需要传大图，以true上传的图将会比false的大5倍左右
+     * @param isSubscribeProgress 是否需要订阅上传进度
+     * 当为true时外部的observer不能使用observeOnce，每当进入一个重要阶段都会通知外部
+     * 当为false时只有在上传进度 完成 和 失败中断 两种情况才通知外部
      *
+     * @param onResult 上传图片时请求到的task id和file keys
+     * success 上一步操作是否成功 若为false则中断上传
+     * tip 要求外部显示的提示，第一个Int为true则为res id，直接使用getString显示，否则使用 正在上传第%d张图片
+     * taskAndKeys 请求的key和task id，在最后一步成功完成之前都是null
      */
-    fun upload(token: String, fileLocalPaths: List<String>, type: String, onResult: (taskAndKeys: DomainUploadPath.DataBean?) -> Unit) {
+    fun upload(
+            token: String,
+            fileLocalPaths: List<String>,
+            type: String,
+            isNeedLarge: Boolean = true,
+            isSubscribeProgress: Boolean = false,
+            onResult: (success: Boolean, tip: Pair<Int,Boolean>, taskAndKeys: DomainUploadPath.DataBean?, allSuccess: Boolean) -> Unit) {
+        if (isSubscribeProgress) onResult(true, Pair(R.string.handlingLocalMedia,true), null, false)
         // 将文件路径转换为本地文件
         val fileLocalList = ArrayList<File>(fileLocalPaths.size).apply {
             for (localPath in fileLocalPaths) {
-                this.add(FileUtil.getFile(localPath))
+                this.add(FileUtil.compressFile(localPath, isNeedLarge))
             }
         }
+        if (isSubscribeProgress) onResult(true,Pair(R.string.requestingCredentials,true), null, false)
         // 获取七牛云服务器上传凭证
         getQiNiuToken(token) { uploadToken ->
             if (uploadToken != null) {
+                if (isSubscribeProgress) onResult(true, Pair(R.string.resourceAllocating,true), null, false)
                 // 获取将要上传的图片在服务器上的路径前缀和文件名
                 requestForImagePath(token, type, fileLocalPaths.size) { taskAndKeysWrapper ->
                     if (taskAndKeysWrapper != null) {
                         // 执行上传操作
-                        uploadFileToQiNiu(fileLocalList, taskAndKeysWrapper, uploadToken.data.token) {
-                            if (it) {
-                                onResult(taskAndKeysWrapper.data)
+                        uploadFileToQiNiu(fileLocalList,
+                                taskAndKeysWrapper,
+                                uploadToken.data.token) { success, toBeUpload, allSuccess ->
+                            if (allSuccess) {
+                                onResult(true, Pair(R.string.imagesUploadSuccess,true), taskAndKeysWrapper.data, true)
                             } else {
-                                onResult(null)
+                                if (success) {
+                                    if (isSubscribeProgress) onResult(true, Pair(toBeUpload,false), null, false)
+                                } else {
+                                    onResult(false, Pair(toBeUpload,false), null, false)
+                                }
                             }
                         }
                     } else {
-                        onResult(null)
+                        onResult(false, Pair(R.string.resourceAllocationFailed,true), null, false)
                     }
                 }
             } else {
-                onResult(null)
+                onResult(false, Pair(R.string.inValidCredential,true), null, false)
             }
         }
     }
@@ -176,9 +200,16 @@ class UploadRepository private constructor() {
      * @param fileLocalEntities 图片本地文件
      * @param fileKeysAndTaskID 图片将要放到服务器上的名字和任务id
      * @param uploadToken       图片上传所需要的七牛云凭证
-     * @param onResult          是否所有图片上传成功
+     * @param onResult
+     * success 上一张上传的图片是否成功，当此值为false时其他两值直接无视，中断上传
+     * toBeUploaded 将要上传的图片，从1开始
+     * allSuccess 全部上传都完成，当此值为true时其他两值直接无视，代表上传成功
      */
-    private fun uploadFileToQiNiu(fileLocalEntities: List<File?>, fileKeysAndTaskID: DomainUploadPath, uploadToken: String, onResult: (success: Boolean) -> Unit) {
+    private fun uploadFileToQiNiu(
+            fileLocalEntities: List<File?>,
+            fileKeysAndTaskID: DomainUploadPath,
+            uploadToken: String,
+            onResult: (success: Boolean, toBeUploaded: Int, allSuccess: Boolean) -> Unit) {
         // 获取数量
         val size = fileLocalEntities.size
 
@@ -206,6 +237,9 @@ class UploadRepository private constructor() {
                 .fromIterable(fileLocalEntities)
                 .concatMap { fileLocalEntity ->
                     Observable.create(ObservableOnSubscribe<String> {
+                        // 正在上传第index+1张图片
+                        onResult(true, index + 1, false)
+
                         // 七牛云回调额外参数 设置图片的key和taskid
                         val uploadOptions = UploadOptions.defaultOptions()
                         uploadOptions.params[UPLOAD_PARAM_FILE_KEY] = fileKeys[index]
@@ -219,7 +253,6 @@ class UploadRepository private constructor() {
                             it.onComplete()
                         } else {
                             // 上传失败，发送至subscribe中的失败回调，退出上传流程
-                            LogUtils.d("图片上传失败 abandoned")
                             it.onError(IOException(putResult.error))
                         }
 
@@ -232,18 +265,18 @@ class UploadRepository private constructor() {
                     // 成功的回调将会回到这里
                     responsePath.add(it)
                     if (responsePath.size == size) {
-                        onResult(true)
+                        onResult(true, index, true)
                     }
                 }) {
                     LogUtils.d(it.message)
-                    onResult(false)
+                    onResult(false, index, false)
                 }
     }
 
     /**
      * 移动在七牛云上的图片
      */
-    fun moveIMImage(token: String, taskID: String, keys: String, onResult:()->Unit) {
+    fun moveIMImage(token: String, taskID: String, keys: String, onResult: () -> Unit) {
 
     }
 }

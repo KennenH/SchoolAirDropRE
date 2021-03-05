@@ -27,6 +27,10 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     companion object {
         const val LOGIN = 39726 // 请求码 网络登录请求
 
+        /**
+         * 所有在登录页面和主页面之间的可能的经过的页面，都需要实现
+         * onActivityResult来帮助登录页传递登录信息
+         */
         fun start(context: Context?) {
             val intent = Intent(context, LoginActivity::class.java)
             if (context is AppCompatActivity) {

@@ -12,7 +12,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.ItemSsbSellingBinding
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
-import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity.Companion.start
+import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 
@@ -28,7 +28,7 @@ class SSBAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainPurchasi
         if (item != null) {
             val binding = ItemSsbSellingBinding.bind(holder.itemView)
             val isQuotable = item.isGoods_is_bargain
-            val isSecondHand = item.isGoods_is_secondHande
+            val isSecondHand = item.isGoods_is_secondHand
 
             if (isQuotable && isSecondHand) {
                 binding.ssbSellingGoodsTitle.text = context.getString(R.string.itemNSs, item.goods_name)
@@ -71,7 +71,7 @@ class SSBAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainPurchasi
             binding.ssbSellingGoodsPrice.setPrice(item.goods_price)
 
             if (context is AppCompatActivity) {
-                holder.itemView.setOnClickListener { start(context, item, true) }
+                holder.itemView.setOnClickListener { GoodsActivity.start(context, item.goods_id, true) }
             }
 
             if (isMine == true) {

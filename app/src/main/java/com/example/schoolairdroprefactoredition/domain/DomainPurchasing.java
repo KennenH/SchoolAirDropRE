@@ -1,10 +1,13 @@
 package com.example.schoolairdroprefactoredition.domain;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.Serializable;
 import java.util.List;
 
 public class DomainPurchasing implements Serializable {
 
+    @NotNull
     @Override
     public String toString() {
         return "DomainPurchasing{" +
@@ -62,6 +65,7 @@ public class DomainPurchasing implements Serializable {
 
     public static class DataBean implements Serializable {
 
+        @NotNull
         @Override
         public String toString() {
             return "DataBean{" +
@@ -70,7 +74,7 @@ public class DomainPurchasing implements Serializable {
                     ", goods_cover_image='" + goods_cover_image + '\'' +
                     ", goods_price='" + goods_price + '\'' +
                     ", goods_is_bargain=" + goods_is_bargain +
-                    ", goods_is_secondHande=" + goods_is_secondHande +
+                    ", goods_is_secondHand=" + goods_is_secondHand +
                     ", seller=" + seller +
                     '}';
         }
@@ -82,7 +86,7 @@ public class DomainPurchasing implements Serializable {
         private String longitude;
         private String latitude;
         private boolean goods_is_bargain;
-        private boolean goods_is_secondHande;
+        private boolean goods_is_secondHand;
         private SellerBean seller;
 
         public String getLongitude() {
@@ -111,6 +115,7 @@ public class DomainPurchasing implements Serializable {
 
         public static class SellerBean implements Serializable {
 
+            @NotNull
             @Override
             public String toString() {
                 return "SellerBean{" +
@@ -150,12 +155,12 @@ public class DomainPurchasing implements Serializable {
         }
 
 
-        public boolean isGoods_is_secondHande() {
-            return goods_is_secondHande;
+        public boolean isGoods_is_secondHand() {
+            return goods_is_secondHand;
         }
 
-        public void setGoods_is_secondHande(boolean goods_is_secondHande) {
-            this.goods_is_secondHande = goods_is_secondHande;
+        public void setGoods_is_secondHand(boolean goods_is_secondHand) {
+            this.goods_is_secondHand = goods_is_secondHand;
         }
 
         public boolean isGoods_is_bargain() {

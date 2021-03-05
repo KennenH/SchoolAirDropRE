@@ -50,7 +50,7 @@
     <View
         android:id="@+id/status_bar_overlay"
         android:layout_width="match_parent"
-        android:layout_height="30dp"
+        android:layout_height="60dp"
         android:background="@drawable/bg_top_dark_overlay"
         app:layout_constraintTop_toTopOf="parent" />
 

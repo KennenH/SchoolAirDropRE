@@ -54,9 +54,12 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
     fun sendImageMessage(token: String?, imagePaths: List<String>): LiveData<List<String>?> {
         val uploadLiveDate = MutableLiveData<List<String>?>()
         if (token != null) {
-            uploadRepository.upload(token, imagePaths, ConstantUtil.UPLOAD_TYPE_IM) {
-                if (it != null) {
-                    uploadRepository.moveIMImage(token, it.taskId, it.keys.joinToString(",")) {
+            uploadRepository.upload(
+                    token,
+                    imagePaths,
+                    ConstantUtil.UPLOAD_TYPE_IM) { _, _, taskAndKeys, _ ->
+                if (taskAndKeys != null) {
+                    uploadRepository.moveIMImage(token, taskAndKeys.taskId, taskAndKeys.keys.joinToString(",")) {
                         uploadLiveDate.postValue(null)
                     }
                 } else {
