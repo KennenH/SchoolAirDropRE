@@ -97,16 +97,16 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.4.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
 
     implementation files('../lib/libs/android-java-air-bridge.jar')
     implementation files('../lib/libs/MobileIMSDK4a_tcp.jar')
     implementation files('../lib/libs/MobileIMSDKServer_META.jar')
     implementation files('../lib/libs/netty-all-4.1.50.Final.jar')
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.0'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
-    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.0'
 
     // zxing
     implementation 'com.journeyapps:zxing-android-embedded:4.1.0'

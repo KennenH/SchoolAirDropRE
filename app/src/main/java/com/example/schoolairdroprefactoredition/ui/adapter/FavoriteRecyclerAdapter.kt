@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.ui.adapter
 
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
@@ -16,18 +17,13 @@ import com.example.schoolairdroprefactoredition.utils.ImageUtil
 
 class FavoriteRecyclerAdapter : BaseQuickAdapter<Favorite, BaseViewHolder>(R.layout.item_favorite) {
 
-    /**
-     * 用于临时存放在收藏列表被取消收藏的物品，以便用户重新将其收藏回来
-     */
-    private val favorMap = HashMap<Int, Boolean?>()
-
     private var mOnFavoriteItemActionListener: OnFavoriteItemActionListener? = null
 
     interface OnFavoriteItemActionListener {
         /**
          * 切换物品收藏状态
          */
-        fun onToggleFavorite(item: Favorite)
+        fun onToggleFavorite(button: View, item: Favorite)
     }
 
     fun setOnFavoriteItemActionListener(listener: OnFavoriteItemActionListener) {
@@ -47,16 +43,14 @@ class FavoriteRecyclerAdapter : BaseQuickAdapter<Favorite, BaseViewHolder>(R.lay
             binding.favoriteGoodsTitle.text = context.getString(R.string.itemSs, item.goods_name)
         }
 
-        val favored = favorMap[item.goods_id]
-        if (favored == null || !favored) {
+        if (item.goods_is_favor) {
             binding.favoriteMoreAction.setImageResource(R.drawable.ic_favorite_red)
         } else {
             binding.favoriteMoreAction.setImageResource(R.drawable.ic_favorite_white)
         }
 
         ImageUtil.loadRoundedImage(binding.favoriteGoodsAvatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.goods_cover_image))
-        binding.favoriteGoodsPrice.setPrice(item.goods_price)
-
+        binding.favoriteGoodsPrice.setPrice(item.goods_price, true)
         binding.favoriteContact.setOnClickListener {
             // 未登录时点击联系先登录
             if (context is AppCompatActivity) {
@@ -68,18 +62,22 @@ class FavoriteRecyclerAdapter : BaseQuickAdapter<Favorite, BaseViewHolder>(R.lay
             }
         }
         binding.favoriteMoreAction.setOnClickListener {
-            val nowFavored = favorMap[item.goods_id]
-            if (nowFavored == null || nowFavored) {
-                favorMap[item.goods_id] = false
-                binding.favoriteMoreAction.setImageResource(R.drawable.ic_favorite_white)
-            } else {
-                favorMap[item.goods_id] = true
-                binding.favoriteMoreAction.setImageResource(R.drawable.ic_favorite_red)
-            }
-            mOnFavoriteItemActionListener?.onToggleFavorite(item)
+            it.isEnabled = false
+
+            mOnFavoriteItemActionListener?.onToggleFavorite(it, item)
         }
         binding.root.setOnClickListener {
             GoodsActivity.start(context, item.goods_id, false)
+        }
+    }
+
+    fun updateFavor(goodsId: Int, isFavor: Boolean) {
+        for ((index, datum) in data.withIndex()) {
+            if (datum.goods_id == goodsId) {
+                datum.goods_is_favor = isFavor
+                notifyItemChanged(index)
+                return
+            }
         }
     }
 }

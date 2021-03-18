@@ -3,6 +3,11 @@ package com.example.schoolairdroprefactoredition.utils
 object ConstantUtil {
 
     /**
+     * alipay app id
+     */
+    const val ALIPAY_APP_ID = 2021002131611951
+
+    /**
      * mi push app key
      */
     const val MIPUSH_APP_ID = "2882303761518719324"
@@ -74,6 +79,7 @@ object ConstantUtil {
     const val SCHOOL_AIR_DROP_BASE_URL_IM = "http://81.69.14.64:2020/"
     const val LOCAL_BASE_URL = "http://10.0.2.2:2020/"
 
+
     /**
      * 七牛云图片基础url
      */
@@ -84,6 +90,20 @@ object ConstantUtil {
      */
     const val SCHOOL_AIR_DROP_IP = "81.69.14.64"
     const val LOCAL_IP = "10.0.2.2"
+
+    /**
+     * 打开app scheme路径
+     */
+    const val SCHEME_OPEN_APP = "open_app"
+
+
+    /**
+     * alipay auth state
+     *
+     * android_schoolairdrop_kennen md5^? base64
+     */
+    const val ALIPAY_AUTH_STATE = "MDRmNDA4M2E0YzY0OGY5NzJlMTFkM2YwYmYwODhiZTc="
+
 
     /**
      * 网络请求成功码
@@ -98,7 +118,7 @@ object ConstantUtil {
     /**
      * 默认头像url
      */
-    const val DEFAULT_AVATAR = "assets/img/avatar.png"
+    const val DEFAULT_AVATAR = "uploads/img/user/default/default.jpg"
 
     /**
      * 图片上传类型 聊天
@@ -223,4 +243,9 @@ object ConstantUtil {
      * 标志有些页面是否是我的个人页面
      */
     const val KEY_IS_MINE = "isMyPageOrNOT?"
+
+    /**
+     * 记住登录页打开之前的动作，以便登录之后帮助用户自动执行动作
+     */
+    const val KEY_ACTION_AFTER_LOGIN = "whatDoUWantToDoAfterLogin?"
 }

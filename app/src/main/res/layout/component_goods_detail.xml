@@ -46,8 +46,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/goods_seller_info"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="@+id/goods_name"
         app:layout_constraintStart_toStartOf="@+id/goods_name"
         app:layout_constraintTop_toBottomOf="@+id/goods_popularity">
 
@@ -73,15 +74,30 @@
 
         <TextView
             android:id="@+id/goods_user_name"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:padding="@dimen/general_padding_large"
+            android:layout_marginStart="@dimen/general_padding"
+            android:ellipsize="end"
             android:textColor="@color/primaryText"
             android:textSize="14dp"
-            app:layout_constraintBottom_toBottomOf="@+id/goodsAvatar"
+            app:layout_constraintBottom_toTopOf="@id/goods_user_last_login_time"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/goodsAvatar"
             app:layout_constraintTop_toTopOf="@+id/goodsAvatar"
             tools:text="李伟" />
+
+        <TextView
+            android:id="@+id/goods_user_last_login_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="@string/lastActiveTime"
+            android:textColor="@color/primaryEvenDarker"
+            android:textSize="@dimen/textSizeMin"
+            app:layout_constraintBottom_toBottomOf="@+id/goodsAvatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/goods_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/goods_user_name" />
 
         <View
             android:id="@+id/view2"

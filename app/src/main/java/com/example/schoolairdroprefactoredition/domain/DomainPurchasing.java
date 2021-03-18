@@ -82,27 +82,27 @@ public class DomainPurchasing implements Serializable {
         private int goods_id;
         private String goods_name;
         private String goods_cover_image;
-        private String goods_price;
-        private String longitude;
-        private String latitude;
+        private float goods_price;
+        private int goods_watch_count;
+        private int goods_favor_count;
         private boolean goods_is_bargain;
         private boolean goods_is_secondHand;
         private SellerBean seller;
 
-        public String getLongitude() {
-            return longitude;
+        public int getGoods_watch_count() {
+            return goods_watch_count;
         }
 
-        public void setLongitude(String longitude) {
-            this.longitude = longitude;
+        public void setGoods_watch_count(int goods_watch_count) {
+            this.goods_watch_count = goods_watch_count;
         }
 
-        public String getLatitude() {
-            return latitude;
+        public int getGoods_favor_count() {
+            return goods_favor_count;
         }
 
-        public void setLatitude(String latitude) {
-            this.latitude = latitude;
+        public void setGoods_favor_count(int goods_favor_count) {
+            this.goods_favor_count = goods_favor_count;
         }
 
         public SellerBean getSeller() {
@@ -196,11 +196,11 @@ public class DomainPurchasing implements Serializable {
             this.goods_id = goods_id;
         }
 
-        public String getGoods_price() {
+        public float getGoods_price() {
             return goods_price;
         }
 
-        public void setGoods_price(String goods_price) {
+        public void setGoods_price(float goods_price) {
             this.goods_price = goods_price;
         }
     }

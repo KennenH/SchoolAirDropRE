@@ -17,39 +17,11 @@
             android:splitMotionEvents="false">
 
             <com.example.schoolairdroprefactoredition.ui.components.PageItem
-                android:id="@+id/settings_privacy_find_via_alipay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:PI_description="@string/allowAddViaAlipayDescription"
-                app:PI_isSwitch="true"
-                app:PI_title="@string/allowAddViaAlipay"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <View
-                android:id="@+id/view3"
-                android:layout_width="match_parent"
-                android:layout_height="1px"
-                android:layout_marginStart="50dp"
-                android:background="@color/colorLine"
-                app:layout_constraintBottom_toBottomOf="@+id/settings_privacy_find_via_alipay"
-                app:layout_constraintEnd_toEndOf="parent" />
-
-            <com.example.schoolairdroprefactoredition.ui.components.PageItem
-                android:id="@+id/settings_privacy_recommend_alipay_friend"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:PI_description="@string/recommedAlipauFriendDescription"
-                app:PI_isSwitch="true"
-                app:PI_title="@string/recommendAlipay"
-                app:layout_constraintTop_toBottomOf="@+id/settings_privacy_find_via_alipay" />
-
-            <com.example.schoolairdroprefactoredition.ui.components.PageItem
                 android:id="@+id/settings_privacy_blacklist"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/general_padding_large"
                 app:PI_title="@string/blacklist"
-                app:layout_constraintTop_toBottomOf="@+id/settings_privacy_recommend_alipay_friend" />
+                app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.core.widget.NestedScrollView>

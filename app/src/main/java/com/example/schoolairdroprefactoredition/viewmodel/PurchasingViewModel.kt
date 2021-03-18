@@ -20,7 +20,7 @@ class PurchasingViewModel(private val databaseRepository: DatabaseRepository) : 
         }
     }
 
-    private var nowPage = 0
+    private var nowPage = 1
 
     private var longitude = AppConfig.DEBUG_LONGITUDE
     private var latitude = AppConfig.DEBUG_LATITUDE
@@ -67,7 +67,7 @@ class PurchasingViewModel(private val databaseRepository: DatabaseRepository) : 
         val purchasingLiveData = MutableLiveData<DomainPurchasing>()
         viewModelScope.launch {
             // 刷新时重置页码
-            nowPage = 0
+            nowPage = 1
             // 刷新时重置加载更多的地理位置
             this@PurchasingViewModel.longitude = longitude
             this@PurchasingViewModel.latitude = latitude

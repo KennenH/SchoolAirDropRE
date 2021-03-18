@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.repository
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
+import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import retrofit2.Call
@@ -17,6 +18,73 @@ class GoodsRepository private constructor() {
                 ?: GoodsRepository().also {
                     INSTANCE = it
                 }
+    }
+
+    /**
+     * 收藏或取消收藏
+     */
+    fun favorGoods(token: String, goodsID: Int, isFavor: Boolean, onResult: (Boolean) -> Unit) {
+        if (isFavor) {
+            RetrofitClient.goodsApi.favorGoods(token, goodsID).apply {
+                enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
+                    override fun onFailureAllRetries() {
+                        onResult(false)
+                    }
+
+                    override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
+                        if (response.code() == HttpURLConnection.HTTP_OK) {
+                            val body = response.body()
+                            if (body != null && body.isSuccess) {
+                                onResult(true)
+                            } else {
+                                onResult(false)
+                            }
+                        } else {
+                            onResult(false)
+                        }
+                    }
+                })
+            }
+        } else {
+            RetrofitClient.goodsApi.unFavorGoods(token, goodsID).apply {
+                enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
+                    override fun onFailureAllRetries() {
+                        onResult(false)
+                    }
+
+                    override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
+                        if (response.code() == HttpURLConnection.HTTP_OK) {
+                            val body = response.body()
+                            if (body != null && body.isSuccess) {
+                                onResult(true)
+                            } else {
+                                onResult(false)
+                            }
+                        } else {
+                            onResult(false)
+                        }
+                    }
+                })
+            }
+        }
+    }
+
+    /**
+     * 当前账号浏览一个物品每24小时仅为该物品添加一个浏览量
+     */
+    fun browseGoods(goodsID: Int) {
+        RetrofitClient.goodsApi.browseGoods(
+                goodsID,
+                ConstantUtil.CLIENT_ID,
+                ConstantUtil.CLIENT_SECRET).apply {
+            enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
+                override fun onFailureAllRetries() {
+                }
+
+                override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
+                }
+            })
+        }
     }
 
     /**
@@ -41,42 +109,6 @@ class GoodsRepository private constructor() {
                         onResult(body)
                     } else {
                         onResult(null)
-                    }
-                }
-            })
-        }
-    }
-
-    /**
-     * 获取物品剩下的信息
-     *
-     * @param onResult
-     * response code 200 -- > 物品信息获取成功
-     * response code 404 -- > 物品已下架
-     * response 空 -- > 信息获取失败
-     */
-    fun getGoodsDetail(goodsID: Int,
-                       onResult: (response: GoodsDetailInfo?) -> Unit) {
-        RetrofitClient.goodsApi.getGoodsDetail(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, goodsID).apply {
-            enqueue(object : CallBackWithRetry<GoodsDetailInfo>(this@apply) {
-                override fun onFailureAllRetries() {
-                    onResult(null)
-                }
-
-                override fun onResponse(call: Call<GoodsDetailInfo>, response: Response<GoodsDetailInfo>) {
-                    val result = response.body()
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        if (response.isSuccessful && result != null) {
-                            onResult(result)
-                        } else {
-                            onResult(null)
-                        }
-                    } else {
-                        if (result?.code == HttpURLConnection.HTTP_NOT_FOUND) {
-                            onResult(result)
-                        } else {
-                            onResult(null)
-                        }
                     }
                 }
             })

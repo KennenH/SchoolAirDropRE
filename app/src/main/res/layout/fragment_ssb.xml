@@ -9,25 +9,19 @@
         android:layout_height="match_parent"
         android:background="@color/primary">
 
-        <FrameLayout
+        <com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
+            android:id="@+id/ssb_recycler"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
-                android:id="@+id/place_holder"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone" />
-
-            <com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
-                android:id="@+id/ssb_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:clipChildren="false"
-                android:clipToPadding="false"
-                android:overScrollMode="never"
-                android:splitMotionEvents="false" />
-
-        </FrameLayout>
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"
+            android:overScrollMode="never"
+            android:splitMotionEvents="false" />
     </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
+
+    <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
+        android:id="@+id/place_holder"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
 </FrameLayout>

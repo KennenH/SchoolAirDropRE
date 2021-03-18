@@ -5,9 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.CompoundButton
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.blankj.utilcode.util.ClickUtils
+import com.alipay.sdk.app.OpenAuthTask
 import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.example.schoolairdroprefactoredition.R
@@ -15,12 +16,13 @@ import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.utils.AnimUtil
-import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
+import com.example.schoolairdroprefactoredition.viewmodel.AccountViewModel
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_logged_in.*
 import kotlinx.android.synthetic.main.activity_login.*
+
 
 class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, CompoundButton.OnCheckedChangeListener, SAApplication.OnApplicationLoginListener {
 
@@ -31,8 +33,11 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
          * 所有在登录页面和主页面之间的可能的经过的页面，都需要实现
          * onActivityResult来帮助登录页传递登录信息
          */
-        fun start(context: Context?) {
+        fun start(context: Context?, actionAfterLogin: Int? = null) {
             val intent = Intent(context, LoginActivity::class.java)
+            if (actionAfterLogin != null) {
+                intent.putExtra(ConstantUtil.KEY_ACTION_AFTER_LOGIN, actionAfterLogin)
+            }
             if (context is AppCompatActivity) {
                 context.startActivityForResult(intent, LOGIN)
                 AnimUtil.activityStartAnimUp(context)
@@ -40,8 +45,12 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
         }
     }
 
-    private val viewModel by lazy {
+    private val loginViewModel by lazy {
         ViewModelProvider(this@LoginActivity).get(LoginViewModel::class.java)
+    }
+
+    private val accountViewModel by lazy {
+        ViewModelProvider(this@LoginActivity).get(AccountViewModel::class.java)
     }
 
     /**
@@ -61,39 +70,71 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      */
     private var token: DomainToken? = null
 
+    /**
+     * OpenAuthTask.OK =  9000               - 调用成功
+     * OpenAuthTask.Duplex =  5000           -  3 s 内快速发起了多次支付 / 授权调用。稍后重试即可。
+     * OpenAuthTask.NOT_INSTALLED =  4001    - 用户未安装支付宝 App。
+     * OpenAuthTask.SYS_ERR =  4000          - 其它错误，如参数传递错误。
+     */
+    private val openAuthCallback = OpenAuthTask.Callback { resultCode, memo, bundle ->
+        when (resultCode) {
+            OpenAuthTask.OK -> {
+                Toast.makeText(this, "授权成功", Toast.LENGTH_SHORT).show()
+                doLoginAppWithAuthCode(bundle.getString("auth_code"))
+            }
+            OpenAuthTask.Duplex -> {
+                Toast.makeText(this, "操作过于频繁，请稍后重试", Toast.LENGTH_SHORT).show()
+                LogUtils.d("操作过于频繁，请稍后重试")
+            }
+            OpenAuthTask.NOT_INSTALLED -> {
+                Toast.makeText(this, "没有安装支付宝App", Toast.LENGTH_SHORT).show()
+                LogUtils.d("没有安装支付宝App")
+            }
+            OpenAuthTask.SYS_ERR -> {
+                Toast.makeText(this, "授权时遇到了意料之外的错误", Toast.LENGTH_SHORT).show()
+                LogUtils.d("授权时遇到了意料之外的错误")
+            }
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        token = (application as SAApplication).getCachedToken()
+//        val info = (application as SAApplication).getCachedMyInfo()
+//        // 已登录时
+//        if (info != null) {
+//            setContentView(R.layout.activity_logged_in)
+//
+//            val phone = AppConfig.USER_ALIPAY
+////          todo 发布时取消注释下面这句话
+//            // final String priPhone = phone.substring(0, 3).concat("****").concat(phone.substring(7));
+//            val isPri = booleanArrayOf(true)
+//
+//            userName.text = phone
+//            userName.setOnClickListener {
+//                userName.text = if (isPri[0]) phone else phone
+//                isPri[0] = !isPri[0]
+//            }
+//            close.setOnClickListener {
+//                finish()
+//                AnimUtil.activityExitAnimDown(this)
+//            }
+//            ClickUtils.applyPressedViewAlpha(close, 0.6f)
+//        } else {
+        setContentView(R.layout.activity_login)
+        (application as? SAApplication)?.addOnApplicationLoginListener(this)
+        login_with_alipay.isEnabled = false
+        cancel.setOnClickListener(this)
+        checkbox.setOnCheckedChangeListener(this)
+        checkbox.isChecked = false
+        login_with_alipay.setOnClickListener(this)
+//        }
+    }
 
-        token = (application as SAApplication).getCachedToken()
-        val info = (application as SAApplication).getCachedMyInfo()
-        // 已登录时
-        if (info != null) {
-            setContentView(R.layout.activity_logged_in)
-
-            val phone = AppConfig.USER_ALIPAY
-//          todo 发布时取消注释下面这句话
-            // final String priPhone = phone.substring(0, 3).concat("****").concat(phone.substring(7));
-            val isPri = booleanArrayOf(true)
-
-            userName.text = phone
-            userName.setOnClickListener {
-                userName.text = if (isPri[0]) phone else phone
-                isPri[0] = !isPri[0]
-            }
-            close.setOnClickListener {
-                finish()
-                AnimUtil.activityExitAnimDown(this)
-            }
-            ClickUtils.applyPressedViewAlpha(close, 0.6f)
-        } else {
-            setContentView(R.layout.activity_login)
-            (application as? SAApplication)?.addOnApplicationLoginListener(this)
-            login_with_alipay.isEnabled = false
-            cancel.setOnClickListener(this)
-            checkbox.setOnCheckedChangeListener(this)
-            checkbox.isChecked = false
-            login_with_alipay.setOnClickListener(this)
-        }
+    override fun onBackPressed() {
+        setResult(RESULT_CANCELED)
+        super.onBackPressed()
+        AnimUtil.activityExitAnimDown(this)
     }
 
     /**
@@ -104,10 +145,26 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
         dismissLoading { DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLogin) }
     }
 
-    override fun onBackPressed() {
-        setResult(RESULT_CANCELED)
-        super.onBackPressed()
-        AnimUtil.activityExitAnimDown(this)
+
+    /**
+     * 跳转支付宝进行app授权
+     *
+     * 用户授权之后将返回用户alipay id，用以登录
+     */
+    private fun openAuthScheme() {
+        // 传递给支付宝应用的业务参数
+        val bizParams: MutableMap<String, String> = HashMap()
+        bizParams["url"] = "https://authweb.alipay.com/auth?auth_type=PURE_OAUTH_SDK&app_id=" + ConstantUtil.ALIPAY_APP_ID + "&scope=auth_base&state=" + ConstantUtil.ALIPAY_AUTH_STATE
+        val scheme = "http://auth.schoolairdrop.com/alipay_result_callback"
+
+        // 唤起授权业务
+        val task = OpenAuthTask(this)
+        task.execute(
+                scheme,
+                OpenAuthTask.BizType.AccountAuth,
+                bizParams,
+                openAuthCallback,
+                true)
     }
 
     /**
@@ -125,26 +182,16 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     override fun onClick(v: View) {
         when (v.id) {
             R.id.login_with_alipay -> {
-                // 暂时禁用提交按钮防止短时间内提交多次
-                v.isEnabled = false
-
-                // 开始转圈圈，这个调用里一旦出错中断了，必须调用loginError来提示用户登录请求中断
-                showLoading {
-                    // 如果没网直接error
-                    if (NetworkUtils.isConnected()) {
-                        // 这里是唯一能将这个变量置为true的地方，失败或者功能之后一定要调用loginError
-                        // 否则用户再点也没办法登录了
-                        if (!isLogging) {
-                            isLogging = true
-                            loginWithAlipay()
-                        }
+                // 检查本地是否有alipay id缓存
+                accountViewModel.lastLoggedUserAlipayID.let {
+                    if (it == null) {
+                        // 本地没有alipay id缓存，可能是没有登录过，也可能是账号手动退出，也可能是缓存被清理
+                        openAuthScheme()
                     } else {
-                        loginError()
+                        // 本地有alipay id缓存，直接使用之登录即可
+                        doLoginAppWithAuthCode(it)
                     }
                 }
-
-                // 已经在网络请求了，可以放开提交按钮了
-                v.isEnabled = true
             }
 
             R.id.cancel -> {
@@ -159,39 +206,54 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     }
 
     /**
+     * 在获取了auth code之后使用它获取alipay id
+     */
+    private fun doLoginAppWithAuthCode(authCode: String?) {
+        // 暂时禁用提交按钮防止短时间内提交多次
+        login_with_alipay.isEnabled = false
+
+        // 开始转圈圈，这个调用里一旦出错中断了，必须调用loginError来提示用户登录请求中断
+        showLoading {
+            // 如果没网直接error
+            if (NetworkUtils.isConnected()) {
+                // 这里是唯一能将这个变量置为true的地方，失败或者功能之后一定要调用loginError
+                // 否则用户再点也没办法登录了
+                if (!isLogging) {
+                    isLogging = true
+                    loginWithAlipay(authCode)
+                }
+            } else {
+                loginError()
+            }
+        }
+
+        // 已经在网络请求了，可以放开提交按钮了
+        login_with_alipay.isEnabled = true
+    }
+
+    /**
      * 登录网络请求
      * 两次请求获取token信息
      * 最后使用token换取用户信息
      */
     @Synchronized
-    private fun loginWithAlipay() {
+    private fun loginWithAlipay(authCode: String?) {
         if (token != null) {
             // 如果之前某种情况登录成功但是用户信息获取失败，直接获取用户信息即可
             getUserInfoWithToken(token)
         } else {
-            // 页面中没有token
-            viewModel.getPublicKey().observeOnce(this, { publicKey ->
-                if (publicKey != null) {
-                    viewModel.authorizeWithAlipayID(
-                            AppConfig.USER_ALIPAY, publicKey.public_key).observeOnce(this, { authorizedToken ->
-                        if (authorizedToken != null) {
-                            token = authorizedToken
-
-                            // todo comment this when release
-                            LogUtils.d("authorizedToken -- > $authorizedToken")
-
-                            // 登录成功了，也不需要把isLogging置回false了
-                            getUserInfoWithToken(authorizedToken)
-                        } else {
-                            loginError()
-                        }
-                    })
+            loginViewModel.loginWithAlipayAuthCode(authCode).observeOnce(this) { alipayID ->
+                if (alipayID != null) {
+                    // 登录成功了，也不需要把isLogging置回false了
+                    getUserInfoWithToken(alipayID)
                 } else {
+                    // 这里是手动登录，要是返回了null说明是出问题了
                     loginError()
                 }
-            })
+            }
         }
     }
+
 
     /**
      * 使用token获取用户信息
@@ -199,7 +261,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     private fun getUserInfoWithToken(token: DomainToken?) {
         // 要是登录了发现token没了那也没救了
         if (token != null) {
-            viewModel.getMyInfo(token.access_token).observeOnce(this@LoginActivity, {
+            loginViewModel.getMyInfo(token.access_token).observeOnce(this@LoginActivity, {
                 if (it != null) {
                     // token换取的user info
                     intent.putExtra(ConstantUtil.KEY_USER_INFO, it)

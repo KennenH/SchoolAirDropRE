@@ -119,11 +119,6 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         user_background.layoutParams.height
     }
 
-    /**
-     * 判断是否是自己的个人主页
-     */
-    private var isMine: Boolean = false
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_user)
@@ -196,14 +191,21 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
 
         userInfo.createtime.let { millis ->
             if (millis == -1L) return
-            val calendar = Calendar.getInstance().also { it.timeInMillis = millis }
+            val calendar = Calendar.getInstance().also { it.timeInMillis = millis * 1000L }
             user_join_time.text = getString(
                     R.string.userJoinTime,
                     calendar.get(Calendar.YEAR),
                     calendar.get(Calendar.MONTH),
                     calendar.get(Calendar.DAY_OF_MONTH))
         }
-        description.text = getString(R.string.lastActiveTime, userInfo.lastLoginTime)
+
+        try {
+            description.text = getString(R.string.lastActiveTime,
+                    TimeUtils.getFriendlyTimeSpanByNow(TimeUtils.string2Date(userInfo.lastLoginTime)))
+        } catch (e: Exception) {
+            description.visibility = View.GONE
+        }
+
         userName.text = userInfo.userName
         user_more_selling.text = userInfo.userGoodsOnSaleCount.toString()
         user_more_posts.text = userInfo.userContactCount.toString()
@@ -238,14 +240,14 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
                 XPopup.Builder(this@UserActivity)
                         .asImageViewer(v as ImageView,
                                 ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(userInfo?.userAvatar),
-                                false, -1, -1, ScreenUtils.getAppScreenWidth(),
+                                false, -1, -1, -1,
                                 true, getColor(R.color.blackAlways), ImageLoader())
                         .show()
             }
 
             // 在售
             R.id.user_more_selling -> {
-                SSBActivity.start(this@UserActivity, userInfo?.userId, 0, isModifiable || isMine)
+                SSBActivity.start(this@UserActivity, userInfo?.userId, 0, isModifiable)
             }
 
             // 帖子

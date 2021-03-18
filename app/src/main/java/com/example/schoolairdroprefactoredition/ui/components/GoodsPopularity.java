@@ -16,6 +16,8 @@ public class GoodsPopularity extends ConstraintLayout {
     private final TextView mLikes;
     private final TextView mWatches;
 
+    private int likes = 0;
+
     public GoodsPopularity(Context context) {
         this(context, null);
     }
@@ -38,7 +40,12 @@ public class GoodsPopularity extends ConstraintLayout {
     }
 
     public void setLikes(int likes) {
+        this.likes = likes;
         mLikes.setText(NumberUtil.num2StringWithUnit(likes));
+    }
+
+    public int getLikes() {
+        return likes;
     }
 
     public void setWatches(int watches) {

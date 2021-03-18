@@ -8,7 +8,7 @@ object AppConfig {
     /**
      * 是否开启debug模式
      */
-    const val IS_DEBUG = true
+    const val IS_DEBUG = false
 
     /**
      * debug模式下默认中国计量大学
@@ -28,6 +28,9 @@ object AppConfig {
      * wencaizhongbai
      * wiredo
      * clz
+     * mav
+     * Sage
+     * test1 李伟
      */
     const val USER_ALIPAY = "19858120611"
 }

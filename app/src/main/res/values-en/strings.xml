@@ -303,6 +303,10 @@
     <string name="requestingServer">Requesting server</string>
     <string name="uploadFailedAtIndex">Error uploading image %d</string>
     <string name="picturePrepareFailed">An unexpected problem occurred while processing the image file. Please try to select another image and try again.</string>
-    <string name="canFavorWithoutLogin">You can favor item without logging in</string>
+    <string name="canFavorItemInGoodsPage">You can favor item on them item page</string>
     <string name="canChatInGoodsPage">You can initiate a chat with the seller on the item page</string>
+    <string name="gratefulToHaveU">Grateful to have u</string>
+    <string name="goPostUItem">Go to the homepage or click on the upper right corner to add</string>
+    <string name="actionTooFrequent">The operation is too frequent</string>
+    <string name="watchCount">%d people viewed</string>
 </resources>

@@ -22,6 +22,8 @@ import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.MessageViewModel
 import com.github.ybq.android.spinkit.SpinKitView
+import com.yanzhenjie.recyclerview.OnItemMenuClickListener
+import com.yanzhenjie.recyclerview.SwipeMenuBridge
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import net.x52im.mobileimsdk.server.protocal.Protocal
@@ -123,7 +125,7 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
                 if (menuBridge.position == 0) {
                     // 隐藏第position个会话
                     // 2021/2/23 Bug Fix： 这里如果直接调用data[adapterPosition]会莫名其妙 NPE crash
-                    //           update： 只能多此一举地进行一次遍历才能正常
+                    //           update： 只能多此一举地进行一次遍历
                     for ((index, datum) in mMessagesRecyclerAdapter.data.withIndex()) {
                         if (index == adapterPosition) {
                             mMessagesRecyclerAdapter.removeAt(adapterPosition)

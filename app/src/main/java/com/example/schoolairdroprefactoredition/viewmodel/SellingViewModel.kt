@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.schoolairdroprefactoredition.domain.DomainPostInfo
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
+import com.example.schoolairdroprefactoredition.domain.DomainSelling
 import com.example.schoolairdroprefactoredition.repository.SellingRepository
 
 class SellingViewModel : ViewModel() {
@@ -14,11 +15,6 @@ class SellingViewModel : ViewModel() {
     private val postsPage = 0
 
     private val sellingRepository = SellingRepository.getInstance()
-
-    private val postsLiveData = MutableLiveData<DomainPostInfo?>()
-
-    private val deletePostResultLiveData = MutableLiveData<Boolean>()
-    private val updatePostResultLiveData = MutableLiveData<Boolean>()
 
     /**
      * 下架物品
@@ -34,8 +30,8 @@ class SellingViewModel : ViewModel() {
     /**
      * 获取用户在售物品
      */
-    fun getSelling(userID: Int): LiveData<DomainPurchasing?> {
-        val sellingLiveData = MutableLiveData<DomainPurchasing?>()
+    fun getSelling(userID: Int): LiveData<DomainSelling?> {
+        val sellingLiveData = MutableLiveData<DomainSelling?>()
         sellingRepository.getSelling(userID) {
             sellingLiveData.postValue(it)
         }

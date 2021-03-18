@@ -30,7 +30,9 @@ class UserInfoCache {
      * 退出账号
      */
     fun quitCurrentAccount() {
-        updateUserAccount(DomainUserInfo.DataBean())
+        updateUserAccount(DomainUserInfo.DataBean().also {
+            it.userId = -1
+        })
     }
 
     /**
@@ -43,7 +45,8 @@ class UserInfoCache {
     /**
      * 更新设备上已有的账号信息
      *
-     * @param info 传入null时删除当前账号
+     * @param info
+     * 传入null时删除当前账号，包括保存在本地的token
      */
     fun updateUserAccount(info: DomainUserInfo.DataBean?) {
         // 传入null，则将第一个账号（当前）删除

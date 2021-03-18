@@ -23,6 +23,11 @@ import com.journeyapps.barcodescanner.DecoratedBarcodeView.TorchListener
 import kotlinx.android.synthetic.main.activity_capture.*
 import kotlinx.android.synthetic.main.custom_barcode_scanner.*
 
+// 打开扫描页面
+//                IntentIntegrator.forSupportFragment(this@MyFragment)
+//                        .setCaptureActivity(CaptureActivity::class.java)
+//                        .setBeepEnabled(false)
+//                        .initiateScan()
 class CaptureActivity : BaseActivity(), TorchListener {
 
     companion object {

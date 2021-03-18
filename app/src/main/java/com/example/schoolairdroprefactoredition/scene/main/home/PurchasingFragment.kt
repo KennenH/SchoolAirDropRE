@@ -123,7 +123,7 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
 
     override fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?) {
         if (aMapLocation == null) {
-            DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
+            DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLocation)
             return
         }
         purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observeOnce(viewLifecycleOwner) {

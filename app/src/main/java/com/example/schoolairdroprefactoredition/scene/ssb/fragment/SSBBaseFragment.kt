@@ -8,8 +8,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.LogUtils
+import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
+import com.example.schoolairdroprefactoredition.domain.DomainSelling
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.SSBAdapter
@@ -40,7 +42,7 @@ abstract class SSBBaseFragment :
 
     protected var binding: FragmentSsbBinding? = null
 
-    protected var mList: ArrayList<DomainPurchasing.DataBean> = ArrayList()
+    protected var mList: ArrayList<DomainSelling.Data> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSsbBinding.inflate(inflater, container, false)
@@ -80,9 +82,11 @@ abstract class SSBBaseFragment :
     /**
      * 子fragment在获取网络数据之后调用
      */
-    protected fun loadData(data: DomainPurchasing) {
+    protected fun loadData(data: DomainSelling) {
         mList.addAll(data.data)
-        if (mList.size == 0) showPlaceholder(StatePlaceHolder.TYPE_EMPTY) else {
+        if (mList.size == 0) {
+            showPlaceholder(StatePlaceHolder.TYPE_EMPTY, getString(R.string.goPostUItem))
+        } else {
             mAdapter.setList(mList)
             showContentContainer()
         }
@@ -102,14 +106,13 @@ abstract class SSBBaseFragment :
      * item上右下角的三个点按钮的操作
      * 在售列表中为 {下架物品}
      */
-    abstract fun onItemAction(view: View, bean: DomainPurchasing.DataBean?)
+    abstract fun onItemAction(view: View, bean: DomainSelling.Data?)
 
-    override fun onItemActionButtonClick(view: View, bean: DomainPurchasing.DataBean?) {
+    override fun onItemActionButtonClick(view: View, bean: DomainSelling.Data?) {
         onItemAction(view, bean)
     }
 
     override fun onRetry(view: View) {
-        LogUtils.d("重试获取selling")
         retryGrabOnlineData()
     }
 }

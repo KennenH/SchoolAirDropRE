@@ -21,6 +21,8 @@ public class DialogUtil {
      * @param confirmListener 确认后的事件
      */
     public static void showConfirm(Context context, CharSequence title, CharSequence content, OnConfirmListener confirmListener) {
+        if (content == null) return;
+
         boolean isDarkTheme = false;
         if ((context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES) {
             isDarkTheme = true;
@@ -39,6 +41,8 @@ public class DialogUtil {
      * @param type one of {@link DIALOG_TYPE}
      */
     public static void showCenterDialog(Context context, @DIALOG_TYPE int type, @StringRes int tip) {
+        if (context == null) return;
+
         switch (type) {
             case DialogUtil.DIALOG_TYPE.SUCCESS:
                 showSuccess(context, tip);

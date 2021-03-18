@@ -25,12 +25,25 @@ import com.example.schoolairdroprefactoredition.utils.*
 import com.example.schoolairdroprefactoredition.viewmodel.GoodsViewModel
 import kotlinx.android.synthetic.main.activity_goods.*
 import kotlinx.android.synthetic.main.activity_logged_in.*
-import java.net.HttpURLConnection
+import kotlinx.android.synthetic.main.placeholder.*
 
 class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickListener, OnUserInfoClickListener, ButtonRight.OnButtonClickListener {
 
     companion object {
-        const val KEY_IS_FROM_SELLING = "fromSelling?"
+        /**
+         * 标志本页面是否是从在售页面进入
+         */
+        const val IS_FROM_SELLING = "fromSelling?"
+
+        /**
+         * 登录后若卖家不是自己则自动打开与卖家的聊天页面
+         */
+        const val ACTION_AFTER_LOGIN_CHAT = 10
+
+        /**
+         * 登录后执行收藏或取消收藏按钮
+         */
+        const val ACTION_AFTER_LOGIN_FAVOR = 20
 
         /**
          * @param goodsID 物品id
@@ -41,7 +54,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
             val intent = Intent(context, GoodsActivity::class.java)
             intent.apply {
                 putExtra(ConstantUtil.KEY_GOODS_ID, goodsID)
-                putExtra(KEY_IS_FROM_SELLING, isFromSelling)
+                putExtra(IS_FROM_SELLING, isFromSelling)
             }
 
             if (context is AppCompatActivity) {
@@ -120,10 +133,21 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
      */
     private fun validateInfo() {
         // 若从用户信息页面进入的在售页面，则隐藏卖家信息，原因见方法本身
-        if (intent.getBooleanExtra(KEY_IS_FROM_SELLING, false)) {
-            goods_info_container.hideSellerInfo()
-        }
+//        if (intent.getBooleanExtra(IS_FROM_SELLING, false)) {
+//            goods_info_container.hideSellerInfo()
+//        }
+        // 显示或隐藏动作按钮
         showActionButtons()
+        // 浏览量加一
+        goodsViewModel.browse(goodsInfo?.goods_id, (application as? SAApplication)?.getCachedMyInfo()?.userId)
+    }
+
+    /**
+     * 仅本地显示，物品收藏数加一/减一
+     * @param isFavor 是否是收藏加一
+     */
+    private fun updateFavorCount(isFavor: Boolean) {
+        goods_info_container.updateFavor(isFavor)
     }
 
     /**
@@ -139,8 +163,8 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
     /**
      * 在未登录时打开物品页面并进行操作时
      */
-    private fun login() {
-        LoginActivity.start(this@GoodsActivity)
+    private fun login(action: Int? = null) {
+        LoginActivity.start(this@GoodsActivity, action)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -149,12 +173,29 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
             if (requestCode == LoginActivity.LOGIN) {
                 // 在物品页面登录后返回
                 if (data != null) {
+                    val myInfo = data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean?
                     (application as SAApplication).cacheMyInfoAndToken(
-                            data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean,
-                            data.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken)
+                            myInfo,
+                            data.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken?)
 
                     validateInfo()
                     setResult(Activity.RESULT_OK, data)
+                    when (data.getIntExtra(ConstantUtil.KEY_ACTION_AFTER_LOGIN, -1)) {
+                        // 如果登录后动作码为登录且物品不是自己的，则打开聊天页面
+                        ACTION_AFTER_LOGIN_CHAT -> {
+                            goodsInfo?.seller?.user_id?.let {
+                                if (it != myInfo?.userId) {
+                                    ChatActivity.start(this, it)
+                                }
+                            }
+                        }
+                        // 执行收藏/取消收藏操作
+                        ACTION_AFTER_LOGIN_FAVOR -> {
+                            onRightButtonClick()
+                        }
+                        else -> { // do nothing
+                        }
+                    }
                 }
             }
         }
@@ -165,7 +206,6 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
             finish()
             return true
         }
-
         return super.onOptionsItemSelected(item)
     }
 
@@ -179,7 +219,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
      */
     override fun onLeftButtonClick() {
         if ((application as SAApplication).getCachedToken() == null) {
-            login()
+            login(ACTION_AFTER_LOGIN_CHAT)
         } else {
             if (goodsInfo?.seller?.user_id != null) {
                 val counterpartInfo = DomainUserInfo.DataBean()
@@ -194,33 +234,52 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
     /**
      * 点击右下角的收藏按钮
      */
+    @Synchronized
     override fun onRightButtonClick() {
-        if (goodsInfo?.goods_id != null &&
-                goodsInfo?.seller?.user_id != null &&
-                goodsInfo?.goods_name != null &&
-                goodsInfo?.goods_cover_image != null &&
-                goodsInfo?.goods_price != null &&
-                goodsInfo?.goods_is_bargain != null &&
-                goodsInfo?.goods_is_secondHand != null) {
-            showLoading()
-            goodsViewModel.toggleGoodsFavorite(Favorite(
-                    goodsInfo?.goods_id!!,
-                    goodsInfo?.seller?.user_id!!,
-                    goodsInfo?.goods_name!!,
-                    goodsInfo?.goods_cover_image!!,
-                    goodsInfo?.goods_price.toString(),
-                    goodsInfo?.goods_is_bargain!!,
-                    goodsInfo?.goods_is_secondHand!!
-            )).observeOnce(this) {
-                dismissLoading {
-                    goods_button_right.toggleFavor()
-                    if (it) {
-                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.favorDone)
-                    } else {
-                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.unfavorDone)
+        goods_button_right.isEnabled = false
+        val token = (application as SAApplication).getCachedToken()
+        if (token != null) {
+            if (goodsInfo?.goods_id != null &&
+                    goodsInfo?.seller?.user_id != null &&
+                    goodsInfo?.goods_name != null &&
+                    goodsInfo?.goods_cover_image != null &&
+                    goodsInfo?.goods_price != null &&
+                    goodsInfo?.goods_is_bargain != null &&
+                    goodsInfo?.goods_is_secondHand != null) {
+                showLoading()
+                goodsViewModel.toggleGoodsFavorite(token.access_token, Favorite(
+                        goodsInfo?.goods_id!!,
+                        goodsInfo?.seller?.user_id!!,
+                        goodsInfo?.goods_name!!,
+                        goodsInfo?.goods_cover_image!!,
+                        goodsInfo?.goods_price.toString(),
+                        goodsInfo?.goods_is_bargain!!,
+                        goodsInfo?.goods_is_secondHand!!,
+                        true
+                )).observeOnce(this) {
+                    dismissLoading {
+                        goods_button_right.isEnabled = true
+                        it?.let { isFavor ->
+                            updateFavorCount(isFavor)
+                        }
+                        when (it) {
+                            true -> {
+                                goods_button_right.toggleFavor()
+                                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.favorDone)
+                            }
+                            false -> {
+                                goods_button_right.toggleFavor()
+                                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.unfavorDone)
+                            }
+                            else -> {
+                                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.actionTooFrequent)
+                            }
+                        }
                     }
                 }
             }
+        } else {
+            login(ACTION_AFTER_LOGIN_FAVOR)
         }
     }
 }

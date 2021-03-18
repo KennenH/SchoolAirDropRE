@@ -77,6 +77,7 @@ public class DomainUserInfo implements Serializable {
          * "user_avatar": "/uploads/img/user/default/default.jpg",
          * "user_gender": "m",
          * "createtime": 1612696413,
+         * "last_login_time": "2021-03-05 17:03:30"
          * "user_goodsOnSaleCount": 0,
          * "user_contactCount": 0
          */

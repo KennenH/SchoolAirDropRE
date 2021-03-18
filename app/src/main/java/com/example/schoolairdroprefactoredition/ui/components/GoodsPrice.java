@@ -33,8 +33,17 @@ public class GoodsPrice extends ConstraintLayout {
         mPriceFraction = findViewById(R.id.price_fraction);
     }
 
-    public void setPrice(float price) {
-        String p = NumberUtil.num2Money(price);
+    /**
+     * @param isUnitMode 是否需要转换为以k为单位的形式
+     */
+    public void setPrice(float price, boolean isUnitMode) {
+        String p;
+        if (isUnitMode) {
+            p = NumberUtil.num2Money(price);
+        } else {
+            p = String.valueOf(price);
+        }
+
         int dot = p.indexOf(".");
         mCurrency.setText(R.string.currency_RMB);
         if (dot != -1) {
@@ -46,12 +55,21 @@ public class GoodsPrice extends ConstraintLayout {
         }
     }
 
-    public void setPrice(String price) {
+    /**
+     * @param isUnitMode 是否需要转换为以k为单位的形式
+     */
+    public void setPrice(String price, boolean isUnitMode) {
         if (price == null) return;
-        float priceF = Float.parseFloat(price);
-        String p = NumberUtil.num2Money(priceF);
-        int dot = p.indexOf(".");
 
+        String p;
+        if (isUnitMode) {
+            float priceF = Float.parseFloat(price);
+            p = NumberUtil.num2Money(priceF);
+        } else {
+            p = price;
+        }
+
+        int dot = p.indexOf(".");
         mCurrency.setText(R.string.currency_RMB);
         if (dot != -1) {
             mPriceInt.setText(p.substring(0, dot));

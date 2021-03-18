@@ -6,9 +6,29 @@ import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 
 class UserLoginCacheUtils {
+
     companion object {
-        val instance = UserLoginCacheUtils()
-        val mJsonCacheUtil: JsonCacheUtil = JsonCacheUtil.getInstance()
+        private var INSTANCE: UserLoginCacheUtils? = null
+        fun getInstance() = INSTANCE
+                ?: UserLoginCacheUtils().also {
+                    INSTANCE = it
+                }
+    }
+
+    private val mJsonCacheUtil: JsonCacheUtil = JsonCacheUtil.getInstance()
+
+    /**
+     * 保存用户上次登录获取的alipay id
+     */
+    fun saveUserAlipayID(alipayID: String) {
+        mJsonCacheUtil.saveCache(JsonCacheConstantUtil.USER_ALIPAY_ID, alipayID)
+    }
+
+    /**
+     * 获取[saveUserAlipayID]保存的信息
+     */
+    fun getUserAlipayID(): String? {
+        return mJsonCacheUtil.getCache(JsonCacheConstantUtil.USER_ALIPAY_ID, String::class.java)
     }
 
     /**
@@ -19,10 +39,17 @@ class UserLoginCacheUtils {
      * @param duration token持续时间
      */
     fun saveUserToken(token: DomainToken, duration: Long = 3_600) {
-        var userTokenCache: UserTokenCache? = mJsonCacheUtil.getCache(UserTokenCache.KEY, UserTokenCache::class.java)
-        if (userTokenCache == null) userTokenCache = UserTokenCache()
+        val userTokenCache = mJsonCacheUtil.getCache(UserTokenCache.KEY, UserTokenCache::class.java)
+                ?: UserTokenCache()
         userTokenCache.token = token
         mJsonCacheUtil.saveCache(UserTokenCache.KEY, userTokenCache, duration)
+    }
+
+    /**
+     * 获取[saveUserToken]保存的信息
+     */
+    fun getUserToken(): DomainUserInfo.DataBean? {
+        return mJsonCacheUtil.getCache(UserInfoCache.KEY, UserInfoCache::class.java)?.getLastLoggedAccount()
     }
 
     /**
@@ -32,10 +59,16 @@ class UserLoginCacheUtils {
      * @param info 本次登录获取的用户信息
      */
     fun saveUserInfo(info: DomainUserInfo.DataBean) {
-        var userInfoCache: UserInfoCache? = mJsonCacheUtil.getCache(UserInfoCache.KEY, UserInfoCache::class.java)
-        if (userInfoCache == null) userInfoCache = UserInfoCache()
-        userInfoCache.updateUserAccount(info)
-        mJsonCacheUtil.saveCache(UserInfoCache.KEY, userInfoCache)
+        mJsonCacheUtil.saveCache(
+                UserInfoCache.KEY,
+                mJsonCacheUtil.getCache(UserInfoCache.KEY, UserInfoCache::class.java)?.updateUserAccount(info))
+    }
+
+    /**
+     * 获取[saveUserInfo]保存的信息
+     */
+    fun getUserInfo(): DomainToken? {
+        return mJsonCacheUtil.getCache(UserTokenCache.KEY, UserTokenCache::class.java)?.token
     }
 
     /**
@@ -43,10 +76,9 @@ class UserLoginCacheUtils {
      * 不会删除当前账号在设备上的缓存
      */
     private fun quitCurrentUser() {
-        var userInfoCache: UserInfoCache? = mJsonCacheUtil.getCache(UserInfoCache.KEY, UserInfoCache::class.java)
-        if (userInfoCache == null) userInfoCache = UserInfoCache()
-        userInfoCache.quitCurrentAccount()
-        mJsonCacheUtil.saveCache(UserInfoCache.KEY, userInfoCache)
+        mJsonCacheUtil.saveCache(
+                UserInfoCache.KEY,
+                mJsonCacheUtil.getCache(UserInfoCache.KEY, UserInfoCache::class.java)?.quitCurrentAccount())
     }
 
     /**

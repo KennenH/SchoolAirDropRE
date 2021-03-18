@@ -201,9 +201,9 @@ class InputSetActivity : ImmersionStatusBarActivity() {
         val id = item.itemId
         if (id == android.R.id.home) {
             // 当本次修改后文本长度与上次保存的文本长度差超过10时默认为保存而不是丢弃修改
-            if (abs(input.text.length - (content?.length ?: 0)) > 10) {
-                sendData()
-            }
+//            if (abs(input.text.length - (content?.length ?: 0)) > 10) {
+//                sendData()
+//            }
             finish()
             return true
         } else if (id == R.id.done) {

@@ -125,7 +125,7 @@
             android:layout_height="0dp"
             android:background="@drawable/bg_rounded_primary5"
             android:padding="@dimen/general_padding_small"
-            android:src="@drawable/ic_favorite_white"
+            android:src="@drawable/ic_favorite_red"
             app:layout_constraintBottom_toBottomOf="@+id/favorite_contact"
             app:layout_constraintEnd_toEndOf="@+id/favorite_goods_title"
             app:layout_constraintTop_toTopOf="@+id/favorite_contact" />

@@ -317,14 +317,16 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         val token = (application as SAApplication).getCachedToken()
-        val myInfo = (application as SAApplication).getCachedMyInfo()
-        if (token != null && token.access_token != null) {
+        if (token != null && token.access_token != null && mChatRecyclerAdapter.data.isNotEmpty()) {
+            val myInfo = (application as SAApplication).getCachedMyInfo()
             // 获取本地消息记录，由于前面已经设置观察者，此处只需要调用即可
             chatViewModel.getChat(
                     token.access_token,
                     myInfo?.userId.toString(),
                     counterpartInfo.userId.toString(),
                     mChatRecyclerAdapter.data.last().send_time)
+        } else {
+            refreshLayout.finishRefresh()
         }
     }
 

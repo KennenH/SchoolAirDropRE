@@ -4,11 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import com.amap.api.location.AMapLocation
 import com.blankj.utilcode.constant.PermissionConstants
 import com.example.schoolairdroprefactoredition.R
@@ -19,6 +14,11 @@ import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity.OnLocationListener
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.DialogUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import com.qiniu.android.utils.Json
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener
 
@@ -65,6 +65,10 @@ abstract class BaseChildFragment : BaseFragment(), OnLocationListener, EndlessRe
      * 点击重试之后会发现页面无限等待，因为这里的定位查重逻辑将用户手动重试的请求也一并过滤了
      */
     private var isThisPageLocationGot = false
+
+    private val jsonCacheUtil by lazy {
+        JsonCacheUtil.getInstance()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -198,18 +202,22 @@ abstract class BaseChildFragment : BaseFragment(), OnLocationListener, EndlessRe
         if (aMapLocation != null) {
             getAutoLoadMoreData(recycler, aMapLocation)
         } else {
-            Toast.makeText(context, "something went wrong >_<", Toast.LENGTH_SHORT).show()
             recycler.finishLoading()
         }
     }
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
-        if (aMapLocation != null) {
-            getRefreshData(refreshLayout, aMapLocation)
-        } else { // 定位失败时通知父Fragment显示PlaceHolder
+        // 检查刷新操作是否过于频繁
+        JsonCacheUtil.runWithFrequentCheck({
+            if (aMapLocation != null) {
+                getRefreshData(refreshLayout, aMapLocation)
+            } else { // 定位失败时通知父Fragment显示PlaceHolder
+                refreshLayout.finishRefresh()
+                showPlaceHolder(StatePlaceHolder.TYPE_LOADING)
+                locateWithoutRequest() // 自动请求MainActivity的定位
+            }
+        }, {
             refreshLayout.finishRefresh()
-            showPlaceHolder(StatePlaceHolder.TYPE_LOADING)
-            locateWithoutRequest() // 自动请求MainActivity的定位
-        }
+        })
     }
 }

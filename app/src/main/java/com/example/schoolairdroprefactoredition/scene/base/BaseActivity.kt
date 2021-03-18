@@ -13,8 +13,13 @@ import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
+import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
+import com.example.schoolairdroprefactoredition.cache.UserTokenCache
 import com.example.schoolairdroprefactoredition.custom.InAppFloatAnimator
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
@@ -37,6 +42,10 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
          * 浮窗显示持续时间
          */
         const val FLOAT_LAST = 2500L
+    }
+
+    private val jsonCacheUtil by lazy {
+        JsonCacheUtil.getInstance()
     }
 
     private val dismissRunnable by lazy {
@@ -90,63 +99,67 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
      * 显示浮窗
      */
     private fun showFloatWindow(content: String, userID: String) {
-        EasyFloat.isShow(this@BaseActivity, IM_FLOAT_TAG)?.let {
-            if (it) { // 正在显示，直接替换文本，刷新显示时间
-                EasyFloat.getFloatView(this@BaseActivity, IM_FLOAT_TAG)?.apply {
-                    findViewById<TextView?>(R.id.float_in_app_content)?.text = content
-                    resetPostDelay(this)
-                }
-            } else {
-                EasyFloat.with(this)
-                        .setTag(IM_FLOAT_TAG)
-                        .setLayout(R.layout.sheet_float_in_app) { view: View? ->
-                            view?.parent?.requestDisallowInterceptTouchEvent(true)
-                            view?.findViewById<TextView?>(R.id.float_in_app_content)?.text = content
-                            view?.postDelayed(dismissRunnable, FLOAT_LAST)
-                        }
-                        .registerCallback {
-                            var downY = 0f // 按下时的y
-                            var isClick = true
-                            touchEvent { view, motionEvent ->
-                                resetPostDelay(view)
-                                when (motionEvent.action) {
-                                    MotionEvent.ACTION_DOWN -> {
-                                        isClick = true
-                                        downY = motionEvent.y
-                                    }
-                                    MotionEvent.ACTION_MOVE -> {
-                                        isClick = false
-                                        val dMoveY = motionEvent.y - downY
-                                        if (dMoveY <= 0) {
-                                            view.translationY = dMoveY
-                                        } else {
-                                            view.translationY = dMoveY * (0.1f - 0.000002f * dMoveY)
+        val shouldShowFloat = jsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
+                ?.isDisplayInAppFloat ?: true
+        if (shouldShowFloat) {
+            EasyFloat.isShow(this@BaseActivity, IM_FLOAT_TAG)?.let {
+                if (it) { // 正在显示，直接替换文本，刷新显示时间
+                    EasyFloat.getFloatView(this@BaseActivity, IM_FLOAT_TAG)?.apply {
+                        findViewById<TextView?>(R.id.float_in_app_content)?.text = content
+                        resetPostDelay(this)
+                    }
+                } else {
+                    EasyFloat.with(this)
+                            .setTag(IM_FLOAT_TAG)
+                            .setLayout(R.layout.sheet_float_in_app) { view: View? ->
+                                view?.parent?.requestDisallowInterceptTouchEvent(true)
+                                view?.findViewById<TextView?>(R.id.float_in_app_content)?.text = content
+                                view?.postDelayed(dismissRunnable, FLOAT_LAST)
+                            }
+                            .registerCallback {
+                                var downY = 0f // 按下时的y
+                                var isClick = true
+                                touchEvent { view, motionEvent ->
+                                    resetPostDelay(view)
+                                    when (motionEvent.action) {
+                                        MotionEvent.ACTION_DOWN -> {
+                                            isClick = true
+                                            downY = motionEvent.y
                                         }
-                                    }
-                                    MotionEvent.ACTION_UP -> {
-                                        if (isClick) {
-                                            EasyFloat.dismiss(this@BaseActivity, IM_FLOAT_TAG)
-                                            ChatActivity.start(this@BaseActivity, userID.toInt())
-                                        } else {
-                                            if (view.translationY >= 0) {
-                                                // 被下拉时放手将会回归原位
-                                                floatResumePosition(view)
+                                        MotionEvent.ACTION_MOVE -> {
+                                            isClick = false
+                                            val dMoveY = motionEvent.y - downY
+                                            if (dMoveY <= 0) {
+                                                view.translationY = dMoveY
                                             } else {
-                                                // 上拉时放手将会dismiss
+                                                view.translationY = dMoveY * (0.1f - 0.000002f * dMoveY)
+                                            }
+                                        }
+                                        MotionEvent.ACTION_UP -> {
+                                            if (isClick) {
                                                 EasyFloat.dismiss(this@BaseActivity, IM_FLOAT_TAG)
+                                                ChatActivity.start(this@BaseActivity, userID.toInt())
+                                            } else {
+                                                if (view.translationY >= 0) {
+                                                    // 被下拉时放手将会回归原位
+                                                    floatResumePosition(view)
+                                                } else {
+                                                    // 上拉时放手将会dismiss
+                                                    EasyFloat.dismiss(this@BaseActivity, IM_FLOAT_TAG)
+                                                }
                                             }
                                         }
                                     }
                                 }
                             }
-                        }
-                        .setFilter(ChatActivity::class.java)
-                        .setAnimator(InAppFloatAnimator())
-                        .setMatchParent(widthMatch = true, heightMatch = false)
-                        .setDragEnable(false)
-                        .setSidePattern(SidePattern.TOP)
-                        .setShowPattern(ShowPattern.CURRENT_ACTIVITY)
-                        .show()
+                            .setFilter(ChatActivity::class.java)
+                            .setAnimator(InAppFloatAnimator())
+                            .setMatchParent(widthMatch = true, heightMatch = false)
+                            .setDragEnable(false)
+                            .setSidePattern(SidePattern.TOP)
+                            .setShowPattern(ShowPattern.CURRENT_ACTIVITY)
+                            .show()
+                }
             }
         }
     }

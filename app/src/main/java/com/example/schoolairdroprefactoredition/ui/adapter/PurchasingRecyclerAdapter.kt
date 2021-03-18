@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.ui.adapter
 
-import androidx.appcompat.app.AppCompatActivity
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.ItemHomeGoodsInfoBinding
@@ -20,12 +19,12 @@ class PurchasingRecyclerAdapter : BaseFooterAdapter<DomainPurchasing.DataBean, B
         val secondHand = item.isGoods_is_secondHand
 
         ImageUtil.loadRoundedImage(binding.itemImage, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.goods_cover_image))
-        binding.itemPrice.setPrice(item.goods_price)
+        binding.itemPrice.setPrice(item.goods_price, true)
         binding.itemSeller.text = item.seller.user_name
-        if (context is AppCompatActivity) {
-            binding.root.setOnClickListener {
-                GoodsActivity.start(context, item.goods_id, false)
-            }
+        binding.itemWatchCount.text = context.getString(R.string.watchCount, item.goods_watch_count)
+
+        binding.root.setOnClickListener {
+            GoodsActivity.start(context, item.goods_id, false)
         }
 
         if (negotiable && secondHand) {

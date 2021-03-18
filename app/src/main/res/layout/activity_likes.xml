@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/primary"
     tools:context=".scene.favorite.FavoriteActivity">
 
     <androidx.appcompat.widget.Toolbar
@@ -16,6 +17,7 @@
         app:navigationIcon="@drawable/ic_left">
 
         <TextView
+            android:id="@+id/likes_title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"

@@ -82,10 +82,10 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
     private fun setUserData() {
         val info = getInfo()
         if (getToken() == null) { // 无token认证信息，显示默认值
-            mAvatar?.setImageResource(R.drawable.ic_logo_alpha)
+            mAvatar?.setImageResource(R.drawable.placeholder_rounded)
             mName?.text = getString(R.string.pleaseLogin)
         } else if (info != null) { // 设置页面数据
-            ImageUtil.loadRoundedImageColorfulPlaceholder(mAvatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(info.userAvatar))
+            ImageUtil.loadRoundedImage(mAvatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(info.userAvatar))
             mName?.text = info.userName
         }
     }
@@ -95,7 +95,9 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
         val intent: Intent = mainIntent
         when (id) {
             R.id.my_info -> {
-                if (intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) != null && intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO) != null) {
+                val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
+                val userInfo = intent.getSerializableExtra(ConstantUtil.KEY_USER_INFO)
+                if (token != null && userInfo != null) {
                     UserActivity.start(activity)
                 } else {
                     LoginActivity.start(context)
@@ -103,11 +105,6 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
             }
 
             R.id.my_likes -> {
-                // 打开扫描页面
-//                IntentIntegrator.forSupportFragment(this@MyFragment)
-//                        .setCaptureActivity(CaptureActivity::class.java)
-//                        .setBeepEnabled(false)
-//                        .initiateScan()
                 FavoriteActivity.start(context)
             }
 
@@ -116,7 +113,12 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
             }
 
             R.id.my_selling -> {
-                SSBActivity.start(context, getInfo()?.userId, 0, true)
+                val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
+                if (token != null) {
+                    SSBActivity.start(context, getInfo()?.userId, 0, true)
+                } else {
+                    LoginActivity.start(context)
+                }
             }
 
             R.id.my_posts -> {

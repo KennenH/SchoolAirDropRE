@@ -24,9 +24,12 @@ class SwitchAccountActivity : ImmersionStatusBarActivity() {
     companion object {
         const val SWITCH_ACCOUNT = 9346
 
-        fun start(context: Context, bundle: Bundle) {
-            val intent = Intent(context, SwitchAccountActivity::class.java)
-            intent.putExtras(bundle)
+        fun start(context: Context?, userInfo: DomainUserInfo.DataBean?) {
+            if (context == null) return
+
+            val intent = Intent(context, SwitchAccountActivity::class.java).also {
+                it.putExtra(ConstantUtil.KEY_USER_INFO, userInfo)
+            }
             if (context is AppCompatActivity) {
                 context.startActivityForResult(intent, SWITCH_ACCOUNT)
                 AnimUtil.activityStartAnimUp(context)

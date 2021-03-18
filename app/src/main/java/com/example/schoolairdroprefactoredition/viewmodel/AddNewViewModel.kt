@@ -39,11 +39,11 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                    cover: String, picSet: ArrayList<String>,
                    title: String, description: String,
                    longitude: Double, latitude: Double,
-                   isBrandNew: Boolean, isQuotable: Boolean, price: Float): LiveData<Triple<Boolean, Pair<Int,Boolean>, Boolean>> {
+                   isBrandNew: Boolean, isQuotable: Boolean, price: Float): LiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
         // Triple中 第一个bool为上一步是否成功，第二个string为tip的res id，第三个bool为总流程是否成功完成
         // Pair中 第一个Int为tip本身，Boolean为是否是res id，若为false则表示第一个Int是纯数字，此时需要
         // 使用 正在上传第%d张图片 然后填入改数字，若为true则外部直接使用getString将其转换为文字
-        val submitItemLiveData = MutableLiveData<Triple<Boolean, Pair<Int,Boolean>, Boolean>>()
+        val submitItemLiveData = MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>>()
         viewModelScope.launch {
             // 将封面图片加入图片集中，为的是确保服务器收到的数组第一张图片是封面
             picSet.add(0, cover)
@@ -59,18 +59,18 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                     if (allSuccess) {
                         // 返回出来的结果为空
                         if (taskAndKeys != null) {
-                            submitItemLiveData.postValue(Triple(true, Pair(R.string.requestingServer,true), false))
+                            submitItemLiveData.postValue(Triple(true, Pair(R.string.requestingServer, true), false))
                             // 上传物品
                             addNewRepository.submitNewItem(
                                     token, taskAndKeys.taskId,
-                                    taskAndKeys.keys[0], taskAndKeys.keys.joinToString(","),
+                                    taskAndKeys.keys[0], taskAndKeys.keys.drop(0).joinToString(","),
                                     title, description,
                                     longitude, latitude,
                                     isBrandNew, isQuotable, price) {
-                                submitItemLiveData.postValue(Triple(true, Pair(R.string.uploadSuccess,true), it))
+                                submitItemLiveData.postValue(Triple(true, Pair(R.string.uploadSuccess, true), it))
                             }
                         } else {
-                            submitItemLiveData.postValue(Triple(false, Pair(-1,false), false))
+                            submitItemLiveData.postValue(Triple(false, Pair(-1, false), false))
                         }
                     } else {
                         // 这里出来是订阅的每一步流程，需要外部显示tip
@@ -78,7 +78,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                     }
                 } else {
                     // 上一步出错，流程终止
-                    submitItemLiveData.postValue(Triple(false, Pair(-1,false), false))
+                    submitItemLiveData.postValue(Triple(false, Pair(-1, false), false))
                 }
             }
         }

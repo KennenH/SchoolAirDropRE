@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import com.blankj.utilcode.util.TimeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsDetailBinding
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
@@ -11,6 +12,7 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.example.schoolairdroprefactoredition.utils.MyUtil.getArrayFromString
 import com.facebook.shimmer.ShimmerFrameLayout
+import java.lang.Exception
 
 class GoodsInfo @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ShimmerFrameLayout(context, attrs, defStyleAttr), View.OnClickListener {
 
@@ -45,32 +47,52 @@ class GoodsInfo @JvmOverloads constructor(context: Context?, attrs: AttributeSet
         binding.goodsSellerInfo.visibility = GONE
     }
 
-    fun setData(baseInfo: DomainGoodsAllDetailInfo.Data?) {
-        if (baseInfo != null) {
-            val negotiable = baseInfo.goods_is_bargain // 是否可议价
-            val secondHand = baseInfo.goods_is_secondHand // 是否二手
+    /**
+     * 收藏数量加一或减一
+     * @param isFavor true加一，false减一
+     */
+    fun updateFavor(isFavor: Boolean) {
+        if (isFavor) {
+            binding.goodsPopularity.likes++
+        } else {
+            binding.goodsPopularity.likes--
+        }
+    }
+
+    /**
+     * 装填数据
+     */
+    fun setData(item: DomainGoodsAllDetailInfo.Data?) {
+        if (item != null) {
+            val negotiable = item.goods_is_bargain // 是否可议价
+            val secondHand = item.goods_is_secondHand // 是否二手
 
             if (negotiable && secondHand) {
-                binding.goodsName.text = context.resources.getString(R.string.itemNS, baseInfo.goods_name)
+                binding.goodsName.text = context.resources.getString(R.string.itemNS, item.goods_name)
             } else if (negotiable) {
-                binding.goodsName.text = context.resources.getString(R.string.itemN, baseInfo.goods_name)
+                binding.goodsName.text = context.resources.getString(R.string.itemN, item.goods_name)
             } else if (secondHand) {
-                binding.goodsName.text = context.resources.getString(R.string.itemS, baseInfo.goods_name)
+                binding.goodsName.text = context.resources.getString(R.string.itemS, item.goods_name)
             } else {
-                binding.goodsName.text = baseInfo.goods_name
+                binding.goodsName.text = item.goods_name
             }
 
             binding.apply {
-                goodsPrice.setPrice(baseInfo.goods_price)
-                goodsPager.setData(getArrayFromString(baseInfo.goods_images).also {
-                    it.drop(0)
-                }, false)
-                goodsDescription.text = baseInfo.goods_content
-                goodsPopularity.setWatches(baseInfo.goods_watch_count)
-                goodsPopularity.setLikes(baseInfo.goods_favor_count)
-                goodsPopularity.setComments(baseInfo.goods_chat_count)
-                goodsUserName.text = baseInfo.seller.user_name
-                ImageUtil.loadRoundedImage(goodsAvatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(baseInfo.seller.user_avatar))
+                goodsPrice.setPrice(item.goods_price, false)
+                goodsPager.setData(getArrayFromString(item.goods_images), false)
+                goodsDescription.text = item.goods_content
+                goodsPopularity.setWatches(item.goods_watch_count)
+                goodsPopularity.likes = item.goods_favor_count
+                goodsPopularity.setComments(item.goods_chat_count)
+
+                try {
+                    goodsUserLastLoginTime.text = context?.getString(R.string.lastActiveTime, TimeUtils.getFriendlyTimeSpanByNow(item.seller.last_login_time))
+                } catch (e: Exception) {
+                    goodsUserLastLoginTime.visibility = View.GONE
+                }
+
+                goodsUserName.text = item.seller.user_name
+                ImageUtil.loadRoundedImage(goodsAvatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.seller.user_avatar))
             }
 
         }

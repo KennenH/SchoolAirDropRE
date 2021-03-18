@@ -252,7 +252,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 // 加载头像
                 if (counterpartUrl == null) {
                     counterpartUrl = ConstantUtil.QINIU_BASE_URL + (ImageUtil.fixUrl(mCounterpartInfo?.userAvatar)
-                            ?: ConstantUtil.DEFAULT_AVATAR)
+                            ?: ConstantUtil.QINIU_BASE_URL + ConstantUtil.DEFAULT_AVATAR)
                 }
                 ImageUtil.loadRoundedImage(avatarView, counterpartUrl)
                 // 消息内容
@@ -271,7 +271,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 // 加载头像
                 if (counterpartUrl == null) {
                     counterpartUrl = ConstantUtil.QINIU_BASE_URL + (ImageUtil.fixUrl(mCounterpartInfo?.userAvatar)
-                            ?: ConstantUtil.DEFAULT_AVATAR)
+                            ?: ConstantUtil.QINIU_BASE_URL + ConstantUtil.DEFAULT_AVATAR)
                 }
                 ImageUtil.loadRoundedImage(avatarView, counterpartUrl)
                 // 获取图片view

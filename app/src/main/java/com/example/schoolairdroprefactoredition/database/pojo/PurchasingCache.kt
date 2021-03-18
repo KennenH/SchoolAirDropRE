@@ -19,7 +19,7 @@ data class PurchasingCache(
 
         val goods_is_secondhand: Boolean,
 
-        val goods_price: String,
+        val goods_price: Float,
 
         val user_name: String,
 

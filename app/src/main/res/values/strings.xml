@@ -333,7 +333,11 @@
     <string name="requestingServer">正在请求服务器</string>
     <string name="uploadFailedAtIndex">第%d张图片上传出错</string>
     <string name="picturePrepareFailed">在处理图片文件时出现了意料之外的问题，请尝试重新选取其他图片重试。</string>
-    <string name="canFavorWithoutLogin">未登录也可以收藏物品</string>
+    <string name="canFavorItemInGoodsPage">可以在物品页面收藏中意的物品</string>
     <string name="canChatInGoodsPage">可以在物品页面与卖家发起聊天</string>
+    <string name="gratefulToHaveU">感谢有你</string>
+    <string name="goPostUItem">去主页或点击右上角添加</string>
+    <string name="actionTooFrequent">操作过于频繁，请稍后再试</string>
+    <string name="watchCount">%d人看过</string>
 
 </resources>

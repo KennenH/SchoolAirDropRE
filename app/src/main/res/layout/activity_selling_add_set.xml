@@ -73,10 +73,11 @@
                 android:id="@+id/input_tip"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_padding_large"
                 android:layout_marginTop="@dimen/general_padding_large"
                 android:textColor="@color/primaryText"
                 android:textSize="@dimen/textSizeNormal"
-                app:layout_constraintStart_toStartOf="@+id/input_attention"
+                app:layout_constraintStart_toStartOf="@+id/input"
                 app:layout_constraintTop_toBottomOf="@+id/input"
                 tools:text="@string/textRemainCount" />
 
@@ -85,7 +86,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/general_padding_large"
-                android:layout_marginEnd="@dimen/general_padding_large"
                 android:layout_marginBottom="@dimen/general_padding_large"
                 android:drawablePadding="@dimen/general_padding_small"
                 android:ellipsize="end"

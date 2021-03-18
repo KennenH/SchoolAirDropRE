@@ -6,10 +6,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.schoolairdroprefactoredition.cache.UserInfoCache
 import com.example.schoolairdroprefactoredition.cache.UserTokenCache
+import com.example.schoolairdroprefactoredition.domain.DomainAlipayUserID
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.repository.LoginRepository
+import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
 import com.example.schoolairdroprefactoredition.utils.UserLoginCacheUtils
 import kotlinx.coroutines.launch
 
@@ -20,46 +22,39 @@ class LoginViewModel : ViewModel() {
     }
 
     /**
-     * 获取RSA公钥
+     * 使用auth code换取用户alipay id，再使用alipay id登录app
+     * 总共分为三步，其中任何一步出错将返回null
      */
-    fun getPublicKey(): LiveData<DomainAuthorizeGet?> {
-        val mPublicKey = MutableLiveData<DomainAuthorizeGet?>()
+    fun loginWithAlipayAuthCode(authCode: String?): LiveData<DomainToken?> {
+        val token = MutableLiveData<DomainToken?>()
         viewModelScope.launch {
-            loginRepository.getPublicKey { success, response ->
-                if (success) {
-                    mPublicKey.postValue(response)
-                } else {
-                    mPublicKey.postValue(null)
+            if (authCode != null) {
+                // 使用auth code获取alipay id
+                loginRepository.getAlipayIDByAuthCode(authCode) { alipayID ->
+                    if (alipayID != null) {
+                        // 获取alipay id之后获取公钥
+                        loginRepository.getPublicKey { publicKey ->
+                            if (publicKey != null) {
+                                // 获取公钥之后加密alipay id传输获取app token
+                                loginRepository.authorizeWithAlipayID(
+                                        alipayID,
+                                        publicKey,
+                                ) {
+                                    token.postValue(it)
+                                }
+                            } else {
+                                token.postValue(null)
+                            }
+                        }
+                    } else {
+                        token.postValue(null)
+                    }
                 }
+            } else {
+                token.postValue(null)
             }
         }
-        return mPublicKey
-    }
-
-    /**
-     * 使用alipay id登录
-     */
-    fun authorizeWithAlipayID(
-            rawAlipayID: String,
-            publicKey: String,
-    ): LiveData<DomainToken?> {
-        val mAuthorize = MutableLiveData<DomainToken?>()
-        viewModelScope.launch {
-            loginRepository.authorizeWithAlipayID(
-                    rawAlipayID,
-                    publicKey,
-            ) { success, response ->
-                if (success) {
-                    mAuthorize.postValue(response)
-                } else {
-                    mAuthorize.postValue(null)
-                }
-                if (response != null) {
-                    UserLoginCacheUtils.instance.saveUserToken(response)
-                }
-            }
-        }
-        return mAuthorize
+        return token
     }
 
     /**
@@ -76,7 +71,7 @@ class LoginViewModel : ViewModel() {
                 }
 
                 if (response != null) {
-                    UserLoginCacheUtils.instance.saveUserInfo(response)
+                    UserLoginCacheUtils.getInstance().saveUserInfo(response)
                 }
             }
         }
@@ -84,21 +79,23 @@ class LoginViewModel : ViewModel() {
     }
 
     /**
-     * 登出
+     * 用户登出，删除用户账号相关的本地缓存，包括用户alipay id、用户token、用户信息
      */
     fun logout() {
-        UserLoginCacheUtils.instance.deleteCache(UserTokenCache.KEY)
-        UserLoginCacheUtils.instance.deleteCache(UserInfoCache.KEY)
+        // 删除用户alipay id
+        UserLoginCacheUtils.getInstance().deleteCache(JsonCacheConstantUtil.USER_ALIPAY_ID)
+        // 删除用户token
+        UserLoginCacheUtils.getInstance().deleteCache(UserTokenCache.KEY)
+        // 删除用户信息
+        UserLoginCacheUtils.getInstance().deleteCache(UserInfoCache.KEY)
     }
-
-//    private var connectLiveData: MutableLiveData<DomainConnect> = MutableLiveData()
 
     /**
      * app进入前台时检查token是否过期
      */
     fun connectWhenComesToForeground(token: String) {
         viewModelScope.launch {
-            loginRepository.connectWhenComesToForeground(token){
+            loginRepository.connectWhenComesToForeground(token) {
 
             }
         }

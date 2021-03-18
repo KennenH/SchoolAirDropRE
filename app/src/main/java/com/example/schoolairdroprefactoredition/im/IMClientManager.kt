@@ -2,6 +2,7 @@ package com.example.schoolairdroprefactoredition.im
 
 import android.app.Application
 import com.example.schoolairdroprefactoredition.application.SAApplication
+import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import net.x52im.mobileimsdk.android.ClientCoreSDK
 import net.x52im.mobileimsdk.android.conf.ConfigEntity
@@ -24,6 +25,7 @@ class IMClientManager private constructor(private var application: Application?)
     /**
      * 初始化im sdk，每次登录前必须保证调用成功此方法，否则会报203未初始化错误
      */
+    @Synchronized
     fun initMobileIMSDK() {
         if (!init) {
             // 设置AppKey
@@ -37,7 +39,7 @@ class IMClientManager private constructor(private var application: Application?)
 //			ConfigEntity.setSenseMode(SenseMode.MODE_10S);
 
             // 开启/关闭DEBUG信息输出
-            ClientCoreSDK.DEBUG = true
+            ClientCoreSDK.DEBUG = AppConfig.IS_DEBUG
 
             // 【特别注意】请确保首先进行核心库的初始化（这是不同于iOS和Java端的地方)
             ClientCoreSDK.getInstance().init(application)

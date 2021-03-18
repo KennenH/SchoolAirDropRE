@@ -15,14 +15,6 @@ import com.example.schoolairdroprefactoredition.viewmodel.SettingsViewModel
  */
 class SettingsNotificationFragment : TransitionBaseFragment(), View.OnClickListener {
 
-    companion object {
-        fun newInstance(bundle: Bundle?): SettingsNotificationFragment {
-            val fragment = SettingsNotificationFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
     private var displayInAppFloat: PageItem? = null
 
     private val settingsViewModel by lazy {
@@ -32,6 +24,11 @@ class SettingsNotificationFragment : TransitionBaseFragment(), View.OnClickListe
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = LayoutInflater.from(context).inflate(R.layout.fragment_settings_notification, container, false)
         displayInAppFloat = root.findViewById(R.id.settings_notification_in_app_float)
+
+        if (settingsViewModel.getIsDisplayFloat() && displayInAppFloat?.isItemSelected == false) {
+            displayInAppFloat?.toggle()
+        }
+
         displayInAppFloat?.setOnClickListener(this)
         return root
     }

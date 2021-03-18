@@ -2,11 +2,11 @@ package com.example.schoolairdroprefactoredition.repository
 
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
+import com.example.schoolairdroprefactoredition.domain.DomainAlipayUserID
 import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.RSACoder
+import com.example.schoolairdroprefactoredition.utils.*
 import com.mob.pushsdk.MobPush
 import retrofit2.Call
 import retrofit2.Response
@@ -23,6 +23,35 @@ class LoginRepository private constructor() {
     }
 
     /**
+     * 使用支付宝auth code换取用户alipay id
+     * 获取到的alipay id用于登录app
+     */
+    fun getAlipayIDByAuthCode(authCode: String, onResult: (String?) -> Unit) {
+        RetrofitClient.userApi.getUserAlipayIDByAuthCode(authCode).apply {
+            enqueue(object : CallBackWithRetry<DomainAlipayUserID>(this@apply) {
+                override fun onFailureAllRetries() {
+                    onResult(null)
+                }
+
+                override fun onResponse(call: Call<DomainAlipayUserID>, response: Response<DomainAlipayUserID>) {
+                    if (response.code() == HttpURLConnection.HTTP_OK) {
+                        val body = response.body()
+                        if (body?.code == ConstantUtil.HTTP_OK) {
+                            body.data.alipay_id.let {
+                                onResult(it)
+                                // 永久保存用户alipay id
+                                UserLoginCacheUtils.getInstance().saveUserAlipayID(it)
+                            }
+                        } else {
+                            onResult(null)
+                        }
+                    }
+                }
+            })
+        }
+    }
+
+    /**
      * 每当app来到前台（不包括打开时）时调用token验证接口
      */
     fun connectWhenComesToForeground(token: String, onResult: () -> Unit) {
@@ -34,11 +63,11 @@ class LoginRepository private constructor() {
     /**
      * 获取公钥
      */
-    fun getPublicKey(onResult: (success: Boolean, response: DomainAuthorizeGet?) -> Unit) {
+    fun getPublicKey(onResult: (response: String?) -> Unit) {
         RetrofitClient.userApi.getPublicKey().apply {
             enqueue(object : CallBackWithRetry<DomainAuthorizeGet>(this@apply) {
                 override fun onFailureAllRetries() {
-                    onResult(false, null)
+                    onResult(null)
                 }
 
                 override fun onResponse(call: Call<DomainAuthorizeGet>, response: Response<DomainAuthorizeGet>) {
@@ -46,13 +75,13 @@ class LoginRepository private constructor() {
                         val result = response.body()
                         if (response.isSuccessful && result != null) {
 //                            result.cookie = session
-                            onResult(true, result)
+                            onResult(result.public_key)
                         } else {
-                            onResult(false, null)
+                            onResult(null)
                         }
                     } else {
 //                        LogUtils.d(response.errorBody()?.string())
-                        onResult(false, null)
+                        onResult(null)
                     }
                 }
             })
@@ -65,7 +94,7 @@ class LoginRepository private constructor() {
     fun authorizeWithAlipayID(
             rawAlipayID: String,
             publicKey: String,
-            onResult: (success: Boolean, response: DomainToken?) -> Unit) {
+            onResult: (response: DomainToken?) -> Unit) {
         MobPush.getRegistrationId { registrationID ->
 //            if (registrationID == null) {
 //                onResult(false, null)
@@ -79,18 +108,20 @@ class LoginRepository private constructor() {
                         enqueue(object : CallBackWithRetry<DomainToken>(this@apply) {
                             override fun onResponse(call: Call<DomainToken>, response: Response<DomainToken>) {
                                 if (response.code() == HttpURLConnection.HTTP_OK) {
-                                    if (response.isSuccessful) {
-                                        onResult(true, response.body())
+                                    val token = response.body()
+                                    if (token != null) {
+                                        onResult(token)
+                                        UserLoginCacheUtils.getInstance().saveUserToken(token)
                                     } else {
-                                        onResult(false, null)
+                                        onResult(null)
                                     }
                                 } else {
-                                    onResult(false, null)
+                                    onResult(null)
                                 }
                             }
 
                             override fun onFailureAllRetries() {
-                                onResult(false, null)
+                                onResult(null)
                             }
                         })
                     }

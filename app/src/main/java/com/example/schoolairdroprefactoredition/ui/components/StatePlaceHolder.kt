@@ -9,12 +9,15 @@ import android.widget.TextView
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.PlaceholderBinding
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto
+import com.example.schoolairdroprefactoredition.utils.DialogUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import com.github.ybq.android.spinkit.SpinKitView
 
 /**
  * 状态显示PlaceHolder
  */
-class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ConstraintLayoutAuto(context, attrs, defStyleAttr), View.OnClickListener {
+class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ConstraintLayoutAuto(context, attrs, defStyleAttr) {
 
     companion object {
         const val TYPE_EMPTY_HOME_GOODS = 99 //状态 类型 没有物品 仅首页使用
@@ -40,10 +43,23 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
     private val mLoading: SpinKitView
     private val mActionTip: TextView
 
+    private val jsonCacheUtil by lazy {
+        JsonCacheUtil.getInstance()
+    }
+
     init {
         val binding = PlaceholderBinding.bind(LayoutInflater.from(context).inflate(R.layout.placeholder, this, true))
-        binding.placeholderRoot.setOnClickListener(this)
-        binding.root.setOnClickListener(this)
+        binding.placeholderRoot.setOnClickListener {
+            if (type != TYPE_LOADING) {
+                val refreshCount = jsonCacheUtil.getCache(JsonCacheConstantUtil.FREQUENT_ACTION_COUNT, Int::class.java)
+                if (refreshCount == null || refreshCount < 3) {
+                    placeHolderActionListener?.onRetry(it)
+                } else {
+                    jsonCacheUtil.saveCache(JsonCacheConstantUtil.FREQUENT_ACTION_COUNT, refreshCount + 1, 10_000L)
+                    DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.actionTooFrequent)
+                }
+            }
+        }
         mIcon = binding.imageView
         mTip = binding.textView
         mLoading = binding.loading
@@ -141,13 +157,5 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
 
     fun setOnStatePlaceholderActionListener(listener: OnStatePlaceholderActionListener?) {
         placeHolderActionListener = listener
-    }
-
-    override fun onClick(v: View) {
-        if (v.id == R.id.placeholder_root) {
-            if (type != TYPE_LOADING) {
-                placeHolderActionListener?.onRetry(v)
-            }
-        }
     }
 }

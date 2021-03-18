@@ -12,6 +12,7 @@
         android:layout_width="@dimen/toolbar_icon"
         android:layout_height="@dimen/toolbar_icon"
         android:src="@drawable/chat_2"
+        android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@id/item_likes_icon"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
@@ -26,6 +27,7 @@
         android:text="0"
         android:textColor="@color/primaryText"
         android:textSize="@dimen/textSizeLarge"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/item_comments_icon"
         app:layout_constraintStart_toStartOf="@id/item_comments_icon"
         app:layout_constraintTop_toBottomOf="@id/item_comments_icon" />
@@ -56,10 +58,10 @@
         android:layout_width="@dimen/toolbar_icon"
         android:layout_height="@dimen/toolbar_icon"
         android:src="@drawable/eye_green"
-        android:tint="@color/colorPrimaryGreen"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/item_likes_icon"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/colorAccent" />
 
     <TextView
         android:id="@+id/item_watches"

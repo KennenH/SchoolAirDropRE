@@ -37,8 +37,6 @@ open class BaseParentFragment : StatePlaceholderFragment(), OnStatePlaceholderAc
         if (activity is MainActivity) {
             showPlaceholder(StatePlaceHolder.TYPE_LOADING)
             (activity as? MainActivity)?.requestPermission(PermissionConstants.LOCATION, PermissionBaseActivity.RequestType.MANUAL)
-        } else {
-            DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
         }
     }
 

@@ -19,14 +19,6 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
         ViewModelProvider(this).get(SettingsViewModel::class.java)
     }
 
-    companion object {
-        fun newInstance(bundle: Bundle): SettingsGeneralFragment {
-            val fragment = SettingsGeneralFragment()
-            fragment.arguments = bundle
-            return fragment
-        }
-    }
-
     /**
      * 暗黑模式按钮是否已经初始化
      */
@@ -39,7 +31,7 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (generalViewModel.isDarkTheme() == true) {
+        if (generalViewModel.isDarkTheme()) {
             settingsGeneralDarkTheme.select()
         }
         isDarkThemeInitialized = true

@@ -15,17 +15,17 @@ import com.example.schoolairdroprefactoredition.ui.components.PageItem
  */
 class SettingsAboutFragment : TransitionBaseFragment(), View.OnClickListener {
 
-    private var mVersion: TextView? = null
-
-    private var mFeedback: PageItem? = null
+    private var binding: FragmentSettingsAboutBinding? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val binding = FragmentSettingsAboutBinding.inflate(inflater, container, false)
-        mVersion = binding.settingsAboutVersion
-        mFeedback = binding.settingsAboutFeedback
-        mVersion?.setOnClickListener(this)
-        mFeedback?.setOnClickListener(this)
-        return binding.root
+        binding = FragmentSettingsAboutBinding.inflate(inflater, container, false)
+
+        binding?.settingsAboutVersion?.setOnClickListener(this)
+        binding?.settingsAboutFeedback?.setOnClickListener(this)
+
+        binding?.settingsAboutVersion?.text = getString(R.string.version, "1.0")
+
+        return binding?.root
     }
 
     override fun onClick(v: View) {

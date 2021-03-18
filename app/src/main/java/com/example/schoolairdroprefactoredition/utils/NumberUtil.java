@@ -37,15 +37,15 @@ public class NumberUtil {
      * 转换为货币
      *
      * @param num
-     * @return 最大以w为单位
+     * @return 最大以k为单位，最大为99k
      */
     public static String num2Money(float num) {
         int integer;
         int fraction;
-        if (num >= 10000) {
-            integer = (int) num / 10000;
-            fraction = (int) num % 10000 / 100;
-            return fraction != 0 ? integer + "." + fraction + "w" : integer + "w";
+        if (num >= 1000) {
+            integer = (int) num / 1000;
+            fraction = (int) num % 1000 / 10;
+            return integer + "." + fraction + "k";
         } else
             return String.valueOf(num);
     }

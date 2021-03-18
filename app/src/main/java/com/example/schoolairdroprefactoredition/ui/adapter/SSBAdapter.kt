@@ -7,16 +7,18 @@ import com.amap.api.services.geocoder.GeocodeResult
 import com.amap.api.services.geocoder.GeocodeSearch
 import com.amap.api.services.geocoder.RegeocodeQuery
 import com.amap.api.services.geocoder.RegeocodeResult
+import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.ItemSsbSellingBinding
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
+import com.example.schoolairdroprefactoredition.domain.DomainSelling
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 
-class SSBAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainPurchasing.DataBean?, BaseViewHolder>(R.layout.item_ssb_selling) {
+class SSBAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainSelling.Data?, BaseViewHolder>(R.layout.item_ssb_selling) {
 
     private val mOnSSBItemActionListeners = ArrayList<OnSSBItemActionListener>()
 
@@ -24,11 +26,11 @@ class SSBAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainPurchasi
         GeocodeSearch(context)
     }
 
-    override fun convert(holder: BaseViewHolder, item: DomainPurchasing.DataBean?) {
+    override fun convert(holder: BaseViewHolder, item: DomainSelling.Data?) {
         if (item != null) {
             val binding = ItemSsbSellingBinding.bind(holder.itemView)
-            val isQuotable = item.isGoods_is_bargain
-            val isSecondHand = item.isGoods_is_secondHand
+            val isQuotable = item.goods_is_bargain
+            val isSecondHand = item.goods_is_secondHand
 
             if (isQuotable && isSecondHand) {
                 binding.ssbSellingGoodsTitle.text = context.getString(R.string.itemNSs, item.goods_name)
@@ -38,41 +40,36 @@ class SSBAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainPurchasi
                 binding.ssbSellingGoodsTitle.text = context.getString(R.string.itemSs, item.goods_name)
             }
 
-            if (item.latitude != null && item.longitude != null) {
-                binding.goodsLocating.visibility = View.VISIBLE
-                geocodeSearch.apply {
-                    setOnGeocodeSearchListener(object : GeocodeSearch.OnGeocodeSearchListener {
-                        override fun onRegeocodeSearched(p0: RegeocodeResult?, p1: Int) {
-                            binding.goodsLocating.visibility = View.GONE
-                            if (p1 == 1000) {
-                                val reGeoAddress = p0?.regeocodeAddress
-                                binding.goodsLocation.text = "${reGeoAddress?.district}${reGeoAddress?.roads}${reGeoAddress?.streetNumber}"
-                            } else {
-                                binding.goodsLocation.text = context.getString(R.string.errorLocation)
-                            }
-                        }
-
-                        override fun onGeocodeSearched(p0: GeocodeResult?, p1: Int) {
-                            // do nothing
-                        }
-                    })
-
-                    getFromLocationAsyn(
-                            RegeocodeQuery(LatLonPoint(item.latitude.toDouble(),
-                                    item.longitude.toDouble()),
-                                    200f, GeocodeSearch.AMAP))
+            binding.goodsWatches.text = item.goods_watch_count.toString()
+            binding.goodsLocating.visibility = View.VISIBLE
+            geocodeSearch.setOnGeocodeSearchListener(object : GeocodeSearch.OnGeocodeSearchListener {
+                override fun onRegeocodeSearched(p0: RegeocodeResult?, p1: Int) {
+                    binding.goodsLocating.visibility = View.GONE
+                    if (p1 == 1000) {
+                        val address = p0?.regeocodeAddress
+                        binding.goodsLocation.text = address?.formatAddress
+                                ?.replace(address.province, "")
+                                ?.replace(address.city, "")
+                                ?.replace(address.district, "")
+                                ?.replace(address.township, "")
+                    } else {
+                        binding.goodsLocation.text = context.getString(R.string.errorLocation)
+                    }
                 }
-            } else {
-                binding.goodsLocation.text = context.getString(R.string.errorLocation)
-                binding.goodsLocating.visibility = View.GONE
-            }
+
+                override fun onGeocodeSearched(p0: GeocodeResult?, p1: Int) {
+                    // do nothing
+                }
+            })
+
+            geocodeSearch.getFromLocationAsyn(
+                    RegeocodeQuery(LatLonPoint(item.goods_latitude,
+                            item.goods_longitude),
+                            200f, GeocodeSearch.AMAP))
 
             ImageUtil.loadRoundedImage(binding.ssbSellingGoodsAvatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.goods_cover_image))
-            binding.ssbSellingGoodsPrice.setPrice(item.goods_price)
-
-            if (context is AppCompatActivity) {
-                holder.itemView.setOnClickListener { GoodsActivity.start(context, item.goods_id, true) }
-            }
+            binding.ssbSellingGoodsPrice.setPrice(item.goods_price, true)
+            holder.itemView.setOnClickListener { GoodsActivity.start(context, item.goods_id, true) }
 
             if (isMine == true) {
                 binding.goodsMoreAction.setOnClickListener { v: View ->
@@ -88,7 +85,7 @@ class SSBAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainPurchasi
     }
 
     interface OnSSBItemActionListener {
-        fun onItemActionButtonClick(view: View, bean: DomainPurchasing.DataBean?)
+        fun onItemActionButtonClick(view: View, bean: DomainSelling.Data?)
     }
 
     fun addOnSSBItemActionListener(listener: OnSSBItemActionListener) {

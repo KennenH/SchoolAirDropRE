@@ -5,12 +5,11 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
 import com.example.schoolairdroprefactoredition.databinding.SheetSsbItemMoreBinding
-import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
+import com.example.schoolairdroprefactoredition.domain.DomainSelling
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
@@ -21,7 +20,6 @@ import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.qiniu.android.utils.LogUtil
 
 class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
 
@@ -63,7 +61,7 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
      * 重试
      */
     override fun retryGrabOnlineData() {
-        getSelling()
+//        getSelling()
     }
 
     /**
@@ -82,7 +80,7 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
                     }
                 }
             } else {
-                showPlaceholder(StatePlaceHolder.TYPE_ERROR)
+                showPlaceholder(StatePlaceHolder.TYPE_ERROR, getString(R.string.errorLoading))
             }
         }
     }
@@ -91,7 +89,7 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
      * 在售物品更多设置
      * 修改物品信息 下架物品等
      */
-    override fun onItemAction(view: View, bean: DomainPurchasing.DataBean?) {
+    override fun onItemAction(view: View, bean: DomainSelling.Data?) {
         if (!isMine) return
 
         context?.let { c ->

@@ -29,6 +29,9 @@ import kotlinx.android.synthetic.main.activity_likes.*
 class FavoriteActivity : ImmersionStatusBarActivity(), FavoriteRecyclerAdapter.OnFavoriteItemActionListener, View.OnClickListener {
 
     companion object {
+        /**
+         * 收藏页面在未登录时仍旧可以进入，但是执行取消收藏和收藏操作必须在登录状态才可进行
+         */
         fun start(context: Context?) {
             Intent(context, FavoriteActivity::class.java).let {
                 if (context is AppCompatActivity) {
@@ -70,6 +73,8 @@ class FavoriteActivity : ImmersionStatusBarActivity(), FavoriteRecyclerAdapter.O
     private fun initRecycler() {
         showPlaceholder(StatePlaceHolder.TYPE_LOADING)
         favorite_search_bar.setOnClickListener(this)
+        toolbar.setOnClickListener(this)
+        likes_title.setOnClickListener(this)
         favorite_recycler.apply {
             layoutManager = LinearLayoutManager(this@FavoriteActivity, RecyclerView.VERTICAL, false)
             addItemDecoration(MarginItemDecoration(SizeUtils.dp2px(8f), false))
@@ -125,7 +130,7 @@ class FavoriteActivity : ImmersionStatusBarActivity(), FavoriteRecyclerAdapter.O
      */
     private fun showPlaceholder(type: Int) {
         favorite_placeholder.setPlaceholderType(type)
-        favorite_placeholder.setPlaceholderActionTip(getString(R.string.canFavorWithoutLogin))
+        favorite_placeholder.setPlaceholderActionTip(getString(R.string.canFavorItemInGoodsPage))
         favorite_placeholder?.visibility = View.VISIBLE
         favorite_recycler?.visibility = View.INVISIBLE
     }
@@ -156,13 +161,30 @@ class FavoriteActivity : ImmersionStatusBarActivity(), FavoriteRecyclerAdapter.O
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onToggleFavorite(item: Favorite) {
-        goodsViewModel.toggleGoodsFavorite(item).observeOnce(this) {
-            if (it) {
-                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.favorDone)
-            } else {
-                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.unfavorDone)
+    override fun onToggleFavorite(button: View, item: Favorite) {
+        showLoading()
+        val token = (application as SAApplication).getCachedToken()
+        if (token != null) {
+            goodsViewModel.toggleGoodsFavorite(token.access_token, item).observeOnce(this) {
+                dismissLoading {
+                    button.isEnabled = true
+                    when (it) {
+                        true -> {
+                            favoriteRecyclerAdapter.updateFavor(item.goods_id, true)
+                            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.favorDone)
+                        }
+                        false -> {
+                            favoriteRecyclerAdapter.updateFavor(item.goods_id, false)
+                            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.unfavorDone)
+                        }
+                        else -> {
+                            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.actionTooFrequent)
+                        }
+                    }
+                }
             }
+        } else {
+            LoginActivity.start(this)
         }
     }
 
@@ -170,6 +192,14 @@ class FavoriteActivity : ImmersionStatusBarActivity(), FavoriteRecyclerAdapter.O
         when (v?.id) {
             R.id.favorite_search_bar -> {
                 favorite_search_bar.requestFocus()
+            }
+            R.id.toolbar -> {
+                KeyboardUtils.hideSoftInput(this)
+                favorite_search_bar.clearFocus()
+            }
+            R.id.likes_title -> {
+                KeyboardUtils.hideSoftInput(this)
+                favorite_search_bar.clearFocus()
             }
         }
     }

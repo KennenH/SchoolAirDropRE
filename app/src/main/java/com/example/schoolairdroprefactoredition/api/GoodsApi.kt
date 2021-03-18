@@ -1,9 +1,6 @@
 package com.example.schoolairdroprefactoredition.api
 
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
-import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
-import com.example.schoolairdroprefactoredition.domain.DomainResult
-import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
+import com.example.schoolairdroprefactoredition.domain.*
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -31,7 +28,7 @@ interface GoodsApi {
                     @Field("keyWords") keyWord: String): Call<DomainPurchasing>
 
     /**
-     * 获取附近在售的商品
+     * 获取附近的商品
      */
     @FormUrlEncoded
     @POST("appapi/goods/getNearByGoods")
@@ -41,16 +38,6 @@ interface GoodsApi {
             @Field("page") page: Int,
             @Field("longitude") longitude: Double?,
             @Field("latitude") latitude: Double?): Call<DomainPurchasing>
-
-    /**
-     * 获取物品详细信息
-     */
-    @FormUrlEncoded
-    @POST("appapi/goods/getGoodsDetailInfo")
-    fun getGoodsDetail(
-            @Field("client_id") clientID: String,
-            @Field("client_secret") clientSecret: String,
-            @Field("goods_id") goodsID: Int): Call<GoodsDetailInfo>
 
     /**
      * 获取物品全部详细信息
@@ -99,13 +86,33 @@ interface GoodsApi {
     fun getGoodsOnSaleByClient(
             @Field("user_id") userID: Int,
             @Field("client_id") clientID: String,
-            @Field("client_secret") clientSecret: String): Call<DomainPurchasing>
+            @Field("client_secret") clientSecret: String): Call<DomainSelling>
 
     /**
-     * 获取收藏物品详情
+     * 物品浏览量加一
      */
     @FormUrlEncoded
-    @POST("appapi/goods/")
-    fun getFavoriteGoodsDetail(
-            @Field("goods_ids") goodsIDs: String)
+    @POST("appapi/goods/updateWatchCount")
+    fun browseGoods(
+            @Field("goods_id") goodsID: Int,
+            @Field("client_id") clientID: String,
+            @Field("client_secret") clientSecret: String): Call<DomainResult>
+
+    /**
+     * 收藏
+     */
+    @FormUrlEncoded
+    @POST("appapi/goods/updateFavorCount")
+    fun favorGoods(
+            @Field("Authorization") token: String,
+            @Field("goods_id_string") goodsID: Int): Call<DomainResult>
+
+    /**
+     * 取消收藏
+     */
+    @FormUrlEncoded
+    @POST("appapi/goods/deleteFavorCount")
+    fun unFavorGoods(
+            @Field("Authorization") token: String,
+            @Field("goods_id_string") goodsID: Int): Call<DomainResult>
 }

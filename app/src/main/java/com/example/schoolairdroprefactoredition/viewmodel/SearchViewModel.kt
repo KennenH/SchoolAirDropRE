@@ -7,21 +7,21 @@ import com.example.schoolairdroprefactoredition.cache.SearchHistories
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.SearchSuggestionBean
 import com.example.schoolairdroprefactoredition.repository.SearchRepository
+import com.example.schoolairdroprefactoredition.utils.AppConfig
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 
 class SearchViewModel : ViewModel() {
     private var lastSearchedKey: String = ""
 
-    private var lastLongitude = 0.0
+    private var lastLongitude = AppConfig.DEBUG_LONGITUDE
 
-    private var lastLatitude = 0.0
+    private var lastLatitude = AppConfig.DEBUG_LATITUDE
 
-    private var page = 0
+    private var page = 1
 
     private val mSearchRepository by lazy {
         SearchRepository.getInstance()
     }
-
-    private val mSearchHistories = MutableLiveData<SearchHistories>()
 
     private val mSearchSuggestions = MutableLiveData<SearchSuggestionBean>()
 
@@ -49,7 +49,7 @@ class SearchViewModel : ViewModel() {
     fun getSearchResult(longitude: Double, latitude: Double, key: String): LiveData<List<DomainPurchasing.DataBean>?> {
         val mSearchResults = MutableLiveData<List<DomainPurchasing.DataBean>?>()
         // 初始化页面号以及保存搜索关键字和地点
-        page = 0
+        page = 1
         lastSearchedKey = key
         lastLongitude = longitude
         lastLatitude = latitude

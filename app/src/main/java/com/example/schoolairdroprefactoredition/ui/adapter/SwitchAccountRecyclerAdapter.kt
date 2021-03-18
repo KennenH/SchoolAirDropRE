@@ -11,7 +11,7 @@ import com.example.schoolairdroprefactoredition.utils.AnimUtil
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 
-class SwitchAccountRecyclerAdapter(val info: DomainUserInfo.DataBean?) : BaseQuickAdapter<DomainUserInfo.DataBean, BaseViewHolder>(R.layout.item_accounts) {
+class SwitchAccountRecyclerAdapter(private val info: DomainUserInfo.DataBean?) : BaseQuickAdapter<DomainUserInfo.DataBean, BaseViewHolder>(R.layout.item_accounts) {
 
     override fun convert(holder: BaseViewHolder, item: DomainUserInfo.DataBean) {
         holder.itemView.setOnClickListener {

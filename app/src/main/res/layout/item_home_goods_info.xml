@@ -47,6 +47,19 @@
         app:layout_constraintTop_toBottomOf="@+id/item_title" />
 
     <TextView
+        android:id="@+id/item_watch_count"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding"
+        android:includeFontPadding="false"
+        android:text="@string/watchCount"
+        android:textColor="@color/primaryDarkest"
+        android:textSize="14dp"
+        app:layout_constraintBottom_toBottomOf="@+id/item_price"
+        app:layout_constraintEnd_toEndOf="@+id/item_title"
+        app:layout_constraintStart_toEndOf="@id/item_price" />
+
+    <TextView
         android:id="@+id/item_seller"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

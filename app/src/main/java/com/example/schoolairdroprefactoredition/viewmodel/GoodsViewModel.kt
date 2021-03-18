@@ -8,8 +8,9 @@ import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.repository.GoodsRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
+import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import kotlinx.coroutines.launch
-import java.net.HttpURLConnection
 
 class GoodsViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
 
@@ -26,33 +27,8 @@ class GoodsViewModel(private val databaseRepository: DatabaseRepository) : ViewM
         GoodsRepository.getInstance()
     }
 
-
-    /**
-     * 获取物品详细信息
-     *
-     * @return
-     * null 物品信息获取失败
-     * code 200 获取成功
-     * code 404 物品已下架
-     */
-    @Deprecated("使用getGoodsAllDetailByID")
-    fun getGoodsDetailByID(goodsID: Int): LiveData<GoodsDetailInfo?> {
-        val goodsDetail = MutableLiveData<GoodsDetailInfo?>()
-        viewModelScope.launch {
-            goodsRepository.getGoodsDetail(goodsID) { response ->
-                response.let {
-                    if (it != null) {
-                        viewModelScope.launch {
-                            it.isFavorite = databaseRepository.isFavorite(goodsID)
-                            goodsDetail.postValue(it)
-                        }
-                    } else {
-                        goodsDetail.postValue(null)
-                    }
-                }
-            }
-        }
-        return goodsDetail
+    private val jsonCacheUtil by lazy {
+        JsonCacheUtil.getInstance()
     }
 
     /**
@@ -100,21 +76,49 @@ class GoodsViewModel(private val databaseRepository: DatabaseRepository) : ViewM
      * @return
      * true 收藏成功
      * false 取消收藏成功
+     * null 收藏动作被拦截，操作过于频繁
      */
-    fun toggleGoodsFavorite(favorite: Favorite): LiveData<Boolean> {
-        val favoriteGoodsLiveData: MutableLiveData<Boolean> = MutableLiveData()
-        viewModelScope.launch {
-            databaseRepository.isFavorite(favorite.goods_id).let {
-                if (it) {
-                    databaseRepository.removeFavorite(favorite.goods_id)
-                    favoriteGoodsLiveData.postValue(false)
-                } else {
-                    databaseRepository.addFavorite(favorite)
-                    favoriteGoodsLiveData.postValue(true)
+    fun toggleGoodsFavorite(token: String, favorite: Favorite): LiveData<Boolean?> {
+        val favoriteGoodsLiveData: MutableLiveData<Boolean?> = MutableLiveData()
+        // 检查操作是否触发CoolDown
+        JsonCacheUtil.runWithFrequentCheck({
+            viewModelScope.launch {
+                databaseRepository.isFavorite(favorite.goods_id).let { isFavor ->
+                    goodsRepository.favorGoods(token, favorite.goods_id, isFavor) {
+                        viewModelScope.launch {
+                            if (isFavor) {
+                                databaseRepository.removeFavorite(favorite.goods_id)
+                                favoriteGoodsLiveData.postValue(false)
+                            } else {
+                                databaseRepository.addFavorite(favorite)
+                                favoriteGoodsLiveData.postValue(true)
+                            }
+                        }
+                    }
                 }
             }
-        }
+        }, {
+            // 操作过于频繁
+            favoriteGoodsLiveData.postValue(null)
+        })
         return favoriteGoodsLiveData
+    }
+
+    /**
+     * 浏览量加一
+     *
+     * 同时当前用户在24小时内使用本设备再次访问该物品页面将不再为其浏览量加一
+     */
+    fun browse(goodsID: Int?, userID: Int?) {
+        if (goodsID == null) return
+
+        val isBrowsedIn24h = jsonCacheUtil.getCache(JsonCacheConstantUtil.GOODS_BROWSED + goodsID + userID, Boolean::class.java)
+        if (isBrowsedIn24h == null) {
+            jsonCacheUtil.saveCache(JsonCacheConstantUtil.GOODS_BROWSED + goodsID + userID, true, 24 * 60 * 60 * 1000L)
+            viewModelScope.launch {
+                goodsRepository.browseGoods(goodsID)
+            }
+        }
     }
 
 

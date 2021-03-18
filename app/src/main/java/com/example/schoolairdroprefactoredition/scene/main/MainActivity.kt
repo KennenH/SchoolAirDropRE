@@ -16,7 +16,6 @@ import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
@@ -30,7 +29,6 @@ import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
 import com.example.schoolairdroprefactoredition.scene.main.search.SearchFragment
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
-import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.AccountViewModel
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
@@ -148,7 +146,21 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         setContentView(R.layout.activity_main)
         initCache()
         initListener()
+        handleIntent()
 //        setMainActivitySaturation0()
+    }
+
+    /**
+     * 2秒内点击两次退出app
+     */
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleIntent()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -215,6 +227,20 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     /**
+     * 处理从网页以及其他地方跳转到本app的链接
+     */
+    private fun handleIntent() {
+//        val appLinkAction = intent.action
+        val appLinkData = intent.data
+        when (appLinkData?.path) {
+            // 单纯打开app
+            ConstantUtil.SCHEME_OPEN_APP -> {
+
+            }
+        }
+    }
+
+    /**
      * 将本页面颜色饱和度变为0
      *
      * 清明等祭祀节日主题
@@ -229,7 +255,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         contentContainer.setLayerType(View.LAYER_TYPE_SOFTWARE, paint)
     }
 
-    /*
+    /**
      * 父类接收到的定位权限被允许，在此进行定位操作
      */
     override fun locationGranted() {
@@ -259,7 +285,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         userInfoCache?.let {
             intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
         }
-
     }
 
     /**
@@ -353,7 +378,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 val infoCache = accountViewModel.lastLoggedUserInfoCache
                 if (infoCache != null) {
                     intent.putExtra(ConstantUtil.KEY_USER_INFO, infoCache)
-                    autoReLoginWithCache()
+                    autoLoginWithCache()
                 }
             }
         }
@@ -366,6 +391,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 2、用户信息修改后回到MainActivity
      */
     private fun obtainMyInfo() {
+        // 登录状态监听器回调 正在登录
         for (listener in mOnLoginStateChangedListeners) {
             listener.onLogging()
         }
@@ -384,27 +410,12 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 使用已有的缓存进行登录
      * 在app首次打开时调用
      */
-    private fun autoReLoginWithCache() {
-        loginViewModel.getPublicKey().observeOnce(this@MainActivity, { publicK ->
-            publicK.let {
-                if (it != null) {
-                    authorizeWithAlipayID(it)
-                }
-            }
-        })
-    }
-
-    /**
-     * 使用alipay id登录
-     * 注解为同步方法以防止多次同时请求
-     */
     @Synchronized
-    private fun authorizeWithAlipayID(publicK: DomainAuthorizeGet) {
-        loginViewModel.authorizeWithAlipayID(
-                AppConfig.USER_ALIPAY,
-                publicK.public_key)
-                .observeOnce(this@MainActivity, {
-                    it.let {
+    private fun autoLoginWithCache() {
+        loginViewModel.loginWithAlipayAuthCode(accountViewModel.lastLoggedUserAlipayID)
+                .observeOnce(this@MainActivity, { publicK ->
+                    publicK.let {
+                        // 因为这里是自动登录，所以不需要判断空的情况，有就登录，没有就跳过
                         if (it != null) {
                             intent.putExtra(ConstantUtil.KEY_TOKEN, it)
                             obtainMyInfo()
@@ -412,6 +423,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                     }
                 })
     }
+
 
     /**
      * 显示或隐藏消息按钮上的红点角标
@@ -548,13 +560,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         // 为监听登录状态的页面进行回调
         for (listener in mOnLoginStateChangedListeners) {
             listener.onLoginStateChanged(intent)
-        }
-
-        // 若为登录app，则登录IM，否则退出IM
-        if (userInfo != null && token != null) {
-            (application as SAApplication).doLoginIM()
-        } else {
-            (application as SAApplication).doLogoutIM()
         }
     }
 

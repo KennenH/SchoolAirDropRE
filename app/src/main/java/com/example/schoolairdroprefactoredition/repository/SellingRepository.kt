@@ -1,10 +1,10 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.DomainResult
+import com.example.schoolairdroprefactoredition.domain.DomainSelling
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import retrofit2.Call
 import retrofit2.Response
@@ -23,16 +23,16 @@ class SellingRepository {
     /**
      * 用户id获取用户在售物品
      */
-    fun getSelling(userID: Int, onResult: (DomainPurchasing?) -> Unit) {
+    fun getSelling(userID: Int, onResult: (DomainSelling?) -> Unit) {
         RetrofitClient.goodsApi.getGoodsOnSaleByClient(
                 userID,
                 ConstantUtil.CLIENT_ID,
                 ConstantUtil.CLIENT_SECRET).apply {
-            enqueue(object : CallBackWithRetry<DomainPurchasing>(this@apply) {
-                override fun onResponse(call: Call<DomainPurchasing>, response: Response<DomainPurchasing>) {
+            enqueue(object : CallBackWithRetry<DomainSelling>(this@apply) {
+                override fun onResponse(call: Call<DomainSelling>, response: Response<DomainSelling>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val body = response.body()
-                        if (body != null && body.code == 200) {
+                        if (body != null && body.code == ConstantUtil.HTTP_OK) {
                             onResult(body)
                         } else {
                             onResult(null)

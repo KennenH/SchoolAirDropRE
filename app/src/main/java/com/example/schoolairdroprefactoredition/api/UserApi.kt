@@ -66,8 +66,14 @@ interface UserApi {
     /**
      * 校验token是否过期
      */
-    @FormUrlEncoded
     @POST("appapi/auth/connect")
     fun verifyToken(@Header("Authorization") token: String)
 
+    /**
+     * 使用auth code换取用户alipay id
+     * 使用alipay id可以为设备登录
+     */
+    @FormUrlEncoded
+    @POST("appapi/auth/alipaycallback")
+    fun getUserAlipayIDByAuthCode(@Field("auth_code") authCode: String): Call<DomainAlipayUserID>
 }
