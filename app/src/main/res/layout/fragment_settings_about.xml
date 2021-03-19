@@ -47,8 +47,8 @@
             android:id="@+id/settings_about_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/version"
             android:layout_marginTop="@dimen/general_padding"
+            android:text="@string/version"
             android:textColor="@color/primaryText"
             android:textSize="16dp"
             app:layout_constraintEnd_toEndOf="@+id/settings_about_name"
@@ -63,6 +63,31 @@
             app:layout_constraintBottom_toTopOf="@+id/settings_about_copyright"
             app:layout_constraintTop_toBottomOf="@+id/settings_about_version" />
 
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.1" />
+
+        <View
+            android:id="@+id/line"
+            android:layout_width="0dp"
+            android:layout_height="1px"
+            android:background="@color/colorLine"
+            app:layout_constraintBottom_toBottomOf="@+id/settings_about_feedback"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/left" />
+
+        <com.example.schoolairdroprefactoredition.ui.components.PageItem
+            android:id="@+id/settings_about_privacy"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:PI_title="@string/privacyAndService"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/settings_about_feedback" />
+
         <TextView
             android:id="@+id/settings_about_copyright"
             android:layout_width="match_parent"
@@ -71,7 +96,6 @@
             android:text="@string/rightsReserved"
             android:textColor="@color/primaryText"
             android:textSize="12dp"
-            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@+id/guideline2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

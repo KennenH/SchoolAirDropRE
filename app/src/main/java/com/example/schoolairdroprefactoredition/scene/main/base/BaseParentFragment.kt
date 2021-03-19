@@ -33,6 +33,9 @@ open class BaseParentFragment : StatePlaceholderFragment(), OnStatePlaceholderAc
         mPlaceHolder?.setOnStatePlaceholderActionListener(this)
     }
 
+    /**
+     * placeholder引导的重试回调
+     */
     override fun onRetry(view: View) {
         if (activity is MainActivity) {
             showPlaceholder(StatePlaceHolder.TYPE_LOADING)

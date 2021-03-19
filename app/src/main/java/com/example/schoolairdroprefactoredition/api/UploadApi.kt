@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.api
 
+import com.example.schoolairdroprefactoredition.domain.DomainIMPath
 import com.example.schoolairdroprefactoredition.domain.DomainUploadPath
 import com.example.schoolairdroprefactoredition.domain.DomainUploadToken
 import retrofit2.Call
@@ -29,4 +30,19 @@ interface UploadApi {
     @FormUrlEncoded
     @POST("appapi/ajax/dispatchUploadTask")
     fun getImagePath(@Header("Authorization") token: String, @Field("img_type") type: String, @Field("amount") amount: Int): Call<DomainUploadPath>
+
+    /**
+     * 转移im图片 多图
+     *
+     * @param taskID 上传任务分配到的id
+     * @param keys 上传任务分配的key
+     */
+    @FormUrlEncoded
+    @POST("appapi/ajax/moveIMFile")
+    fun moveIMImages(
+            @Header("Authorization") token: String,
+            @Field("task_id") taskID: String,
+            @Field("im_file_keys") keys: String
+    ): Call<DomainIMPath>
+
 }

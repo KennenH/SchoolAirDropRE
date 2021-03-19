@@ -50,6 +50,8 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
      * 上传聊天的图片
      *
      * 图片上传成功之后服务器将会返回图片的路径，再将消息的typeu置为1，消息内容置为获取到的图片路径
+     *
+     * @param imagePaths 本地图片路径
      */
     fun sendImageMessage(token: String?, imagePaths: List<String>): LiveData<List<String>?> {
         val uploadLiveDate = MutableLiveData<List<String>?>()
@@ -60,7 +62,7 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
                     ConstantUtil.UPLOAD_TYPE_IM) { _, _, taskAndKeys, _ ->
                 if (taskAndKeys != null) {
                     uploadRepository.moveIMImage(token, taskAndKeys.taskId, taskAndKeys.keys.joinToString(",")) {
-                        uploadLiveDate.postValue(null)
+                        uploadLiveDate.postValue(it?.split(","))
                     }
                 } else {
                     uploadLiveDate.postValue(null)

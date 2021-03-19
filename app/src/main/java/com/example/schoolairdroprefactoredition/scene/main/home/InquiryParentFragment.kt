@@ -57,6 +57,8 @@ class InquiryParentFragment : BaseParentFragment(), View.OnClickListener {
 //            homeTopAdd.text = getString(R.string.postInquiry)
 //            homeTopAdd.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_ask_for_buy, 0, 0, 0)
 //        }
+        binding.featureNotSupportMask.setOnClickListener(this)
+        binding.homeToolbar.setOnClickListener(this)
         return binding.root
     }
 

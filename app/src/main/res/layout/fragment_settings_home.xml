@@ -79,6 +79,7 @@
                 android:layout_marginTop="@dimen/general_padding_large"
                 android:background="@drawable/button_sheet_white"
                 android:gravity="center"
+                android:visibility="gone"
                 android:padding="@dimen/general_padding_bit_larger"
                 android:text="@string/switchAccount"
                 android:textColor="@color/primaryText"

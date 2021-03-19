@@ -35,7 +35,7 @@ object JsonCacheConstantUtil {
     const val GOODS_BROWSED = "goods-was-browsed-"
 
     /**
-     * 进行频繁操作之后用户将被禁止点击这些检查频繁操作的按钮 冷却时间15s
+     * 进行频繁操作之后用户将被禁止点击这些检查频繁操作的按钮 冷却时间
      */
     const val ACTION_TOO_FREQUENT_COOLDOWN = 15_000L
 

@@ -208,7 +208,7 @@ abstract class BaseChildFragment : BaseFragment(), OnLocationListener, EndlessRe
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         // 检查刷新操作是否过于频繁
-        JsonCacheUtil.runWithFrequentCheck({
+        JsonCacheUtil.runWithFrequentCheck(context, {
             if (aMapLocation != null) {
                 getRefreshData(refreshLayout, aMapLocation)
             } else { // 定位失败时通知父Fragment显示PlaceHolder

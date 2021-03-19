@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.utils
 import android.app.Activity
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -22,7 +23,6 @@ import com.lxj.xpopup.impl.LoadingPopupView
 import com.lxj.xpopup.interfaces.SimpleCallback
 import com.lxj.xpopup.interfaces.XPopupImageLoader
 import java.io.File
-import kotlin.math.min
 
 object MyUtil {
 
@@ -43,13 +43,6 @@ object MyUtil {
         return XPopup.Builder(context)
                 .dismissOnBackPressed(true)
                 .dismissOnTouchOutside(false)
-                .setPopupCallback(object : SimpleCallback() {
-                    override fun onShow(popupView: BasePopupView) {
-                        if (context is AppCompatActivity) {
-                            BarUtils.setNavBarLightMode(context.window, true)
-                        }
-                    }
-                })
                 .asLoading()
     }
 

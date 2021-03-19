@@ -269,7 +269,7 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
         adapter?.addData(0, chat)
         // 保存自己发送的消息
         chatViewModel.saveSentMessage(chat)
-        // 不能给自己发送消息
+        // 只有对方不是自己才能走im通道
         if (userID != myID) {
             // 框架异步发送消息
             object : LocalDataSender.SendCommonDataAsync(content, userID, fingerprint, ConstantUtil.MESSAGE_TYPE_TEXT) {
@@ -277,6 +277,9 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
                     if (code != 0) chatViewModel.updateMessageStatus(fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
                 }
             }.execute()
+        } else {
+            // 若对方是自己则直接标记为被收到
+            messagesBeReceived(fingerprint)
         }
     }
 
@@ -295,7 +298,7 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
             chatViewModel.saveSentMessage(chat)
         }
 
-        // 不能给自己发消息
+        // 只有对方不是自己才能发送成功并走im通道
         if (userID != myID) {
             chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).observeOnce {
                 if (it != null) {
@@ -311,6 +314,11 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
                         chatViewModel.updateMessageStatus(history.fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
                     }
                 }
+            }
+        } else {
+            // 若给自己发送消息则直接标记为被收到
+            for (chatHistory in chatList) {
+                messagesBeReceived(chatHistory.fingerprint)
             }
         }
     }

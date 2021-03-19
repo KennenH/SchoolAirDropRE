@@ -71,7 +71,7 @@
 
                 <data
                     android:host="auth.schoolairdrop.com"
-                    android:path="/alipay_result_callback"
+                    android:path="/alipaycallback"
                     android:scheme="http" />
             </intent-filter>
         </activity>

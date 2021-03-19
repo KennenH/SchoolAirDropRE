@@ -7,6 +7,7 @@ import com.example.schoolairdroprefactoredition.ui.adapter.PurchasingRecyclerAda
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.location.AMapLocation
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding
@@ -69,9 +70,9 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
     }
 
     /**
-     * 刷新列表后
+     * 上拉加载更多的时候获取到的数据不足默认数量，则表明已经没有更多数据
      */
-    override fun onNoMoreDataRefresh() {
+    override fun resetNoMoreData() {
         mEndlessRecyclerView?.setIsNoMoreData(false)
     }
 
@@ -90,7 +91,7 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
     }
 
     /**
-     * 从服务器获取网络数据
+     * 从服务器获取网络数据，仅在页面第一次被加载的时候才被调用
      */
     override fun getOnlineData(aMapLocation: AMapLocation?) {
         if (aMapLocation == null) {
@@ -104,6 +105,8 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
         purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observeOnce(viewLifecycleOwner) {
             if (it != null) {
                 // 如果获取的物品数量为0且当前的adapter也尚没有数据则显示placeholder
+                    LogUtils.d(it.data.size)
+                    LogUtils.d(purchasingRecyclerAdapter.data.size)
                 if (it.data.isEmpty() && purchasingRecyclerAdapter.data.isEmpty()) {
                     showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME_GOODS)
                 } else {
@@ -121,6 +124,9 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
         }
     }
 
+    /**
+     * 刷新时获取数据的逻辑
+     */
     override fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?) {
         if (aMapLocation == null) {
             DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLocation)
@@ -137,6 +143,9 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
         }
     }
 
+    /**
+     * 上拉加载更多的数据获取逻辑
+     */
     override fun getAutoLoadMoreData(recycler: EndlessRecyclerView, aMapLocation: AMapLocation?) {
         purchasingViewModel.getGoodsInfo().observeOnce(viewLifecycleOwner) {
             recycler.finishLoading()

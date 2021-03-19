@@ -22,12 +22,13 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
     @Override
     public void setList(@org.jetbrains.annotations.Nullable Collection<? extends T> list) {
         super.setList(list);
+        // 刷新时将之前标记的没有更多数据标志位重置
         if (mOnNoMoreDataListener != null) {
-            mOnNoMoreDataListener.onNoMoreDataRefresh();
+            mOnNoMoreDataListener.resetNoMoreData();
         }
 
         removeAllFooterView();
-        if (list != null && list.size() < ConstantUtil.DEFAULT_PAGE_SIZE) {
+        if (getData().size() < 1 && list != null && list.size() < ConstantUtil.DEFAULT_PAGE_SIZE) {
             addNoMoreFooter();
         }
     }
@@ -36,7 +37,7 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
     public void addData(@NotNull Collection<? extends T> newData) {
         super.addData(newData);
         removeAllFooterView();
-        if (newData.size() < ConstantUtil.DEFAULT_PAGE_SIZE) {
+        if (getData().size() < 1 && newData.size() < ConstantUtil.DEFAULT_PAGE_SIZE) {
             addNoMoreFooter();
         }
     }
@@ -61,9 +62,9 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
         void onNoMoreData();
 
         /**
-         * recycler已重新刷新，将没有更多数据标志位恢复
+         * recycler已重新刷新，将没有更多数据标志位重置
          */
-        void onNoMoreDataRefresh();
+        void resetNoMoreData();
     }
 
     public void setOnNoMoreDataListener(OnNoMoreDataListener listener) {

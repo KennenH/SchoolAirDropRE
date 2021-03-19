@@ -63,7 +63,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                             // 上传物品
                             addNewRepository.submitNewItem(
                                     token, taskAndKeys.taskId,
-                                    taskAndKeys.keys[0], taskAndKeys.keys.drop(0).joinToString(","),
+                                    taskAndKeys.keys[0], taskAndKeys.keys.subList(1, taskAndKeys.keys.size).joinToString(","),
                                     title, description,
                                     longitude, latitude,
                                     isBrandNew, isQuotable, price) {

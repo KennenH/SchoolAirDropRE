@@ -1,10 +1,10 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import android.app.Application
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
+import com.example.schoolairdroprefactoredition.domain.DomainIMPath
 import com.example.schoolairdroprefactoredition.domain.DomainUploadPath
 import com.example.schoolairdroprefactoredition.domain.DomainUploadToken
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -78,19 +78,19 @@ class UploadRepository private constructor() {
             type: String,
             isNeedLarge: Boolean = true,
             isSubscribeProgress: Boolean = false,
-            onResult: (success: Boolean, tip: Pair<Int,Boolean>, taskAndKeys: DomainUploadPath.DataBean?, allSuccess: Boolean) -> Unit) {
-        if (isSubscribeProgress) onResult(true, Pair(R.string.handlingLocalMedia,true), null, false)
+            onResult: (success: Boolean, tip: Pair<Int, Boolean>, taskAndKeys: DomainUploadPath.DataBean?, allSuccess: Boolean) -> Unit) {
+        if (isSubscribeProgress) onResult(true, Pair(R.string.handlingLocalMedia, true), null, false)
         // 将文件路径转换为本地文件
         val fileLocalList = ArrayList<File>(fileLocalPaths.size).apply {
             for (localPath in fileLocalPaths) {
                 this.add(FileUtil.compressFile(localPath, isNeedLarge))
             }
         }
-        if (isSubscribeProgress) onResult(true,Pair(R.string.requestingCredentials,true), null, false)
+        if (isSubscribeProgress) onResult(true, Pair(R.string.requestingCredentials, true), null, false)
         // 获取七牛云服务器上传凭证
         getQiNiuToken(token) { uploadToken ->
             if (uploadToken != null) {
-                if (isSubscribeProgress) onResult(true, Pair(R.string.resourceAllocating,true), null, false)
+                if (isSubscribeProgress) onResult(true, Pair(R.string.resourceAllocating, true), null, false)
                 // 获取将要上传的图片在服务器上的路径前缀和文件名
                 requestForImagePath(token, type, fileLocalPaths.size) { taskAndKeysWrapper ->
                     if (taskAndKeysWrapper != null) {
@@ -99,21 +99,21 @@ class UploadRepository private constructor() {
                                 taskAndKeysWrapper,
                                 uploadToken.data.token) { success, toBeUpload, allSuccess ->
                             if (allSuccess) {
-                                onResult(true, Pair(R.string.imagesUploadSuccess,true), taskAndKeysWrapper.data, true)
+                                onResult(true, Pair(R.string.imagesUploadSuccess, true), taskAndKeysWrapper.data, true)
                             } else {
                                 if (success) {
-                                    if (isSubscribeProgress) onResult(true, Pair(toBeUpload,false), null, false)
+                                    if (isSubscribeProgress) onResult(true, Pair(toBeUpload, false), null, false)
                                 } else {
-                                    onResult(false, Pair(toBeUpload,false), null, false)
+                                    onResult(false, Pair(toBeUpload, false), null, false)
                                 }
                             }
                         }
                     } else {
-                        onResult(false, Pair(R.string.resourceAllocationFailed,true), null, false)
+                        onResult(false, Pair(R.string.resourceAllocationFailed, true), null, false)
                     }
                 }
             } else {
-                onResult(false, Pair(R.string.inValidCredential,true), null, false)
+                onResult(false, Pair(R.string.inValidCredential, true), null, false)
             }
         }
     }
@@ -276,7 +276,29 @@ class UploadRepository private constructor() {
     /**
      * 移动在七牛云上的图片
      */
-    fun moveIMImage(token: String, taskID: String, keys: String, onResult: () -> Unit) {
+    fun moveIMImage(token: String, taskID: String, keys: String, onResult: (paths: String?) -> Unit) {
+        RetrofitClient.uploadApi.moveIMImages(token, taskID, keys).apply {
+            enqueue(object : CallBackWithRetry<DomainIMPath>(this@apply) {
+                override fun onFailureAllRetries() {
+                    onResult(null)
+                }
 
+                override fun onResponse(call: Call<DomainIMPath>, response: Response<DomainIMPath>) {
+                    if (response.code() == HttpURLConnection.HTTP_OK) {
+                        val body = response.body()
+                        if (body?.code == ConstantUtil.HTTP_OK) {
+                            LogUtils.d(body.data)
+                            onResult(body.data)
+                        } else {
+                            LogUtils.d(response.errorBody()?.string())
+                            onResult(null)
+                        }
+                    } else {
+                        LogUtils.d(response.errorBody()?.string())
+                        onResult(null)
+                    }
+                }
+            })
+        }
     }
 }

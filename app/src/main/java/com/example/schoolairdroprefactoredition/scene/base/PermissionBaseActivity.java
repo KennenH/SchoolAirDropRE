@@ -34,7 +34,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     /**
      * 请求获取权限
      * 在执行需要权限的方法之前必须先执行此方法来判断是否有权限
-     *
+     * <p>
      * 在 XXGranted 方法(eg. {@link PermissionBaseActivity#locationGranted()})中执行需要权限的操作
      * 在 XXDenied 方法(eg. {@link PermissionBaseActivity#locationDenied()})中执行权限拒绝后的操作
      * <p>

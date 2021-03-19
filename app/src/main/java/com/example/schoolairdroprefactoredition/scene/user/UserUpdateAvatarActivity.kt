@@ -36,7 +36,7 @@ class UserUpdateAvatarActivity : BaseActivity(), View.OnLongClickListener, View.
     }
 
     private val mLoading by lazy {
-        MyUtil.loading(this@UserUpdateAvatarActivity)
+        MyUtil.loading(this)
     }
 
     private val info by lazy {

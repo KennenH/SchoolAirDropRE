@@ -275,6 +275,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     /**
      * 读取手机缓存和账号设置
+     *
+     * 此处为子fragment提供账号缓存获取，删除可能导致子fragment无法获取到这些信息
      */
     private fun initCache() {
         val tokenCache = accountViewModel.lastLoggedTokenCaChe

@@ -38,8 +38,7 @@ class LoginViewModel : ViewModel() {
                                 // 获取公钥之后加密alipay id传输获取app token
                                 loginRepository.authorizeWithAlipayID(
                                         alipayID,
-                                        publicKey,
-                                ) {
+                                        publicKey) {
                                     token.postValue(it)
                                 }
                             } else {
@@ -49,6 +48,26 @@ class LoginViewModel : ViewModel() {
                     } else {
                         token.postValue(null)
                     }
+                }
+            } else {
+                token.postValue(null)
+            }
+        }
+        return token
+    }
+
+    /**
+     * 使用alipay id登录app
+     */
+    fun loginWithAlipayID(alipayID: String): LiveData<DomainToken?> {
+        val token = MutableLiveData<DomainToken?>()
+        loginRepository.getPublicKey { publicKey ->
+            if (publicKey != null) {
+                // 获取公钥之后加密alipay id传输获取app token
+                loginRepository.authorizeWithAlipayID(
+                        alipayID,
+                        publicKey) {
+                    token.postValue(it)
                 }
             } else {
                 token.postValue(null)

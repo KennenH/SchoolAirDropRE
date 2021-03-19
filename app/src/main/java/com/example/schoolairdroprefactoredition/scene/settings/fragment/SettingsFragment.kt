@@ -1,13 +1,11 @@
 package com.example.schoolairdroprefactoredition.scene.settings.fragment
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModelProvider
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentSettingsHomeBinding
@@ -21,7 +19,6 @@ import com.example.schoolairdroprefactoredition.scene.switchaccount.SwitchAccoun
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
-import com.lxj.xpopup.XPopup
 
 /**
  * 设置的主页面
@@ -42,20 +39,26 @@ class SettingsFragment : TransitionBaseFragment(), View.OnClickListener, OnLogin
         ViewModelProvider(this).get(LoginViewModel::class.java)
     }
 
-    private var manager: FragmentManager? = null
+    private val manager by lazy {
+        activity?.supportFragmentManager
+    }
 
-    private var binding: FragmentSettingsHomeBinding? = null
+    private lateinit var binding: FragmentSettingsHomeBinding
 
-    private var notificationName: String? = null
+    private val notificationName by lazy {
+        resources.getString(R.string.notification)
+    }
 
-    private var privacyName: String? = null
+    private val privacyName by lazy {
+        resources.getString(R.string.privacy)
+    }
 
-    private var generalName: String? = null
+    private val generalName by lazy {
+        resources.getString(R.string.general)
+    }
 
-    private var aboutName: String? = null
-
-    private val mLoading by lazy {
-        XPopup.Builder(context).asLoading()
+    private val aboutName by lazy {
+        resources.getString(R.string.about)
     }
 
     private var bundle: Bundle? = null
@@ -64,20 +67,12 @@ class SettingsFragment : TransitionBaseFragment(), View.OnClickListener, OnLogin
 
     private var token: DomainToken? = null
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        notificationName = resources.getString(R.string.notification)
-        privacyName = resources.getString(R.string.privacy)
-        generalName = resources.getString(R.string.general)
-        aboutName = resources.getString(R.string.about)
-        manager = activity?.supportFragmentManager
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (activity is SettingsActivity) {
-            (activity as SettingsActivity?)!!.setOnLoginListener(this)
+            (activity as? SettingsActivity)?.setOnLoginListener(this)
         }
+
         bundle = arguments
         if (bundle == null) {
             bundle = Bundle()
@@ -95,11 +90,11 @@ class SettingsFragment : TransitionBaseFragment(), View.OnClickListener, OnLogin
                     settingsHomeNotification.setOnClickListener(this@SettingsFragment)
                     settingsHomeGeneral.setOnClickListener(this@SettingsFragment)
                     settingsHomeAbout.setOnClickListener(this@SettingsFragment)
-                    settingsHomeSwitchAccount.setOnClickListener(this@SettingsFragment)
+                    settingsHomeSwitchAccount.visibility = View.GONE
                     settingsHomeSignOut.setOnClickListener(this@SettingsFragment)
                 }
         validateState()
-        return binding?.root
+        return binding.root
     }
 
     /**
@@ -117,14 +112,14 @@ class SettingsFragment : TransitionBaseFragment(), View.OnClickListener, OnLogin
      */
     private fun validateState() {
         if (isLoggedIn) {
-            binding?.settingsHomeAlipay?.setDescription(getString(R.string.loggedIn, userInfo!!.userName))
-            binding?.settingsHomeSwitchAccount?.visibility = View.VISIBLE
-            binding?.settingsHomeSignOut?.visibility = View.VISIBLE
+            binding.settingsHomeAlipay.setDescription(getString(R.string.loggedIn, userInfo?.userName))
+            binding.settingsHomeSwitchAccount.visibility = View.VISIBLE
+            binding.settingsHomeSignOut.visibility = View.VISIBLE
         } else {
-            binding?.settingsHomePrivacy?.visibility = View.GONE
-            binding?.settingsHomeNotification?.visibility = View.GONE
-            binding?.settingsHomeSwitchAccount?.visibility = View.GONE
-            binding?.settingsHomeSignOut?.visibility = View.GONE
+            binding.settingsHomePrivacy.visibility = View.GONE
+            binding.settingsHomeNotification.visibility = View.GONE
+            binding.settingsHomeSwitchAccount.visibility = View.GONE
+            binding.settingsHomeSignOut.visibility = View.GONE
         }
     }
 

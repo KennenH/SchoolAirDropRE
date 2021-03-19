@@ -43,19 +43,13 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
     private val mLoading: SpinKitView
     private val mActionTip: TextView
 
-    private val jsonCacheUtil by lazy {
-        JsonCacheUtil.getInstance()
-    }
-
     init {
         val binding = PlaceholderBinding.bind(LayoutInflater.from(context).inflate(R.layout.placeholder, this, true))
         binding.placeholderRoot.setOnClickListener {
             if (type != TYPE_LOADING) {
-                val refreshCount = jsonCacheUtil.getCache(JsonCacheConstantUtil.FREQUENT_ACTION_COUNT, Int::class.java)
-                if (refreshCount == null || refreshCount < 3) {
+                JsonCacheUtil.runWithFrequentCheck(context, {
                     placeHolderActionListener?.onRetry(it)
-                } else {
-                    jsonCacheUtil.saveCache(JsonCacheConstantUtil.FREQUENT_ACTION_COUNT, refreshCount + 1, 10_000L)
+                }) {
                     DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.actionTooFrequent)
                 }
             }

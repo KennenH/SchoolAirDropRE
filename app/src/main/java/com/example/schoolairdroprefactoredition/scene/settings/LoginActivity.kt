@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import com.alipay.sdk.app.OpenAuthTask
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.NetworkUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
@@ -79,20 +78,17 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     private val openAuthCallback = OpenAuthTask.Callback { resultCode, memo, bundle ->
         when (resultCode) {
             OpenAuthTask.OK -> {
-                Toast.makeText(this, "授权成功", Toast.LENGTH_SHORT).show()
+                // TODO: 2021/3/19 对比state参数是否一致
                 doLoginAppWithAuthCode(bundle.getString("auth_code"))
             }
             OpenAuthTask.Duplex -> {
                 Toast.makeText(this, "操作过于频繁，请稍后重试", Toast.LENGTH_SHORT).show()
-                LogUtils.d("操作过于频繁，请稍后重试")
             }
             OpenAuthTask.NOT_INSTALLED -> {
-                Toast.makeText(this, "没有安装支付宝App", Toast.LENGTH_SHORT).show()
-                LogUtils.d("没有安装支付宝App")
+                Toast.makeText(this, "没有找到支付宝App", Toast.LENGTH_SHORT).show()
             }
             OpenAuthTask.SYS_ERR -> {
-                Toast.makeText(this, "授权时遇到了意料之外的错误", Toast.LENGTH_SHORT).show()
-                LogUtils.d("授权时遇到了意料之外的错误")
+                Toast.makeText(this, "授权时遇到了意料之外的错误，请稍后重试", Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -139,6 +135,8 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
 
     /**
      * 登录失败，将正在登录的标志置回false
+     *
+     * 所有登陆失败分支都必须调用此方法，否则用户在重新打开登录页面之前都不再能够登录
      */
     private fun loginError() {
         isLogging = false
@@ -152,10 +150,13 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      * 用户授权之后将返回用户alipay id，用以登录
      */
     private fun openAuthScheme() {
+        showLoading()
+
         // 传递给支付宝应用的业务参数
         val bizParams: MutableMap<String, String> = HashMap()
         bizParams["url"] = "https://authweb.alipay.com/auth?auth_type=PURE_OAUTH_SDK&app_id=" + ConstantUtil.ALIPAY_APP_ID + "&scope=auth_base&state=" + ConstantUtil.ALIPAY_AUTH_STATE
-        val scheme = "http://auth.schoolairdrop.com/alipay_result_callback"
+        // 支付宝授权后回跳scheme
+        val scheme = "http://auth.schoolairdrop.com/alipaycallback"
 
         // 唤起授权业务
         val task = OpenAuthTask(this)
@@ -165,13 +166,15 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
                 bizParams,
                 openAuthCallback,
                 true)
+
+        dismissLoading()
     }
 
     /**
      * 防止网络意外时重复登录逻辑：
      *
      * .网络正常时点击登录，显示loading                 进入登录请求
-     *   [LoginActivity.showLoading]  ---- >  [LoginActivity.loginWithAlipay]  ---- >
+     *   [LoginActivity.showLoading]  ---- >  [LoginActivity.loginWithAuthCode]  ---- >
      * . 网络出现异常，按下返回使loading消失    网络恢复，再次按下登录，但正在登录标识符将请求拦截
      *   [LoginActivity.dismissLoading] ---- >  [LoginActivity.showLoading]
      *
@@ -183,13 +186,24 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
         when (v.id) {
             R.id.login_with_alipay -> {
                 // 检查本地是否有alipay id缓存
-                accountViewModel.lastLoggedUserAlipayID.let {
-                    if (it == null) {
+                accountViewModel.lastLoggedUserAlipayID.let { alipayIDCache ->
+                    if (alipayIDCache == null) {
                         // 本地没有alipay id缓存，可能是没有登录过，也可能是账号手动退出，也可能是缓存被清理
                         openAuthScheme()
                     } else {
+                        showLoading()
                         // 本地有alipay id缓存，直接使用之登录即可
-                        doLoginAppWithAuthCode(it)
+                        loginViewModel.loginWithAlipayID(alipayIDCache).observeOnce(this) { token ->
+                            dismissLoading {
+                                if (token != null) {
+                                    // 登录成功了，也不需要把isLogging置回false了
+                                    getUserInfoWithToken(token)
+                                } else {
+                                    // 这里是手动登录，要是返回了null说明是出问题了
+                                    loginError()
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -206,7 +220,12 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     }
 
     /**
-     * 在获取了auth code之后使用它获取alipay id
+     * 在获取了auth code之后使用它换取alipay id并进行注册或登录
+     *
+     * 登录总共分三步
+     * 1、使用传递进来的authCode访问后端callback接口，后端从支付宝后台获取alipay id后返回
+     * 2、获取服务器公钥
+     * 2、使用公钥加密获取的alipay id并访问服务器登录接口，未注册将自动注册
      */
     private fun doLoginAppWithAuthCode(authCode: String?) {
         // 暂时禁用提交按钮防止短时间内提交多次
@@ -216,11 +235,11 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
         showLoading {
             // 如果没网直接error
             if (NetworkUtils.isConnected()) {
-                // 这里是唯一能将这个变量置为true的地方，失败或者功能之后一定要调用loginError
-                // 否则用户再点也没办法登录了
+                // 这里是唯一能将这个变量置为true的地方，在此方法之后如果失败一定要调用loginError
+                // 否则用户重新打开页面之前再点也没办法登录了
                 if (!isLogging) {
                     isLogging = true
-                    loginWithAlipay(authCode)
+                    loginWithAuthCode(authCode)
                 }
             } else {
                 loginError()
@@ -237,15 +256,15 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      * 最后使用token换取用户信息
      */
     @Synchronized
-    private fun loginWithAlipay(authCode: String?) {
+    private fun loginWithAuthCode(authCode: String?) {
         if (token != null) {
             // 如果之前某种情况登录成功但是用户信息获取失败，直接获取用户信息即可
             getUserInfoWithToken(token)
         } else {
-            loginViewModel.loginWithAlipayAuthCode(authCode).observeOnce(this) { alipayID ->
-                if (alipayID != null) {
+            loginViewModel.loginWithAlipayAuthCode(authCode).observeOnce(this) { token ->
+                if (token != null) {
                     // 登录成功了，也不需要把isLogging置回false了
-                    getUserInfoWithToken(alipayID)
+                    getUserInfoWithToken(token)
                 } else {
                     // 这里是手动登录，要是返回了null说明是出问题了
                     loginError()

@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentMyBinding
 import com.example.schoolairdroprefactoredition.domain.DomainToken
@@ -122,7 +123,7 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
             }
 
             R.id.my_posts -> {
-                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAVOR, R.string.functionNotSupport)
+                Toast.makeText(context, getString(R.string.functionNotSupport), Toast.LENGTH_SHORT).show()
             }
         }
     }

@@ -236,50 +236,54 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
      */
     @Synchronized
     override fun onRightButtonClick() {
-        goods_button_right.isEnabled = false
-        val token = (application as SAApplication).getCachedToken()
-        if (token != null) {
-            if (goodsInfo?.goods_id != null &&
-                    goodsInfo?.seller?.user_id != null &&
-                    goodsInfo?.goods_name != null &&
-                    goodsInfo?.goods_cover_image != null &&
-                    goodsInfo?.goods_price != null &&
-                    goodsInfo?.goods_is_bargain != null &&
-                    goodsInfo?.goods_is_secondHand != null) {
-                showLoading()
-                goodsViewModel.toggleGoodsFavorite(token.access_token, Favorite(
-                        goodsInfo?.goods_id!!,
-                        goodsInfo?.seller?.user_id!!,
-                        goodsInfo?.goods_name!!,
-                        goodsInfo?.goods_cover_image!!,
-                        goodsInfo?.goods_price.toString(),
-                        goodsInfo?.goods_is_bargain!!,
-                        goodsInfo?.goods_is_secondHand!!,
-                        true
-                )).observeOnce(this) {
-                    dismissLoading {
-                        goods_button_right.isEnabled = true
-                        it?.let { isFavor ->
-                            updateFavorCount(isFavor)
-                        }
-                        when (it) {
-                            true -> {
-                                goods_button_right.toggleFavor()
-                                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.favorDone)
+        try {
+            goods_button_right.isEnabled = false
+            val token = (application as SAApplication).getCachedToken()
+            if (token != null) {
+                if (goodsInfo?.goods_id != null &&
+                        goodsInfo?.seller?.user_id != null &&
+                        goodsInfo?.goods_name != null &&
+                        goodsInfo?.goods_cover_image != null &&
+                        goodsInfo?.goods_price != null &&
+                        goodsInfo?.goods_is_bargain != null &&
+                        goodsInfo?.goods_is_secondHand != null) {
+                    showLoading()
+                    goodsViewModel.toggleGoodsFavorite(this, token.access_token, Favorite(
+                            goodsInfo?.goods_id!!,
+                            goodsInfo?.seller?.user_id!!,
+                            goodsInfo?.goods_name!!,
+                            goodsInfo?.goods_cover_image!!,
+                            goodsInfo?.goods_price.toString(),
+                            goodsInfo?.goods_is_bargain!!,
+                            goodsInfo?.goods_is_secondHand!!,
+                            true
+                    )).observeOnce(this) {
+                        dismissLoading {
+                            goods_button_right.isEnabled = true
+                            it?.let { isFavor ->
+                                updateFavorCount(isFavor)
                             }
-                            false -> {
-                                goods_button_right.toggleFavor()
-                                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.unfavorDone)
-                            }
-                            else -> {
-                                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.actionTooFrequent)
+                            when (it) {
+                                true -> {
+                                    goods_button_right.toggleFavor()
+                                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.favorDone)
+                                }
+                                false -> {
+                                    goods_button_right.toggleFavor()
+                                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAVOR, R.string.unfavorDone)
+                                }
+                                else -> {
+                                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.actionTooFrequent)
+                                }
                             }
                         }
                     }
                 }
+            } else {
+                login(ACTION_AFTER_LOGIN_FAVOR)
             }
-        } else {
-            login(ACTION_AFTER_LOGIN_FAVOR)
+        } catch (e: Exception) {
+            DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.dialogFailed)
         }
     }
 }

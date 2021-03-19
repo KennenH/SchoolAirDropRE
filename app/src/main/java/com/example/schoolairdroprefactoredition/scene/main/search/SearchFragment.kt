@@ -274,7 +274,7 @@ class SearchFragment : BaseFragment(), OnSearchActionListener, EndlessRecyclerVi
         binding?.searchResult?.setIsNoMoreData(true)
     }
 
-    override fun onNoMoreDataRefresh() {
+    override fun resetNoMoreData() {
         binding?.searchResult?.setIsNoMoreData(false)
     }
 

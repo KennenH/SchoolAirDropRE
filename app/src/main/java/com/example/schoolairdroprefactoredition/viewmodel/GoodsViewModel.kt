@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
+import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.example.schoolairdroprefactoredition.database.pojo.Favorite
 import com.example.schoolairdroprefactoredition.database.pojo.UserCache
@@ -78,10 +80,10 @@ class GoodsViewModel(private val databaseRepository: DatabaseRepository) : ViewM
      * false 取消收藏成功
      * null 收藏动作被拦截，操作过于频繁
      */
-    fun toggleGoodsFavorite(token: String, favorite: Favorite): LiveData<Boolean?> {
+    fun toggleGoodsFavorite(context: Context, token: String, favorite: Favorite): LiveData<Boolean?> {
         val favoriteGoodsLiveData: MutableLiveData<Boolean?> = MutableLiveData()
         // 检查操作是否触发CoolDown
-        JsonCacheUtil.runWithFrequentCheck({
+        JsonCacheUtil.runWithFrequentCheck(context,{
             viewModelScope.launch {
                 databaseRepository.isFavorite(favorite.goods_id).let { isFavor ->
                     goodsRepository.favorGoods(token, favorite.goods_id, isFavor) {

@@ -8,7 +8,7 @@
     <string name="quoteHeaderNum" translatable="false">(%d)</string>
     <string name="priceRMB" translatable="false">¥ %s</string>
     <string name="version" translatable="false">Version %s</string>
-    <string name="rightsReserved" translatable="false">校园空投 版权所有\nCopyright © 2019–2021 SchoolAirdrop. All Rights Reserved.</string>
+    <string name="rightsReserved" translatable="false">校园空投 版权所有\nCopyright © 2021–2021 SchoolAirdrop. All Rights Reserved.</string>
     <string name="alipayID" translatable="false">%s</string>
     <string name="userProtocol" translatable="false">《用户许可协议》</string>
     <string name="serviceProtocol" translatable="false">《校园空投服务条款》</string>
@@ -321,7 +321,7 @@
     <string name="tapWhiteToRetry">点击空白处以重试</string>
     <string name="obtainingData">正在接收消息</string>
     <string name="goodsDeleted">物品已下架</string>
-    <string name="simplifyYourKey">请尝试精简关键字</string>
+    <string name="simplifyYourKey">请尝试将关键字使用空格分隔</string>
     <string name="handlingLocalMedia">正在处理本地图片</string>
     <string name="requestingCredentials">正在请求上传凭证</string>
     <string name="resourceAllocating">正在申请分配资源</string>

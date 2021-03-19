@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.utils
 
+import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import androidx.security.crypto.MasterKeys
@@ -28,13 +30,13 @@ class JsonCacheUtil private constructor() {
         /**
          * 带检查频繁操作的运行
          *
-         * 检查触发时间默认为10秒，触发5次检查将进入一次CoolDown，一次为15秒，CoolDown期间触发任何检查都将重置
-         * 15秒的CoolDown，直到用户在15秒内没有触发任何检查为止
+         * 检查触发时间默认为[JsonCacheConstantUtil.ACTION_TOO_FREQUENT_COOLDOWN]秒，触发5次检查将进入一次CoolDown，一次为
+         * [JsonCacheConstantUtil.ACTION_TOO_FREQUENT_COOLDOWN]秒
          *
          * @param runIfNotFrequent 在没有触发CoolDown时执行的操作
          * @param runIfFrequent    在触发CoolDown时执行的操作
          */
-        fun runWithFrequentCheck(runIfNotFrequent: Runnable?, runIfFrequent: Runnable? = null) {
+        fun runWithFrequentCheck(context: Context?, runIfNotFrequent: Runnable?, runIfFrequent: Runnable? = null) {
             val jsonCacheUtil = getInstance()
             val refreshCount = jsonCacheUtil.getCache(JsonCacheConstantUtil.FREQUENT_ACTION_COUNT, Int::class.java)
             if (refreshCount == null || refreshCount < 5) {
@@ -43,9 +45,9 @@ class JsonCacheUtil private constructor() {
             } else {
                 // 操作过于频繁，触发或重置CoolDown
                 runIfFrequent?.run()
-                DialogUtil.showCenterDialog(Utils.getApp().applicationContext, DialogUtil.DIALOG_TYPE.FAILED, R.string.actionTooFrequent)
+                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.actionTooFrequent)
             }
-            // 无论有没有放行执行被检查的语句，都会重置冷却时间，直到用户没有触发检查操作15秒为止
+            // 重置冷却时间，直到用户在冷却时间内没有触发检查操作为止
             jsonCacheUtil.saveCache(JsonCacheConstantUtil.FREQUENT_ACTION_COUNT, refreshCount?.plus(1)
                     ?: 1, JsonCacheConstantUtil.ACTION_TOO_FREQUENT_COOLDOWN)
         }

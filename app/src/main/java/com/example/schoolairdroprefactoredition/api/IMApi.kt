@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.api
 
+import com.example.schoolairdroprefactoredition.domain.DomainIMPath
 import com.example.schoolairdroprefactoredition.domain.DomainOffline
 import com.example.schoolairdroprefactoredition.domain.DomainOfflineNum
 import retrofit2.Call
@@ -31,5 +32,4 @@ interface IMApi {
             @Header("Authorization") token: String,
             @Field("sender_id") senderID: String,
             @Field("start") startTime: Long): Call<DomainOffline>
-
 }

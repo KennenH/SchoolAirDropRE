@@ -19,7 +19,6 @@ import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.KeyboardUtils
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
@@ -28,10 +27,8 @@ import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips
-import com.example.schoolairdroprefactoredition.scene.addnew.InputSetActivity.Companion.start
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
-import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity.Companion.start
 import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter.OnPicSetClickListener
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem
@@ -292,11 +289,11 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 restorePostDraft()
             }
             AddNewType.MODIFY_ITEM -> {
-//                draft_tip_toggle.setText(R.string.modifyInfo)
-//                tag_title.visibility = View.GONE
-//                option_tag_wrapper.visibility = View.GONE
-//                option_anonymous.visibility = View.GONE
-//                initGoodsInfo()
+                draft_tip_toggle.setText(R.string.modifyInfo)
+                tag_title.visibility = View.GONE
+                option_tag_wrapper.visibility = View.GONE
+                option_anonymous.visibility = View.GONE
+                initGoodsInfo()
             }
         }
     }
@@ -405,10 +402,13 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      */
     private fun submit() {
         if (checkFormIsLegal()) {
-            if (addNewType == AddNewType.ADD_ITEM) {
-                submitItem()
-            } else {
-                DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.functionNotSupport)
+            when (addNewType) {
+                AddNewType.ADD_ITEM, AddNewType.MODIFY_ITEM -> {
+                    submitItem()
+                }
+                else -> {
+                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.functionNotSupport)
+                }
             }
         }
     }
@@ -422,54 +422,73 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         if (isSubmitSuccess) {
             return
         }
-        if (addNewType == AddNewType.ADD_ITEM) { // 新增物品
-            val token = (application as SAApplication).getCachedToken()
-            if (token != null) {
-                if (mAmapLocation == null) {
-//                            dismissLoading(() ->
-                    AddNewResultActivity.start(this, false, AddNewResultTips.LOCATION_FAILED_NEW_ITEM)
-                } else {
-                    showLoading {
-                        val mPicSetPaths = ArrayList<String>()
-                        for (localMedia in mPicSetSelected) {
-                            mPicSetPaths.add(localMedia.cutPath ?: localMedia.path)
-                        }
 
-                        addNewViewModel.submitItem(token.access_token, mCoverPath, mPicSetPaths,
-                                option_title.text.toString(), option_description.text.toString(),
-                                mAmapLocation!!.longitude, mAmapLocation!!.latitude,
-                                !option_secondHand.isChecked, option_negotiable.isChecked, price_input.text.toString().toFloat())
-                                .apply {
-                                    observe(this@AddNewActivity, object : Observer<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
-                                        override fun onChanged(response: Triple<Boolean, Pair<Int, Boolean>, Boolean>) {
-                                            if (!response.first) {
-                                                if (response.second.second) {
-                                                    updateLoadingTip(getString(response.second.first))
-                                                    showUploadResult(result = false)
-                                                } else if (response.second.first != -1) {
-                                                    updateLoadingTip(getString(R.string.uploadFailedAtIndex, response.second.first))
-                                                    showUploadResult(result = false, uploadError = true)
-                                                }
-                                                removeObserver(this) // 上传失败，中断流程，注销观察者
-                                            } else if (response.third) {
-                                                showUploadResult(true)
-                                                removeObserver(this) // 完成上传，注销观察者
-                                            } else {
-                                                if (response.second.second) {
-                                                    // pair中第二个Boolean为true则代表它是res id，可以直接显示
-                                                    updateLoadingTip(getString(response.second.first))
+        when (addNewType) {
+            // 新增物品
+            AddNewType.ADD_ITEM -> {
+                val token = (application as SAApplication).getCachedToken()
+                if (token != null) {
+                    if (mAmapLocation == null) {
+//                            dismissLoading(() ->
+                        AddNewResultActivity.start(this, false, AddNewResultTips.LOCATION_FAILED_NEW_ITEM)
+                    } else {
+                        showLoading {
+                            val mPicSetPaths = ArrayList<String>()
+                            for (localMedia in mPicSetSelected) {
+                                mPicSetPaths.add(localMedia.cutPath ?: localMedia.path)
+                            }
+
+                            addNewViewModel.submitItem(token.access_token, mCoverPath, mPicSetPaths,
+                                    option_title.text.toString(), option_description.text.toString(),
+                                    mAmapLocation!!.longitude, mAmapLocation!!.latitude,
+                                    !option_secondHand.isChecked, option_negotiable.isChecked, price_input.text.toString().toFloat())
+                                    .apply {
+                                        observe(this@AddNewActivity, object : Observer<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
+                                            override fun onChanged(response: Triple<Boolean, Pair<Int, Boolean>, Boolean>) {
+                                                if (!response.first) {
+                                                    if (response.second.second) {
+                                                        updateLoadingTip(getString(response.second.first))
+                                                        showUploadResult(result = false)
+                                                    } else if (response.second.first != -1) {
+                                                        updateLoadingTip(getString(R.string.uploadFailedAtIndex, response.second.first))
+                                                        showUploadResult(result = false, uploadError = true)
+                                                    }
+                                                    removeObserver(this) // 上传失败，中断流程，注销观察者
+                                                } else if (response.third) {
+                                                    showUploadResult(true)
+                                                    removeObserver(this) // 完成上传，注销观察者
                                                 } else {
-                                                    // pair中第二个Boolean为false则代表是纯数字，是正在上传的图片的index+1，需要用占位字符
-                                                    updateLoadingTip(getString(R.string.uploadingIndexPicture, response.second.first))
+                                                    if (response.second.second) {
+                                                        // pair中第二个Boolean为true则代表它是res id，可以直接显示
+                                                        updateLoadingTip(getString(response.second.first))
+                                                    } else {
+                                                        // pair中第二个Boolean为false则代表是纯数字，是正在上传的图片的index+1，需要用占位字符
+                                                        updateLoadingTip(getString(R.string.uploadingIndexPicture, response.second.first))
+                                                    }
                                                 }
                                             }
-                                        }
-                                    })
-                                }
+                                        })
+                                    }
+                        }
                     }
+                } else {
+                    LoginActivity.start(this)
                 }
-            } else {
-                start(this)
+            }
+
+            // 修改物品信息
+            AddNewType.MODIFY_ITEM -> {
+                val token = (application as SAApplication).getCachedToken()
+                if (token != null) {
+                    // TODO: 2021/3/19 提交物品修改后的表单
+                } else {
+                    LoginActivity.start(this)
+                }
+            }
+
+            // 其他尚未支持功能
+            else -> {
+
             }
         }
     }
@@ -739,10 +758,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             return true
         } else if (id == R.id.add_submit) {
             item.isEnabled = false
-            try {
-                submit()
-            } catch (ignored: Exception) {
-            }
+            submit()
             item.isEnabled = true
             return true
         }
@@ -755,42 +771,68 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     override fun onClick(v: View) {
-        val id = v.id
-        if (id == R.id.option_title) {
-            start(this, InputSetActivity.TYPE_TITLE, option_title.text.toString(), getString(R.string.title))
-        } else if (id == R.id.price_confirm) {
-            KeyboardUtils.hideSoftInput(v)
-            price_input.clearFocus()
-        } else if (id == R.id.option_location) {
-            option_location.description = getString(R.string.locating)
-            requestPermission(PermissionConstants.LOCATION, RequestType.MANUAL)
-        } else if (id == R.id.option_negotiable) {
-            option_negotiable.toggle()
-        } else if (id == R.id.option_secondHand) {
-            option_secondHand.toggle()
-        } else if (id == R.id.option_description) {
-            start(this, InputSetActivity.TYPE_DESCRIPTION, option_description.text.toString(), getString(R.string.goodsDescription))
-        } else if (id == R.id.saved_close) {
-            // 点击横幅关闭按钮，将页面标题颜色置为主题色以提示用户页面中存在可恢复的草稿
-            AnimUtil.collapse(saved_draft)
-            AnimUtil.textColorAnim(this, draft_tip_toggle, R.color.primaryText, R.color.colorAccent)
-        } else if (id == R.id.draft_action) {
-            if (addNewType != AddNewType.MODIFY_ITEM) {
-                if (isDraftRestored) {
-                    clearDraft()
-                } else {
-                    if (addNewType == AddNewType.ADD_ITEM) {
-                        restoreItemDraft()
+        when (v.id) {
+            // 标题
+            R.id.option_title -> {
+                InputSetActivity.start(this, InputSetActivity.TYPE_TITLE, option_title.text.toString(), getString(R.string.title))
+            }
+
+            // 价格右边的确认按钮
+            R.id.price_confirm -> {
+                KeyboardUtils.hideSoftInput(v)
+                price_input.clearFocus()
+            }
+
+            // 定位按钮
+            R.id.option_location -> {
+                option_location.description = getString(R.string.locating)
+                requestPermission(PermissionConstants.LOCATION, RequestType.MANUAL)
+            }
+
+            // 是否可议价
+            R.id.option_negotiable -> {
+                option_negotiable.toggle()
+            }
+
+            // 是否二手
+            R.id.option_secondHand -> {
+                option_secondHand.toggle()
+            }
+
+            // 物品描述
+            R.id.option_description -> {
+                InputSetActivity.start(this, InputSetActivity.TYPE_DESCRIPTION, option_description.text.toString(), getString(R.string.goodsDescription))
+            }
+
+            // 蓝色横幅（表单保存相关）关闭按钮
+            R.id.saved_close -> {
+                // 点击横幅关闭按钮，将页面标题颜色置为主题色以提示用户页面中存在可恢复的草稿
+                AnimUtil.collapse(saved_draft)
+                AnimUtil.textColorAnim(this, draft_tip_toggle, R.color.primaryText, R.color.colorAccent)
+            }
+
+            // 蓝色横幅（表单保存相关）动作按钮
+            R.id.draft_action -> {
+                if (addNewType != AddNewType.MODIFY_ITEM) {
+                    if (isDraftRestored) {
+                        clearDraft()
                     } else {
-                        restorePostDraft()
+                        if (addNewType == AddNewType.ADD_ITEM) {
+                            restoreItemDraft()
+                        } else {
+                            restorePostDraft()
+                        }
                     }
                 }
             }
-        } else if (id == R.id.draft_tip_toggle) {
-            // 页面中有草稿且横幅已被关闭时点击页面标题将可以展示横幅
-            if (hasDraft && saved_draft.visibility != View.VISIBLE) {
-                AnimUtil.expand(saved_draft)
-                AnimUtil.textColorAnim(this, draft_tip_toggle, R.color.colorAccent, R.color.primaryText)
+
+            // 页面顶部标题，可打开或关闭蓝色横幅（表单保存相关）
+            R.id.draft_tip_toggle -> {
+                // 页面中有草稿且横幅已被关闭时点击页面标题将可以展示横幅
+                if (hasDraft && saved_draft.visibility != View.VISIBLE) {
+                    AnimUtil.expand(saved_draft)
+                    AnimUtil.textColorAnim(this, draft_tip_toggle, R.color.colorAccent, R.color.primaryText)
+                }
             }
         }
     }

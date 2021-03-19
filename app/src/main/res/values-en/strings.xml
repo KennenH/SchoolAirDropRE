@@ -291,7 +291,7 @@
     <string name="tapWhiteToRetry">Tap the blank space to try again</string>
     <string name="obtainingData">Receiving</string>
     <string name="goodsDeleted">Item has been removed</string>
-    <string name="simplifyYourKey">Please try to refine keywords</string>
+    <string name="simplifyYourKey">Please try to separate keywords with spaces</string>
     <string name="handlingLocalMedia">Processing local image</string>
     <string name="requestingCredentials">Requesting credentials</string>
     <string name="resourceAllocating">Applying for resource allocation</string>
