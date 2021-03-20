@@ -92,6 +92,8 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
     fun setCounterPartInfo(counterpartInfo: DomainUserInfo.DataBean?) {
         if (counterpartInfo != null) {
             BeanUtils.copyProperties(mCounterpartInfo, counterpartInfo)
+            // 刷新用户信息
+            notifyDataSetChanged()
         }
     }
 
@@ -279,7 +281,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 // 设置时间
                 showTime(holder, date, false)
                 // 加载图片
-                ImageUtil.loadRoundedImage(imageView, item.message)
+                ImageUtil.loadRoundedImage(imageView, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.message))
                 // 点击头像进入个人主页
                 avatarView.setOnClickListener {
                     UserActivity.start(context, mCounterpartInfo?.userId)
@@ -288,7 +290,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 imageView.setOnClickListener {
                     XPopup.Builder(context)
                             .isDarkTheme(true)
-                            .asImageViewer(imageView, item.message, false, -1, -1, -1, true, context.getColor(R.color.blackAlways), MyUtil.ImageLoader())
+                            .asImageViewer(imageView, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.message), false, -1, -1, -1, true, context.getColor(R.color.blackAlways), MyUtil.ImageLoader())
                             .show()
                 }
             }

@@ -1,16 +1,11 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.*
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.database.pojo.*
-import com.example.schoolairdroprefactoredition.domain.DomainOfflineNum
-import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.repository.UserRepository
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
-import kotlin.collections.ArrayList
 
 class MessageViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
 

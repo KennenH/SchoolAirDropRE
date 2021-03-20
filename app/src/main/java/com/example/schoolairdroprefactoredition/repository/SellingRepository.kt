@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.repository
 
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing

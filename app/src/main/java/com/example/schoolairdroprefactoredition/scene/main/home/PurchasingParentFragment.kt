@@ -88,7 +88,7 @@ class PurchasingParentFragment : BaseParentFragment(), View.OnClickListener {
         } else if (id == R.id.home_top_add) {
             // if 当前子页面为我的在售
             if (activity is MainActivity) {
-                AddNewActivity.start(context, AddNewActivity.AddNewType.ADD_ITEM)
+                AddNewActivity.startAddNew(context, AddNewActivity.AddNewType.ADD_ITEM)
             }
             // else if 当前子页面为我的求购
 //            if (activity is MainActivity) {

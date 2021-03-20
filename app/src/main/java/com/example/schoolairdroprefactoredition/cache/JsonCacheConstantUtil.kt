@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.utils
+package com.example.schoolairdroprefactoredition.cache
 
 /**
  * 关于[JsonCacheUtil]的所有常量定义
@@ -34,13 +34,26 @@ object JsonCacheConstantUtil {
      */
     const val GOODS_BROWSED = "goods-was-browsed-"
 
+
     /**
      * 进行频繁操作之后用户将被禁止点击这些检查频繁操作的按钮 冷却时间
      */
-    const val ACTION_TOO_FREQUENT_COOLDOWN = 15_000L
+    const val FREQUENT_ACTION_COOLDOWN = 10_000L
 
     /**
+     * 频繁操作计数键
      * 所有检查频繁操作的计数键 [Int]
      */
     const val FREQUENT_ACTION_COUNT = "refreshtoofrequent"
+
+    /**
+     * 进行快速操作检查的动作后在冷却时间内的快速操作都将被无条件过滤，防止恶意调用
+     */
+    const val QUICK_ACTION_COOLDOWN = 5_000L
+
+    /**
+     * 快速操作flag键
+     * 所有检查快速操作的flag键，由于快速操作检查冷却非常短，因此可以使用一个键作为所有动作的键
+     */
+    const val QUICK_ACTION_FLAG = "too_quick_action_flag"
 }

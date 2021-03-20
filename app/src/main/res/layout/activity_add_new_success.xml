@@ -68,6 +68,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/why"
+        android:visibility="gone"
         android:textColor="@color/primaryText"
         android:layout_marginBottom="@dimen/general_padding_bit_larger"
         android:textSize="@dimen/textSizeNormal"

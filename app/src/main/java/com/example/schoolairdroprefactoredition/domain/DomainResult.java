@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.domain;
 
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
+
 public class DomainResult {
 
     /**
@@ -36,6 +38,6 @@ public class DomainResult {
     }
 
     public boolean isSuccess() {
-        return code == 200;
+        return code == ConstantUtil.HTTP_OK;
     }
 }

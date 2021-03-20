@@ -8,8 +8,8 @@ import com.example.schoolairdroprefactoredition.database.pojo.*
 import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.JsonCacheConstantUtil
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.Response

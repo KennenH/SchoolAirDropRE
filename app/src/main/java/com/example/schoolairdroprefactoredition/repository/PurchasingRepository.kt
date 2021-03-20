@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
@@ -21,7 +20,7 @@ class PurchasingRepository private constructor() {
     }
 
     /**
-     * 请求附近在售的数据
+     * 请求附近在售的物品信息
      */
     fun getNearbyGoods(page: Int, longitude: Double, latitude: Double, onResult: (response: DomainPurchasing?) -> Unit) {
         RetrofitClient.goodsApi.getNearByGoods(

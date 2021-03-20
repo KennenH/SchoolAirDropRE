@@ -95,36 +95,14 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        token = (application as SAApplication).getCachedToken()
-//        val info = (application as SAApplication).getCachedMyInfo()
-//        // 已登录时
-//        if (info != null) {
-//            setContentView(R.layout.activity_logged_in)
-//
-//            val phone = AppConfig.USER_ALIPAY
-////          todo 发布时取消注释下面这句话
-//            // final String priPhone = phone.substring(0, 3).concat("****").concat(phone.substring(7));
-//            val isPri = booleanArrayOf(true)
-//
-//            userName.text = phone
-//            userName.setOnClickListener {
-//                userName.text = if (isPri[0]) phone else phone
-//                isPri[0] = !isPri[0]
-//            }
-//            close.setOnClickListener {
-//                finish()
-//                AnimUtil.activityExitAnimDown(this)
-//            }
-//            ClickUtils.applyPressedViewAlpha(close, 0.6f)
-//        } else {
         setContentView(R.layout.activity_login)
         (application as? SAApplication)?.addOnApplicationLoginListener(this)
+
         login_with_alipay.isEnabled = false
+        checkbox.isChecked = false
         cancel.setOnClickListener(this)
         checkbox.setOnCheckedChangeListener(this)
-        checkbox.isChecked = false
         login_with_alipay.setOnClickListener(this)
-//        }
     }
 
     override fun onBackPressed() {
@@ -154,7 +132,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
 
         // 传递给支付宝应用的业务参数
         val bizParams: MutableMap<String, String> = HashMap()
-        bizParams["url"] = "https://authweb.alipay.com/auth?auth_type=PURE_OAUTH_SDK&app_id=" + ConstantUtil.ALIPAY_APP_ID + "&scope=auth_base&state=" + ConstantUtil.ALIPAY_AUTH_STATE
+        bizParams["url"] = "https://authweb.alipay.com/auth?auth_type=PURE_OAUTH_SDK&app_id=" + ConstantUtil.ALIPAY_APP_ID + "&scope=auth_user&state=" + ConstantUtil.ALIPAY_AUTH_STATE
         // 支付宝授权后回跳scheme
         val scheme = "http://auth.schoolairdrop.com/alipaycallback"
 

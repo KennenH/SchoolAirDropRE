@@ -147,14 +147,12 @@
         <ImageView
             android:id="@+id/goods_more_action"
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:padding="@dimen/general_padding_small"
-            android:background="@drawable/bg_rounded_primary5"
-            android:src="@drawable/ic_trash"
+            android:src="@drawable/ic_more_action"
             app:layout_constraintBottom_toBottomOf="@+id/goods_watches"
             app:layout_constraintEnd_toEndOf="@+id/ssb_selling_goods_title"
-            app:layout_constraintTop_toTopOf="@+id/goods_watches"
-            app:tint="@color/colorPrimaryRed" />
+            app:layout_constraintTop_toTopOf="@+id/goods_watches" />
 
     </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>
 </androidx.cardview.widget.CardView>

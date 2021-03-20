@@ -1,18 +1,10 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.schoolairdroprefactoredition.cache.UserInfoCache
-import com.example.schoolairdroprefactoredition.cache.UserTokenCache
-import com.example.schoolairdroprefactoredition.domain.DomainAlipayUserID
+import androidx.lifecycle.*
+import com.example.schoolairdroprefactoredition.cache.*
 import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.repository.LoginRepository
-import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
-import com.example.schoolairdroprefactoredition.utils.UserLoginCacheUtils
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
@@ -59,15 +51,21 @@ class LoginViewModel : ViewModel() {
     /**
      * 使用alipay id登录app
      */
-    fun loginWithAlipayID(alipayID: String): LiveData<DomainToken?> {
+    fun loginWithAlipayID(alipayID: String?): LiveData<DomainToken?> {
         val token = MutableLiveData<DomainToken?>()
-        loginRepository.getPublicKey { publicKey ->
-            if (publicKey != null) {
-                // 获取公钥之后加密alipay id传输获取app token
-                loginRepository.authorizeWithAlipayID(
-                        alipayID,
-                        publicKey) {
-                    token.postValue(it)
+        viewModelScope.launch {
+            if (alipayID != null) {
+                loginRepository.getPublicKey { publicKey ->
+                    if (publicKey != null) {
+                        // 获取公钥之后加密alipay id传输获取app token
+                        loginRepository.authorizeWithAlipayID(
+                                alipayID,
+                                publicKey) {
+                            token.postValue(it)
+                        }
+                    } else {
+                        token.postValue(null)
+                    }
                 }
             } else {
                 token.postValue(null)
@@ -82,16 +80,8 @@ class LoginViewModel : ViewModel() {
     fun getMyInfo(token: String): LiveData<DomainUserInfo.DataBean?> {
         val myInfo = MutableLiveData<DomainUserInfo.DataBean?>()
         viewModelScope.launch {
-            loginRepository.getMyInfo(token) { success, response ->
-                if (success) {
-                    myInfo.postValue(response)
-                } else {
-                    myInfo.postValue(null)
-                }
-
-                if (response != null) {
-                    UserLoginCacheUtils.getInstance().saveUserInfo(response)
-                }
+            loginRepository.getMyInfo(token) { response ->
+                myInfo.postValue(response)
             }
         }
         return myInfo
@@ -112,11 +102,15 @@ class LoginViewModel : ViewModel() {
     /**
      * app进入前台时检查token是否过期
      */
-    fun connectWhenComesToForeground(token: String) {
+    fun connectWhenComesToForeground(token: String?): MutableLiveData<Int?> {
+        val connect = MutableLiveData<Int?>()
         viewModelScope.launch {
-            loginRepository.connectWhenComesToForeground(token) {
-
+            if (token != null) {
+                loginRepository.connectWhenComesToForeground(token) {
+                    connect.postValue(it)
+                }
             }
         }
+        return connect
     }
 }

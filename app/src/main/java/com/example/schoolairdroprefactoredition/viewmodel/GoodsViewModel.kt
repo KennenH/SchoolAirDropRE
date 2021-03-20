@@ -1,17 +1,15 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.*
 import com.example.schoolairdroprefactoredition.database.pojo.Favorite
 import com.example.schoolairdroprefactoredition.database.pojo.UserCache
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
-import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.repository.GoodsRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.JsonCacheConstantUtil
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import kotlinx.coroutines.launch
 
 class GoodsViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {

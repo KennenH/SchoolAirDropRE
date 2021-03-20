@@ -21,16 +21,7 @@ object AppConfig {
     const val DEBUG_LATITUDE = 30.318141927801996
 
     /**
-     * Debug模式下固定登录的用户
-     *
-     *
-     * 19858120611
-     * wencaizhongbai
-     * wiredo
-     * clz
-     * mav
-     * Sage
-     * test1 李伟
+     * Debug模式下固定登录的用户alipay id
      */
-    const val USER_ALIPAY = "19858120611"
+    const val USER_ALIPAY = "2088032859860768"
 }

@@ -1,13 +1,12 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.*
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.database.pojo.UserCache
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.repository.UserRepository
-import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil.IS_GET_USER_INFO_PRESENTLY
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.JsonCacheConstantUtil.IS_GET_USER_INFO_PRESENTLY
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 

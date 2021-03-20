@@ -67,7 +67,7 @@ interface UserApi {
      * 校验token是否过期
      */
     @POST("appapi/auth/connect")
-    fun verifyToken(@Header("Authorization") token: String)
+    fun verifyToken(@Header("Authorization") token: String): Call<DomainConnect>
 
     /**
      * 使用auth code换取用户alipay id

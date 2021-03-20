@@ -62,7 +62,7 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
                     ConstantUtil.UPLOAD_TYPE_IM) { _, _, taskAndKeys, _ ->
                 if (taskAndKeys != null) {
                     uploadRepository.moveIMImage(token, taskAndKeys.taskId, taskAndKeys.keys.joinToString(",")) {
-                        uploadLiveDate.postValue(it?.split(","))
+                        uploadLiveDate.postValue(it)
                     }
                 } else {
                     uploadLiveDate.postValue(null)

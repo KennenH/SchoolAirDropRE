@@ -34,8 +34,13 @@ public class HorizontalImageRecyclerAdapter extends BaseQuickAdapter<LocalMedia,
         image.setOnItemAddPicActionListener(new AddPicItem.OnItemAddPicActionListener() {
             @Override
             public void onClose() {
-                if (mOnPicSetClickListener != null)
+                if (mOnPicSetClickListener != null) {
                     mOnPicSetClickListener.onPicSetDeleteAt(getItemPosition(s));
+
+                    if (realPath.startsWith(ConstantUtil.QINIU_BASE_URL)) {
+                        mOnPicSetClickListener.onOriginalImageDeleted(realPath.replace(ConstantUtil.QINIU_BASE_URL, ""));
+                    }
+                }
 
                 image.clearImage(false);
                 remove(s);
@@ -43,13 +48,20 @@ public class HorizontalImageRecyclerAdapter extends BaseQuickAdapter<LocalMedia,
 
             @Override
             public void onItemClick() {
-                if (mOnPicSetClickListener != null)
+                if (mOnPicSetClickListener != null) {
                     mOnPicSetClickListener.onPicSetClick(holder.itemView.findViewById(R.id.image), getItemPosition(s));
+                }
             }
         });
     }
 
     public interface OnPicSetClickListener {
+
+        /**
+         * 修改物品时原本有的图片被删除
+         */
+        void onOriginalImageDeleted(String path);
+
         /**
          * 图片集的一张图片被删除
          */

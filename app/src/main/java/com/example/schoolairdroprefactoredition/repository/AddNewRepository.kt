@@ -1,14 +1,14 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import android.content.Context
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
-import com.example.schoolairdroprefactoredition.cache.NewPostDraftCache
+import com.example.schoolairdroprefactoredition.cache.NewInquiryDraftCache
 import com.example.schoolairdroprefactoredition.domain.DomainResult
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.utils.AppConfig
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.luck.picture.lib.entity.LocalMedia
 import retrofit2.Call
 import retrofit2.Response
@@ -28,22 +28,26 @@ class AddNewRepository {
     }
 
     /**
-     * 上传物品
+     * 上传物品表单
      *
-     * 不包含图片上传
+     * 不包含图片上传，仅与服务器交互部分
+     *
+     * @param coverKey 封面图片在七牛云上的路径，即整个上传流程中从上一步获取的cover key
+     * @param picSetKeys 图片集在七牛云上的路径，以逗号分隔，同上
      */
-    fun submitNewItem(token: String, taskID: String,
-                      coverKey: String, picSetKeys: String,
-                      title: String, content: String,
-                      longitude: Double, latitude: Double,
-                      isBrandNew: Boolean, isQuotable: Boolean, price: Float,
-                      onResult: (success: Boolean) -> Unit) {
+    fun submitItem(
+            token: String, taskID: String,
+            coverKey: String, picSetKeys: String,
+            title: String, content: String,
+            longitude: Double, latitude: Double,
+            isBrandNew: Boolean, isQuotable: Boolean, price: Float,
+            onResult: (success: Boolean) -> Unit) {
         RetrofitClient.goodsApi.postNewItem(
                 token, taskID,
                 coverKey, picSetKeys,
                 title, content,
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE.toString() else longitude.toString(),
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE.toString() else latitude.toString(),
+                longitude.toString(),
+                latitude.toString(),
                 if (isQuotable) 1 else 0, if (!isBrandNew) 1 else 0,
                 price.toString()).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
@@ -69,18 +73,54 @@ class AddNewRepository {
     }
 
     /**
-     * 上传帖子
+     * 修改物品信息
      *
-     * 不包含图片上传
+     * 仅包含与服务器交互部分，同[submitItem]
      */
-    fun submitNewPost(
+    fun modifyGoodsInfo(token: String, taskID: String,
+                        imagesToDelete: String, picSetKeys: String,
+                        goodsID: Int, title: String, content: String,
+                        longitude: Double, latitude: Double,
+                        isBrandNew: Boolean, isQuotable: Boolean, price: Float,
+                        onResult: (success: Boolean) -> Unit) {
+        RetrofitClient.goodsApi.modifyGoodsInfo(
+                token, taskID,
+                imagesToDelete, picSetKeys,
+                goodsID, title, content,
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE else longitude,
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE else latitude,
+                if (isQuotable) 1 else 0, if (!isBrandNew) 1 else 0,
+                price.toString()).apply {
+            enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
+                override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
+                    if (response.code() == HttpURLConnection.HTTP_OK) {
+                        val body = response.body()
+                        onResult(body?.code == ConstantUtil.HTTP_OK)
+                    } else {
+                        LogUtils.d(response.errorBody()?.string())
+                        onResult(false)
+                    }
+                }
+
+                override fun onFailureAllRetries() {
+                    onResult(false)
+                }
+            })
+        }
+    }
+
+    /**
+     * 上传求购
+     *
+     * 仅包含与服务器交互部分，同[submitItem]
+     */
+    fun submitNewInquiry(
             token: String, cover: String,
             hwRatio: Float, picSet: List<String>,
             title: String, content: String,
             longitude: Double, latitude: Double,
-            context: Context,
             onResult: (success: Boolean) -> Unit) {
-
+        // TODO: 2021/3/19 上传新求购
     }
 
     /**
@@ -105,8 +145,8 @@ class AddNewRepository {
      * 保存帖子页面的草稿
      */
     fun savePostDraft(cover: String, hwRatio: Float, picSet: List<LocalMedia>, tag: String, anonymous: Boolean, title: String, content: String) {
-        var draft = mJsonCacheUtil.getCache(NewPostDraftCache.KEY, NewPostDraftCache::class.java)
-        if (draft == null) draft = NewPostDraftCache()
+        var draft = mJsonCacheUtil.getCache(NewInquiryDraftCache.KEY, NewInquiryDraftCache::class.java)
+        if (draft == null) draft = NewInquiryDraftCache()
         draft.cover = cover
         draft.hwRatio = hwRatio
         draft.picSet = picSet
@@ -114,7 +154,7 @@ class AddNewRepository {
         draft.isAnonymous = anonymous
         draft.title = title
         draft.content = content
-        mJsonCacheUtil.saveCache(NewPostDraftCache.KEY, draft)
+        mJsonCacheUtil.saveCache(NewInquiryDraftCache.KEY, draft)
     }
 
     /**
@@ -128,7 +168,7 @@ class AddNewRepository {
      * 删除帖子页面草稿
      */
     fun deletePostDraft() {
-        mJsonCacheUtil.saveCache(NewPostDraftCache.KEY, null)
+        mJsonCacheUtil.saveCache(NewInquiryDraftCache.KEY, null)
     }
 
     /**
@@ -139,9 +179,9 @@ class AddNewRepository {
     }
 
     /**
-     * 恢复帖子页面草稿
+     * 恢复求购页面草稿
      */
-    fun restorePostDraft(): NewPostDraftCache? {
-        return mJsonCacheUtil.getCache(NewPostDraftCache.KEY, NewPostDraftCache::class.java)
+    fun restoreInquiryDraft(): NewInquiryDraftCache? {
+        return mJsonCacheUtil.getCache(NewInquiryDraftCache.KEY, NewInquiryDraftCache::class.java)
     }
 }

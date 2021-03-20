@@ -1,7 +1,5 @@
-package com.example.schoolairdroprefactoredition.utils
+package com.example.schoolairdroprefactoredition.cache
 
-import com.example.schoolairdroprefactoredition.cache.UserInfoCache
-import com.example.schoolairdroprefactoredition.cache.UserTokenCache
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 
@@ -38,7 +36,7 @@ class UserLoginCacheUtils {
      * @param token    本次登录获取到的token
      * @param duration token持续时间
      */
-    fun saveUserToken(token: DomainToken, duration: Long = 3_600) {
+    fun saveUserToken(token: DomainToken, duration: Long = 3600_000) {
         val userTokenCache = mJsonCacheUtil.getCache(UserTokenCache.KEY, UserTokenCache::class.java)
                 ?: UserTokenCache()
         userTokenCache.token = token
@@ -46,10 +44,10 @@ class UserLoginCacheUtils {
     }
 
     /**
-     * 获取[saveUserToken]保存的信息
+     * 获取[saveUserInfo]保存的信息
      */
-    fun getUserToken(): DomainUserInfo.DataBean? {
-        return mJsonCacheUtil.getCache(UserInfoCache.KEY, UserInfoCache::class.java)?.getLastLoggedAccount()
+    fun getUserToken(): DomainToken? {
+        return mJsonCacheUtil.getCache(UserTokenCache.KEY, UserTokenCache::class.java)?.token
     }
 
     /**
@@ -65,15 +63,14 @@ class UserLoginCacheUtils {
     }
 
     /**
-     * 获取[saveUserInfo]保存的信息
+     * 获取[saveUserToken]保存的信息
      */
-    fun getUserInfo(): DomainToken? {
-        return mJsonCacheUtil.getCache(UserTokenCache.KEY, UserTokenCache::class.java)?.token
+    fun getUserInfo(): DomainUserInfo.DataBean? {
+        return mJsonCacheUtil.getCache(UserInfoCache.KEY, UserInfoCache::class.java)?.getLastLoggedAccount()
     }
 
     /**
      * 退出当前账号
-     * 不会删除当前账号在设备上的缓存
      */
     private fun quitCurrentUser() {
         mJsonCacheUtil.saveCache(

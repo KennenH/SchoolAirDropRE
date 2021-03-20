@@ -10,8 +10,7 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.PlaceholderBinding
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import com.github.ybq.android.spinkit.SpinKitView
 
 /**

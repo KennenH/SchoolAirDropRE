@@ -5,10 +5,10 @@ import com.luck.picture.lib.entity.LocalMedia;
 import java.util.List;
 
 /**
- * 新帖子的草稿
+ * 新求购的草稿
  */
-public class NewPostDraftCache {
-    public static final String KEY = "imPOSTdraftAndU?";
+public class NewInquiryDraftCache {
+    public static final String KEY = "imINQUIRYdraftAndU?";
 
     private String tag;
     private boolean isAnonymous;

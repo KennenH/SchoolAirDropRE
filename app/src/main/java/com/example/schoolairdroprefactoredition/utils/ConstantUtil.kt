@@ -40,7 +40,7 @@ object ConstantUtil {
     /**
      * 聊天界面一次性最大可发送的字符长度
      */
-    const val IM_MAX_TEXT_LENGTH = 255
+    const val IM_MAX_TEXT_LENGTH = 240
 
     /**
      * retrofit 最大缓存数量
@@ -109,6 +109,11 @@ object ConstantUtil {
      * 网络请求成功码
      */
     const val HTTP_OK = 200
+
+    /**
+     * 请求失败
+     */
+    const val HTTP_BAD_REQUEST = 400
 
     /**
      * 不存在

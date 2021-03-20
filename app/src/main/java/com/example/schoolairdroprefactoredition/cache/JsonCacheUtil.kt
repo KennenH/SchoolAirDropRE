@@ -1,13 +1,12 @@
-package com.example.schoolairdroprefactoredition.utils
+package com.example.schoolairdroprefactoredition.cache
 
 import android.content.Context
-import androidx.appcompat.app.AppCompatActivity
 import androidx.security.crypto.EncryptedSharedPreferences
 import androidx.security.crypto.MasterKey
 import androidx.security.crypto.MasterKeys
 import com.blankj.utilcode.util.Utils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.cache.CacheWithDuration
+import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.google.gson.Gson
 
 /**
@@ -29,27 +28,49 @@ class JsonCacheUtil private constructor() {
 
         /**
          * 带检查频繁操作的运行
+         * 触发有一定的条件，触发后惩罚较大
          *
-         * 检查触发时间默认为[JsonCacheConstantUtil.ACTION_TOO_FREQUENT_COOLDOWN]秒，触发5次检查将进入一次CoolDown，一次为
-         * [JsonCacheConstantUtil.ACTION_TOO_FREQUENT_COOLDOWN]秒
+         * 检查触发时间默认为[JsonCacheConstantUtil.FREQUENT_ACTION_COOLDOWN]秒，触发5次检查将进入一次CoolDown，一次为
+         * [JsonCacheConstantUtil.FREQUENT_ACTION_COOLDOWN]秒
          *
          * @param runIfNotFrequent 在没有触发CoolDown时执行的操作
          * @param runIfFrequent    在触发CoolDown时执行的操作
          */
+        @JvmStatic
         fun runWithFrequentCheck(context: Context?, runIfNotFrequent: Runnable?, runIfFrequent: Runnable? = null) {
             val jsonCacheUtil = getInstance()
             val refreshCount = jsonCacheUtil.getCache(JsonCacheConstantUtil.FREQUENT_ACTION_COUNT, Int::class.java)
             if (refreshCount == null || refreshCount < 5) {
                 // 操作未触发CoolDown
                 runIfNotFrequent?.run()
+                // 直到用户在冷却时间内没有触发检查操作为止
+                jsonCacheUtil.saveCache(
+                        JsonCacheConstantUtil.FREQUENT_ACTION_COUNT,
+                        refreshCount?.plus(1) ?: 1,
+                        JsonCacheConstantUtil.FREQUENT_ACTION_COOLDOWN)
             } else {
                 // 操作过于频繁，触发或重置CoolDown
                 runIfFrequent?.run()
                 DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.actionTooFrequent)
             }
-            // 重置冷却时间，直到用户在冷却时间内没有触发检查操作为止
-            jsonCacheUtil.saveCache(JsonCacheConstantUtil.FREQUENT_ACTION_COUNT, refreshCount?.plus(1)
-                    ?: 1, JsonCacheConstantUtil.ACTION_TOO_FREQUENT_COOLDOWN)
+        }
+
+        /**
+         * 带检查过于快速操作的运行
+         * 同样是接口调用保护，无条件触发，对于正常操作几乎没有影响
+         */
+        @JvmStatic
+        fun runWithTooQuickCheck(runIfNotTooQuick: Runnable?) {
+            val jsonCacheUtil = getInstance()
+            val tooQuick = jsonCacheUtil.getCache(JsonCacheConstantUtil.QUICK_ACTION_FLAG, Boolean::class.java)
+            // 非快速操作，执行，快速操作将直接被过滤而不是作为其他处理
+            if (tooQuick == null) {
+                runIfNotTooQuick?.run()
+                jsonCacheUtil.saveCache(
+                        JsonCacheConstantUtil.QUICK_ACTION_FLAG,
+                        true,
+                        JsonCacheConstantUtil.QUICK_ACTION_COOLDOWN)
+            }
         }
     }
 

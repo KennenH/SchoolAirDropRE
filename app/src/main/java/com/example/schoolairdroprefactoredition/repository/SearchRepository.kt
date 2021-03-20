@@ -7,7 +7,7 @@ import com.example.schoolairdroprefactoredition.cache.SearchHistories
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -79,8 +79,7 @@ class SearchRepository {
 
         RetrofitClient.goodsApi.searchGoods(
                 ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page,
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE.toDouble() else longitude,
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE.toDouble() else latitude,
+                longitude, latitude,
                 key).apply {
             enqueue(object : CallBackWithRetry<DomainPurchasing>(this@apply) {
                 override fun onResponse(call: Call<DomainPurchasing>, response: Response<DomainPurchasing>) {

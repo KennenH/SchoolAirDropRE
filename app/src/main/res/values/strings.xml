@@ -201,10 +201,10 @@
     <string name="connectionLost">连接中断 请重试</string>
     <string name="submitSuccess">提交成功</string>
     <string name="submitFailed">提交失败</string>
-    <string name="submitSuccessTip">建议稍后去首页搜索是否可以看到你的物品，若多次搜索无法找到，可能是上传时定位错误，可以下架物品后重新上传。</string>
-    <string name="submitFailedTip">可能是土豆正在维护或者过于繁忙。表单已自动保存，建议稍后重试。</string>
-    <string name="modifySuccessTip">修改过的物品将重新进行审核，审核完毕后将会通知你。</string>
-    <string name="modifyFailedTip">可能是土豆服务器不给力或者正在维护。修改物品的表单不会保存，建议稍后再试。</string>
+    <string name="submitSuccessTip">建议稍后去首页搜索是否可以看到你的物品，若多次搜索无法找到，可能是上传时定位错误，可稍后修改物品信息并为其重新定位后提交。</string>
+    <string name="modifySuccessTip">修改后的物品信息可能出现更新不及时，若发现长时间没有更改，请尝试重新提交。</string>
+    <string name="submitFailedTip">可能是土豆过于繁忙或者正在维护。表单已自动保存，建议稍后重新提交。</string>
+    <string name="modifyFailedTip">可能是土豆过于繁忙或者正在维护。修改物品的表单不会保存，建议稍后再试。</string>
     <string name="OK">好</string>
     <string name="errorUpdateAvatar">上传头像出错</string>
     <string name="imageSaved">图片已保存至相册</string>
@@ -339,5 +339,7 @@
     <string name="goPostUItem">去主页或点击右上角添加</string>
     <string name="actionTooFrequent">操作过于频繁，请稍后再试</string>
     <string name="watchCount">%d人看过</string>
+    <string name="modifyItemLocationFailedTip">当前定位结果异常，物品很可能无法被附近同学搜索到。修改物品表单不会被保存，建议稍后重试。</string>
+    <string name="noNeedToHandleImages">没有图片需要更改</string>
 
 </resources>

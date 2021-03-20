@@ -45,9 +45,12 @@ class AddNewResultActivity : ImmersionStatusBarActivity() {
     annotation class AddNewResultTips {
         companion object {
             var SUCCESS_NEW_ITEM = R.string.submitSuccessTip
+            var SUCCESS_MODIFY_ITEM = R.string.modifySuccessTip
             var FAILED_ADD = R.string.submitFailedTip
+            var FAILED_MODIFY = R.string.modifyFailedTip
             var FAILED_PREPARE = R.string.picturePrepareFailed
             var LOCATION_FAILED_NEW_ITEM = R.string.submitItemLocationFailedTip
+            var LOCATION_FAILED_MODIFY_ITEM = R.string.modifyItemLocationFailedTip
         }
     }
 

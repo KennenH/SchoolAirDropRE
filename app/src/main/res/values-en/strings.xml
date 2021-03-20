@@ -167,7 +167,7 @@
     <string name="connectionLost">Connection lost, please try again</string>
     <string name="submitSuccess">Success</string>
     <string name="submitFailed">Failed</string>
-    <string name="submitSuccessTip">It is recommended to go to the homepage later and search to see if you can see your items. If you can not find it after multiple searches, it may be due to the wrong positioning during upload. You can remove the item and upload it again.</string>
+    <string name="submitSuccessTip">It is recommended to go to the homepage later and search to see if you can see your item. If you can’t find it after multiple searches, it may be due to incorrect positioning when uploading. You can modify the item information and reposition it later and submit it.</string>
     <string name="submitFailedTip">The server may be under maintenance or too busy. The form has been automatically saved. It is recommended to try again later.</string>
     <string name="OK">OK</string>
     <string name="errorLocation">Location Obtain Failed</string>
@@ -309,4 +309,7 @@
     <string name="goPostUItem">Go to the homepage or click on the upper right corner to add</string>
     <string name="actionTooFrequent">The operation is too frequent</string>
     <string name="watchCount">%d people viewed</string>
+    <string name="modifySuccessTip">It is recommended to go to the homepage later to search if you can see your items to ensure that the positioning is correct.</string>
+    <string name="modifyItemLocationFailedTip">The current positioning result is abnormal, and the item may not be searched by nearby students. The modified item form will not be saved. It is recommended to try again later.</string>
+    <string name="noNeedToHandleImages">No picture needs to be changed</string>
 </resources>

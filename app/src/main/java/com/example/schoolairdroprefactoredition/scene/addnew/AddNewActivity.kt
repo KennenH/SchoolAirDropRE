@@ -21,9 +21,10 @@ import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.KeyboardUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
-import com.example.schoolairdroprefactoredition.cache.NewPostDraftCache
-import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
+import com.example.schoolairdroprefactoredition.cache.NewInquiryDraftCache
+import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips
@@ -38,12 +39,14 @@ import com.example.schoolairdroprefactoredition.utils.MyUtil.ImageLoader
 import com.example.schoolairdroprefactoredition.utils.MyUtil.pickPhotoFromAlbum
 import com.example.schoolairdroprefactoredition.utils.filters.DecimalFilter
 import com.example.schoolairdroprefactoredition.viewmodel.AddNewViewModel
+import com.example.schoolairdroprefactoredition.viewmodel.GoodsViewModel
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.ImageViewerPopupView
 import kotlinx.android.synthetic.main.activity_selling_add_new.*
 import java.util.*
+import kotlin.collections.ArrayList
 
 class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocationListener, OnPicSetClickListener, SAApplication.OnApplicationLoginListener {
 
@@ -61,49 +64,34 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         /**
          * 发布物品或新帖子
          * 添加物品或帖子使用该方法
-         * 修改物品使用[AddNewActivity.start]
          *
          * @param type 页面类型
          * one of
          * [AddNewType.ADD_ITEM] 上架物品
          * [AddNewType.ADD_INQUIRY] 新增帖子
          */
-        fun start(context: Context?, @AddNewType type: Int) {
+        fun startAddNew(context: Context?, @AddNewType type: Int) {
             if (context == null) return
 
-            val bundle = Bundle()
-            bundle.putSerializable(ConstantUtil.KEY_ADD_NEW_TYPE, type)
-            start(context, bundle)
+            val intent = Intent(context, AddNewActivity::class.java)
+            intent.putExtra(ConstantUtil.KEY_ADD_NEW_TYPE, type)
+            if (context is AppCompatActivity) {
+                context.startActivityForResult(intent, LoginActivity.LOGIN)
+                AnimUtil.activityStartAnimUp(context)
+            }
         }
 
         /**
          * 修改物品信息
-         * 添加物品或帖子使用[AddNewActivity.start]
          *
-         * @param goodsInfo 要修改的物品的信息 类型[DomainPurchasing.DataBean]
+         * @param goodsID 要修改的物品的id
          */
-        fun start(context: Context?, goodsInfo: DomainPurchasing.DataBean?) {
-            if (context == null) return
-
-            val bundle = Bundle()
-            bundle.putSerializable(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.MODIFY_ITEM)
-            bundle.putSerializable(ConstantUtil.KEY_GOODS_INFO, goodsInfo)
-            start(context, bundle)
-        }
-
-        /**
-         * 打开页面
-         * 若不知道这个bundle里需要传什么参数，请按情况使用以下打开方式
-         *
-         *
-         * 新增物品或帖子: [AddNewActivity.start]
-         * 修改物品信息: [AddNewActivity.start]
-         */
-        private fun start(context: Context?, bundle: Bundle) {
-            if (context == null) return
+        fun startModify(context: Context?, goodsID: Int?) {
+            if (context == null || goodsID == null) return
 
             val intent = Intent(context, AddNewActivity::class.java)
-            intent.putExtras(bundle)
+            intent.putExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.MODIFY_ITEM)
+            intent.putExtra(ConstantUtil.KEY_GOODS_ID, goodsID)
             if (context is AppCompatActivity) {
                 context.startActivityForResult(intent, LoginActivity.LOGIN)
                 AnimUtil.activityStartAnimUp(context)
@@ -135,6 +123,10 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
     private val addNewViewModel by lazy {
         ViewModelProvider(this).get(AddNewViewModel::class.java)
+    }
+
+    private val goodsViewModel by lazy {
+        GoodsViewModel.GoodsViewModelFactory((application as SAApplication).databaseRepository).create(GoodsViewModel::class.java)
     }
 
     private var mClient: AMapLocationClient? = null
@@ -169,7 +161,11 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      * 当前页面保存的图片集路径
      */
     private var mPicSetSelected: MutableList<LocalMedia> = ArrayList()
-    private var goodsBaseInfo: DomainPurchasing.DataBean? = null
+
+    /**
+     * 修改物品时被删除的图片路径
+     */
+    private val mImagesToDelete = ArrayList<String>()
 
     /**
      * 草稿内容是否已被恢复
@@ -194,7 +190,21 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      * 页面新增的类型
      */
     @AddNewType
-    private var addNewType = AddNewType.ADD_ITEM
+    private val addNewType by lazy {
+        intent.getIntExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.ADD_ITEM)
+    }
+
+    /**
+     * 要修改的物品id
+     */
+    private val goodsID by lazy {
+        intent.getIntExtra(ConstantUtil.KEY_GOODS_ID, -1)
+    }
+
+    /**
+     * 获取的物品信息
+     */
+    private var goodsInfo: DomainGoodsAllDetailInfo.Data? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -203,9 +213,6 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
         // 当app在外部登录时将会收到通知
         (application as? SAApplication)?.addOnApplicationLoginListener(this)
-
-        goodsBaseInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO) as? DomainPurchasing.DataBean
-        addNewType = intent.getIntExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.ADD_ITEM)
 
         saved_draft.visibility = View.GONE
         server_tip.visibility = View.GONE
@@ -229,24 +236,31 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         pic_set.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
 
         //封面
-        cover.setOnItemAddPicActionListener(object : OnItemAddPicActionListener {
-            override fun onClose() {
-                mCoverPath = ""
-                cover.clearImage(true)
-            }
-
-            override fun onItemClick() {
-                if (cover.imagePath != null && "" != cover.imagePath) {
-                    XPopup.Builder(this@AddNewActivity)
-                            .isDarkTheme(true)
-                            .asImageViewer(cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, getColor(R.color.blackAlways), ImageLoader())
-                            .show()
-                } else {
-                    request = REQUEST_CODE_COVER
-                    requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL)
+        if (addNewType == AddNewType.ADD_ITEM) {
+            cover.setOnItemAddPicActionListener(object : OnItemAddPicActionListener {
+                override fun onClose() {
+                    mCoverPath = ""
+                    cover.clearImage(true)
                 }
-            }
-        })
+
+                override fun onItemClick() {
+                    if (cover.imagePath != null && "" != cover.imagePath) {
+                        XPopup.Builder(this@AddNewActivity)
+                                .isDarkTheme(true)
+                                .asImageViewer(cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, getColor(R.color.blackAlways), ImageLoader())
+                                .show()
+                    } else {
+                        request = REQUEST_CODE_COVER
+                        requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL)
+                    }
+                }
+            })
+        } else {
+
+            cover_title.visibility = View.GONE
+            cover_wrapper.visibility = View.GONE
+        }
+
         // 这是footer 不显示图片，仅作为相册选择图片的按钮
         val add = AddPicItem(this)
         add.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
@@ -269,16 +283,23 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
     /**
      * 根据页面类型初始化页面数据
+     *
+     * 新增类型将初始化表单条目，只显示对应的选项
+     * 修改类型将请求原始表单数据并使用其填充页面选项
      */
     private fun initPageAccordingToType() {
         when (addNewType) {
+            // 新增物品类型
             AddNewType.ADD_ITEM -> {
                 draft_tip_toggle.setText(R.string.addNewSelling)
                 tag_title.visibility = View.GONE
                 option_tag_wrapper.visibility = View.GONE
                 option_anonymous.visibility = View.GONE
+                // 恢复物品草稿
                 restoreItemDraft()
             }
+
+            // 新增求购类型
             AddNewType.ADD_INQUIRY -> {
                 price_title.visibility = View.GONE
                 option_price.visibility = View.GONE
@@ -286,13 +307,17 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 option_secondHand.visibility = View.GONE
                 draft_tip_toggle.setText(R.string.addNewInquiry)
                 detail_title.setText(R.string.postTitleSaySth)
-                restorePostDraft()
+                // 恢复求购草稿
+                restoreInquiryDraft()
             }
+
+            // 修改物品信息类型
             AddNewType.MODIFY_ITEM -> {
                 draft_tip_toggle.setText(R.string.modifyInfo)
                 tag_title.visibility = View.GONE
                 option_tag_wrapper.visibility = View.GONE
                 option_anonymous.visibility = View.GONE
+                // 使用物品id获取物品信息
                 initGoodsInfo()
             }
         }
@@ -372,7 +397,9 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     (application as SAApplication).cacheMyInfoAndToken(
                             data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean,
                             data.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken)
-                    submit()
+                    JsonCacheUtil.runWithFrequentCheck(this, {
+                        submit()
+                    })
                 }
             }
         }
@@ -424,63 +451,103 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         }
 
         when (addNewType) {
-            // 新增物品
-            AddNewType.ADD_ITEM -> {
+
+            // 提交物品表单
+            AddNewType.ADD_ITEM,
+            AddNewType.MODIFY_ITEM
+            -> {
                 val token = (application as SAApplication).getCachedToken()
                 if (token != null) {
                     if (mAmapLocation == null) {
-//                            dismissLoading(() ->
-                        AddNewResultActivity.start(this, false, AddNewResultTips.LOCATION_FAILED_NEW_ITEM)
+                        // 定位异常，拦截上传操作
+                        AddNewResultActivity.start(
+                                this, false,
+                                if (addNewType == AddNewType.ADD_ITEM) AddNewResultTips.LOCATION_FAILED_NEW_ITEM
+                                else AddNewResultTips.LOCATION_FAILED_MODIFY_ITEM)
                     } else {
                         showLoading {
-                            val mPicSetPaths = ArrayList<String>()
-                            for (localMedia in mPicSetSelected) {
-                                mPicSetPaths.add(localMedia.cutPath ?: localMedia.path)
-                            }
-
-                            addNewViewModel.submitItem(token.access_token, mCoverPath, mPicSetPaths,
-                                    option_title.text.toString(), option_description.text.toString(),
-                                    mAmapLocation!!.longitude, mAmapLocation!!.latitude,
-                                    !option_secondHand.isChecked, option_negotiable.isChecked, price_input.text.toString().toFloat())
-                                    .apply {
-                                        observe(this@AddNewActivity, object : Observer<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
-                                            override fun onChanged(response: Triple<Boolean, Pair<Int, Boolean>, Boolean>) {
-                                                if (!response.first) {
-                                                    if (response.second.second) {
-                                                        updateLoadingTip(getString(response.second.first))
-                                                        showUploadResult(result = false)
-                                                    } else if (response.second.first != -1) {
-                                                        updateLoadingTip(getString(R.string.uploadFailedAtIndex, response.second.first))
-                                                        showUploadResult(result = false, uploadError = true)
-                                                    }
-                                                    removeObserver(this) // 上传失败，中断流程，注销观察者
-                                                } else if (response.third) {
-                                                    showUploadResult(true)
-                                                    removeObserver(this) // 完成上传，注销观察者
-                                                } else {
-                                                    if (response.second.second) {
-                                                        // pair中第二个Boolean为true则代表它是res id，可以直接显示
-                                                        updateLoadingTip(getString(response.second.first))
+                            if (addNewType == AddNewType.ADD_ITEM) {
+                                // 新增物品
+                                val mPicSetPaths = ArrayList<String>()
+                                for (localMedia in mPicSetSelected) {
+                                    mPicSetPaths.add(localMedia.cutPath ?: localMedia.path)
+                                }
+                                addNewViewModel.submitItem(token.access_token, mCoverPath, mPicSetPaths,
+                                        option_title.text.toString(), option_description.text.toString(),
+                                        mAmapLocation!!.longitude, mAmapLocation!!.latitude,
+                                        !option_secondHand.isChecked, option_negotiable.isChecked, price_input.text.toString().toFloat())
+                                        .apply {
+                                            observe(this@AddNewActivity, object : Observer<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
+                                                override fun onChanged(response: Triple<Boolean, Pair<Int, Boolean>, Boolean>) {
+                                                    if (!response.first) {
+                                                        if (response.second.second) {
+                                                            updateLoadingTip(getString(response.second.first))
+                                                            showUploadResult(result = false)
+                                                        } else if (response.second.first != -1) {
+                                                            updateLoadingTip(getString(R.string.uploadFailedAtIndex, response.second.first))
+                                                            showUploadResult(result = false, isUploadImageError = true)
+                                                        }
+                                                        removeObserver(this) // 上传失败，中断流程，注销观察者
+                                                    } else if (response.third) {
+                                                        showUploadResult(true)
+                                                        removeObserver(this) // 完成上传，注销观察者
                                                     } else {
-                                                        // pair中第二个Boolean为false则代表是纯数字，是正在上传的图片的index+1，需要用占位字符
-                                                        updateLoadingTip(getString(R.string.uploadingIndexPicture, response.second.first))
+                                                        if (response.second.second) {
+                                                            // pair中第二个Boolean为true则代表它是res id，可以直接显示
+                                                            updateLoadingTip(getString(response.second.first))
+                                                        } else {
+                                                            // pair中第二个Boolean为false则代表是纯数字，是正在上传的图片的index+1，需要用占位字符
+                                                            updateLoadingTip(getString(R.string.uploadingIndexPicture, response.second.first))
+                                                        }
                                                     }
                                                 }
-                                            }
-                                        })
+                                            })
+                                        }
+                            } else { // 修改物品信息
+                                goodsInfo?.goods_cover_image?.split(",")?.let {
+                                    // 将不是原本物品信息中的图片集拿出来
+                                    val mPicSetPaths = ArrayList<String>()
+                                    for (localMedia in mPicSetSelected) {
+                                        val path = localMedia.cutPath ?: localMedia.path
+                                        if (!path.startsWith(ConstantUtil.QINIU_BASE_URL)) {
+                                            mPicSetPaths.add(path)
+                                        }
                                     }
+                                    addNewViewModel.modifyGoodsInfo(token.access_token, mImagesToDelete, mPicSetPaths, goodsID,
+                                            option_title.text.toString(), option_description.text.toString(),
+                                            mAmapLocation!!.longitude, mAmapLocation!!.latitude,
+                                            !option_secondHand.isChecked, option_negotiable.isChecked, price_input.text.toString().toFloat())
+                                            .apply {
+                                                observe(this@AddNewActivity, object : Observer<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
+                                                    override fun onChanged(response: Triple<Boolean, Pair<Int, Boolean>, Boolean>) {
+                                                        if (!response.first) {
+                                                            if (response.second.second) {
+                                                                updateLoadingTip(getString(response.second.first))
+                                                                showUploadResult(result = false)
+                                                            } else if (response.second.first != -1) {
+                                                                updateLoadingTip(getString(R.string.uploadFailedAtIndex, response.second.first))
+                                                                showUploadResult(result = false, isUploadImageError = true)
+                                                            }
+                                                            removeObserver(this) // 上传失败，中断流程，注销观察者
+                                                        } else if (response.third) {
+                                                            showUploadResult(true)
+                                                            removeObserver(this) // 完成上传，注销观察者
+                                                        } else {
+                                                            if (response.second.second) {
+                                                                // pair中第二个Boolean为true则代表它是res id，可以直接显示
+                                                                updateLoadingTip(getString(response.second.first))
+                                                            } else {
+                                                                // pair中第二个Boolean为false则代表是纯数字，是正在上传的图片的index+1，需要用占位字符
+                                                                updateLoadingTip(getString(R.string.uploadingIndexPicture, response.second.first))
+                                                            }
+                                                        }
+                                                    }
+                                                })
+                                            }
+                                }
+                            }
                         }
                     }
-                } else {
-                    LoginActivity.start(this)
-                }
-            }
-
-            // 修改物品信息
-            AddNewType.MODIFY_ITEM -> {
-                val token = (application as SAApplication).getCachedToken()
-                if (token != null) {
-                    // TODO: 2021/3/19 提交物品修改后的表单
                 } else {
                     LoginActivity.start(this)
                 }
@@ -494,18 +561,21 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 显示物品上传结果
+     * 显示物品表单提交结果
      *
-     * @param uploadError 是否是上传图片时出的错，如果是，则提示用户换一张图片再试试
+     * @param isUploadImageError 是否是上传图片时出的错，如果是，则提示用户换一张图片再试试
      */
-    private fun showUploadResult(result: Boolean, uploadError: Boolean = false) {
+    private fun showUploadResult(result: Boolean, isUploadImageError: Boolean = false) {
         dismissLoading {
             AddNewResultActivity.start(
                     this@AddNewActivity,
                     result,
                     when {
-                        result -> AddNewResultTips.SUCCESS_NEW_ITEM
-                        uploadError -> AddNewResultTips.FAILED_PREPARE
+                        result && addNewType == AddNewType.ADD_ITEM -> AddNewResultTips.SUCCESS_NEW_ITEM
+                        result && addNewType == AddNewType.MODIFY_ITEM -> AddNewResultTips.SUCCESS_MODIFY_ITEM
+                        isUploadImageError -> AddNewResultTips.FAILED_PREPARE
+                        !result && addNewType == AddNewType.ADD_ITEM -> AddNewResultTips.FAILED_ADD
+                        !result && addNewType == AddNewType.MODIFY_ITEM -> AddNewResultTips.FAILED_MODIFY
                         else -> AddNewResultTips.FAILED_ADD
                     })
             if (result) {
@@ -657,11 +727,11 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 恢复帖子草稿
+     * 恢复求购草稿
      * 清除后在页面被pause之前仍可恢复
      */
-    private fun restorePostDraft() {
-        addNewViewModel.restorePostDraft().observeOnce(this, { draftCache: NewPostDraftCache? ->
+    private fun restoreInquiryDraft() {
+        addNewViewModel.restoreInquiryDraft().observeOnce(this, { draftCache: NewInquiryDraftCache? ->
             if (draftCache != null) {
                 hasDraft = true
                 saved_draft.visibility = View.VISIBLE // 显示草稿恢复提示
@@ -682,44 +752,55 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 用给进来的物品id获取物品信息
-     * 在使用物品信息填充页面
+     * 用给进来的物品id获取物品信息，再使用物品信息填充页面
      */
     private fun initGoodsInfo() {
-//        goodsBaseInfo?.let { baseInfo ->
-//            goodsViewModel.getGoodsDetailByID(baseInfo.goods_id).observeOnce(this) { goodsDetailInfo ->
-//                goodsDetailInfo.let { detailInfo ->
-//                    if (detailInfo != null) {
-//                        val goodsInfo = intent.getSerializableExtra(ConstantUtil.KEY_GOODS_INFO) as DomainPurchasing.DataBean
-//                        mCoverPath = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(goodsInfo.goods_cover_image)
-//                        cover.setImageRemotePath(mCoverPath)
-//
-//                        val picSet =
-//                                if (detailInfo.data.goods_images == null || detailInfo.data.goods_images.trim() == "") ArrayList()
-//                                else getArrayFromString(detailInfo.data.goods_images)
-//
-//                        for (i in picSet.indices) {
-//                            val media = LocalMedia()
-//                            media.path = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(picSet[i])
-//                            mPicSetSelected.add(media)
-//                        }
-//
-//                        mPicSetHorizontalAdapter.setList(mPicSetSelected)
-//                        option_title.text = goodsInfo.goods_name
-//                        price_input.setText(goodsInfo.goods_price)
-//                        if (goodsInfo.isGoods_is_secondHande) {
-//                            option_secondHand.toggle()
-//                        }
-//                        if (goodsInfo.isGoods_is_bargain) {
-//                            option_negotiable.toggle()
-//                        }
-//                        option_description.text = detailInfo.data.goods_content
-//                    } else {
-//                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorLoadItemInfo)
-//                    }
-//                }
-//            }
-//        }
+        showLoading()
+        goodsViewModel.getGoodsAllDetailByID(goodsID).observeOnce(this) { detailInfo ->
+            val goodsInfo = detailInfo?.data
+            if (goodsInfo != null) {
+                this.goodsInfo = goodsInfo
+                when (detailInfo.code) {
+                    // 物品已下架
+                    ConstantUtil.HTTP_NOT_FOUND -> {
+                        DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.goodsDeleted)
+                    }
+
+                    // 物品信息获取成功，使用数据填充页面
+                    ConstantUtil.HTTP_OK -> {
+                        mCoverPath = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(goodsInfo.goods_cover_image)
+                        cover.setImageRemotePath(mCoverPath)
+
+                        val picSet =
+                                if (goodsInfo.goods_images.trim() == "") ArrayList()
+                                else MyUtil.getArrayFromString(goodsInfo.goods_images)
+
+                        for (i in picSet.indices) {
+                            val media = LocalMedia()
+                            media.cutPath = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(picSet[i])
+                            mPicSetSelected.add(media) // 修改物品时图片集是完整路径
+                        }
+
+                        mPicSetHorizontalAdapter.setList(mPicSetSelected)
+                        option_title.text = goodsInfo.goods_name
+                        price_input.setText(goodsInfo.goods_price.toString())
+                        if (goodsInfo.goods_is_secondHand) {
+                            option_secondHand.toggle()
+                        }
+                        if (goodsInfo.goods_is_bargain) {
+                            option_negotiable.toggle()
+                        }
+                        option_description.text = goodsInfo.goods_content
+                    }
+                }
+                dismissLoading()
+            } else {
+                dismissLoading {
+                    // 物品信息获取失败
+                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorLoadItemInfo)
+                }
+            }
+        }
     }
 
     /**
@@ -758,7 +839,9 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             return true
         } else if (id == R.id.add_submit) {
             item.isEnabled = false
-            submit()
+            JsonCacheUtil.runWithFrequentCheck(this, {
+                submit()
+            })
             item.isEnabled = true
             return true
         }
@@ -820,7 +903,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         if (addNewType == AddNewType.ADD_ITEM) {
                             restoreItemDraft()
                         } else {
-                            restorePostDraft()
+                            restoreInquiryDraft()
                         }
                     }
                 }
@@ -865,6 +948,12 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             mClient?.onDestroy()
             mClient = null
             mOption = null
+        }
+    }
+
+    override fun onOriginalImageDeleted(path: String?) {
+        if (path != null) {
+            mImagesToDelete.add(path)
         }
     }
 

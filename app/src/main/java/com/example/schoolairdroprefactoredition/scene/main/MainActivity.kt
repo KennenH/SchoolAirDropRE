@@ -14,8 +14,10 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
@@ -219,7 +221,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         })
 
         home_add_fab.setOnClickListener {
-            AddNewActivity.start(this, AddNewActivity.AddNewType.ADD_ITEM)
+            AddNewActivity.startAddNew(this, AddNewActivity.AddNewType.ADD_ITEM)
         }
 
         navView.setOnNavigationItemSelectedListener(this@MainActivity)
@@ -372,7 +374,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         if (!autoLogged) {
             autoLogged = true // 已自动登录标识，防止多个子fragment调用此方法
             val token = accountViewModel.lastLoggedTokenCaChe
-            if (token != null) { // token 仍有效 使用本地缓存重新获取token后登录
+            if (token != null) { // token 仍有效 使用本地缓存直接登录
                 intent.putExtra(ConstantUtil.KEY_TOKEN, token)
                 obtainMyInfo()
             } else {
@@ -380,8 +382,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 val infoCache = accountViewModel.lastLoggedUserInfoCache
                 if (infoCache != null) {
                     intent.putExtra(ConstantUtil.KEY_USER_INFO, infoCache)
-                    autoLoginWithCache()
                 }
+                loginWithCachedAlipayID()
             }
         }
     }
@@ -402,7 +404,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         if (token?.access_token != null) {
             loginViewModel.getMyInfo(token.access_token).observeOnce(this, {
                 intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
-
                 loginStateChanged(it, token)
             })
         }
@@ -413,15 +414,13 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 在app首次打开时调用
      */
     @Synchronized
-    private fun autoLoginWithCache() {
-        loginViewModel.loginWithAlipayAuthCode(accountViewModel.lastLoggedUserAlipayID)
-                .observeOnce(this@MainActivity, { publicK ->
-                    publicK.let {
-                        // 因为这里是自动登录，所以不需要判断空的情况，有就登录，没有就跳过
-                        if (it != null) {
-                            intent.putExtra(ConstantUtil.KEY_TOKEN, it)
-                            obtainMyInfo()
-                        }
+    private fun loginWithCachedAlipayID() {
+        loginViewModel.loginWithAlipayID(accountViewModel.lastLoggedUserAlipayID)
+                .observeOnce(this@MainActivity, { token ->
+                    // 因为这里是自动登录，所以不需要判断空的情况，有就登录，没有就跳过
+                    if (token != null) {
+                        intent.putExtra(ConstantUtil.KEY_TOKEN, token)
+                        obtainMyInfo()
                     }
                 })
     }
@@ -620,8 +619,23 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 调用token验证接口
      */
     override fun onAppEnterForeground() {
-        (application as? SAApplication)?.getCachedToken()?.access_token?.let {
-//            loginViewModel.connectWhenComesToForeground(it)
+        JsonCacheUtil.runWithTooQuickCheck {
+            (application as? SAApplication)?.getCachedToken()?.access_token?.let { token ->
+                // 检查token是否过期，若过期则重新登录
+                loginViewModel.connectWhenComesToForeground(token).observeOnce(this) {
+                    when (it) {
+                        // token已经过期，需要重新登录
+                        ConstantUtil.HTTP_BAD_REQUEST -> {
+                            loginWithCachedAlipayID()
+                        }
+
+                        // 验证token时出错
+                        null -> {
+
+                        }
+                    }
+                }
+            }
         }
     }
 

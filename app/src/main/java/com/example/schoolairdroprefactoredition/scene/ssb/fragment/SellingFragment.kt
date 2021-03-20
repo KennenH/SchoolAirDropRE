@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
@@ -94,11 +95,18 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
 
         context?.let { c ->
             val binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(context))
-            val token = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken?
+            val token = (activity?.application as SAApplication).getCachedToken()
 
             dialog = BottomSheetDialog(c)
             dialog?.setContentView(binding.root)
             binding.apply {
+                // 修改物品信息按钮
+                modify.setOnClickListener {
+                    AddNewActivity.startModify(context, bean?.goods_id)
+                    dialog?.dismiss()
+                }
+
+                // 下架物品按钮
                 offShelf.setOnClickListener {
                     DialogUtil.showConfirm(context, getString(R.string.attention), getString(R.string.unListItem)) {
                         if (token != null) {
@@ -121,6 +129,7 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
                     dialog?.dismiss()
                 }
 
+                // 取消按钮
                 cancel.setOnClickListener { dialog?.dismiss() }
 
                 val bottomSheetView = dialog?.delegate?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
@@ -170,7 +179,7 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
             }
 
             R.id.selling_posts_add -> {
-                AddNewActivity.start(context, AddNewActivity.AddNewType.ADD_ITEM)
+                AddNewActivity.startAddNew(context, AddNewActivity.AddNewType.ADD_ITEM)
                 return true
             }
         }

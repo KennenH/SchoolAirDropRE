@@ -18,7 +18,7 @@ import java.io.File;
 
 public class AddPicItem extends ConstraintLayout implements View.OnClickListener {
 
-    private ItemAddPicBinding binding;
+    private final ItemAddPicBinding binding;
 
     private OnItemAddPicActionListener mOnItemAddPicActionListener;
 
@@ -78,8 +78,9 @@ public class AddPicItem extends ConstraintLayout implements View.OnClickListener
         imagePath = "";
         binding.close.setVisibility(INVISIBLE);
 
-        if (isRecoverBackground)
+        if (isRecoverBackground) {
             binding.image.setImageResource(R.drawable.bg_add_pic);
+        }
     }
 
     public String getImagePath() {
@@ -88,17 +89,15 @@ public class AddPicItem extends ConstraintLayout implements View.OnClickListener
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.image:
-                if (mOnItemAddPicActionListener != null)
-                    mOnItemAddPicActionListener.onItemClick();
-                break;
-            case R.id.close:
-                if (mOnItemAddPicActionListener != null)
-                    mOnItemAddPicActionListener.onClose();
-                break;
-            default:
-                break;
+        int id = v.getId();
+        if (id == R.id.image) {
+            if (mOnItemAddPicActionListener != null) {
+                mOnItemAddPicActionListener.onItemClick();
+            }
+        } else if (id == R.id.close) {
+            if (mOnItemAddPicActionListener != null) {
+                mOnItemAddPicActionListener.onClose();
+            }
         }
     }
 

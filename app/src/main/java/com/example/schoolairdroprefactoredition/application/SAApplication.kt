@@ -7,7 +7,6 @@ import android.os.Process
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
-import com.alipay.sdk.app.EnvUtils
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
 import com.example.schoolairdroprefactoredition.database.SARoomDatabase
@@ -19,9 +18,10 @@ import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.viewmodel.ChatViewModel
 import com.example.schoolairdroprefactoredition.viewmodel.InstanceMessageViewModel
+import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.lzf.easyfloat.EasyFloat
 import com.xiaomi.channel.commonutils.logger.LoggerInterface

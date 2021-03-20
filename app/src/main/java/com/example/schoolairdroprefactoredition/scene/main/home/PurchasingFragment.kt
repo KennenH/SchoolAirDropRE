@@ -105,8 +105,6 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
         purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observeOnce(viewLifecycleOwner) {
             if (it != null) {
                 // 如果获取的物品数量为0且当前的adapter也尚没有数据则显示placeholder
-                    LogUtils.d(it.data.size)
-                    LogUtils.d(purchasingRecyclerAdapter.data.size)
                 if (it.data.isEmpty() && purchasingRecyclerAdapter.data.isEmpty()) {
                     showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_HOME_GOODS)
                 } else {

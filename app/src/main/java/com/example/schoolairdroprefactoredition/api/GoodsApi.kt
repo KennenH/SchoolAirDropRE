@@ -66,17 +66,47 @@ interface GoodsApi {
      */
     @FormUrlEncoded
     @POST("appapi/goods/uploadGoods")
-    fun postNewItem(@Header("Authorization") token: String,
-                    @Field("task_id") taskID: String,
-                    @Field("cover_file_key") coverKey: String,
-                    @Field("content_file_keys") picSetKeys: String,
-                    @Field("goods_name") title: String,
-                    @Field("goods_content") description: String,
-                    @Field("goods_longitude") longitude: String,
-                    @Field("goods_latitude") latitude: String,
-                    @Field("goods_is_quotable") quotable: Int,
-                    @Field("goods_is_secondHand") secondHand: Int,
-                    @Field("goods_price") price: String): Call<DomainResult>
+    fun postNewItem(
+            @Header("Authorization") token: String,
+            @Field("task_id") taskID: String,
+            @Field("cover_file_key") coverKey: String,
+            @Field("content_file_keys") picSetKeys: String,
+            @Field("goods_name") title: String,
+            @Field("goods_content") description: String,
+            @Field("goods_longitude") longitude: String,
+            @Field("goods_latitude") latitude: String,
+            @Field("goods_is_quotable") quotable: Int,
+            @Field("goods_is_secondHand") secondHand: Int,
+            @Field("goods_price") price: String
+    ): Call<DomainResult>
+
+    /**
+     * 修改物品信息
+     *
+     * 修改物品信息不允许修改封面图片
+     *
+     * @param imagesToDelete 需要删除哪些图片
+     * @param picSetKeys 新增的图片key
+     * 当用户没有新增或者删除任何图片的时候这两个参数都为空即可
+     *
+     * 其余参数同[postNewItem]
+     */
+    @FormUrlEncoded
+    @POST("appapi/goods/updateGoodsInfo")
+    fun modifyGoodsInfo(
+            @Header("Authorization") token: String,
+            @Field("task_id") taskID: String,
+            @Field("delete_photo") imagesToDelete: String,
+            @Field("content_file_keys") picSetKeys: String,
+            @Field("goods_id") goodsID: Int,
+            @Field("goods_name") title: String,
+            @Field("goods_content") description: String,
+            @Field("goods_longitude") longitude: Double,
+            @Field("goods_latitude") latitude: Double,
+            @Field("goods_is_quotable") quotable: Int,
+            @Field("goods_is_secondHand") secondHand: Int,
+            @Field("goods_price") price: String
+    ): Call<DomainResult>
 
     /**
      * 获取用户个人在售

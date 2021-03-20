@@ -2,8 +2,7 @@ package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
-import okhttp3.internal.notify
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 
 class SettingsViewModel : ViewModel() {
 

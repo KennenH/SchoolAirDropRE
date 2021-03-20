@@ -1,11 +1,10 @@
 package com.example.schoolairdroprefactoredition.repository
 
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
-import com.example.schoolairdroprefactoredition.domain.DomainAlipayUserID
-import com.example.schoolairdroprefactoredition.domain.DomainAuthorizeGet
-import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
+import com.example.schoolairdroprefactoredition.cache.UserLoginCacheUtils
+import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.utils.*
 import com.mob.pushsdk.MobPush
 import retrofit2.Call
@@ -39,7 +38,6 @@ class LoginRepository private constructor() {
                         if (body?.code == ConstantUtil.HTTP_OK) {
                             body.data.alipay_id.let {
                                 onResult(it)
-                                // 永久保存用户alipay id
                                 UserLoginCacheUtils.getInstance().saveUserAlipayID(it)
                             }
                         } else {
@@ -53,10 +51,28 @@ class LoginRepository private constructor() {
 
     /**
      * 每当app来到前台（不包括打开时）时调用token验证接口
+     *
+     * @param onResult 接收code
+     * [ConstantUtil.HTTP_OK] 为验证通过
+     * [ConstantUtil.HTTP_BAD_REQUEST] 为验证失败，token已失效
+     * null 为其他错误
      */
-    fun connectWhenComesToForeground(token: String, onResult: () -> Unit) {
+    fun connectWhenComesToForeground(token: String, onResult: (code: Int?) -> Unit) {
         RetrofitClient.userApi.verifyToken(token).apply {
+            enqueue(object : CallBackWithRetry<DomainConnect>(this@apply) {
+                override fun onFailureAllRetries() {
+                    onResult(null)
+                }
 
+                override fun onResponse(call: Call<DomainConnect>, response: Response<DomainConnect>) {
+                    if (response.code() == HttpURLConnection.HTTP_OK) {
+                        val body = response.body()
+                        onResult(body?.code)
+                    } else {
+                        onResult(null)
+                    }
+                }
+            })
         }
     }
 
@@ -74,13 +90,11 @@ class LoginRepository private constructor() {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val result = response.body()
                         if (response.isSuccessful && result != null) {
-//                            result.cookie = session
                             onResult(result.public_key)
                         } else {
                             onResult(null)
                         }
                     } else {
-//                        LogUtils.d(response.errorBody()?.string())
                         onResult(null)
                     }
                 }
@@ -99,57 +113,65 @@ class LoginRepository private constructor() {
 //            if (registrationID == null) {
 //                onResult(false, null)
 //            } else
-            RetrofitClient.userApi.authorizeWithAlipayID(
-                    ConstantUtil.CLIENT_GRANT_TYPE,
-                    ConstantUtil.CLIENT_ID,
-                    ConstantUtil.CLIENT_SECRET,
-                    RSACoder.encryptWithPublicKey(publicKey, rawAlipayID), registrationID)
-                    .apply {
-                        enqueue(object : CallBackWithRetry<DomainToken>(this@apply) {
-                            override fun onResponse(call: Call<DomainToken>, response: Response<DomainToken>) {
-                                if (response.code() == HttpURLConnection.HTTP_OK) {
-                                    val token = response.body()
-                                    if (token != null) {
-                                        onResult(token)
-                                        UserLoginCacheUtils.getInstance().saveUserToken(token)
+
+            val encryptWithPublicKey = RSACoder.encryptWithPublicKey(publicKey, rawAlipayID)
+            if (encryptWithPublicKey != null) {
+                RetrofitClient.userApi.authorizeWithAlipayID(
+                        ConstantUtil.CLIENT_GRANT_TYPE,
+                        ConstantUtil.CLIENT_ID,
+                        ConstantUtil.CLIENT_SECRET,
+                        encryptWithPublicKey,
+                        registrationID)
+                        .apply {
+                            enqueue(object : CallBackWithRetry<DomainToken>(this@apply) {
+                                override fun onResponse(call: Call<DomainToken>, response: Response<DomainToken>) {
+                                    if (response.code() == HttpURLConnection.HTTP_OK) {
+                                        val token = response.body()
+                                        if (token != null) {
+                                            onResult(token)
+                                            UserLoginCacheUtils.getInstance().saveUserToken(token)
+                                        } else {
+                                            onResult(null)
+                                        }
                                     } else {
+                                        LogUtils.d(response.errorBody()?.string())
                                         onResult(null)
                                     }
-                                } else {
+                                }
+
+                                override fun onFailureAllRetries() {
                                     onResult(null)
                                 }
-                            }
-
-                            override fun onFailureAllRetries() {
-                                onResult(null)
-                            }
-                        })
-                    }
+                            })
+                        }
+            } else {
+                onResult(null)
+            }
         }
     }
 
     /**
      * 获取我的用户信息
      */
-    fun getMyInfo(token: String, onResult: (success: Boolean, response: DomainUserInfo.DataBean?) -> Unit) {
+    fun getMyInfo(token: String, onResult: (response: DomainUserInfo.DataBean?) -> Unit) {
         RetrofitClient.userApi.getMyUserInfo(token).apply {
             enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
                 override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val body = response.body()
-                        if (response.isSuccessful) {
-                            onResult(true, body?.data)
+                        if (body?.data != null) {
+                            onResult(body.data)
+                            UserLoginCacheUtils.getInstance().saveUserInfo(body.data)
                         } else {
-                            onResult(false, null)
+                            onResult(null)
                         }
                     } else {
-//                        LogUtils.d(response.errorBody()?.string())
-                        onResult(false, null)
+                        onResult(null)
                     }
                 }
 
                 override fun onFailureAllRetries() {
-                    onResult(false, null)
+                    onResult(null)
                 }
             })
         }

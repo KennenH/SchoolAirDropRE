@@ -9,7 +9,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainUploadPath
 import com.example.schoolairdroprefactoredition.domain.DomainUploadToken
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.FileUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import com.qiniu.android.common.FixedZone
 import com.qiniu.android.storage.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -67,7 +67,7 @@ class UploadRepository private constructor() {
      * 当为true时外部的observer不能使用observeOnce，每当进入一个重要阶段都会通知外部
      * 当为false时只有在上传进度 完成 和 失败中断 两种情况才通知外部
      *
-     * @param onResult 上传图片时请求到的task id和file keys
+     * @param onResult 返回本次上传分配到的task id和所有被上传的图片被分配到的file keys
      * success 上一步操作是否成功 若为false则中断上传
      * tip 要求外部显示的提示，第一个Int为true则为res id，直接使用getString显示，否则使用 正在上传第%d张图片
      * taskAndKeys 请求的key和task id，在最后一步成功完成之前都是null
@@ -79,6 +79,19 @@ class UploadRepository private constructor() {
             isNeedLarge: Boolean = true,
             isSubscribeProgress: Boolean = false,
             onResult: (success: Boolean, tip: Pair<Int, Boolean>, taskAndKeys: DomainUploadPath.DataBean?, allSuccess: Boolean) -> Unit) {
+        // 若发现传进来的图片数量是0则直接视为完成
+        if (fileLocalPaths.isEmpty()) {
+            onResult(true,
+                    Pair(R.string.noNeedToHandleImages,true),
+                    DomainUploadPath.DataBean().also {
+                        it.taskId = ""
+                        it.keys = ArrayList()
+                    },
+                    true)
+            return
+        }
+
+        // 处理准备上传的文件
         if (isSubscribeProgress) onResult(true, Pair(R.string.handlingLocalMedia, true), null, false)
         // 将文件路径转换为本地文件
         val fileLocalList = ArrayList<File>(fileLocalPaths.size).apply {
@@ -152,7 +165,7 @@ class UploadRepository private constructor() {
     /**
      * 获取七牛云上传凭证
      *
-     * 首先从本地sp缓存中获取
+     * 上传凭证有时效，时效内可以上传任意数量的图片，因此首先从本地sp缓存中获取
      * 若本地缓存不存在或者已经过期，则从服务器重新获取
      *
      * @param token app用户验证token
@@ -276,7 +289,7 @@ class UploadRepository private constructor() {
     /**
      * 移动在七牛云上的图片
      */
-    fun moveIMImage(token: String, taskID: String, keys: String, onResult: (paths: String?) -> Unit) {
+    fun moveIMImage(token: String, taskID: String, keys: String, onResult: (paths: List<String>?) -> Unit) {
         RetrofitClient.uploadApi.moveIMImages(token, taskID, keys).apply {
             enqueue(object : CallBackWithRetry<DomainIMPath>(this@apply) {
                 override fun onFailureAllRetries() {
@@ -287,8 +300,7 @@ class UploadRepository private constructor() {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val body = response.body()
                         if (body?.code == ConstantUtil.HTTP_OK) {
-                            LogUtils.d(body.data)
-                            onResult(body.data)
+                            onResult(body.data.path_url)
                         } else {
                             LogUtils.d(response.errorBody()?.string())
                             onResult(null)

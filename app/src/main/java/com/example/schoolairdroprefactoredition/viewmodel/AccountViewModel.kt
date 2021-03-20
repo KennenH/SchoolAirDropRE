@@ -2,12 +2,11 @@ package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.schoolairdroprefactoredition.cache.UserInfoCache
-import com.example.schoolairdroprefactoredition.cache.UserTokenCache
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
-import com.example.schoolairdroprefactoredition.utils.UserLoginCacheUtils
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.UserLoginCacheUtils
+import com.example.schoolairdroprefactoredition.utils.AppConfig
 import java.util.*
 
 class AccountViewModel : ViewModel() {
@@ -19,18 +18,17 @@ class AccountViewModel : ViewModel() {
     /**
      * 获取上次登录用户的alipay id
      */
-    val lastLoggedUserAlipayID: String? = UserLoginCacheUtils.getInstance().getUserAlipayID()
+    val lastLoggedUserAlipayID: String? = if (AppConfig.IS_DEBUG) AppConfig.USER_ALIPAY else UserLoginCacheUtils.getInstance().getUserAlipayID()
 
     /**
      * 获取上次登录的用户的基本信息
      */
-    val lastLoggedUserInfoCache: DomainUserInfo.DataBean? = UserLoginCacheUtils.getInstance().getUserToken()
-
+    val lastLoggedUserInfoCache: DomainUserInfo.DataBean? = UserLoginCacheUtils.getInstance().getUserInfo()
 
     /**
      * 获取上次登录用户的token信息
      */
-    val lastLoggedTokenCaChe: DomainToken? = UserLoginCacheUtils.getInstance().getUserInfo()
+    val lastLoggedTokenCaChe: DomainToken? = UserLoginCacheUtils.getInstance().getUserToken()
 
 
     /**

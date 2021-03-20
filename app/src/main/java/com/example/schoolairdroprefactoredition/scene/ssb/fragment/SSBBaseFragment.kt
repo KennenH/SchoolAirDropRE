@@ -70,9 +70,11 @@ abstract class SSBBaseFragment :
     }
 
     override fun getStatePlaceholder(): StatePlaceHolder? {
-        return binding?.placeHolder.also {
-            it?.setOnStatePlaceholderActionListener(this)
-        }
+        return binding?.placeHolder
+        // 注册placeholder占位符点击事件
+//                .also {
+//            it?.setOnStatePlaceholderActionListener(this)
+//        }
     }
 
     override fun getContentContainer(): View? {
@@ -104,7 +106,7 @@ abstract class SSBBaseFragment :
 
     /**
      * item上右下角的三个点按钮的操作
-     * 在售列表中为 {下架物品}
+     * 在售列表中为 下架物品、修改物品信息
      */
     abstract fun onItemAction(view: View, bean: DomainSelling.Data?)
 

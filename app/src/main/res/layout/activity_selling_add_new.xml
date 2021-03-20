@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -94,8 +95,8 @@
             android:layout_margin="@dimen/general_padding_bit_larger"
             android:drawablePadding="@dimen/general_padding"
             android:ellipsize="end"
-            android:textColor="@color/whiteAlways"
             android:text="这是来自服务器的警告"
+            android:textColor="@color/whiteAlways"
             android:textSize="@dimen/textSizeNormal"
             app:drawableStartCompat="@drawable/ic_attention_small"
             app:drawableTint="@color/whiteAlways"
@@ -200,11 +201,11 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-
                 <TextView
                     android:id="@+id/pic_set_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/general_padding_bit_larger"
                     android:layout_marginTop="@dimen/general_padding_small"
                     android:drawablePadding="@dimen/general_padding_small"
                     android:ellipsize="end"
@@ -214,8 +215,8 @@
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
                     app:drawableEndCompat="@drawable/ic_importance"
-                    app:layout_constraintStart_toStartOf="@+id/cover_title"
-                    app:layout_constraintTop_toBottomOf="@id/cover_wrapper" />
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/cover_wrapper" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/pic_set"
@@ -409,13 +410,13 @@
                 <com.example.schoolairdroprefactoredition.ui.components.OptionItem
                     android:id="@+id/option_anonymous"
                     android:layout_width="match_parent"
-                    app:SO_isSwitch="true"
-                    app:SO_title="@string/anonymous"
-                    app:SO_checked="true"
+                    android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/general_padding_large"
                     android:layout_marginTop="@dimen/general_padding_small"
                     android:layout_marginEnd="@dimen/general_padding_large"
-                    android:layout_height="wrap_content"
+                    app:SO_checked="true"
+                    app:SO_isSwitch="true"
+                    app:SO_title="@string/anonymous"
                     app:layout_constraintTop_toBottomOf="@+id/option_secondHand" />
 
                 <TextView

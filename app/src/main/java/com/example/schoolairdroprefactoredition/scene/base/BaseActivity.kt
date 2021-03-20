@@ -10,16 +10,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
-import com.example.schoolairdroprefactoredition.cache.UserTokenCache
 import com.example.schoolairdroprefactoredition.custom.InAppFloatAnimator
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
+import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheConstantUtil
-import com.example.schoolairdroprefactoredition.utils.JsonCacheUtil
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
@@ -97,15 +94,23 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
 
     /**
      * 显示浮窗
+     *
+     * @param typeu 消息类型
+     * one of
+     * [com.example.schoolairdroprefactoredition.utils.ConstantUtil.MESSAGE_TYPE_TEXT] 文本消息
+     * [com.example.schoolairdroprefactoredition.utils.ConstantUtil.MESSAGE_TYPE_IMAGE] 图片消息
      */
-    private fun showFloatWindow(content: String, userID: String) {
+    private fun showFloatWindow(content: String, userID: String, typeu: Int) {
         val shouldShowFloat = jsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
                 ?.isDisplayInAppFloat ?: true
         if (shouldShowFloat) {
             EasyFloat.isShow(this@BaseActivity, IM_FLOAT_TAG)?.let {
                 if (it) { // 正在显示，直接替换文本，刷新显示时间
                     EasyFloat.getFloatView(this@BaseActivity, IM_FLOAT_TAG)?.apply {
-                        findViewById<TextView?>(R.id.float_in_app_content)?.text = content
+                        findViewById<TextView?>(R.id.float_in_app_content)?.text =
+                                if (typeu == ConstantUtil.MESSAGE_TYPE_TEXT) content
+                                else getString(R.string.picture)
+
                         resetPostDelay(this)
                     }
                 } else {
@@ -113,7 +118,10 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
                             .setTag(IM_FLOAT_TAG)
                             .setLayout(R.layout.sheet_float_in_app) { view: View? ->
                                 view?.parent?.requestDisallowInterceptTouchEvent(true)
-                                view?.findViewById<TextView?>(R.id.float_in_app_content)?.text = content
+                                view?.findViewById<TextView?>(R.id.float_in_app_content)?.text =
+                                        if (typeu == ConstantUtil.MESSAGE_TYPE_TEXT) content
+                                        else getString(R.string.picture)
+
                                 view?.postDelayed(dismissRunnable, FLOAT_LAST)
                             }
                             .registerCallback {
@@ -209,7 +217,7 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
     }
 
     override fun onIMReceiveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
-        showFloatWindow(content, senderID)
+        showFloatWindow(content, senderID, typeu)
     }
 
     override fun onIMErrorResponse(errorCode: Int, message: String) {
