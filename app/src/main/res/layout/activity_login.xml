@@ -57,11 +57,11 @@
         android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_larger"
         android:gravity="center"
         android:longClickable="false"
         android:text="@string/app_name"
         android:textColor="@color/primaryText"
-        android:layout_marginTop="@dimen/general_padding_larger"
         android:textIsSelectable="false"
         android:textSize="26dp"
         app:layout_constraintBottom_toTopOf="@id/guideline4"
@@ -95,43 +95,45 @@
         app:layout_constraintTop_toTopOf="@+id/checkbox" />
 
     <TextView
+        android:id="@+id/privacy_protocol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/general_padding"
+        android:ellipsize="end"
+        android:text="@string/privacyProtocol"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintBottom_toTopOf="@+id/user_protocol"
+        app:layout_constraintEnd_toEndOf="@+id/user_protocol"
+        app:layout_constraintStart_toEndOf="@+id/agree"
+        app:layout_constraintTop_toTopOf="@+id/guideline5" />
+
+    <TextView
         android:id="@+id/user_protocol"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:text="@string/userProtocol"
-        android:textColor="@color/colorPrimaryDark"
-        android:textSize="@dimen/textSizeNormal"
-        app:layout_constraintBottom_toBottomOf="@+id/agree"
-        app:layout_constraintEnd_toStartOf="@+id/service_protocol"
-        app:layout_constraintStart_toEndOf="@+id/agree"
-        app:layout_constraintTop_toTopOf="@+id/agree" />
-
-    <TextView
-        android:id="@+id/service_protocol"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/general_padding"
         android:ellipsize="end"
         android:text="@string/serviceProtocol"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="@dimen/textSizeNormal"
-        app:layout_constraintBottom_toBottomOf="@+id/agree"
+        app:layout_constraintBottom_toBottomOf="@+id/checkbox"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/user_protocol"
-        app:layout_constraintTop_toTopOf="@+id/agree" />
+        app:layout_constraintStart_toEndOf="@+id/agree"
+        app:layout_constraintTop_toBottomOf="@+id/privacy_protocol" />
 
     <TextView
         android:id="@+id/tip"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/general_padding_small"
+        android:layout_marginTop="@dimen/general_padding"
         android:gravity="center"
         android:text="@string/loginTip"
         android:textColor="@color/primaryText"
         android:textIsSelectable="false"
         android:textSize="@dimen/textSizeMin"
-        app:layout_constraintEnd_toEndOf="@+id/service_protocol"
-        app:layout_constraintStart_toStartOf="@+id/checkbox"
+        app:layout_constraintEnd_toEndOf="@+id/guideline2"
+        app:layout_constraintStart_toStartOf="@+id/guideline1"
         app:layout_constraintTop_toBottomOf="@+id/checkbox" />
 
     <TextView

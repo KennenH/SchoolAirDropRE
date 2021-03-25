@@ -26,7 +26,7 @@ class GoodsRepository private constructor() {
      */
     fun toggleFavorGoods(token: String, goodsID: Int, isFavor: Boolean, onResult: (Boolean) -> Unit) {
         if (isFavor) {
-            RetrofitClient.goodsApi.unFavorGoods(MyUtil.bearerToken(token), goodsID).apply {
+            RetrofitClient.goodsApi.unFavorGoods(token, goodsID).apply {
                 enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                     override fun onFailureAllRetries() {
                         onResult(false)
@@ -47,7 +47,7 @@ class GoodsRepository private constructor() {
                 })
             }
         } else {
-            RetrofitClient.goodsApi.favorGoods(MyUtil.bearerToken(token), goodsID).apply {
+            RetrofitClient.goodsApi.favorGoods(token, goodsID).apply {
                 enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                     override fun onFailureAllRetries() {
                         onResult(false)

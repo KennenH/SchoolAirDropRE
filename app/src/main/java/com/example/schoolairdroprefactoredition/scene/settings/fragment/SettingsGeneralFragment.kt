@@ -47,12 +47,16 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
         }
     }
 
-    override fun onPageItemToggled() {
-        if (isDarkThemeInitialized) {
-            if (activity?.application is SAApplication) {
-                (activity?.application as SAApplication).setAppTheme(settingsGeneralDarkTheme.isItemSelected)
+    override fun onPageItemToggled(pageItem: PageItem?) {
+        when (pageItem) {
+            settingsGeneralDarkTheme -> {
+                if (isDarkThemeInitialized) {
+                    if (activity?.application is SAApplication) {
+                        (activity?.application as SAApplication).setAppTheme(settingsGeneralDarkTheme.isItemSelected)
+                    }
+                    activity?.supportFragmentManager?.popBackStack()
+                }
             }
-            activity?.supportFragmentManager?.popBackStack()
         }
     }
 }

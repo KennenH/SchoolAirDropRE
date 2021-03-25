@@ -1,7 +1,9 @@
 package com.example.schoolairdroprefactoredition.scene.base
 
 import android.animation.ObjectAnimator
+import android.media.AudioManager
 import android.media.RingtoneManager
+import android.media.SoundPool
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -13,7 +15,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
-import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.cache.util.UserSettingsCacheUtil
 import com.example.schoolairdroprefactoredition.custom.InAppFloatAnimator
@@ -23,6 +24,7 @@ import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
 import net.x52im.mobileimsdk.server.protocal.Protocal
+import kotlin.properties.Delegates
 
 
 /**
@@ -44,6 +46,10 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
         const val FLOAT_LAST = 2500L
     }
 
+    private lateinit var soundPool: SoundPool
+
+    private var soundId by Delegates.notNull<Int>()
+
     /**
      * 本页面是否正在活动
      *
@@ -64,6 +70,7 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initListeners()
+        initRes()
     }
 
     override fun onResume() {
@@ -80,6 +87,7 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
     override fun onDestroy() {
         super.onDestroy()
         removeListeners()
+        releaseRes()
     }
 
     /**
@@ -89,8 +97,20 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
         (application as? SAApplication)?.addOnIMListener(this)
     }
 
+    /**
+     * 初始化声音资源
+     */
+    private fun initRes() {
+        soundPool = SoundPool.Builder().build()
+        soundId = soundPool.load(this, R.raw.message_sound, 1)
+    }
+
     private fun removeListeners() {
         (application as? SAApplication)?.removeOnIMListener(this)
+    }
+
+    private fun releaseRes() {
+        soundPool.release()
     }
 
     /**
@@ -130,7 +150,6 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
     private fun showFloatWindow(content: String, userID: String, typeu: Int) {
         // 当前activity可见且用户设置为app内弹窗则显示浮窗
         if (isActive && UserSettingsCacheUtil.getInstance().isShouldShowFloat()) {
-            playSystemNotification()
             EasyFloat.isShow(this@BaseActivity, IM_FLOAT_TAG)?.let {
                 if (it) { // 正在显示，直接替换文本，刷新显示时间
                     EasyFloat.getFloatView(this@BaseActivity, IM_FLOAT_TAG)?.apply {
@@ -204,8 +223,9 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
      */
     private fun playSystemNotification() {
         if (UserSettingsCacheUtil.getInstance().isShouldPlaySystemNotification()) {
-            val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-            RingtoneManager.getRingtone(applicationContext, notification).play()
+            soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
+//            val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+//            RingtoneManager.getRingtone(applicationContext, notification).play()
         }
     }
 
@@ -254,6 +274,7 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
     }
 
     override fun onIMReceiveMessage(fingerprint: String, senderID: String, content: String, typeu: Int) {
+        playSystemNotification()
         showFloatWindow(content, senderID, typeu)
     }
 

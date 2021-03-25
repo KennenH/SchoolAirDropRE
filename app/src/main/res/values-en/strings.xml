@@ -273,7 +273,7 @@
     <string name="connecting">Connecting</string>
     <string name="noMessageYet">No Message Yet</string>
     <string name="systemBusy">The system is busy, Please try again later</string>
-    <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;Delete&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
+    <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;&#160;Delete&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
     <string name="recyclerFooter">[img src=ic_line/]&#160;&#160;&#160;&#160;no more data&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
     <string name="illegalName">Illegal Name</string>
     <string name="receiveANewMessage">Receive New Message</string>
@@ -303,7 +303,7 @@
     <string name="requestingServer">Requesting server</string>
     <string name="uploadFailedAtIndex">Error uploading image %d</string>
     <string name="picturePrepareFailed">An unexpected problem occurred while processing the image file. Please try to select another image and try again.</string>
-    <string name="canFavorItemInGoodsPage">You can favor item on them item page</string>
+    <string name="canFavorItemInGoodsPage">You can favor item on the item page</string>
     <string name="canChatInGoodsPage">You can initiate a chat with the seller on the item page</string>
     <string name="gratefulToHaveU">Grateful to have u</string>
     <string name="goPostUItem">Go to the homepage or click on the upper right corner to add</string>
@@ -312,7 +312,8 @@
     <string name="modifySuccessTip">It is recommended to go to the homepage later to search if you can see your items to ensure that the positioning is correct.</string>
     <string name="modifyItemLocationFailedTip">The current positioning result is abnormal, and the item may not be searched by nearby students. The modified item form will not be saved. It is recommended to try again later.</string>
     <string name="noNeedToHandleImages">No picture needs to be changed</string>
-    <string name="tooFrequentMessageWarning">The message was sent too fast, wait for %d seconds and try again</string>
+    <string name="tooFrequentMessageWarning">The message was sent too fast</string>
     <string name="AlipayNotFound">Alipay app not found</string>
     <string name="unexpectedError">An unexpected error was encountered during authorization, please try again later</string>
+    <string name="sound">Sound</string>
 </resources>

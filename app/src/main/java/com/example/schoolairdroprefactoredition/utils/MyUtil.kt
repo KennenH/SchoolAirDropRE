@@ -14,6 +14,7 @@ import com.blankj.utilcode.util.ScreenUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.scene.protocol.ProtocolActivity
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.animators.AnimationType
 import com.luck.picture.lib.config.PictureMimeType
@@ -27,14 +28,6 @@ import com.lxj.xpopup.interfaces.XPopupImageLoader
 import java.io.File
 
 object MyUtil {
-
-    /**
-     * 包装token
-     */
-    @JvmStatic
-    fun bearerToken(token: String): String {
-        return "Bearer $token"
-    }
 
     @JvmStatic
     fun loading(context: Context?): LoadingPopupView {
@@ -264,8 +257,7 @@ object MyUtil {
      */
     @JvmStatic
     fun openPrivacyWebsite(context: Context?) {
-        val uri = Uri.parse("http://81.69.14.64:8080/index/policy/privacy.html")
-        context?.startActivity(Intent(Intent.ACTION_VIEW, uri))
+        ProtocolActivity.start(context, ProtocolActivity.PROTOCOL_PRIVACY)
     }
 
     /**
@@ -273,7 +265,6 @@ object MyUtil {
      */
     @JvmStatic
     fun openServiceWebsite(context: Context?) {
-        val uri = Uri.parse("http://81.69.14.64:8080/index/policy/agreement.html")
-        context?.startActivity(Intent(Intent.ACTION_VIEW, uri))
+        ProtocolActivity.start(context, ProtocolActivity.PROTOCOL_USER)
     }
 }

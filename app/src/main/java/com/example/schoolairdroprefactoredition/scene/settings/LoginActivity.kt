@@ -16,10 +16,7 @@ import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.util.UserLoginCacheUtil
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
-import com.example.schoolairdroprefactoredition.utils.AnimUtil
-import com.example.schoolairdroprefactoredition.utils.AppConfig
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.DialogUtil
+import com.example.schoolairdroprefactoredition.utils.*
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import kotlinx.android.synthetic.main.activity_logged_in.*
 import kotlinx.android.synthetic.main.activity_login.*
@@ -95,6 +92,8 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
         cancel.setOnClickListener(this)
         checkbox.setOnCheckedChangeListener(this)
         login_with_alipay.setOnClickListener(this)
+        privacy_protocol.setOnClickListener(this)
+        user_protocol.setOnClickListener(this)
     }
 
     override fun onBackPressed() {
@@ -162,7 +161,7 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
                                 getUserInfoWithToken(pair.first)
                             }
 
-                            // refresh token已经失效，需要用户手动登录
+                            // refresh token已经失效，需要用户重新授权登录
                             ConstantUtil.HTTP_INVALID_REFRESH_TOKEN -> {
                                 loginViewModel.logout()
                                 openAuthScheme()
@@ -183,14 +182,22 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
     override fun onClick(v: View) {
         when (v.id) {
             R.id.login_with_alipay -> {
-//                if (AppConfig.IS_DEBUG) {
-//                    showLoading()
-//                    loginViewModel.loginDebug().observeOnce(this) {
-//                        getUserInfoWithToken(it)
-//                    }
-//                } else {
-                clickToLogin()
-//                }
+                if (AppConfig.IS_DEBUG) {
+                    showLoading()
+                    loginViewModel.loginDebug().observeOnce(this) {
+                        getUserInfoWithToken(it)
+                    }
+                } else {
+                    clickToLogin()
+                }
+            }
+
+            R.id.privacy_protocol -> {
+                MyUtil.openPrivacyWebsite(this)
+            }
+
+            R.id.user_protocol -> {
+                MyUtil.openServiceWebsite(this)
             }
 
             R.id.cancel -> {

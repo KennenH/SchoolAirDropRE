@@ -22,7 +22,7 @@ class UserNameRepository private constructor() {
      * 修改用户名
      */
     fun rename(token: String, name: String, onResult: (success: Boolean) -> Unit) {
-        RetrofitClient.userApi.updateUserName(MyUtil.bearerToken(token), name).apply {
+        RetrofitClient.userApi.updateUserName(token, name).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                 override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {

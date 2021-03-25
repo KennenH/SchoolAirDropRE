@@ -9,8 +9,6 @@ import java.lang.IllegalArgumentException
 
 class MessageViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
 
-    private val userCacheLiveData = MutableLiveData<UserCache>()
-
     private val userRepository by lazy {
         UserRepository.getInstance()
     }
@@ -44,6 +42,8 @@ class MessageViewModel(private val databaseRepository: DatabaseRepository) : Vie
             databaseRepository.hideChannel(myID, counterpartID)
         }
     }
+
+    private val userCacheLiveData = MutableLiveData<UserCache?>()
 
     /**
      * 获取用户缓存，当有缓存存在直接使用缓存

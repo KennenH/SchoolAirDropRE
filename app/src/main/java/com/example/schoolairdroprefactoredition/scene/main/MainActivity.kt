@@ -8,12 +8,14 @@ import android.graphics.Paint
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
@@ -32,7 +34,6 @@ import com.example.schoolairdroprefactoredition.scene.main.search.SearchFragment
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.viewmodel.AccountViewModel
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_main.*
@@ -144,7 +145,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         setContentView(R.layout.activity_main)
         initCache()
         initListener()
-        handleIntent()
 //        setMainActivitySaturation0()
     }
 
@@ -156,10 +156,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     }
 
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        handleIntent()
-    }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -222,20 +218,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
         navView.setOnNavigationItemSelectedListener(this@MainActivity)
         navView.selectedItemId = R.id.navigation_purchasing
-    }
-
-    /**
-     * 处理从网页以及其他地方跳转到本app的链接
-     */
-    private fun handleIntent() {
-//        val appLinkAction = intent.action
-        val appLinkData = intent.data
-        when (appLinkData?.path) {
-            // 单纯打开app
-            ConstantUtil.SCHEME_OPEN_APP -> {
-
-            }
-        }
     }
 
     /**
@@ -368,13 +350,16 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     @Synchronized
     fun autoLogin() {
         if (!autoLogged) {
-            autoLogged = true // 已自动登录标识，防止多个子fragment调用此方法
+            // 防止多个子fragment调用此方法
+            autoLogged = true
+
             val token = UserLoginCacheUtil.getInstance().getUserToken()
-            if (token != null) { // token 仍有效 使用本地缓存直接登录
+            if (token != null) { // token 仍有效（有效时间大于半小时左右）
                 intent.putExtra(ConstantUtil.KEY_TOKEN, token)
+                // 直接获取用户信息
                 obtainMyInfo()
             } else {
-                // token 已无效 使用本地缓存重新获取token后登录
+                // token 已无效（实际上距离失效还有半小时不到）使用旧的token获取新的token
                 val infoCache = UserLoginCacheUtil.getInstance().getUserInfo()
                 if (infoCache != null) {
                     intent.putExtra(ConstantUtil.KEY_USER_INFO, infoCache)
@@ -398,10 +383,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
         val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken
         if (token?.access_token != null) {
-            loginViewModel.getMyInfo(token.access_token).observeOnce(this, {
+            loginViewModel.getMyInfo(token.access_token).observeOnce(this) {
                 intent.putExtra(ConstantUtil.KEY_USER_INFO, it)
                 loginStateChanged(it, token)
-            })
+            }
         }
     }
 
@@ -625,12 +610,12 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      */
     override fun onAppEnterForeground() {
         JsonCacheUtil.runWithTooQuickCheck {
+            // 取在应用程序中的token，程序中无token则无需验证
             (application as? SAApplication)?.getCachedToken()?.access_token?.let { token ->
                 // 检查token是否过期，若过期则重新登录
                 loginViewModel.connectWhenComesToForeground(token).observeAnywayOnce {
                     when (it) {
                         ConstantUtil.HTTP_OK -> {
-                            // token 未过期 do nothing
                         }
 
                         // token已经过期，自动重新登录
@@ -640,6 +625,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
                         // 验证token时出错
                         null -> {
+                            Toast.makeText(this, "token验证出错", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

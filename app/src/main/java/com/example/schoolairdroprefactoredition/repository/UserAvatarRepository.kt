@@ -23,7 +23,7 @@ class UserAvatarRepository {
      * 修改服务器上头像的路径和全名
      */
     fun updateAvatar(token: String, taskID: String, avatar: String, onResult: (String?) -> Unit) {
-        RetrofitClient.userApi.updateUserAvatar(MyUtil.bearerToken(token), taskID, avatar).apply {
+        RetrofitClient.userApi.updateUserAvatar(token, taskID, avatar).apply {
             enqueue(object : CallBackWithRetry<DomainAvatarUpdateResult>(this@apply) {
                 override fun onResponse(call: Call<DomainAvatarUpdateResult>, response: Response<DomainAvatarUpdateResult>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {

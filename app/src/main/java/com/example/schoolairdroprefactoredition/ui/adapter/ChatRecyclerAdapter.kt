@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.ui.adapter
 import android.view.View
 import android.widget.ImageView
 import com.blankj.utilcode.constant.TimeConstants
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
 import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate
@@ -17,8 +18,13 @@ import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.example.schoolairdroprefactoredition.utils.TimeUtil
 import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.core.ImageViewerPopupView
 import javadz.beanutils.BeanUtils
+import java.lang.Exception
 import java.util.*
+import kotlin.collections.ArrayDeque
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterpartInfo: DomainSimpleUserInfo?) : BaseDelegateMultiAdapter<ChatHistory, BaseViewHolder>() {
 
@@ -86,6 +92,13 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
      * 当上一条消息与即将要显示的消息间隔不超过5分钟时，将不会显示下一条消息的时间
      */
     private var lastMessageTime: Date? = null
+
+    /**
+     * 聊天列表中的所有已经加载的图片消息
+     *
+     * 点击任何一张已经加载的图片左右滑动可以查看前后已经加载的图片
+     */
+    private val imageList = ArrayDeque<String>()
 
     /**
      * 重新设置对方信息
@@ -159,6 +172,50 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
 
     init {
         setMultiTypeDelegate(ChatEntityDelegate(myInfo?.userId.toString()))
+    }
+
+    /**
+     * 添加零散的在线消息
+     */
+    override fun addData(position: Int, data: ChatHistory) {
+        super.addData(position, data)
+        addImagesToList(data, true)
+    }
+
+    /**
+     * 进入页面首次加载消息记录或者下拉加载更多历史消息
+     */
+    override fun addData(position: Int, newData: Collection<ChatHistory>) {
+        super.addData(position, newData)
+        for (datum in newData) {
+            addImagesToList(datum, false)
+        }
+    }
+
+    /**
+     * 当外部调用[addData]时将图片全部放入一个列表中，便于用户点击一张被加载的图片后
+     * 可以左右滑动来查看前后加载完毕的图片
+     *
+     * @param isAddToLast 这条消息是否是被加在列表最底下的，即是否是零散的在线消息，否则则为下拉刷新批量加
+     * 的历史消息或离线消息
+     */
+    private fun addImagesToList(data: ChatHistory, isAddToLast: Boolean) {
+        if (data.message_type == ConstantUtil.MESSAGE_TYPE_IMAGE) {
+            if (data.sender_id == mCounterpartInfo?.userId.toString()) {
+                if (isAddToLast) {
+                    imageList.addLast(ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(data.message))
+                } else {
+                    imageList.addFirst(ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(data.message))
+                }
+            } else if (data.receiver_id == mCounterpartInfo?.userId.toString()) {
+                // 我发送的图片，不需要加资源服务器地址前缀
+                if (isAddToLast) {
+                    imageList.addLast(data.message)
+                } else {
+                    imageList.addFirst(data.message)
+                }
+            }
+        }
     }
 
     /**
@@ -240,7 +297,8 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 val imageView = holder.itemView.findViewById<ImageView>(R.id.send_image)
                 // 显示时间
                 showTime(holder, date, true)
-                // 加载图片
+                // 加载图片，这里不要加ImageUtil.fixUrl()，因为自己发送的图片一定显示的是本地图片
+                // 不考虑用户将本地缓存清除的情况，清除本地缓存则图片损坏
                 ImageUtil.loadRoundedImage(imageView, item.message)
                 // 点击头像进入个人主页
                 avatarView.setOnClickListener {
@@ -248,10 +306,19 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 }
                 // 点击图片查看
                 imageView.setOnClickListener {
-                    XPopup.Builder(context)
-                            .isDarkTheme(true)
-                            .asImageViewer(imageView, item.message, false, -1, -1, -1, true, context.getColor(R.color.blackAlways), MyUtil.ImageLoader())
-                            .show()
+                    val index = imageList.indexOf(item.message)
+                    if (index != -1 && index < imageList.size) {
+                        XPopup.Builder(context)
+                                .isDarkTheme(true)
+                                .asImageViewer(
+                                        imageView,
+                                        index,
+                                        imageList as List<Any>?,
+                                        false, true, -1, -1, -1, true,
+                                        context.getColor(R.color.blackAlways),
+                                        { _: ImageViewerPopupView, _: Int -> },
+                                        MyUtil.ImageLoader()).show()
+                    }
                 }
                 // 显示发送状态
                 showStatusView(holder, item)
@@ -297,10 +364,20 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 }
                 // 点击图片查看
                 imageView.setOnClickListener {
-                    XPopup.Builder(context)
-                            .isDarkTheme(true)
-                            .asImageViewer(imageView, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.message), false, -1, -1, -1, true, context.getColor(R.color.blackAlways), MyUtil.ImageLoader())
-                            .show()
+                    val index = imageList.indexOf(ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.message))
+                    if (index != -1 && index < imageList.size) {
+                        XPopup.Builder(context)
+                                .isDarkTheme(true)
+                                .asImageViewer(
+                                        imageView,
+                                        index,
+                                        imageList as List<Any>?,
+                                        false, true, -1, -1, -1, true,
+                                        context.getColor(R.color.blackAlways),
+                                        { popView: ImageViewerPopupView, _: Int ->
+                                        },
+                                        MyUtil.ImageLoader()).show()
+                    }
                 }
             }
         }

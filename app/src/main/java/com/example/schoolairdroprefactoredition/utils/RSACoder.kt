@@ -1,9 +1,6 @@
 package com.example.schoolairdroprefactoredition.utils
 
 import android.util.Base64
-import com.blankj.utilcode.util.LogUtils
-import com.example.schoolairdroprefactoredition.cache.UserTokenCache
-import com.example.schoolairdroprefactoredition.domain.DomainToken
 import java.nio.charset.StandardCharsets
 import java.security.KeyFactory
 import java.security.KeyPairGenerator

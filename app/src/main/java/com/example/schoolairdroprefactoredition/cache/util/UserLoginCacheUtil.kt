@@ -1,11 +1,10 @@
 package com.example.schoolairdroprefactoredition.cache.util
 
-import android.util.Base64
 import com.example.schoolairdroprefactoredition.cache.UserInfoCache
 import com.example.schoolairdroprefactoredition.cache.UserTokenCache
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
-import java.nio.charset.StandardCharsets
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 
 class UserLoginCacheUtil private constructor() {
 
@@ -28,20 +27,17 @@ class UserLoginCacheUtil private constructor() {
      * @param token    本次登录获取到的token
      */
     fun saveUserToken(token: DomainToken) {
-//        token.data.apply {
-//            access_token = Base64.encodeToString(access_token.toByteArray(StandardCharsets.UTF_8), Base64.DEFAULT)
-//        }
-        // 比token实际失效时间短半小时，防止用户上线前token有效而使用很短的时间token便过期
+        token.data.apply {
+            access_token = ConstantUtil.PREFIX_BEARER + access_token
+        }
+        // 比token实际失效时间短半小时左右，防止用户上线前token有效而使用很短的时间token便过期
         mJsonCacheUtil.saveCache(UserTokenCache.KEY, UserTokenCache(token), token.data.expires_in * 750L)
     }
 
     /**
-     * 获取[saveUserInfo]保存的信息，过期返回null
+     * 获取[saveUserInfo]保存的信息，过期（距离实际失效还有大约半小时不到时间）返回null
      */
     fun getUserToken(): DomainToken? {
-        //        token?.data?.apply {
-//            access_token = Base64.decode(access_token, Base64.DEFAULT).decodeToString()
-//        }
         return mJsonCacheUtil.getCache(UserTokenCache.KEY, UserTokenCache::class.java)?.token
     }
 
@@ -49,9 +45,6 @@ class UserLoginCacheUtil private constructor() {
      * 获取[saveUserInfo]保存的信息
      */
     fun getUserTokenAnyway(): DomainToken? {
-        //        token?.data?.apply {
-//            access_token = Base64.decode(access_token, Base64.DEFAULT).decodeToString()
-//        }
         return mJsonCacheUtil.getCacheAnyway(UserTokenCache.KEY, UserTokenCache::class.java)?.token
     }
 

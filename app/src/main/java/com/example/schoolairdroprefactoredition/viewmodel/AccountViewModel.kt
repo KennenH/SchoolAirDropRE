@@ -2,7 +2,6 @@ package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.ViewModel
 import com.example.schoolairdroprefactoredition.cache.UserInfoCache
-import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.cache.util.UserLoginCacheUtil

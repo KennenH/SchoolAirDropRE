@@ -211,12 +211,12 @@ public class PageItem extends ConstraintLayout implements CompoundButton.OnCheck
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         if (mOnPageItemSelectedListener != null) {
-            mOnPageItemSelectedListener.onPageItemToggled();
+            mOnPageItemSelectedListener.onPageItemToggled(this);
         }
     }
 
     public interface OnPageItemSelectedListener {
-        void onPageItemToggled();
+        void onPageItemToggled(PageItem pageItem);
     }
 
     public void setOnPageItemSelectedListener(OnPageItemSelectedListener listener) {

@@ -36,7 +36,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".scene.settings.PrivacyActivity"></activity>
+        <activity android:name=".scene.protocol.ProtocolActivity"></activity>
+        <activity android:name=".scene.settings.PrivacyActivity" />
         <activity
             android:name=".scene.main.MainActivity"
             android:configChanges="locale|layoutDirection|orientation|screenSize|keyboardHidden"

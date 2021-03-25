@@ -36,9 +36,9 @@ class PostActivity : ImmersionStatusBarActivity() {
             supportStartPostponedEnterTransition()
         }
         val list = ArrayList<String>()
-        list.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_DEPRECATED + "assets/goods/img/UmMHekJlINW5BYhL_1.jpg")
-        list.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_DEPRECATED + "assets/goods/img/UmMHekJlINW5BYhL_3.jpg")
-        list.add(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_DEPRECATED + "assets/goods/img/759OL4FeobGDtuga_1.jpg")
+        list.add(ConstantUtil.SCHOOL_AIRDROP_BASE_URL_DEPRECATED + "assets/goods/img/UmMHekJlINW5BYhL_1.jpg")
+        list.add(ConstantUtil.SCHOOL_AIRDROP_BASE_URL_DEPRECATED + "assets/goods/img/UmMHekJlINW5BYhL_3.jpg")
+        list.add(ConstantUtil.SCHOOL_AIRDROP_BASE_URL_DEPRECATED + "assets/goods/img/759OL4FeobGDtuga_1.jpg")
 //        ImageUtil.loadImage(posts_image_test, list[2], R.drawable.logo_placeholder) { supportStartPostponedEnterTransition() }
         posts_pager.setData(list, true)
     }

@@ -32,7 +32,7 @@ object RetrofitClient {
 
     private val retrofit by lazy {
         Retrofit.Builder()
-                .baseUrl(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL)
+                .baseUrl(ConstantUtil.SCHOOL_AIRDROP_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build()
@@ -40,7 +40,7 @@ object RetrofitClient {
 
     private val retrofitIM by lazy {
         Retrofit.Builder()
-                .baseUrl(ConstantUtil.SCHOOL_AIR_DROP_BASE_URL_IM)
+                .baseUrl(ConstantUtil.SCHOOL_AIRDROP_BASE_URL_IM)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(okHttpClient)
                 .build()

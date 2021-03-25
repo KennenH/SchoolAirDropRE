@@ -132,7 +132,7 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
 
                             // 本次预拉取的消息数量不足默认数量，则直接将它们ack
                             val size = data.size
-                            if (size < ConstantUtil.DEFAULT_PAGE_SIZE) {
+                            if (size > 0 && size < ConstantUtil.DEFAULT_PAGE_SIZE) {
                                 databaseRepository.ackOffline(token, senderID, data.last().send_time)
                             }
 

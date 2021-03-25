@@ -5,13 +5,11 @@ import android.os.Bundle
 import android.os.SystemClock
 import android.view.*
 import androidx.core.content.res.ResourcesCompat
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
 import com.example.schoolairdroprefactoredition.databinding.SheetSsbItemMoreBinding
 import com.example.schoolairdroprefactoredition.domain.DomainSelling
-import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity.OnLoginStateChangeListener

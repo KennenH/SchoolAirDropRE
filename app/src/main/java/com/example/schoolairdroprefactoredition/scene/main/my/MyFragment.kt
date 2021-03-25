@@ -22,7 +22,6 @@ import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.scene.favorite.FavoriteActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 
 class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedListener {

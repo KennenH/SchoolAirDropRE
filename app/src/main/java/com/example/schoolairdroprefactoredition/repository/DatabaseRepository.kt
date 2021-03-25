@@ -45,7 +45,7 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
      * 获取某个临界时间之前的（早的，旧的）消息
      */
     fun getChatRemote(token: String, senderID: String, start: Long, onResult: (success: Boolean, response: DomainOffline?) -> Unit) {
-        RetrofitClient.imApi.getOffline(MyUtil.bearerToken(token), senderID, start).apply {
+        RetrofitClient.imApi.getOffline(token, senderID, start).apply {
             enqueue(object : CallBackWithRetry<DomainOffline>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(false, null)
@@ -71,7 +71,7 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
      * 获取离线消息数量，即离线消息列表
      */
     fun getOfflineNum(token: DomainToken, onResult: (response: DomainOfflineNum?) -> Unit) {
-        RetrofitClient.imApi.getOfflineNum(MyUtil.bearerToken(token.access_token)).apply {
+        RetrofitClient.imApi.getOfflineNum(token.access_token).apply {
             enqueue(object : CallBackWithRetry<DomainOfflineNum>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null)
@@ -97,7 +97,7 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
      * ack消息，从start开始，比start发送时间迟的消息都将被ack
      */
     fun ackOffline(token: String, senderID: String, start: Long) {
-        RetrofitClient.imApi.ackOffline(MyUtil.bearerToken(token), senderID, start)
+        RetrofitClient.imApi.ackOffline(token, senderID, start)
     }
 
     /**

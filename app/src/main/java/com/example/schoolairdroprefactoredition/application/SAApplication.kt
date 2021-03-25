@@ -9,19 +9,18 @@ import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
 import com.example.schoolairdroprefactoredition.database.SARoomDatabase
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
-import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.im.IMClientManager
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.cache.util.MessageSendCacheUtil
 import com.example.schoolairdroprefactoredition.cache.util.UserSettingsCacheUtil
+import com.example.schoolairdroprefactoredition.domain.DomainToken
+import com.example.schoolairdroprefactoredition.utils.MessageUtil
 import com.example.schoolairdroprefactoredition.viewmodel.ChatViewModel
 import com.example.schoolairdroprefactoredition.viewmodel.InstanceMessageViewModel
 import com.facebook.drawee.backends.pipeline.Fresco
@@ -98,7 +97,6 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
      * 1、第一次打开app时无需调用，之后每次进入后台时将它置为true
      * 2、每次connect调用分为两个部分，第一部分为验证token是否过期，第二部分为拉取离线消息
      * 3、验证token的调用有冷却间隔
-     * 4、todo app进入前台时先检查im框架回调，若im在后台期间不曾断开连接，则无需拉取离线消息
      */
     private var isComesFromBackground = false
 
@@ -294,6 +292,15 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
                             messagesBeReceived(fingerprint)
                         }
                     } else {
+                        messagesLost(arrayListOf(Protocal(
+                                ConstantUtil.MESSAGE_TYPE_TEXT,
+                                content,
+                                myID,
+                                userID,
+                                true,
+                                fingerprint,
+                                ConstantUtil.MESSAGE_TYPE_TEXT
+                        )).also { it.ensureCapacity(1) })
                         // 检查未通过，new一个tip类型消息提示用户
                         val tip = ChatHistory(
                                 Protocal.genFingerPrint(),

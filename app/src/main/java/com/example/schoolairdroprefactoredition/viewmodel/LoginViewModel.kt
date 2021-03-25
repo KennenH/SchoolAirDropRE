@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.*
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.cache.*
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheConstantUtil
 import com.example.schoolairdroprefactoredition.cache.util.UserLoginCacheUtil
@@ -9,8 +8,6 @@ import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.repository.LoginRepository
 import com.example.schoolairdroprefactoredition.utils.AppConfig
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.qiniu.android.utils.LogUtil
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {

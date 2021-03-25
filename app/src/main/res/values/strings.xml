@@ -11,8 +11,8 @@
     <string name="rightsReserved" translatable="false">校园空投 版权所有\nCopyright © 2021–2021 SchoolAirdrop. All Rights Reserved.</string>
     <string name="alipayID" translatable="false">%s</string>
     <string name="userProtocol" translatable="false">《用户许可协议》</string>
-    <string name="serviceProtocol" translatable="false">《校园空投服务条款》</string>
-    <string name="privacyProtocol" translatable="false">《校园空投及第三方服务隐私政策》</string>
+    <string name="serviceProtocol" translatable="false">《校园空投用户协议与免责条款》</string>
+    <string name="privacyProtocol" translatable="false">《校园空投隐私政策》</string>
     <string name="fraction0" translatable="false">.00</string>
 
 
@@ -303,7 +303,7 @@
     <string name="connecting">正在连接</string>
     <string name="noMessageYet">还没有消息哦</string>
     <string name="systemBusy">系统繁忙，请稍后再试</string>
-    <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;删除&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
+    <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;&#160;删除&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
     <string name="illegalName">名字中包含非法字符</string>
     <string name="receiveANewMessage">收到一条新消息</string>
     <string name="postInquiry">发布求购</string>
@@ -343,5 +343,6 @@
     <string name="tooFrequentMessageWarning">消息发送太快啦</string>
     <string name="AlipayNotFound">没有找到支付宝App</string>
     <string name="unexpectedError">授权时遇到了意料之外的错误，请稍后重试</string>
+    <string name="sound">声音</string>
 
 </resources>

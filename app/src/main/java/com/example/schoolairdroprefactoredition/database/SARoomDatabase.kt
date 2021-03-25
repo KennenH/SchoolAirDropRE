@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.database.dao.DatabaseDao
 import com.example.schoolairdroprefactoredition.database.pojo.*
 import kotlinx.coroutines.CoroutineScope
@@ -25,11 +26,10 @@ abstract class SARoomDatabase : RoomDatabase() {
     abstract fun databaseDao(): DatabaseDao
 
     private class DatabaseCallback(private val scope: CoroutineScope) : RoomDatabase.Callback() {
-        override fun onCreate(db: SupportSQLiteDatabase) {
-            super.onCreate(db)
+        override fun onOpen(db: SupportSQLiteDatabase) {
+            super.onOpen(db)
             INSTANCE?.let {
                 scope.launch {
-                    // 每次app打开都将正在发送时app被kill的消息标记为发送失败
                     it.databaseDao().updateInterruptedMessageStatus()
                 }
             }

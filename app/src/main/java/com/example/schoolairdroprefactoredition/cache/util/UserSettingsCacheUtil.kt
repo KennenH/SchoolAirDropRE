@@ -23,6 +23,8 @@ class UserSettingsCacheUtil private constructor() {
 
     /**
      * 获取用户是否设置应该显示app内弹窗
+     *
+     * 默认是
      */
     fun isShouldShowFloat(): Boolean {
         return jsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
@@ -42,6 +44,8 @@ class UserSettingsCacheUtil private constructor() {
 
     /**
      * 获取用户是否设置暗黑模式
+     *
+     * 默认否
      */
     fun isDarkTheme(): Boolean {
         return jsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
@@ -61,6 +65,8 @@ class UserSettingsCacheUtil private constructor() {
 
     /**
      * 获取用户是否设置播放系统声音
+     *
+     * 默认是
      */
     fun isShouldPlaySystemNotification(): Boolean {
         return jsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)

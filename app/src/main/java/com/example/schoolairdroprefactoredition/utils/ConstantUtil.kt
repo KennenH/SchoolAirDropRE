@@ -1,7 +1,5 @@
 package com.example.schoolairdroprefactoredition.utils
 
-import net.x52im.mobileimsdk.server.protocal.Protocal
-
 object ConstantUtil {
 
     /**
@@ -33,6 +31,11 @@ object ConstantUtil {
     const val LONGITUDE = "nowLongitude"
     const val LATITUDE = "nowLatitude"
     const val AMAP_LOCATION = "amapLocation"
+
+    /**
+     * token前缀
+     */
+    const val PREFIX_BEARER = "Bearer "
 
     /**
      * 默认获取数据一页
@@ -90,11 +93,20 @@ object ConstantUtil {
     /**
      * 校园空投 网络接口base url
      */
-    const val SCHOOL_AIR_DROP_BASE_URL_DEPRECATED = "http://81.69.14.64:8000/"
-    const val SCHOOL_AIR_DROP_BASE_URL = "http://81.69.14.64:8080/"
-    const val SCHOOL_AIR_DROP_BASE_URL_IM = "http://81.69.14.64:2020/"
+    const val SCHOOL_AIRDROP_BASE_URL_DEPRECATED = "http://schoolairdrop.com:8000/"
+    const val SCHOOL_AIRDROP_BASE_URL = "http://schoolairdrop.com:8080/"
+    const val SCHOOL_AIRDROP_BASE_URL_IM = "http://schoolairdrop.com:2020/"
     const val LOCAL_BASE_URL = "http://10.0.2.2:2020/"
 
+    /**
+     * 校园空投隐私政策
+     */
+    const val SCHOOL_AIRDROP_PRIVACY = "http://schoolairdrop.com:8080/index/policy/privacy.html"
+
+    /**
+     * 校园空投用户协议
+     */
+    const val SCHOOL_AIRDROP_USER = "http://schoolairdrop.com:8080/index/policy/agreement.html"
 
     /**
      * 七牛云图片基础url
@@ -199,10 +211,14 @@ object ConstantUtil {
     const val MESSAGE_TYPE_TIP = 2
 
     //////////////////////////// KEYS ////////////////////////////////
+
     /**
-     * tab页面页号
+     * 协议类型
+     * one of
+     * [com.example.schoolairdroprefactoredition.scene.protocol.ProtocolActivity.PROTOCOL_PRIVACY] 隐私政策
+     * [com.example.schoolairdroprefactoredition.scene.protocol.ProtocolActivity.PROTOCOL_USER] 用户协议
      */
-    const val KEY_ARG_SECTION_NUMBER = "section_number"
+    const val KEY_PROTOCOL_TYPE = "protocol_type"
 
     /**
      * AddNewActivity 页面类型

@@ -284,8 +284,8 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        menuInflater.inflate(R.menu.more, menu)
-        menu.getItem(0).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+//        menuInflater.inflate(R.menu.more, menu)
+//        menu.getItem(0).setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
         return super.onCreateOptionsMenu(menu)
     }
 

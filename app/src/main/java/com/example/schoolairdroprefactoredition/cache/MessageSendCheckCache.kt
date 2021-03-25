@@ -23,7 +23,7 @@ data class MessageSendCheckCache(
         /**
          * 当触发冷却时的禁言时间
          */
-        const val MESSAGE_FREQUENT_COOLDOWN = 8_000L
+        const val MESSAGE_FREQUENT_COOLDOWN = 10_000L
 
         /**
          * 实例被保存之后的有效时间
@@ -35,6 +35,6 @@ data class MessageSendCheckCache(
         /**
          * 发送10条消息小于该时间将触发频繁发送警告
          */
-        const val MESSAGE_SEND_10_MIN_SPAN = 20_000L
+        const val MESSAGE_SEND_10_MIN_SPAN = 25_000L
     }
 }

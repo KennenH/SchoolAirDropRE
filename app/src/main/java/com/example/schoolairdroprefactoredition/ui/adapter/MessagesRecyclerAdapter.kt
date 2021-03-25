@@ -73,11 +73,14 @@ class MessagesRecyclerAdapter : BaseQuickAdapter<ChatOfflineNumDetail, BaseViewH
 
         // 获取消息显示视图
         val messageAbstract = holder.itemView.findViewById<TextView>(R.id.messages_abstract)
-        // 若消息类型为0（或者-1，为测试消息）则直接显示文本内容，若为1则为图片则仅显示为 [图片]
-        if (item.message_type == ConstantUtil.MESSAGE_TYPE_TEXT || item.message_type == -1) {
-            messageAbstract.text = item.message
-        } else if (item.message_type == ConstantUtil.MESSAGE_TYPE_IMAGE) {
-            messageAbstract.text = context.getString(R.string.picture)
+        // 若消息类型为0（或者-1，为测试消息;或2，提示消息）则直接显示文本内容，若为1则为图片则仅显示为 [图片]
+        when (item.message_type) {
+            ConstantUtil.MESSAGE_TYPE_TEXT, -1, ConstantUtil.MESSAGE_TYPE_TIP -> {
+                messageAbstract.text = item.message
+            }
+            ConstantUtil.MESSAGE_TYPE_IMAGE -> {
+                messageAbstract.text = context.getString(R.string.picture)
+            }
         }
 
         when (item.status) {

@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/general_padding_large"
+                android:visibility="gone"
                 app:PI_title="@string/storage" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>

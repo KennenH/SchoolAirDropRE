@@ -43,5 +43,5 @@ interface IMApi {
     fun ackOffline(
             @Header("Authorization") token: String,
             @Field("sender_id") senderID: String,
-            @Field("start") startTime: Long)
+            @Field("start") startTime: Long): Call<DomainResult>
 }

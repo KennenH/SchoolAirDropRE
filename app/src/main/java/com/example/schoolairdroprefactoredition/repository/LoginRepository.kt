@@ -58,7 +58,7 @@ class LoginRepository private constructor() {
      * null 为其他错误
      */
     fun connectWhenComesToForeground(token: String, onResult: (code: Int?) -> Unit) {
-        RetrofitClient.userApi.verifyToken(MyUtil.bearerToken(token)).apply {
+        RetrofitClient.userApi.verifyToken(token).apply {
             enqueue(object : CallBackWithRetry<DomainConnect>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null)
@@ -109,7 +109,7 @@ class LoginRepository private constructor() {
             token: String,
             onResult: (response: DomainToken?, code: Int) -> Unit) {
         RetrofitClient.userApi.refreshToken(
-                MyUtil.bearerToken(token),
+                token.substring(7),
                 ConstantUtil.CLIENT_ID,
                 ConstantUtil.CLIENT_SECRET).apply {
             enqueue(object : CallBackWithRetry<DomainToken>(this@apply) {
@@ -164,8 +164,8 @@ class LoginRepository private constructor() {
                                     if (response.code() == HttpURLConnection.HTTP_OK) {
                                         val token = response.body()
                                         if (token != null) {
-                                            onResult(token)
                                             UserLoginCacheUtil.getInstance().saveUserToken(token)
+                                            onResult(UserLoginCacheUtil.getInstance().getUserToken())
                                         } else {
                                             onResult(null)
                                         }
@@ -190,7 +190,7 @@ class LoginRepository private constructor() {
      * 获取我的用户信息
      */
     fun getMyInfo(token: String, onResult: (response: DomainUserInfo.DataBean?) -> Unit) {
-        RetrofitClient.userApi.getMyUserInfo(MyUtil.bearerToken(token))
+        RetrofitClient.userApi.getMyUserInfo(token)
                 .apply {
                     enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
                         override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {

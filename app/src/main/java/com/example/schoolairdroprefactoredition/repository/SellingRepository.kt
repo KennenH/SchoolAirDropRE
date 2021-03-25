@@ -55,7 +55,7 @@ class SellingRepository {
      * 下架物品
      */
     fun deleteGoods(token: String, goodsID: String, onResult: (Boolean) -> Unit) {
-        RetrofitClient.goodsApi.deleteGoods(MyUtil.bearerToken(token), goodsID.toInt()).apply {
+        RetrofitClient.goodsApi.deleteGoods(token, goodsID.toInt()).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                 override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
                     onResult(response.code() == HttpURLConnection.HTTP_OK)

@@ -44,7 +44,7 @@ class AddNewRepository {
             isBrandNew: Boolean, isQuotable: Boolean, price: Float,
             onResult: (success: Boolean) -> Unit) {
         RetrofitClient.goodsApi.postNewItem(
-                MyUtil.bearerToken(token), taskID,
+                token, taskID,
                 coverKey, picSetKeys,
                 title, content,
                 longitude.toString(),
@@ -85,7 +85,7 @@ class AddNewRepository {
                         isBrandNew: Boolean, isQuotable: Boolean, price: Float,
                         onResult: (success: Boolean) -> Unit) {
         RetrofitClient.goodsApi.modifyGoodsInfo(
-                MyUtil.bearerToken(token), taskID,
+                token, taskID,
                 imagesToDelete, picSetKeys,
                 goodsID, title, content,
                 if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE else longitude,
