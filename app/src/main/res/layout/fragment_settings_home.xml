@@ -20,7 +20,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:PI_description="@string/unLogged"
-                app:PI_icon="@drawable/ic_alipay_48"
+                app:PI_icon="@drawable/ic_alipay"
                 app:PI_title="@string/alipayAccountText"
                 app:layout_constraintTop_toTopOf="parent" />
 

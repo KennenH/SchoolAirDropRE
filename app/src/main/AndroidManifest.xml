@@ -36,7 +36,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
+        <activity android:name=".scene.settings.PrivacyActivity"></activity>
         <activity
             android:name=".scene.main.MainActivity"
             android:configChanges="locale|layoutDirection|orientation|screenSize|keyboardHidden"
@@ -59,7 +59,6 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-
         <activity
             android:name="com.alipay.sdk.app.AlipayResultActivity"
             tools:node="merge">
@@ -75,7 +74,6 @@
                     android:scheme="http" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".scene.ssb.MyPostActivity"
             android:label="" />

@@ -8,26 +8,34 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface UserApi {
+
     /**
      * 获取公钥
-     *
-     * http://81.69.14.64:8080/appapi/auth/login
      */
-//    @POST("authorize/login")
-    @POST("appapi/auth/login")
+    @POST("appapi/auth/applogin")
     fun getPublicKey(): Call<DomainAuthorizeGet>
 
     /**
      * 使用公钥加密的alipay id登录获取token
      */
     @FormUrlEncoded
-    @POST("appapi/auth/login")
+    @POST("appapi/auth/applogin")
     fun authorizeWithAlipayID(
             @Field("grant_type") grantType: String,
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String,
             @Field("alipay_id") encryptedAlipayID: String,
             @Field("registration_id") registrationID: String?): Call<DomainToken>
+
+    /**
+     * 使用refresh token获取新的refresh token和access token
+     */
+    @FormUrlEncoded
+    @POST("appapi/auth/refreshtoken")
+    fun refreshToken(
+            @Field("expire_access_token") accessToken: String,
+            @Field("client_id") clientID: String,
+            @Field("client_secret") clientSecret: String): Call<DomainToken>
 
     /**
      * 使用token获取用户信息

@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.cache.util.UserSettingsCacheUtil
 import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment
 import com.example.schoolairdroprefactoredition.ui.components.PageItem
-import com.example.schoolairdroprefactoredition.viewmodel.SettingsViewModel
 
 /**
  * 通知页面
@@ -17,15 +16,12 @@ class SettingsNotificationFragment : TransitionBaseFragment(), View.OnClickListe
 
     private var displayInAppFloat: PageItem? = null
 
-    private val settingsViewModel by lazy {
-        ViewModelProvider(this).get(SettingsViewModel::class.java)
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val root = LayoutInflater.from(context).inflate(R.layout.fragment_settings_notification, container, false)
         displayInAppFloat = root.findViewById(R.id.settings_notification_in_app_float)
 
-        if (settingsViewModel.getIsDisplayFloat() && displayInAppFloat?.isItemSelected == false) {
+        if (UserSettingsCacheUtil.getInstance().isShouldShowFloat()
+                && displayInAppFloat?.isItemSelected == false) {
             displayInAppFloat?.toggle()
         }
 
@@ -37,7 +33,9 @@ class SettingsNotificationFragment : TransitionBaseFragment(), View.OnClickListe
         val id = v.id
         if (id == R.id.settings_notification_in_app_float) {
             displayInAppFloat?.toggle()
-            settingsViewModel.toggleDisplayFloat()
+            UserSettingsCacheUtil.getInstance().apply {
+                saveShouldShowFloat(!isShouldShowFloat())
+            }
         }
     }
 }

@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.ActivityAddNewSuccessBinding
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
-import com.example.schoolairdroprefactoredition.scene.why.WhyActivity.Companion.start
 import com.example.schoolairdroprefactoredition.utils.AnimUtil
 
 class AddNewResultActivity : ImmersionStatusBarActivity() {
@@ -80,7 +79,6 @@ class AddNewResultActivity : ImmersionStatusBarActivity() {
             finish()
             AnimUtil.activityExitAnimDown(this)
         }
-        binding.resultWhy.setOnClickListener { v: View? -> start(this) }
     }
 
     override fun onBackPressed() {

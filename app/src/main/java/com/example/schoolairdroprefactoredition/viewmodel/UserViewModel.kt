@@ -5,8 +5,8 @@ import com.example.schoolairdroprefactoredition.database.pojo.UserCache
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.repository.UserRepository
-import com.example.schoolairdroprefactoredition.cache.JsonCacheConstantUtil.IS_GET_USER_INFO_PRESENTLY
-import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheConstantUtil.IS_GET_USER_INFO_PRESENTLY
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
 

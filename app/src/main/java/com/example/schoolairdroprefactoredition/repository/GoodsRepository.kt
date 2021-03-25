@@ -4,8 +4,8 @@ import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
 import com.example.schoolairdroprefactoredition.domain.DomainResult
-import com.example.schoolairdroprefactoredition.domain.GoodsDetailInfo
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.MyUtil
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -22,10 +22,11 @@ class GoodsRepository private constructor() {
 
     /**
      * 收藏或取消收藏
+     * @param isFavor 该物品是否已被收藏，true则执行取消收藏，false则执行收藏
      */
-    fun favorGoods(token: String, goodsID: Int, isFavor: Boolean, onResult: (Boolean) -> Unit) {
+    fun toggleFavorGoods(token: String, goodsID: Int, isFavor: Boolean, onResult: (Boolean) -> Unit) {
         if (isFavor) {
-            RetrofitClient.goodsApi.favorGoods(token, goodsID).apply {
+            RetrofitClient.goodsApi.unFavorGoods(MyUtil.bearerToken(token), goodsID).apply {
                 enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                     override fun onFailureAllRetries() {
                         onResult(false)
@@ -46,7 +47,7 @@ class GoodsRepository private constructor() {
                 })
             }
         } else {
-            RetrofitClient.goodsApi.unFavorGoods(token, goodsID).apply {
+            RetrofitClient.goodsApi.favorGoods(MyUtil.bearerToken(token), goodsID).apply {
                 enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                     override fun onFailureAllRetries() {
                         onResult(false)

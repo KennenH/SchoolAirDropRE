@@ -58,8 +58,8 @@
     <color name="transparent">#00000000</color>
     <color name="darkTransparentAlways">#1E000000</color>
     <color name="darkerTransparentAlways">#80000000</color>
-    <color name="darkTransparent">#1FFFFFFF</color>
-    <color name="darkerTransparent">#99FFFFFF</color>
+    <color name="darkTransparent">#26FFFFFF</color>
+    <color name="darkerTransparent">#BEFFFFFF</color>
 
 
     <color name="placeholderBackground">#EAF0F7</color>

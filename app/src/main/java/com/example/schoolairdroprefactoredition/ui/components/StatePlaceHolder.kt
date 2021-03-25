@@ -10,7 +10,7 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.PlaceholderBinding
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
-import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.github.ybq.android.spinkit.SpinKitView
 
 /**
@@ -24,9 +24,9 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
         const val TYPE_EMPTY = 110 //状态 类型 没有物品
         const val TYPE_EMPTY_SEARCH = 220 //状态 类型 搜索为空
         const val TYPE_LOADING = 77 //状态 类型 正在加载
-        const val TYPE_NETWORK_OR_LOCATION_ERROR_HOME = 88 //状态 类型 网络或定位错误 仅首页使用
-        const val TYPE_DENIED = 11 //状态 类型 权限被拒
-        const val TYPE_ERROR = 22 //状态 类型 加载错误
+        const val TYPE_NETWORK_OR_LOCATION_ERROR_HOME = 886 //状态 类型 网络或定位错误 仅首页使用
+        const val TYPE_DENIED = 112 //状态 类型 权限被拒
+        const val TYPE_ERROR = 223 //状态 类型 加载错误
 
         private const val TIP_NETWORK_OR_LOCATION_ERROR_HOME = R.string.errorNetLocation // 状态 提示 网络或定位错误 仅首页使用
         private const val TIP_EMPTY_GOODS = R.string.errorGoodsEmptyHome // 状态 提示 物品空 仅首页使用
@@ -45,7 +45,7 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
     init {
         val binding = PlaceholderBinding.bind(LayoutInflater.from(context).inflate(R.layout.placeholder, this, true))
         binding.placeholderRoot.setOnClickListener {
-            if (type != TYPE_LOADING) {
+            if (isEnableTooFrequentCheck && type != TYPE_LOADING) {
                 JsonCacheUtil.runWithFrequentCheck(context, {
                     placeHolderActionListener?.onRetry(it)
                 }) {
@@ -64,6 +64,13 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
      * 当前实例的类型，初始化为加载
      */
     private var type = TYPE_LOADING
+
+    /**
+     * 是否开启非加载状态下的点击频繁检查
+     *
+     * true的时候点击placeholder多次将会导致进入冷却事件而无法再次点击
+     */
+    private var isEnableTooFrequentCheck = false
 
     private var placeHolderActionListener: OnStatePlaceholderActionListener? = null
 
@@ -148,7 +155,11 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
         fun onRetry(view: View)
     }
 
+    /**
+     * 设置了placeholder动作监听之后将开启tooFrequentCheck
+     */
     fun setOnStatePlaceholderActionListener(listener: OnStatePlaceholderActionListener?) {
+        isEnableTooFrequentCheck = true
         placeHolderActionListener = listener
     }
 }

@@ -4,20 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.cache.util.UserSettingsCacheUtil
 import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment
 import com.example.schoolairdroprefactoredition.ui.components.PageItem
-import com.example.schoolairdroprefactoredition.viewmodel.SettingsViewModel
 import kotlinx.android.synthetic.main.fragment_settings_general.*
 
 class SettingsGeneralFragment : TransitionBaseFragment(),
         View.OnClickListener, PageItem.OnPageItemSelectedListener {
-
-    private val generalViewModel by lazy {
-        ViewModelProvider(this).get(SettingsViewModel::class.java)
-    }
 
     /**
      * 暗黑模式按钮是否已经初始化
@@ -31,7 +26,7 @@ class SettingsGeneralFragment : TransitionBaseFragment(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (generalViewModel.isDarkTheme()) {
+        if (UserSettingsCacheUtil.getInstance().isDarkTheme()) {
             settingsGeneralDarkTheme.select()
         }
         isDarkThemeInitialized = true

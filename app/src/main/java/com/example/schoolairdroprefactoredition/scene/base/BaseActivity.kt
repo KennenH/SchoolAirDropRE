@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.scene.base
 
 import android.animation.ObjectAnimator
+import android.media.RingtoneManager
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
@@ -13,14 +14,16 @@ import androidx.lifecycle.Observer
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.UserSettingsCacheUtil
 import com.example.schoolairdroprefactoredition.custom.InAppFloatAnimator
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
-import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
 import net.x52im.mobileimsdk.server.protocal.Protocal
+
 
 /**
  * app所有activity页面中的父类
@@ -41,6 +44,13 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
         const val FLOAT_LAST = 2500L
     }
 
+    /**
+     * 本页面是否正在活动
+     *
+     * 活动状态下打开app内弹窗收到消息将显示弹窗
+     */
+    private var isActive = false
+
     private val jsonCacheUtil by lazy {
         JsonCacheUtil.getInstance()
     }
@@ -56,9 +66,15 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
         initListeners()
     }
 
+    override fun onResume() {
+        super.onResume()
+        isActive = true
+    }
+
     override fun onPause() {
         super.onPause()
         EasyFloat.dismiss(this)
+        isActive = false
     }
 
     override fun onDestroy() {
@@ -67,10 +83,7 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
     }
 
     /**
-     * ！！！！
-     *  注意
-     * ！！！！
-     * 所有在这个Activity基类中注册的listener在子类activity中千万不要再注册，否则每次回调都会有两次
+     * 注册im事件回调
      */
     private fun initListeners() {
         (application as? SAApplication)?.addOnIMListener(this)
@@ -82,9 +95,23 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
 
     /**
      * 仅观察一次的观察者
+     * 遵循context的生命周期
      */
     fun <T> LiveData<T>.observeOnce(lifecycleOwner: LifecycleOwner, observer: Observer<T>) {
         observe(lifecycleOwner, object : Observer<T> {
+            override fun onChanged(t: T?) {
+                removeObserver(this)
+                observer.onChanged(t)
+            }
+        })
+    }
+
+    /**
+     * 仅观察一次的观察者
+     * 任何时候数据变化都会使观察者返回数据
+     */
+    fun <T> LiveData<T>.observeAnywayOnce(observer: Observer<T>) {
+        observeForever(object : Observer<T> {
             override fun onChanged(t: T?) {
                 removeObserver(this)
                 observer.onChanged(t)
@@ -101,9 +128,9 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
      * [com.example.schoolairdroprefactoredition.utils.ConstantUtil.MESSAGE_TYPE_IMAGE] 图片消息
      */
     private fun showFloatWindow(content: String, userID: String, typeu: Int) {
-        val shouldShowFloat = jsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
-                ?.isDisplayInAppFloat ?: true
-        if (shouldShowFloat) {
+        // 当前activity可见且用户设置为app内弹窗则显示浮窗
+        if (isActive && UserSettingsCacheUtil.getInstance().isShouldShowFloat()) {
+            playSystemNotification()
             EasyFloat.isShow(this@BaseActivity, IM_FLOAT_TAG)?.let {
                 if (it) { // 正在显示，直接替换文本，刷新显示时间
                     EasyFloat.getFloatView(this@BaseActivity, IM_FLOAT_TAG)?.apply {
@@ -169,6 +196,16 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
                             .show()
                 }
             }
+        }
+    }
+
+    /**
+     * 播放系统声音提示
+     */
+    private fun playSystemNotification() {
+        if (UserSettingsCacheUtil.getInstance().isShouldPlaySystemNotification()) {
+            val notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
+            RingtoneManager.getRingtone(applicationContext, notification).play()
         }
     }
 

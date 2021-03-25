@@ -14,10 +14,10 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
-import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.UserLoginCacheUtil
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
@@ -61,10 +61,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
     private val loginViewModel by lazy {
         ViewModelProvider(this).get(LoginViewModel::class.java)
-    }
-
-    private val accountViewModel by lazy {
-        ViewModelProvider(this).get(AccountViewModel::class.java)
     }
 
     private val mClient by lazy {
@@ -281,8 +277,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 此处为子fragment提供账号缓存获取，删除可能导致子fragment无法获取到这些信息
      */
     private fun initCache() {
-        val tokenCache = accountViewModel.lastLoggedTokenCaChe
-        val userInfoCache = accountViewModel.lastLoggedUserInfoCache
+        val tokenCache = UserLoginCacheUtil.getInstance().getUserToken()
+        val userInfoCache = UserLoginCacheUtil.getInstance().getUserInfo()
         tokenCache?.let {
             intent.putExtra(ConstantUtil.KEY_TOKEN, it)
         }
@@ -373,17 +369,17 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     fun autoLogin() {
         if (!autoLogged) {
             autoLogged = true // 已自动登录标识，防止多个子fragment调用此方法
-            val token = accountViewModel.lastLoggedTokenCaChe
+            val token = UserLoginCacheUtil.getInstance().getUserToken()
             if (token != null) { // token 仍有效 使用本地缓存直接登录
                 intent.putExtra(ConstantUtil.KEY_TOKEN, token)
                 obtainMyInfo()
             } else {
                 // token 已无效 使用本地缓存重新获取token后登录
-                val infoCache = accountViewModel.lastLoggedUserInfoCache
+                val infoCache = UserLoginCacheUtil.getInstance().getUserInfo()
                 if (infoCache != null) {
                     intent.putExtra(ConstantUtil.KEY_USER_INFO, infoCache)
                 }
-                loginWithCachedAlipayID()
+                reLogin()
             }
         }
     }
@@ -410,19 +406,21 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     /**
-     * 使用已有的缓存进行登录
-     * 在app首次打开时调用
+     * 重新登录
+     * 在进入app时 或者 在app进入前台时若发现token过期时调用
      */
     @Synchronized
-    private fun loginWithCachedAlipayID() {
-        loginViewModel.loginWithAlipayID(accountViewModel.lastLoggedUserAlipayID)
-                .observeOnce(this@MainActivity, { token ->
-                    // 因为这里是自动登录，所以不需要判断空的情况，有就登录，没有就跳过
-                    if (token != null) {
-                        intent.putExtra(ConstantUtil.KEY_TOKEN, token)
-                        obtainMyInfo()
+    private fun reLogin() {
+        UserLoginCacheUtil.getInstance().getUserTokenAnyway()?.let {
+            loginViewModel.refreshToken(it)
+                    .observeAnywayOnce { pair ->
+                        // 因为这里是自动登录，所以不需要判断空的情况，有就登录，没有就跳过
+                        if (pair.first != null) {
+                            intent.putExtra(ConstantUtil.KEY_TOKEN, pair.first)
+                            obtainMyInfo()
+                        }
                     }
-                })
+        }
     }
 
 
@@ -501,18 +499,22 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * <p>
      * 登录状态改变后的后的回调监听 登录 退登 都会回到此处
      * SettingsActivity中登录流程为:
-     * .                  监听
-     * {@link MyFragment} ===> {@link MainActivity}
-     * .                                                                                         监听
-     * {@link com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment} === > {@link SettingsActivity}
-     * <p>
-     * .                     start for result                          start for result
-     * {@link MainActivity} ================> {@link SettingsActivity} ================> {@link com.example.schoolairdroprefactoredition.scene.settings.LoginActivity}
-     * <p>
-     * 再按原路返回至各个Activity,然后监听回调至{@link MyFragment} 与 {@link com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment}
-     * <p>
-     * <p>
-     * 退出登录后将本地token清除 同时清除页面用户信息
+     * .            监听
+     * [MyFragment] ===> [MainActivity]
+     * .                                                                                   监听
+     * [com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment] === >
+     *
+     * [com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity]
+     *
+     * .              start for result                     start for result
+     * [MainActivity] ================> [com.example.schoolairdroprefactoredition.scene.settings.SettingsActivity]
+     *
+     * start for result
+     * ================> [com.example.schoolairdroprefactoredition.scene.settings.LoginActivity]
+     *
+     * 再按原路返回至各个Activity,然后监听回调至[MyFragment] 与 [com.example.schoolairdroprefactoredition.scene.settings.fragment.SettingsFragment]
+     *
+     * 退出登录后将本地token清除 同时清除页面用户信息和alipay id
      */
     interface OnLoginStateChangedListener {
         /**
@@ -523,6 +525,9 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
          *  包含的键值对
          *  [ConstantUtil.KEY_TOKEN] token 类型为[DomainToken]
          *  [ConstantUtil.KEY_USER_INFO] 我的用户信息 类型为[DomainUserInfo.DataBean]
+         *
+         *  若上两者为空则表明为退出登录
+         *  反之则为登录
          */
         fun onLoginStateChanged(intent: Intent)
 
@@ -583,7 +588,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         fun onPullDone()
     }
 
-    fun setOnPullingOfflineNum(listener: OnOfflineNumStateChangeListener) {
+    fun setOnPullingOfflineNumListener(listener: OnOfflineNumStateChangeListener) {
         this.mOnOfflineNumStateChangeListener = listener
     }
 
@@ -622,16 +627,19 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         JsonCacheUtil.runWithTooQuickCheck {
             (application as? SAApplication)?.getCachedToken()?.access_token?.let { token ->
                 // 检查token是否过期，若过期则重新登录
-                loginViewModel.connectWhenComesToForeground(token).observeOnce(this) {
+                loginViewModel.connectWhenComesToForeground(token).observeAnywayOnce {
                     when (it) {
-                        // token已经过期，需要重新登录
+                        ConstantUtil.HTTP_OK -> {
+                            // token 未过期 do nothing
+                        }
+
+                        // token已经过期，自动重新登录
                         ConstantUtil.HTTP_BAD_REQUEST -> {
-                            loginWithCachedAlipayID()
+                            reLogin()
                         }
 
                         // 验证token时出错
                         null -> {
-
                         }
                     }
                 }

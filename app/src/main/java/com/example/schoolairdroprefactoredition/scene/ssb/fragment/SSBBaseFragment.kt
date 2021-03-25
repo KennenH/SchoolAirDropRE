@@ -25,13 +25,6 @@ abstract class SSBBaseFragment :
         StatePlaceholderFragment(),
         OnSSBItemActionListener, StatePlaceHolder.OnStatePlaceholderActionListener {
 
-    companion object {
-        /**
-         * 在售子页面的位置
-         */
-        const val POS_SELLING = 0
-    }
-
     protected val viewModel by lazy {
         ViewModelProvider(this).get(SellingViewModel::class.java)
     }
@@ -71,10 +64,6 @@ abstract class SSBBaseFragment :
 
     override fun getStatePlaceholder(): StatePlaceHolder? {
         return binding?.placeHolder
-        // 注册placeholder占位符点击事件
-//                .also {
-//            it?.setOnStatePlaceholderActionListener(this)
-//        }
     }
 
     override fun getContentContainer(): View? {

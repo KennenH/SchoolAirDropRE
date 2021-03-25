@@ -246,4 +246,11 @@ interface DatabaseDao {
      */
     @Query("delete from purchasing")
     suspend fun deleteAllCachedPurchasing()
+
+    /**
+     * 将上次app在线的时候发送的、但是还没有收到结果的消息标记为发送失败
+     * 发送状态码见[ChatHistory.status]
+     */
+    @Query("update offline set status = 2 where status = 1")
+    suspend fun updateInterruptedMessageStatus()
 }

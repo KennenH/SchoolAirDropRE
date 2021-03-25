@@ -274,7 +274,7 @@
     <string name="currentAccount">当前账号</string>
     <string name="agreeAboveAgreementAndStartToUse">同意并开始使用</string>
     <string name="disagreeAndQuit">拒绝并退出校园空投</string>
-    <string name="serviceTip">开始之前，请仔细阅读我们的服务条款和隐私政策(包含第三方服务)</string>
+    <string name="serviceTip">在开始之前，请仔细阅读我们的服务条款和隐私政策(包含第三方服务)</string>
     <string name="haveReadAndAgreeTerms">我已认真阅读并同意以上服务条款和隐私政策</string>
     <string name="privacyAndService">隐私政策与服务条款</string>
     <string name="pleaseAgreeAboveTermsFirst">请先阅读并同意以上条款</string>
@@ -288,7 +288,6 @@
     <string name="submitPostLocationFailedTip">当前定位结果异常，帖子很可能无法被其他同学看到。表单已自动保存，建议稍后重试提交。</string>
     <string name="newPostSuccessTip">帖子已发表至广场。</string>
     <string name="why">为什么?</string>
-    <string name="whyMyAppKeepBug">为什么我的校园空投总是报错、闪退、出现各种奇怪的bug?</string>
     <string name="errorLoadItemInfo">加载物品信息出错</string>
     <string name="postTitleSaySth">描述一下你的具体要求</string>
     <string name="posts">帖子</string>
@@ -304,7 +303,7 @@
     <string name="connecting">正在连接</string>
     <string name="noMessageYet">还没有消息哦</string>
     <string name="systemBusy">系统繁忙，请稍后再试</string>
-    <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;删除&#160;&#160;&#160;&#160;&#160;&#160;</string>
+    <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;删除&#160;&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
     <string name="illegalName">名字中包含非法字符</string>
     <string name="receiveANewMessage">收到一条新消息</string>
     <string name="postInquiry">发布求购</string>
@@ -341,5 +340,8 @@
     <string name="watchCount">%d人看过</string>
     <string name="modifyItemLocationFailedTip">当前定位结果异常，物品很可能无法被附近同学搜索到。修改物品表单不会被保存，建议稍后重试。</string>
     <string name="noNeedToHandleImages">没有图片需要更改</string>
+    <string name="tooFrequentMessageWarning">消息发送太快啦</string>
+    <string name="AlipayNotFound">没有找到支付宝App</string>
+    <string name="unexpectedError">授权时遇到了意料之外的错误，请稍后重试</string>
 
 </resources>

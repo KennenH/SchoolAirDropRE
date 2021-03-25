@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.blankj.utilcode.util.BarUtils
@@ -33,7 +34,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
         /**
          * 标志本页面是否是从在售页面进入
          */
-        const val IS_FROM_SELLING = "fromSelling?"
+        private const val IS_FROM_SELLING = "fromSelling?"
 
         /**
          * 登录后若卖家不是自己则自动打开与卖家的聊天页面
@@ -202,11 +203,17 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            finish()
-            return true
+        return when (item.itemId) {
+            android.R.id.home -> {
+                finish()
+                true
+            }
+            R.id.dark_more -> {
+                Toast.makeText(this, getString(R.string.functionNotSupport), Toast.LENGTH_SHORT).show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onUserInfoClick(view: View?) {

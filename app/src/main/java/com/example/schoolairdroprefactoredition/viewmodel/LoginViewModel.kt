@@ -1,16 +1,43 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.*
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.cache.*
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheConstantUtil
+import com.example.schoolairdroprefactoredition.cache.util.UserLoginCacheUtil
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.repository.LoginRepository
+import com.example.schoolairdroprefactoredition.utils.AppConfig
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.qiniu.android.utils.LogUtil
 import kotlinx.coroutines.launch
 
 class LoginViewModel : ViewModel() {
 
     private val loginRepository by lazy {
         LoginRepository.getInstance()
+    }
+
+    /**
+     * debug 登录
+     */
+    fun loginDebug(): LiveData<DomainToken?> {
+        val token = MutableLiveData<DomainToken?>()
+        // 获取alipay id之后获取公钥
+        loginRepository.getPublicKey { publicKey ->
+            if (publicKey != null) {
+                // 获取公钥之后加密alipay id传输获取app token
+                loginRepository.authorizeWithAlipayID(
+                        AppConfig.USER_ALIPAY,
+                        publicKey) {
+                    token.postValue(it)
+                }
+            } else {
+                token.postValue(null)
+            }
+        }
+        return token
     }
 
     /**
@@ -49,29 +76,16 @@ class LoginViewModel : ViewModel() {
     }
 
     /**
-     * 使用alipay id登录app
+     * 用旧的refresh token换取新的refresh token
      */
-    fun loginWithAlipayID(alipayID: String?): LiveData<DomainToken?> {
-        val token = MutableLiveData<DomainToken?>()
+    fun refreshToken(token: DomainToken): LiveData<Pair<DomainToken?, Int>> {
+        val newToken = MutableLiveData<Pair<DomainToken?, Int>>()
         viewModelScope.launch {
-            if (alipayID != null) {
-                loginRepository.getPublicKey { publicKey ->
-                    if (publicKey != null) {
-                        // 获取公钥之后加密alipay id传输获取app token
-                        loginRepository.authorizeWithAlipayID(
-                                alipayID,
-                                publicKey) {
-                            token.postValue(it)
-                        }
-                    } else {
-                        token.postValue(null)
-                    }
-                }
-            } else {
-                token.postValue(null)
+            loginRepository.refreshToken(token.access_token) { token, code ->
+                newToken.postValue(Pair(token, code))
             }
         }
-        return token
+        return newToken
     }
 
     /**
@@ -92,11 +106,11 @@ class LoginViewModel : ViewModel() {
      */
     fun logout() {
         // 删除用户alipay id
-        UserLoginCacheUtils.getInstance().deleteCache(JsonCacheConstantUtil.USER_ALIPAY_ID)
+        UserLoginCacheUtil.getInstance().deleteCache(JsonCacheConstantUtil.USER_ALIPAY_ID)
         // 删除用户token
-        UserLoginCacheUtils.getInstance().deleteCache(UserTokenCache.KEY)
+        UserLoginCacheUtil.getInstance().deleteCache(UserTokenCache.KEY)
         // 删除用户信息
-        UserLoginCacheUtils.getInstance().deleteCache(UserInfoCache.KEY)
+        UserLoginCacheUtil.getInstance().deleteCache(UserInfoCache.KEY)
     }
 
     /**

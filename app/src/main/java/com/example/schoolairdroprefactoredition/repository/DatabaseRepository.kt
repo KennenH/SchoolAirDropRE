@@ -8,8 +8,9 @@ import com.example.schoolairdroprefactoredition.database.pojo.*
 import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.cache.JsonCacheConstantUtil
-import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheConstantUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.utils.MyUtil
 import kotlinx.coroutines.flow.Flow
 import retrofit2.Call
 import retrofit2.Response
@@ -44,7 +45,7 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
      * 获取某个临界时间之前的（早的，旧的）消息
      */
     fun getChatRemote(token: String, senderID: String, start: Long, onResult: (success: Boolean, response: DomainOffline?) -> Unit) {
-        RetrofitClient.imApi.getOffline(token, senderID, start).apply {
+        RetrofitClient.imApi.getOffline(MyUtil.bearerToken(token), senderID, start).apply {
             enqueue(object : CallBackWithRetry<DomainOffline>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(false, null)
@@ -70,7 +71,7 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
      * 获取离线消息数量，即离线消息列表
      */
     fun getOfflineNum(token: DomainToken, onResult: (response: DomainOfflineNum?) -> Unit) {
-        RetrofitClient.imApi.getOfflineNum(token.access_token).apply {
+        RetrofitClient.imApi.getOfflineNum(MyUtil.bearerToken(token.access_token)).apply {
             enqueue(object : CallBackWithRetry<DomainOfflineNum>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null)
@@ -92,32 +93,57 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
         }
     }
 
+    /**
+     * ack消息，从start开始，比start发送时间迟的消息都将被ack
+     */
+    fun ackOffline(token: String, senderID: String, start: Long) {
+        RetrofitClient.imApi.ackOffline(MyUtil.bearerToken(token), senderID, start)
+    }
+
+    /**
+     * 隐藏域某人的会话
+     */
     @WorkerThread
     suspend fun hideChannel(myID: String, counterpartId: String) {
         databaseDao.setChannelDisplay(myID, counterpartId, 0)
         databaseDao.ackOfflineNum(counterpartId, myID)
     }
 
+    /**
+     * 保存是否需要拉取消息的标识符
+     */
     @WorkerThread
-    suspend fun saveLastMessage(pullFlag: PullFlag) {
+    suspend fun savePullFlag(pullFlag: PullFlag) {
         databaseDao.updatePullFlag(pullFlag)
     }
 
+    /**
+     * 批量保存是否需要拉取消息的标识符
+     */
     @WorkerThread
-    suspend fun saveLastMessage(pullFlag: List<PullFlag>) {
+    suspend fun savePullFlag(pullFlag: List<PullFlag>) {
         databaseDao.updatePullFlag(pullFlag)
     }
 
+    /**
+     * 保存离线消息数量
+     */
     @WorkerThread
     suspend fun saveOfflineNum(offlineNums: List<ChatOfflineNum>) {
         databaseDao.saveOfflineNum(offlineNums)
     }
 
+    /**
+     * 批量保存用户信息缓存
+     */
     @WorkerThread
     suspend fun saveUserCache(userCaches: List<UserCache>) {
         databaseDao.saveUserCache(userCaches)
     }
 
+    /**
+     * 保存用户信息缓存
+     */
     @WorkerThread
     suspend fun saveUserCache(userCache: UserCache) {
         // 保存再次请求的限制，防止频繁调用请求
@@ -125,12 +151,17 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
         databaseDao.saveUserCache(userCache)
     }
 
+    /**
+     * 获取用户信息缓存
+     */
     @WorkerThread
     suspend fun getUserCache(userID: Int): UserCache? {
         return databaseDao.getUserCache(userID)
     }
 
     /**
+     * 保存消息记录
+     *
      * @param isSentFromCounterpart
      * 是否是对方发来的消息，即该消息是否是我接收到的
      */
@@ -146,53 +177,83 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
         }
     }
 
+    /**
+     * 批量保存消息记录
+     */
     @WorkerThread
     suspend fun saveHistory(histories: List<ChatHistory>) {
         databaseDao.saveChat(histories)
     }
 
+    /**
+     * ack消息数量
+     */
     @WorkerThread
     suspend fun ackOfflineNum(receiverID: String, senderID: String) {
         databaseDao.ackOfflineNum(receiverID, senderID)
     }
 
+    /**
+     * 获取对于该用户是否还需要拉取离线消息
+     */
     @WorkerThread
     suspend fun getPullFlag(senderID: String): PullFlag? {
         return databaseDao.getPullFlag(senderID)
     }
 
+    /**
+     * 收藏物品
+     */
     @WorkerThread
     suspend fun addFavorite(favorite: Favorite) {
         databaseDao.addFavorite(favorite)
     }
 
+    /**
+     * 取消收藏物品
+     */
     @WorkerThread
     suspend fun removeFavorite(goodsID: Int) {
         databaseDao.removeFavorite(goodsID)
     }
 
+    /**
+     * 检查物品是否被收藏了
+     */
     @WorkerThread
     suspend fun isFavorite(goodsID: Int): Boolean {
         return databaseDao.isFavorite(goodsID)
     }
 
+    /**
+     * 更新消息发送状态
+     */
     @WorkerThread
     suspend fun updateMessageStatus(fingerprint: String, @ChatRecyclerAdapter.MessageSendStatus status: Int) {
         databaseDao.updateMessageStatus(fingerprint, status)
     }
 
+    /**
+     * 获取所有收藏的物品
+     */
     @WorkerThread
     suspend fun getFavorites(key: String?): List<Favorite> {
         return if (key == null) databaseDao.getFavorites()
         else databaseDao.getFavorites("%$key%")
     }
 
+    /**
+     * 保存在售列表缓存
+     */
     @WorkerThread
     suspend fun savePurchasingCache(purchasing: List<PurchasingCache>) {
         databaseDao.deleteAllCachedPurchasing()
         databaseDao.savePurchasingCache(purchasing)
     }
 
+    /**
+     * 获取在售的缓存
+     */
     @WorkerThread
     suspend fun getPurchasingCache(): List<PurchasingCache> {
         return databaseDao.getPurchasingCache()

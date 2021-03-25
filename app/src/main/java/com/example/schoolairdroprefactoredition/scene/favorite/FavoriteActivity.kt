@@ -162,9 +162,9 @@ class FavoriteActivity : ImmersionStatusBarActivity(), FavoriteRecyclerAdapter.O
     }
 
     override fun onToggleFavorite(button: View, item: Favorite) {
-        showLoading()
         val token = (application as SAApplication).getCachedToken()
         if (token != null) {
+            showLoading()
             goodsViewModel.toggleGoodsFavorite(this, token.access_token, item).observeOnce(this) {
                 dismissLoading {
                     button.isEnabled = true

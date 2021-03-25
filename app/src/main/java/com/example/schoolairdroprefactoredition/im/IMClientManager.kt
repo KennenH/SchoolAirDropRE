@@ -60,4 +60,9 @@ class IMClientManager private constructor(private var application: Application?)
     fun resetInit() {
         init = false
     }
+
+    /**
+     * 是否已经初始化，即类似于判断是否已登录im
+     */
+    fun isInit() = init
 }

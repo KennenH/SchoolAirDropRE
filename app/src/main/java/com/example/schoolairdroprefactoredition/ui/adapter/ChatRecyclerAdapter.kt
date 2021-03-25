@@ -3,7 +3,6 @@ package com.example.schoolairdroprefactoredition.ui.adapter
 import android.view.View
 import android.widget.ImageView
 import com.blankj.utilcode.constant.TimeConstants
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.chad.library.adapter.base.BaseDelegateMultiAdapter
 import com.chad.library.adapter.base.delegate.BaseMultiTypeDelegate
@@ -27,7 +26,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
         /**
          * 我发送的文字消息
          */
-        const val ITEM_CHAT_SEND = 0
+        const val ITEM_CHAT_SEND_TEXT = 0
 
         /**
          * 我收到的文字消息
@@ -43,6 +42,11 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
          * 我收到的图片消息
          */
         const val ITEM_CHAT_RECEIVE_IMAGE = 3
+
+        /**
+         * 系统提示消息
+         */
+        const val ITEM_CHAT_TIP = 4
     }
 
     /**
@@ -204,8 +208,13 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
     override fun convert(holder: BaseViewHolder, item: ChatHistory) {
         val date = Date(item.send_time)
         when (holder.itemViewType) {
+            // 来自系统的消息
+            ITEM_CHAT_TIP -> {
+                // 提示文字
+                holder.setText(R.id.tip_text, item.message)
+            }
             // 我发送的文本消息
-            ITEM_CHAT_SEND -> {
+            ITEM_CHAT_SEND_TEXT -> {
                 // 获取头像的 view
                 val avatarView = holder.itemView.findViewById<ImageView>(R.id.send_avatar)
                 // 消息文本
@@ -307,11 +316,17 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
             val history = data[position]
             // 判断消息的发送方
             return if (history.sender_id == myID) {
-                // 判断消息的类型
-                if (history.message_type == ConstantUtil.MESSAGE_TYPE_IMAGE) {
-                    ITEM_CHAT_SEND_IMAGE
-                } else {
-                    ITEM_CHAT_SEND
+                // 我发出的消息
+                when (history.message_type) {
+                    ConstantUtil.MESSAGE_TYPE_IMAGE -> {
+                        ITEM_CHAT_SEND_IMAGE
+                    }
+                    ConstantUtil.MESSAGE_TYPE_TIP -> {
+                        ITEM_CHAT_TIP
+                    }
+                    else -> {
+                        ITEM_CHAT_SEND_TEXT
+                    }
                 }
             } else {
                 if (history.message_type == ConstantUtil.MESSAGE_TYPE_IMAGE) {
@@ -323,10 +338,11 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
         }
 
         init {
-            addItemType(ITEM_CHAT_SEND, R.layout.item_chat_send)
+            addItemType(ITEM_CHAT_SEND_TEXT, R.layout.item_chat_send)
                     .addItemType(ITEM_CHAT_RECEIVE, R.layout.item_chat_receive)
                     .addItemType(ITEM_CHAT_SEND_IMAGE, R.layout.item_chat_send_image)
                     .addItemType(ITEM_CHAT_RECEIVE_IMAGE, R.layout.item_chat_receive_image)
+                    .addItemType(ITEM_CHAT_TIP, R.layout.item_chat_tip)
         }
     }
 }

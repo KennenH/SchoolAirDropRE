@@ -3,7 +3,12 @@ package com.example.schoolairdroprefactoredition
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.blankj.utilcode.util.LogUtils
+import com.example.schoolairdroprefactoredition.cache.UserTokenCache
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.UserLoginCacheUtil
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.utils.RSACoder
+import junit.framework.Assert.assertEquals
 import org.junit.Assert
 import org.junit.Ignore
 import org.junit.Test
@@ -16,24 +21,18 @@ import org.junit.runner.RunWith
  */
 @RunWith(AndroidJUnit4::class)
 class ExampleInstrumentedTest {
-    @Test
-    @Ignore("AS自动生成代码")
-    fun useAppContext() {
-        // Context of the app under test.
-        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        Assert.assertEquals("com.example.schoolairdroprefactoredition", appContext.packageName)
-    }
 
     @Test
-    fun RSACoder_generateKeys() {
-        val keys = RSACoder.generateKeys()
-        if (keys != null) {
-//            LogUtils.d("public key -- > " + keys[RSACoder.PUBLIC_KEY]);
-//            LogUtils.d("private key -- > " + keys[RSACoder.PRIVATE_KEY]);
-            val encryptWithPublicKey = RSACoder.encryptWithPublicKey(keys[RSACoder.PUBLIC_KEY]!!, "kennen")
-            LogUtils.d(encryptWithPublicKey)
-            val decryptWithPrivateKey = RSACoder.decryptWithPrivateKey(keys[RSACoder.PRIVATE_KEY]!!, encryptWithPublicKey!!)
-            Assert.assertEquals("kennen", decryptWithPrivateKey)
-        }
+    fun RSACoder_encode_decode() {
+        UserLoginCacheUtil.getInstance().saveUserToken(DomainToken(200,
+                DomainToken.Data("kennen", 10, "Berear", ""),
+                ""))
+        val cache = JsonCacheUtil.getInstance().getCache(UserTokenCache.KEY, UserTokenCache::class.java)
+                ?.token
+        LogUtils.d("cache ac -- > ${cache?.access_token}")
+        LogUtils.d("cache -- > ${cache?.data?.access_token}")
+        val accessToken = UserLoginCacheUtil.getInstance().getUserToken()?.data?.access_token
+        LogUtils.d("access -- > $accessToken")
+        assertEquals(accessToken, "kennen")
     }
 }

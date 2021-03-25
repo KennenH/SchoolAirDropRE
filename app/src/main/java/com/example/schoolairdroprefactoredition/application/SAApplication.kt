@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.LogUtils
+import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.UserSettingsCache
 import com.example.schoolairdroprefactoredition.database.SARoomDatabase
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
@@ -18,10 +19,11 @@ import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.MessageSendCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.UserSettingsCacheUtil
 import com.example.schoolairdroprefactoredition.viewmodel.ChatViewModel
 import com.example.schoolairdroprefactoredition.viewmodel.InstanceMessageViewModel
-import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import com.facebook.drawee.backends.pipeline.Fresco
 import com.lzf.easyfloat.EasyFloat
 import com.xiaomi.channel.commonutils.logger.LoggerInterface
@@ -57,10 +59,10 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
                 var code = -1
                 try {
                     code = LocalDataSender.getInstance().sendLoginout()
-                    // 重置初始化标志符，否则会报203
                 } catch (e: Exception) {
                 }
 
+                // 重置初始化标志符，否则会报203
                 IMClientManager.getInstance(application).resetInit()
                 return code
             }
@@ -95,8 +97,8 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
      *
      * 1、第一次打开app时无需调用，之后每次进入后台时将它置为true
      * 2、每次connect调用分为两个部分，第一部分为验证token是否过期，第二部分为拉取离线消息
-     * 3、验证token的调用有10秒钟的间隔
-     * 4、app进入前台时先检查im框架回调，若im在后台期间不曾断开连接，则无需拉取离线消息
+     * 3、验证token的调用有冷却间隔
+     * 4、todo app进入前台时先检查im框架回调，若im在后台期间不曾断开连接，则无需拉取离线消息
      */
     private var isComesFromBackground = false
 
@@ -145,23 +147,20 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
     }
 
     /**
-     * 设置App主题
+     * 初始化App主题
      * 默认为白色，且不跟随系统
      */
     private fun initAppTheme() {
-        val mJsonCacheUtil = JsonCacheUtil.getInstance()
-        var settings = mJsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
-        if (settings == null) settings = UserSettingsCache()
-        AppCompatDelegate.setDefaultNightMode(if (settings.isDarkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
+        val isDarkTheme = UserSettingsCacheUtil.getInstance().isDarkTheme()
+        AppCompatDelegate.setDefaultNightMode(if (isDarkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
     }
 
+    /**
+     * 设置app主题
+     */
     fun setAppTheme(isDarkTheme: Boolean) {
-        val mJsonCacheUtil = JsonCacheUtil.getInstance()
-        var settings = mJsonCacheUtil.getCache(UserSettingsCache.KEY, UserSettingsCache::class.java)
-        if (settings == null) settings = UserSettingsCache()
+        UserSettingsCacheUtil.getInstance().saveDarkTheme(isDarkTheme)
         AppCompatDelegate.setDefaultNightMode(if (isDarkTheme) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO)
-        settings.isDarkTheme = isDarkTheme
-        mJsonCacheUtil.saveCache(UserSettingsCache.KEY, settings)
     }
 
     private fun initAdapt() {
@@ -262,25 +261,52 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
         // 为本条消息创建消息指纹
         val fingerprint = Protocal.genFingerPrint()
         // 为新发送的消息new一个对象
-        val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_TEXT, content, System.currentTimeMillis(), ChatRecyclerAdapter.MessageSendStatus.SENDING)
+        val chat = ChatHistory(
+                fingerprint,
+                myID,
+                userID,
+                ConstantUtil.MESSAGE_TYPE_TEXT,
+                content,
+                System.currentTimeMillis(),
+                ChatRecyclerAdapter.MessageSendStatus.SENDING)
+        // 保存自己发送的消息
+        chatViewModel.saveSentMessage(chat)
         // 获取adapter和recycler view的弱引用
         val adapter = weakAdapter.get()
         // 将发送的消息显示到消息框中
         adapter?.addData(0, chat)
-        // 保存自己发送的消息
-        chatViewModel.saveSentMessage(chat)
-        // 只有对方不是自己才能走im通道
-        if (userID != myID) {
-            // 框架异步发送消息
-            object : LocalDataSender.SendCommonDataAsync(content, userID, fingerprint, ConstantUtil.MESSAGE_TYPE_TEXT) {
-                override fun onPostExecute(code: Int?) {
-                    if (code != 0) chatViewModel.updateMessageStatus(fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+        // 检查消息发送频率
+        MessageSendCacheUtil
+                .getInstance()
+                .saveMessageWithCheck().let { check ->
+                    // 检查通过
+                    if (check) {
+                        // 只有对方不是自己才能走im通道
+                        if (userID != myID) {
+                            // 框架异步发送消息
+                            object : LocalDataSender.SendCommonDataAsync(content, userID, fingerprint, ConstantUtil.MESSAGE_TYPE_TEXT) {
+                                override fun onPostExecute(code: Int?) {
+                                    if (code != 0) chatViewModel.updateMessageStatus(fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+                                }
+                            }.execute()
+                        } else {
+                            // 若对方是自己则直接标记为被收到
+                            messagesBeReceived(fingerprint)
+                        }
+                    } else {
+                        // 检查未通过，new一个tip类型消息提示用户
+                        val tip = ChatHistory(
+                                Protocal.genFingerPrint(),
+                                myID,
+                                userID,
+                                ConstantUtil.MESSAGE_TYPE_TIP,
+                                getString(R.string.tooFrequentMessageWarning),
+                                System.currentTimeMillis(),
+                                ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
+                        chatViewModel.saveSentMessage(tip)
+                        adapter?.addData(0, tip)
+                    }
                 }
-            }.execute()
-        } else {
-            // 若对方是自己则直接标记为被收到
-            messagesBeReceived(fingerprint)
-        }
     }
 
     /**
@@ -297,10 +323,10 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
             adapter?.addData(0, chat)
             chatViewModel.saveSentMessage(chat)
         }
-
-        // 只有对方不是自己才能发送成功并走im通道
+        // TODO: 2021/3/23 多图消息发送拦截规则
+        // 只有对方不是自己才能发送并走im通道
         if (userID != myID) {
-            chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).observeOnce {
+            chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).observeAnywayOnce {
                 if (it != null) {
                     for ((index, path) in it.withIndex()) {
                         object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
@@ -321,18 +347,18 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
                 messagesBeReceived(chatHistory.fingerprint)
             }
         }
+
     }
 
     /*****************************************************************************/
     /***************************** 监听器和回调方法 *******************************/
     /*****************************************************************************/
-
     /**
      * app 进入前台回调，打开app时将不会被回调
      */
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     fun onAppResume() {
-        // 打开app时将不会回调
+        // 打开app时不会回调，后续从后台进入前台时才会被调用
         if (isComesFromBackground) {
             isComesFromBackground = false
             for (listener in appRuntimeStatusListeners) {
@@ -410,6 +436,12 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
 
     /**
      * 注册IM系统事件监听回调
+     *
+     * ！！！！
+     *  注意
+     * ！！！！
+     * 该监听已在[com.example.schoolairdroprefactoredition.scene.base.BaseActivity]中被注册，所有其他的
+     * 继承自BaseActivity的页面不要再注册
      */
     fun addOnIMListener(imListener: IMListener) {
         eventIMListeners.add(imListener)
@@ -533,7 +565,7 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
                 listener.onObtainOfflineState(true)
             }
             // 主页开始获取用户离线消息数量，若有，则为消息图片加上小红点
-            imViewModel.getOfflineNumOnline(cachedToken).observeOnce {
+            imViewModel.getOfflineNumOnline(cachedToken).observeAnywayOnce {
                 if (it) shouldShowBadgeListener?.onShowBadge()
                 // 离线消息获取完成
                 for (listener in eventIMListeners) {
@@ -602,7 +634,7 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
     /**
      * 仅观察一次的观察者
      */
-    fun <T> LiveData<T>.observeOnce(observer: Observer<T>) {
+    private fun <T> LiveData<T>.observeAnywayOnce(observer: Observer<T>) {
         observeForever(object : Observer<T> {
             override fun onChanged(t: T?) {
                 removeObserver(this)

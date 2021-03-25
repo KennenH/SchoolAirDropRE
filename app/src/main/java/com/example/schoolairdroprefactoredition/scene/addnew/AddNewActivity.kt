@@ -21,7 +21,7 @@ import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.KeyboardUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
-import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewInquiryDraftCache
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
@@ -489,6 +489,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                                                         }
                                                         removeObserver(this) // 上传失败，中断流程，注销观察者
                                                     } else if (response.third) {
+                                                        // 在售物品数量加一
+                                                        (application as SAApplication).getCachedMyInfo()?.userGoodsOnSaleCount?.plus(1)
                                                         showUploadResult(true)
                                                         removeObserver(this) // 完成上传，注销观察者
                                                     } else {

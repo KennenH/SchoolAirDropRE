@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.utils
 
+import net.x52im.mobileimsdk.server.protocal.Protocal
+
 object ConstantUtil {
 
     /**
@@ -64,11 +66,25 @@ object ConstantUtil {
      */
     const val GOODS_TYPE_SECONDHAND = "secondHand"
 
+
     /**
-     * 移动端接口密码
+     * refresh token grant type
+     */
+    const val REFRESH_TOKEN_GRANT_TYPE = "refresh_token"
+
+    /**
+     * 非refresh token grant type
      */
     const val CLIENT_GRANT_TYPE = "client_credentials"
+
+    /**
+     * client id错误会报 [HTTP_INVALID_CLIENT]
+     */
     const val CLIENT_ID = "testclient"
+
+    /**
+     * client secret错误会报 [HTTP_INVALID_CLIENT]
+     */
     const val CLIENT_SECRET = "123456"
 
     /**
@@ -121,6 +137,16 @@ object ConstantUtil {
     const val HTTP_NOT_FOUND = 404
 
     /**
+     * 只用于验证refreshToken是否有效，406则无效
+     */
+    const val HTTP_INVALID_REFRESH_TOKEN = 406
+
+    /**
+     * 只用于验证client id和secret是否正确，405则不正确
+     */
+    const val HTTP_INVALID_CLIENT = 405
+
+    /**
      * 默认头像url
      */
     const val DEFAULT_AVATAR = "uploads/img/user/default/default.jpg"
@@ -167,6 +193,10 @@ object ConstantUtil {
      */
     const val MESSAGE_TYPE_IMAGE = 1
 
+    /**
+     * IM消息类型 提示
+     */
+    const val MESSAGE_TYPE_TIP = 2
 
     //////////////////////////// KEYS ////////////////////////////////
     /**

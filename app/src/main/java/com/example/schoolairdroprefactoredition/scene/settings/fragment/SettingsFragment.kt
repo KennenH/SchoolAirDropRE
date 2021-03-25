@@ -113,12 +113,12 @@ class SettingsFragment : TransitionBaseFragment(), View.OnClickListener, OnLogin
     private fun validateState() {
         if (isLoggedIn) {
             binding.settingsHomeAlipay.setDescription(getString(R.string.loggedIn, userInfo?.userName))
-            binding.settingsHomeSwitchAccount.visibility = View.VISIBLE
+//            binding.settingsHomeSwitchAccount.visibility = View.VISIBLE
             binding.settingsHomeSignOut.visibility = View.VISIBLE
         } else {
             binding.settingsHomePrivacy.visibility = View.GONE
             binding.settingsHomeNotification.visibility = View.GONE
-            binding.settingsHomeSwitchAccount.visibility = View.GONE
+//            binding.settingsHomeSwitchAccount.visibility = View.GONE
             binding.settingsHomeSignOut.visibility = View.GONE
         }
     }

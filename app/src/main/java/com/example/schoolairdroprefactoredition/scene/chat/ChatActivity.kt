@@ -196,47 +196,13 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_chat)
+        setSupportActionBar(toolbar)
 
         (application as? SAApplication)?.addOnApplicationLoginListener(this)
-        setSupportActionBar(toolbar)
         initRecyclerLists()
         initListeners()
         initAnim()
-
-        val token = (application as SAApplication).getCachedToken()
-        val myInfo = (application as SAApplication).getCachedMyInfo()
-
-        // 若用户信息不全，则获取用户基本信息并缓存
-        if (counterpartInfo.userName == null || counterpartInfo.userAvatar == null) {
-            userViewModel.getUserInfo(counterpartInfo.userId).observe(this) {
-                it?.let {
-                    user_name.text = it.userName
-                    mChatRecyclerAdapter.setCounterPartInfo(it)
-                }
-            }
-        }
-
-        // 观察本地消息记录，刷新时再次调用，每次观察结果都获取默认条数消息
-        chatViewModel.getChat(
-                token?.access_token,
-                myInfo?.userId.toString(),
-                counterpartInfo.userId.toString())
-                .observe(this) {
-                    // 刷新完毕要调用完成刷新操作
-                    if (it.size < ConstantUtil.DEFAULT_PAGE_SIZE) {
-                        recycler_container.finishRefreshWithNoMoreData()
-                    } else {
-                        recycler_container.finishRefresh(true)
-                    }
-                    // 将本地消息显示在对话列表中
-                    mChatRecyclerAdapter.addData(mChatRecyclerAdapter.data.size, it)
-
-                    // 第一次获取数据时
-                    if (isFirstCall) {
-                        isFirstCall = false
-                        recycler_view.scrollToPosition(0)
-                    }
-                }
+        initObservers()
     }
 
     override fun onPause() {
@@ -261,13 +227,19 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 finish()
-                return true
+                true
             }
+
+            R.id.more -> {
+//                Toast.makeText(this, getString(R.string.functionNotSupport), Toast.LENGTH_SHORT).show()
+                true
+            }
+
+            else -> super.onOptionsItemSelected(item)
         }
-        return super.onOptionsItemSelected(item)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -287,6 +259,7 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
                     // 将镜头置于最新消息处
                     scrollToFirst()
                 }
+
                 PICK_ALBUM -> { // 相册选择照片返回
                     val pictures = PictureSelector.obtainMultipleResult(data)
                     val pathsWrapper = ArrayList<String>(pictures.size)
@@ -302,8 +275,9 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
                     // 将镜头置于最新消息处
                     scrollToFirst()
                 }
-                UserActivity.REQUEST_UPDATE_INFO -> { // 进入对方的个人主页，更新对方的用户信息
-                    userViewModel.getUserInfo(counterpartInfo.userId)
+
+                UserActivity.REQUEST_UPDATE_INFO -> { // 进入对方的个人主页后返回，更新对方的用户信息
+                    userViewModel.getUserInfo(counterpartInfo.userId) // 在页面初始化时已设置观察者
                 }
             }
         }
@@ -317,7 +291,7 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
 
     override fun onRefresh(refreshLayout: RefreshLayout) {
         val token = (application as SAApplication).getCachedToken()
-        if (token != null && token.access_token != null && mChatRecyclerAdapter.data.isNotEmpty()) {
+        if (token?.access_token != null && mChatRecyclerAdapter.data.isNotEmpty()) {
             val myInfo = (application as SAApplication).getCachedMyInfo()
             // 获取本地消息记录，由于前面已经设置观察者，此处只需要调用即可
             chatViewModel.getChat(
@@ -333,6 +307,42 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
     ///////////////////////////////////////////////////////////////////////////////
     ////////////////////////////////// 初始化页面 //////////////////////////////////
     //↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+    private fun initObservers() {
+        // 若用户信息不全，则获取用户基本信息并缓存
+        if (counterpartInfo.userName == null || counterpartInfo.userAvatar == null) {
+            userViewModel.getUserInfo(counterpartInfo.userId).observe(this) {
+                it?.let {
+                    user_name.text = it.userName
+                    mChatRecyclerAdapter.setCounterPartInfo(it)
+                }
+            }
+        }
+
+        val token = (application as SAApplication).getCachedToken()
+        val myInfo = (application as SAApplication).getCachedMyInfo()
+        // 观察本地消息记录，刷新时再次调用，每次观察结果都获取默认条数消息
+        chatViewModel.getChat(
+                token?.access_token,
+                myInfo?.userId.toString(),
+                counterpartInfo.userId.toString())
+                .observe(this) {
+                    // 刷新完毕要调用完成刷新操作
+                    if (it.size < ConstantUtil.DEFAULT_PAGE_SIZE) {
+                        recycler_container.finishRefreshWithNoMoreData()
+                    } else {
+                        recycler_container.finishRefresh(true)
+                    }
+                    // 将本地消息显示在对话列表中
+                    mChatRecyclerAdapter.addData(mChatRecyclerAdapter.data.size, it)
+
+                    // 第一次获取数据时
+                    if (isFirstCall) {
+                        isFirstCall = false
+                        recycler_view.scrollToPosition(0)
+                    }
+                }
+    }
+
     /**
      * 初始化动画
      */
@@ -390,6 +400,12 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
 
         // 发送按钮按下监听
         chat_bar_send.setOnClickListener {
+            // 每次按下发送按钮都会进入1s冷却
+            it.isEnabled = false
+            it.postDelayed({
+                it.isEnabled = true
+            }, 1000L)
+
             // 发送消息
             val myInfo = (application as SAApplication).getCachedMyInfo()
             if (myInfo != null) {

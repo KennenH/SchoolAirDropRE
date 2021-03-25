@@ -22,6 +22,8 @@ object AppConfig {
 
     /**
      * Debug模式下固定登录的用户alipay id
+     * 2088032602057834 光哥
+     * 2088032859860768
      */
     const val USER_ALIPAY = "2088032859860768"
 }

@@ -1,6 +1,9 @@
 package com.example.schoolairdroprefactoredition.utils
 
 import android.util.Base64
+import com.blankj.utilcode.util.LogUtils
+import com.example.schoolairdroprefactoredition.cache.UserTokenCache
+import com.example.schoolairdroprefactoredition.domain.DomainToken
 import java.nio.charset.StandardCharsets
 import java.security.KeyFactory
 import java.security.KeyPairGenerator
@@ -112,8 +115,9 @@ object RSACoder {
     fun generateKeys(): Map<String, String>? {
         val keyMap: MutableMap<String, String> = HashMap(2)
         try {
-            val keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM)
-            keyPairGen.initialize(KEY_LENGTH)
+            val keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM).also {
+                it.initialize(KEY_LENGTH)
+            }
             val keyPair = keyPairGen.generateKeyPair()
             keyMap[PUBLIC_KEY] = Base64.encodeToString(keyPair.public.encoded, Base64.DEFAULT)
             keyMap[PRIVATE_KEY] = Base64.encodeToString(keyPair.private.encoded, Base64.DEFAULT)
@@ -123,6 +127,4 @@ object RSACoder {
         }
         return null
     }
-
-
 }

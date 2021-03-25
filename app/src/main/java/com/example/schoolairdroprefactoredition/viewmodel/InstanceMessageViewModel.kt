@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.*
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.database.pojo.ChatOfflineNum
 import com.example.schoolairdroprefactoredition.database.pojo.PullFlag
@@ -9,11 +8,9 @@ import com.example.schoolairdroprefactoredition.database.pojo.UserCache
 import com.example.schoolairdroprefactoredition.domain.DomainOfflineNum
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
-import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
 import kotlinx.coroutines.launch
 import java.lang.IllegalArgumentException
-import java.lang.ref.WeakReference
 
 class InstanceMessageViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
 
@@ -106,7 +103,7 @@ class InstanceMessageViewModel(private val databaseRepository: DatabaseRepositor
 
             // 保存所有装配好的信息
             databaseRepository.saveUserCache(senderInfo)
-            databaseRepository.saveLastMessage(pullFlag)
+            databaseRepository.savePullFlag(pullFlag)
             databaseRepository.saveOfflineNum(numList)
             databaseRepository.saveHistory(historyList)
         }

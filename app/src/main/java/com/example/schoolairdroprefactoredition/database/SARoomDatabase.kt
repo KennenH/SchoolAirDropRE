@@ -29,8 +29,8 @@ abstract class SARoomDatabase : RoomDatabase() {
             super.onCreate(db)
             INSTANCE?.let {
                 scope.launch {
-                    // 每次app打开的时候都会做的事情
-//                    it.clearAllTables()
+                    // 每次app打开都将正在发送时app被kill的消息标记为发送失败
+                    it.databaseDao().updateInterruptedMessageStatus()
                 }
             }
         }

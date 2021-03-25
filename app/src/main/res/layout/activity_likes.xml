@@ -26,70 +26,57 @@
             android:textSize="@dimen/textSizeNormal" />
     </androidx.appcompat.widget.Toolbar>
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar3"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/white"
+        android:focusable="true"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+        <EditText
+            android:id="@+id/favorite_search_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_icon_large"
+            android:layout_marginStart="@dimen/general_padding_larger"
+            android:layout_marginEnd="@dimen/general_padding_larger"
+            android:background="@drawable/bg_round_primary_light"
+            android:drawablePadding="@dimen/general_padding"
+            android:gravity="center_vertical"
+            android:hint="@string/search"
+            android:inputType="text"
+            android:paddingStart="10dp"
+            android:textColor="@color/primaryText"
+            android:textColorHint="@color/primaryText"
+            android:textSize="14dp"
+            app:drawableStartCompat="@drawable/ic_search"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="RtlSymmetry" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
+        app:layout_constraintTop_toBottomOf="@+id/toolbar3">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/toolbar_wrapper"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:gravity="center"
-            app:elevation="0dp">
-
-            <androidx.appcompat.widget.Toolbar
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                android:focusable="true"
-                app:layout_scrollFlags="snap|scroll|enterAlways">
-
-                <EditText
-                    android:id="@+id/favorite_search_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/toolbar_icon_large"
-                    android:layout_marginStart="@dimen/general_padding_larger"
-                    android:layout_marginEnd="@dimen/general_padding_larger"
-                    android:background="@drawable/bg_round_primary_light"
-                    android:drawablePadding="@dimen/general_padding"
-                    android:gravity="center_vertical"
-                    android:hint="@string/search"
-                    android:inputType="text"
-                    android:paddingStart="10dp"
-                    android:textColor="@color/primaryText"
-                    android:textColorHint="@color/primaryText"
-                    android:textSize="14dp"
-                    app:drawableStartCompat="@drawable/ic_search"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:ignore="RtlSymmetry" />
-            </androidx.appcompat.widget.Toolbar>
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/favorite_recycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/toolbar">
+            android:overScrollMode="never"
+            android:splitMotionEvents="false" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/favorite_recycler"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never"
-                android:splitMotionEvents="false" />
+    </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
 
-        </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
-
-        <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
-            android:id="@+id/favorite_placeholder"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
+        android:id="@+id/favorite_placeholder"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar3" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -33,7 +33,7 @@
         app:layout_constraintTop_toBottomOf="@+id/dialog_privacy_title" />
 
     <TextView
-        android:id="@+id/privacy_terms"
+        android:id="@+id/service_terms"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/general_padding_large"
@@ -46,7 +46,7 @@
         app:layout_constraintTop_toBottomOf="@id/dialog_privacy_text" />
 
     <TextView
-        android:id="@+id/service_terms"
+        android:id="@+id/privacy_terms"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/general_padding_large"
@@ -56,7 +56,7 @@
         android:textSize="@dimen/textSizeLarge"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/privacy_terms" />
+        app:layout_constraintTop_toBottomOf="@id/service_terms" />
 
     <CheckBox
         android:id="@+id/dialog_privacy_check"
@@ -78,7 +78,7 @@
         app:layout_constraintBottom_toTopOf="@id/dialog_privacy_agree"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/dialog_privacy_check"
-        app:layout_constraintTop_toBottomOf="@+id/service_terms" />
+        app:layout_constraintTop_toBottomOf="@+id/privacy_terms" />
 
     <TextView
         android:id="@+id/dialog_privacy_agree"

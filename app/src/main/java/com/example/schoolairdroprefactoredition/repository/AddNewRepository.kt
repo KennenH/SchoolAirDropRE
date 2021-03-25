@@ -6,9 +6,10 @@ import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewInquiryDraftCache
 import com.example.schoolairdroprefactoredition.domain.DomainResult
-import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.luck.picture.lib.entity.LocalMedia
 import retrofit2.Call
 import retrofit2.Response
@@ -43,7 +44,7 @@ class AddNewRepository {
             isBrandNew: Boolean, isQuotable: Boolean, price: Float,
             onResult: (success: Boolean) -> Unit) {
         RetrofitClient.goodsApi.postNewItem(
-                token, taskID,
+                MyUtil.bearerToken(token), taskID,
                 coverKey, picSetKeys,
                 title, content,
                 longitude.toString(),
@@ -84,7 +85,7 @@ class AddNewRepository {
                         isBrandNew: Boolean, isQuotable: Boolean, price: Float,
                         onResult: (success: Boolean) -> Unit) {
         RetrofitClient.goodsApi.modifyGoodsInfo(
-                token, taskID,
+                MyUtil.bearerToken(token), taskID,
                 imagesToDelete, picSetKeys,
                 goodsID, title, content,
                 if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE else longitude,

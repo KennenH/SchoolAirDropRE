@@ -33,6 +33,7 @@ data class ChatHistory(
          * 消息类型
          * 0 文本类型 可带emoji
          * 1 图片类型
+         * 2 提示类型
          */
         val message_type: Int,
 
@@ -49,7 +50,8 @@ data class ChatHistory(
         /**
          * 消息的状态
          * 0 接收正常或已发送，在代表发送时不一定成功，待IM框架回调后方可得知
-         * 1 发送失败
+         * 1 正在发送
+         * 2 发送失败
          */
         var status: Int,
 ) {

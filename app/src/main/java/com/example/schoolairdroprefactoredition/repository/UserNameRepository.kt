@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.repository
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainResult
+import com.example.schoolairdroprefactoredition.utils.MyUtil
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -21,7 +22,7 @@ class UserNameRepository private constructor() {
      * 修改用户名
      */
     fun rename(token: String, name: String, onResult: (success: Boolean) -> Unit) {
-        RetrofitClient.userApi.updateUserName(token, name).apply {
+        RetrofitClient.userApi.updateUserName(MyUtil.bearerToken(token), name).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                 override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {

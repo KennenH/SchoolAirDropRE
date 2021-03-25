@@ -18,9 +18,6 @@ import kotlinx.android.synthetic.main.activity_ssb.*
 class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener {
 
     companion object {
-        const val SELLING = R.string.selling
-        const val INQUIRY = R.string.inquiry
-        const val FAVORITE = R.string.likes
         const val PAGE_INDEX = "SSBPage?Index"
 
         /**
@@ -119,8 +116,5 @@ class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener {
 
     override fun onClick(v: View) {
         val id = v.id
-        if (id == R.id.ssb_search) {
-
-        }
     }
 }

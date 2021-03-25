@@ -22,8 +22,6 @@ import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.MessageViewModel
 import com.github.ybq.android.spinkit.SpinKitView
-import com.yanzhenjie.recyclerview.OnItemMenuClickListener
-import com.yanzhenjie.recyclerview.SwipeMenuBridge
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import net.x52im.mobileimsdk.server.protocal.Protocal
@@ -58,13 +56,13 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
      */
     private var isConnected = true
 
-    private var title: TextView? = null
+    private lateinit var title: TextView
 
-    private var loading: SpinKitView? = null
+    private lateinit var loading: SpinKitView
 
-    private var recyclerView: SwipeRecyclerView? = null
+    private lateinit var recyclerView: SwipeRecyclerView
 
-    private var placeholder: StatePlaceHolder? = null
+    private lateinit var placeholder: StatePlaceHolder
 
     private val mMessagesRecyclerAdapter by lazy {
         MessagesRecyclerAdapter()
@@ -78,21 +76,19 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
         MessageViewModel.MessageViewModelFactory((activity?.application as SAApplication).databaseRepository).create(MessageViewModel::class.java)
     }
 
-    override fun getStatePlaceholder(): StatePlaceHolder? {
+    override fun getStatePlaceholder(): StatePlaceHolder {
         return placeholder
     }
 
-    override fun getContentContainer(): View? {
+    override fun getContentContainer(): View {
         return recyclerView
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        if (activity is MainActivity) {
-            (activity as MainActivity).apply {
-                addOnLoginActivityListener(this@MessagesFragment)
-                setOnPullingOfflineNum(this@MessagesFragment)
-            }
+        (activity as? MainActivity)?.apply {
+            addOnLoginActivityListener(this@MessagesFragment)
+            setOnPullingOfflineNumListener(this@MessagesFragment)
         }
         (activity?.application as? SAApplication)?.addOnIMListener(this)
     }
@@ -107,7 +103,7 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
 
         val myInfo = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
         mMessagesRecyclerAdapter.setUserInfoRequestListener(this)
-        recyclerView?.apply {
+        recyclerView.apply {
             layoutManager = manager
             setSwipeMenuCreator { _, rightMenu, position ->
                 val delete = SwipeMenuItem(context)
@@ -130,7 +126,7 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
                         if (index == adapterPosition) {
                             mMessagesRecyclerAdapter.removeAt(adapterPosition)
                             if (mMessagesRecyclerAdapter.data.isEmpty()) {
-                                placeholder?.visibility = View.VISIBLE
+                                placeholder.visibility = View.VISIBLE
                             }
                             messageViewModel.swipeToHideChannel(myInfo?.userId.toString(), datum.counterpart_id)
                         }
@@ -162,22 +158,22 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
     private fun updateMessageState(@MessageState state: Int) {
         when (state) {
             MessageState.REFRESH -> {
-                loading?.visibility = View.INVISIBLE
+                loading.visibility = View.INVISIBLE
                 if (isConnected) {
-                    title?.text = context?.getString(R.string.messages)
+                    title.text = context?.getString(R.string.messages)
                 } else {
-                    title?.text = context?.getString(R.string.disconnect)
+                    title.text = context?.getString(R.string.disconnect)
                 }
             }
 
             MessageState.CONNECTING -> {
-                loading?.visibility = View.VISIBLE
-                title?.text = context?.getString(R.string.connecting)
+                loading.visibility = View.VISIBLE
+                title.text = context?.getString(R.string.connecting)
             }
 
             MessageState.OBTAINING_DATA -> {
-                loading?.visibility = View.VISIBLE
-                title?.text = getString(R.string.obtainingData)
+                loading.visibility = View.VISIBLE
+                title.text = getString(R.string.obtainingData)
             }
         }
     }
@@ -187,9 +183,9 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
      */
     fun pageScrollToTop() {
         if (manager.findLastVisibleItemPosition() > 10) {
-            recyclerView?.scrollToPosition(5)
+            recyclerView.scrollToPosition(5)
         }
-        recyclerView?.smoothScrollToPosition(0)
+        recyclerView.smoothScrollToPosition(0)
     }
 
     override fun onLoginStateChanged(intent: Intent) {

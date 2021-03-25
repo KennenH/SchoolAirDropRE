@@ -26,7 +26,7 @@ public class MorePanelAdapter extends BaseQuickAdapter<MorePanelBean, BaseViewHo
                 // 相册
                 case MorePanelBean.ALBUM:
                     if (getContext() instanceof AppCompatActivity) {
-                        MyUtil.pickPhotoFromAlbum((AppCompatActivity) getContext(), ChatActivity.PICK_ALBUM, 6, false, false, false);
+                        MyUtil.pickPhotoFromAlbum((AppCompatActivity) getContext(), ChatActivity.PICK_ALBUM, 5, false, false, false);
                     }
                     break;
                 // 相机

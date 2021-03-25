@@ -134,7 +134,7 @@ interface GoodsApi {
     @FormUrlEncoded
     @POST("appapi/goods/updateFavorCount")
     fun favorGoods(
-            @Field("Authorization") token: String,
+            @Header("Authorization") token: String,
             @Field("goods_id_string") goodsID: Int): Call<DomainResult>
 
     /**
@@ -143,6 +143,6 @@ interface GoodsApi {
     @FormUrlEncoded
     @POST("appapi/goods/deleteFavorCount")
     fun unFavorGoods(
-            @Field("Authorization") token: String,
+            @Header("Authorization") token: String,
             @Field("goods_id_string") goodsID: Int): Call<DomainResult>
 }

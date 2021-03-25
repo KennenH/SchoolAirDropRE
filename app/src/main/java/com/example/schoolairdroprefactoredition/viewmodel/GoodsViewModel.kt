@@ -8,8 +8,8 @@ import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
 import com.example.schoolairdroprefactoredition.repository.DatabaseRepository
 import com.example.schoolairdroprefactoredition.repository.GoodsRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.cache.JsonCacheConstantUtil
-import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheConstantUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import kotlinx.coroutines.launch
 
 class GoodsViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
@@ -84,7 +84,7 @@ class GoodsViewModel(private val databaseRepository: DatabaseRepository) : ViewM
         JsonCacheUtil.runWithFrequentCheck(context,{
             viewModelScope.launch {
                 databaseRepository.isFavorite(favorite.goods_id).let { isFavor ->
-                    goodsRepository.favorGoods(token, favorite.goods_id, isFavor) {
+                    goodsRepository.toggleFavorGoods(token, favorite.goods_id, isFavor) {
                         viewModelScope.launch {
                             if (isFavor) {
                                 databaseRepository.removeFavorite(favorite.goods_id)

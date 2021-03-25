@@ -7,6 +7,7 @@ import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.domain.DomainSelling
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.MyUtil
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -54,7 +55,7 @@ class SellingRepository {
      * 下架物品
      */
     fun deleteGoods(token: String, goodsID: String, onResult: (Boolean) -> Unit) {
-        RetrofitClient.goodsApi.deleteGoods(token, goodsID.toInt()).apply {
+        RetrofitClient.goodsApi.deleteGoods(MyUtil.bearerToken(token), goodsID.toInt()).apply {
             enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
                 override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
                     onResult(response.code() == HttpURLConnection.HTTP_OK)

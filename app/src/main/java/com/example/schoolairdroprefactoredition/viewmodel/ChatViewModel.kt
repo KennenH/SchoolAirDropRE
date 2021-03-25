@@ -119,9 +119,6 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
             chatLiveData.postValue(databaseRepository.getChatLocal(receiverID, senderID, startTime))
 
             // 获取服务器离线并ack上一批显示的消息
-            // 2021/2/23  Bug fix： 以获取的离线数量小于默认值设置flag来判断是否需要请求会有问题，最后一次
-            // 请求必定小于默认值，这部分离线消息将永远无法被ack
-            //            update ： 将flag设置为false的逻辑改为只有当获取到的离线数量为0时才不再请求
             if (token != null) {
                 val pullFlag = databaseRepository.getPullFlag(senderID)
                 // 若上一次保存的flag是true则预拉取服务器数据并ack上一批获取的离线消息
@@ -132,11 +129,18 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
                             val data = response.data
                             // 保存获取到的数据
                             saveReceivedOffline(data)
-                            // 保存这一批消息中最早的消息的指纹
+
+                            // 本次预拉取的消息数量不足默认数量，则直接将它们ack
+                            val size = data.size
+                            if (size < ConstantUtil.DEFAULT_PAGE_SIZE) {
+                                databaseRepository.ackOffline(token, senderID, data.last().send_time)
+                            }
+
+                            // 小于默认条数就将标志为置为
                             viewModelScope.launch {
-                                databaseRepository.saveLastMessage(
-                                        // 只要获取到的离线不是0就为true
-                                        PullFlag(senderID, data.isNotEmpty()))
+                                databaseRepository.savePullFlag(
+                                        // 只要获取到的离线消息数量不足默认数就需要再次拉取
+                                        PullFlag(senderID, size < ConstantUtil.DEFAULT_PAGE_SIZE))
                             }
                         }
                     }

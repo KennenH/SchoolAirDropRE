@@ -3,7 +3,8 @@ package com.example.schoolairdroprefactoredition.repository
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
-import com.example.schoolairdroprefactoredition.cache.UserLoginCacheUtils
+import com.example.schoolairdroprefactoredition.cache.UserInfoCache
+import com.example.schoolairdroprefactoredition.cache.util.UserLoginCacheUtil
 import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.utils.*
 import com.mob.pushsdk.MobPush
@@ -38,7 +39,6 @@ class LoginRepository private constructor() {
                         if (body?.code == ConstantUtil.HTTP_OK) {
                             body.data.alipay_id.let {
                                 onResult(it)
-                                UserLoginCacheUtils.getInstance().saveUserAlipayID(it)
                             }
                         } else {
                             onResult(null)
@@ -58,7 +58,7 @@ class LoginRepository private constructor() {
      * null 为其他错误
      */
     fun connectWhenComesToForeground(token: String, onResult: (code: Int?) -> Unit) {
-        RetrofitClient.userApi.verifyToken(token).apply {
+        RetrofitClient.userApi.verifyToken(MyUtil.bearerToken(token)).apply {
             enqueue(object : CallBackWithRetry<DomainConnect>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null)
@@ -90,12 +90,52 @@ class LoginRepository private constructor() {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val result = response.body()
                         if (response.isSuccessful && result != null) {
-                            onResult(result.public_key)
+                            onResult(result.data.public_key)
                         } else {
                             onResult(null)
                         }
                     } else {
                         onResult(null)
+                    }
+                }
+            })
+        }
+    }
+
+    /**
+     * 当前token已过期，使用上一个有效的token换取新的token
+     */
+    fun refreshToken(
+            token: String,
+            onResult: (response: DomainToken?, code: Int) -> Unit) {
+        RetrofitClient.userApi.refreshToken(
+                MyUtil.bearerToken(token),
+                ConstantUtil.CLIENT_ID,
+                ConstantUtil.CLIENT_SECRET).apply {
+            enqueue(object : CallBackWithRetry<DomainToken>(this@apply) {
+                override fun onFailureAllRetries() {
+                    onResult(null, ConstantUtil.HTTP_BAD_REQUEST)
+                }
+
+                override fun onResponse(call: Call<DomainToken>, response: Response<DomainToken>) {
+                    val body = response.body()
+                    when (response.code()) {
+                        // refresh token刷新成功，获取新的token
+                        ConstantUtil.HTTP_OK -> {
+                            onResult(body, ConstantUtil.HTTP_OK)
+                            if (body != null) {
+                                UserLoginCacheUtil.getInstance().saveUserToken(body)
+                            }
+                        }
+
+                        // refresh token过期，需要用户重新登录
+                        ConstantUtil.HTTP_INVALID_REFRESH_TOKEN -> {
+                            onResult(null, ConstantUtil.HTTP_INVALID_REFRESH_TOKEN)
+                        }
+
+                        else -> {
+                            onResult(null, response.code())
+                        }
                     }
                 }
             })
@@ -110,10 +150,6 @@ class LoginRepository private constructor() {
             publicKey: String,
             onResult: (response: DomainToken?) -> Unit) {
         MobPush.getRegistrationId { registrationID ->
-//            if (registrationID == null) {
-//                onResult(false, null)
-//            } else
-
             val encryptWithPublicKey = RSACoder.encryptWithPublicKey(publicKey, rawAlipayID)
             if (encryptWithPublicKey != null) {
                 RetrofitClient.userApi.authorizeWithAlipayID(
@@ -129,7 +165,7 @@ class LoginRepository private constructor() {
                                         val token = response.body()
                                         if (token != null) {
                                             onResult(token)
-                                            UserLoginCacheUtils.getInstance().saveUserToken(token)
+                                            UserLoginCacheUtil.getInstance().saveUserToken(token)
                                         } else {
                                             onResult(null)
                                         }
@@ -154,27 +190,28 @@ class LoginRepository private constructor() {
      * 获取我的用户信息
      */
     fun getMyInfo(token: String, onResult: (response: DomainUserInfo.DataBean?) -> Unit) {
-        RetrofitClient.userApi.getMyUserInfo(token).apply {
-            enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
-                override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        val body = response.body()
-                        if (body?.data != null) {
-                            onResult(body.data)
-                            UserLoginCacheUtils.getInstance().saveUserInfo(body.data)
-                        } else {
+        RetrofitClient.userApi.getMyUserInfo(MyUtil.bearerToken(token))
+                .apply {
+                    enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
+                        override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
+                            if (response.code() == HttpURLConnection.HTTP_OK) {
+                                val body = response.body()
+                                if (body?.data != null) {
+                                    onResult(body.data)
+                                    UserLoginCacheUtil.getInstance().saveUserInfo(body.data)
+                                } else {
+                                    onResult(null)
+                                }
+                            } else {
+                                onResult(null)
+                            }
+                        }
+
+                        override fun onFailureAllRetries() {
                             onResult(null)
                         }
-                    } else {
-                        onResult(null)
-                    }
+                    })
                 }
-
-                override fun onFailureAllRetries() {
-                    onResult(null)
-                }
-            })
-        }
     }
 
 

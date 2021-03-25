@@ -9,7 +9,8 @@ import com.example.schoolairdroprefactoredition.domain.DomainUploadPath
 import com.example.schoolairdroprefactoredition.domain.DomainUploadToken
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.FileUtil
-import com.example.schoolairdroprefactoredition.cache.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.qiniu.android.common.FixedZone
 import com.qiniu.android.storage.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -139,7 +140,7 @@ class UploadRepository private constructor() {
      * @param onResult 成功返回图片路径前缀和n张图片的名字，失败null
      */
     private fun requestForImagePath(token: String, type: String, amount: Int, onResult: (response: DomainUploadPath?) -> Unit) {
-        RetrofitClient.uploadApi.getImagePath(token, type, amount).apply {
+        RetrofitClient.uploadApi.getImagePath(MyUtil.bearerToken(token), type, amount).apply {
             enqueue(object : CallBackWithRetry<DomainUploadPath>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null)
@@ -178,7 +179,7 @@ class UploadRepository private constructor() {
             onResult(localUploadToken)
         } else {
             // 从服务器获取
-            RetrofitClient.uploadApi.getUploadToken(token).apply {
+            RetrofitClient.uploadApi.getUploadToken(MyUtil.bearerToken(token)).apply {
                 enqueue(object : CallBackWithRetry<DomainUploadToken>(this@apply) {
                     override fun onFailureAllRetries() {
                         onResult(null)
@@ -290,7 +291,7 @@ class UploadRepository private constructor() {
      * 移动在七牛云上的图片
      */
     fun moveIMImage(token: String, taskID: String, keys: String, onResult: (paths: List<String>?) -> Unit) {
-        RetrofitClient.uploadApi.moveIMImages(token, taskID, keys).apply {
+        RetrofitClient.uploadApi.moveIMImages(MyUtil.bearerToken(token), taskID, keys).apply {
             enqueue(object : CallBackWithRetry<DomainIMPath>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null)

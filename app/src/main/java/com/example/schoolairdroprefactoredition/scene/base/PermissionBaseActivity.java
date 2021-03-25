@@ -115,7 +115,8 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     }
 
     /**
-     * 检查是否已经同意服务条款和隐私政策 仅用于{@link com.example.schoolairdroprefactoredition.scene.main.MainActivity}
+     * 检查是否已经同意服务条款和隐私政策
+     * 仅用于{@link com.example.schoolairdroprefactoredition.scene.main.MainActivity}
      * 若已同意则在{@link PermissionBaseActivity#initAppMainAfterAgreeToTermsOfService()}中启动主页面的渲染
      * 否则退出App
      */
@@ -133,9 +134,15 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                         @Override
                         protected void init() {
                             super.init();
+                            TextView service = findViewById(R.id.service_terms);
+                            TextView privacy = findViewById(R.id.privacy_terms);
                             TextView agree = findViewById(R.id.dialog_privacy_agree);
                             TextView disagree = findViewById(R.id.dialog_privacy_disagree);
-                            ((CheckBox) findViewById(R.id.dialog_privacy_check)).setOnCheckedChangeListener((button, selected) -> {
+                            CheckBox checkBox = findViewById(R.id.dialog_privacy_check);
+
+                            service.setOnClickListener(v -> MyUtil.openServiceWebsite(PermissionBaseActivity.this));
+                            privacy.setOnClickListener(v -> MyUtil.openPrivacyWebsite(PermissionBaseActivity.this));
+                            checkBox.setOnCheckedChangeListener((button, selected) -> {
                                 agree.setEnabled(selected);
                                 if (selected) {
                                     agree.setText(getString(R.string.agreeAboveAgreementAndStartToUse));
@@ -143,7 +150,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                                     agree.setText(getString(R.string.pleaseAgreeAboveTermsFirst));
                                 }
                             });
-
+                            ((TextView) findViewById(R.id.dialog_privacy_agree_text)).setOnClickListener(view -> checkBox.toggle());
                             agree.setOnClickListener(v -> handleAgreementToTermsOfService(this));
                             disagree.setOnClickListener(v -> AppUtils.exitApp());
                         }

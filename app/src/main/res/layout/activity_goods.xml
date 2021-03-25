@@ -57,9 +57,9 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/goods_toolbar"
         android:layout_width="match_parent"
+        app:menu="@menu/dark_more"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="@id/smartRefreshLayout"
-        app:navigationIcon="@drawable/ic_left_dark_fill"
-        app:title="" />
+        app:navigationIcon="@drawable/ic_left_dark_fill" />
 
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

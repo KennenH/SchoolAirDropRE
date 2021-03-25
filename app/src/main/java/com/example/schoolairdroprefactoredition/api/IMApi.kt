@@ -1,8 +1,8 @@
 package com.example.schoolairdroprefactoredition.api
 
-import com.example.schoolairdroprefactoredition.domain.DomainIMPath
 import com.example.schoolairdroprefactoredition.domain.DomainOffline
 import com.example.schoolairdroprefactoredition.domain.DomainOfflineNum
+import com.example.schoolairdroprefactoredition.domain.DomainResult
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -32,4 +32,16 @@ interface IMApi {
             @Header("Authorization") token: String,
             @Field("sender_id") senderID: String,
             @Field("start") startTime: Long): Call<DomainOffline>
+
+    /**
+     * ack来自特定用户的离线消息
+     *
+     * @param startTime 从这个临界时间开始，迟于这个时间的所有消息都将被ack
+     */
+    @FormUrlEncoded
+    @POST("im/offline/ack")
+    fun ackOffline(
+            @Header("Authorization") token: String,
+            @Field("sender_id") senderID: String,
+            @Field("start") startTime: Long)
 }

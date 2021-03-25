@@ -80,7 +80,7 @@ class InquiryFragment : BaseChildFragment(), InquiryRecyclerAdapter.OnNoMoreData
     }
 
     override fun getOnlineData(aMapLocation: AMapLocation?) {
-        inquiryViewModel.getInquiry().observe(viewLifecycleOwner, { data: List<BaseHomeNewsEntity> ->
+        inquiryViewModel.getInquiry().observeOnce(viewLifecycleOwner, { data: List<BaseHomeNewsEntity> ->
             if (data.isNullOrEmpty()) {
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_INQUIRY)
             } else {
@@ -91,7 +91,7 @@ class InquiryFragment : BaseChildFragment(), InquiryRecyclerAdapter.OnNoMoreData
     }
 
     override fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?) {
-        inquiryViewModel.getInquiry(aMapLocation?.longitude, aMapLocation?.latitude).observe(viewLifecycleOwner, { data: List<BaseHomeNewsEntity> ->
+        inquiryViewModel.getInquiry(aMapLocation?.longitude, aMapLocation?.latitude).observeOnce(viewLifecycleOwner, { data: List<BaseHomeNewsEntity> ->
             refreshLayout.finishRefresh()
             if (data.isNullOrEmpty()) {
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_INQUIRY)

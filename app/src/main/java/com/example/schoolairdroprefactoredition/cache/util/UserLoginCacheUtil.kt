@@ -1,32 +1,24 @@
-package com.example.schoolairdroprefactoredition.cache
+package com.example.schoolairdroprefactoredition.cache.util
 
+import android.util.Base64
+import com.example.schoolairdroprefactoredition.cache.UserInfoCache
+import com.example.schoolairdroprefactoredition.cache.UserTokenCache
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
+import java.nio.charset.StandardCharsets
 
-class UserLoginCacheUtils {
+class UserLoginCacheUtil private constructor() {
 
     companion object {
-        private var INSTANCE: UserLoginCacheUtils? = null
+        private var INSTANCE: UserLoginCacheUtil? = null
         fun getInstance() = INSTANCE
-                ?: UserLoginCacheUtils().also {
+                ?: UserLoginCacheUtil().also {
                     INSTANCE = it
                 }
     }
 
-    private val mJsonCacheUtil: JsonCacheUtil = JsonCacheUtil.getInstance()
-
-    /**
-     * 保存用户上次登录获取的alipay id
-     */
-    fun saveUserAlipayID(alipayID: String) {
-        mJsonCacheUtil.saveCache(JsonCacheConstantUtil.USER_ALIPAY_ID, alipayID)
-    }
-
-    /**
-     * 获取[saveUserAlipayID]保存的信息
-     */
-    fun getUserAlipayID(): String? {
-        return mJsonCacheUtil.getCache(JsonCacheConstantUtil.USER_ALIPAY_ID, String::class.java)
+    private val mJsonCacheUtil by lazy {
+        JsonCacheUtil.getInstance()
     }
 
     /**
@@ -34,20 +26,33 @@ class UserLoginCacheUtils {
      * 以便下次用户在token有效期内登录时自动登录
      *
      * @param token    本次登录获取到的token
-     * @param duration token持续时间
      */
-    fun saveUserToken(token: DomainToken, duration: Long = 3600_000) {
-        val userTokenCache = mJsonCacheUtil.getCache(UserTokenCache.KEY, UserTokenCache::class.java)
-                ?: UserTokenCache()
-        userTokenCache.token = token
-        mJsonCacheUtil.saveCache(UserTokenCache.KEY, userTokenCache, duration)
+    fun saveUserToken(token: DomainToken) {
+//        token.data.apply {
+//            access_token = Base64.encodeToString(access_token.toByteArray(StandardCharsets.UTF_8), Base64.DEFAULT)
+//        }
+        // 比token实际失效时间短半小时，防止用户上线前token有效而使用很短的时间token便过期
+        mJsonCacheUtil.saveCache(UserTokenCache.KEY, UserTokenCache(token), token.data.expires_in * 750L)
     }
 
     /**
-     * 获取[saveUserInfo]保存的信息
+     * 获取[saveUserInfo]保存的信息，过期返回null
      */
     fun getUserToken(): DomainToken? {
+        //        token?.data?.apply {
+//            access_token = Base64.decode(access_token, Base64.DEFAULT).decodeToString()
+//        }
         return mJsonCacheUtil.getCache(UserTokenCache.KEY, UserTokenCache::class.java)?.token
+    }
+
+    /*
+     * 获取[saveUserInfo]保存的信息
+     */
+    fun getUserTokenAnyway(): DomainToken? {
+        //        token?.data?.apply {
+//            access_token = Base64.decode(access_token, Base64.DEFAULT).decodeToString()
+//        }
+        return mJsonCacheUtil.getCacheAnyway(UserTokenCache.KEY, UserTokenCache::class.java)?.token
     }
 
     /**
@@ -80,8 +85,6 @@ class UserLoginCacheUtils {
 
     /**
      * 删除对应键的值
-     *
-     * todo 删除缓存对于用户信息来说分两种，第一种仅退出账号不删除信息，第二种删除信息，此处是仅退出不删除
      *
      * @param key 键
      */
