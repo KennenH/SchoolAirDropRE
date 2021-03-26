@@ -14,12 +14,6 @@ object ConstantUtil {
     const val MIPUSH_APP_KEY = "5561871983324"
 
     /**
-     * 检查用户是否同意使用服务协议和隐私政策
-     */
-    const val START_UP_PREFERENCE = "IfUserAgreeToTerms"
-    const val START_UP_IS_TERMS_AGREED = "IfUserAgreeToTerms"
-
-    /**
      * 图片压缩比率 范围在0-100之内
      */
     const val ORIGIN = 100
@@ -60,22 +54,6 @@ object ConstantUtil {
     const val CACHE_MAX_AGE = (30 * 24 * 60 * 60).toLong()
 
     /**
-     * 可议价 物品类型
-     */
-    const val GOODS_TYPE_BARGAIN = "bargain"
-
-    /**
-     * 二手 物品类型
-     */
-    const val GOODS_TYPE_SECONDHAND = "secondHand"
-
-
-    /**
-     * refresh token grant type
-     */
-    const val REFRESH_TOKEN_GRANT_TYPE = "refresh_token"
-
-    /**
      * 非refresh token grant type
      */
     const val CLIENT_GRANT_TYPE = "client_credentials"
@@ -96,7 +74,6 @@ object ConstantUtil {
     const val SCHOOL_AIRDROP_BASE_URL_DEPRECATED = "http://schoolairdrop.com:8000/"
     const val SCHOOL_AIRDROP_BASE_URL = "http://schoolairdrop.com:8080/"
     const val SCHOOL_AIRDROP_BASE_URL_IM = "http://schoolairdrop.com:2020/"
-    const val LOCAL_BASE_URL = "http://10.0.2.2:2020/"
 
     /**
      * 校园空投隐私政策

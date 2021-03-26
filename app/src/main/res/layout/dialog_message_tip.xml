@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_rounded_white"
+    android:padding="@dimen/general_padding_bit_larger">
+
+    <TextView
+        android:id="@+id/dialog_message_tip_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/tips"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textSizeLarge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/dialog_message_tip_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:text="@string/messageTip"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_message_tip_title" />
+
+    <TextView
+        android:id="@+id/dialog_message_tip_got_it"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_bit_larger"
+        android:background="@drawable/login"
+        android:gravity="center"
+        android:padding="@dimen/general_padding_large"
+        android:text="@string/gotit"
+        android:textColor="@color/whiteAlways"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/dialog_message_tip_content" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

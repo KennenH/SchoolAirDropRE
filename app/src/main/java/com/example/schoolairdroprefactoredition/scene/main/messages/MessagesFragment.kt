@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
+import com.example.schoolairdroprefactoredition.cache.util.DialogCacheUtil
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.databinding.FragmentMessagesBinding
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment
@@ -22,6 +24,8 @@ import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.viewmodel.MessageViewModel
 import com.github.ybq.android.spinkit.SpinKitView
+import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.core.BasePopupView
 import com.yanzhenjie.recyclerview.SwipeMenuItem
 import com.yanzhenjie.recyclerview.SwipeRecyclerView
 import net.x52im.mobileimsdk.server.protocal.Protocal
@@ -101,6 +105,28 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
         loading = binding.messagesTitleLoading
         placeholder = binding.messagesEmpty
 
+        if (!DialogCacheUtil.getInstance().isKnowMessageTip()) {
+            context?.let {
+                XPopup.Builder(it)
+                        .dismissOnBackPressed(true)
+                        .isClickThrough(false)
+                        .dismissOnTouchOutside(false)
+                        .asCustom(object : BasePopupView(it) {
+                            override fun init() {
+                                super.init()
+                                findViewById<TextView>(R.id.dialog_message_tip_got_it)
+                                        .setOnClickListener {
+                                            DialogCacheUtil.getInstance().saveIsKnowMessageTip()
+                                        }
+                            }
+
+                            override fun getPopupLayoutId(): Int {
+                                return R.layout.dialog_message_tip
+                            }
+                        })
+            }
+        }
+
         val myInfo = activity?.intent?.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
         mMessagesRecyclerAdapter.setUserInfoRequestListener(this)
         recyclerView.apply {
@@ -129,6 +155,8 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
                                 placeholder.visibility = View.VISIBLE
                             }
                             messageViewModel.swipeToHideChannel(myInfo?.userId.toString(), datum.counterpart_id)
+                            // 因为在这里删除了之后data改变了，如果不break出去，会报ConcurrentModificationException
+                            break
                         }
                     }
                 }

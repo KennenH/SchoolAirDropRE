@@ -8,6 +8,7 @@ import android.widget.TextView
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentSettingsAboutBinding
 import com.example.schoolairdroprefactoredition.scene.base.TransitionBaseFragment
+import com.example.schoolairdroprefactoredition.scene.settings.FeedbackActivity
 import com.example.schoolairdroprefactoredition.ui.components.PageItem
 import com.example.schoolairdroprefactoredition.utils.MyUtil
 
@@ -37,6 +38,7 @@ class SettingsAboutFragment : TransitionBaseFragment(), View.OnClickListener {
             }
             R.id.settings_about_feedback -> {
                 // 发送邮箱或app内文字加图片形式
+                FeedbackActivity.start(context)
             }
             R.id.settings_about_privacy -> {
                 MyUtil.openPrivacyWebsite(context)

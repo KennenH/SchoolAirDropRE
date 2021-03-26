@@ -14,6 +14,9 @@ import java.lang.IllegalArgumentException
 
 class InstanceMessageViewModel(private val databaseRepository: DatabaseRepository) : ViewModel() {
 
+    /**
+     * 是否获取到了离线消息
+     */
     private val hasOffline = MutableLiveData<Boolean>()
 
     class InstanceViewModelFactory(private val repository: DatabaseRepository) : ViewModelProvider.Factory {
@@ -57,7 +60,7 @@ class InstanceMessageViewModel(private val databaseRepository: DatabaseRepositor
     }
 
     /**
-     * 保存服务器离线消息数量以及最新10条消息，合并入本地数据库
+     * 保存服务器离线消息数量以及最新默认条消息，合并入本地数据库
      */
     private fun saveOfflineNum(offlineNums: DomainOfflineNum) {
         viewModelScope.launch {

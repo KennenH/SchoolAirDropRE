@@ -19,11 +19,6 @@ open class ImmersionStatusBarActivity : BaseActivity() {
     private var mLoading: LoadingPopupView? = null
 
     /**
-     * 是否为暗黑模式
-     */
-    protected var isDarkTheme = false
-
-    /**
      * 是否有请求正在运行标志位，当有请求正在运行时通过
      * [ImmersionStatusBarActivity.showLoading]
      * 运行的网络请求将不会再次发起并且会被抛弃而不是等待上一个请求结束
@@ -32,9 +27,6 @@ open class ImmersionStatusBarActivity : BaseActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        if (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
-            isDarkTheme = true
-        }
         setActivityTheme()
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
     }

@@ -312,8 +312,21 @@
     <string name="modifySuccessTip">It is recommended to go to the homepage later to search if you can see your items to ensure that the positioning is correct.</string>
     <string name="modifyItemLocationFailedTip">The current positioning result is abnormal, and the item may not be searched by nearby students. The modified item form will not be saved. It is recommended to try again later.</string>
     <string name="noNeedToHandleImages">No picture needs to be changed</string>
-    <string name="tooFrequentMessageWarning">The message was sent too fast</string>
+    <string name="tooFrequentTextMessageWarning">The message was sent too fast, please try again later</string>
     <string name="AlipayNotFound">Alipay app not found</string>
     <string name="unexpectedError">An unexpected error was encountered during authorization, please try again later</string>
     <string name="sound">Sound</string>
+    <string name="ChooseEmailApp">Choose an email app</string>
+    <string name="NoEmailApp">No app that can send email</string>
+    <string name="feedbackType">Feedback type</string>
+    <string name="feedbackSendTo">Send to</string>
+    <string name="feedbackDone">Done</string>
+    <string name="fillInYourSuggestion">Fill in your valuable comments and suggestions, please enter at least 10 words</string>
+    <string name="feedbackTip">SchoolAirdrop does not currently support sending emails directly within the app, but we provide stationery. You only need to fill in the stationery and select an installed email app to send it. You can also long press to copy the email address provided below, and then send it in other ways.If the school email is not available, please choose to send to Gmail.</string>
+    <string name="thanksForYourFeedback">Thank you for your feedback</string>
+    <string name="addressCopied">%s copied</string>
+    <string name="gotit">Got it</string>
+    <string name="messageTip">The Android version of the SchoolAirdrop may not receive system message notifications, or the notifications received have no sound or vibration prompts. You may need to go online from time to time to check if there are chat messages for you. We apologize for any inconvenience.</string>
+    <string name="tips">Tips</string>
+    <string name="tooFrequentImageMessageWarning">The picture was sent too fast, please try again later</string>
 </resources>

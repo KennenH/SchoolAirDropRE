@@ -237,12 +237,13 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         when (v?.id) {
             // 用户头像
             R.id.user_avatar -> {
-                XPopup.Builder(this@UserActivity)
-                        .asImageViewer(v as ImageView,
-                                ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(userInfo?.userAvatar),
-                                false, -1, -1, -1,
-                                true, getColor(R.color.blackAlways), ImageLoader())
-                        .show()
+                UserModifyInfoActivity.start(this)
+//                XPopup.Builder(this@UserActivity)
+//                        .asImageViewer(v as ImageView,
+//                                ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(userInfo?.userAvatar),
+//                                false, -1, -1, -1,
+//                                true, getColor(R.color.blackAlways), ImageLoader())
+//                        .show()
             }
 
             // 在售
@@ -252,7 +253,7 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
 
             // 帖子
             R.id.user_more_posts -> {
-                Toast.makeText(this, "功能尚在开发", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "功能尚未支持", Toast.LENGTH_SHORT).show()
                 // TODO: 2020/12/5 点击进入用户发表的帖子
             }
         }

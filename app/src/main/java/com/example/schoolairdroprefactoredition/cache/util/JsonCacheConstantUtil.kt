@@ -58,5 +58,5 @@ object JsonCacheConstantUtil {
     /**
      * 进行快速操作检查的动作后在冷却时间内的快速操作都将被无条件过滤，防止恶意调用
      */
-    const val QUICK_ACTION_COOLDOWN = 10_000L
+    const val QUICK_ACTION_COOLDOWN = 15_000L
 }

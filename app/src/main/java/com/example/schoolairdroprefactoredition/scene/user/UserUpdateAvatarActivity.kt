@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ImageUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
@@ -64,11 +65,11 @@ class UserUpdateAvatarActivity : BaseActivity(), View.OnLongClickListener, View.
         setContentView(R.layout.activity_user_update_avatar)
         setSupportActionBar(toolbar)
         StatusBarUtil.setTranslucentForImageView(this, toolbar)
+        BarUtils.setNavBarLightMode(this, !isDarkTheme)
+        BarUtils.setNavBarColor(this, getColor(R.color.white))
 
         avatar.setOnLongClickListener(this)
-
         ImageUtil.loadImage(avatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(info?.userAvatar), R.drawable.ic_logo_alpha_white)
-
         mDialog.setContentView(bottomSheetBinding.root)
         bottomSheetBinding.apply {
             takePhoto.setOnClickListener(this@UserUpdateAvatarActivity)

@@ -9,6 +9,7 @@ import androidx.lifecycle.*
 import androidx.lifecycle.Observer
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.database.SARoomDatabase
 import com.example.schoolairdroprefactoredition.database.pojo.ChatHistory
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
@@ -276,7 +277,7 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
         // 检查消息发送频率
         MessageSendCacheUtil
                 .getInstance()
-                .saveMessageWithCheck().let { check ->
+                .checkTextMessageSendFrequent().let { check ->
                     // 检查通过
                     if (check) {
                         // 只有对方不是自己才能走im通道
@@ -292,22 +293,14 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
                             messagesBeReceived(fingerprint)
                         }
                     } else {
-                        messagesLost(arrayListOf(Protocal(
-                                ConstantUtil.MESSAGE_TYPE_TEXT,
-                                content,
-                                myID,
-                                userID,
-                                true,
-                                fingerprint,
-                                ConstantUtil.MESSAGE_TYPE_TEXT
-                        )).also { it.ensureCapacity(1) })
+                        messagesLost(MessageUtil.createProtocol(arrayListOf(fingerprint)))
                         // 检查未通过，new一个tip类型消息提示用户
                         val tip = ChatHistory(
                                 Protocal.genFingerPrint(),
                                 myID,
                                 userID,
                                 ConstantUtil.MESSAGE_TYPE_TIP,
-                                getString(R.string.tooFrequentMessageWarning),
+                                getString(R.string.tooFrequentTextMessageWarning),
                                 System.currentTimeMillis(),
                                 ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
                         chatViewModel.saveSentMessage(tip)
@@ -322,39 +315,61 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
     fun sendImageMessage(userID: String, myID: String, imagePaths: List<String>, weakAdapter: WeakReference<ChatRecyclerAdapter>) {
         val adapter = weakAdapter.get()
         // 先暂时保存这几个new出来的chat对象，后面图片发送完毕之后发送消息还要使用
-        val chatList = ArrayList<ChatHistory>(imagePaths.size)
+        val size = imagePaths.size
+        val chatList = ArrayList<ChatHistory>(size)
+        val fingerprints = ArrayList<String>(size)
         for (path in imagePaths) {
             val fingerprint = Protocal.genFingerPrint()
+            fingerprints.add(fingerprint)
             val chat = ChatHistory(fingerprint, myID, userID, ConstantUtil.MESSAGE_TYPE_IMAGE, path, System.currentTimeMillis(), ChatRecyclerAdapter.MessageSendStatus.SENDING)
             chatList.add(chat)
             adapter?.addData(0, chat)
             chatViewModel.saveSentMessage(chat)
         }
-        // TODO: 2021/3/23 多图消息发送拦截规则
-        // 只有对方不是自己才能发送并走im通道
-        if (userID != myID) {
-            chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths).observeAnywayOnce {
-                if (it != null) {
-                    for ((index, path) in it.withIndex()) {
-                        object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
-                            override fun onPostExecute(code: Int?) {
-                                if (code != 0) chatViewModel.updateMessageStatus(chatList[index]?.fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+
+        MessageSendCacheUtil
+                .getInstance()
+                .checkImageMessageSendFrequent(size).let { canBeSent ->
+                    // 只有对方不是自己才能发送并走im通道
+                    if (userID != myID) {
+                        // 没有被拦截的图片处理
+                        chatViewModel.sendImageMessage(getCachedToken()?.access_token, imagePaths.subList(0, canBeSent)).observeAnywayOnce {
+                            if (it != null) {
+                                for ((index, path) in it.withIndex()) {
+                                    object : LocalDataSender.SendCommonDataAsync(path, userID, chatList[index]?.fingerprint, ConstantUtil.MESSAGE_TYPE_IMAGE) {
+                                        override fun onPostExecute(code: Int?) {
+                                            if (code != 0) chatViewModel.updateMessageStatus(chatList[index]?.fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+                                        }
+                                    }.execute()
+                                }
+                            } else {
+                                for (history in chatList) {
+                                    chatViewModel.updateMessageStatus(history.fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+                                }
                             }
-                        }.execute()
-                    }
-                } else {
-                    for (history in chatList) {
-                        chatViewModel.updateMessageStatus(history.fingerprint, ChatRecyclerAdapter.MessageSendStatus.FAILED)
+                        }
+
+                        // 被拦截的图片处理
+                        if (canBeSent < size) {
+                            messagesLost(MessageUtil.createProtocol(fingerprints.subList(canBeSent, size)))
+                            val tip = ChatHistory(
+                                    Protocal.genFingerPrint(),
+                                    myID,
+                                    userID,
+                                    ConstantUtil.MESSAGE_TYPE_TIP,
+                                    getString(R.string.tooFrequentImageMessageWarning),
+                                    System.currentTimeMillis(),
+                                    ChatRecyclerAdapter.MessageSendStatus.SUCCESS)
+                            chatViewModel.saveSentMessage(tip)
+                            adapter?.addData(0, tip)
+                        }
+                    } else {
+                        // 若给自己发送消息则直接标记为被收到
+                        for (chatHistory in chatList) {
+                            messagesBeReceived(chatHistory.fingerprint)
+                        }
                     }
                 }
-            }
-        } else {
-            // 若给自己发送消息则直接标记为被收到
-            for (chatHistory in chatList) {
-                messagesBeReceived(chatHistory.fingerprint)
-            }
-        }
-
     }
 
     /*****************************************************************************/
@@ -370,6 +385,18 @@ class SAApplication : Application(), ChatBaseEvent, MessageQoSEvent, ChatMessage
             isComesFromBackground = false
             for (listener in appRuntimeStatusListeners) {
                 listener.onAppEnterForeground()
+            }
+
+            // 获取离线消息
+            JsonCacheUtil.runWithTooQuickCheck {
+                // 主页开始获取用户离线消息数量，若有，则为消息图片加上小红点
+                imViewModel.getOfflineNumOnline(cachedToken).observeAnywayOnce {
+                    if (it) shouldShowBadgeListener?.onShowBadge()
+                    // 离线消息获取完成
+                    for (listener in eventIMListeners) {
+                        listener.onObtainOfflineState(false)
+                    }
+                }
             }
         }
     }

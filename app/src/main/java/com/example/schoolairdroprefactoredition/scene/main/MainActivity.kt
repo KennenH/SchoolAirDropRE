@@ -89,7 +89,9 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     /**
      * 消息 页面
      */
-    private val mMessages = MessagesFragment()
+    private val mMessages by lazy {
+        MessagesFragment()
+    }
 
     /**
      * 我的 页面
@@ -447,15 +449,9 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 showFragment(mPlaza)
             }
             R.id.navigation_message -> {
-                // 当未登录时
-                val token = (application as SAApplication).getCachedToken()
-                if (token != null) {
-                    // 清空badge然后显示消息列表页面
-                    showBadge(false)
-                    showFragment(mMessages)
-                } else {
-                    LoginActivity.start(this)
-                }
+                // 清空badge然后显示消息列表页面
+                showBadge(false)
+                showFragment(mMessages)
             }
             R.id.navigation_my -> {
                 showFragment(mMy)

@@ -28,17 +28,6 @@ class JsonCacheUtil private constructor() {
                 }
 
         /**
-         * 带检查地发送消息
-         */
-        @JvmStatic
-        fun sendMessageWithFrequentCheck(
-                context: Context?,
-                runIfNotFrequent: Runnable?,
-                runBanned: Runnable? = null) {
-
-        }
-
-        /**
          * 带检查频繁操作的运行
          * 触发有一定的条件，触发后有一定惩罚
          *
@@ -76,7 +65,7 @@ class JsonCacheUtil private constructor() {
          * 冷却时间[JsonCacheConstantUtil.QUICK_ACTION_COOLDOWN]
          */
         @JvmStatic
-        fun runWithTooQuickCheck(runIfNotTooQuick: Runnable?) {
+        fun runWithTooQuickCheck(coolDown: Long = JsonCacheConstantUtil.QUICK_ACTION_COOLDOWN, runIfNotTooQuick: Runnable?) {
             val jsonCacheUtil = getInstance()
             val tooQuick = jsonCacheUtil.getCache(JsonCacheConstantUtil.KEY_QUICK_ACTION_FLAG, Boolean::class.java)
             // 非快速操作，执行，快速操作将直接被过滤而不是作为其他处理
@@ -85,7 +74,7 @@ class JsonCacheUtil private constructor() {
                 jsonCacheUtil.saveCache(
                         JsonCacheConstantUtil.KEY_QUICK_ACTION_FLAG,
                         true,
-                        JsonCacheConstantUtil.QUICK_ACTION_COOLDOWN)
+                        coolDown)
             }
         }
     }

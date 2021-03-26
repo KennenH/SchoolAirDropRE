@@ -13,12 +13,11 @@ import androidx.annotation.StringRes;
 
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.AppUtils;
-import com.blankj.utilcode.util.LogUtils;
 import com.blankj.utilcode.util.PermissionUtils;
 import com.example.schoolairdroprefactoredition.R;
+import com.example.schoolairdroprefactoredition.cache.util.DialogCacheUtil;
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity;
 import com.example.schoolairdroprefactoredition.utils.AppConfig;
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 import com.example.schoolairdroprefactoredition.utils.DialogUtil;
 import com.example.schoolairdroprefactoredition.utils.MyUtil;
 import com.lxj.xpopup.XPopup;
@@ -90,8 +89,6 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                         popUpToSettingsForPermission(finalRes, permission);
                     } else if (denied.size() != 0) { // 拒绝但未勾选不再提醒
                         popUpForRequestPermission(finalRes, permission);
-                    } else {
-                        LogUtils.d("权限请求失败了，将调用父类权限拒绝方法");
                     }
 
                     switch (permission) {
@@ -125,7 +122,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
             throw new IllegalStateException("checkIfAgreeToTermsOfServiceAndPrivacyPolicy can only be called in MainActivity.");
         }
 
-        boolean isAgreed = getSharedPreferences(ConstantUtil.START_UP_PREFERENCE, MODE_PRIVATE).getBoolean(ConstantUtil.START_UP_IS_TERMS_AGREED, false);
+        boolean isAgreed = DialogCacheUtil.Companion.getInstance().isAgreeToPolicy();
         if (!isAgreed) {
             new XPopup.Builder(this)
                     .isClickThrough(false)
@@ -150,7 +147,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
                                     agree.setText(getString(R.string.pleaseAgreeAboveTermsFirst));
                                 }
                             });
-                            ((TextView) findViewById(R.id.dialog_privacy_agree_text)).setOnClickListener(view -> checkBox.toggle());
+                            findViewById(R.id.dialog_privacy_agree_text).setOnClickListener(view -> checkBox.toggle());
                             agree.setOnClickListener(v -> handleAgreementToTermsOfService(this));
                             disagree.setOnClickListener(v -> AppUtils.exitApp());
                         }
@@ -236,10 +233,6 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     private void handleAgreementToTermsOfService(BasePopupView dialog) {
         if (AppConfig.IS_DEBUG) {
             dialog.dismiss();
-            getSharedPreferences(ConstantUtil.START_UP_PREFERENCE, MODE_PRIVATE)
-                    .edit()
-                    .putBoolean(ConstantUtil.START_UP_IS_TERMS_AGREED, false)
-                    .apply();
             initAppMainAfterAgreeToTermsOfService();
         } else {
             LoadingPopupView loading = MyUtil.loading(this);
@@ -247,11 +240,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
             MobSDK.submitPolicyGrantResult(true, new OperationCallback<Void>() {
                 @Override
                 public void onComplete(Void aVoid) {
-                    getSharedPreferences(ConstantUtil.START_UP_PREFERENCE, MODE_PRIVATE)
-                            .edit()
-                            .putBoolean(ConstantUtil.START_UP_IS_TERMS_AGREED, true)
-                            .apply();
-
+                    DialogCacheUtil.Companion.getInstance().saveAgreeToPolicy();
                     loading.dismissWith(dialog::dismiss);
                     initAppMainAfterAgreeToTermsOfService();
                 }

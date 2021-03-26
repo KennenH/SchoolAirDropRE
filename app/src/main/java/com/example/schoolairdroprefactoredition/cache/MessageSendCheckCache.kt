@@ -7,34 +7,57 @@ import kotlin.collections.ArrayDeque
  */
 data class MessageSendCheckCache(
         /**
-         * 连续发送的消息时间列表
+         * 连续发送的文字消息时间列表
          */
-        val latestMessagesTimeList: ArrayDeque<Long>
+        val continuousTextMessagesTimeList: ArrayDeque<Long>,
+
+        /**
+         * 连续发送的图片消息时间列表
+         */
+        val continuousImageMessagesTimeList: ArrayDeque<Long>
 ) {
     companion object {
 
         const val KEY = "message_send_check"
 
         /**
-         * 触发检查后的冷却时间
+         * 触发文字消息检查后的冷却标志
          */
-        const val KEY_MESSAGE_FREQUENT_COOL_DOWN = "toofrequentmessagesend!"
+        const val KEY_TEXT_MESSAGE_FREQUENT_COOL_DOWN = "toofrequenttextmessagesend!"
 
         /**
-         * 当触发冷却时的禁言时间
+         * 触发图片消息检查的冷却标志
          */
-        const val MESSAGE_FREQUENT_COOLDOWN = 10_000L
+        const val KEY_IMAGE_MESSAGE_FREQUENT_COOL_DOWN = "toofrequentimagemessagesend!"
 
         /**
-         * 实例被保存之后的有效时间
-         *
-         * 当有新的消息发送时有效时间将被刷新，有效时间内未触发冷却本次检查计算自动结束
+         * 当触发文字冷却时的禁言时间
          */
-        const val MESSAGE_CHECK_DURATION = 5_000L
+        const val MESSAGE_TEXT_FREQUENT_COOLDOWN = 10_000L
 
         /**
-         * 发送10条消息小于该时间将触发频繁发送警告
+         * 触发图片冷却时间禁言时间
          */
-        const val MESSAGE_SEND_10_MIN_SPAN = 25_000L
+        const val MESSAGE_IMAGE_FREQUENT_COOLDOWN = 20_000L
+
+        /**
+         * 前后两条文字消息判断为连续发送的最大时间间隔
+         */
+        const val MESSAGE_TEXT_CHECK_DURATION = 5_000L
+
+        /**
+         * 前后两条图片消息判断为连续发送的最大时间间隔
+         */
+        const val MESSAGE_IMAGE_CHECK_DURATION = 20_000L
+
+        /**
+         * 发送10条文字消息小于该时间将触发频繁发送警告
+         */
+        const val MESSAGE_SEND_10_TEXT_MIN_SPAN = 25_000L
+
+        /**
+         * 发送10条图片消息小于该事件将触发频繁发送警告
+         */
+        const val MESSAGE_SEND_10_IMAGE_MIN_SPAN = 60_000L
     }
 }

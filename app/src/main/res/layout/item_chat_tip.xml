@@ -25,7 +25,7 @@
         android:drawablePadding="@dimen/general_padding"
         android:gravity="center"
         android:padding="@dimen/general_padding_large"
-        android:text="@string/tooFrequentMessageWarning"
+        android:text="@string/tooFrequentTextMessageWarning"
         android:textColor="@color/primaryText"
         android:textSize="@dimen/textSizeNormal"
         app:drawableStartCompat="@drawable/ic_attention_small"

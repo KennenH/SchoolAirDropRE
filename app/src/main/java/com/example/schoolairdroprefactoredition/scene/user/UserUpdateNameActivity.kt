@@ -34,7 +34,7 @@ class UserUpdateNameActivity : ImmersionStatusBarActivity() {
         /**
          * 名字最大长度
          */
-        const val MAX_NAME_LENGTH = 8
+        const val MAX_NAME_LENGTH = 15
 
 
         fun start(context: Context?) {
@@ -99,22 +99,19 @@ class UserUpdateNameActivity : ImmersionStatusBarActivity() {
         set_title.setText(R.string.setName)
 
         input.apply {
-            filters = arrayOf(InputFilter.LengthFilter(8))
+            filters = arrayOf(InputFilter.LengthFilter(MAX_NAME_LENGTH))
             input_warning.setText(R.string.illegalName)
             setLines(1)
             addTextChangedListener({ _, _, _, _ -> }, { _, _, _, _ -> }, {
-                LogUtils.d("after text changed")
                 input_tip.text = getString(R.string.textRemainCount, MAX_NAME_LENGTH - input.text.length)
-                if (!noSpecialsPattern.matcher(input.text).matches()) {
-                    LogUtils.d("字符输入非法")
-                    // 含有特殊字符，禁用提交按钮
-                    doneMenu?.isEnabled = false
-                    input_warning.visibility = View.VISIBLE
-                } else {
-                    LogUtils.d("字符输入合法")
+//                if (!noSpecialsPattern.matcher(input.text).matches()) {
+//                    // 含有特殊字符，禁用提交按钮
+//                    doneMenu?.isEnabled = false
+//                    input_warning.visibility = View.VISIBLE
+//                } else {
                     doneMenu?.isEnabled = true
                     input_warning.visibility = View.INVISIBLE
-                }
+//                }
             })
             setOnFocusChangeListener { v, hasFocus ->
                 if (hasFocus) {

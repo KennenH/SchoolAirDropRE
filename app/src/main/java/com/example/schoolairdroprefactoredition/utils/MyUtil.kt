@@ -1,16 +1,13 @@
 package com.example.schoolairdroprefactoredition.utils
 
 import android.app.Activity
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
-import android.content.Intent
 import android.content.pm.ActivityInfo
-import android.content.res.Configuration
-import android.net.Uri
 import android.widget.ImageView
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.blankj.utilcode.util.BarUtils
-import com.blankj.utilcode.util.ScreenUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.schoolairdroprefactoredition.R
@@ -21,13 +18,23 @@ import com.luck.picture.lib.config.PictureMimeType
 import com.luck.picture.lib.style.PictureWindowAnimationStyle
 import com.luck.picture.lib.tools.SdkVersionUtils
 import com.lxj.xpopup.XPopup
-import com.lxj.xpopup.core.BasePopupView
 import com.lxj.xpopup.impl.LoadingPopupView
-import com.lxj.xpopup.interfaces.SimpleCallback
 import com.lxj.xpopup.interfaces.XPopupImageLoader
 import java.io.File
 
+
 object MyUtil {
+
+    /**
+     * 将内容复制到粘贴板
+     */
+    @JvmStatic
+    fun copyTpClipboard(context: Context?, content: CharSequence) {
+        val clipboard = context?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+        val clip = ClipData.newPlainText("SchoolAirdrop", content)
+        clipboard?.setPrimaryClip(clip)
+        Toast.makeText(context, context?.getString(R.string.addressCopied, content), Toast.LENGTH_SHORT).show()
+    }
 
     @JvmStatic
     fun loading(context: Context?): LoadingPopupView {

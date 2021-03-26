@@ -9,4 +9,14 @@
         <item>reply</item>
         <item>reply_all</item>
     </string-array>
+
+    <string-array name="feedback_address">
+        <item>1800303220@cjlu.edu.cn</item>
+        <item>hkn379645931@gmail.com</item>
+    </string-array>
+
+    <string-array name="feedback_type">
+        <item>发现Bug</item>
+        <item>意见或建议</item>
+    </string-array>
 </resources>

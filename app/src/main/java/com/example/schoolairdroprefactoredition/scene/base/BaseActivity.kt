@@ -1,10 +1,12 @@
 package com.example.schoolairdroprefactoredition.scene.base
 
 import android.animation.ObjectAnimator
+import android.content.res.Configuration
 import android.media.AudioManager
 import android.media.RingtoneManager
 import android.media.SoundPool
 import android.os.Bundle
+import android.view.ContextThemeWrapper
 import android.view.MotionEvent
 import android.view.View
 import android.view.animation.DecelerateInterpolator
@@ -46,6 +48,11 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
         const val FLOAT_LAST = 2500L
     }
 
+    /**
+     * 当前是否为暗黑模式
+     */
+    protected var isDarkTheme = false
+
     private lateinit var soundPool: SoundPool
 
     private var soundId by Delegates.notNull<Int>()
@@ -69,8 +76,8 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        initListeners()
         initRes()
+        initListeners()
     }
 
     override fun onResume() {
@@ -101,6 +108,10 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
      * 初始化声音资源
      */
     private fun initRes() {
+        if (resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK == Configuration.UI_MODE_NIGHT_YES) {
+            isDarkTheme = true
+        }
+
         soundPool = SoundPool.Builder().build()
         soundId = soundPool.load(this, R.raw.message_sound, 1)
     }
