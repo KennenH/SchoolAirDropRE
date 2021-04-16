@@ -1,7 +1,8 @@
 package com.example.schoolairdroprefactoredition.repository
 
+import android.text.SpannableString
 import com.blankj.utilcode.util.LogUtils
-import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewInquiryDraftCache
@@ -9,7 +10,6 @@ import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.luck.picture.lib.entity.LocalMedia
 import retrofit2.Call
 import retrofit2.Response
@@ -51,7 +51,7 @@ class AddNewRepository {
                 latitude.toString(),
                 if (isQuotable) 1 else 0, if (!isBrandNew) 1 else 0,
                 price.toString()).apply {
-            enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
+            enqueue(object : CallbackWithRetry<DomainResult>(this@apply) {
                 override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val body = response.body()
@@ -92,7 +92,7 @@ class AddNewRepository {
                 if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE else latitude,
                 if (isQuotable) 1 else 0, if (!isBrandNew) 1 else 0,
                 price.toString()).apply {
-            enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
+            enqueue(object : CallbackWithRetry<DomainResult>(this@apply) {
                 override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val body = response.body()

@@ -28,6 +28,9 @@ import kotlin.collections.HashMap
 
 class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterpartInfo: DomainSimpleUserInfo?) : BaseDelegateMultiAdapter<ChatHistory, BaseViewHolder>() {
 
+    /**
+     * 这里是adapter中显示的不同item的类型编号
+     */
     companion object {
         /**
          * 我发送的文字消息
@@ -99,6 +102,14 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
      * 点击任何一张已经加载的图片左右滑动可以查看前后已经加载的图片
      */
     private val imageList = ArrayDeque<String>()
+
+    /**
+     * 聊天列表中加载的图片消息的fingerprint
+     *
+     * 由于自己发送的图片消息的url可能会一样，因此获取图片的index由本列表通过fingerprint来提供
+     * 而图片的url则由[imageList]通过该index来提供
+     */
+    private val imageIndexList = ArrayDeque<String>()
 
     /**
      * 重新设置对方信息
@@ -204,15 +215,19 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
             if (data.sender_id == mCounterpartInfo?.userId.toString()) {
                 if (isAddToLast) {
                     imageList.addLast(ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(data.message))
+                    imageIndexList.addLast(data.fingerprint)
                 } else {
+                    imageIndexList.addFirst(data.fingerprint)
                     imageList.addFirst(ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(data.message))
                 }
             } else if (data.receiver_id == mCounterpartInfo?.userId.toString()) {
                 // 我发送的图片，不需要加资源服务器地址前缀
                 if (isAddToLast) {
                     imageList.addLast(data.message)
+                    imageIndexList.addLast(data.fingerprint)
                 } else {
                     imageList.addFirst(data.message)
+                    imageIndexList.addFirst(data.fingerprint)
                 }
             }
         }
@@ -306,7 +321,9 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 }
                 // 点击图片查看
                 imageView.setOnClickListener {
-                    val index = imageList.indexOf(item.message)
+                    // 由于是我自己发送的图片，因此可能会重复发送两张一模一样的图片，需要通过图片指纹列表来
+                    // 获取该图片在图片列表中的index，从而获取正确的位置
+                    val index = imageIndexList.indexOf(item.fingerprint)
                     if (index != -1 && index < imageList.size) {
                         XPopup.Builder(context)
                                 .isDarkTheme(true)
@@ -364,6 +381,9 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                 }
                 // 点击图片查看
                 imageView.setOnClickListener {
+                    // 此处是对方发送给我的图片消息，因此即使对方发送的图片是一模一样的，但是我收到的图片url
+                    // 一定是不一样的，因此这里不需要使用图片指纹列表来获取图片的index，其url便可以作为其在
+                    // 图片列表的指纹码
                     val index = imageList.indexOf(ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(item.message))
                     if (index != -1 && index < imageList.size) {
                         XPopup.Builder(context)
@@ -374,7 +394,7 @@ class ChatRecyclerAdapter(private var myInfo: DomainUserInfo.DataBean?, counterp
                                         imageList as List<Any>?,
                                         false, true, -1, -1, -1, true,
                                         context.getColor(R.color.blackAlways),
-                                        { popView: ImageViewerPopupView, _: Int ->
+                                        { _: ImageViewerPopupView, _: Int ->
                                         },
                                         MyUtil.ImageLoader()).show()
                     }

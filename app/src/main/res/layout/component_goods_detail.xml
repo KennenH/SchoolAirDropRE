@@ -138,9 +138,9 @@
         app:layout_constraintEnd_toEndOf="@id/goods_name"
         app:layout_constraintStart_toStartOf="@+id/goods_name"
         app:layout_constraintTop_toBottomOf="@id/goods_description_header"
-        tools:text="出售二手烟，拍下即面对面交货，无需动嘴，无需打火机，只需闭上双眼，深吸一口气，即可享受到中华二手烟的雄浑烤烟气息，荡气回肠，心动不如行动" />
+        tools:text="出售二手烟，拍下即面对面交货，无需动嘴，无需打火机，只需闭上双眼，深吸一口气，即可享受到中华二手烟的雄浑烤烟气息，荡气回肠" />
 
-    <View
+    <Space
         android:id="@+id/goods_bottom"
         android:layout_width="match_parent"
         android:layout_height="96dp"

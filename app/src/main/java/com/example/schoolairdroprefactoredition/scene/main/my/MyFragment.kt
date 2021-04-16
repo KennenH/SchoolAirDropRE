@@ -122,7 +122,7 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
             }
 
             R.id.my_posts -> {
-                Toast.makeText(context, getString(R.string.functionNotSupport), Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.featureNotSupport), Toast.LENGTH_SHORT).show()
             }
         }
     }

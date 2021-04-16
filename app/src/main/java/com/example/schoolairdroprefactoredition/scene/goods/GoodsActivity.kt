@@ -8,9 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintLayout
 import com.blankj.utilcode.util.BarUtils
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.database.pojo.Favorite
@@ -28,7 +26,9 @@ import kotlinx.android.synthetic.main.activity_goods.*
 import kotlinx.android.synthetic.main.activity_logged_in.*
 import kotlinx.android.synthetic.main.placeholder.*
 
-class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickListener, OnUserInfoClickListener, ButtonRight.OnButtonClickListener {
+class GoodsActivity : ImmersionStatusBarActivity(),
+//        ButtonLeft.OnButtonClickListener,
+        OnUserInfoClickListener, ButtonRight.OnButtonClickListener {
 
     companion object {
         /**
@@ -90,7 +90,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
         setSupportActionBar(goods_toolbar)
 
         goods_info_container.setOnUserInfoClickListener(this)
-        goods_button_left.setOnButtonClickListener(this)
+//        goods_button_left.setOnButtonClickListener(this)
         goods_button_right.setOnButtonClickListener(this)
 
         goodsViewModel.getGoodsAllDetailByID(goodsID).observeOnce(this) {
@@ -123,7 +123,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
         StatusBarUtil.setTranslucentForImageView(this@GoodsActivity, 0, goods_toolbar)
         BarUtils.setStatusBarLightMode(this@GoodsActivity, !isDarkTheme)
         BarUtils.setNavBarLightMode(this@GoodsActivity, !isDarkTheme)
-        status_bar_overlay.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, BarUtils.getStatusBarHeight())
+//        status_bar_overlay.layoutParams = ConstraintLayout.LayoutParams(ConstraintLayout.LayoutParams.MATCH_PARENT, BarUtils.getStatusBarHeight())
     }
 
     /**
@@ -156,7 +156,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
      */
     private fun showActionButtons() {
         val isGoodsMine = (application as? SAApplication)?.getCachedMyInfo()?.userId == goodsInfo?.seller?.user_id
-        goods_button_left.visibility = if (!isGoodsMine) View.VISIBLE else View.GONE
+//        goods_button_left.visibility = if (!isGoodsMine) View.VISIBLE else View.GONE
         goods_button_right.visibility = if (!isGoodsMine) View.VISIBLE else View.GONE
         goods_info_container.showBottom(!isGoodsMine)
     }
@@ -192,7 +192,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
                         }
                         // 执行收藏/取消收藏操作
                         ACTION_AFTER_LOGIN_FAVOR -> {
-                            onRightButtonClick()
+                            onFavorToggle()
                         }
                         else -> { // do nothing
                         }
@@ -209,7 +209,7 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
                 true
             }
             R.id.dark_more -> {
-                Toast.makeText(this, getString(R.string.functionNotSupport), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(R.string.featureNotSupport), Toast.LENGTH_SHORT).show()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -224,25 +224,15 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
     /**
      * 点击左下角的聊天按钮
      */
-    override fun onLeftButtonClick() {
-        if ((application as SAApplication).getCachedToken() == null) {
-            login(ACTION_AFTER_LOGIN_CHAT)
-        } else {
-            if (goodsInfo?.seller?.user_id != null) {
-                val counterpartInfo = DomainUserInfo.DataBean()
-                counterpartInfo.userId = goodsInfo?.seller?.user_id!!
-                counterpartInfo.userName = goodsInfo?.seller?.user_name
-                counterpartInfo.userAvatar = goodsInfo?.seller?.user_avatar
-                ChatActivity.start(this@GoodsActivity, counterpartInfo)
-            }
-        }
-    }
+//    override fun onLeftButtonClick() {
+//
+//    }
 
     /**
      * 点击右下角的收藏按钮
      */
     @Synchronized
-    override fun onRightButtonClick() {
+    override fun onFavorToggle() {
         try {
             goods_button_right.isEnabled = false
             val token = (application as SAApplication).getCachedToken()
@@ -291,6 +281,24 @@ class GoodsActivity : ImmersionStatusBarActivity(), ButtonLeft.OnButtonClickList
             }
         } catch (e: Exception) {
             DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.dialogFailed)
+        }
+    }
+
+    /**
+     * 按下聊天按钮
+     */
+    @Synchronized
+    override fun onChatClick() {
+        if ((application as SAApplication).getCachedToken() == null) {
+            login(ACTION_AFTER_LOGIN_CHAT)
+        } else {
+            if (goodsInfo?.seller?.user_id != null) {
+                val counterpartInfo = DomainUserInfo.DataBean()
+                counterpartInfo.userId = goodsInfo?.seller?.user_id!!
+                counterpartInfo.userName = goodsInfo?.seller?.user_name
+                counterpartInfo.userAvatar = goodsInfo?.seller?.user_avatar
+                ChatActivity.start(this@GoodsActivity, counterpartInfo)
+            }
         }
     }
 }

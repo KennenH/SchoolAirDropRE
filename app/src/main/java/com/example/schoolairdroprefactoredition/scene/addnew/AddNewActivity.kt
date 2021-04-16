@@ -4,10 +4,13 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.InputFilter
+import android.text.Spannable
+import android.text.Spanned
 import android.view.*
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -19,6 +22,7 @@ import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
@@ -34,6 +38,7 @@ import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecycl
 import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter.OnPicSetClickListener
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem.OnItemAddPicActionListener
+import com.example.schoolairdroprefactoredition.ui.components.SadSpannable
 import com.example.schoolairdroprefactoredition.utils.*
 import com.example.schoolairdroprefactoredition.utils.MyUtil.ImageLoader
 import com.example.schoolairdroprefactoredition.utils.MyUtil.pickPhotoFromAlbum
@@ -48,7 +53,8 @@ import kotlinx.android.synthetic.main.activity_selling_add_new.*
 import java.util.*
 import kotlin.collections.ArrayList
 
-class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocationListener, OnPicSetClickListener, SAApplication.OnApplicationLoginListener {
+class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocationListener,
+        OnPicSetClickListener, SAApplication.OnApplicationLoginListener {
 
     companion object {
         /**
@@ -374,9 +380,10 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 if (data != null) {
                     val type = data.getIntExtra(InputSetActivity.TYPE, InputSetActivity.TYPE_TITLE)
                     if (type == InputSetActivity.TYPE_TITLE) {
-                        option_title.text = data.getStringExtra(InputSetActivity.RESULT)
+                        option_title.text = data.getCharSequenceExtra(InputSetActivity.RESULT)
                     } else {
-                        option_description.text = data.getStringExtra(InputSetActivity.RESULT)
+                        // 此处获得的直接是input set页面传回来的spannable，可以直接显示
+                        option_description.text = data.getCharSequenceExtra(InputSetActivity.RESULT)
                     }
                 }
             } else if (requestCode == REQUEST_CODE_COVER) { // 封面选择返回
@@ -434,7 +441,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     submitItem()
                 }
                 else -> {
-                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.functionNotSupport)
+                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.featureNotSupport)
                 }
             }
         }
@@ -451,7 +458,6 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         }
 
         when (addNewType) {
-
             // 提交物品表单
             AddNewType.ADD_ITEM,
             AddNewType.MODIFY_ITEM
@@ -467,10 +473,15 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     } else {
                         showLoading {
                             if (addNewType == AddNewType.ADD_ITEM) {
+//                                val spannableJson =
+//                                        if (option_description.text is Spannable)
+//                                            SadSpannable.generateJson(this, option_description.text as Spanned)
+//                                        else option_description.text.toString()
                                 // 新增物品
                                 val mPicSetPaths = ArrayList<String>()
                                 for (localMedia in mPicSetSelected) {
-                                    mPicSetPaths.add(localMedia.cutPath ?: localMedia.path)
+                                    mPicSetPaths.add(localMedia.cutPath
+                                            ?: localMedia.path)
                                 }
                                 addNewViewModel.submitItem(token.access_token, mCoverPath, mPicSetPaths,
                                         option_title.text.toString(), option_description.text.toString(),
@@ -557,7 +568,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
             // 其他尚未支持功能
             else -> {
-
+                Toast.makeText(this,getString(R.string.featureNotSupport),Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -565,6 +576,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     /**
      * 显示物品表单提交结果
      *
+     * @param result 是否成功
      * @param isUploadImageError 是否是上传图片时出的错，如果是，则提示用户换一张图片再试试
      */
     private fun showUploadResult(result: Boolean, isUploadImageError: Boolean = false) {
@@ -657,10 +669,11 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
         // 保存草稿
         if (addNewType == AddNewType.ADD_ITEM) { // 保存物品表单
-            if (!isSubmitSuccess && (mCoverPath.trim() != ""
-                            || mPicSetSelected.size > 0 || option_title.text.toString().trim() != ""
-                            || option_description.text.toString().trim() != ""
-                            || price_input.text.toString() != ""
+            if (!isSubmitSuccess && (mCoverPath.isNotBlank()
+                            || mPicSetSelected.size > 0
+                            || option_title.text.isNotBlank()
+                            || option_description.text.isNotBlank()
+                            || price_input.text.isNotBlank()
                             || option_negotiable.isChecked
                             || option_secondHand.isChecked)) {
                 addNewViewModel.saveItemDraft(mCoverPath,
@@ -674,9 +687,9 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 addNewViewModel.deleteItemDraft()
             }
         } else if (addNewType == AddNewType.ADD_INQUIRY) { // 保存帖子表单
-            if (!isSubmitSuccess && (mCoverPath.trim() != ""
-                            || mPicSetSelected.size > 0 || option_title.text.toString().trim() != ""
-                            || option_description.text.toString().trim() != "")) {
+            if (!isSubmitSuccess && (mCoverPath.isNotBlank()
+                            || mPicSetSelected.size > 0 || option_title.text.isNotBlank()
+                            || option_description.text.isNotBlank())) {
                 addNewViewModel.savePostDraft(mCoverPath,
                         mHWRatio,
                         mPicSetSelected,
@@ -704,11 +717,13 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
                 mCoverPath = draftCache.cover
                 mPicSetSelected = draftCache.picSet
-                if (mCoverPath != "") {
+                if (mCoverPath.isNotBlank()) {
                     cover.setImageLocalPath(mCoverPath)
                 }
                 mPicSetHorizontalAdapter.setList(mPicSetSelected)
                 option_title.text = draftCache.title
+//                option_description.text = SadSpannable(this,
+//                        SadSpannable.parseJsonToSpannableJsonStyle(draftCache.description))
                 option_description.text = draftCache.description
                 price_input.setText(draftCache.price)
                 if (draftCache.isNegotiable) {
@@ -740,7 +755,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 mCoverPath = draftCache.cover
                 mHWRatio = draftCache.hwRatio
                 mPicSetSelected = draftCache.picSet
-                if (mCoverPath != "") {
+                if (mCoverPath.isNotBlank()) {
                     cover.setImageLocalPath(mCoverPath)
                 }
                 mPicSetHorizontalAdapter.setList(mPicSetSelected)
@@ -774,7 +789,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         cover.setImageRemotePath(mCoverPath)
 
                         val picSet =
-                                if (goodsInfo.goods_images.trim() == "") ArrayList()
+                                if (goodsInfo.goods_images.trim().isBlank()) ArrayList()
                                 else MyUtil.getArrayFromString(goodsInfo.goods_images)
 
                         for (i in picSet.indices) {
@@ -886,7 +901,12 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
             // 物品描述
             R.id.option_description -> {
-                InputSetActivity.start(this, InputSetActivity.TYPE_DESCRIPTION, option_description.text.toString(), getString(R.string.goodsDescription))
+                InputSetActivity.start(
+                        this,
+                        InputSetActivity.TYPE_DESCRIPTION,
+//                        SadSpannable.generateJson(this, option_description.text as Spanned),
+                        option_description.text.toString(),
+                        getString(R.string.goodsDescription))
             }
 
             // 蓝色横幅（表单保存相关）关闭按钮

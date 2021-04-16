@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/button_rounded_white"
+    android:padding="@dimen/general_padding_large">
+
+    <TextView
+        android:id="@+id/item_question_Q"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:drawablePadding="@dimen/general_padding_small"
+        android:drawableTint="@color/orangeLight"
+        android:ellipsize="end"
+        android:lines="1"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizeNormal"
+        app:drawableStartCompat="@drawable/ic_question"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="10dp"
+        tools:text="小狗勾还活着不？" />
+
+    <TextView
+        android:id="@+id/item_question_A"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:drawableStart="@drawable/ic_attention_small"
+        android:drawablePadding="@dimen/general_padding_small"
+        android:drawableTint="@color/colorPrimaryGreen"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintTop_toBottomOf="@+id/item_question_Q"
+        tools:layout_editor_absoluteX="10dp"
+        tools:text="卖家：还活着，活得好好的" />
+
+    <TextView
+        android:id="@+id/item_question_more"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:gravity="center"
+        android:textColor="@color/colorAccentLight"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintTop_toBottomOf="@+id/item_question_A"
+        tools:text="查看所有5条问答" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

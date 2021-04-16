@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom"
+    android:background="@drawable/bg_rounded_white_border">
+
+    <TextView
+        android:id="@+id/dialog_text_size_s"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/general_padding_large"
+        android:background="@drawable/button_rounded_primary5"
+        android:gravity="center"
+        android:text="@string/smallText"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizeLarger"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/dialog_text_size_m"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/general_padding_large"
+        android:background="@drawable/button_rounded_primary5"
+        android:gravity="center"
+        android:text="@string/middleText"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizeLarger"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_text_size_s"
+        app:layout_constraintStart_toEndOf="@+id/dialog_text_size_s"
+        app:layout_constraintTop_toTopOf="@+id/dialog_text_size_s" />
+
+    <TextView
+        android:id="@+id/dialog_text_size_l"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/general_padding_large"
+        android:background="@drawable/button_rounded_primary5"
+        android:gravity="center"
+        android:text="@string/largeText"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizeLarger"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_text_size_s"
+        app:layout_constraintStart_toEndOf="@+id/dialog_text_size_m"
+        app:layout_constraintTop_toTopOf="@+id/dialog_text_size_s" />
+
+    <TextView
+        android:id="@+id/dialog_text_size_xl"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="@dimen/general_padding_large"
+        android:background="@drawable/button_rounded_primary5"
+        android:gravity="center"
+        android:text="@string/xLargeText"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizeLarger"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_text_size_s"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dialog_text_size_l"
+        app:layout_constraintTop_toTopOf="@+id/dialog_text_size_s" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

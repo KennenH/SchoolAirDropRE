@@ -1,9 +1,8 @@
 package com.example.schoolairdroprefactoredition.repository
 
 import com.blankj.utilcode.util.LogUtils
-import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
-import com.example.schoolairdroprefactoredition.cache.UserInfoCache
 import com.example.schoolairdroprefactoredition.cache.util.UserLoginCacheUtil
 import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.utils.*
@@ -28,7 +27,7 @@ class LoginRepository private constructor() {
      */
     fun getAlipayIDByAuthCode(authCode: String, onResult: (String?) -> Unit) {
         RetrofitClient.userApi.getUserAlipayIDByAuthCode(authCode).apply {
-            enqueue(object : CallBackWithRetry<DomainAlipayUserID>(this@apply) {
+            enqueue(object : CallbackWithRetry<DomainAlipayUserID>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null)
                 }
@@ -59,7 +58,7 @@ class LoginRepository private constructor() {
      */
     fun connectWhenComesToForeground(token: String, onResult: (code: Int?) -> Unit) {
         RetrofitClient.userApi.verifyToken(token).apply {
-            enqueue(object : CallBackWithRetry<DomainConnect>(this@apply) {
+            enqueue(object : CallbackWithRetry<DomainConnect>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null)
                 }
@@ -81,7 +80,7 @@ class LoginRepository private constructor() {
      */
     fun getPublicKey(onResult: (response: String?) -> Unit) {
         RetrofitClient.userApi.getPublicKey().apply {
-            enqueue(object : CallBackWithRetry<DomainAuthorizeGet>(this@apply) {
+            enqueue(object : CallbackWithRetry<DomainAuthorizeGet>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null)
                 }
@@ -112,7 +111,7 @@ class LoginRepository private constructor() {
                 token.substring(7),
                 ConstantUtil.CLIENT_ID,
                 ConstantUtil.CLIENT_SECRET).apply {
-            enqueue(object : CallBackWithRetry<DomainToken>(this@apply) {
+            enqueue(object : CallbackWithRetry<DomainToken>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null, ConstantUtil.HTTP_BAD_REQUEST)
                 }
@@ -159,7 +158,7 @@ class LoginRepository private constructor() {
                         encryptWithPublicKey,
                         registrationID)
                         .apply {
-                            enqueue(object : CallBackWithRetry<DomainToken>(this@apply) {
+                            enqueue(object : CallbackWithRetry<DomainToken>(this@apply) {
                                 override fun onResponse(call: Call<DomainToken>, response: Response<DomainToken>) {
                                     if (response.code() == HttpURLConnection.HTTP_OK) {
                                         val token = response.body()
@@ -192,7 +191,7 @@ class LoginRepository private constructor() {
     fun getMyInfo(token: String, onResult: (response: DomainUserInfo.DataBean?) -> Unit) {
         RetrofitClient.userApi.getMyUserInfo(token)
                 .apply {
-                    enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
+                    enqueue(object : CallbackWithRetry<DomainUserInfo>(this@apply) {
                         override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
                             if (response.code() == HttpURLConnection.HTTP_OK) {
                                 val body = response.body()

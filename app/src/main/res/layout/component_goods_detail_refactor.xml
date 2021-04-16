@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/general_padding_bit_larger">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/goods_seller_info"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/goodsAvatar"
+            android:layout_width="@dimen/home_item_image_smaller"
+            android:layout_height="@dimen/home_item_image_smaller"
+            android:scaleType="centerCrop"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:placeholderImage="@drawable/placeholder_rounded"
+            app:placeholderImageScaleType="centerInside"
+            app:roundedCornerRadius="@dimen/general_padding" />
+
+        <TextView
+            android:id="@+id/goods_user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/general_padding"
+            android:ellipsize="end"
+            android:textColor="@color/black"
+            android:textSize="@dimen/textSizeLarge"
+            app:layout_constraintBottom_toTopOf="@id/goods_user_last_login_time"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/goodsAvatar"
+            app:layout_constraintTop_toTopOf="@+id/goodsAvatar"
+            tools:text="李伟" />
+
+        <TextView
+            android:id="@+id/goods_user_last_login_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:text="@string/lastActiveTime"
+            android:textColor="@color/primaryText"
+            android:textSize="@dimen/textSizeMin"
+            app:layout_constraintBottom_toBottomOf="@+id/goodsAvatar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/goods_user_name"
+            app:layout_constraintTop_toBottomOf="@+id/goods_user_name" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.example.schoolairdroprefactoredition.ui.components.GoodsPopularity
+        android:id="@+id/goods_popularity"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/goods_price"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <com.example.schoolairdroprefactoredition.ui.components.GoodsPrice
+        android:id="@+id/goods_price"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        app:layout_constraintStart_toStartOf="@+id/goods_seller_info"
+        app:layout_constraintTop_toBottomOf="@+id/goods_seller_info" />
+
+    <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
+        android:id="@+id/goods_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_bit_larger"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:textColor="@color/black"
+        android:textSize="18dp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="@+id/goods_seller_info"
+        app:layout_constraintStart_toStartOf="@+id/goods_price"
+        app:layout_constraintTop_toBottomOf="@+id/goods_price"
+        tools:text="[img src=ic_negotiable/] [img src=ic_secondhand/] 哈哈哈哈哈哈哈哈哈哈哈哈 三全食品" />
+
+    <TextView
+        android:id="@+id/goods_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_bit_larger"
+        android:background="@drawable/bg_rounded_primary5"
+        android:letterSpacing="0.03"
+        android:lineSpacingExtra="2dp"
+        android:padding="@dimen/general_padding"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintEnd_toEndOf="@id/goods_name"
+        app:layout_constraintStart_toStartOf="@+id/goods_name"
+        app:layout_constraintTop_toBottomOf="@+id/goods_name"
+        tools:text="出售二手烟，拍下即面对面交货，无需动嘴，无需打火机，只需闭上双眼，深吸一口气，即可享受到中华二手烟的雄浑烤烟气息，荡气回肠" />
+
+    <com.example.schoolairdroprefactoredition.ui.components.GoodsImageLoader
+        android:id="@+id/goods_image_loader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        app:cardBackgroundColor="@color/transparent"
+        android:layout_marginTop="@dimen/general_padding_bit_larger"
+        app:layout_constraintEnd_toEndOf="@+id/goods_description"
+        app:layout_constraintStart_toStartOf="@+id/goods_description"
+        app:layout_constraintTop_toBottomOf="@+id/goods_description" />
+
+    <Space
+        android:id="@+id/goods_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="96dp"
+        app:layout_constraintTop_toBottomOf="@+id/goods_image_loader" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

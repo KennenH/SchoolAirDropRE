@@ -201,7 +201,7 @@
     <string name="successSave">Saved</string>
     <string name="successAvatar">Avatar Updated</string>
     <string name="successUnlist">Unlisted</string>
-    <string name="errorLogin">Error Logging</string>
+    <string name="errorLogin">Error logging, please try again later</string>
     <string name="successFavorite">Item Favorited</string>
     <string name="sellingHideByUser">Hidden</string>
     <string name="ic_credit1">[img src=ic_credit1en/]</string>
@@ -283,7 +283,7 @@
     <string name="descriptionDisplayInAppFloat">After opening, when the App is in the foreground, the floating window will be displayed when a message is received</string>
     <string name="titleQuestionTip">The title is an important basis for keyword matching when searching</string>
     <string name="descriptionQuestionTip">The search will not cover the description, but a careful and detailed description can improve the buyer’s understanding of the item and also reflect the seller’s sincere attitude, thereby greatly increasing the probability of the item being sold</string>
-    <string name="functionNotSupport">Feature not supported</string>
+    <string name="featureNotSupport">Feature not supported</string>
     <string name="workshopWithAppName">Blink SchoolAirdrop</string>
     <string name="imTextTooLong">The input is too long</string>
     <string name="lastActiveTime">Latest Active %s</string>
@@ -329,4 +329,10 @@
     <string name="messageTip">The Android version of the SchoolAirdrop may not receive system message notifications, or the notifications received have no sound or vibration prompts. You may need to go online from time to time to check if there are chat messages for you. We apologize for any inconvenience.</string>
     <string name="tips">Tips</string>
     <string name="tooFrequentImageMessageWarning">The picture was sent too fast, please try again later</string>
+    <string name="questionAndResponse">Q&amp;A</string>
+    <string name="questions">Q&amp;A</string>
+    <string name="totalQuestionsAndResponse">View all %d Q&amp;A</string>
+    <string name="byeBye">Bye</string>
+    <string name="seeAllQuestions">See All Questions</string>
+    <string name="handlingSpannableJson">Handling rich text</string>
 </resources>

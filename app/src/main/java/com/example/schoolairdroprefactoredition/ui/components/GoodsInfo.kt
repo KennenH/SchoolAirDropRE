@@ -4,20 +4,24 @@ import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
+import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.TimeUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsDetailBinding
+import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsDetailRefactorBinding
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
-import com.example.schoolairdroprefactoredition.utils.MyUtil.getArrayFromString
+import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.facebook.shimmer.ShimmerFrameLayout
 import java.lang.Exception
 
-class GoodsInfo @JvmOverloads constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0) : ShimmerFrameLayout(context, attrs, defStyleAttr), View.OnClickListener {
+class GoodsInfo
+@JvmOverloads
+constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 0)
+    : ShimmerFrameLayout(context, attrs, defStyleAttr), View.OnClickListener {
 
     private val binding by lazy {
-        ComponentGoodsDetailBinding.inflate(LayoutInflater.from(context), this, true)
+        ComponentGoodsDetailRefactorBinding.inflate(LayoutInflater.from(context), this, true)
     }
 
     private var mOnUserInfoClickListener: OnUserInfoClickListener? = null
@@ -79,8 +83,13 @@ class GoodsInfo @JvmOverloads constructor(context: Context?, attrs: AttributeSet
 
             binding.apply {
                 goodsPrice.setPrice(item.goods_price, false)
-                goodsPager.setData(getArrayFromString(item.goods_images), false)
-                goodsDescription.text = item.goods_content
+
+                // 原布局中的顶部图片pager集
+//                goodsPager.setData(getArrayFromString(item.goods_images), false)
+                goodsImageLoader.setData(MyUtil.getArrayFromString(item.goods_images))
+
+                val spanned = SadSpannable(context,SadSpannable.parseJsonToSpannableJsonStyle(item.goods_content))
+                goodsDescription.text = spanned
                 goodsPopularity.setWatches(item.goods_watch_count)
                 goodsPopularity.likes = item.goods_favor_count
                 goodsPopularity.setComments(item.goods_chat_count)

@@ -1,11 +1,10 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.MyUtil
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -27,7 +26,7 @@ class GoodsRepository private constructor() {
     fun toggleFavorGoods(token: String, goodsID: Int, isFavor: Boolean, onResult: (Boolean) -> Unit) {
         if (isFavor) {
             RetrofitClient.goodsApi.unFavorGoods(token, goodsID).apply {
-                enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
+                enqueue(object : CallbackWithRetry<DomainResult>(this@apply) {
                     override fun onFailureAllRetries() {
                         onResult(false)
                     }
@@ -48,7 +47,7 @@ class GoodsRepository private constructor() {
             }
         } else {
             RetrofitClient.goodsApi.favorGoods(token, goodsID).apply {
-                enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
+                enqueue(object : CallbackWithRetry<DomainResult>(this@apply) {
                     override fun onFailureAllRetries() {
                         onResult(false)
                     }
@@ -78,7 +77,7 @@ class GoodsRepository private constructor() {
                 goodsID,
                 ConstantUtil.CLIENT_ID,
                 ConstantUtil.CLIENT_SECRET).apply {
-            enqueue(object : CallBackWithRetry<DomainResult>(this@apply) {
+            enqueue(object : CallbackWithRetry<DomainResult>(this@apply) {
                 override fun onFailureAllRetries() {
                 }
 
@@ -99,7 +98,7 @@ class GoodsRepository private constructor() {
     fun getGoodsAllDetail(goodsID: Int,
                           onResult: (response: DomainGoodsAllDetailInfo?) -> Unit) {
         RetrofitClient.goodsApi.getGoodsAllDetail(ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, goodsID).apply {
-            enqueue(object : CallBackWithRetry<DomainGoodsAllDetailInfo>(this@apply) {
+            enqueue(object : CallbackWithRetry<DomainGoodsAllDetailInfo>(this@apply) {
                 override fun onFailureAllRetries() {
                     onResult(null)
                 }

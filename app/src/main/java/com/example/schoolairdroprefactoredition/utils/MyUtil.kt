@@ -5,9 +5,11 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.ActivityInfo
+import android.content.res.Resources
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.schoolairdroprefactoredition.R
@@ -25,6 +27,18 @@ import java.io.File
 
 object MyUtil {
 
+    @JvmStatic
+    fun dp2px(dp: Int): Int {
+        val scale = Resources.getSystem().displayMetrics.density
+        return (dp * scale + 0.5f).toInt()
+    }
+
+    @JvmStatic
+    fun px2dp(px: Int): Int {
+        val scale = Resources.getSystem().displayMetrics.density
+        return (px / scale + 0.5f).toInt()
+    }
+
     /**
      * 将内容复制到粘贴板
      */
@@ -39,6 +53,7 @@ object MyUtil {
     @JvmStatic
     fun loading(context: Context?): LoadingPopupView {
         return XPopup.Builder(context)
+                .hasShadowBg(false)
                 .dismissOnBackPressed(true)
                 .dismissOnTouchOutside(false)
                 .asLoading()

@@ -16,7 +16,6 @@ public class ButtonRight extends LinearLayout {
     private static final int UNFAVORED = R.drawable.outline_favorite_24;
 
     private final ImageView mButtonLeft;
-//    private final ImageView mButtonRight;
     private OnButtonClickListener mOnButtonClickListener;
 
     private boolean isFavored = false;
@@ -33,17 +32,17 @@ public class ButtonRight extends LinearLayout {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.component_goods_button_right, this, true);
         mButtonLeft = findViewById(R.id.button_one);
-//        mButtonRight = findViewById(R.id.button_two);
+        ImageView mButtonRight = findViewById(R.id.button_two);
         mButtonLeft.setOnClickListener(v -> {
             if (mOnButtonClickListener != null) {
-                mOnButtonClickListener.onRightButtonClick();
+                mOnButtonClickListener.onFavorToggle();
             }
         });
-//        mButtonRight.setOnClickListener(v -> {
-//            if (mOnButtonClickListener != null) {
-//                mOnButtonClickListener.onRightButtonClick();
-//            }
-//        });
+        mButtonRight.setOnClickListener(v -> {
+            if (mOnButtonClickListener != null) {
+                mOnButtonClickListener.onChatClick();
+            }
+        });
     }
 
     public void setFavor(boolean favor) {
@@ -61,7 +60,9 @@ public class ButtonRight extends LinearLayout {
     }
 
     public interface OnButtonClickListener {
-        void onRightButtonClick();
+        void onFavorToggle();
+
+        void onChatClick();
     }
 
     public void setOnButtonClickListener(OnButtonClickListener onButtonClickListener) {

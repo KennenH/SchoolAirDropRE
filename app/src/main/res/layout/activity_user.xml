@@ -205,5 +205,5 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/user_personal"
-        app:navigationIcon="@drawable/ic_left_white" />
+        app:navigationIcon="@drawable/ic_left_dark_fill" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -174,6 +174,8 @@ class MessagesFragment : StatePlaceholderFragment(), MainActivity.OnLoginStateCh
                     showPlaceholder(StatePlaceHolder.TYPE_EMPTY, context?.getString(R.string.canChatInGoodsPage))
                 }
             })
+        } else {
+            showPlaceholder(StatePlaceHolder.TYPE_EMPTY, context?.getString(R.string.canChatInGoodsPage))
         }
         return binding.root
     }

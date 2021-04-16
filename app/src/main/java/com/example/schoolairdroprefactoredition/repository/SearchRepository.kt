@@ -1,7 +1,7 @@
 package com.example.schoolairdroprefactoredition.repository
 
 import com.blankj.utilcode.util.LogUtils
-import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.cache.SearchHistories
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
@@ -80,7 +80,7 @@ class SearchRepository {
                 ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page,
                 longitude, latitude,
                 key).apply {
-            enqueue(object : CallBackWithRetry<DomainPurchasing>(this@apply) {
+            enqueue(object : CallbackWithRetry<DomainPurchasing>(this@apply) {
                 override fun onResponse(call: Call<DomainPurchasing>, response: Response<DomainPurchasing>) {
                     val code = response.code()
                     if (code == HttpURLConnection.HTTP_OK) {

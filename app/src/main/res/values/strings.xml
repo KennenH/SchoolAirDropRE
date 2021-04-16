@@ -8,12 +8,14 @@
     <string name="quoteHeaderNum" translatable="false">(%d)</string>
     <string name="priceRMB" translatable="false">¥ %s</string>
     <string name="version" translatable="false">Version %s</string>
-    <string name="rightsReserved" translatable="false">校园空投 版权所有\nCopyright © 2021–2021 SchoolAirdrop. All Rights Reserved.</string>
+    <string name="rightsReserved" translatable="false">校园空投 版权所有\nCopyright © 2021 SchoolAirdrop. All Rights Reserved.</string>
     <string name="alipayID" translatable="false">%s</string>
     <string name="userProtocol" translatable="false">《用户许可协议》</string>
     <string name="serviceProtocol" translatable="false">《校园空投用户协议与免责条款》</string>
     <string name="privacyProtocol" translatable="false">《校园空投隐私政策》</string>
     <string name="fraction0" translatable="false">.00</string>
+    <string name="app_version_detail" translatable="false">Beta 1.1.4.00</string>
+    <string name="app_version" translatable="false">Beta 1.1.4</string>
 
 
     <string name="itemNS">"[img src=ic_negotiable/] [img src=ic_secondhand/] %s"</string>
@@ -234,7 +236,7 @@
     <string name="successQuote">发起成功</string>
     <string name="errorUnknown">未知错误</string>
     <string name="successFavorite">物品已收藏</string>
-    <string name="errorLogin">登录失败</string>
+    <string name="errorLogin">登录失败，请稍后重试</string>
     <string name="successUnlist">物品已下架，可能需要半分钟左右来处理</string>
     <string name="successAvatar">头像已更新</string>
     <string name="successSave">图片已保存</string>
@@ -312,7 +314,7 @@
     <string name="descriptionDisplayInAppFloat">开启后当App在前台时收到消息将显示浮窗</string>
     <string name="titleQuestionTip">标题是附近同学搜索时关键词匹配的重要依据</string>
     <string name="descriptionQuestionTip">搜索将不会覆盖物品描述，但认真详尽的描述能提高买家对物品的了解程度，亦能体现卖家的真诚态度，从而大幅提高物品出售概率</string>
-    <string name="functionNotSupport">功能尚未支持</string>
+    <string name="featureNotSupport">功能尚未支持</string>
     <string name="workshopWithAppName">Blink 校园空投</string>
     <string name="imTextTooLong">输入内容过长</string>
     <string name="lastActiveTime">上次活跃时间 %s</string>
@@ -357,5 +359,16 @@
     <string name="gotit">知道了</string>
     <string name="messageTip">校园空投安卓版可能无法收到系统消息通知，或收到的通知没有声音、振动提示，可能需要时常上线来查看是否有聊天消息。若带来不便，敬请谅解。</string>
     <string name="tips">温馨提示</string>
+    <string name="questions">大家都在问</string>
+    <string name="questionAndResponse">问&amp;答</string>
+    <string name="totalQuestionsAndResponse">查看所有%d条问答</string>
+    <string name="byeBye">再见</string>
+    <string name="seeAllQuestions">查看所有问题</string>
+    <string name="bold" translatable="false">B</string>
+    <string name="middleText" translatable="false">M</string>
+    <string name="smallText" translatable="false">S</string>
+    <string name="largeText" translatable="false">L</string>
+    <string name="xLargeText" translatable="false">XL</string>
+    <string name="handlingSpannableJson">正在处理富文本</string>
 
 </resources>

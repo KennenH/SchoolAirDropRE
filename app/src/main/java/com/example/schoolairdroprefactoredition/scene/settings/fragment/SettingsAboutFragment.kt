@@ -17,24 +17,32 @@ import com.example.schoolairdroprefactoredition.utils.MyUtil
  */
 class SettingsAboutFragment : TransitionBaseFragment(), View.OnClickListener {
 
-    private var binding: FragmentSettingsAboutBinding? = null
+    private lateinit var binding: FragmentSettingsAboutBinding
+
+    /**
+     * 是否显示版本细节版号
+     */
+    private var versionDetail = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSettingsAboutBinding.inflate(inflater, container, false)
 
-        binding?.settingsAboutVersion?.setOnClickListener(this)
-        binding?.settingsAboutFeedback?.setOnClickListener(this)
-        binding?.settingsAboutPrivacy?.setOnClickListener(this)
-        binding?.settingsAboutService?.setOnClickListener(this)
-        binding?.settingsAboutVersion?.text = getString(R.string.version, "1.0")
+        binding.settingsAboutVersion.setOnClickListener(this)
+        binding.settingsAboutFeedback.setOnClickListener(this)
+        binding.settingsAboutPrivacy.setOnClickListener(this)
+        binding.settingsAboutService.setOnClickListener(this)
+        binding.settingsAboutVersion.text = getString(R.string.version, getString(R.string.app_version))
 
-        return binding?.root
+        return binding.root
     }
 
     override fun onClick(v: View) {
         when (v.id) {
             R.id.settings_about_version -> {
-
+                versionDetail = versionDetail.not()
+                binding.settingsAboutVersion.text = getString(R.string.version,
+                        if (!versionDetail) getString(R.string.app_version_detail)
+                        else getString(R.string.app_version))
             }
             R.id.settings_about_feedback -> {
                 // 发送邮箱或app内文字加图片形式

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:background="@drawable/bg_rounded_white"
+    android:padding="@dimen/general_padding_bit_larger">
+
+    <TextView
+        android:id="@+id/dialog_server_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/tips"
+        android:textColor="@color/black"
+        android:textSize="@dimen/textSizeLarge"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/dialog_server_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_server_title"
+        tools:text="同学你好，经过社区其他同学的监督举报和我们的审查，你近期的行为多次严重违反了我们的社区规定和用户协议，因此校园空投将对本账号作出永久封禁的决定，希望你能够理解。再次感谢你使用校园空投。" />
+
+    <TextView
+        android:id="@+id/dialog_server_done"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/general_padding_large"
+        android:background="@drawable/button_rounded_theme_dark"
+        android:gravity="center"
+        android:padding="@dimen/general_padding_large"
+        android:text="@string/byeBye"
+        android:textColor="@color/whiteAlways"
+        android:textSize="@dimen/textSizeNormal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dialog_server_content" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

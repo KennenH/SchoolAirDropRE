@@ -62,7 +62,11 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
                     ConstantUtil.UPLOAD_TYPE_IM) { _, _, taskAndKeys, _ ->
                 if (taskAndKeys != null) {
                     uploadRepository.moveIMImage(token, taskAndKeys.taskId, taskAndKeys.keys.joinToString(",")) {
-                        uploadLiveDate.postValue(it)
+                        if (it != null) {
+                            uploadLiveDate.postValue(it.data.path_url)
+                        } else {
+                            uploadLiveDate.postValue(null)
+                        }
                     }
                 } else {
                     uploadLiveDate.postValue(null)
@@ -124,8 +128,8 @@ class ChatViewModel(private val databaseRepository: DatabaseRepository) : ViewMo
                 // 若上一次保存的flag是true则预拉取服务器数据并ack上一批获取的离线消息
                 if (pullFlag != null && pullFlag.pull_flag) {
                     databaseRepository.getChatRemote(token, senderID, startTime
-                            ?: System.currentTimeMillis()) { success, response ->
-                        if (success && response != null) {
+                            ?: System.currentTimeMillis()) { response ->
+                        if (response != null) {
                             val data = response.data
                             // 保存获取到的数据
                             saveReceivedOffline(data)

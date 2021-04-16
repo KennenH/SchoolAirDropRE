@@ -1,6 +1,6 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import retrofit2.Call
@@ -22,7 +22,7 @@ class UserRepository private constructor() {
      */
     fun getUserInfoById(userID: Int, onResult: (success: Boolean, response: DomainUserInfo.DataBean?) -> Unit) {
         RetrofitClient.userApi.getUserInfoByID(userID).apply {
-            enqueue(object : CallBackWithRetry<DomainUserInfo>(this@apply) {
+            enqueue(object : CallbackWithRetry<DomainUserInfo>(this@apply) {
                 override fun onResponse(call: Call<DomainUserInfo>, response: Response<DomainUserInfo>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         if (response.isSuccessful) {

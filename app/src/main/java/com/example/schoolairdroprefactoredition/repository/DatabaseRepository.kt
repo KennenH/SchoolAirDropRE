@@ -1,20 +1,15 @@
 package com.example.schoolairdroprefactoredition.repository
 
 import androidx.annotation.WorkerThread
-import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.CallbackResultOrNull
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.database.dao.DatabaseDao
 import com.example.schoolairdroprefactoredition.database.pojo.*
 import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.ui.adapter.ChatRecyclerAdapter
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheConstantUtil
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
-import com.example.schoolairdroprefactoredition.utils.MyUtil
 import kotlinx.coroutines.flow.Flow
-import retrofit2.Call
-import retrofit2.Response
-import java.net.HttpURLConnection
 import java.util.*
 
 class DatabaseRepository(private val databaseDao: DatabaseDao) {
@@ -44,26 +39,9 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
     /**
      * 获取某个临界时间之前的（早的，旧的）消息
      */
-    fun getChatRemote(token: String, senderID: String, start: Long, onResult: (success: Boolean, response: DomainOffline?) -> Unit) {
+    fun getChatRemote(token: String, senderID: String, start: Long, onResult: (response: DomainOffline?) -> Unit) {
         RetrofitClient.imApi.getOffline(token, senderID, start).apply {
-            enqueue(object : CallBackWithRetry<DomainOffline>(this@apply) {
-                override fun onFailureAllRetries() {
-                    onResult(false, null)
-                }
-
-                override fun onResponse(call: Call<DomainOffline>, response: Response<DomainOffline>) {
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        val body = response.body()
-                        if (body != null && body.code == ConstantUtil.HTTP_OK) {
-                            onResult(true, body)
-                        } else {
-                            onResult(false, null)
-                        }
-                    } else {
-                        onResult(false, null)
-                    }
-                }
-            })
+            enqueue(CallbackResultOrNull<DomainOffline>(this@apply,onResult))
         }
     }
 
@@ -72,24 +50,7 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
      */
     fun getOfflineNum(token: DomainToken, onResult: (response: DomainOfflineNum?) -> Unit) {
         RetrofitClient.imApi.getOfflineNum(token.access_token).apply {
-            enqueue(object : CallBackWithRetry<DomainOfflineNum>(this@apply) {
-                override fun onFailureAllRetries() {
-                    onResult(null)
-                }
-
-                override fun onResponse(call: Call<DomainOfflineNum>, response: Response<DomainOfflineNum>) {
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        val body = response.body()
-                        if (body != null && body.code == ConstantUtil.HTTP_OK) {
-                            onResult(body)
-                        } else {
-                            onResult(null)
-                        }
-                    } else {
-                        onResult(null)
-                    }
-                }
-            })
+            enqueue(CallbackResultOrNull<DomainOfflineNum>(this@apply, onResult))
         }
     }
 
@@ -167,6 +128,7 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
      */
     @WorkerThread
     suspend fun saveHistory(history: ChatHistory, isSentFromCounterpart: Boolean) {
+
         // 保存消息本身
         databaseDao.saveChat(history)
         // 更新消息列表

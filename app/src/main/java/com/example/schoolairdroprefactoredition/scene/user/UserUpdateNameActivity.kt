@@ -94,7 +94,7 @@ class UserUpdateNameActivity : ImmersionStatusBarActivity() {
     }
 
     private fun init() {
-        input_attention.visibility = View.GONE
+//        input_attention.visibility = View.GONE
         val myInfo = (application as SAApplication).getCachedMyInfo()
         set_title.setText(R.string.setName)
 

@@ -259,9 +259,6 @@ open class BaseActivity : AppCompatActivity(), SAApplication.IMListener {
                 0f).apply {
             duration = 150
             interpolator = DecelerateInterpolator(2f)
-            addUpdateListener {
-                view.translationY = it.animatedValue as Float
-            }
             start()
         }
     }

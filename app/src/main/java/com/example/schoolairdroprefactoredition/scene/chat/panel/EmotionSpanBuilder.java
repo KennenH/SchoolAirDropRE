@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 
 public class EmotionSpanBuilder {
 
-    private static Pattern sPatternEmotion =
+    private static final Pattern sPatternEmotion =
             Pattern.compile("\\[([\u4e00-\u9fa5\\w])+\\]|[\\ud83c\\udc00-\\ud83c\\udfff]|[\\ud83d\\udc00-\\ud83d\\udfff]|[\\u2600-\\u27ff]");
 
     public static Spannable buildEmotionSpannable(Context context, String text) {

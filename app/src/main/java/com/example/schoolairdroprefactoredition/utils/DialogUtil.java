@@ -30,6 +30,7 @@ public class DialogUtil {
 
         new XPopup.Builder(context)
                 .isDarkTheme(isDarkTheme)
+                .hasShadowBg(false)
                 .asConfirm(title, content, context.getString(android.R.string.cancel), context.getString(android.R.string.ok)
                         , confirmListener, () -> {
                         }, false).show();
@@ -79,6 +80,7 @@ public class DialogUtil {
     private static void showSuccess(Context context, @StringRes int tip) {
         new XPopup.Builder(context)
                 .isClickThrough(true)
+                .hasShadowBg(false)
                 .asCustom(new BasePopupView(context) {
                     @Override
                     protected void init() {
@@ -100,6 +102,7 @@ public class DialogUtil {
     private static void showFailed(Context context, @StringRes int tip) {
         new XPopup.Builder(context)
                 .isClickThrough(true)
+                .hasShadowBg(false)
                 .asCustom(new BasePopupView(context) {
                     @Override
                     protected void init() {
@@ -121,6 +124,7 @@ public class DialogUtil {
     private static void showNetWorkError(Context context, @StringRes int tip) {
         new XPopup.Builder(context)
                 .isClickThrough(true)
+                .hasShadowBg(false)
                 .asCustom(new BasePopupView(context) {
                     @Override
                     protected void init() {
@@ -142,6 +146,7 @@ public class DialogUtil {
     private static void showFavor(Context context, @StringRes int tip) {
         new XPopup.Builder(context)
                 .isClickThrough(true)
+                .hasShadowBg(false)
                 .asCustom(new BasePopupView(context) {
                     @Override
                     protected void init() {
@@ -163,6 +168,7 @@ public class DialogUtil {
     private static void showUnknown(Context context, @StringRes int tip) {
         new XPopup.Builder(context)
                 .isClickThrough(true)
+                .hasShadowBg(false)
                 .asCustom(new BasePopupView(context) {
                     @Override
                     protected void init() {

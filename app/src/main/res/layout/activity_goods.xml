@@ -4,17 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".scene.goods.GoodsActivity">
 
     <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
         android:id="@+id/smartRefreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
+        android:layout_height="0dp"
+        android:paddingTop="?attr/actionBarSize"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="@+id/goods_toolbar">
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -29,14 +30,14 @@
         </androidx.core.widget.NestedScrollView>
     </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
 
-    <com.example.schoolairdroprefactoredition.ui.components.ButtonLeft
-        android:id="@+id/goods_button_left"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/general_padding_large"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+<!--    <com.example.schoolairdroprefactoredition.ui.components.ButtonLeft-->
+<!--        android:id="@+id/goods_button_left"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_margin="@dimen/general_padding_large"-->
+<!--        android:visibility="gone"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent" />-->
 
     <com.example.schoolairdroprefactoredition.ui.components.ButtonRight
         android:id="@+id/goods_button_right"
@@ -47,19 +48,20 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <View
-        android:id="@+id/status_bar_overlay"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@drawable/bg_top_dark_overlay"
-        app:layout_constraintTop_toTopOf="parent" />
+    <!--    <View-->
+    <!--        android:id="@+id/status_bar_overlay"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="60dp"-->
+    <!--        android:background="@drawable/bg_top_dark_overlay"-->
+    <!--        app:layout_constraintTop_toTopOf="parent" />-->
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/goods_toolbar"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
         app:menu="@menu/dark_more"
-        android:layout_height="?attr/actionBarSize"
-        app:layout_constraintTop_toTopOf="@id/smartRefreshLayout"
         app:navigationIcon="@drawable/ic_left_dark_fill" />
 
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

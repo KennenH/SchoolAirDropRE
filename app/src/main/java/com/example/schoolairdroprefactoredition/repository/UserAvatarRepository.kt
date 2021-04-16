@@ -1,10 +1,9 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainAvatarUpdateResult
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
-import com.example.schoolairdroprefactoredition.utils.MyUtil
 import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
@@ -24,7 +23,7 @@ class UserAvatarRepository {
      */
     fun updateAvatar(token: String, taskID: String, avatar: String, onResult: (String?) -> Unit) {
         RetrofitClient.userApi.updateUserAvatar(token, taskID, avatar).apply {
-            enqueue(object : CallBackWithRetry<DomainAvatarUpdateResult>(this@apply) {
+            enqueue(object : CallbackWithRetry<DomainAvatarUpdateResult>(this@apply) {
                 override fun onResponse(call: Call<DomainAvatarUpdateResult>, response: Response<DomainAvatarUpdateResult>) {
                     if (response.code() == HttpURLConnection.HTTP_OK) {
                         val body = response.body()

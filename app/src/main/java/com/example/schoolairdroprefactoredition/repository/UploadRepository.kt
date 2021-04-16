@@ -2,7 +2,8 @@ package com.example.schoolairdroprefactoredition.repository
 
 import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.api.base.CallBackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.CallbackResultOrNull
+import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainIMPath
 import com.example.schoolairdroprefactoredition.domain.DomainUploadPath
@@ -10,7 +11,6 @@ import com.example.schoolairdroprefactoredition.domain.DomainUploadToken
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.FileUtil
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
-import com.example.schoolairdroprefactoredition.utils.MyUtil
 import com.qiniu.android.common.FixedZone
 import com.qiniu.android.storage.*
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -83,7 +83,7 @@ class UploadRepository private constructor() {
         // 若发现传进来的图片数量是0则直接视为完成
         if (fileLocalPaths.isEmpty()) {
             onResult(true,
-                    Pair(R.string.noNeedToHandleImages,true),
+                    Pair(R.string.noNeedToHandleImages, true),
                     DomainUploadPath.DataBean().also {
                         it.taskId = ""
                         it.keys = ArrayList()
@@ -139,27 +139,9 @@ class UploadRepository private constructor() {
      * @param amount 将要上传的图片的数量
      * @param onResult 成功返回图片路径前缀和n张图片的名字，失败null
      */
-    private fun requestForImagePath(token: String, type: String, amount: Int, onResult: (response: DomainUploadPath?) -> Unit) {
+    private fun requestForImagePath(token: String, type: String, amount: Int, onResult: (DomainUploadPath?) -> Unit) {
         RetrofitClient.uploadApi.getImagePath(token, type, amount).apply {
-            enqueue(object : CallBackWithRetry<DomainUploadPath>(this@apply) {
-                override fun onFailureAllRetries() {
-                    onResult(null)
-                }
-
-                override fun onResponse(call: Call<DomainUploadPath>, response: Response<DomainUploadPath>) {
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        val body = response.body()
-                        if (body != null && body.code == ConstantUtil.HTTP_OK) {
-                            onResult(body)
-                        } else {
-                            onResult(null)
-                        }
-                    } else {
-                        LogUtils.d(response.errorBody()?.string())
-                        onResult(null)
-                    }
-                }
-            })
+            enqueue(CallbackResultOrNull<DomainUploadPath>(this@apply, onResult))
         }
     }
 
@@ -180,7 +162,7 @@ class UploadRepository private constructor() {
         } else {
             // 从服务器获取
             RetrofitClient.uploadApi.getUploadToken(token).apply {
-                enqueue(object : CallBackWithRetry<DomainUploadToken>(this@apply) {
+                enqueue(object : CallbackWithRetry<DomainUploadToken>(this@apply) {
                     override fun onFailureAllRetries() {
                         onResult(null)
                     }
@@ -290,28 +272,9 @@ class UploadRepository private constructor() {
     /**
      * 移动在七牛云上的图片
      */
-    fun moveIMImage(token: String, taskID: String, keys: String, onResult: (paths: List<String>?) -> Unit) {
+    fun moveIMImage(token: String, taskID: String, keys: String, onResult: (DomainIMPath?) -> Unit) {
         RetrofitClient.uploadApi.moveIMImages(token, taskID, keys).apply {
-            enqueue(object : CallBackWithRetry<DomainIMPath>(this@apply) {
-                override fun onFailureAllRetries() {
-                    onResult(null)
-                }
-
-                override fun onResponse(call: Call<DomainIMPath>, response: Response<DomainIMPath>) {
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        val body = response.body()
-                        if (body?.code == ConstantUtil.HTTP_OK) {
-                            onResult(body.data.path_url)
-                        } else {
-                            LogUtils.d(response.errorBody()?.string())
-                            onResult(null)
-                        }
-                    } else {
-                        LogUtils.d(response.errorBody()?.string())
-                        onResult(null)
-                    }
-                }
-            })
+            enqueue(CallbackResultOrNull<DomainIMPath>(this@apply, onResult))
         }
     }
 }

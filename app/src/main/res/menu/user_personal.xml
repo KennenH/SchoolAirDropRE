@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/modify_info"
-        android:icon="@drawable/ic_wrench"
+        android:icon="@drawable/ic_wrench_dark_fill"
         android:title="@string/modifyInfo"
         app:showAsAction="always" />
 </menu>

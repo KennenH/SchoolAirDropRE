@@ -13,15 +13,16 @@ android {
         minSdkVersion 23
         targetSdkVersion 30
         versionCode 1
-        versionName "Beta3.2"
+        versionName "Beta1.1.4.00"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     allprojects {
         repositories {
             google()
-            jcenter()
+            mavenCentral()
             maven { url 'https://jitpack.io' }
+            maven { url "http://mvn.mob.com/android" }
         }
     }
     buildTypes {
@@ -125,8 +126,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     // fresco
-    implementation 'com.facebook.fresco:fresco:2.3.0'
-    implementation 'com.facebook.fresco:animated-gif:2.3.0'
+    implementation 'com.facebook.fresco:fresco:2.4.0'
     //shadow layout
     implementation 'com.github.lihangleo2:ShadowLayout:3.1.6'
     //facebook shimmer

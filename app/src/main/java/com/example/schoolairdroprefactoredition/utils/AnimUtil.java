@@ -25,9 +25,7 @@ public class AnimUtil {
         anim.setDuration(180); // milliseconds
         anim.setRepeatCount(1); // repeat count must be ood to recover original color of view
         anim.setRepeatMode(ValueAnimator.REVERSE);
-        anim.addUpdateListener(animator -> {
-            view.setBackgroundColor((int) animator.getAnimatedValue());
-        });
+        anim.addUpdateListener(animator -> view.setBackgroundColor((int) animator.getAnimatedValue()));
         anim.start();
     }
 

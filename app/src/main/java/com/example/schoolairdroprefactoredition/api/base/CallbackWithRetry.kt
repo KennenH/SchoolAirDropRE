@@ -4,13 +4,13 @@ import com.blankj.utilcode.util.LogUtils
 import retrofit2.Call
 import retrofit2.Callback
 
-abstract class CallBackWithRetry<T>(private val call: Call<T>) : Callback<T> {
+abstract class CallbackWithRetry<T>(private val call: Call<T>) : Callback<T> {
 
     companion object {
         /**
-         * 最多自动重试3次
+         * 最多自动重试2次
          */
-        private const val TOTAL_RETRIES = 3
+        private const val TOTAL_RETRIES = 2
     }
 
     private var retryCount = 0

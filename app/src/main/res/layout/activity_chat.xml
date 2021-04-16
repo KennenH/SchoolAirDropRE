@@ -47,8 +47,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            app:hide_by_touch_area="@id/recycler_view"
-            app:hide_by_touch_outside_enable="true"
             app:input_view="@id/edit_view">
 
             <com.scwang.smart.refresh.layout.SmartRefreshLayout

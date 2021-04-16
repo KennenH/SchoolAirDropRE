@@ -1,6 +1,11 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
 import android.app.Application
+import android.content.Context
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.Spanned
+import android.text.SpannedString
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,6 +15,7 @@ import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewInquiryDraftCache
 import com.example.schoolairdroprefactoredition.repository.AddNewRepository
 import com.example.schoolairdroprefactoredition.repository.UploadRepository
+import com.example.schoolairdroprefactoredition.ui.components.SadSpannable
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.coroutines.launch
@@ -163,6 +169,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
      * 保存用户物品草稿
      */
     fun saveItemDraft(cover: String, picSet: List<LocalMedia>, title: String, description: String, price: String, isQuotable: Boolean, isSecondHand: Boolean) {
+//        addNewRepository.saveItemDraft(cover, picSet, title, SadSpannable.generateJson(getApplication(), description as Spanned), price, isQuotable, isSecondHand)
         addNewRepository.saveItemDraft(cover, picSet, title, description, price, isQuotable, isSecondHand)
     }
 

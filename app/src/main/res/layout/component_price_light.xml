@@ -12,7 +12,7 @@
         android:includeFontPadding="false"
         android:text="@string/currency_RMB"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="14dp"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="SpUsage" />
@@ -39,7 +39,7 @@
         android:maxLength="4"
         android:text="@string/fraction0"
         android:textColor="@color/colorPrimaryDark"
-        android:textSize="14dp"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBaseline_toBaselineOf="@+id/price_currency"
         app:layout_constraintStart_toEndOf="@+id/price_int"
         tools:ignore="SpUsage" />

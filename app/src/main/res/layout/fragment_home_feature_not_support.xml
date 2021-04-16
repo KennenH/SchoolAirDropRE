@@ -161,7 +161,7 @@
             android:layout_marginStart="@dimen/general_padding_even_larger"
             android:layout_marginTop="@dimen/general_padding"
             android:layout_marginEnd="@dimen/general_padding_even_larger"
-            android:text="@string/functionNotSupport"
+            android:text="@string/featureNotSupport"
             android:textColor="@color/primaryDarkest"
             android:textSize="@dimen/textSizeNormal"
             app:layout_constraintEnd_toEndOf="parent"

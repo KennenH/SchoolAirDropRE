@@ -184,9 +184,8 @@ public class ImagePager extends ConstraintLayout implements ViewPager.OnPageChan
 
                 new XPopup.Builder(getContext())
                         .hasStatusBar(false)
-                        .asImageViewer(pic, position, mData, false, false, -1, -1, -1, true, getContext().getColor(R.color.blackAlways), (popupView, position1) -> {
-                            popupView.updateSrcView((ImageView) binding.goodsPagerPager.getChildAt(position1));
-                        }, new MyUtil.ImageLoader())
+                        .asImageViewer(pic, position, mData, false, false, -1, -1, -1, true, getContext().getColor(R.color.blackAlways), (popupView, position1) ->
+                                popupView.updateSrcView((ImageView) binding.goodsPagerPager.getChildAt(position1)), new MyUtil.ImageLoader())
                         .show();
             });
 

@@ -172,6 +172,7 @@ object ConstantUtil {
     const val MENU_CLICK_GAP = 1000
 
 
+    ///////////////////// IM 消息类型 //////////////////////
     /**
      * IM消息类型 文本
      */
@@ -187,6 +188,12 @@ object ConstantUtil {
      */
     const val MESSAGE_TYPE_TIP = 2
 
+    /**
+     * 服务端消息 强制退出app
+     */
+    const val MESSAGE_TYPE_LOGOUT = 9
+    ///////////////////// IM 消息类型 //////////////////////
+
     //////////////////////////// KEYS ////////////////////////////////
 
     /**
@@ -201,6 +208,11 @@ object ConstantUtil {
      * AddNewActivity 页面类型
      */
     const val KEY_ADD_NEW_TYPE = "addNewPageType"
+
+    /**
+     * ResponseActivity 中根据该标识符来获取问题id
+     */
+    const val KEY_QUESTION_ID = "question&responseID"
 
     /**
      * 要登陆的alipayID

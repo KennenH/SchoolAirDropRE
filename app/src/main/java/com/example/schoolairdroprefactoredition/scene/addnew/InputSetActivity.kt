@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.addnew
 
+import android.animation.ObjectAnimator
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -12,17 +13,19 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.View.OnFocusChangeListener
+import android.view.animation.DecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import com.blankj.utilcode.util.KeyboardUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
+import com.example.schoolairdroprefactoredition.ui.components.InputToolKit
 import kotlinx.android.synthetic.main.activity_selling_add_set.*
-import kotlin.math.abs
+
 
 /**
  * [AddNewActivity]页面进入的输入标题和详细信息的页面
  */
-class InputSetActivity : ImmersionStatusBarActivity() {
+class InputSetActivity : ImmersionStatusBarActivity(), InputToolKit.InputToolKitActionListener {
 
     companion object {
 
@@ -116,8 +119,86 @@ class InputSetActivity : ImmersionStatusBarActivity() {
         intent.getIntExtra(TYPE, TYPE_TITLE)
     }
 
-    private val content by lazy {
-        intent.getStringExtra(CONTENT)
+    private val contentJson by lazy {
+        // 拿到的应该是完整的json格式纯文本，而不是带span的富文本对象
+        intent.getStringExtra(CONTENT) ?: ""
+    }
+
+    private val sadSpannable by lazy {
+//        SadSpannable(this, SadSpannable.parseJsonToSpannableJsonStyle(contentJson))
+//        SadSpannable(this, SadSpannable.parseJsonToSpannableJsonStyle("{\n" +
+//                "  \"string\": \"1234567890abcdefghijklmnopqrstuvwxyz\",\n" +
+//                "  \"style\": {\n" +
+//                "    \"bold\": {\n" +
+//                "      \"range\": \"1,5|5,7|7,10|12,18|18,19|19,20|\",\n" +
+//                "      \"value\": \"\"\n" +
+//                "    },\n" +
+//                "    \"color\": {\n" +
+//                "      \"range\": \"1,5|10,12|12,18|18,19|20,25|\",\n" +
+//                "      \"value\": \"red|red|red|red|red|\"\n" +
+//                "    },\n" +
+//                "    \"delete\": {\n" +
+//                "      \"range\": \"12,18|18,19|19,20|\",\n" +
+//                "      \"value\": \"\"\n" +
+//                "    },\n" +
+//                "    \"size\": {\n" +
+//                "      \"range\": \"1,5|7,10|10,12|18,19|19,20|20,25|25,29|\",\n" +
+//                "      \"value\": \"l|s|s|xl|xl|xl|xl|\"\n" +
+//                "    }\n" +
+//                "  }\n" +
+//                "}"))
+    }
+
+    /**
+     * 当前键盘高度
+     */
+    private var keyboardHeight = 0f
+
+    /**
+     * 当前是否加粗
+     */
+    private var isBold = false
+
+    /**
+     * 当前是否删除线
+     */
+    private var isDelete = false
+
+    /**
+     * 当前文字字体大小
+     */
+    private var spannableTextSize = InputToolKit.TEXT_SIZE_M
+
+    /**
+     * 当前是否是强调色
+     */
+    private var isStressTextColor = false
+
+    /**
+     * 文字是否被初始化解析
+     *
+     * 在页面进入时input view会初始化并解析spannable字符串
+     * 解析完毕后置为true
+     */
+    private var isSpannableInitialized = false
+
+    /**
+     * 弹出工具栏动画
+     */
+    private val ejectToolKit by lazy {
+        Runnable {
+            if (keyboardHeight > 300) {
+                ObjectAnimator.ofFloat(
+                        input_tool_kit_bar,
+                        "translationY",
+                        input_tool_kit_bar.translationY,
+                        -keyboardHeight - 25,
+                        -keyboardHeight).apply {
+                    duration = 550L
+                    interpolator = DecelerateInterpolator(0.8f)
+                }.start()
+            }
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -129,10 +210,27 @@ class InputSetActivity : ImmersionStatusBarActivity() {
         set_title.text = title
         if (type == TYPE_TITLE) {
             input.maxLines = 2
-            input_attention.text = getString(R.string.titleQuestionTip)
-        } else {
+            input_tool_kit_bar.visibility = View.GONE
+        } else if (type == TYPE_DESCRIPTION) {
+            input_tip.visibility = View.GONE
+            input_tool_kit_bar.visibility = View.VISIBLE
             input.minLines = 5
-            input_attention.text = getString(R.string.descriptionQuestionTip)
+//            input.maxLines = 7
+//            input_tool_kit_bar.setInputToolKitActionListener(this)
+//            KeyboardUtils.registerSoftInputChangedListener(this) {
+//                // 记录键盘高度，在键盘高度不变后将根据此高度拉工具栏
+//                keyboardHeight = it.toFloat()
+//                if (it > 300) {
+////                 上面是工具栏已经打开的状态那么这里就是没有打开而准备打开的状态
+////                 这也意味着，在回调附近时间内工具栏不应该是可见的
+////                 若回调时工具栏高度大于0说明是隐藏键盘，直接隐藏工具栏
+//                    input_tool_kit_bar.postDelayed({
+//                        ejectToolKit.run()
+//                    }, 120L)
+//                } else {
+//                    input_tool_kit_bar.translationY = 0f
+//                }
+//            }
         }
 
         input_warning.visibility = View.INVISIBLE
@@ -143,13 +241,69 @@ class InputSetActivity : ImmersionStatusBarActivity() {
             }
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                // do nothing
+                // 初始化使的改变不做处理
+//                if (!isSpannableInitialized) {
+//                    isSpannableInitialized = true
+//                    return
+//                }
+//
+//                if (s.isBlank()) return
+//
+//                (s as SpannableStringBuilder).apply {
+//                    val end = start + count
+//                    if (isBold) {
+//                        setSpan(
+//                                StyleSpan(Typeface.BOLD),
+//                                start,
+//                                end,
+//                                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+//                    } else {
+//                        setSpan(
+//                                NonBoldSpan(),
+//                                start,
+//                                end,
+//                                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+//                    }
+//
+//                    if (isDelete) {
+//                        setSpan(
+//                                StrikethroughSpan(),
+//                                start,
+//                                end,
+//                                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+//                    } else {
+//                        setSpan(
+//                                NonStrikethroughSpan(),
+//                                start,
+//                                end,
+//                                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+//                    }
+//
+//                    if (isStressTextColor) {
+//                        setSpan(
+//                                ForegroundColorSpan(resources.getColor(InputToolKit.TEXT_COLOR_RED, theme)),
+//                                start,
+//                                end,
+//                                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+//                    } else {
+//                        setSpan(
+//                                ForegroundColorSpan(resources.getColor(InputToolKit.TEXT_COLOR_BLACK, theme)),
+//                                start,
+//                                end,
+//                                Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+//                    }
+//
+//                    setSpan(
+//                            AbsoluteSizeSpan(MyUtil.dp2px(spannableTextSize)),
+//                            start,
+//                            end,
+//                            Spannable.SPAN_INCLUSIVE_INCLUSIVE)
+//                }
             }
 
             override fun afterTextChanged(s: Editable) {
                 if (type == TYPE_TITLE) {
                     input_tip.text = getString(R.string.textRemainCount, MAX_TITLE - input.text.length)
-
                     // 若含有空格或者换行符，将会提示无法提交
                     if (s.toString().contains(" ") || s.toString().contains("\n")) {
                         doneMenu?.isEnabled = false
@@ -158,8 +312,6 @@ class InputSetActivity : ImmersionStatusBarActivity() {
                         doneMenu?.isEnabled = true
                         input_warning.visibility = View.INVISIBLE
                     }
-                } else {
-                    input_tip.text = getString(R.string.textRemainCount, MAX_DESCRIPTION - input.text.length)
                 }
             }
         })
@@ -174,19 +326,29 @@ class InputSetActivity : ImmersionStatusBarActivity() {
 
         if (type == TYPE_TITLE) {
             input.filters = arrayOf<InputFilter>(LengthFilter(MAX_TITLE))
+            input.setText(contentJson)
         } else {
-            input.filters = arrayOf<InputFilter>(LengthFilter(MAX_DESCRIPTION))
+//            input.filters = arrayOf<InputFilter>(LengthFilter(MAX_DESCRIPTION))
+//            input.text = sadSpannable
+            input.setText(contentJson)
         }
 
-        input.setText(content)
         input.requestFocus()
+
+
+//        set_title.setOnClickListener {
+//            val json = SadSpannable.generateJson(this, input.text)
+//            LogUtils.d(json)
+//            input.text = SadSpannable(this,SadSpannable.parseJsonToSpannableJsonStyle(json))
+//        }
     }
 
     /**
      * 将用户输入返回给上一个页面
      */
     private fun sendData() {
-        intent.putExtra(RESULT, input.text.toString())
+        // 直接将spannable传出去，让add new页面去生成json字符串
+        intent.putExtra(RESULT, input.text)
         intent.putExtra(TYPE, type)
         setResult(RESULT_OK, intent)
     }
@@ -216,5 +378,21 @@ class InputSetActivity : ImmersionStatusBarActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onTextSizeChange(textSize: Int) {
+        spannableTextSize = textSize
+    }
+
+    override fun onTextBoldToggle(bold: Boolean) {
+        isBold = bold
+    }
+
+    override fun onTextStressColorToggle(isStressColor: Boolean) {
+        isStressTextColor = isStressColor
+    }
+
+    override fun onTextDeleteLineToggle(delete: Boolean) {
+        isDelete = delete
     }
 }

@@ -46,7 +46,8 @@
             android:name=".scene.main.MainActivity"
             android:configChanges="locale|layoutDirection|orientation|screenSize|keyboardHidden"
             android:label="@string/app_name"
-            android:theme="@style/splashScreenTheme">
+            android:theme="@style/splashScreenTheme"
+            android:windowSoftInputMode="adjustNothing">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -92,7 +93,6 @@
         <activity
             android:name=".scene.user.UserUpdateNameActivity"
             android:label="" />
-        <activity android:name=".scene.why.WhyActivity" />
         <activity
             android:name=".scene.post.PostActivity"
             android:label=""
@@ -129,7 +129,8 @@
             android:label="" />
         <activity
             android:name=".scene.addnew.InputSetActivity"
-            android:label="" />
+            android:label=""
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".scene.addnew.AddNewActivity"
             android:label="" />

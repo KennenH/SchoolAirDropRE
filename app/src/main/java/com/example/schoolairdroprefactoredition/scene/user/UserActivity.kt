@@ -237,13 +237,12 @@ class UserActivity : ImmersionStatusBarActivity(), View.OnClickListener, OverDra
         when (v?.id) {
             // 用户头像
             R.id.user_avatar -> {
-                UserModifyInfoActivity.start(this)
-//                XPopup.Builder(this@UserActivity)
-//                        .asImageViewer(v as ImageView,
-//                                ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(userInfo?.userAvatar),
-//                                false, -1, -1, -1,
-//                                true, getColor(R.color.blackAlways), ImageLoader())
-//                        .show()
+                XPopup.Builder(this@UserActivity)
+                        .asImageViewer(v as ImageView,
+                                ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(userInfo?.userAvatar),
+                                false, -1, -1, -1,
+                                true, getColor(R.color.blackAlways), ImageLoader())
+                        .show()
             }
 
             // 在售

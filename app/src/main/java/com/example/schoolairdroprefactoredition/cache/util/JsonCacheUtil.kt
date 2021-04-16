@@ -9,6 +9,7 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.CacheWithDuration
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.google.gson.Gson
+import java.lang.Exception
 
 /**
  * 使用SP保存数据
@@ -136,7 +137,11 @@ class JsonCacheUtil private constructor() {
         return if (duration != -1L && duration - System.currentTimeMillis() <= 0) { // 已过期
             null
         } else { // 未过期
-            mGson.fromJson(cache, clazz)
+            try {
+                mGson.fromJson(cache, clazz)
+            } catch (e: Exception) {
+                null
+            }
         }
     }
 

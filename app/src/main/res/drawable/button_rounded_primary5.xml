@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-<item android:state_pressed="false">
-    <shape android:shape="rectangle">
-        <solid android:color="@color/primaryDark" />
-        <corners android:radius="@dimen/general_padding_small" />
-    </shape>
-</item>
-<item android:state_pressed="true">
-    <shape android:shape="rectangle">
-        <solid android:color="@color/primaryDarker" />
-        <corners android:radius="@dimen/general_padding_small" />
-    </shape>
-</item>
+    <item android:state_pressed="false" android:state_selected="false">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/primaryDark" />
+            <corners android:radius="@dimen/general_padding_small" />
+        </shape>
+    </item>
+    <item android:state_pressed="true" android:state_selected="false">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/primaryDarker" />
+            <corners android:radius="@dimen/general_padding_small" />
+        </shape>
+    </item>
+    <item android:state_pressed="false" android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorAccentDark" />
+            <corners android:radius="@dimen/general_padding_small" />
+        </shape>
+    </item>
+    <item android:state_pressed="true" android:state_selected="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/colorPrimaryDark" />
+            <corners android:radius="@dimen/general_padding_small" />
+        </shape>
+    </item>
 </selector>
