@@ -3,18 +3,16 @@ package com.example.schoolairdroprefactoredition.scene.main.base
 import android.view.View
 import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.constant.PermissionConstants
-import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment
 import com.example.schoolairdroprefactoredition.scene.main.MainActivity
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder.OnStatePlaceholderActionListener
-import com.example.schoolairdroprefactoredition.utils.DialogUtil
 
 /**
  * 主页面淘物和求购父页面的父类
  * [com.example.schoolairdroprefactoredition.scene.main.home.PurchasingParentFragment]
- * [com.example.schoolairdroprefactoredition.scene.main.home.InquiryParentFragment]
+ * [com.example.schoolairdroprefactoredition.scene.main.home.IDesireParentFragment]
  */
 open class BaseParentFragment : StatePlaceholderFragment(), OnStatePlaceholderActionListener {
 

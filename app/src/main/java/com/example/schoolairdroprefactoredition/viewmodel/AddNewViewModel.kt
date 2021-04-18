@@ -1,21 +1,15 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
 import android.app.Application
-import android.content.Context
-import android.text.Spannable
-import android.text.SpannableString
-import android.text.Spanned
-import android.text.SpannedString
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
-import com.example.schoolairdroprefactoredition.cache.NewInquiryDraftCache
+import com.example.schoolairdroprefactoredition.cache.NewIDesireDraftCache
 import com.example.schoolairdroprefactoredition.repository.AddNewRepository
 import com.example.schoolairdroprefactoredition.repository.UploadRepository
-import com.example.schoolairdroprefactoredition.ui.components.SadSpannable
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.luck.picture.lib.entity.LocalMedia
 import kotlinx.coroutines.launch
@@ -30,7 +24,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * 恢复上传帖子页面草稿 结果
      */
-    private val restoredPostDraftLiveData = MutableLiveData<NewInquiryDraftCache>()
+    private val restoredPostDraftLiveData = MutableLiveData<NewIDesireDraftCache>()
 
     private val addNewRepository: AddNewRepository = AddNewRepository.getInstance()
 
@@ -81,7 +75,9 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                                     title, description,
                                     longitude, latitude,
                                     isBrandNew, isQuotable, price) {
-                                submitItemLiveData.postValue(Triple(it, Pair(R.string.uploadSuccess, true), it))
+                                submitItemLiveData.postValue(Triple(it?.isSuccess
+                                        ?: false, Pair(R.string.uploadSuccess, true), it?.isSuccess
+                                        ?: false))
                             }
                         } else {
                             submitItemLiveData.postValue(Triple(false, Pair(-1, false), false))
@@ -127,7 +123,9 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                                     goodsID, title, description,
                                     longitude, latitude,
                                     isBrandNew, isQuotable, price) {
-                                modifyGoodsLiveData.postValue(Triple(it, Pair(R.string.uploadSuccess, true), it))
+                                modifyGoodsLiveData.postValue(Triple(it?.isSuccess
+                                        ?: false, Pair(R.string.uploadSuccess, true), it?.isSuccess
+                                        ?: false))
                             }
                         } else {
                             modifyGoodsLiveData.postValue(Triple(false, Pair(-1, false), false))
@@ -146,23 +144,90 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     /**
-     * 提交帖子
+     * 提交求购信息
      */
-    fun submitInquiry(token: String,
-                      cover: String,
-                      HWRatio: Float,
+    fun submitIDesire(token: String,
+                      tagID: Int,
                       picSet: List<String>,
-                      title: String,
                       content: String,
-                      longitude: Double, latitude: Double): LiveData<Boolean> {
-        val submitInquiryLiveData = MutableLiveData<Boolean>()
-        addNewRepository.submitNewInquiry(
-                token, cover,
-                HWRatio, picSet,
-                title, content,
-                longitude, latitude) {
+                      longitude: Double, latitude: Double): LiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
+        val submitInquiryLiveData = MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>>()
+        viewModelScope.launch {
+            uploadRepository.upload(
+                    token, picSet,
+                    ConstantUtil.UPLOAD_TYPE_INQUIRY,
+                    isSubscribeProgress = true) { success, tip, taskAndKeys, allSuccess ->
+                // 上一步完成
+                if (success) {
+                    // 所有步骤都完成
+                    if (allSuccess) {
+                        // 返回出来的结果为空
+                        if (taskAndKeys != null) {
+                            submitInquiryLiveData.postValue(Triple(true, Pair(R.string.requestingServer, true), false))
+                            addNewRepository.submitNewInquiry(
+                                    token, tagID, picSet.joinToString(","),
+                                    content, longitude, latitude) {
+                                submitInquiryLiveData.postValue(Triple(it?.isSuccess
+                                        ?: false, Pair(R.string.uploadSuccess, true), it?.isSuccess
+                                        ?: false))
+                            }
+                        } else {
+                            submitInquiryLiveData.postValue(Triple(false, Pair(-1, false), false))
+                        }
+                    } else {
+                        // 这里出来是订阅的每一步流程，需要外部显示tip
+                        submitInquiryLiveData.postValue(Triple(true, tip, false))
+                    }
+                } else {
+                    // 上一步出错，流程终止
+                    submitInquiryLiveData.postValue(Triple(false, Pair(-1, false), false))
+                }
+            }
         }
         return submitInquiryLiveData
+    }
+
+    /**
+     * 修改求购信息
+     */
+    fun modifyInquiry(
+            token: String, picSet: List<String>,
+            tagID: Int, content: String,
+            longitude: Double, latitude: Double
+    ): MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
+        val modifyInquiryLiveData = MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>>()
+        viewModelScope.launch {
+            uploadRepository.upload(
+                    token, picSet, ConstantUtil.UPLOAD_TYPE_INQUIRY,
+                    isSubscribeProgress = true) { success, tip, taskAndKeys, allSuccess ->
+                // 上一步完成
+                if (success) {
+                    // 所有步骤都完成
+                    if (allSuccess) {
+                        // 返回出来的结果为空
+                        if (taskAndKeys != null) {
+                            modifyInquiryLiveData.postValue(Triple(true, Pair(R.string.requestingServer, true), false))
+                            addNewRepository.submitNewInquiry(
+                                    token, tagID, picSet.joinToString(","),
+                                    content, longitude, latitude) {
+                                modifyInquiryLiveData.postValue(Triple(it?.isSuccess
+                                        ?: false, Pair(R.string.uploadSuccess, true), it?.isSuccess
+                                        ?: false))
+                            }
+                        } else {
+                            modifyInquiryLiveData.postValue(Triple(false, Pair(-1, false), false))
+                        }
+                    } else {
+                        // 这里出来是订阅的每一步流程，需要外部显示tip
+                        modifyInquiryLiveData.postValue(Triple(true, tip, false))
+                    }
+                } else {
+                    // 上一步出错，流程终止
+                    modifyInquiryLiveData.postValue(Triple(false, Pair(-1, false), false))
+                }
+            }
+        }
+        return modifyInquiryLiveData
     }
 
     /**
@@ -184,14 +249,20 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * 保存用户帖子草稿
      */
-    fun savePostDraft(cover: String, hwRatio: Float, picSet: List<LocalMedia>, tag: String, anonymous: Boolean, title: String, content: String) {
-        addNewRepository.savePostDraft(cover, hwRatio, picSet, tag, anonymous, title, content)
+    fun savePostDraft(
+            picSet: List<LocalMedia>,
+            tag: String,
+            content: String) {
+        addNewRepository.savePostDraft(
+                picSet,
+                tag,
+                content)
     }
 
     /**
      * 恢复用户帖子草稿
      */
-    fun restoreInquiryDraft(): LiveData<NewInquiryDraftCache> {
+    fun restoreIDesireDraft(): LiveData<NewIDesireDraftCache> {
         restoredPostDraftLiveData.value = addNewRepository.restoreInquiryDraft()
         return restoredPostDraftLiveData
     }

@@ -13,7 +13,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,9 +29,9 @@
                 android:adjustViewBounds="true"
                 android:maxHeight="360dp"
                 android:minHeight="200dp"
-                android:scaleType="centerCrop"
+                android:scaleType="fitStart"
                 android:src="@drawable/pk" />
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
     </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -63,11 +63,12 @@
             android:id="@+id/news_avatar"
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:layout_marginTop="@dimen/general_padding_large"
             android:scaleType="centerCrop"
             android:src="@drawable/pk"
-            app:layout_constraintBottom_toBottomOf="@+id/news_likes"
+            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/news_title"
-            app:layout_constraintTop_toTopOf="@+id/news_likes" />
+            app:layout_constraintTop_toBottomOf="@+id/news_title" />
 
         <TextView
             android:id="@+id/news_user_name"
@@ -79,28 +80,27 @@
             android:text="ikennenx"
             android:textColor="@color/primaryText"
             android:textSize="@dimen/textSizeNormal"
-            app:layout_constraintBottom_toBottomOf="@+id/news_likes"
-            app:layout_constraintEnd_toStartOf="@+id/news_likes"
+            app:layout_constraintBottom_toBottomOf="@+id/news_avatar"
             app:layout_constraintStart_toEndOf="@id/news_avatar"
-            app:layout_constraintTop_toTopOf="@+id/news_likes" />
+            app:layout_constraintTop_toTopOf="@+id/news_avatar" />
 
-        <TextView
-            android:id="@+id/news_likes"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/general_padding_large"
-            android:background="@drawable/bg_round_stroke_primary"
-            android:gravity="center"
-            android:paddingStart="@dimen/general_padding_small"
-            android:paddingTop="@dimen/general_padding_tiny"
-            android:paddingEnd="@dimen/general_padding_small"
-            android:paddingBottom="@dimen/general_padding_tiny"
-            android:text="1123"
-            android:textColor="@color/primaryText"
-            android:textSize="@dimen/textSizeNormal"
-            app:drawableStartCompat="@drawable/ic_thumb"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/news_title"
-            app:layout_constraintTop_toBottomOf="@+id/news_title" />
+        <!--        <TextView-->
+        <!--            android:id="@+id/news_likes"-->
+        <!--            android:layout_width="wrap_content"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="@dimen/general_padding_large"-->
+        <!--            android:background="@drawable/bg_round_stroke_primary"-->
+        <!--            android:gravity="center"-->
+        <!--            android:paddingStart="@dimen/general_padding_small"-->
+        <!--            android:paddingTop="@dimen/general_padding_tiny"-->
+        <!--            android:paddingEnd="@dimen/general_padding_small"-->
+        <!--            android:paddingBottom="@dimen/general_padding_tiny"-->
+        <!--            android:text="1123"-->
+        <!--            android:textColor="@color/primaryText"-->
+        <!--            android:textSize="@dimen/textSizeNormal"-->
+        <!--            app:drawableStartCompat="@drawable/ic_thumb"-->
+        <!--            app:layout_constraintBottom_toBottomOf="parent"-->
+        <!--            app:layout_constraintEnd_toEndOf="@+id/news_title"-->
+        <!--            app:layout_constraintTop_toBottomOf="@+id/news_title" />-->
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

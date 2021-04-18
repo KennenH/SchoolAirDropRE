@@ -63,19 +63,6 @@
         app:layout_constraintStart_toStartOf="@+id/left"
         app:layout_constraintTop_toBottomOf="@+id/result_title" />
 
-    <TextView
-        android:id="@+id/result_why"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/why"
-        android:visibility="gone"
-        android:textColor="@color/primaryText"
-        android:layout_marginBottom="@dimen/general_padding_bit_larger"
-        android:textSize="@dimen/textSizeNormal"
-        app:layout_constraintBottom_toTopOf="@+id/result_confirm"
-        app:layout_constraintEnd_toStartOf="@+id/right"
-        app:layout_constraintStart_toStartOf="@+id/left" />
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottom"
         android:layout_width="wrap_content"

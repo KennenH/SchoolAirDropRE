@@ -2,41 +2,41 @@ package com.example.schoolairdroprefactoredition.scene.main.home
 
 import android.content.Intent
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import androidx.core.app.ActivityOptionsCompat
-import androidx.core.util.Pair
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.amap.api.location.AMapLocation
 import com.blankj.utilcode.util.SizeUtils
-import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
-import com.example.schoolairdroprefactoredition.scene.post.PostActivity
-import com.example.schoolairdroprefactoredition.ui.adapter.InquiryRecyclerAdapter
-import com.example.schoolairdroprefactoredition.ui.adapter.InquiryRecyclerAdapter.OnInquiryItemClickListener
-import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity
+import com.example.schoolairdroprefactoredition.ui.adapter.IDesireRecyclerAdapter
+import com.example.schoolairdroprefactoredition.ui.adapter.IDesireRecyclerAdapter.OnInquiryItemClickListener
+import com.example.schoolairdroprefactoredition.ui.components.BaseIDesireEntity
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
-import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration
 import com.example.schoolairdroprefactoredition.viewmodel.InquiryViewModel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
+import androidx.core.app.ActivityOptionsCompat
+import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.scene.idesire.IDesireActivity
+import androidx.core.util.Pair
 
-class InquiryFragment : BaseChildFragment(), InquiryRecyclerAdapter.OnNoMoreDataListener, OnInquiryItemClickListener {
+class IDesireFragment : BaseChildFragment(), IDesireRecyclerAdapter.OnNoMoreDataListener, OnInquiryItemClickListener {
 
     companion object {
-        fun newInstance(): InquiryFragment {
-            return InquiryFragment()
+        fun newInstance(): IDesireFragment {
+            return IDesireFragment()
         }
     }
 
-    private val inquiryViewModel by lazy {
+    private val iDesireViewModel by lazy {
         ViewModelProvider(this).get(InquiryViewModel::class.java)
     }
 
-    private val inquiryRecyclerAdapter by lazy {
-        InquiryRecyclerAdapter().also {
+    private val iDesireRecyclerAdapter by lazy {
+        IDesireRecyclerAdapter().also {
             it.setOnNoMoreDataListener(this)
             it.setOnInquiryItemClickListener(this)
         }
@@ -53,11 +53,11 @@ class InquiryFragment : BaseChildFragment(), InquiryRecyclerAdapter.OnNoMoreData
     override fun initView(binding: FragmentHomeContentBinding?) {
         this.binding = binding
         binding?.homeRecycler?.apply {
-            setOnLoadMoreListener(this@InquiryFragment)
+            setOnLoadMoreListener(this@IDesireFragment)
             setPadding(SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f))
             layoutManager = mManager
-            addItemDecoration(MarginItemDecoration(SizeUtils.dp2px(1f), true))
-            adapter = inquiryRecyclerAdapter
+//            addItemDecoration(MarginItemDecoration(SizeUtils.dp2px(8f), true))
+            adapter = iDesireRecyclerAdapter
         }
     }
 
@@ -80,42 +80,52 @@ class InquiryFragment : BaseChildFragment(), InquiryRecyclerAdapter.OnNoMoreData
     }
 
     override fun getOnlineData(aMapLocation: AMapLocation?) {
-        inquiryViewModel.getInquiry().observeOnce(viewLifecycleOwner, { data: List<BaseHomeNewsEntity> ->
+        iDesireViewModel.getInquiry().observeOnce(viewLifecycleOwner, { data: List<BaseIDesireEntity> ->
             if (data.isNullOrEmpty()) {
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_INQUIRY)
             } else {
-                inquiryRecyclerAdapter.setList(data)
+                iDesireRecyclerAdapter.setList(data)
                 showContentContainer()
             }
         })
     }
 
     override fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?) {
-        inquiryViewModel.getInquiry(aMapLocation?.longitude, aMapLocation?.latitude).observeOnce(viewLifecycleOwner, { data: List<BaseHomeNewsEntity> ->
+        iDesireViewModel.getInquiry(aMapLocation?.longitude, aMapLocation?.latitude).observeOnce(viewLifecycleOwner, { data: List<BaseIDesireEntity> ->
             refreshLayout.finishRefresh()
             if (data.isNullOrEmpty()) {
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_INQUIRY)
             } else {
-                inquiryRecyclerAdapter.setList(data)
+                iDesireRecyclerAdapter.setList(data)
                 showContentContainer()
             }
         })
     }
 
+    /**
+     * 当获取到的数据小于默认条数会添加尾巴以提示用户没有更多
+     */
     override fun onNoMoreData() {
         binding?.homeRecycler?.setIsNoMoreData(true)
     }
 
+    /**
+     * 当页面被刷新时重置没有更多数据的标识符
+     */
     override fun onNoMoreDataRefresh() {
         binding?.homeRecycler?.setIsNoMoreData(false)
     }
 
-    override fun onHomePostItemClicked(pager: CardView, title: TextView) {
-        val intent = Intent(context, PostActivity::class.java)
-        val pair1 = Pair.create<View, String>(pager, getString(R.string.sharedElementPostActivityWrapper))
-        val pair2 = Pair.create<View, String>(title, getString(R.string.sharedElementPostActivityTitle))
+    /**
+     * 以元素共享动画+圆角渐变打开求购详情页面
+     */
+    override fun onHomePostItemClicked(card: View, content: View, avatar: View, name: View) {
+        val intent = Intent(context, IDesireActivity::class.java)
+        val wrapper = Pair.create(content, getString(R.string.sharedElementPostActivityWrapper))
+        val avatarPair = Pair.create(avatar, getString(R.string.sharedElementPostActivityAvatar))
+        val namePair = Pair.create(name, getString(R.string.sharedElementPostActivityName))
         val options = activity?.let {
-            ActivityOptionsCompat.makeSceneTransitionAnimation(it, pair1, pair2)
+            ActivityOptionsCompat.makeSceneTransitionAnimation(it, wrapper, avatarPair, namePair)
         }
         startActivity(intent, options?.toBundle())
     }

@@ -9,7 +9,7 @@
     <item
         android:id="@+id/navigation_playground"
         android:icon="@drawable/ic_all"
-        android:title="@string/inquiry" />
+        android:title="@string/idesire" />
 
     <item
         android:id="@+id/navigation_hidden"

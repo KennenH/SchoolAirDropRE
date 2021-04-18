@@ -81,16 +81,7 @@ class UploadRepository private constructor() {
             isSubscribeProgress: Boolean = false,
             onResult: (success: Boolean, tip: Pair<Int, Boolean>, taskAndKeys: DomainUploadPath.DataBean?, allSuccess: Boolean) -> Unit) {
         // 若发现传进来的图片数量是0则直接视为完成
-        if (fileLocalPaths.isEmpty()) {
-            onResult(true,
-                    Pair(R.string.noNeedToHandleImages, true),
-                    DomainUploadPath.DataBean().also {
-                        it.taskId = ""
-                        it.keys = ArrayList()
-                    },
-                    true)
-            return
-        }
+        if (fileLocalPaths.isEmpty()) return
 
         // 处理准备上传的文件
         if (isSubscribeProgress) onResult(true, Pair(R.string.handlingLocalMedia, true), null, false)

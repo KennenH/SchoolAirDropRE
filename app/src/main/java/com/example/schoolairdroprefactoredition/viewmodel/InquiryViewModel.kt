@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.schoolairdroprefactoredition.repository.InquiryRepository
-import com.example.schoolairdroprefactoredition.ui.components.BaseHomeNewsEntity
+import com.example.schoolairdroprefactoredition.ui.components.BaseIDesireEntity
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 
 class InquiryViewModel : ViewModel() {
@@ -19,9 +19,9 @@ class InquiryViewModel : ViewModel() {
         InquiryRepository.getInstance()
     }
 
-    private val inquiryLiveData = MutableLiveData<List<BaseHomeNewsEntity>>()
+    private val inquiryLiveData = MutableLiveData<List<BaseIDesireEntity>>()
 
-    fun getInquiry(longitude: Double?, latitude: Double?): LiveData<List<BaseHomeNewsEntity>> {
+    fun getInquiry(longitude: Double?, latitude: Double?): LiveData<List<BaseIDesireEntity>> {
         page = 0
         this.latitude = latitude ?: AppConfig.DEBUG_LATITUDE
         this.longitude = longitude ?: AppConfig.DEBUG_LONGITUDE
@@ -31,7 +31,7 @@ class InquiryViewModel : ViewModel() {
         return inquiryLiveData
     }
 
-    fun getInquiry(): LiveData<List<BaseHomeNewsEntity>> {
+    fun getInquiry(): LiveData<List<BaseIDesireEntity>> {
         inquiryRepository.getInquiry(page++) {
             inquiryLiveData.postValue(it)
         }

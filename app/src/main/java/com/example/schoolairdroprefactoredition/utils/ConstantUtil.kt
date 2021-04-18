@@ -71,6 +71,7 @@ object ConstantUtil {
     /**
      * 校园空投 网络接口base url
      */
+    @Deprecated("use 8080 instead")
     const val SCHOOL_AIRDROP_BASE_URL_DEPRECATED = "http://schoolairdrop.com:8000/"
     const val SCHOOL_AIRDROP_BASE_URL = "http://schoolairdrop.com:8080/"
     const val SCHOOL_AIRDROP_BASE_URL_IM = "http://schoolairdrop.com:2020/"
@@ -153,7 +154,7 @@ object ConstantUtil {
     /**
      * 图片上传类型 帖子
      */
-    const val UPLOAD_TYPE_POST = "post"
+    const val UPLOAD_TYPE_INQUIRY = "inquiry"
 
     /**
      * 图片上传类型 头像
@@ -273,6 +274,11 @@ object ConstantUtil {
      * 获取物品id 键
      */
     const val KEY_GOODS_ID = "key_goods_id"
+
+    /**
+     * 获取求购id 键
+     */
+    const val KEY_IDESIRE_ID = "key_inquiry_id"
 
     /**
      * 打开用户个人信息页面时是否可修改信息

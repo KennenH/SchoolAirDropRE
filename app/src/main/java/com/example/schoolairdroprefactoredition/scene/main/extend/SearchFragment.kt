@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.scene.main.search
+package com.example.schoolairdroprefactoredition.scene.main.extend
 
 import android.os.Bundle
 import android.view.LayoutInflater

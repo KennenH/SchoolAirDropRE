@@ -200,7 +200,6 @@
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-
                 <TextView
                     android:id="@+id/pic_set_title"
                     android:layout_width="0dp"
@@ -407,18 +406,6 @@
                     app:SO_title="@string/second_hand"
                     app:layout_constraintTop_toBottomOf="@+id/option_negotiable" />
 
-                <com.example.schoolairdroprefactoredition.ui.components.OptionItem
-                    android:id="@+id/option_anonymous"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/general_padding_large"
-                    android:layout_marginTop="@dimen/general_padding_small"
-                    android:layout_marginEnd="@dimen/general_padding_large"
-                    app:SO_checked="true"
-                    app:SO_isSwitch="true"
-                    app:SO_title="@string/anonymous"
-                    app:layout_constraintTop_toBottomOf="@+id/option_secondHand" />
-
                 <TextView
                     android:id="@+id/detail_title"
                     android:layout_width="wrap_content"
@@ -431,7 +418,7 @@
                     android:textSize="@dimen/textSizeNormal"
                     app:drawableEndCompat="@drawable/ic_importance"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/option_anonymous" />
+                    app:layout_constraintTop_toBottomOf="@+id/option_secondHand" />
 
                 <LinearLayout
                     android:id="@+id/option_description_wrapper"

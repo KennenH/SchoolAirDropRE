@@ -37,6 +37,9 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
+            android:name=".scene.idesire.IDesireActivity"
+            android:label="" />
+        <activity
             android:name=".scene.settings.FeedbackActivity"
             android:label="" />
         <activity
@@ -93,10 +96,6 @@
         <activity
             android:name=".scene.user.UserUpdateNameActivity"
             android:label="" />
-        <activity
-            android:name=".scene.post.PostActivity"
-            android:label=""
-            android:theme="@style/AppTheme.PostsActivity" />
         <activity
             android:name=".scene.switchaccount.SwitchAccountActivity"
             android:label="" />

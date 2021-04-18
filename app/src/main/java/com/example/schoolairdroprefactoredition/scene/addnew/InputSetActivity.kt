@@ -119,8 +119,7 @@ class InputSetActivity : ImmersionStatusBarActivity(), InputToolKit.InputToolKit
         intent.getIntExtra(TYPE, TYPE_TITLE)
     }
 
-    private val contentJson by lazy {
-        // 拿到的应该是完整的json格式纯文本，而不是带span的富文本对象
+    private val content by lazy {
         intent.getStringExtra(CONTENT) ?: ""
     }
 
@@ -213,7 +212,7 @@ class InputSetActivity : ImmersionStatusBarActivity(), InputToolKit.InputToolKit
             input_tool_kit_bar.visibility = View.GONE
         } else if (type == TYPE_DESCRIPTION) {
             input_tip.visibility = View.GONE
-            input_tool_kit_bar.visibility = View.VISIBLE
+            input_tool_kit_bar.visibility = View.GONE
             input.minLines = 5
 //            input.maxLines = 7
 //            input_tool_kit_bar.setInputToolKitActionListener(this)
@@ -326,11 +325,11 @@ class InputSetActivity : ImmersionStatusBarActivity(), InputToolKit.InputToolKit
 
         if (type == TYPE_TITLE) {
             input.filters = arrayOf<InputFilter>(LengthFilter(MAX_TITLE))
-            input.setText(contentJson)
+            input.setText(content)
         } else {
 //            input.filters = arrayOf<InputFilter>(LengthFilter(MAX_DESCRIPTION))
 //            input.text = sadSpannable
-            input.setText(contentJson)
+            input.setText(content)
         }
 
         input.requestFocus()
@@ -348,7 +347,7 @@ class InputSetActivity : ImmersionStatusBarActivity(), InputToolKit.InputToolKit
      */
     private fun sendData() {
         // 直接将spannable传出去，让add new页面去生成json字符串
-        intent.putExtra(RESULT, input.text)
+        intent.putExtra(RESULT, input.text.toString())
         intent.putExtra(TYPE, type)
         setResult(RESULT_OK, intent)
     }

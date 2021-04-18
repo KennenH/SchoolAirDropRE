@@ -116,28 +116,28 @@
         </com.google.android.flexbox.FlexboxLayout>
     </androidx.core.widget.NestedScrollView>
 
-    <TextView
-        android:id="@+id/select_tag_why"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/general_padding_large"
-        android:drawablePadding="@dimen/general_padding_tiny"
-        android:gravity="center"
-        android:padding="@dimen/general_padding_small"
-        android:text="@string/whyTagSoFew"
-        android:textColor="@color/primaryText"
-        android:textSize="@dimen/textSizeMin"
-        app:drawableStartCompat="@drawable/ic_why"
-        app:layout_constraintBottom_toTopOf="@+id/confirm"
-        app:layout_constraintEnd_toStartOf="@+id/right"
-        app:layout_constraintStart_toStartOf="@+id/left" />
+    <!--    <TextView-->
+    <!--        android:id="@+id/select_tag_why"-->
+    <!--        android:layout_width="wrap_content"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:layout_marginBottom="@dimen/general_padding_large"-->
+    <!--        android:drawablePadding="@dimen/general_padding_tiny"-->
+    <!--        android:gravity="center"-->
+    <!--        android:padding="@dimen/general_padding_small"-->
+    <!--        android:text="@string/whyTagSoFew"-->
+    <!--        android:textColor="@color/primaryText"-->
+    <!--        android:textSize="@dimen/textSizeMin"-->
+    <!--        app:drawableStartCompat="@drawable/ic_why"-->
+    <!--        app:layout_constraintBottom_toTopOf="@+id/confirm"-->
+    <!--        app:layout_constraintEnd_toStartOf="@+id/right"-->
+    <!--        app:layout_constraintStart_toStartOf="@+id/left" />-->
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottom_tag"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.6" />
+        app:layout_constraintGuide_percent="0.72" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottom_cancel"
@@ -153,13 +153,13 @@
         android:background="@drawable/button_rounded_theme_dark"
         android:gravity="center"
         android:padding="@dimen/general_padding_large"
-        android:layout_marginBottom="@dimen/general_padding_bit_larger"
         android:text="@string/confirm"
         android:textColor="@color/whiteAlways"
         android:textSize="@dimen/textSizeLarge"
         app:layout_constraintBottom_toTopOf="@+id/cancel"
         app:layout_constraintEnd_toStartOf="@+id/right"
-        app:layout_constraintStart_toStartOf="@+id/left" />
+        app:layout_constraintStart_toStartOf="@+id/left"
+        app:layout_constraintTop_toBottomOf="@+id/nestedScrollView" />
 
     <TextView
         android:id="@+id/cancel"
@@ -173,6 +173,7 @@
         android:textSize="@dimen/textSizeLarge"
         app:layout_constraintBottom_toTopOf="@+id/bottom_cancel"
         app:layout_constraintEnd_toStartOf="@+id/right"
-        app:layout_constraintStart_toStartOf="@+id/left" />
+        app:layout_constraintStart_toStartOf="@+id/left"
+        app:layout_constraintTop_toBottomOf="@id/confirm" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

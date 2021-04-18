@@ -43,13 +43,15 @@ class AddNewResultActivity : ImmersionStatusBarActivity() {
      */
     annotation class AddNewResultTips {
         companion object {
-            var SUCCESS_NEW_ITEM = R.string.submitSuccessTip
-            var SUCCESS_MODIFY_ITEM = R.string.modifySuccessTip
-            var FAILED_ADD = R.string.submitFailedTip
-            var FAILED_MODIFY = R.string.modifyFailedTip
-            var FAILED_PREPARE = R.string.picturePrepareFailed
-            var LOCATION_FAILED_NEW_ITEM = R.string.submitItemLocationFailedTip
-            var LOCATION_FAILED_MODIFY_ITEM = R.string.modifyItemLocationFailedTip
+            const val SUCCESS_NEW = R.string.submitSuccessTip
+            const val SUCCESS_MODIFY = R.string.modifySuccessTip
+
+            const val FAILED_ADD = R.string.submitFailedTip
+            const val FAILED_MODIFY = R.string.modifyFailedTip
+            const val FAILED_PREPARE = R.string.picturePrepareFailed
+
+            const val LOCATION_FAILED_NEW = R.string.submitItemLocationFailedTip
+            const val LOCATION_FAILED_MODIFY = R.string.modifyItemLocationFailedTip
         }
     }
 
@@ -60,22 +62,20 @@ class AddNewResultActivity : ImmersionStatusBarActivity() {
         val intent = intent
         var isSuccess = false
         var pageTip = AddNewResultTips.FAILED_ADD
+
         if (intent != null) {
             pageTip = intent.getIntExtra(PAGE_TIP, pageTip)
             isSuccess = intent.getBooleanExtra(IS_SUCCESS, false)
         }
         if (isSuccess) {
-            binding.resultWhy.visibility = View.GONE
             binding.resultTitle.text = getString(TITLE_ADD_NEW_SUCCESS)
             binding.resultIcon.setImageResource(ICON_SUCCESS)
         } else {
-            // TODO: 2020/11/27 为什么出错页面
-            binding.resultWhy.visibility = View.GONE
             binding.resultTitle.text = getString(TITLE_ADD_NEW_FAILED)
             binding.resultIcon.setImageResource(ICON_FAILED)
         }
         binding.resultTip.text = getString(pageTip)
-        binding.resultConfirm.setOnClickListener { v: View? ->
+        binding.resultConfirm.setOnClickListener {
             finish()
             AnimUtil.activityExitAnimDown(this)
         }

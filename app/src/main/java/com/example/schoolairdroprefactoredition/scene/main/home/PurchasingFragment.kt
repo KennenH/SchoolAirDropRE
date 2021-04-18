@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.main.home
 
+import android.widget.Toast
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
 import com.example.schoolairdroprefactoredition.ui.adapter.BaseFooterAdapter
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
@@ -115,9 +116,10 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
                 // 如果当前adapter没有数据且加载失败了则显示placeholder
                 if (purchasingRecyclerAdapter.data.isEmpty()) {
                     showPlaceHolder(StatePlaceHolder.TYPE_ERROR)
-                } else {
-                    DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
                 }
+//                else {
+//                    DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
+//                }
             }
         }
     }
@@ -127,7 +129,8 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
      */
     override fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?) {
         if (aMapLocation == null) {
-            DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLocation)
+//            DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLocation)
+            Toast.makeText(context, R.string.errorLocation, Toast.LENGTH_SHORT).show()
             return
         }
         purchasingViewModel.getGoodsInfo(aMapLocation.longitude, aMapLocation.latitude).observeOnce(viewLifecycleOwner) {
@@ -136,7 +139,8 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
             if (it != null) {
                 purchasingRecyclerAdapter.setList(it.data)
             } else {
-                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
+//                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
+                Toast.makeText(context, R.string.systemBusy, Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -151,7 +155,8 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
             if (it != null) {
                 purchasingRecyclerAdapter.addData(it.data)
             } else {
-                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
+//                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
+                Toast.makeText(context, R.string.systemBusy, Toast.LENGTH_SHORT).show()
             }
         }
     }

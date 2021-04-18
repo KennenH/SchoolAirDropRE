@@ -100,7 +100,7 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
             binding.apply {
                 // 修改物品信息按钮
                 modify.setOnClickListener {
-                    AddNewActivity.startModify(context, bean?.goods_id)
+                    AddNewActivity.startModifyGoods(context, bean?.goods_id)
                     dialog?.dismiss()
                 }
 

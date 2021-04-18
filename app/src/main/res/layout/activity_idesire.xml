@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context=".scene.idesire.IDesireActivity">
+
+    <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryPurple" />
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:overScrollMode="never">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/posts_images"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:transitionGroup="true"
+                    android:transitionName="@string/sharedElementPostActivityWrapper"
+                    app:cardBackgroundColor="@color/colorPrimaryPurple"
+                    app:cardCornerRadius="0dp"
+                    app:cardElevation="0dp"
+                    app:contentPadding="@dimen/general_padding_large"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <TextView
+                        android:id="@+id/posts_title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="@dimen/general_padding_larger"
+                        android:paddingTop="?attr/actionBarSize"
+                        android:text="收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯"
+                        android:textColor="@color/whiteAlways"
+                        android:textSize="@dimen/textSizeLarge"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/posts_images" />
+                    <!--                        android:transitionName="@string/sharedElementPostActivityTitle"-->
+
+
+                    <!--                    <com.example.schoolairdroprefactoredition.ui.components.ImagePager-->
+                    <!--                        android:id="@+id/posts_pager"-->
+                    <!--                        android:layout_width="match_parent"-->
+                    <!--                        android:layout_height="wrap_content"-->
+                    <!--                        android:overScrollMode="never" />-->
+                </com.google.android.material.card.MaterialCardView>
+
+
+                <com.facebook.drawee.view.SimpleDraweeView
+                    android:id="@+id/posts_poster_avatar"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginStart="@dimen/general_padding_bit_larger"
+                    android:layout_marginTop="@dimen/general_padding_bit_larger"
+                    android:contentDescription="@string/avatar"
+                    android:scaleType="centerCrop"
+                    android:transitionName="@string/sharedElementPostActivityAvatar"
+                    app:actualImageResource="@drawable/pk"
+                    app:layout_constraintStart_toStartOf="@+id/posts_images"
+                    app:layout_constraintTop_toBottomOf="@id/posts_images"
+                    app:roundedCornerRadius="@dimen/general_round_rect" />
+
+                <TextView
+                    android:id="@+id/posts_poster_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/general_padding"
+                    android:text="ikennenx"
+                    android:textColor="@color/primaryText"
+                    android:textSize="@dimen/textSizeNormal"
+                    android:transitionName="@string/sharedElementPostActivityName"
+                    app:layout_constraintBottom_toBottomOf="@+id/posts_poster_avatar"
+                    app:layout_constraintStart_toEndOf="@id/posts_poster_avatar"
+                    app:layout_constraintTop_toTopOf="@+id/posts_poster_avatar" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout>
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:navigationIcon="@drawable/ic_left_white" />
+</com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

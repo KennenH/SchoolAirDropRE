@@ -1,20 +1,13 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import android.text.SpannableString
-import com.blankj.utilcode.util.LogUtils
-import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.CallbackResultOrNull
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
+import com.example.schoolairdroprefactoredition.cache.NewIDesireDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
-import com.example.schoolairdroprefactoredition.cache.NewInquiryDraftCache
-import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.utils.AppConfig
-import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.luck.picture.lib.entity.LocalMedia
-import retrofit2.Call
-import retrofit2.Response
-import java.net.HttpURLConnection
-import java.util.*
 
 class AddNewRepository {
 
@@ -42,7 +35,7 @@ class AddNewRepository {
             title: String, content: String,
             longitude: Double, latitude: Double,
             isBrandNew: Boolean, isQuotable: Boolean, price: Float,
-            onResult: (success: Boolean) -> Unit) {
+            onResult: (success: DomainResult?) -> Unit) {
         RetrofitClient.goodsApi.postNewItem(
                 token, taskID,
                 coverKey, picSetKeys,
@@ -51,25 +44,7 @@ class AddNewRepository {
                 latitude.toString(),
                 if (isQuotable) 1 else 0, if (!isBrandNew) 1 else 0,
                 price.toString()).apply {
-            enqueue(object : CallbackWithRetry<DomainResult>(this@apply) {
-                override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        val body = response.body()
-                        if (body != null && body.isSuccess) {
-                            onResult(true)
-                        } else {
-                            onResult(false)
-                        }
-                    } else {
-                        LogUtils.d(response.errorBody()?.string())
-                        onResult(false)
-                    }
-                }
-
-                override fun onFailureAllRetries() {
-                    onResult(false)
-                }
-            })
+            enqueue(CallbackResultOrNull(this, onResult))
         }
     }
 
@@ -83,7 +58,7 @@ class AddNewRepository {
                         goodsID: Int, title: String, content: String,
                         longitude: Double, latitude: Double,
                         isBrandNew: Boolean, isQuotable: Boolean, price: Float,
-                        onResult: (success: Boolean) -> Unit) {
+                        onResult: (response: DomainResult?) -> Unit) {
         RetrofitClient.goodsApi.modifyGoodsInfo(
                 token, taskID,
                 imagesToDelete, picSetKeys,
@@ -92,36 +67,44 @@ class AddNewRepository {
                 if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE else latitude,
                 if (isQuotable) 1 else 0, if (!isBrandNew) 1 else 0,
                 price.toString()).apply {
-            enqueue(object : CallbackWithRetry<DomainResult>(this@apply) {
-                override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        val body = response.body()
-                        onResult(body?.code == ConstantUtil.HTTP_OK)
-                    } else {
-                        LogUtils.d(response.errorBody()?.string())
-                        onResult(false)
-                    }
-                }
-
-                override fun onFailureAllRetries() {
-                    onResult(false)
-                }
-            })
+            enqueue(CallbackResultOrNull(this, onResult))
         }
     }
 
     /**
      * 上传求购
      *
-     * 仅包含与服务器交互部分，同[submitItem]
+     * 仅包含与服务器文字交互部分，同[submitItem]
      */
     fun submitNewInquiry(
-            token: String, cover: String,
-            hwRatio: Float, picSet: List<String>,
-            title: String, content: String,
+            token: String, tagID: Int,
+            picSetKeys: String, content: String,
             longitude: Double, latitude: Double,
-            onResult: (success: Boolean) -> Unit) {
-        // TODO: 2021/3/19 上传新求购
+            onResult: (response: DomainResult?) -> Unit) {
+        RetrofitClient.inquiryApi.submitInquiry(
+                token, content,
+                picSetKeys, tagID,
+                longitude, latitude).apply {
+            enqueue(CallbackResultOrNull(this, onResult))
+        }
+    }
+
+    /**
+     * 修改求购
+     *
+     * 仅包含与服务器文字交互部分，同上
+     */
+    fun modifyInquiry(
+            token: String, tagID: Int,
+            picSetKeys: String, content: String,
+            deleteImages: String,
+            longitude: Double, latitude: Double,
+            onResult: (response: DomainResult?) -> Unit) {
+        RetrofitClient.inquiryApi.modifyInquiry(
+                token, content, picSetKeys, deleteImages,
+                tagID, longitude, latitude).apply {
+            enqueue(CallbackResultOrNull(this, onResult))
+        }
     }
 
     /**
@@ -145,17 +128,16 @@ class AddNewRepository {
     /**
      * 保存帖子页面的草稿
      */
-    fun savePostDraft(cover: String, hwRatio: Float, picSet: List<LocalMedia>, tag: String, anonymous: Boolean, title: String, content: String) {
-        var draft = mJsonCacheUtil.getCache(NewInquiryDraftCache.KEY, NewInquiryDraftCache::class.java)
-        if (draft == null) draft = NewInquiryDraftCache()
-        draft.cover = cover
-        draft.hwRatio = hwRatio
+    fun savePostDraft(
+            picSet: List<LocalMedia>,
+            tag: String,
+            content: String) {
+        var draft = mJsonCacheUtil.getCache(NewIDesireDraftCache.KEY, NewIDesireDraftCache::class.java)
+        if (draft == null) draft = NewIDesireDraftCache()
         draft.picSet = picSet
         draft.tag = tag
-        draft.isAnonymous = anonymous
-        draft.title = title
         draft.content = content
-        mJsonCacheUtil.saveCache(NewInquiryDraftCache.KEY, draft)
+        mJsonCacheUtil.saveCache(NewIDesireDraftCache.KEY, draft)
     }
 
     /**
@@ -169,7 +151,7 @@ class AddNewRepository {
      * 删除帖子页面草稿
      */
     fun deletePostDraft() {
-        mJsonCacheUtil.saveCache(NewInquiryDraftCache.KEY, null)
+        mJsonCacheUtil.saveCache(NewIDesireDraftCache.KEY, null)
     }
 
     /**
@@ -182,7 +164,7 @@ class AddNewRepository {
     /**
      * 恢复求购页面草稿
      */
-    fun restoreInquiryDraft(): NewInquiryDraftCache? {
-        return mJsonCacheUtil.getCache(NewInquiryDraftCache.KEY, NewInquiryDraftCache::class.java)
+    fun restoreInquiryDraft(): NewIDesireDraftCache? {
+        return mJsonCacheUtil.getCache(NewIDesireDraftCache.KEY, NewIDesireDraftCache::class.java)
     }
 }

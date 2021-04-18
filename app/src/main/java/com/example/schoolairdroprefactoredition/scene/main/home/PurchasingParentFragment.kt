@@ -33,9 +33,9 @@ class PurchasingParentFragment : BaseParentFragment(), View.OnClickListener {
         HomePagerAdapter(childFragmentManager, HomePagerAdapter.PAGE_TYPE_PURCHASING)
     }
 
-    private var mViewPager: ViewPager? = null
+    private lateinit var mViewPager: ViewPager
 
-    private var mAppBarLayout: AppBarLayout? = null
+    private lateinit var mAppBarLayout: AppBarLayout
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -75,10 +75,8 @@ class PurchasingParentFragment : BaseParentFragment(), View.OnClickListener {
      * 详见 [PurchasingFragment.scrollToTop]
      */
     fun pageScrollToTop() {
-        if (mViewPager != null && mAppBarLayout != null) {
             purchasingPagerAdapter.scrollToTop(mViewPager?.currentItem ?: 0)
-            mAppBarLayout?.setExpanded(true, true)
-        }
+        mAppBarLayout.setExpanded(true, true)
     }
 
     override fun onClick(v: View) {
@@ -86,15 +84,9 @@ class PurchasingParentFragment : BaseParentFragment(), View.OnClickListener {
         if (id == R.id.home_search_bar) {
             mOnSearchBarClickedListener?.onSearchBarClicked()
         } else if (id == R.id.home_top_add) {
-            // if 当前子页面为我的在售
             if (activity is MainActivity) {
                 AddNewActivity.startAddNew(context, AddNewActivity.AddNewType.ADD_ITEM)
             }
-            // else if 当前子页面为我的求购
-//            if (activity is MainActivity) {
-//                AddNewActivity.start(context, AddNewActivity.AddNewType.ADD_INQUIRY)
-//            }
-            // else
         }
     }
 

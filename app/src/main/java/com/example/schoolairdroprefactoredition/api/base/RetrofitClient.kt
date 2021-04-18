@@ -63,8 +63,8 @@ object RetrofitClient {
     /**
      * 帖子接口
      */
-    val postApi: PostApi by lazy {
-        retrofit.create(PostApi::class.java)
+    val inquiryApi: InquiryApi by lazy {
+        retrofit.create(InquiryApi::class.java)
     }
 
     /**

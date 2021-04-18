@@ -171,7 +171,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/general_padding_bit_larger"
-                    android:text="@string/inquiry"
+                    android:text="@string/idesire"
                     android:textColor="@color/primaryText"
                     android:textSize="@dimen/textSizeNormal" />
             </LinearLayout>

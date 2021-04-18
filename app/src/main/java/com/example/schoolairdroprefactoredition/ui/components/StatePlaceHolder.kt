@@ -30,7 +30,7 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
 
         private const val TIP_NETWORK_OR_LOCATION_ERROR_HOME = R.string.errorNetLocation // 状态 提示 网络或定位错误 仅首页使用
         private const val TIP_EMPTY_GOODS = R.string.errorGoodsEmptyHome // 状态 提示 物品空 仅首页使用
-        private const val TIP_EMPTY_INQUIRY = R.string.errorInquiryEmpty // 状态 提示 求购空 仅首页使用
+        private const val TIP_EMPTY_INQUIRY = R.string.errorIDesireEmpty // 状态 提示 求购空 仅首页使用
         private const val TIP_EMPTY = R.string.nothingThere // 状态 提示 空 非首页
         private const val TIP_EMPTY_SEARCH = R.string.emptySearch // 状态 提示 空 搜索
         private const val TIP_PERMISSION_DENIED = R.string.permissionDenied // 状态 提示 权限被拒

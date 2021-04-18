@@ -15,7 +15,6 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
@@ -26,11 +25,11 @@ import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment
-import com.example.schoolairdroprefactoredition.scene.main.home.InquiryParentFragment
+import com.example.schoolairdroprefactoredition.scene.main.home.IDesireParentFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.PurchasingParentFragment
 import com.example.schoolairdroprefactoredition.scene.main.messages.MessagesFragment
 import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
-import com.example.schoolairdroprefactoredition.scene.main.search.SearchFragment
+import com.example.schoolairdroprefactoredition.scene.main.extend.SearchFragment
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -72,6 +71,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         AMapLocationClientOption()
     }
 
+
+
     /**
      * 搜索 页面
      */
@@ -83,7 +84,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 广场 页面
      */
     private val mPlaza by lazy {
-        InquiryParentFragment.newInstance()
+        IDesireParentFragment.newInstance()
     }
 
     /**

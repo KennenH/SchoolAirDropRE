@@ -12,7 +12,7 @@
     <color name="colorAccentShadow">#DA4395FA</color>
     <color name="blackShadow">#73C8C8C8</color>
 
-    <color name="primaryLight">#F4F4F4</color>
+    <color name="primaryLight">#FAFAFA</color>
     <color name="primary">#efefef</color>
     <color name="primaryDark">#eeeeee</color>
     <color name="primaryDarker">#DADADA</color>
@@ -39,6 +39,7 @@
     <color name="black">#000000</color>
 
     <color name="colorPrimaryPink">#ED7ECD</color>
+    <color name="colorPrimaryPurple">#854DC3</color>
     <color name="colorPrimaryRed">#DD402C</color>
     <color name="colorPrimaryRedLight">#ED5C4A</color>
     <color name="colorPrimaryGreen">#44A944</color>
