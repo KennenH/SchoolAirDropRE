@@ -11,11 +11,11 @@ import com.luck.picture.lib.entity.LocalMedia;
 
 import org.jetbrains.annotations.NotNull;
 
-public class HorizontalImageRecyclerAdapter extends BaseQuickAdapter<LocalMedia, BaseViewHolder> {
+public class AddNewHorizontalImageRecyclerAdapter extends BaseQuickAdapter<LocalMedia, BaseViewHolder> {
 
     private OnPicSetClickListener mOnPicSetClickListener;
 
-    public HorizontalImageRecyclerAdapter() {
+    public AddNewHorizontalImageRecyclerAdapter() {
         super(R.layout.item_image);
     }
 

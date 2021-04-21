@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.provider.MediaStore;
 
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
@@ -184,6 +185,24 @@ public class FileUtil {
         return path.startsWith("content:") || path.startsWith("file:");
     }
 
+    /**
+     * bitmap 转换为 uri
+     */
+    @Nullable
+    public static Uri getImageUri(Context inContext, Bitmap inImage) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        inImage.compress(Bitmap.CompressFormat.JPEG, 10, bytes);
+        String path = MediaStore.Images.Media.insertImage(
+                inContext.getContentResolver(),
+                inImage,
+                "sadIWantBackgroundSnapshot",
+                null);
+        return Uri.parse(path);
+    }
+
+    /**
+     * url 转换为 bitmap
+     */
     @Nullable
     public static Bitmap getBitmapFromURL(String url) {
         try {

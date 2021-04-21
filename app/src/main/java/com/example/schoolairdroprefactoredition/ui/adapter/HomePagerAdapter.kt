@@ -3,7 +3,7 @@ package com.example.schoolairdroprefactoredition.ui.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.example.schoolairdroprefactoredition.scene.main.home.IDesireFragment
+import com.example.schoolairdroprefactoredition.scene.main.home.IWantFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.PurchasingFragment
 import java.util.*
 
@@ -19,7 +19,7 @@ class HomePagerAdapter(fm: FragmentManager, private val pageType: Int) : Fragmen
     /**
      * 求购 子页面数组
      */
-    private val mIDesireFragments: MutableList<IDesireFragment> = ArrayList(PAGE_NUM_INQUIRY)
+    private val mIWantFragments: MutableList<IWantFragment> = ArrayList(PAGE_NUM_INQUIRY)
 
     /**
      * 淘物 子页面数组
@@ -28,8 +28,8 @@ class HomePagerAdapter(fm: FragmentManager, private val pageType: Int) : Fragmen
 
     override fun getItem(position: Int): Fragment {
         return if (pageType == PAGE_TYPE_INQUIRY) {
-            val fragment = IDesireFragment.newInstance()
-            mIDesireFragments.add(fragment)
+            val fragment = IWantFragment.newInstance()
+            mIWantFragments.add(fragment)
             fragment
         } else {
             val fragment = PurchasingFragment.newInstance()
@@ -49,7 +49,7 @@ class HomePagerAdapter(fm: FragmentManager, private val pageType: Int) : Fragmen
         if (subFragmentIndex == null) return
 
         if (pageType == PAGE_TYPE_INQUIRY) {
-            mIDesireFragments[subFragmentIndex].scrollToTop()
+            mIWantFragments[subFragmentIndex].scrollToTop()
         } else {
             mPurchasingFragments[subFragmentIndex].scrollToTop()
         }

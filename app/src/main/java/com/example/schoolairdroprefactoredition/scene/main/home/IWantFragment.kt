@@ -1,42 +1,35 @@
 package com.example.schoolairdroprefactoredition.scene.main.home
 
-import android.content.Intent
 import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.amap.api.location.AMapLocation
 import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
-import com.example.schoolairdroprefactoredition.ui.adapter.IDesireRecyclerAdapter
-import com.example.schoolairdroprefactoredition.ui.adapter.IDesireRecyclerAdapter.OnInquiryItemClickListener
-import com.example.schoolairdroprefactoredition.ui.components.BaseIDesireEntity
+import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
+import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.OnInquiryItemClickListener
+import com.example.schoolairdroprefactoredition.ui.components.BaseIWantEntity
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.viewmodel.InquiryViewModel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
-import androidx.core.app.ActivityOptionsCompat
-import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.scene.idesire.IDesireActivity
-import androidx.core.util.Pair
+import com.example.schoolairdroprefactoredition.scene.idesire.IWantActivity
 
-class IDesireFragment : BaseChildFragment(), IDesireRecyclerAdapter.OnNoMoreDataListener, OnInquiryItemClickListener {
+class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataListener, OnInquiryItemClickListener {
 
     companion object {
-        fun newInstance(): IDesireFragment {
-            return IDesireFragment()
+        fun newInstance(): IWantFragment {
+            return IWantFragment()
         }
     }
 
-    private val iDesireViewModel by lazy {
+    private val iWantViewModel by lazy {
         ViewModelProvider(this).get(InquiryViewModel::class.java)
     }
 
-    private val iDesireRecyclerAdapter by lazy {
-        IDesireRecyclerAdapter().also {
+    private val iWantRecyclerAdapter by lazy {
+        IWantRecyclerAdapter().also {
             it.setOnNoMoreDataListener(this)
             it.setOnInquiryItemClickListener(this)
         }
@@ -53,11 +46,11 @@ class IDesireFragment : BaseChildFragment(), IDesireRecyclerAdapter.OnNoMoreData
     override fun initView(binding: FragmentHomeContentBinding?) {
         this.binding = binding
         binding?.homeRecycler?.apply {
-            setOnLoadMoreListener(this@IDesireFragment)
+            setOnLoadMoreListener(this@IWantFragment)
             setPadding(SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f))
             layoutManager = mManager
 //            addItemDecoration(MarginItemDecoration(SizeUtils.dp2px(8f), true))
-            adapter = iDesireRecyclerAdapter
+            adapter = iWantRecyclerAdapter
         }
     }
 
@@ -80,23 +73,23 @@ class IDesireFragment : BaseChildFragment(), IDesireRecyclerAdapter.OnNoMoreData
     }
 
     override fun getOnlineData(aMapLocation: AMapLocation?) {
-        iDesireViewModel.getInquiry().observeOnce(viewLifecycleOwner, { data: List<BaseIDesireEntity> ->
+        iWantViewModel.getInquiry().observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
             if (data.isNullOrEmpty()) {
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_INQUIRY)
             } else {
-                iDesireRecyclerAdapter.setList(data)
+                iWantRecyclerAdapter.setList(data)
                 showContentContainer()
             }
         })
     }
 
     override fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?) {
-        iDesireViewModel.getInquiry(aMapLocation?.longitude, aMapLocation?.latitude).observeOnce(viewLifecycleOwner, { data: List<BaseIDesireEntity> ->
+        iWantViewModel.getInquiry(aMapLocation?.longitude, aMapLocation?.latitude).observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
             refreshLayout.finishRefresh()
             if (data.isNullOrEmpty()) {
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_INQUIRY)
             } else {
-                iDesireRecyclerAdapter.setList(data)
+                iWantRecyclerAdapter.setList(data)
                 showContentContainer()
             }
         })
@@ -117,17 +110,12 @@ class IDesireFragment : BaseChildFragment(), IDesireRecyclerAdapter.OnNoMoreData
     }
 
     /**
-     * 以元素共享动画+圆角渐变打开求购详情页面
+     * 以元素共享动画打开求购详情页面
      */
-    override fun onHomePostItemClicked(card: View, content: View, avatar: View, name: View) {
-        val intent = Intent(context, IDesireActivity::class.java)
-        val wrapper = Pair.create(content, getString(R.string.sharedElementPostActivityWrapper))
-        val avatarPair = Pair.create(avatar, getString(R.string.sharedElementPostActivityAvatar))
-        val namePair = Pair.create(name, getString(R.string.sharedElementPostActivityName))
-        val options = activity?.let {
-            ActivityOptionsCompat.makeSceneTransitionAnimation(it, wrapper, avatarPair, namePair)
+    override fun onHomePostItemClicked(card: View, item: BaseIWantEntity) {
+        if (context != null) {
+            IWantActivity.start(requireContext(), card,item )
         }
-        startActivity(intent, options?.toBundle())
     }
 
     override fun getAutoLoadMoreData(recycler: EndlessRecyclerView, aMapLocation: AMapLocation?) {}

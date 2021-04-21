@@ -1,8 +1,9 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.example.schoolairdroprefactoredition.ui.adapter.IDesireRecyclerAdapter
-import com.example.schoolairdroprefactoredition.ui.components.BaseIDesireEntity
+import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
+import com.example.schoolairdroprefactoredition.ui.components.BaseIWantEntity
 import kotlin.collections.ArrayList
+import kotlin.random.Random
 
 class InquiryRepository {
 
@@ -17,11 +18,11 @@ class InquiryRepository {
     /**
      * 获取求购
      */
-    fun getInquiry(page: Int, onResult: (List<BaseIDesireEntity>) -> Unit) {
-        val data: ArrayList<BaseIDesireEntity> = ArrayList(12)
+    fun getInquiry(page: Int, onResult: (List<BaseIWantEntity>) -> Unit) {
+        val data: ArrayList<BaseIWantEntity> = ArrayList(12)
         for (i in 0..11) {
-            val item = BaseIDesireEntity()
-            item.setType(IDesireRecyclerAdapter.TYPE_ONE)
+            val item = BaseIWantEntity()
+            item.setType(IWantRecyclerAdapter.TYPE_ONE)
             when {
                 i % 4 == 0 -> {
                     item.content = "求一个ipad air4价格希望在3000左右，几新都没有关系，只要不影响使用就ok"
@@ -29,10 +30,11 @@ class InquiryRepository {
                 i % 5 == 0 -> {
                     item.content = "有没有小伙伴有配ipad air4的笔，期望价格在500左右，有意向的dd"
                 }
-                else ->{
-                    item.content = "收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯"
+                else -> {
+                    item.content = "收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯"
                 }
             }
+            item.color = Random.nextInt(0, 3)
             data.add(item)
         }
         onResult(data)

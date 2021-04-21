@@ -6,10 +6,14 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Rect
+import android.util.DisplayMetrics
+import android.view.View
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import com.blankj.utilcode.util.SizeUtils
+import com.blankj.utilcode.util.ScreenUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.schoolairdroprefactoredition.R

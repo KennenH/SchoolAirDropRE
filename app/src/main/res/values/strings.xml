@@ -14,6 +14,7 @@
     <string name="serviceProtocol" translatable="false">《校园空投用户协议与免责条款》</string>
     <string name="privacyProtocol" translatable="false">《校园空投隐私政策》</string>
     <string name="fraction0" translatable="false">.00</string>
+    <string name="omit" translatable="false">%s…</string>
     <string name="app_version_detail" translatable="false">Beta 1.1.4.00</string>
     <string name="app_version" translatable="false">Beta 1.1.4</string>
 

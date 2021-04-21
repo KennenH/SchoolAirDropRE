@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_iwant_color_wrapper"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:transitionName="@string/sharedElementPostActivityWrapper"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/general_padding"
+    app:cardElevation="@dimen/general_padding_small"
+    app:cardUseCompatPadding="true"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.facebook.drawee.view.SimpleDraweeView
+            android:id="@+id/item_iwant_avatar"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_margin="@dimen/general_padding_large"
+            android:scaleType="centerCrop"
+            android:transitionName="@string/sharedElementPostActivityAvatar"
+            app:actualImageResource="@drawable/pk"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/item_iwant_content_wrapper"
+            app:roundedCornerRadius="@dimen/general_padding_small" />
+
+        <TextView
+            android:id="@+id/item_iwant_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/general_padding_large"
+            android:text="kennen"
+            android:textColor="@color/primaryText"
+            android:textSize="@dimen/textSizeNormal"
+            android:transitionName="@string/sharedElementPostActivityName"
+            app:layout_constraintBottom_toBottomOf="@+id/item_iwant_avatar"
+            app:layout_constraintStart_toEndOf="@+id/item_iwant_avatar"
+            app:layout_constraintTop_toTopOf="@+id/item_iwant_avatar" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_iwant_content_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/item_iwant_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="5"
+                android:padding="@dimen/general_padding_bit_larger"
+                android:text="收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textSizeNormal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/item_iwant_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_padding_bit_larger"
+                android:layout_marginBottom="@dimen/general_padding"
+                android:background="@drawable/bg_round_translucent"
+                android:paddingStart="@dimen/general_padding"
+                android:paddingTop="@dimen/general_padding_tiny"
+                android:paddingEnd="@dimen/general_padding"
+                android:paddingBottom="@dimen/general_padding_tiny"
+                android:text="#书本"
+                android:textColor="@color/whiteAlways"
+                android:textSize="@dimen/textSizeMin"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/item_iwant_content"
+                app:layout_constraintTop_toBottomOf="@id/item_iwant_content" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
+
+

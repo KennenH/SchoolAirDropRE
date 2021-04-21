@@ -2,18 +2,18 @@ package com.example.schoolairdroprefactoredition.ui.adapter
 
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.cardview.widget.CardView
-import com.blankj.utilcode.util.ClickUtils
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.res.ResourcesCompat
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.ui.components.BaseIDesireEntity
+import com.example.schoolairdroprefactoredition.ui.components.BaseIWantEntity
 import com.example.schoolairdroprefactoredition.ui.components.RecyclerFooter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 
-class IDesireRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIDesireEntity, BaseViewHolder>() {
+class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIWantEntity, BaseViewHolder>() {
 
     companion object {
         /**
@@ -21,11 +21,17 @@ class IDesireRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIDesireEntity, Base
          */
         const val TYPE_ONE = 0
 
+
+        const val COLOR_GREY = 0
+
+        const val COLOR_PURPLE = 1
+
+        const val COLOR_THEME = 2
     }
 
     init {
 //        addItemType(TYPE_ONE, R.layout.item_home_news_1)
-        addItemType(TYPE_ONE, R.layout.item_idesire)
+        addItemType(TYPE_ONE, R.layout.item_iwant)
 //        addItemType(TYPE_TWO, R.layout.item_home_news_2)
     }
 
@@ -33,20 +39,40 @@ class IDesireRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIDesireEntity, Base
 
     private var mOnInquiryItemClickListener: ArrayList<OnInquiryItemClickListener> = ArrayList()
 
-    override fun convert(holder: BaseViewHolder, item: BaseIDesireEntity) {
+    override fun convert(holder: BaseViewHolder, item: BaseIWantEntity) {
         when (holder.itemViewType) {
             TYPE_ONE -> {
-                val cardView: CardView = holder.itemView.findViewById(R.id.item_idesire_color_wrapper)
-                val contentView: TextView = holder.itemView.findViewById(R.id.item_idesire_content)
-                val avatarView: ImageView = holder.itemView.findViewById(R.id.item_idesire_avatar)
-                val nameView: TextView = holder.itemView.findViewById(R.id.item_idesire_name)
+                val cardView: CardView = holder.itemView.findViewById(R.id.item_iwant_color_wrapper)
+                val constraintView: ConstraintLayout = holder.itemView.findViewById(R.id.item_iwant_content_wrapper)
+                val contentView: TextView = holder.itemView.findViewById(R.id.item_iwant_content)
+//                val avatarView: ImageView = holder.itemView.findViewById(R.id.item_idesire_avatar)
+//                val nameView: TextView = holder.itemView.findViewById(R.id.item_idesire_name)
+
+                val resource = context.resources
+                val theme = context.theme
+                val blackText = resource.getColor(R.color.black, theme)
+                val whiteAlwaysText = resource.getColor(R.color.whiteAlways, theme)
+                when (item.color) {
+                    COLOR_PURPLE -> {
+                        constraintView.background = ResourcesCompat.getDrawable(resource, R.drawable.bg_top_rounded_purple, theme)
+                        contentView.setTextColor(whiteAlwaysText)
+                    }
+                    COLOR_THEME -> {
+                        constraintView.background = ResourcesCompat.getDrawable(resource, R.drawable.bg_top_rounded_theme, theme)
+                        contentView.setTextColor(whiteAlwaysText)
+                    }
+                    else -> {
+                        constraintView.background = ResourcesCompat.getDrawable(resource, R.drawable.bg_top_rounded, theme)
+                        contentView.setTextColor(blackText)
+                    }
+                }
 
                 holder.itemView.setOnClickListener {
                     for (listener in mOnInquiryItemClickListener) {
-                        listener.onHomePostItemClicked(cardView, contentView, avatarView, nameView)
+                        listener.onHomePostItemClicked(cardView, item)
                     }
                 }
-                holder.setText(R.id.item_idesire_content, item.content)
+                holder.setText(R.id.item_iwant_content, item.content)
 //                val title: CardView = holder.itemView.findViewById(R.id.root)
 //                holder.itemView.setOnClickListener {
 //                    for (listener in mOnInquiryItemClickListener) {
@@ -73,14 +99,14 @@ class IDesireRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIDesireEntity, Base
         /**
          * item按下回调
          */
-        fun onHomePostItemClicked(card: View, content: View, avatar: View, name: View)
+        fun onHomePostItemClicked(card: View, item: BaseIWantEntity)
     }
 
     fun setOnInquiryItemClickListener(listener: OnInquiryItemClickListener) {
         mOnInquiryItemClickListener.add(listener)
     }
 
-    override fun setList(list: Collection<BaseIDesireEntity>?) {
+    override fun setList(list: Collection<BaseIWantEntity>?) {
         super.setList(list)
         for (listener in mOnNoMoreDataListener) {
             listener.onNoMoreDataRefresh()
@@ -91,7 +117,7 @@ class IDesireRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIDesireEntity, Base
         }
     }
 
-    override fun addData(newData: Collection<BaseIDesireEntity>) {
+    override fun addData(newData: Collection<BaseIWantEntity>) {
         super.addData(newData)
         if (newData.size < ConstantUtil.DEFAULT_PAGE_SIZE) {
             addFooter()

@@ -5,6 +5,7 @@ import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.TextView;
@@ -58,6 +59,26 @@ public class AnimUtil {
     }
 
     /**
+     * 获取view测量后的高度
+     */
+    public static int getMeasuredHeight(final View v) {
+        int matchParentMeasureSpec = View.MeasureSpec.makeMeasureSpec(((View) v.getParent()).getWidth(), View.MeasureSpec.EXACTLY);
+        int wrapContentMeasureSpec = View.MeasureSpec.makeMeasureSpec(v.getMeasuredHeight(), View.MeasureSpec.UNSPECIFIED);
+        v.measure(matchParentMeasureSpec, wrapContentMeasureSpec);
+        return v.getMeasuredHeight();
+    }
+
+    /**
+     * 获取view测量后的宽度
+     */
+    public static int getMeasuredWidth(final View v) {
+        int matchParentMeasureSpec = View.MeasureSpec.makeMeasureSpec(((View) v.getParent()).getWidth(), View.MeasureSpec.EXACTLY);
+        int wrapContentMeasureSpec = View.MeasureSpec.makeMeasureSpec(v.getMeasuredHeight(), View.MeasureSpec.UNSPECIFIED);
+        v.measure(matchParentMeasureSpec, wrapContentMeasureSpec);
+        return v.getMeasuredWidth();
+    }
+
+    /**
      * View 从上至下展开组件动画
      */
     public static void expand(final View v) {
@@ -65,14 +86,16 @@ public class AnimUtil {
         int wrapContentMeasureSpec = View.MeasureSpec.makeMeasureSpec(v.getMeasuredHeight(), View.MeasureSpec.UNSPECIFIED);
         v.measure(matchParentMeasureSpec, wrapContentMeasureSpec);
         final int targetHeight = v.getMeasuredHeight();
+        final ViewGroup.LayoutParams params = v.getLayoutParams();
 
-        v.getLayoutParams().height = 1;
+        params.height = 1;
         v.setVisibility(View.VISIBLE);
+
         Animation a = new Animation() {
             @Override
             protected void applyTransformation(float interpolatedTime, Transformation t) {
                 int now = (int) (targetHeight * interpolatedTime);
-                v.getLayoutParams().height = v.getLayoutParams().height < now ? now : v.getLayoutParams().height;
+                params.height = params.height < now ? now : params.height;
                 v.requestLayout();
             }
 

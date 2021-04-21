@@ -37,7 +37,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".scene.idesire.IDesireActivity"
+            android:name=".scene.idesire.IWantActivity"
             android:label="" />
         <activity
             android:name=".scene.settings.FeedbackActivity"

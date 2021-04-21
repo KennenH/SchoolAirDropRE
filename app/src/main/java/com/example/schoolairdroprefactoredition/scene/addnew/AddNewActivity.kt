@@ -31,8 +31,8 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
-import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter
-import com.example.schoolairdroprefactoredition.ui.adapter.HorizontalImageRecyclerAdapter.OnPicSetClickListener
+import com.example.schoolairdroprefactoredition.ui.adapter.AddNewHorizontalImageRecyclerAdapter
+import com.example.schoolairdroprefactoredition.ui.adapter.AddNewHorizontalImageRecyclerAdapter.OnPicSetClickListener
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem.OnItemAddPicActionListener
 import com.example.schoolairdroprefactoredition.utils.*
@@ -165,7 +165,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      * 图片集横向recycler的adapter
      */
     private val mPicSetHorizontalAdapter by lazy {
-        HorizontalImageRecyclerAdapter()
+        AddNewHorizontalImageRecyclerAdapter()
     }
 
     /**

@@ -19,7 +19,7 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigat
 
 /**
  * 首页中求购tab下的所有子页面的父类，当前仅有求购一个子页面
- * [com.example.schoolairdroprefactoredition.scene.main.home.IDesireFragment]
+ * [com.example.schoolairdroprefactoredition.scene.main.home.IWantFragment]
  */
 class IDesireParentFragment : BaseParentFragment(), View.OnClickListener {
 
@@ -80,7 +80,7 @@ class IDesireParentFragment : BaseParentFragment(), View.OnClickListener {
      * 当当前页面最后可见的item位置小于一定值时直接调用平滑滑动
      * 否则将先闪现至固定item位置处再平滑滚动
      *
-     * 详见 [IDesireFragment.scrollToTop]
+     * 详见 [IWantFragment.scrollToTop]
      */
     fun pageScrollToTop() {
         homePagerAdapter.scrollToTop(mViewPager.currentItem)

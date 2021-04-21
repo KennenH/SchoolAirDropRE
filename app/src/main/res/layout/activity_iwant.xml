@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".scene.idesire.IDesireActivity">
+    tools:context=".scene.idesire.IWantActivity">
 
     <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout
         android:layout_width="match_parent"
@@ -37,7 +37,10 @@
                     app:cardBackgroundColor="@color/colorPrimaryPurple"
                     app:cardCornerRadius="0dp"
                     app:cardElevation="0dp"
-                    app:contentPadding="@dimen/general_padding_large"
+                    app:contentPaddingBottom="@dimen/general_padding_even_larger"
+                    app:contentPaddingLeft="@dimen/general_padding_even_larger"
+                    app:contentPaddingRight="@dimen/general_padding_even_larger"
+                    app:contentPaddingTop="72dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
@@ -46,8 +49,6 @@
                         android:id="@+id/posts_title"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/general_padding_larger"
-                        android:paddingTop="?attr/actionBarSize"
                         android:text="收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯"
                         android:textColor="@color/whiteAlways"
                         android:textSize="@dimen/textSizeLarge"
