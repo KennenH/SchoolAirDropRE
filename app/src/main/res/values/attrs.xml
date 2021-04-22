@@ -28,7 +28,8 @@
         <attr name="SO_title" format="string" />
         <attr name="SO_description" format="string" />
         <attr name="SO_isSwitch" format="boolean" />
-        <attr name="SO_clickable" format="boolean" />
+        <attr name="SO_isShowArrow" format="boolean" />
+        <attr name="SO_hasImage" format="boolean" />
     </declare-styleable>
 
     <!-- ConstraintContentContainer start-->

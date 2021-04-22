@@ -278,7 +278,7 @@ object ConstantUtil {
     /**
      * 获取求购id 键
      */
-    const val KEY_IDESIRE_ID = "key_inquiry_id"
+    const val KEY_IWANT_ID = "key_inquiry_id"
 
     /**
      * 打开用户个人信息页面时是否可修改信息

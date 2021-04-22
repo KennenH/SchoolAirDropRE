@@ -9,7 +9,34 @@ public class BaseIWantEntity implements MultiItemEntity, Serializable {
 
     private int type = IWantRecyclerAdapter.TYPE_ONE;
     private String content;
-    private int color = IWantRecyclerAdapter.COLOR_GREY;
+    private String images;
+    private int userID;
+    private String tag;
+    private int color = IWantRecyclerAdapter.COLOR_DEFAULT;
+
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public int getUserID() {
+        return userID;
+    }
+
+    public void setUserID(int userID) {
+        this.userID = userID;
+    }
+
+    public String getImages() {
+        return images;
+    }
+
+    public void setImages(String images) {
+        this.images = images;
+    }
 
     public int getColor() {
         return color;

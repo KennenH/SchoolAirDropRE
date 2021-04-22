@@ -2,7 +2,7 @@ package com.example.schoolairdroprefactoredition.repository
 
 import com.example.schoolairdroprefactoredition.api.base.CallbackResultOrNull
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
-import com.example.schoolairdroprefactoredition.cache.NewIDesireDraftCache
+import com.example.schoolairdroprefactoredition.cache.NewIWantDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.domain.DomainResult
@@ -76,12 +76,12 @@ class AddNewRepository {
      *
      * 仅包含与服务器文字交互部分，同[submitItem]
      */
-    fun submitNewInquiry(
+    fun submitNewIWant(
             token: String, tagID: Int,
             picSetKeys: String, content: String,
             longitude: Double, latitude: Double,
             onResult: (response: DomainResult?) -> Unit) {
-        RetrofitClient.inquiryApi.submitInquiry(
+        RetrofitClient.I_WANT_API.submitIWant(
                 token, content,
                 picSetKeys, tagID,
                 longitude, latitude).apply {
@@ -100,7 +100,7 @@ class AddNewRepository {
             deleteImages: String,
             longitude: Double, latitude: Double,
             onResult: (response: DomainResult?) -> Unit) {
-        RetrofitClient.inquiryApi.modifyInquiry(
+        RetrofitClient.I_WANT_API.modifyIWant(
                 token, content, picSetKeys, deleteImages,
                 tagID, longitude, latitude).apply {
             enqueue(CallbackResultOrNull(this, onResult))
@@ -132,12 +132,12 @@ class AddNewRepository {
             picSet: List<LocalMedia>,
             tag: String,
             content: String) {
-        var draft = mJsonCacheUtil.getCache(NewIDesireDraftCache.KEY, NewIDesireDraftCache::class.java)
-        if (draft == null) draft = NewIDesireDraftCache()
+        var draft = mJsonCacheUtil.getCache(NewIWantDraftCache.KEY, NewIWantDraftCache::class.java)
+        if (draft == null) draft = NewIWantDraftCache()
         draft.picSet = picSet
         draft.tag = tag
         draft.content = content
-        mJsonCacheUtil.saveCache(NewIDesireDraftCache.KEY, draft)
+        mJsonCacheUtil.saveCache(NewIWantDraftCache.KEY, draft)
     }
 
     /**
@@ -151,7 +151,7 @@ class AddNewRepository {
      * 删除帖子页面草稿
      */
     fun deletePostDraft() {
-        mJsonCacheUtil.saveCache(NewIDesireDraftCache.KEY, null)
+        mJsonCacheUtil.saveCache(NewIWantDraftCache.KEY, null)
     }
 
     /**
@@ -164,7 +164,7 @@ class AddNewRepository {
     /**
      * 恢复求购页面草稿
      */
-    fun restoreInquiryDraft(): NewIDesireDraftCache? {
-        return mJsonCacheUtil.getCache(NewIDesireDraftCache.KEY, NewIDesireDraftCache::class.java)
+    fun restoreInquiryDraft(): NewIWantDraftCache? {
+        return mJsonCacheUtil.getCache(NewIWantDraftCache.KEY, NewIWantDraftCache::class.java)
     }
 }

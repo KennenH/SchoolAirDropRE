@@ -48,6 +48,17 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <com.facebook.drawee.view.SimpleDraweeView
+        android:id="@+id/image"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_marginEnd="@dimen/general_padding_small"
+        app:actualImageResource="@color/heart"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/title"
+        app:layout_constraintTop_toTopOf="parent"
+        app:roundedCornerRadius="@dimen/general_padding_small" />
+
     <com.google.android.material.switchmaterial.SwitchMaterial
         android:id="@+id/swi"
         android:layout_width="wrap_content"

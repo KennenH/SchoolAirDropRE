@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * 新求购的草稿
  */
-public class NewIDesireDraftCache {
+public class NewIWantDraftCache {
     public static final String KEY = "imINQUIRYdraftAndU?";
 
     /**

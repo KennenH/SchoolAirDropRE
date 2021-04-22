@@ -93,7 +93,7 @@ class IDesireParentFragment : BaseParentFragment(), View.OnClickListener {
             mOnSearchBarClickedListener?.onSearchBarClicked()
         } else if (id == R.id.home_top_add) {
             if (activity is MainActivity) {
-                AddNewActivity.startAddNew(context, AddNewActivity.AddNewType.ADD_IDESIRE)
+                AddNewActivity.startAddNew(context, AddNewActivity.AddNewType.ADD_IWANT)
             }
         }
     }

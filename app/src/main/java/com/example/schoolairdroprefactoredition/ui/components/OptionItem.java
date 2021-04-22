@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.DrawableRes;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.schoolairdroprefactoredition.R;
@@ -21,10 +22,27 @@ public class OptionItem extends ConstraintLayoutAuto {
     private final TextView mDescription;
     private final ImageView mArrow;
     private final SwitchCompat mSwitch;
+    private final ImageView mImage;
 
+    /**
+     * 是否是开关，默认否
+     */
     private boolean isSwitch = false;
+
+    /**
+     * 若为开关，是否显示被打开状态，默认否
+     */
     private boolean isCheck = false;
+
+    /**
+     * 是否显示尾部的右箭头，默认是
+     */
     private boolean isShowArrow = false;
+
+    /**
+     * 是否有图片显示，默认否
+     */
+    private boolean hasImage = false;
 
     private String title = "";
     private String description = "";
@@ -45,6 +63,7 @@ public class OptionItem extends ConstraintLayoutAuto {
         mDescription = findViewById(R.id.description);
         mArrow = findViewById(R.id.arrow);
         mSwitch = findViewById(R.id.swi);
+        mImage = findViewById(R.id.image);
 
         initAttrs(context, attrs);
         init();
@@ -56,7 +75,8 @@ public class OptionItem extends ConstraintLayoutAuto {
 
         isCheck = ta.getBoolean(R.styleable.OptionItem_SO_checked, isCheck);
         isSwitch = ta.getBoolean(R.styleable.OptionItem_SO_isSwitch, isSwitch);
-        isShowArrow = ta.getBoolean(R.styleable.OptionItem_SO_clickable, isShowArrow);
+        isShowArrow = ta.getBoolean(R.styleable.OptionItem_SO_isShowArrow, isShowArrow);
+        hasImage = ta.getBoolean(R.styleable.OptionItem_SO_hasImage, hasImage);
         title = ta.getString(R.styleable.OptionItem_SO_title);
         description = ta.getString(R.styleable.OptionItem_SO_description);
 
@@ -64,15 +84,21 @@ public class OptionItem extends ConstraintLayoutAuto {
     }
 
     private void init() {
-        if (isSwitch) {
+        if (isSwitch) { // 开关类型
             mSwitch.setChecked(isCheck);
             mSwitch.setVisibility(VISIBLE);
             mDescription.setVisibility(GONE);
             mArrow.setVisibility(INVISIBLE);
-        } else {
+        } else { // 不是开关
             mSwitch.setVisibility(INVISIBLE);
             mDescription.setVisibility(VISIBLE);
             mArrow.setVisibility(VISIBLE);
+        }
+
+        if (hasImage) {
+            mImage.setVisibility(VISIBLE);
+        } else {
+            mImage.setVisibility(GONE);
         }
 
         if (isShowArrow) {
@@ -81,8 +107,16 @@ public class OptionItem extends ConstraintLayoutAuto {
         }
 
         if (title != null && !title.equals("")) mTitle.setText(title);
-        if (description != null && !description.equals(""))
+        if (description != null && !description.equals("")) {
             mDescription.setText(description);
+        }
+    }
+
+    /**
+     * 在hasImage下设置图片为资源id
+     */
+    public void setImageResource(@DrawableRes int res) {
+        mImage.setImageResource(res);
     }
 
     public CharSequence getText() {

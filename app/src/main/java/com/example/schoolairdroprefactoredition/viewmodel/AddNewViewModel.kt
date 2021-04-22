@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
-import com.example.schoolairdroprefactoredition.cache.NewIDesireDraftCache
+import com.example.schoolairdroprefactoredition.cache.NewIWantDraftCache
 import com.example.schoolairdroprefactoredition.repository.AddNewRepository
 import com.example.schoolairdroprefactoredition.repository.UploadRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -24,7 +24,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * 恢复上传帖子页面草稿 结果
      */
-    private val restoredPostDraftLiveData = MutableLiveData<NewIDesireDraftCache>()
+    private val restoredPostDraftLiveData = MutableLiveData<NewIWantDraftCache>()
 
     private val addNewRepository: AddNewRepository = AddNewRepository.getInstance()
 
@@ -146,12 +146,12 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * 提交求购信息
      */
-    fun submitIDesire(token: String,
-                      tagID: Int,
-                      picSet: List<String>,
-                      content: String,
-                      longitude: Double, latitude: Double): LiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
-        val submitInquiryLiveData = MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>>()
+    fun submitIWant(token: String,
+                    tagID: Int,
+                    picSet: List<String>,
+                    content: String,
+                    longitude: Double, latitude: Double): LiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
+        val submitIWantLiveData = MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>>()
         viewModelScope.launch {
             uploadRepository.upload(
                     token, picSet,
@@ -163,28 +163,28 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                     if (allSuccess) {
                         // 返回出来的结果为空
                         if (taskAndKeys != null) {
-                            submitInquiryLiveData.postValue(Triple(true, Pair(R.string.requestingServer, true), false))
-                            addNewRepository.submitNewInquiry(
+                            submitIWantLiveData.postValue(Triple(true, Pair(R.string.requestingServer, true), false))
+                            addNewRepository.submitNewIWant(
                                     token, tagID, picSet.joinToString(","),
                                     content, longitude, latitude) {
-                                submitInquiryLiveData.postValue(Triple(it?.isSuccess
+                                submitIWantLiveData.postValue(Triple(it?.isSuccess
                                         ?: false, Pair(R.string.uploadSuccess, true), it?.isSuccess
                                         ?: false))
                             }
                         } else {
-                            submitInquiryLiveData.postValue(Triple(false, Pair(-1, false), false))
+                            submitIWantLiveData.postValue(Triple(false, Pair(-1, false), false))
                         }
                     } else {
                         // 这里出来是订阅的每一步流程，需要外部显示tip
-                        submitInquiryLiveData.postValue(Triple(true, tip, false))
+                        submitIWantLiveData.postValue(Triple(true, tip, false))
                     }
                 } else {
                     // 上一步出错，流程终止
-                    submitInquiryLiveData.postValue(Triple(false, Pair(-1, false), false))
+                    submitIWantLiveData.postValue(Triple(false, Pair(-1, false), false))
                 }
             }
         }
-        return submitInquiryLiveData
+        return submitIWantLiveData
     }
 
     /**
@@ -207,7 +207,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                         // 返回出来的结果为空
                         if (taskAndKeys != null) {
                             modifyInquiryLiveData.postValue(Triple(true, Pair(R.string.requestingServer, true), false))
-                            addNewRepository.submitNewInquiry(
+                            addNewRepository.submitNewIWant(
                                     token, tagID, picSet.joinToString(","),
                                     content, longitude, latitude) {
                                 modifyInquiryLiveData.postValue(Triple(it?.isSuccess
@@ -262,7 +262,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * 恢复用户帖子草稿
      */
-    fun restoreIDesireDraft(): LiveData<NewIDesireDraftCache> {
+    fun restoreIWantDraft(): LiveData<NewIWantDraftCache> {
         restoredPostDraftLiveData.value = addNewRepository.restoreInquiryDraft()
         return restoredPostDraftLiveData
     }

@@ -4,7 +4,7 @@ package com.example.schoolairdroprefactoredition.domain
  * @author kennen
  * @date 2021/4/18
  */
-data class DomainIDesire(
+data class DomainIWant(
         val code: Int,
         val msg: String,
         val data: Data

@@ -15,6 +15,7 @@
     <string name="privacyProtocol" translatable="false">《校园空投隐私政策》</string>
     <string name="fraction0" translatable="false">.00</string>
     <string name="omit" translatable="false">%s…</string>
+    <string name="iwant_tag" translatable="false">#%s</string>
     <string name="app_version_detail" translatable="false">Beta 1.1.4.00</string>
     <string name="app_version" translatable="false">Beta 1.1.4</string>
 
@@ -289,12 +290,12 @@
     <string name="addNewGoodsError">发送请求时出错，若多次失败请更新版本</string>
     <string name="idesire">求购</string>
     <string name="doNotPostIllegalContent">请不要发布违反学校规章、国家法律的文字和图片，请仔细检查表单各项内容</string>
-    <string name="addNewIDesire">发布求购</string>
+    <string name="addNewIWant">发布求购</string>
     <string name="submitPostLocationFailedTip">当前定位结果异常，帖子很可能无法被其他同学看到。表单已自动保存，建议稍后重试提交。</string>
     <string name="newPostSuccessTip">帖子已发表至广场。</string>
     <string name="why">为什么?</string>
     <string name="errorLoadItemInfo">加载物品信息出错</string>
-    <string name="postTitleSaySth">描述一下你的具体要求</string>
+    <string name="postTitleSaySth">描述一下你的要求</string>
     <string name="posts">帖子</string>
     <string name="noSpaceAndLineBreak">请不要输入空格及换行符</string>
     <string name="selectMostSuitableTagForUPost">请选择一个最符合你的求购分类的标签</string>
@@ -376,5 +377,6 @@
     <string name="contactOwner">联系主人</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="iwant_card_color">卡片颜色</string>
 
 </resources>

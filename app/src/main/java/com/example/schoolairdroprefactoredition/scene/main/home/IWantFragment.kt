@@ -12,7 +12,7 @@ import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.
 import com.example.schoolairdroprefactoredition.ui.components.BaseIWantEntity
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
-import com.example.schoolairdroprefactoredition.viewmodel.InquiryViewModel
+import com.example.schoolairdroprefactoredition.viewmodel.IWantViewModel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.example.schoolairdroprefactoredition.scene.idesire.IWantActivity
 
@@ -25,7 +25,7 @@ class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataList
     }
 
     private val iWantViewModel by lazy {
-        ViewModelProvider(this).get(InquiryViewModel::class.java)
+        ViewModelProvider(this).get(IWantViewModel::class.java)
     }
 
     private val iWantRecyclerAdapter by lazy {
@@ -49,7 +49,6 @@ class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataList
             setOnLoadMoreListener(this@IWantFragment)
             setPadding(SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f))
             layoutManager = mManager
-//            addItemDecoration(MarginItemDecoration(SizeUtils.dp2px(8f), true))
             adapter = iWantRecyclerAdapter
         }
     }
@@ -73,7 +72,7 @@ class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataList
     }
 
     override fun getOnlineData(aMapLocation: AMapLocation?) {
-        iWantViewModel.getInquiry().observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
+        iWantViewModel.getIWant().observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
             if (data.isNullOrEmpty()) {
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_INQUIRY)
             } else {
@@ -84,7 +83,7 @@ class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataList
     }
 
     override fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?) {
-        iWantViewModel.getInquiry(aMapLocation?.longitude, aMapLocation?.latitude).observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
+        iWantViewModel.getIWant(aMapLocation?.longitude, aMapLocation?.latitude).observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
             refreshLayout.finishRefresh()
             if (data.isNullOrEmpty()) {
                 showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_INQUIRY)

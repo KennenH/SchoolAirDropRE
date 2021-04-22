@@ -254,7 +254,7 @@
     <string name="confirmTransaction">Confirm Receipt</string>
     <string name="buyerReceiveQRCode">Buyer Receiving Code</string>
     <string name="pleaseConfirmPurchase">Please confirm the purchase before scanning QR</string>
-    <string name="addNewIDesire">Post IDeisre</string>
+    <string name="addNewIWant">Post IDeisre</string>
     <string name="submitPostLocationFailedTip">The current location result is abnormal, and the post may not be searched by other students on campus. The form has been automatically saved. It is recommended to retry the submission later.</string>
     <string name="newPostSuccessTip">The post has been posted to the Plaza.</string>
     <string name="why">Why?</string>

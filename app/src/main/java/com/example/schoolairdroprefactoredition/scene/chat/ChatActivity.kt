@@ -60,7 +60,9 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
          *
          * @param userID 对方的用户id
          */
-        fun start(context: Context, userID: Int) {
+        fun start(context: Context?, userID: Int?) {
+            if (userID == null || userID == -1 || context == null) return
+
             context.startActivity(Intent(context, ChatActivity::class.java).also { intent ->
                 intent.putExtra(ConstantUtil.KEY_USER_SIMPLE_INFO, DomainSimpleUserInfo().also {
                     it.userId = userID

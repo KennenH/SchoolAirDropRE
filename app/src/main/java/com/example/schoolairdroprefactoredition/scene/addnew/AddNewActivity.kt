@@ -23,9 +23,9 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
-import com.example.schoolairdroprefactoredition.cache.NewIDesireDraftCache
+import com.example.schoolairdroprefactoredition.cache.NewIWantDraftCache
 import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
-import com.example.schoolairdroprefactoredition.domain.DomainIDesire
+import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.domain.DomainToken
 import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips
@@ -102,15 +102,15 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         /**
          * 修改求购信息
          *
-         * @param iDesireID 要修改的求购信息
+         * @param iWantID 要修改的求购信息
          */
         @JvmStatic
-        fun startModifyIDesire(context: Context?, iDesireID: Int?) {
-            if (context == null || iDesireID == null) return
+        fun startModifyIWant(context: Context?, iWantID: Int?) {
+            if (context == null || iWantID == null) return
 
             val intent = Intent(context, AddNewActivity::class.java)
-            intent.putExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.MODIFY_IDESIRE)
-            intent.putExtra(ConstantUtil.KEY_IDESIRE_ID, iDesireID)
+            intent.putExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.MODIFY_IWANT)
+            intent.putExtra(ConstantUtil.KEY_IWANT_ID, iWantID)
             if (context is AppCompatActivity) {
                 context.startActivityForResult(intent, LoginActivity.LOGIN)
                 AnimUtil.activityStartAnimUp(context)
@@ -138,12 +138,12 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             /**
              * 发布求购 页面类型
              */
-            const val ADD_IDESIRE = 234
+            const val ADD_IWANT = 234
 
             /**
              * 修改求购 页面类型
              */
-            const val MODIFY_IDESIRE = 861
+            const val MODIFY_IWANT = 861
         }
     }
 
@@ -242,7 +242,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     /**
      * 获取的求购信息
      */
-    private var IDesireInfo: DomainIDesire.Data? = null
+    private var IWantInfo: DomainIWant.Data? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -331,6 +331,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             AddNewType.ADD_ITEM -> {
                 draft_tip_toggle.setText(R.string.addNewSelling)
 
+                option_iwant_color.visibility = View.GONE
                 tag_title.visibility = View.GONE
                 option_tag_wrapper.visibility = View.GONE
 
@@ -339,18 +340,19 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             }
 
             // 新增求购类型
-            AddNewType.ADD_IDESIRE -> {
-                draft_tip_toggle.setText(R.string.addNewIDesire)
+            AddNewType.ADD_IWANT -> {
+                draft_tip_toggle.setText(R.string.addNewIWant)
                 detail_title.setText(R.string.postTitleSaySth)
 
                 pic_set_title.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
                 price_title.visibility = View.GONE
+                option_title.visibility = View.GONE
                 option_price.visibility = View.GONE
                 option_negotiable.visibility = View.GONE
                 option_secondHand.visibility = View.GONE
 
                 // 恢复求购草稿
-                restoreIDesireDraft()
+                restoreIWantDraft()
             }
 
             // 修改物品信息类型
@@ -365,7 +367,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             }
 
             // 修改求购信息类型
-            AddNewType.MODIFY_IDESIRE -> {
+            AddNewType.MODIFY_IWANT -> {
 
             }
         }
@@ -393,7 +395,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         isCircle = false,
                         isCropWithoutSpecificShape = false
                 )
-            } else if (pageType == AddNewType.ADD_IDESIRE) {
+            } else if (pageType == AddNewType.ADD_IWANT) {
                 pickPhotoFromAlbum(
                         this,
                         REQUEST_CODE_COVER,
@@ -495,8 +497,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         AddNewType.ADD_ITEM, AddNewType.MODIFY_ITEM -> {
                             submitItem(token)
                         }
-                        AddNewType.ADD_IDESIRE, AddNewType.MODIFY_IDESIRE -> {
-                            submitIDesire(token)
+                        AddNewType.ADD_IWANT, AddNewType.MODIFY_IWANT -> {
+                            submitIWant(token)
                         }
                         else -> {
                             DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.featureNotSupport)
@@ -609,15 +611,15 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      * 提交求购表单
      */
     @Synchronized
-    private fun submitIDesire(token: DomainToken) {
+    private fun submitIWant(token: DomainToken) {
         showLoading {
-            if (pageType == AddNewType.ADD_IDESIRE) {
+            if (pageType == AddNewType.ADD_IWANT) {
                 val mPicSetPaths = ArrayList<String>()
                 for (localMedia in mPicSetSelected) {
                     mPicSetPaths.add(localMedia.cutPath
                             ?: localMedia.path)
                 }
-                addNewViewModel.submitIDesire(
+                addNewViewModel.submitIWant(
                         token.access_token, mNowTagID,
                         mPicSetPaths, option_description.text.toString(),
                         mAmapLocation!!.longitude, mAmapLocation!!.latitude)
@@ -634,8 +636,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                                         }
                                         removeObserver(this) // 上传失败，中断流程，注销观察者
                                     } else if (response.third) {
-                                        // 在售物品数量加一
-                                        (application as SAApplication).getCachedMyInfo()?.userGoodsOnSaleCount?.plus(1)
+                                        // 求购数量加一
+                                        (application as SAApplication).getCachedMyInfo()?.userContactCount?.plus(1)
                                         showUploadResult(true)
                                         removeObserver(this) // 完成上传，注销观察者
                                     } else {
@@ -650,8 +652,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                                 }
                             })
                         }
-            } else if (pageType == AddNewType.MODIFY_IDESIRE) {
-// TODO: 2021/4/18  修改求购信息
+            } else if (pageType == AddNewType.MODIFY_IWANT) {
+                // TODO: 2021/4/18  修改求购信息
             }
         }
     }
@@ -670,24 +672,24 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     when {
                         result
                                 && pageType == AddNewType.ADD_ITEM
-                                && pageType == AddNewType.ADD_IDESIRE
+                                && pageType == AddNewType.ADD_IWANT
                         -> AddNewResultTips.SUCCESS_NEW
 
                         result
                                 && pageType == AddNewType.MODIFY_ITEM
-                                && pageType == AddNewType.MODIFY_IDESIRE
+                                && pageType == AddNewType.MODIFY_IWANT
                         -> AddNewResultTips.SUCCESS_MODIFY
 
                         isUploadImageError -> AddNewResultTips.FAILED_PREPARE
 
                         !result
                                 && pageType == AddNewType.ADD_ITEM
-                                && pageType == AddNewType.ADD_IDESIRE
+                                && pageType == AddNewType.ADD_IWANT
                         -> AddNewResultTips.FAILED_ADD
 
                         !result
                                 && pageType == AddNewType.MODIFY_ITEM
-                                && pageType == AddNewType.MODIFY_IDESIRE
+                                && pageType == AddNewType.MODIFY_IWANT
                         -> AddNewResultTips.FAILED_MODIFY
 
                         else -> AddNewResultTips.FAILED_ADD
@@ -741,7 +743,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             pass = false
         }
         if (mNowTagID == -1
-                && pageType == AddNewType.ADD_IDESIRE) {
+                && pageType == AddNewType.ADD_IWANT) {
             AnimUtil.primaryBackgroundViewBlinkRed(this, option_tag_wrapper)
             focusView = tag_title
             pass = false
@@ -799,7 +801,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             } else {
                 addNewViewModel.deleteItemDraft()
             }
-        } else if (pageType == AddNewType.ADD_IDESIRE) { // 保存帖子表单
+        } else if (pageType == AddNewType.ADD_IWANT) { // 保存帖子表单
             if (!isSubmitSuccess && (mCoverPath.isNotBlank()
                             || mPicSetSelected.size > 0 || option_title.text.isNotBlank()
                             || option_description.text.isNotBlank())) {
@@ -861,8 +863,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      * 恢复求购草稿
      * 清除后在页面被pause之前仍可恢复
      */
-    private fun restoreIDesireDraft() {
-        addNewViewModel.restoreIDesireDraft().observeOnce(this, { draftCache: NewIDesireDraftCache? ->
+    private fun restoreIWantDraft() {
+        addNewViewModel.restoreIWantDraft().observeOnce(this, { draftCache: NewIWantDraftCache? ->
             if (draftCache != null) {
                 hasDraft = true
                 saved_draft.visibility = View.VISIBLE // 显示草稿恢复提示
@@ -935,9 +937,9 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 使用给进来的IDesire信息填充页面
+     * 使用给进来的IWant信息填充页面
      */
-    private fun initIDesireInfo() {
+    private fun initIWantInfo() {
 
     }
 
@@ -1046,7 +1048,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         if (pageType == AddNewType.ADD_ITEM) {
                             restoreItemDraft()
                         } else {
-                            restoreIDesireDraft()
+                            restoreIWantDraft()
                         }
                     }
                 }
