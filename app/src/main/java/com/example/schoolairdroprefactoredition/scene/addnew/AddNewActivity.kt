@@ -24,15 +24,13 @@ import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewIWantDraftCache
-import com.example.schoolairdroprefactoredition.domain.DomainGoodsAllDetailInfo
-import com.example.schoolairdroprefactoredition.domain.DomainIWant
-import com.example.schoolairdroprefactoredition.domain.DomainToken
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
+import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.AddNewHorizontalImageRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.AddNewHorizontalImageRecyclerAdapter.OnPicSetClickListener
+import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem
 import com.example.schoolairdroprefactoredition.ui.components.AddPicItem.OnItemAddPicActionListener
 import com.example.schoolairdroprefactoredition.utils.*
@@ -45,6 +43,7 @@ import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.ImageViewerPopupView
+import kotlinx.android.synthetic.main.activity_iwant_refactor.*
 import kotlinx.android.synthetic.main.activity_selling_add_new.*
 import java.util.*
 import kotlin.collections.ArrayList
@@ -64,14 +63,17 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         const val REQUEST_CODE_PIC_SET = 11
 
         /**
-         * 发布物品或新帖子
-         * 添加物品或帖子使用该方法
+         * 发布物品或求购，仅新增物品或新增求购
          *
-         * @param type 页面类型 所有类型包含在[AddNewType]中
+         * @param type 页面类型 [AddNewType]
          */
         @JvmStatic
         fun startAddNew(context: Context?, @AddNewType type: Int) {
             if (context == null) return
+
+            if (type != AddNewType.ADD_ITEM && type != AddNewType.ADD_IWANT) {
+                throw IllegalArgumentException("startAddNew can only accept add new type, use startModifyGoods or startModifyIWant instead")
+            }
 
             val intent = Intent(context, AddNewActivity::class.java)
             intent.putExtra(ConstantUtil.KEY_ADD_NEW_TYPE, type)
@@ -119,9 +121,10 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 页面的类型，因为把这个页面命名为AddNewActivity，所以不要被这个
-     * AddNewType名字给迷惑了，就是页面的类型，所有新增修改类型的标志码
-     * 都在这个类中列出
+     * 页面的类型
+     *
+     * 因为把这个页面命名为AddNewActivity，所以把页面类型叫做AddNewType
+     * 就是页面的类型，并不是只有新增时使用这个页面，所有新增修改类型的标志码都在这个类中列出
      */
     annotation class AddNewType {
         companion object {
@@ -136,7 +139,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             const val MODIFY_ITEM = 456
 
             /**
-             * 发布求购 页面类型
+             * 发布新求购 页面类型
              */
             const val ADD_IWANT = 234
 
@@ -155,10 +158,19 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         GoodsViewModel.GoodsViewModelFactory((application as SAApplication).databaseRepository).create(GoodsViewModel::class.java)
     }
 
+    /**
+     * Amap 定位所需对象
+     */
     private var mClient: AMapLocationClient? = null
 
+    /**
+     * Amap 定位所需对象
+     */
     private var mOption: AMapLocationClientOption? = null
 
+    /**
+     * Amap 定位所需对象
+     */
     private var mAmapLocation: AMapLocation? = null
 
     /**
@@ -169,34 +181,41 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 当未授权时保存请求码，授权完毕后按照保存的请求码进行操作
+     * 当未授权时保存请求码，授权完毕后按照保存的请求码自动进行操作
      */
     private var request = 0
 
     /**
-     * 图片宽高比 高：宽
-     */
-    private var mHWRatio = 1.0f
-
-    /**
-     * 当前页面保存的封面路径
+     * 类型为[AddNewType.ADD_ITEM]时当前选择的封面本地路径
      */
     private var mCoverPath: String = ""
 
     /**
-     * 当前页面保存的图片集路径
+     * 所有类型适用，保存的将要添加的图片集本地路径
      */
     private var mPicSetSelected: MutableList<LocalMedia> = ArrayList()
 
     /**
-     * 修改物品时被删除的图片路径
+     * 类型为[AddNewType.MODIFY_IWANT] 或 [AddNewType.MODIFY_ITEM]时被删除的服务器图片路径
      */
     private val mImagesToDelete = ArrayList<String>()
 
     /**
-     * 当前选中的tag id
+     * 类型为[AddNewType.ADD_IWANT] 或 [AddNewType.MODIFY_IWANT]时当前选中的tag id
      */
-    private var mNowTagID = -1
+    private var mNowTag: DomainIWantTags.Data? = null
+
+    /**
+     * 类型为[AddNewType.ADD_IWANT] 或 [AddNewType.MODIFY_IWANT]时当前选中的卡片颜色
+     *
+     * one of
+     * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_DEFAULT]
+     * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_PURPLE]
+     * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_THEME]
+     * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_RED]
+     * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_ORANGE]
+     */
+    private var mNowCardColor = -1
 
     /**
      * 草稿内容是否已被恢复
@@ -208,19 +227,24 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     /**
      * 是否已经提交并且成功了
      *
+     * 该标志位是为了防止提交成功之后出错仍留在本页面，防止用户重复提交
      * 成功之后将不会对页面内容进行缓存
      */
     private var isSubmitSuccess = false
 
     /**
      * 页面中是否有草稿
+     *
+     * 在[AddNewType]为[AddNewType.ADD_IWANT] [AddNewType.ADD_ITEM]时标志是否本地有
+     * 对应页面类型的草稿
      */
     private var hasDraft = false
 
     /**
-     * 页面的类型
+     * 当前页面的类型 [AddNewType]
      *
-     * 从所有静态start方法中页面类型
+     * 从所有start页面方法中传递页面类型
+     * [startAddNew] [startModifyIWant] [startModifyGoods]
      */
     @AddNewType
     private val pageType by lazy {
@@ -228,21 +252,29 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 要修改的物品id
+     * 在[AddNewType]为[AddNewType.MODIFY_ITEM]时传入的要修改的物品id
      */
     private val goodsID by lazy {
         intent.getIntExtra(ConstantUtil.KEY_GOODS_ID, -1)
     }
 
     /**
-     * 获取的物品信息
+     * 在[AddNewType]为[AddNewType.MODIFY_ITEM]时获取的旧的物品信息
      */
     private var goodsInfo: DomainGoodsAllDetailInfo.Data? = null
 
     /**
-     * 获取的求购信息
+     * 在[AddNewType]为[AddNewType.MODIFY_IWANT]时传入的要修改的求购id
      */
-    private var IWantInfo: DomainIWant.Data? = null
+    private val iWantID by lazy {
+        intent.getIntExtra(ConstantUtil.KEY_IWANT_ID, -1)
+    }
+
+    /**
+     * 在[AddNewType]为[AddNewType.MODIFY_IWANT]时获取的旧求购信息
+     */
+    private var iWantInfo: DomainIWant.Data? = null
+
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -252,54 +284,27 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         // 当app在外部登录时将会收到通知
         (application as? SAApplication)?.addOnApplicationLoginListener(this)
 
+        // 请求定位权限，权限授予后父类调用locationGranted
+        requestPermission(PermissionConstants.LOCATION, RequestType.AUTO)
+
+        // 初始化页面
+        initPageAccordingToType()
+    }
+
+    /**
+     * 初始化全局数据以及根据页面类型[AddNewType]初始化页面数据
+     *
+     * 新增类型将初始化表单条目，只显示对应的选项
+     * 修改类型将请求原始表单数据并使用其填充页面选项
+     *
+     * onClick回调传送门[onClick]
+     */
+    private fun initPageAccordingToType() {
         saved_draft.visibility = View.GONE
         server_tip.visibility = View.GONE
         illegal_warning.visibility = View.GONE
-        draft_tip_toggle.setOnClickListener(this)
-        draft_action.setOnClickListener(this)
-        saved_close.setOnClickListener(this)
-        pic_set.setOnClickListener(this)
-        option_title.setOnClickListener(this)
-        price_confirm.setOnClickListener(this)
-        option_location.setOnClickListener(this)
-        option_negotiable.setOnClickListener(this)
-        option_secondHand.setOnClickListener(this)
-        option_description.setOnClickListener(this)
-        price_input.setOnEditorActionListener { _: TextView?, _: Int, _: KeyEvent? ->
-            price_input.clearFocus()
-            KeyboardUtils.hideSoftInput(this)
-            true
-        }
-        price_input.filters = arrayOf<InputFilter>(DecimalFilter())
-        pic_set.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
 
-        if (pageType == AddNewType.ADD_ITEM) {
-            //封面
-            cover.setOnItemAddPicActionListener(object : OnItemAddPicActionListener {
-                override fun onClose() {
-                    mCoverPath = ""
-                    cover.clearImage(true)
-                }
-
-                override fun onItemClick() {
-                    if (cover.imagePath != null && cover.imagePath.isNotBlank()) {
-                        XPopup.Builder(this@AddNewActivity)
-                                .isDarkTheme(true)
-                                .asImageViewer(cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, getColor(R.color.blackAlways), ImageLoader())
-                                .show()
-                    } else {
-                        request = REQUEST_CODE_COVER
-                        requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL)
-                    }
-                }
-            })
-        } else {
-
-            cover_title.visibility = View.GONE
-            cover_wrapper.visibility = View.GONE
-        }
-
-        // 这是footer 不显示图片，仅作为相册选择图片的按钮
+        // 这是footer 不显示图片，仅作为打开相册或相机来选择图片的按钮
         val add = AddPicItem(this)
         add.layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         add.setOnItemAddPicActionListener(object : OnItemAddPicActionListener {
@@ -309,34 +314,92 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
             override fun onItemClick() {
                 request = REQUEST_CODE_PIC_SET
+                // 请求权限，权限通过后自动打开相册
                 requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL)
             }
         })
-        mPicSetHorizontalAdapter.setOnPicSetClickListener(this)
         mPicSetHorizontalAdapter.addFooterView(add)
+        mPicSetHorizontalAdapter.setOnPicSetClickListener(this)
+        pic_set.layoutManager = LinearLayoutManager(this, RecyclerView.HORIZONTAL, false)
         pic_set.adapter = mPicSetHorizontalAdapter
-        requestPermission(PermissionConstants.LOCATION, RequestType.AUTO)
-        initPageAccordingToType()
-    }
 
-    /**
-     * 根据页面类型初始化页面数据
-     *
-     * 新增类型将初始化表单条目，只显示对应的选项
-     * 修改类型将请求原始表单数据并使用其填充页面选项
-     */
-    private fun initPageAccordingToType() {
+        draft_tip_toggle.setOnClickListener(this)
+        draft_action.setOnClickListener(this)
+        saved_close.setOnClickListener(this)
+        pic_set.setOnClickListener(this)
+        option_location.setOnClickListener(this)
+        option_description.setOnClickListener(this)
+
+        // 判断页面类型
         when (pageType) {
             // 新增物品类型
             AddNewType.ADD_ITEM -> {
                 draft_tip_toggle.setText(R.string.addNewSelling)
 
-                option_iwant_color.visibility = View.GONE
-                tag_title.visibility = View.GONE
-                option_tag_wrapper.visibility = View.GONE
+                option_iwant_color.visibility = View.GONE // 求购卡片颜色
+                tag_title.visibility = View.GONE // 求购tag
+                option_tag_wrapper.visibility = View.GONE // 求购tag父
+
+                option_title.setOnClickListener(this)
+                price_confirm.setOnClickListener(this)
+                option_negotiable.setOnClickListener(this)
+                option_secondHand.setOnClickListener(this)
+
+                // 初始化封面选项
+                cover.setOnItemAddPicActionListener(object : OnItemAddPicActionListener {
+                    override fun onClose() {
+                        mCoverPath = ""
+                        cover.clearImage(true)
+                    }
+
+                    override fun onItemClick() {
+                        if (cover.imagePath != null && cover.imagePath.isNotBlank()) {
+                            XPopup.Builder(this@AddNewActivity)
+                                    .isDarkTheme(true)
+                                    .asImageViewer(cover.findViewById(R.id.image), mCoverPath, false, -1, -1, -1, true, getColor(R.color.blackAlways), ImageLoader())
+                                    .show()
+                        } else {
+                            request = REQUEST_CODE_COVER
+                            requestPermission(PermissionConstants.STORAGE, RequestType.MANUAL)
+                        }
+                    }
+                })
+                // 初始化价格选项
+                price_input.setOnEditorActionListener { _: TextView?, _: Int, _: KeyEvent? ->
+                    price_input.clearFocus()
+                    KeyboardUtils.hideSoftInput(this)
+                    true
+                }
+                price_input.filters = arrayOf<InputFilter>(DecimalFilter())
 
                 // 恢复物品草稿
                 restoreItemDraft()
+            }
+
+
+            // 修改物品信息类型
+            AddNewType.MODIFY_ITEM -> {
+                draft_tip_toggle.setText(R.string.modifyInfo)
+
+                option_iwant_color.visibility = View.GONE // 求购卡片颜色
+                tag_title.visibility = View.GONE // 求购tag标题
+                option_tag_wrapper.visibility = View.GONE // 求购tag父
+                cover_title.visibility = View.GONE // 修改物品信息禁止修改封面图片
+                cover_wrapper.visibility = View.GONE // 修改物品信息禁止修改封面图片
+
+                option_title.setOnClickListener(this)
+                price_confirm.setOnClickListener(this)
+                option_negotiable.setOnClickListener(this)
+                option_secondHand.setOnClickListener(this)
+                price_input.setOnEditorActionListener { _: TextView?, _: Int, _: KeyEvent? ->
+                    price_input.clearFocus()
+                    KeyboardUtils.hideSoftInput(this)
+                    true
+                }
+                price_input.filters = arrayOf<InputFilter>(DecimalFilter())
+
+                // 使用物品id获取物品信息
+                initGoodsInfo()
             }
 
             // 新增求购类型
@@ -345,29 +408,42 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 detail_title.setText(R.string.postTitleSaySth)
 
                 pic_set_title.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+                // 都是新增物品里的选项，求购用不到
                 price_title.visibility = View.GONE
-                option_title.visibility = View.GONE
+                option_title_wrapper.visibility = View.GONE
+                title_title.visibility = View.GONE
                 option_price.visibility = View.GONE
                 option_negotiable.visibility = View.GONE
                 option_secondHand.visibility = View.GONE
+                cover_title.visibility = View.GONE
+                cover_wrapper.visibility = View.GONE
+
+                option_tag.setOnClickListener(this)
+                option_iwant_color.setOnClickListener(this)
+
+                option_iwant_color.setColor(R.color.primaryDark)
 
                 // 恢复求购草稿
                 restoreIWantDraft()
             }
 
-            // 修改物品信息类型
-            AddNewType.MODIFY_ITEM -> {
-                draft_tip_toggle.setText(R.string.modifyInfo)
-
-                tag_title.visibility = View.GONE
-                option_tag_wrapper.visibility = View.GONE
-
-                // 使用物品id获取物品信息
-                initGoodsInfo()
-            }
-
             // 修改求购信息类型
             AddNewType.MODIFY_IWANT -> {
+                draft_tip_toggle.setText(R.string.modifyInfo)
+                detail_title.setText(R.string.postTitleSaySth)
+
+                pic_set_title.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
+                option_title_wrapper.visibility = View.GONE
+                title_title.visibility = View.GONE
+                price_title.visibility = View.GONE
+                option_price.visibility = View.GONE
+                option_negotiable.visibility = View.GONE
+                option_secondHand.visibility = View.GONE
+                cover_title.visibility = View.GONE
+                cover_wrapper.visibility = View.GONE
+
+                option_tag.setOnClickListener(this)
+                option_iwant_color.setOnClickListener(this)
 
             }
         }
@@ -419,9 +495,11 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        if (data == null) return
+
         if (resultCode == RESULT_OK) {
-            if (requestCode == InputSetActivity.REQUEST_CODE) { // 输入页面内容返回
-                if (data != null) {
+            when (requestCode) {
+                InputSetActivity.REQUEST_CODE -> { // 输入页面内容返回
                     val type = data.getIntExtra(InputSetActivity.TYPE, InputSetActivity.TYPE_TITLE)
                     if (type == InputSetActivity.TYPE_TITLE) {
                         option_title.text = data.getStringExtra(InputSetActivity.RESULT)
@@ -430,19 +508,16 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         option_description.text = data.getStringExtra(InputSetActivity.RESULT)
                     }
                 }
-            } else if (requestCode == REQUEST_CODE_COVER) { // 封面选择返回
-                if (data != null) {
+                REQUEST_CODE_COVER -> { // 封面选择返回
                     val coverMedia = PictureSelector.obtainMultipleResult(data)[0]
                     mCoverPath = coverMedia.cutPath ?: coverMedia.path
                     cover.setImageLocalPath(mCoverPath)
                 }
-            } else if (requestCode == REQUEST_CODE_PIC_SET) { // 图片集选择返回
-                if (data != null) {
+                REQUEST_CODE_PIC_SET -> { // 图片集选择返回
                     mPicSetSelected.addAll(PictureSelector.obtainMultipleResult(data))
                     mPicSetHorizontalAdapter.setList(mPicSetSelected)
                 }
-            } else if (requestCode == LoginActivity.LOGIN) { // 在本页面打开登录页面登录并返回
-                if (data != null) {
+                LoginActivity.LOGIN -> { // 在本页面打开登录页面登录并返回
                     setResult(RESULT_OK, data)
                     (application as SAApplication).cacheMyInfoAndToken(
                             data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean,
@@ -451,12 +526,22 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         checkBeforeSubmit()
                     })
                 }
+                IWantTagActivity.REQUEST_CODE_IWANT_TAG -> {
+                    val tag = data.getSerializableExtra(IWantTagActivity.KEY_SELECTED_TAG)
+                            as DomainIWantTags.Data?
+                    if (tag != null) {
+                        option_tag.text = tag.tag
+                        this.mNowTag = tag
+                    }
+                }
             }
         }
     }
 
     /**
-     * 定位
+     * 开始定位
+     *
+     * 进入页面、点击重新定位时调用
      */
     private fun startLocation() {
         if (mClient == null) {
@@ -476,6 +561,10 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
     /**
      * 提交表单前的检查
+     *
+     * 1、检查是否频繁提交
+     * 2、检查表单必填项是否填写完整
+     * 3、检查当前是否已登录
      */
     private fun checkBeforeSubmit() {
         if (checkFormIsLegal()) {
@@ -620,7 +709,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                             ?: localMedia.path)
                 }
                 addNewViewModel.submitIWant(
-                        token.access_token, mNowTagID,
+                        token.access_token, mNowTag!!.tag_id, mNowCardColor,
                         mPicSetPaths, option_description.text.toString(),
                         mAmapLocation!!.longitude, mAmapLocation!!.latitude)
                         .apply {
@@ -703,46 +792,49 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 检查表单填写是否完整
+     * 检查表单必填项填写是否完整
+     *
      * 若有必填项未填，则将页面跳至未填项目并高亮显示提示用户填写
      */
     private fun checkFormIsLegal(): Boolean {
         var pass = true
         var focusView: View? = null
 
-        if (option_description.text.isBlank()) {
+        if (option_description.text.isBlank()) { // 详细描述
             AnimUtil.primaryBackgroundViewBlinkRed(this, option_description_wrapper)
             focusView = option_description_wrapper
             pass = false
         }
-        if (price_input.text.isNotBlank()
+        if (price_input.text.isNotBlank() // 价格输入
                 && pageType == AddNewType.ADD_ITEM
                 && pageType == AddNewType.MODIFY_ITEM) {
             AnimUtil.primaryBackgroundViewBlinkRed(this, option_price)
             focusView = price_title
             pass = false
         }
-        if (option_title.text.isBlank()
+        if (option_title.text.isBlank() // 标题
                 && pageType == AddNewType.ADD_ITEM
                 && pageType == AddNewType.MODIFY_ITEM) {
             AnimUtil.primaryBackgroundViewBlinkRed(this, option_title_wrapper)
             focusView = title_title
             pass = false
         }
-        if (mPicSetHorizontalAdapter.data.isEmpty()
+        if (mPicSetHorizontalAdapter.data.isEmpty() // 新增的图片
                 && pageType == AddNewType.ADD_ITEM
                 && pageType == AddNewType.MODIFY_ITEM) {
             AnimUtil.primaryBackgroundViewBlinkRed(this, pic_set)
             focusView = pic_set_title
             pass = false
         }
-        if (mCoverPath.isBlank()
+        if (mCoverPath.isBlank() // 封面
                 && pageType == AddNewType.ADD_ITEM) {
             AnimUtil.primaryBackgroundViewBlinkRed(this, cover_wrapper)
             focusView = cover_title
             pass = false
         }
-        if (mNowTagID == -1
+        if (mNowTag == null // 求购标签
+                || mNowTag?.tag_id == -1
+                || mNowTag?.tag?.isBlank() == true
                 && pageType == AddNewType.ADD_IWANT) {
             AnimUtil.primaryBackgroundViewBlinkRed(this, option_tag_wrapper)
             focusView = tag_title
@@ -803,16 +895,14 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             }
         } else if (pageType == AddNewType.ADD_IWANT) { // 保存帖子表单
             if (!isSubmitSuccess && (mCoverPath.isNotBlank()
+                            || mNowTag != null
                             || mPicSetSelected.size > 0 || option_title.text.isNotBlank()
                             || option_description.text.isNotBlank())) {
                 addNewViewModel.savePostDraft(
-//                        mCoverPath,
-//                        mHWRatio,
                         mPicSetSelected,
-                        option_tag.text.toString(),
-//                        option_anonymous.isChecked,
-//                        option_title.text.toString(),
-                        option_description.text.toString())
+                        mNowTag ?: DomainIWantTags.Data(-1, ""),
+                        option_description.text.toString(),
+                        mNowCardColor)
             } else {
                 addNewViewModel.deletePostDraft()
             }
@@ -868,14 +958,15 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             if (draftCache != null) {
                 hasDraft = true
                 saved_draft.visibility = View.VISIBLE // 显示草稿恢复提示
-//                mCoverPath = draftCache.cover
-//                mHWRatio = draftCache.hwRatio
                 mPicSetSelected = draftCache.picSet
                 if (mCoverPath.isNotBlank()) {
                     cover.setImageLocalPath(mCoverPath)
                 }
+                mNowTag = draftCache.tag
+                option_tag.text = mNowTag?.tag
+                mNowCardColor = draftCache.cardColor
+                setCardColor()
                 mPicSetHorizontalAdapter.setList(mPicSetSelected)
-//                option_title.text = draftCache.title
                 option_description.text = draftCache.content
             }
             draft_tip.text = getString(R.string.draftRecovered)
@@ -885,7 +976,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 用给进来的物品id获取物品信息，再使用物品信息填充页面
+     * 类型为[AddNewType.MODIFY_ITEM]时用给进来的物品id获取物品信息，再使用物品信息填充页面
      */
     private fun initGoodsInfo() {
         showLoading()
@@ -937,9 +1028,10 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 使用给进来的IWant信息填充页面
+     * 类型为[AddNewType.MODIFY_IWANT]使用给进来的IWant id获取信息并填充页面
      */
     private fun initIWantInfo() {
+        showLoading()
 
     }
 
@@ -953,6 +1045,9 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         cover.clearImage(true)
         option_title.text = ""
         price_input.setText("")
+        mNowTag = null
+        option_tag.text = ""
+        option_iwant_color.setColor(R.color.primaryDark)
         if (option_negotiable.isChecked) {
             option_negotiable.toggle()
         }
@@ -963,6 +1058,29 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         draft_tip.text = getString(R.string.draftCleared)
         draft_action.text = getString(R.string.restoreDraft)
         isDraftRestored = false
+    }
+
+    /**
+     * 设置卡片颜色
+     */
+    private fun setCardColor() {
+        when (mNowCardColor) {
+            IWantRecyclerAdapter.COLOR_DEFAULT->{
+                option_iwant_color.setColor(R.color.primaryDark)
+            }
+            IWantRecyclerAdapter.COLOR_PURPLE->{
+                option_iwant_color.setColor(R.color.colorPrimaryPurple)
+            }
+            IWantRecyclerAdapter.COLOR_THEME->{
+                option_iwant_color.setColor(R.color.colorAccentDark)
+            }
+            IWantRecyclerAdapter.COLOR_ORANGE->{
+                option_iwant_color.setColor(R.color.yellow)
+            }
+            IWantRecyclerAdapter.COLOR_RED->{
+                option_iwant_color.setColor(R.color.heart)
+            }
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -1022,14 +1140,14 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 option_secondHand.toggle()
             }
 
-            // 物品描述
+            // 详细描述
             R.id.option_description -> {
                 InputSetActivity.start(
                         this,
                         InputSetActivity.TYPE_DESCRIPTION,
 //                        SadSpannable.generateJson(this, option_description.text as Spanned),
                         option_description.text.toString(),
-                        getString(R.string.goodsDescription))
+                        getString(R.string.detailDescription))
             }
 
             // 蓝色横幅（表单保存相关）关闭按钮
@@ -1061,6 +1179,16 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     AnimUtil.expand(saved_draft)
                     AnimUtil.textColorAnim(this, draft_tip_toggle, R.color.colorAccent, R.color.primaryText)
                 }
+            }
+
+            // 求购卡片颜色
+            R.id.option_iwant_color -> {
+
+            }
+
+            // 求购标签
+            R.id.option_tag -> {
+                IWantTagActivity.start(this, mNowTag)
             }
         }
     }
@@ -1103,7 +1231,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 在已选的图片集中删除一张图片
+     * 在已选的新增图片集中删除一张图片
      *
      * @param pos 删除的位置
      */
@@ -1112,8 +1240,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     }
 
     /**
-     * 点击已选的图片集
-     * 查看图片
+     * 点击已选的新增图片集以查看图片
      *
      * @param pos 点击的位置
      */

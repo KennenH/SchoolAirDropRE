@@ -7,11 +7,10 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
-import com.blankj.utilcode.util.ClickUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.ui.components.BaseIWantEntity
+import com.example.schoolairdroprefactoredition.database.BaseIWantEntity
 import com.example.schoolairdroprefactoredition.ui.components.RecyclerFooter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 
@@ -26,26 +25,36 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIWantEntity, BaseView
 
         /**
          * 求购卡片的默认颜色，在不同模式下的表现不同
+         *
+         * primaryDark
          */
         const val COLOR_DEFAULT = 0
 
         /**
          * 求购卡片紫色
+         *
+         * colorPrimaryPurple
          */
         const val COLOR_PURPLE = 1
 
         /**
          * 求购卡片主题色
+         *
+         * colorAccentDark
          */
         const val COLOR_THEME = 2
 
         /**
          * 求购卡片心色
+         *
+         * heart
          */
         const val COLOR_RED = 3
 
         /**
          * 求购卡片橘色
+         *
+         * yellow
          */
         const val COLOR_ORANGE = 4
     }

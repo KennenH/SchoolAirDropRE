@@ -1,4 +1,4 @@
-package com.example.schoolairdroprefactoredition.ui.components;
+package com.example.schoolairdroprefactoredition.database;
 
 import com.chad.library.adapter.base.entity.MultiItemEntity;
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter;

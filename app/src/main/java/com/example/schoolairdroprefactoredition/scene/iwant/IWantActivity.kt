@@ -1,11 +1,11 @@
-package com.example.schoolairdroprefactoredition.scene.idesire
+package com.example.schoolairdroprefactoredition.scene.iwant
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.transition.*
 import android.view.View
-import android.view.animation.AccelerateInterpolator
+import android.view.animation.AccelerateDecelerateInterpolator
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.res.ResourcesCompat
@@ -22,7 +22,7 @@ import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantHorizontalRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.TransitionAdapter
-import com.example.schoolairdroprefactoredition.ui.components.BaseIWantEntity
+import com.example.schoolairdroprefactoredition.database.BaseIWantEntity
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil
 import com.example.schoolairdroprefactoredition.utils.decoration.HorizontalItemMarginDecoration
 import kotlinx.android.synthetic.main.activity_iwant_refactor.*
@@ -55,13 +55,19 @@ class IWantActivity : ImmersionStatusBarActivity() {
     private val windowTransition by lazy {
         TransitionInflater.from(this).inflateTransition(R.transition.share_element_post_pager)
                 .also {
-                    it.duration = 180L
-                    it.interpolator = AccelerateInterpolator()
+                    it.duration = 200L
+                    it.interpolator = AccelerateDecelerateInterpolator()
                 }
     }
 
     private val adapter by lazy {
         IWantHorizontalRecyclerAdapter()
+    }
+
+    private val springForce by lazy {
+        SpringForce(1f).also {
+            it.dampingRatio = SpringForce.DAMPING_RATIO_LOW_BOUNCY
+        }
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -72,8 +78,6 @@ class IWantActivity : ImmersionStatusBarActivity() {
         initView()
         // 初始化元素共享动画
         initTransition()
-        // 开始元素共享动画
-        supportStartPostponedEnterTransition()
     }
 
     private fun initView() {
@@ -146,14 +150,10 @@ class IWantActivity : ImmersionStatusBarActivity() {
             SpringAnimation(it, DynamicAnimation.SCALE_X) to
                     SpringAnimation(it, DynamicAnimation.SCALE_Y)
         }
-        springAnimX.setStartVelocity(1.3f)
-        springAnimY.setStartVelocity(1.3f)
-        springAnimX.spring = SpringForce(1f).also {
-            it.dampingRatio = SpringForce.DAMPING_RATIO_LOW_BOUNCY
-        }
-        springAnimY.spring = SpringForce(1f).also {
-            it.dampingRatio = SpringForce.DAMPING_RATIO_LOW_BOUNCY
-        }
+        springAnimX.setStartVelocity(1.4f)
+        springAnimY.setStartVelocity(1.4f)
+        springAnimX.spring = springForce
+        springAnimY.spring = springForce
         window.sharedElementEnterTransition = windowTransition
         window.sharedElementEnterTransition.apply {
             addListener(object : TransitionAdapter() {
@@ -174,8 +174,8 @@ class IWantActivity : ImmersionStatusBarActivity() {
                         }
 
                         override fun onTransitionEnd(transition: Transition) {
-                            springAnimX.setStartVelocity(-1.5f)
-                            springAnimY.setStartVelocity(-1.5f)
+                            springAnimX.setStartVelocity(-1.6f)
+                            springAnimY.setStartVelocity(-1.6f)
                             springAnimX.start()
                             springAnimY.start()
                         }

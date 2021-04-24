@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.DrawableRes;
 import androidx.appcompat.widget.SwitchCompat;
 
 import com.example.schoolairdroprefactoredition.R;
@@ -113,10 +112,17 @@ public class OptionItem extends ConstraintLayoutAuto {
     }
 
     /**
-     * 在hasImage下设置图片为资源id
+     * 在hasImage下设置纯颜色资源
      */
-    public void setImageResource(@DrawableRes int res) {
-        mImage.setImageResource(res);
+    public void setColor(int color) {
+        mImage.setBackgroundColor(getResources().getColor(color, getContext().getTheme()));
+    }
+
+    /**
+     * 在hasImage下获取image view，便于外部使用view加载图片
+     */
+    public ImageView getImageView() {
+        return mImage;
     }
 
     public CharSequence getText() {

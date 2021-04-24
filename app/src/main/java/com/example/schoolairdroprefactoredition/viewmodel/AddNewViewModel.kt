@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewIWantDraftCache
+import com.example.schoolairdroprefactoredition.domain.DomainIWantTags
 import com.example.schoolairdroprefactoredition.repository.AddNewRepository
 import com.example.schoolairdroprefactoredition.repository.UploadRepository
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -147,9 +148,8 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
      * 提交求购信息
      */
     fun submitIWant(token: String,
-                    tagID: Int,
-                    picSet: List<String>,
-                    content: String,
+                    tagID: Int, color: Int,
+                    picSet: List<String>, content: String,
                     longitude: Double, latitude: Double): LiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
         val submitIWantLiveData = MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>>()
         viewModelScope.launch {
@@ -165,7 +165,8 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                         if (taskAndKeys != null) {
                             submitIWantLiveData.postValue(Triple(true, Pair(R.string.requestingServer, true), false))
                             addNewRepository.submitNewIWant(
-                                    token, tagID, picSet.joinToString(","),
+                                    token, tagID, color,
+                                    picSet.joinToString(","),
                                     content, longitude, latitude) {
                                 submitIWantLiveData.postValue(Triple(it?.isSuccess
                                         ?: false, Pair(R.string.uploadSuccess, true), it?.isSuccess
@@ -190,10 +191,10 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
     /**
      * 修改求购信息
      */
-    fun modifyInquiry(
-            token: String, picSet: List<String>,
-            tagID: Int, content: String,
-            longitude: Double, latitude: Double
+    fun modifyIWant(
+            token: String, tagID: Int, color: Int,
+            imagesToDelete: ArrayList<String>, picSet: List<String>,
+            content: String, longitude: Double, latitude: Double
     ): MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
         val modifyInquiryLiveData = MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>>()
         viewModelScope.launch {
@@ -207,8 +208,10 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                         // 返回出来的结果为空
                         if (taskAndKeys != null) {
                             modifyInquiryLiveData.postValue(Triple(true, Pair(R.string.requestingServer, true), false))
-                            addNewRepository.submitNewIWant(
-                                    token, tagID, picSet.joinToString(","),
+                            addNewRepository.modifyIWant(
+                                    token, tagID, color,
+                                    imagesToDelete.joinToString(","),
+                                    picSet.joinToString(","),
                                     content, longitude, latitude) {
                                 modifyInquiryLiveData.postValue(Triple(it?.isSuccess
                                         ?: false, Pair(R.string.uploadSuccess, true), it?.isSuccess
@@ -251,12 +254,14 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun savePostDraft(
             picSet: List<LocalMedia>,
-            tag: String,
-            content: String) {
+            tag: DomainIWantTags.Data,
+            content: String,
+            cardColor: Int) {
         addNewRepository.savePostDraft(
                 picSet,
                 tag,
-                content)
+                content,
+                cardColor)
     }
 
     /**

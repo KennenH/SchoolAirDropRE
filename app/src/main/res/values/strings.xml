@@ -16,8 +16,8 @@
     <string name="fraction0" translatable="false">.00</string>
     <string name="omit" translatable="false">%s…</string>
     <string name="iwant_tag" translatable="false">#%s</string>
-    <string name="app_version_detail" translatable="false">Beta 1.1.4.00</string>
-    <string name="app_version" translatable="false">Beta 1.1.4</string>
+    <string name="app_version_detail" translatable="false">Beta 1.1.5.00</string>
+    <string name="app_version" translatable="false">Beta 1.1.5</string>
 
 
     <string name="itemNS">"[img src=ic_negotiable/] [img src=ic_secondhand/] %s"</string>
@@ -374,9 +374,7 @@
     <string name="largeText" translatable="false">L</string>
     <string name="xLargeText" translatable="false">XL</string>
     <string name="handlingSpannableJson">正在处理富文本</string>
-    <string name="contactOwner">联系主人</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="iwant_card_color">卡片颜色</string>
+    <string name="selectTagFirst">请先选择一个标签</string>
 
 </resources>

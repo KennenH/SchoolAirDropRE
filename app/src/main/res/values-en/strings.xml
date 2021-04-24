@@ -335,4 +335,6 @@
     <string name="byeBye">Bye</string>
     <string name="seeAllQuestions">See All Questions</string>
     <string name="handlingSpannableJson">Handling rich text</string>
+    <string name="iwant_card_color">Card Color</string>
+    <string name="selectTagFirst">Please select a tag</string>
 </resources>

@@ -12,7 +12,6 @@ import com.example.schoolairdroprefactoredition.utils.NumberUtil;
 
 public class GoodsPopularity extends ConstraintLayout {
 
-    private final TextView mComments;
     private final TextView mLikes;
     private final TextView mWatches;
 
@@ -30,13 +29,8 @@ public class GoodsPopularity extends ConstraintLayout {
         super(context, attrs, defStyleAttr);
         LayoutInflater.from(context).inflate(R.layout.component_goods_popularity, this, true);
 
-        mComments = findViewById(R.id.item_comments);
         mLikes = findViewById(R.id.item_likes);
         mWatches = findViewById(R.id.item_watches);
-    }
-
-    public void setComments(int comments) {
-        mComments.setText(NumberUtil.num2StringWithUnit(comments));
     }
 
     public void setLikes(int likes) {

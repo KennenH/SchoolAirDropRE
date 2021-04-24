@@ -90,7 +90,6 @@ class GoodsActivity : ImmersionStatusBarActivity(),
         setSupportActionBar(goods_toolbar)
 
         goods_info_container.setOnUserInfoClickListener(this)
-//        goods_button_left.setOnButtonClickListener(this)
         goods_button_right.setOnButtonClickListener(this)
 
         goodsViewModel.getGoodsAllDetailByID(goodsID).observeOnce(this) {
@@ -219,14 +218,6 @@ class GoodsActivity : ImmersionStatusBarActivity(),
     override fun onUserInfoClick(view: View?) {
         UserActivity.start(this@GoodsActivity, goodsInfo?.seller?.user_id)
     }
-
-
-    /**
-     * 点击左下角的聊天按钮
-     */
-//    override fun onLeftButtonClick() {
-//
-//    }
 
     /**
      * 点击右下角的收藏按钮

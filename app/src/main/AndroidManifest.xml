@@ -37,7 +37,7 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".scene.idesire.IWantActivity"
+            android:name=".scene.iwant.IWantActivity"
             android:label="" />
         <activity
             android:name=".scene.settings.FeedbackActivity"
@@ -86,7 +86,7 @@
         <activity
             android:name=".scene.ssb.MyPostActivity"
             android:label="" />
-        <activity android:name=".scene.addnew.SelectPostTagActivity" />
+        <activity android:name=".scene.addnew.IWantTagActivity" />
         <activity
             android:name=".scene.user.UserActivity"
             android:label="" />

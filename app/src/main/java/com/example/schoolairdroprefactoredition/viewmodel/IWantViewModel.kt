@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.schoolairdroprefactoredition.repository.IWantRepository
-import com.example.schoolairdroprefactoredition.ui.components.BaseIWantEntity
+import com.example.schoolairdroprefactoredition.database.BaseIWantEntity
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 
 class IWantViewModel : ViewModel() {

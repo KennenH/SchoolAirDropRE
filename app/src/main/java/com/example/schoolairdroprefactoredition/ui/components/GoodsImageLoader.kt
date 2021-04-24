@@ -52,6 +52,8 @@ class GoodsImageLoader : MaterialCardView {
 
     /**
      * 装载图片
+     *
+     * 宽度最大为屏幕宽度，长度以宽度变化同比例缩放
      */
     fun setData(images: List<String>) {
         val size = images.size

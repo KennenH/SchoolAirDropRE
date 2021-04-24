@@ -9,12 +9,12 @@ import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentB
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.OnInquiryItemClickListener
-import com.example.schoolairdroprefactoredition.ui.components.BaseIWantEntity
+import com.example.schoolairdroprefactoredition.database.BaseIWantEntity
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.viewmodel.IWantViewModel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
-import com.example.schoolairdroprefactoredition.scene.idesire.IWantActivity
+import com.example.schoolairdroprefactoredition.scene.iwant.IWantActivity
 
 class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataListener, OnInquiryItemClickListener {
 

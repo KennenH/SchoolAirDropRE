@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.cache;
 
+import com.example.schoolairdroprefactoredition.domain.DomainIWantTags;
+import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter;
 import com.luck.picture.lib.entity.LocalMedia;
 
 import java.util.List;
@@ -18,18 +20,37 @@ public class NewIWantDraftCache {
     /**
      * 求购标签
      */
-    private String tag;
+    private DomainIWantTags.Data tag;
+
+    /**
+     * 求购卡片颜色
+     *
+     * {@link IWantRecyclerAdapter#COLOR_DEFAULT} 默认
+     * {@link IWantRecyclerAdapter#COLOR_PURPLE} 紫色
+     * {@link IWantRecyclerAdapter#COLOR_THEME} 主题色
+     * {@link IWantRecyclerAdapter#COLOR_RED} 红色
+     * {@link IWantRecyclerAdapter#COLOR_ORANGE} 橘色
+     */
+    private int cardColor;
+
+    public int getCardColor() {
+        return cardColor;
+    }
+
+    public void setCardColor(int cardColor) {
+        this.cardColor = cardColor;
+    }
 
     /**
      * 求购图片集
      */
     private List<LocalMedia> picSet;
 
-    public String getTag() {
+    public DomainIWantTags.Data getTag() {
         return tag;
     }
 
-    public void setTag(String tag) {
+    public void setTag(DomainIWantTags.Data tag) {
         this.tag = tag;
     }
 

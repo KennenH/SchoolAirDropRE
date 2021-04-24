@@ -5,6 +5,7 @@ import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.cache.NewIWantDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
+import com.example.schoolairdroprefactoredition.domain.DomainIWantTags
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.utils.AppConfig
 import com.luck.picture.lib.entity.LocalMedia
@@ -77,13 +78,13 @@ class AddNewRepository {
      * 仅包含与服务器文字交互部分，同[submitItem]
      */
     fun submitNewIWant(
-            token: String, tagID: Int,
+            token: String, tagID: Int, color: Int,
             picSetKeys: String, content: String,
             longitude: Double, latitude: Double,
             onResult: (response: DomainResult?) -> Unit) {
-        RetrofitClient.I_WANT_API.submitIWant(
-                token, content,
-                picSetKeys, tagID,
+        RetrofitClient.iWantApi.submitIWant(
+                token, tagID, color,
+                picSetKeys, content,
                 longitude, latitude).apply {
             enqueue(CallbackResultOrNull(this, onResult))
         }
@@ -94,15 +95,15 @@ class AddNewRepository {
      *
      * 仅包含与服务器文字交互部分，同上
      */
-    fun modifyInquiry(
-            token: String, tagID: Int,
-            picSetKeys: String, content: String,
-            deleteImages: String,
-            longitude: Double, latitude: Double,
+    fun modifyIWant(
+            token: String, tagID: Int, color: Int,
+            deleteImages: String, picSetKeys: String,
+            content: String, longitude: Double, latitude: Double,
             onResult: (response: DomainResult?) -> Unit) {
-        RetrofitClient.I_WANT_API.modifyIWant(
-                token, content, picSetKeys, deleteImages,
-                tagID, longitude, latitude).apply {
+        RetrofitClient.iWantApi.modifyIWant(
+                token, tagID, color,
+                deleteImages, picSetKeys,
+                content, longitude, latitude).apply {
             enqueue(CallbackResultOrNull(this, onResult))
         }
     }
@@ -130,13 +131,15 @@ class AddNewRepository {
      */
     fun savePostDraft(
             picSet: List<LocalMedia>,
-            tag: String,
-            content: String) {
+            tag: DomainIWantTags.Data,
+            content: String,
+            cardColor: Int) {
         var draft = mJsonCacheUtil.getCache(NewIWantDraftCache.KEY, NewIWantDraftCache::class.java)
         if (draft == null) draft = NewIWantDraftCache()
         draft.picSet = picSet
         draft.tag = tag
         draft.content = content
+        draft.cardColor = cardColor
         mJsonCacheUtil.saveCache(NewIWantDraftCache.KEY, draft)
     }
 

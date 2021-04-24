@@ -1,7 +1,7 @@
 package com.example.schoolairdroprefactoredition.repository
 
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
-import com.example.schoolairdroprefactoredition.ui.components.BaseIWantEntity
+import com.example.schoolairdroprefactoredition.database.BaseIWantEntity
 import kotlin.collections.ArrayList
 import kotlin.random.Random
 

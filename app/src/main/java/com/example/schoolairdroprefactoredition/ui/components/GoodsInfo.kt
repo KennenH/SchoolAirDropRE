@@ -42,10 +42,6 @@ constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 
 
     /**
      * 隐藏卖家信息
-     * 从在售页面进入的物品界面要隐藏卖家信息
-     * 防止在查看他人在售列表时
-     * 点击物品 -> 查看用户信息 -> 点击在售 -> 再点击物品…
-     * 无限套娃访问
      */
     fun hideSellerInfo() {
         binding.goodsSellerInfo.visibility = GONE
@@ -83,16 +79,12 @@ constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 
 
             binding.apply {
                 goodsPrice.setPrice(item.goods_price, false)
-
-                // 原布局中的顶部图片pager集
-//                goodsPager.setData(getArrayFromString(item.goods_images), false)
                 goodsImageLoader.setData(MyUtil.getArrayFromString(item.goods_images))
 
-                val spanned = SadSpannable(context,SadSpannable.parseJsonToSpannableJsonStyle(item.goods_content))
-                goodsDescription.text = spanned
+//                val spanned = SadSpannable(context,SadSpannable.parseJsonToSpannableJsonStyle(item.goods_content))
+                goodsDescription.text = item.goods_content
                 goodsPopularity.setWatches(item.goods_watch_count)
                 goodsPopularity.likes = item.goods_favor_count
-                goodsPopularity.setComments(item.goods_chat_count)
 
                 try {
                     goodsUserLastLoginTime.text = context?.getString(R.string.lastActiveTime, TimeUtils.getFriendlyTimeSpanByNow(item.seller.last_login_time))

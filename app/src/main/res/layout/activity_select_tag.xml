@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    tools:context=".scene.addnew.SelectPostTagActivity">
+    tools:context=".scene.addnew.IWantTagActivity">
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/left"
@@ -71,48 +71,6 @@
             android:padding="@dimen/general_padding_tiny"
             app:flexWrap="wrap">
 
-            <include
-                layout="@layout/item_flex_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/general_padding_tiny" />
-
-            <include
-                layout="@layout/item_flex_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/general_padding_tiny" />
-
-            <include
-                layout="@layout/item_flex_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/general_padding_tiny" />
-
-            <include
-                layout="@layout/item_flex_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/general_padding_tiny" />
-
-            <include
-                layout="@layout/item_flex_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/general_padding_tiny" />
-
-            <include
-                layout="@layout/item_flex_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/general_padding_tiny" />
-
-            <include
-                layout="@layout/item_flex_tag"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/general_padding_tiny" />
-
         </com.google.android.flexbox.FlexboxLayout>
     </androidx.core.widget.NestedScrollView>
 
@@ -137,14 +95,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.72" />
+        app:layout_constraintGuide_percent="0.73" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/bottom_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.89" />
+        app:layout_constraintGuide_percent="0.9" />
 
     <TextView
         android:id="@+id/confirm"
