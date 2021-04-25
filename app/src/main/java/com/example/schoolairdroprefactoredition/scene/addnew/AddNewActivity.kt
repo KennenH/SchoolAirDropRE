@@ -24,6 +24,7 @@ import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewIWantDraftCache
+import com.example.schoolairdroprefactoredition.databinding.SheetIwantColorSelectorBinding
 import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
@@ -39,12 +40,15 @@ import com.example.schoolairdroprefactoredition.utils.MyUtil.pickPhotoFromAlbum
 import com.example.schoolairdroprefactoredition.utils.filters.DecimalFilter
 import com.example.schoolairdroprefactoredition.viewmodel.AddNewViewModel
 import com.example.schoolairdroprefactoredition.viewmodel.GoodsViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.luck.picture.lib.PictureSelector
 import com.luck.picture.lib.entity.LocalMedia
 import com.lxj.xpopup.XPopup
 import com.lxj.xpopup.core.ImageViewerPopupView
 import kotlinx.android.synthetic.main.activity_iwant_refactor.*
 import kotlinx.android.synthetic.main.activity_selling_add_new.*
+import kotlinx.android.synthetic.main.sheet_iwant_color_selector.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -212,8 +216,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_DEFAULT]
      * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_PURPLE]
      * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_THEME]
-     * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_RED]
-     * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_ORANGE]
+     * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_HEART]
+     * [com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.COLOR_WARNING]
      */
     private var mNowCardColor = -1
 
@@ -275,6 +279,19 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      */
     private var iWantInfo: DomainIWant.Data? = null
 
+    /**
+     * 卡片颜色选择弹窗
+     */
+    private val cardColorSelectorDialog by lazy {
+        BottomSheetDialog(this)
+    }
+
+    /**
+     * 卡片颜色选择弹窗的布局绑定器
+     */
+    private val cardColorSelectorBinding by lazy {
+        SheetIwantColorSelectorBinding.inflate(LayoutInflater.from(this))
+    }
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -420,8 +437,15 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
                 option_tag.setOnClickListener(this)
                 option_iwant_color.setOnClickListener(this)
-
-                option_iwant_color.setColor(R.color.primaryDark)
+                cardColorSelectorDialog.setContentView(cardColorSelectorBinding.root)
+                cardColorSelectorBinding.apply {
+                    iwantColorSelectorDefault.setOnClickListener(this@AddNewActivity)
+                    iwantColorSelectorPurple.setOnClickListener(this@AddNewActivity)
+                    iwantColorSelectorTheme.setOnClickListener(this@AddNewActivity)
+                    iwantColorSelectorHeart.setOnClickListener(this@AddNewActivity)
+                    iwantColorSelectorWarning.setOnClickListener(this@AddNewActivity)
+                    iwantColorSelectorCancel.setOnClickListener(this@AddNewActivity)
+                }
 
                 // 恢复求购草稿
                 restoreIWantDraft()
@@ -444,6 +468,14 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
                 option_tag.setOnClickListener(this)
                 option_iwant_color.setOnClickListener(this)
+                cardColorSelectorDialog.setContentView(cardColorSelectorBinding.root)
+                cardColorSelectorBinding.apply {
+                    iwant_color_selector_default.setOnClickListener(this@AddNewActivity)
+                    iwant_color_selector_purple.setOnClickListener(this@AddNewActivity)
+                    iwant_color_selector_theme.setOnClickListener(this@AddNewActivity)
+                    iwant_color_selector_heart.setOnClickListener(this@AddNewActivity)
+                    iwant_color_selector_warning.setOnClickListener(this@AddNewActivity)
+                }
 
             }
         }
@@ -1047,7 +1079,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         price_input.setText("")
         mNowTag = null
         option_tag.text = ""
-        option_iwant_color.setColor(R.color.primaryDark)
+        option_iwant_color.setDrawable(R.drawable.bg_round_primary_dark)
         if (option_negotiable.isChecked) {
             option_negotiable.toggle()
         }
@@ -1065,21 +1097,40 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      */
     private fun setCardColor() {
         when (mNowCardColor) {
-            IWantRecyclerAdapter.COLOR_DEFAULT->{
-                option_iwant_color.setColor(R.color.primaryDark)
-            }
-            IWantRecyclerAdapter.COLOR_PURPLE->{
-                option_iwant_color.setColor(R.color.colorPrimaryPurple)
-            }
-            IWantRecyclerAdapter.COLOR_THEME->{
-                option_iwant_color.setColor(R.color.colorAccentDark)
-            }
-            IWantRecyclerAdapter.COLOR_ORANGE->{
-                option_iwant_color.setColor(R.color.yellow)
-            }
-            IWantRecyclerAdapter.COLOR_RED->{
-                option_iwant_color.setColor(R.color.heart)
-            }
+            IWantRecyclerAdapter.COLOR_DEFAULT ->
+                option_iwant_color.setDrawable(R.drawable.bg_round_primary_dark)
+            IWantRecyclerAdapter.COLOR_PURPLE ->
+                option_iwant_color.setDrawable(R.drawable.bg_round_purple)
+            IWantRecyclerAdapter.COLOR_THEME ->
+                option_iwant_color.setDrawable(R.drawable.bg_round_theme)
+            IWantRecyclerAdapter.COLOR_WARNING ->
+                option_iwant_color.setDrawable(R.drawable.bg_round_warning)
+            IWantRecyclerAdapter.COLOR_HEART ->
+                option_iwant_color.setDrawable(R.drawable.bg_round_heart)
+        }
+    }
+
+    /**
+     * 显示选择卡片颜色弹窗
+     *
+     * onClick传送门[onClick]
+     */
+    private fun showColorSelector() {
+        val view = cardColorSelectorDialog.delegate.findViewById<View?>(com.google.android.material.R.id.design_bottom_sheet)
+        if (view != null) {
+            val bottomSheetBehavior = BottomSheetBehavior.from(view)
+            bottomSheetBehavior.skipCollapsed = true
+            bottomSheetBehavior.isDraggable = false
+            bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+                override fun onStateChanged(bottomSheet: View, newState: Int) {
+                    cardColorSelectorDialog.dismiss()
+                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                }
+
+                override fun onSlide(bottomSheet: View, slideOffset: Float) {
+                }
+            })
+            cardColorSelectorDialog.show()
         }
     }
 
@@ -1114,9 +1165,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     override fun onClick(v: View) {
         when (v.id) {
             // 标题
-            R.id.option_title -> {
+            R.id.option_title ->
                 InputSetActivity.start(this, InputSetActivity.TYPE_TITLE, option_title.text.toString(), getString(R.string.title))
-            }
 
             // 价格右边的确认按钮
             R.id.price_confirm -> {
@@ -1131,14 +1181,10 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             }
 
             // 是否可议价
-            R.id.option_negotiable -> {
-                option_negotiable.toggle()
-            }
+            R.id.option_negotiable -> option_negotiable.toggle()
 
             // 是否二手
-            R.id.option_secondHand -> {
-                option_secondHand.toggle()
-            }
+            R.id.option_secondHand -> option_secondHand.toggle()
 
             // 详细描述
             R.id.option_description -> {
@@ -1182,14 +1228,47 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             }
 
             // 求购卡片颜色
-            R.id.option_iwant_color -> {
-
-            }
+            R.id.option_iwant_color -> showColorSelector()
 
             // 求购标签
-            R.id.option_tag -> {
-                IWantTagActivity.start(this, mNowTag)
+            R.id.option_tag -> IWantTagActivity.start(this, mNowTag)
+
+            // 默认颜色
+            R.id.iwant_color_selector_default->{
+                mNowCardColor = IWantRecyclerAdapter.COLOR_DEFAULT
+                setCardColor()
+                cardColorSelectorDialog.dismiss()
             }
+
+            // 紫色
+            R.id.iwant_color_selector_purple->{
+                mNowCardColor = IWantRecyclerAdapter.COLOR_PURPLE
+                setCardColor()
+                cardColorSelectorDialog.dismiss()
+            }
+
+            // 主题色
+            R.id.iwant_color_selector_theme->{
+                mNowCardColor = IWantRecyclerAdapter.COLOR_THEME
+                setCardColor()
+                cardColorSelectorDialog.dismiss()
+            }
+
+            // 红色
+            R.id.iwant_color_selector_heart->{
+                mNowCardColor = IWantRecyclerAdapter.COLOR_HEART
+                setCardColor()
+                cardColorSelectorDialog.dismiss()
+            }
+
+            // 警告
+            R.id.iwant_color_selector_warning -> {
+                mNowCardColor = IWantRecyclerAdapter.COLOR_WARNING
+                setCardColor()
+                cardColorSelectorDialog.dismiss()
+            }
+
+            R.id.iwant_color_selector_cancel -> cardColorSelectorDialog.dismiss()
         }
     }
 

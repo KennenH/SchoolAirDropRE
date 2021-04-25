@@ -16,7 +16,7 @@
     <string name="fraction0" translatable="false">.00</string>
     <string name="omit" translatable="false">%s…</string>
     <string name="iwant_tag" translatable="false">#%s</string>
-    <string name="app_version_detail" translatable="false">Beta 1.1.5.00</string>
+    <string name="app_version_detail" translatable="false">Beta 1.1.5.85</string>
     <string name="app_version" translatable="false">Beta 1.1.5</string>
 
 
@@ -374,7 +374,12 @@
     <string name="largeText" translatable="false">L</string>
     <string name="xLargeText" translatable="false">XL</string>
     <string name="handlingSpannableJson">正在处理富文本</string>
-    <string name="iwant_card_color">卡片颜色</string>
+    <string name="iwantCardColor">卡片色彩</string>
     <string name="selectTagFirst">请先选择一个标签</string>
-
+    <string name="selectYourCardColor">选择一种卡片色彩</string>
+    <string name="iwantColorDefault">默认</string>
+    <string name="iwantColorPurple">紫色 &#160;[img src=bg_round_purple/]</string>
+    <string name="iwantColorTheme">主题 &#160;[img src=bg_round_theme/]</string>
+    <string name="iwantColorHeart">红色 &#160;[img src=bg_round_heart/]</string>
+    <string name="iwantColorWarning">警告 &#160;[img src=bg_round_warning/]</string>
 </resources>

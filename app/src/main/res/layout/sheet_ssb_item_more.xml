@@ -7,13 +7,8 @@
 
     <TextView
         android:id="@+id/modify"
-        style="@style/SheetNormal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_sheet_first"
-        android:gravity="center"
+        style="@style/SheetFirst"
         android:text="@string/modifyInfo"
-        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintTop_toTopOf="parent" />
 
     <View
@@ -26,12 +21,7 @@
     <TextView
         android:id="@+id/off_shelf"
         style="@style/SheetNormal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_sheet_white"
-        android:gravity="center"
         android:text="@string/offShelf"
-        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintTop_toBottomOf="@+id/s2" />
 
     <View
@@ -44,13 +34,6 @@
     <TextView
         android:id="@+id/cancel"
         style="@style/SheetCancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_sheet_white"
-        android:gravity="center"
-        android:text="@string/cancel"
-        android:textColor="@color/black"
-        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gap"
         app:layout_goneMarginTop="@dimen/general_padding_large" />

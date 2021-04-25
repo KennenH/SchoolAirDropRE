@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom">
+
+    <TextView
+        android:id="@+id/iwant_color_selector_title"
+        style="@style/SheetFirst"
+        android:text="@string/selectYourCardColor"
+        android:textColor="@color/primaryDarkest"
+        android:textSize="@dimen/textSizeMin"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/s2"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sheet_gap"
+        android:background="@color/colorLine"
+        app:layout_constraintTop_toBottomOf="@+id/iwant_color_selector_title" />
+
+    <TextView
+        android:id="@+id/iwant_color_selector_default"
+        style="@style/SheetNormal"
+        android:text="@string/iwantColorDefault"
+        app:layout_constraintTop_toBottomOf="@+id/s2" />
+
+    <View
+        android:id="@+id/s3"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sheet_gap"
+        android:background="@color/colorLine"
+        app:layout_constraintTop_toBottomOf="@+id/iwant_color_selector_default" />
+
+    <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
+        android:id="@+id/iwant_color_selector_purple"
+        style="@style/SheetNormal"
+        android:text="@string/iwantColorPurple"
+        app:layout_constraintTop_toBottomOf="@+id/s3" />
+
+    <View
+        android:id="@+id/s4"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sheet_gap"
+        android:background="@color/colorLine"
+        app:layout_constraintTop_toBottomOf="@+id/iwant_color_selector_purple" />
+
+    <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
+        android:id="@+id/iwant_color_selector_theme"
+        style="@style/SheetNormal"
+        android:text="@string/iwantColorTheme"
+        app:layout_constraintTop_toBottomOf="@+id/s4" />
+
+    <View
+        android:id="@+id/s5"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sheet_gap"
+        android:background="@color/colorLine"
+        app:layout_constraintTop_toBottomOf="@+id/iwant_color_selector_theme" />
+
+    <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
+        android:id="@+id/iwant_color_selector_heart"
+        style="@style/SheetNormal"
+        android:text="@string/iwantColorHeart"
+        app:layout_constraintTop_toBottomOf="@+id/s5" />
+
+    <View
+        android:id="@+id/s6"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/sheet_gap"
+        android:background="@color/colorLine"
+        app:layout_constraintTop_toBottomOf="@+id/iwant_color_selector_heart" />
+
+    <com.example.schoolairdroprefactoredition.ui.components.TextViewWithImages
+        android:id="@+id/iwant_color_selector_warning"
+        style="@style/SheetNormal"
+        android:text="@string/iwantColorWarning"
+        app:layout_constraintTop_toBottomOf="@+id/s6" />
+
+    <View
+        android:id="@+id/gap"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/general_padding_large"
+        android:background="@color/primary"
+        app:layout_constraintTop_toBottomOf="@id/iwant_color_selector_warning" />
+
+    <TextView
+        android:id="@+id/iwant_color_selector_cancel"
+        style="@style/SheetCancel"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/gap"
+        app:layout_goneMarginTop="@dimen/general_padding_large" />
+
+</com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

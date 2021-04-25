@@ -38,7 +38,7 @@
                 android:id="@+id/line"
                 android:layout_width="@dimen/line"
                 android:layout_height="@dimen/general_padding_larger"
-                android:background="@drawable/bg_round_primary"
+                android:background="@drawable/button_round_primary"
                 android:backgroundTint="@color/whiteAlways"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@id/button_one"

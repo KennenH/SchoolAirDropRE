@@ -28,8 +28,8 @@ public class NewIWantDraftCache {
      * {@link IWantRecyclerAdapter#COLOR_DEFAULT} 默认
      * {@link IWantRecyclerAdapter#COLOR_PURPLE} 紫色
      * {@link IWantRecyclerAdapter#COLOR_THEME} 主题色
-     * {@link IWantRecyclerAdapter#COLOR_RED} 红色
-     * {@link IWantRecyclerAdapter#COLOR_ORANGE} 橘色
+     * {@link IWantRecyclerAdapter#COLOR_HEART} 红色
+     * {@link IWantRecyclerAdapter#COLOR_WARNING} 橘色
      */
     private int cardColor;
 

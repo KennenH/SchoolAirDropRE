@@ -90,12 +90,12 @@ class IWantActivity : ImmersionStatusBarActivity() {
         val blackAlwaysText = resources.getColor(R.color.blackAlways, theme)
         val whiteAlwaysText = resources.getColor(R.color.whiteAlways, theme)
         when (iwantEntity?.color) {
-            IWantRecyclerAdapter.COLOR_RED -> {
+            IWantRecyclerAdapter.COLOR_HEART -> {
                 iwant_content.setTextColor(whiteAlwaysText)
                 iwant_content_wrapper.background = ResourcesCompat.getDrawable(resources, R.drawable.bg_top_rounded_red, theme)
                 iwant_recycler.setBackgroundColor(resources.getColor(R.color.heart, theme))
             }
-            IWantRecyclerAdapter.COLOR_ORANGE -> {
+            IWantRecyclerAdapter.COLOR_WARNING -> {
                 iwant_content.setTextColor(blackAlwaysText)
                 iwant_content_wrapper.background = ResourcesCompat.getDrawable(resources, R.drawable.bg_top_rounded_yellow, theme)
                 iwant_recycler.setBackgroundColor(resources.getColor(R.color.yellow, theme))

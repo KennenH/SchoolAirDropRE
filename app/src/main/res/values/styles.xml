@@ -49,19 +49,42 @@
         <item name="android:background">@color/blackOverlay</item>
     </style>
 
-    <style name="SheetCancel" parent="Widget.AppCompat.TextView">
-        <item name="android:paddingTop">@dimen/general_padding_bit_larger</item>
-        <item name="android:paddingStart">@dimen/general_padding_bit_larger</item>
-        <item name="android:paddingEnd">@dimen/general_padding_bit_larger</item>
-        <item name="android:paddingBottom">@dimen/general_padding_even_larger</item>
+
+    <!--  BottomSheetDialog 条目样式  -->
+    <style name="SheetFirst" parent="Widget.AppCompat.TextView">
+        <item name="android:padding">@dimen/general_padding_bit_larger</item>
+        <item name="android:textSize">@dimen/textSizeNormal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
         <item name="android:textColor">@color/black</item>
+        <item name="android:background">@drawable/button_sheet_first</item>
     </style>
 
     <style name="SheetNormal" parent="Widget.AppCompat.TextView">
         <item name="android:padding">@dimen/general_padding_bit_larger</item>
+        <item name="android:textSize">@dimen/textSizeNormal</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
         <item name="android:textColor">@color/black</item>
-        <item name="background">@color/white</item>
+        <item name="android:background">@drawable/button_sheet_white</item>
     </style>
+
+    <style name="SheetCancel" parent="Widget.AppCompat.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/button_sheet_white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:text">@string/cancel</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/textSizeNormal</item>
+        <item name="android:paddingTop">@dimen/general_padding_bit_larger</item>
+        <item name="android:paddingStart">@dimen/general_padding_bit_larger</item>
+        <item name="android:paddingEnd">@dimen/general_padding_bit_larger</item>
+        <item name="android:paddingBottom">@dimen/general_padding_even_larger</item>
+    </style>
+    <!--  BottomSheetDialog 条目样式  -->
 
     <!-- =======================================圆角透明背景Dialog======================================= -->
     <style name="CustomBottomSheetDialog" parent="@style/ThemeOverlay.MaterialComponents.BottomSheetDialog">
@@ -144,7 +167,7 @@
         <item name="android:layout_marginTop">@dimen/general_padding_small</item>
         <item name="android:layout_marginEnd">@dimen/general_padding_larger</item>
         <item name="android:layout_marginBottom">@dimen/general_padding_small</item>
-        <item name="android:background">@drawable/bg_round_primary_light</item>
+        <item name="android:background">@drawable/button_round_primary_light</item>
         <item name="android:drawableStart">@drawable/ic_search</item>
         <item name="android:drawablePadding">@dimen/general_padding</item>
         <item name="android:gravity">center_vertical</item>

@@ -46,7 +46,7 @@
             android:layout_marginTop="@dimen/general_padding_small"
             android:layout_marginEnd="@dimen/general_padding_larger"
             android:layout_marginBottom="@dimen/general_padding_small"
-            android:background="@drawable/bg_round_primary_light"
+            android:background="@drawable/button_round_primary_light"
             android:drawableStart="@drawable/ic_search"
             android:drawablePadding="@dimen/general_padding"
             android:gravity="center_vertical"

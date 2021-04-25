@@ -2,6 +2,8 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape android:shape="rectangle">
+            <size android:width="@dimen/general_padding_bit_larger"
+                android:height="@dimen/general_padding_bit_larger" />
             <solid android:color="@color/colorAccentDark" />
             <corners android:radius="@dimen/general_round_rect" />
         </shape>

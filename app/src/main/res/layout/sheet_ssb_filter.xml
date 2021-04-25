@@ -7,10 +7,7 @@
 
     <TextView
         android:id="@+id/title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_sheet_first"
-        android:gravity="center"
+        style="@style/SheetFirst"
         android:padding="@dimen/general_padding_bit_larger"
         android:text="@string/sortBy"
         android:textColor="@color/primaryDarkest"
@@ -26,14 +23,8 @@
 
     <TextView
         android:id="@+id/female"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_sheet_white"
-        android:gravity="center"
-        android:padding="@dimen/general_padding_bit_larger"
+        style="@style/SheetNormal"
         android:text="@string/filterTimeAsc"
-        android:textColor="@color/black"
-        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintTop_toBottomOf="@id/s0" />
 
     <View
@@ -45,14 +36,8 @@
 
     <TextView
         android:id="@+id/male"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_sheet_white"
-        android:gravity="center"
-        android:padding="@dimen/general_padding_bit_larger"
+        style="@style/SheetNormal"
         android:text="@string/filterTimeDesc"
-        android:textColor="@color/black"
-        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintTop_toBottomOf="@+id/s1" />
 
     <View
@@ -64,33 +49,20 @@
 
     <TextView
         android:id="@+id/hermaphrodite"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_sheet_white"
-        android:gravity="center"
-        android:padding="@dimen/general_padding_bit_larger"
+        style="@style/SheetNormal"
         android:text="@string/filterWatches"
-        android:textColor="@color/black"
-        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintTop_toBottomOf="@+id/s2" />
 
     <View
         android:id="@+id/gap"
         android:layout_width="match_parent"
         android:layout_height="@dimen/general_padding_large"
-        android:background="@color/colorLine"
+        android:background="@color/primary"
         app:layout_constraintTop_toBottomOf="@id/hermaphrodite" />
 
     <TextView
         android:id="@+id/cancel"
         style="@style/SheetCancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/button_sheet_white"
-        android:gravity="center"
-        android:text="@string/cancel"
-        android:textColor="@color/black"
-        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/gap"
         app:layout_goneMarginTop="@dimen/general_padding_large" />

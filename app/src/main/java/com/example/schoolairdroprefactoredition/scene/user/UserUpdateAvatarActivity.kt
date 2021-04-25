@@ -20,6 +20,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.luck.picture.lib.PictureSelector
 import kotlinx.android.synthetic.main.activity_user_update_avatar.*
+import java.lang.Exception
 import java.util.*
 
 class UserUpdateAvatarActivity : BaseActivity(), View.OnLongClickListener, View.OnClickListener {
@@ -181,11 +182,10 @@ class UserUpdateAvatarActivity : BaseActivity(), View.OnLongClickListener, View.
             }
             R.id.save_to_album -> {
                 val bitmap = FileUtil.urlToBitmap(this, info?.userAvatar)
-
-                if (bitmap != null) {
+                try {
                     ImageUtils.save2Album(bitmap, Bitmap.CompressFormat.JPEG)
                     DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successSave)
-                } else {
+                } catch (e: Exception) {
                     DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorUnknown)
                 }
                 mDialog.dismiss()

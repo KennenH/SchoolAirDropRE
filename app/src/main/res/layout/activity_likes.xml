@@ -41,7 +41,7 @@
             android:layout_height="@dimen/toolbar_icon_large"
             android:layout_marginStart="@dimen/general_padding_larger"
             android:layout_marginEnd="@dimen/general_padding_larger"
-            android:background="@drawable/bg_round_primary_light"
+            android:background="@drawable/button_round_primary_light"
             android:drawablePadding="@dimen/general_padding"
             android:gravity="center_vertical"
             android:hint="@string/search"

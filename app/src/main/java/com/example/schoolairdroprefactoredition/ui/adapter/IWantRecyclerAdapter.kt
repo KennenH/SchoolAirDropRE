@@ -49,14 +49,14 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIWantEntity, BaseView
          *
          * heart
          */
-        const val COLOR_RED = 3
+        const val COLOR_HEART = 3
 
         /**
          * 求购卡片橘色
          *
          * yellow
          */
-        const val COLOR_ORANGE = 4
+        const val COLOR_WARNING = 4
     }
 
     init {
@@ -84,12 +84,12 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIWantEntity, BaseView
         val blackAlwaysText = resource.getColor(R.color.blackAlways, theme)
         val whiteAlwaysText = resource.getColor(R.color.whiteAlways, theme)
         when (item.color) {
-            COLOR_RED -> {
+            COLOR_HEART -> {
                 constraintView.background = ResourcesCompat.getDrawable(resource, R.drawable.bg_top_rounded_red, theme)
                 contentView.setTextColor(whiteAlwaysText)
                 hasImageView.setImageResource(R.drawable.ic_has_image_white)
             }
-            COLOR_ORANGE -> {
+            COLOR_WARNING -> {
                 constraintView.background = ResourcesCompat.getDrawable(resource, R.drawable.bg_top_rounded_yellow, theme)
                 contentView.setTextColor(blackAlwaysText)
                 hasImageView.setImageResource(R.drawable.ic_has_image_black)
