@@ -170,7 +170,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:gravity="center"
-                    android:text="@string/idesire"
+                    android:text="@string/iwant"
                     android:textColor="@color/primaryText"
                     android:textSize="14dp"
                     app:layout_constraintBaseline_toBaselineOf="@id/user_selling_text"

@@ -18,7 +18,7 @@ class IWantRepository {
     /**
      * 获取求购
      */
-    fun getIWant(page: Int, onResult: (List<BaseIWantEntity>) -> Unit) {
+    fun getNearByIWant(page: Int, onResult: (List<BaseIWantEntity>) -> Unit) {
         val data: ArrayList<BaseIWantEntity> = ArrayList(12)
         for (i in 0..11) {
             val item = BaseIWantEntity()

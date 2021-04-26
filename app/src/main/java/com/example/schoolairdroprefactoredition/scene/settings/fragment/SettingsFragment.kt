@@ -92,6 +92,8 @@ class SettingsFragment : TransitionBaseFragment(), View.OnClickListener, OnLogin
                     settingsHomeAbout.setOnClickListener(this@SettingsFragment)
                     settingsHomeSwitchAccount.visibility = View.GONE
                     settingsHomeSignOut.setOnClickListener(this@SettingsFragment)
+                    settingsHomeAbout.setTitle(getString(R.string.about))
+                    settingsHomeAbout.setDescription(getString(R.string.version, getString(R.string.app_version)))
                 }
         validateState()
         return binding.root
@@ -132,9 +134,6 @@ class SettingsFragment : TransitionBaseFragment(), View.OnClickListener, OnLogin
         get() = (userInfo != null
                 && token != null)
 
-    /**
-     * 已登录时点击支付宝登录10次将会出现
-     */
     private var clickTimes = 0
     override fun onClick(v: View) {
         when (v.id) {

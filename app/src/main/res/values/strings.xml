@@ -46,10 +46,10 @@
     <string name="countDown" translatable="false">%1$d:%2$d:%3$d</string>
 
     <!--    shared element transition name -->
-    <string name="sharedElementPostActivityWrapper" translatable="false">IDesireActivitySharedWrapper</string>
-    <string name="sharedElementPostActivityAvatar" translatable="false">IDesireActivitySharedAvatar</string>
-    <string name="sharedElementPostActivityName" translatable="false">IDesireActivitySharedName</string>
-    <string name="sharedElementPostActivityTitle" translatable="false">IDesireActivitySharedContent</string>
+    <string name="sharedElementPostActivityWrapper" translatable="false">IWantActivitySharedWrapper</string>
+    <string name="sharedElementPostActivityAvatar" translatable="false">IWantActivitySharedAvatar</string>
+    <string name="sharedElementPostActivityName" translatable="false">IWantActivitySharedName</string>
+    <string name="sharedElementPostActivityTitle" translatable="false">IWantActivitySharedContent</string>
 
     <!--  translatable  -->
     <string name="home">首页</string>
@@ -174,7 +174,7 @@
     <string name="locating">获取定位中</string>
     <string name="errorNetLocation">网络或定位出错啦</string>
     <string name="errorGoodsEmptyHome">附近还没有人发布过物品，快去发布你自己的物品吧</string>
-    <string name="errorIDesireEmpty">没有符合要求的求购</string>
+    <string name="errorIWantEmpty">附近还没有人发布求购，快去发布你自己的求购吧</string>
     <string name="postMyItem">去发布我的物品</string>
     <string name="errorRetry">重试</string>
     <string name="trash">回收站</string>
@@ -195,7 +195,7 @@
     <string name="obtainLocationInfo">获取定位信息</string>
     <string name="permissionDenied">权限被拒绝</string>
     <string name="errorLocation">定位信息获取失败</string>
-    <string name="locationPermissionContent">定位将用于获取首页信息、淘物附近在售、交易地点以及物品发布位置。若不允许，校园空投核心功能将不可用。</string>
+    <string name="locationPermissionContent">定位将用于获取淘物附近在售、附近求购以及物品发布位置。若不允许，校园空投核心功能将不可用。</string>
     <string name="cameraPermissionContent">相机将用于即时拍照，在上传头像以及物品发布时可能需要此功能。若不允许，上述功能将不可用。</string>
     <string name="albumPermissionContent">读写存储在接受消息通知、上传头像以及物品发布时可能需要此功能。若不允许，你将无法接受重要通知且部分重要功能不可用。</string>
     <string name="phonePermissionContent">在接受消息通知时需要此功能。若不允许，你将无法接受重要通知。</string>
@@ -288,7 +288,7 @@
     <string name="completed">已完成</string>
     <string name="termsOfServiceAgreeFailed">啊哦，条约走丢了</string>
     <string name="addNewGoodsError">发送请求时出错，若多次失败请更新版本</string>
-    <string name="idesire">求购</string>
+    <string name="iwant">求购</string>
     <string name="doNotPostIllegalContent">请不要发布违反学校规章、国家法律的文字和图片，请仔细检查表单各项内容</string>
     <string name="addNewIWant">发布求购</string>
     <string name="submitPostLocationFailedTip">当前定位结果异常，帖子很可能无法被其他同学看到。表单已自动保存，建议稍后重试提交。</string>
@@ -312,7 +312,7 @@
     <string name="delete">&#160;&#160;&#160;&#160;&#160;&#160;&#160;删除&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
     <string name="illegalName">名字中包含非法字符</string>
     <string name="receiveANewMessage">收到一条新消息</string>
-    <string name="postIDesire">发布求购</string>
+    <string name="postIWant">发布求购</string>
     <string name="favorDone">已收藏</string>
     <string name="unfavorDone">已取消</string>
     <string name="descriptionDisplayInAppFloat">开启后当App在前台时收到消息将显示浮窗</string>
@@ -377,7 +377,7 @@
     <string name="iwantCardColor">卡片色彩</string>
     <string name="selectTagFirst">请先选择一个标签</string>
     <string name="selectYourCardColor">选择一种卡片色彩</string>
-    <string name="iwantColorDefault">默认</string>
+    <string name="iwantColorDefault">默认 &#160;[img src=bg_round_primary_dark/]</string>
     <string name="iwantColorPurple">紫色 &#160;[img src=bg_round_purple/]</string>
     <string name="iwantColorTheme">主题 &#160;[img src=bg_round_theme/]</string>
     <string name="iwantColorHeart">红色 &#160;[img src=bg_round_heart/]</string>

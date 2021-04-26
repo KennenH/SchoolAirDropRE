@@ -12,14 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.05" />
+        app:layout_constraintGuide_percent="0.03" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/right"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        app:layout_constraintGuide_percent="0.95" />
+        app:layout_constraintGuide_percent="0.97" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/iwant_card"
@@ -53,11 +53,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/general_padding_bit_larger"
-                    tools:text="收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯"
                     android:textColor="@color/black"
                     android:textSize="@dimen/textSizeNormal"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯" />
 
                 <TextView
                     android:id="@+id/iwant_tag"
@@ -70,12 +70,12 @@
                     android:paddingTop="@dimen/general_padding_tiny"
                     android:paddingEnd="@dimen/general_padding"
                     android:paddingBottom="@dimen/general_padding_tiny"
-                    tools:text="#书本"
                     android:textColor="@color/whiteAlways"
                     android:textSize="@dimen/textSizeMin"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="@id/iwant_content"
-                    app:layout_constraintTop_toBottomOf="@id/iwant_content" />
+                    app:layout_constraintTop_toBottomOf="@id/iwant_content"
+                    tools:text="#书本" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <androidx.recyclerview.widget.RecyclerView
@@ -92,7 +92,7 @@
                 android:layout_margin="@dimen/general_padding_large"
                 android:scaleType="centerCrop"
                 android:transitionName="@string/sharedElementPostActivityAvatar"
-                app:actualImageResource="@drawable/pk"
+                app:actualImageResource="@drawable/logo_placeholder"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iwant_recycler"
@@ -103,13 +103,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/general_padding_large"
-                android:text="kennen"
                 android:textColor="@color/primaryText"
                 android:textSize="@dimen/textSizeNormal"
                 android:transitionName="@string/sharedElementPostActivityName"
                 app:layout_constraintBottom_toBottomOf="@id/iwant_user_avatar"
                 app:layout_constraintStart_toEndOf="@id/iwant_user_avatar"
-                app:layout_constraintTop_toTopOf="@id/iwant_user_avatar" />
+                app:layout_constraintTop_toTopOf="@id/iwant_user_avatar"
+                tools:text="kennen" />
 
             <ImageView
                 android:id="@+id/iwant_contact_owner"

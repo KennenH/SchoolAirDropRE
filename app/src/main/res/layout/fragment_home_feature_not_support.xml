@@ -147,7 +147,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/general_padding_even_larger"
-            android:text="@string/idesire"
+            android:text="@string/iwant"
             android:textColor="@color/primaryDarkest"
             android:textSize="@dimen/textSizeLarger"
             app:layout_constraintEnd_toEndOf="parent"

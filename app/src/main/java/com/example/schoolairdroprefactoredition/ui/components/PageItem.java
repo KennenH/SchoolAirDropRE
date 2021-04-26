@@ -170,7 +170,7 @@ public class PageItem extends ConstraintLayout implements CompoundButton.OnCheck
         mDescriptionView.setText(description);
     }
 
-    public void setName(String title) {
+    public void setTitle(String title) {
         mNameView.setText(title);
     }
 

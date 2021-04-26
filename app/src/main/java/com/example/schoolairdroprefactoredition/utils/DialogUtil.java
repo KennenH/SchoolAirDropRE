@@ -31,6 +31,7 @@ public class DialogUtil {
         new XPopup.Builder(context)
                 .isDarkTheme(isDarkTheme)
                 .hasShadowBg(false)
+                .navigationBarColor(context.getResources().getColor(R.color.white, context.getTheme()))
                 .asConfirm(title, content, context.getString(android.R.string.cancel), context.getString(android.R.string.ok)
                         , confirmListener, () -> {
                         }, false).show();
@@ -81,6 +82,7 @@ public class DialogUtil {
         new XPopup.Builder(context)
                 .isClickThrough(true)
                 .hasShadowBg(false)
+                .navigationBarColor(context.getResources().getColor(R.color.white, context.getTheme()))
                 .asCustom(new BasePopupView(context) {
                     @Override
                     protected void init() {
@@ -103,6 +105,7 @@ public class DialogUtil {
         new XPopup.Builder(context)
                 .isClickThrough(true)
                 .hasShadowBg(false)
+                .navigationBarColor(context.getResources().getColor(R.color.white, context.getTheme()))
                 .asCustom(new BasePopupView(context) {
                     @Override
                     protected void init() {
@@ -125,6 +128,7 @@ public class DialogUtil {
         new XPopup.Builder(context)
                 .isClickThrough(true)
                 .hasShadowBg(false)
+                .navigationBarColor(context.getResources().getColor(R.color.white, context.getTheme()))
                 .asCustom(new BasePopupView(context) {
                     @Override
                     protected void init() {
@@ -147,6 +151,7 @@ public class DialogUtil {
         new XPopup.Builder(context)
                 .isClickThrough(true)
                 .hasShadowBg(false)
+                .navigationBarColor(context.getResources().getColor(R.color.white, context.getTheme()))
                 .asCustom(new BasePopupView(context) {
                     @Override
                     protected void init() {
@@ -169,6 +174,7 @@ public class DialogUtil {
         new XPopup.Builder(context)
                 .isClickThrough(true)
                 .hasShadowBg(false)
+                .navigationBarColor(context.getResources().getColor(R.color.white, context.getTheme()))
                 .asCustom(new BasePopupView(context) {
                     @Override
                     protected void init() {

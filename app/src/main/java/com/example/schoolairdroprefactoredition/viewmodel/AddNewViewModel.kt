@@ -165,8 +165,9 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                         if (taskAndKeys != null) {
                             submitIWantLiveData.postValue(Triple(true, Pair(R.string.requestingServer, true), false))
                             addNewRepository.submitNewIWant(
-                                    token, tagID, color,
-                                    picSet.joinToString(","),
+                                    token, tagID,
+                                    color, taskAndKeys.taskId,
+                                    taskAndKeys.keys.joinToString(","),
                                     content, longitude, latitude) {
                                 submitIWantLiveData.postValue(Triple(it?.isSuccess
                                         ?: false, Pair(R.string.uploadSuccess, true), it?.isSuccess

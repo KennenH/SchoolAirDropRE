@@ -72,9 +72,9 @@ class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataList
     }
 
     override fun getOnlineData(aMapLocation: AMapLocation?) {
-        iWantViewModel.getIWant().observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
+        iWantViewModel.getNearByIWant().observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
             if (data.isNullOrEmpty()) {
-                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_INQUIRY)
+                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_IWANT)
             } else {
                 iWantRecyclerAdapter.setList(data)
                 showContentContainer()
@@ -83,10 +83,10 @@ class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataList
     }
 
     override fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?) {
-        iWantViewModel.getIWant(aMapLocation?.longitude, aMapLocation?.latitude).observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
+        iWantViewModel.getNearByIWant(aMapLocation?.longitude, aMapLocation?.latitude).observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
             refreshLayout.finishRefresh()
             if (data.isNullOrEmpty()) {
-                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_INQUIRY)
+                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_IWANT)
             } else {
                 iWantRecyclerAdapter.setList(data)
                 showContentContainer()

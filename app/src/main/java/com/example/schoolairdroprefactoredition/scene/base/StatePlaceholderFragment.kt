@@ -10,8 +10,8 @@ import com.lxj.xpopup.impl.LoadingPopupView
  */
 abstract class StatePlaceholderFragment : BaseFragment() {
 
-    protected val mLoading: LoadingPopupView by lazy {
-        MyUtil.loading(context)
+    protected val mLoading: LoadingPopupView? by lazy {
+        context?.let { MyUtil.loading(it) }
     }
 
     /**
@@ -46,10 +46,10 @@ abstract class StatePlaceholderFragment : BaseFragment() {
      * 在最上层显示一个小弹窗以提示正在加载
      */
     protected open fun showLoading() {
-        mLoading.show()
+        mLoading?.show()
     }
 
     protected open fun dismissLoading(task: Runnable) {
-        mLoading.dismissWith(task)
+        mLoading?.dismissWith(task)
     }
 }

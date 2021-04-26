@@ -55,7 +55,7 @@ class IWantActivity : ImmersionStatusBarActivity() {
     private val windowTransition by lazy {
         TransitionInflater.from(this).inflateTransition(R.transition.share_element_post_pager)
                 .also {
-                    it.duration = 200L
+                    it.duration = 190L
                     it.interpolator = AccelerateDecelerateInterpolator()
                 }
     }
@@ -150,8 +150,8 @@ class IWantActivity : ImmersionStatusBarActivity() {
             SpringAnimation(it, DynamicAnimation.SCALE_X) to
                     SpringAnimation(it, DynamicAnimation.SCALE_Y)
         }
-        springAnimX.setStartVelocity(1.4f)
-        springAnimY.setStartVelocity(1.4f)
+        springAnimX.setStartVelocity(1.47f)
+        springAnimY.setStartVelocity(1.47f)
         springAnimX.spring = springForce
         springAnimY.spring = springForce
         window.sharedElementEnterTransition = windowTransition
@@ -174,8 +174,8 @@ class IWantActivity : ImmersionStatusBarActivity() {
                         }
 
                         override fun onTransitionEnd(transition: Transition) {
-                            springAnimX.setStartVelocity(-1.6f)
-                            springAnimY.setStartVelocity(-1.6f)
+                            springAnimX.setStartVelocity(-1.66f)
+                            springAnimY.setStartVelocity(-1.66f)
                             springAnimX.start()
                             springAnimY.start()
                         }

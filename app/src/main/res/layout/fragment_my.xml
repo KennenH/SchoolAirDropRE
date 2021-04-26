@@ -110,7 +110,7 @@
             <com.example.schoolairdroprefactoredition.ui.components.PageItem
                 android:id="@+id/my_posts"
                 android:layout_width="match_parent"
-                app:PI_title="@string/idesire"
+                app:PI_title="@string/iwant"
                 app:PI_icon="@drawable/ic_ask_for"
                 android:layout_height="wrap_content"
                 app:layout_constraintTop_toBottomOf="@+id/my_selling" />

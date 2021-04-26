@@ -12,7 +12,7 @@ import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder.O
 /**
  * 主页面淘物和求购父页面的父类
  * [com.example.schoolairdroprefactoredition.scene.main.home.PurchasingParentFragment]
- * [com.example.schoolairdroprefactoredition.scene.main.home.IDesireParentFragment]
+ * [com.example.schoolairdroprefactoredition.scene.main.home.IWantParentFragment]
  */
 open class BaseParentFragment : StatePlaceholderFragment(), OnStatePlaceholderActionListener {
 

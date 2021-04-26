@@ -145,7 +145,6 @@ class LoginActivity : ImmersionStatusBarActivity(), View.OnClickListener, Compou
      */
     private fun clickToLogin() {
         UserLoginCacheUtil.getInstance().getUserTokenAnyway().let { cache ->
-            LogUtils.d(cache)
             if (cache == null) {
                 // 本地没有alipay id缓存，可能是没有登录过，也可能是账号手动退出，也可能是缓存被清理
                 openAuthScheme()

@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.api
 
+import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.domain.DomainIWantTags
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import retrofit2.Call
@@ -14,12 +15,13 @@ interface IWantApi {
      * 提交新求购
      */
     @FormUrlEncoded
-    @POST("appapi/iwant/addNewIwant")
+    @POST("appapi/IWant/uploadIwant")
     fun submitIWant(
             @Header("Authorization") token: String,
+            @Field("task_id") taskID: String,
+            @Field("file_keys") images: String,
+            @Field("tag_id") tagID: Int,
             @Field("iwant_color") cardColor: Int,
-            @Field("iwant_tag_id") tagID: Int,
-            @Field("iwant_images") images: String,
             @Field("iwant_content") content: String,
             @Field("iwant_longitude") longitude: Double,
             @Field("iwant_latitude") latitude: Double): Call<DomainResult>
@@ -28,7 +30,7 @@ interface IWantApi {
      * 修改求购信息
      */
     @FormUrlEncoded
-    @POST("appapi/iwant/modifyIwant")
+    @POST("appapi/IWant/modifyIwant")
     fun modifyIWant(
             @Header("Authorization") token: String,
             @Field("iwant_color") cardColor: Int,
@@ -43,7 +45,7 @@ interface IWantApi {
      * 删除我的求购
      */
     @FormUrlEncoded
-    @POST("appapi/iwant/deleteIwant")
+    @POST("appapi/IWant/deleteIwant")
     fun deteleIwant(
             @Header("Authorization") token: String,
             @Field("iwant_id") iwantID: Int)
@@ -52,18 +54,36 @@ interface IWantApi {
      * 获取附近求购信息
      */
     @FormUrlEncoded
-    @POST("appapi/iwant/getIwant")
-    fun getIWant(
+    @POST("appapi/IWant/getNearByIWant")
+    fun getNearByIWant(
+            @Field("client_id") clientID: String,
+            @Field("client_secret") clientSecret: String,
             @Field("longitude") longitude: Double,
             @Field("latitude") latitude: Double,
-            @Field("page") page: Int)
+            @Field("page") page: Int): Call<DomainIWant>
+
+    /**
+     * 搜索求购
+     */
+    @FormUrlEncoded
+    @POST("appapi/IWant/searchIWant")
+    fun searchIWant(
+            @Field("client_id") clientID: String,
+            @Field("client_secret") clientSecret: String,
+            @Field("longitude") longitude: Double,
+            @Field("latitude") latitude: Double,
+            @Field("keywords") keyword: String,
+            @Field("page") page: Int): Call<DomainIWant>
+
 
     /**
      * 以user id获取求购信息
      */
     @FormUrlEncoded
-    @POST("appapi/iwant/getIwantById")
+    @POST("appapi/IWant/getIwantById")
     fun getIWantByUserID(
+            @Field("client_id") clientID: String,
+            @Field("client_secret") clientSecret: String,
             @Field("user_id") userID: Int)
 
     /**
@@ -73,5 +93,5 @@ interface IWantApi {
     @POST("appapi/tags/searchTags")
     fun getIWantTags(
             @Field("client_id") clientID: String,
-            @Field("client_secret") clientSecret: String) : Call<DomainIWantTags>
+            @Field("client_secret") clientSecret: String): Call<DomainIWantTags>
 }

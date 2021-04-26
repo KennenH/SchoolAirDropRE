@@ -21,16 +21,16 @@ import net.lucode.hackware.magicindicator.buildins.commonnavigator.CommonNavigat
  * 首页中求购tab下的所有子页面的父类，当前仅有求购一个子页面
  * [com.example.schoolairdroprefactoredition.scene.main.home.IWantFragment]
  */
-class IDesireParentFragment : BaseParentFragment(), View.OnClickListener {
+class IWantParentFragment : BaseParentFragment(), View.OnClickListener {
 
     companion object {
-        fun newInstance(): IDesireParentFragment {
-            return IDesireParentFragment()
+        fun newInstance(): IWantParentFragment {
+            return IWantParentFragment()
         }
     }
 
     private val homePagerAdapter by lazy {
-        HomePagerAdapter(childFragmentManager, HomePagerAdapter.PAGE_TYPE_INQUIRY)
+        HomePagerAdapter(childFragmentManager, HomePagerAdapter.PAGE_TYPE_IWANT)
     }
 
     private lateinit var mViewPager: ViewPager
@@ -66,10 +66,10 @@ class IDesireParentFragment : BaseParentFragment(), View.OnClickListener {
                     homeViewpager.also {
                         it.adapter = homePagerAdapter
                     })
-            homeSearchBar.setOnClickListener(this@IDesireParentFragment)
-            homeTopAdd.setOnClickListener(this@IDesireParentFragment)
-            homeTopAdd.text = getString(R.string.postIDesire)
-            homeTopAdd.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_add_ask_for_buy, 0, 0, 0)
+            homeSearchBar.setOnClickListener(this@IWantParentFragment)
+            homeTopAdd.setOnClickListener(this@IWantParentFragment)
+            homeTopAdd.text = getString(R.string.postIWant)
+            homeTopAdd.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_iwant_icon, 0, 0, 0)
         }
         binding.homeToolbar.setOnClickListener(this)
         return binding.root

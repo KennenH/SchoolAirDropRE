@@ -142,8 +142,8 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIWantEntity, BaseView
         for (listener in mOnNoMoreDataListener) {
             listener.onNoMoreDataRefresh()
         }
-        removeAllFooterView()
         if (list != null && list.size < ConstantUtil.DEFAULT_PAGE_SIZE) {
+            removeAllFooterView()
             addFooter()
         }
     }
@@ -151,6 +151,7 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIWantEntity, BaseView
     override fun addData(newData: Collection<BaseIWantEntity>) {
         super.addData(newData)
         if (newData.size < ConstantUtil.DEFAULT_PAGE_SIZE) {
+            removeAllFooterView()
             addFooter()
         }
     }

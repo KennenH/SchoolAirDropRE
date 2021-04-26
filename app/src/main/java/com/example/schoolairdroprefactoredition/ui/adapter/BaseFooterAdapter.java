@@ -26,26 +26,25 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
         if (mOnNoMoreDataListener != null) {
             mOnNoMoreDataListener.resetNoMoreData();
         }
-
-        removeAllFooterView();
-        if (getData().size() < 1 && list != null && list.size() < ConstantUtil.DEFAULT_PAGE_SIZE) {
-            addNoMoreFooter();
+        if (list != null && list.size() < ConstantUtil.DEFAULT_PAGE_SIZE) {
+            removeAllFooterView();
+            addFooter();
         }
     }
 
     @Override
     public void addData(@NotNull Collection<? extends T> newData) {
         super.addData(newData);
-        removeAllFooterView();
-        if (getData().size() < 1 && newData.size() < ConstantUtil.DEFAULT_PAGE_SIZE) {
-            addNoMoreFooter();
+        if (newData.size() < ConstantUtil.DEFAULT_PAGE_SIZE) {
+            removeAllFooterView();
+            addFooter();
         }
     }
 
     /**
      * 在没有更多数据时添加没有更多数据提示的尾巴
      */
-    private void addNoMoreFooter() {
+    private void addFooter() {
         if (mOnNoMoreDataListener != null) {
             mOnNoMoreDataListener.onNoMoreData();
         }

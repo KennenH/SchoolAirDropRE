@@ -3,8 +3,6 @@ package com.example.schoolairdroprefactoredition.viewmodel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.schoolairdroprefactoredition.domain.DomainPostInfo
-import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.DomainSelling
 import com.example.schoolairdroprefactoredition.repository.SellingRepository
 

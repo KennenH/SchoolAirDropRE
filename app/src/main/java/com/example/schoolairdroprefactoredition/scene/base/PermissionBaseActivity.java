@@ -33,13 +33,14 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     /**
      * 请求获取权限
      * 在执行需要权限的方法之前必须先执行此方法来判断是否有权限
+     *
      * <p>
-     * 在 XXGranted 方法(eg. {@link PermissionBaseActivity#locationGranted()})中执行需要权限的操作
-     * 在 XXDenied 方法(eg. {@link PermissionBaseActivity#locationDenied()})中执行权限拒绝后的操作
+     * 在 XXGranted 方法(eg. {@link PermissionBaseActivity#locationGranted()} 定位权限已获取)中执行需要权限的操作
+     * 在 XXDenied 方法(eg. {@link PermissionBaseActivity#locationDenied()} 定位权限被拒绝)中执行权限拒绝后的操作
      * <p>
      *
      * @param type one of {@link RequestType#MANUAL} or {@link RequestType#AUTO}
-     *             在类型为 {@link RequestType#MANUAL} 时若已勾选不再提醒，则弹窗引导用户手动设置 **适用于用户手动重试时**
+     *             在类型为 {@link RequestType#MANUAL} 时若已勾选不再提醒，则弹窗引导用户手动设置 **适用于用户手动点击重试时**
      *             反之若类型为 {@link RequestType#AUTO} 时若权限被拒绝则不会询问 **适用于页面打开时自动检查权限**
      */
     public void requestPermission(@PermissionConstants.Permission String permission, @RequestType int type) {
@@ -112,9 +113,9 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     }
 
     /**
-     * 检查是否已经同意服务条款和隐私政策
-     * 仅用于{@link com.example.schoolairdroprefactoredition.scene.main.MainActivity}
-     * 若已同意则在{@link PermissionBaseActivity#initAppMainAfterAgreeToTermsOfService()}中启动主页面的渲染
+     * 检查用户是否已经同意服务条款和隐私政策
+     * 仅用于{@link com.example.schoolairdroprefactoredition.scene.main.MainActivity}页面初始化之前
+     * 若已同意则在{@link PermissionBaseActivity#initAppMainAfterAgreeToTermsOfService()}中启动主页面的加载
      * 否则退出App
      */
     public void checkIfAgreeToTermsOfServiceAndPrivacyPolicy(Context context) {
@@ -127,6 +128,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
             new XPopup.Builder(this)
                     .isClickThrough(false)
                     .dismissOnTouchOutside(false)
+                    .navigationBarColor(context.getResources().getColor(R.color.white, context.getTheme()))
                     .asCustom(new BasePopupView(this) {
                         @Override
                         protected void init() {
@@ -336,6 +338,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
         int finalRequest = request;
         new XPopup.Builder(this)
                 .isDarkTheme(isDarkTheme())
+                .navigationBarColor(getResources().getColor(R.color.white, getTheme()))
                 .asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
                         , () -> {
                             switch (permission) {
@@ -385,6 +388,7 @@ public class PermissionBaseActivity extends ImmersionStatusBarActivity {
     private void popUpToSettingsForPermission(@StringRes int res, @PermissionConstants.Permission String permission) {
         new XPopup.Builder(this)
                 .isDarkTheme(isDarkTheme())
+                .navigationBarColor(getResources().getColor(R.color.white, getTheme()))
                 .asConfirm(getString(R.string.permissionTitle), getString(res), getString(android.R.string.cancel), getString(android.R.string.ok)
                         , () -> { // 点击确定，引导至系统设置
                             switch (permission) {

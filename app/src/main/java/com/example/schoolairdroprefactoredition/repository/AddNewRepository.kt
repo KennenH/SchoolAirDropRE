@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.repository
 
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallbackResultOrNull
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.cache.NewIWantDraftCache
@@ -78,13 +79,16 @@ class AddNewRepository {
      * 仅包含与服务器文字交互部分，同[submitItem]
      */
     fun submitNewIWant(
-            token: String, tagID: Int, color: Int,
+            token: String, tagID: Int,
+            color: Int, taskID: String,
             picSetKeys: String, content: String,
             longitude: Double, latitude: Double,
             onResult: (response: DomainResult?) -> Unit) {
+        LogUtils.d(tagID)
         RetrofitClient.iWantApi.submitIWant(
-                token, tagID, color,
-                picSetKeys, content,
+                token,
+                taskID, picSetKeys,
+                tagID, color, content,
                 longitude, latitude).apply {
             enqueue(CallbackResultOrNull(this, onResult))
         }

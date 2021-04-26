@@ -93,7 +93,7 @@
     <string name="add">Add New</string>
     <string name="offShelf">Remove the item</string>
     <string name="modifyInfo">Modify Information</string>
-    <string name="addNewSelling">Add New Item</string>
+    <string name="addNewSelling">Post Item</string>
     <string name="submit">Submit</string>
     <string name="clickable">Clickable</string>
     <string name="options">Options</string>
@@ -155,7 +155,7 @@
     <string name="purchasing">Goods</string>
     <string name="obtainLocationInfo">Obtain Location Information</string>
     <string name="permissionDenied">Permission denied</string>
-    <string name="locationPermissionContent">Location will be used to obtain information on the Home page, nearby items, transaction locations, and item release locations.</string>
+    <string name="locationPermissionContent">Location will be used to obtain information on the nearby items, nearby IWants, and item release locations.</string>
     <string name="cameraPermissionContent">The camera will be used to take photos in real time. This function may be required when uploading avatars and publishing items.</string>
     <string name="albumPermissionContent">The album will be used to select pictures, upload avatars, and post items may require this feature.</string>
     <string name="REJECT">REJECT</string>
@@ -191,7 +191,7 @@
     <string name="restoreDraft">Restore</string>
     <string name="draftCleared">Input cleared, the draft will be deleted after opening other pages</string>
     <string name="plsEnterQuotePrice">Please Enter Quote Price</string>
-    <string name="errorIDesireEmpty">No nearby IDesire</string>
+    <string name="errorIWantEmpty">No nearby IDesire</string>
     <string name="postMyTopic">Post My Topic</string>
     <string name="unListItem">Are You Sure You Want To Off-Shelf This Item?</string>
     <string name="attention">Attention</string>
@@ -245,7 +245,7 @@
     <string name="completed">Finished</string>
     <string name="termsOfServiceAgreeFailed">Ah oh, the treaty is lost</string>
     <string name="addNewGoodsError">Error adding new item, try to update the version if it fails multiple times</string>
-    <string name="idesire">IDesire</string>
+    <string name="iwant">IDesire</string>
     <string name="doNotPostIllegalContent">Please do not post articles and images that violate school rules and national laws. Please check the contents of the form again</string>
     <string name="phonePermissionContent">This function is required when receiving message notifications. If not allowed, you will not be able to accept important notices.</string>
     <string name="modifyFailedTip">It may be that the server is under maintenance. The form will not be saved. It is recommended to try again later.</string>
@@ -277,7 +277,7 @@
     <string name="recyclerFooter">[img src=ic_line/]&#160;&#160;&#160;&#160;no more data&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
     <string name="illegalName">Illegal Name</string>
     <string name="receiveANewMessage">Receive New Message</string>
-    <string name="postIDesire">Post IDesire</string>
+    <string name="postIWant">Post IDesire</string>
     <string name="favorDone">Favored</string>
     <string name="unfavorDone">Unfavored</string>
     <string name="descriptionDisplayInAppFloat">After opening, when the App is in the foreground, the floating window will be displayed when a message is received</string>

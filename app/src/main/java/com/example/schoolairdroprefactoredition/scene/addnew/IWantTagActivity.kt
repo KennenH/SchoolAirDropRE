@@ -7,7 +7,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.domain.DomainIWantTags
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
@@ -88,7 +87,8 @@ class IWantTagActivity : ImmersionStatusBarActivity(), IWantTag.OnIWantTagAction
                 for (tag in it.data) {
                     IWantTag(this, tag).also { iwantTag ->
                         select_tag_flex_box.addView(iwantTag)
-                        if (tag.tag_id == nowTag?.tag_id) {
+                        if (tag.tags_id == nowTag?.tags_id
+                                && tag.tags_content == nowTag?.tags_content) {
                             confirm.isEnabled = true
                             iwantTag.isSelected = true
                             IWantTag.setselectedTagPos(select_tag_flex_box.indexOfChild(iwantTag))

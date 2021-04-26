@@ -108,10 +108,10 @@ class SellingFragment : SSBBaseFragment(), OnLoginStateChangeListener {
                 offShelf.setOnClickListener {
                     DialogUtil.showConfirm(context, getString(R.string.attention), getString(R.string.unListItem)) {
                         if (token != null) {
-                            mLoading.show()
+                            mLoading?.show()
                             viewModel.deleteGoods(token.access_token, bean?.goods_id.toString())
                                     .observeOnce(viewLifecycleOwner, {
-                                        mLoading.dismissWith {
+                                        mLoading?.dismissWith {
                                             if (it) {
                                                 (activity?.application as SAApplication).getCachedMyInfo()?.userGoodsOnSaleCount?.minus(1)
                                                 DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successUnlist)

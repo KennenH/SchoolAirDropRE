@@ -15,6 +15,7 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
+import com.blankj.utilcode.util.ScreenUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
@@ -25,7 +26,7 @@ import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.base.PermissionBaseActivity
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseParentFragment
-import com.example.schoolairdroprefactoredition.scene.main.home.IDesireParentFragment
+import com.example.schoolairdroprefactoredition.scene.main.home.IWantParentFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.PurchasingParentFragment
 import com.example.schoolairdroprefactoredition.scene.main.messages.MessagesFragment
 import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
@@ -33,9 +34,15 @@ import com.example.schoolairdroprefactoredition.scene.main.extend.SearchFragment
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.XPopupUtil
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.lxj.xpopup.XPopup
+import com.lxj.xpopup.animator.PopupAnimator
+import com.lxj.xpopup.enums.PopupAnimation
+import com.lxj.xpopup.impl.PartShadowPopupView
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.item_position_arragne.*
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -72,7 +79,6 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
 
-
     /**
      * 搜索 页面
      */
@@ -81,10 +87,10 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     /**
-     * 广场 页面
+     * 求购 页面
      */
-    private val mPlaza by lazy {
-        IDesireParentFragment.newInstance()
+    private val mIWant by lazy {
+        IWantParentFragment.newInstance()
     }
 
     /**
@@ -124,11 +130,11 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     private var mOnOfflineNumStateChangeListener: OnOfflineNumStateChangeListener? = null
 
     /**
-     * 本页面初始化前询问用户是否同意服务协议
+     * 主页面初始化前检查并询问用户是否同意app服务协议
      *
-     * 同意后将页面初始化代码写在
+     * 同意后将页面在
      * [MainActivity.initAppMainAfterAgreeToTermsOfService]
-     * 不同意则将退出App
+     * 中进行初始化，不同意则将退出App
      */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -139,7 +145,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     /**
      * 加载[MainActivity]页面内容
      *
-     * 父类调用本方法的前提时必须先同意
+     * 在此之前，用户必须先同意用户协议
      * [MainActivity.checkIfAgreeToTermsOfServiceAndPrivacyPolicy]
      */
     override fun initAppMainAfterAgreeToTermsOfService() {
@@ -164,7 +170,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                LoginActivity.LOGIN -> {
+                LoginActivity.LOGIN -> { // 登录请求完成后返回用户信息，该请求码可以被传递
                     val userInfo = data?.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as? DomainUserInfo.DataBean
                     val token = data?.getSerializableExtra(ConstantUtil.KEY_TOKEN) as? DomainToken
 
@@ -179,7 +185,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                     loginStateChanged(userInfo, token)
                 }
 
-                UserActivity.REQUEST_UPDATE_MY -> {
+                UserActivity.REQUEST_UPDATE_MY -> { // 从修改用户信息页面传递回来的请求码，将重新获取我的信息
                     if (data?.getBooleanExtra(ConstantUtil.KEY_UPDATED, false) as Boolean) {
                         obtainMyInfo()
                     }
@@ -203,7 +209,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         (application as? SAApplication)?.addOnAppStatusChangeListener(this@MainActivity)
         (application as? SAApplication)?.setOnShouldShowBadgeListener(this@MainActivity)
 
-        mPlaza.setOnSearchBarClickedListener(object : BaseParentFragment.OnSearchBarClickedListener {
+        mIWant.setOnSearchBarClickedListener(object : BaseParentFragment.OnSearchBarClickedListener {
             override fun onSearchBarClicked() {
                 showSearch()
             }
@@ -216,7 +222,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         })
 
         home_add_fab.setOnClickListener {
-            AddNewActivity.startAddNew(this, AddNewActivity.AddNewType.ADD_ITEM)
+//            AddNewActivity.startAddNew(this, AddNewActivity.AddNewType.ADD_ITEM)
+            showAddNewLauncher()
         }
 
         navView.setOnNavigationItemSelectedListener(this@MainActivity)
@@ -280,7 +287,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 注意：
      * 这里页面显示时再点击使得页面滑动至顶部的逻辑不能用
      * [BottomNavigationView.setOnNavigationItemReselectedListener]
-     * 这个接口实现，这个接口的用意是让图标在第二次被点击
+     * 这个接口实现，这个接口的用意是让图标在 第二次 被点击
      * 的时候才能被选中，这样第一次进app的时候第一个页面就
      * 会一直是虚空状态，要先切换到其他页面再切回来才能正常
      */
@@ -288,7 +295,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         supportFragmentManager.apply {
             if (fragment.isHidden || !fragment.isAdded) {
                 beginTransaction()
-                        .hide(mPlaza)
+                        .hide(mIWant)
                         .hide(mMy)
                         .hide(mPurchasing)
                         .hide(mMessages)
@@ -309,8 +316,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                     mPurchasing -> {
                         mPurchasing.pageScrollToTop()
                     }
-                    mPlaza -> {
-                        mPlaza.pageScrollToTop()
+                    mIWant -> {
+                        mIWant.pageScrollToTop()
                     }
                     mMessages -> {
                         mMessages.pageScrollToTop()
@@ -321,7 +328,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
     }
 
     /**
-     * 显示搜索页面
+     * 显示搜索页面 [mSearch]
      */
     private fun showSearch() {
         supportFragmentManager.apply {
@@ -340,6 +347,32 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
                 }
             }
         }
+    }
+
+    /**
+     * 显示选择新增的弹窗
+     */
+    private fun showAddNewLauncher() {
+        XPopup.Builder(this)
+                .atView(navView)
+                .navigationBarColor(resources.getColor(R.color.white, theme))
+                .isCenterHorizontal(true)
+                .popupAnimation(PopupAnimation.ScrollAlphaFromBottom)
+                .popupWidth(ScreenUtils.getScreenWidth())
+                .asAttachList(
+                        XPopupUtil.getMainAddNewStringList(this),
+                        XPopupUtil.getMainAddNewIconArray(),
+                        { pos, _ ->
+                            if (pos == 0) {
+                                AddNewActivity.startAddNew(this, AddNewActivity.AddNewType.ADD_ITEM)
+                            } else if (pos == 1) {
+                                AddNewActivity.startAddNew(this, AddNewActivity.AddNewType.ADD_IWANT)
+                            }
+                        },
+                        R.layout.dialog_main_add_new,
+                        R.layout.item_main_add_new
+                )
+                .show()
     }
 
     /**
@@ -446,8 +479,8 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
             R.id.navigation_purchasing -> {
                 showFragment(mPurchasing)
             }
-            R.id.navigation_playground -> {
-                showFragment(mPlaza)
+            R.id.navigation_iwant -> {
+                showFragment(mIWant)
             }
             R.id.navigation_message -> {
                 // 清空badge然后显示消息列表页面
@@ -622,7 +655,7 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
 
                         // 验证token时出错
                         null -> {
-                            Toast.makeText(this, "token验证出错", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(this, "token验证失败", Toast.LENGTH_SHORT).show()
                         }
                     }
                 }

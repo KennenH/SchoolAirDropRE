@@ -18,26 +18,26 @@ class IWantViewModel : ViewModel() {
 
     private var latitude = AppConfig.DEBUG_LATITUDE
 
-    private val inquiryRepository by lazy {
+    private val iWantRepository by lazy {
         IWantRepository.getInstance()
     }
 
-    private val inquiryLiveData = MutableLiveData<List<BaseIWantEntity>>()
+    private val iWantLiveData = MutableLiveData<List<BaseIWantEntity>>()
 
-    fun getIWant(longitude: Double?, latitude: Double?): LiveData<List<BaseIWantEntity>> {
+    fun getNearByIWant(longitude: Double?, latitude: Double?): LiveData<List<BaseIWantEntity>> {
         page = 1
         this.latitude = latitude ?: AppConfig.DEBUG_LATITUDE
         this.longitude = longitude ?: AppConfig.DEBUG_LONGITUDE
-        inquiryRepository.getIWant(page++) {
-            inquiryLiveData.postValue(it)
+        iWantRepository.getNearByIWant(page++) {
+            iWantLiveData.postValue(it)
         }
-        return inquiryLiveData
+        return iWantLiveData
     }
 
-    fun getIWant(): LiveData<List<BaseIWantEntity>> {
-        inquiryRepository.getIWant(page++) {
-            inquiryLiveData.postValue(it)
+    fun getNearByIWant(): LiveData<List<BaseIWantEntity>> {
+        iWantRepository.getNearByIWant(page++) {
+            iWantLiveData.postValue(it)
         }
-        return inquiryLiveData
+        return iWantLiveData
     }
 }

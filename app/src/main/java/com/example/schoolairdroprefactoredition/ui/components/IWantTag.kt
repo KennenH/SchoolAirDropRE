@@ -5,8 +5,6 @@ import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.setMargins
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.domain.DomainIWantTags
@@ -37,7 +35,7 @@ class IWantTag : ConstraintLayout {
 
         val padding = SizeUtils.dp2px(3f)
         setPadding(padding, padding, padding, padding)
-        iwant_tag.text = tag.tag
+        iwant_tag.text = tag.tags_content
         iwant_tag.setOnClickListener {
             if (!iwant_tag.isSelected) {
                 if (parent is FlexboxLayout) {

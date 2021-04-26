@@ -55,11 +55,12 @@ object MyUtil {
     }
 
     @JvmStatic
-    fun loading(context: Context?): LoadingPopupView {
+    fun loading(context: Context): LoadingPopupView {
         return XPopup.Builder(context)
                 .hasShadowBg(false)
                 .dismissOnBackPressed(true)
                 .dismissOnTouchOutside(false)
+                .navigationBarColor(context.resources.getColor(R.color.white, context.theme))
                 .asLoading()
     }
 

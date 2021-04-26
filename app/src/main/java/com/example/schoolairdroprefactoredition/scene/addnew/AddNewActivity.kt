@@ -562,7 +562,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     val tag = data.getSerializableExtra(IWantTagActivity.KEY_SELECTED_TAG)
                             as DomainIWantTags.Data?
                     if (tag != null) {
-                        option_tag.text = tag.tag
+                        option_tag.text = tag.tags_content
                         this.mNowTag = tag
                     }
                 }
@@ -741,7 +741,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                             ?: localMedia.path)
                 }
                 addNewViewModel.submitIWant(
-                        token.access_token, mNowTag!!.tag_id, mNowCardColor,
+                        token.access_token, mNowTag!!.tags_id, mNowCardColor,
                         mPicSetPaths, option_description.text.toString(),
                         mAmapLocation!!.longitude, mAmapLocation!!.latitude)
                         .apply {
@@ -865,8 +865,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             pass = false
         }
         if (mNowTag == null // 求购标签
-                || mNowTag?.tag_id == -1
-                || mNowTag?.tag?.isBlank() == true
+                || mNowTag?.tags_id == -1
+                || mNowTag?.tags_content?.isBlank() == true
                 && pageType == AddNewType.ADD_IWANT) {
             AnimUtil.primaryBackgroundViewBlinkRed(this, option_tag_wrapper)
             focusView = tag_title
@@ -925,10 +925,12 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             } else {
                 addNewViewModel.deleteItemDraft()
             }
-        } else if (pageType == AddNewType.ADD_IWANT) { // 保存帖子表单
-            if (!isSubmitSuccess && (mCoverPath.isNotBlank()
+        } else if (pageType == AddNewType.ADD_IWANT) { // 保存求购表单
+            if (!isSubmitSuccess
+                    && (mCoverPath.isNotBlank()
                             || mNowTag != null
-                            || mPicSetSelected.size > 0 || option_title.text.isNotBlank()
+                            || mPicSetSelected.size > 0
+                            || option_title.text.isNotBlank()
                             || option_description.text.isNotBlank())) {
                 addNewViewModel.savePostDraft(
                         mPicSetSelected,
@@ -995,7 +997,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     cover.setImageLocalPath(mCoverPath)
                 }
                 mNowTag = draftCache.tag
-                option_tag.text = mNowTag?.tag
+                option_tag.text = mNowTag?.tags_content
                 mNowCardColor = draftCache.cardColor
                 setCardColor()
                 mPicSetHorizontalAdapter.setList(mPicSetSelected)
@@ -1231,7 +1233,11 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             R.id.option_iwant_color -> showColorSelector()
 
             // 求购标签
-            R.id.option_tag -> IWantTagActivity.start(this, mNowTag)
+            R.id.option_tag -> {
+                JsonCacheUtil.runWithFrequentCheck(this, {
+                    IWantTagActivity.start(this, mNowTag)
+                })
+            }
 
             // 默认颜色
             R.id.iwant_color_selector_default->{

@@ -20,7 +20,7 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
 
     companion object {
         const val TYPE_EMPTY_HOME_GOODS = 99 //状态 类型 没有物品 仅首页使用
-        const val TYPE_EMPTY_INQUIRY = 66 //状态 类型 没有求购 仅首页使用
+        const val TYPE_EMPTY_IWANT = 66 //状态 类型 没有求购 仅首页使用
         const val TYPE_EMPTY = 110 //状态 类型 没有物品
         const val TYPE_EMPTY_SEARCH = 220 //状态 类型 搜索为空
         const val TYPE_LOADING = 77 //状态 类型 正在加载
@@ -30,9 +30,9 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
 
         private const val TIP_NETWORK_OR_LOCATION_ERROR_HOME = R.string.errorNetLocation // 状态 提示 网络或定位错误 仅首页使用
         private const val TIP_EMPTY_GOODS = R.string.errorGoodsEmptyHome // 状态 提示 物品空 仅首页使用
-        private const val TIP_EMPTY_INQUIRY = R.string.errorIDesireEmpty // 状态 提示 求购空 仅首页使用
+        private const val TIP_EMPTY_IWANT = R.string.errorIWantEmpty // 状态 提示 求购空 仅首页使用
         private const val TIP_EMPTY = R.string.nothingThere // 状态 提示 空 非首页
-        private const val TIP_EMPTY_SEARCH = R.string.emptySearch // 状态 提示 空 搜索
+        private const val TIP_EMPTY_SEARCH_GOODS = R.string.emptySearch // 状态 提示 空 搜索
         private const val TIP_PERMISSION_DENIED = R.string.permissionDenied // 状态 提示 权限被拒
         private const val TIP_ERROR = R.string.errorLoading // 状态 提示 加载错误
     }
@@ -79,7 +79,7 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
      * one of below
      *
      * @param type [StatePlaceHolder.TYPE_EMPTY_HOME_GOODS]
-     * [StatePlaceHolder.TYPE_EMPTY_INQUIRY]
+     * [StatePlaceHolder.TYPE_EMPTY_IWANT]
      * [StatePlaceHolder.TYPE_EMPTY]
      * [StatePlaceHolder.TYPE_EMPTY_SEARCH]
      * [StatePlaceHolder.TYPE_LOADING]
@@ -102,9 +102,9 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
             TYPE_EMPTY_HOME_GOODS -> {
                 mTip.setText(TIP_EMPTY_GOODS)
             }
-            // 附近没有物品 仅首页使用
-            TYPE_EMPTY_INQUIRY -> {
-                mTip.setText(TIP_EMPTY_INQUIRY)
+            // 附近没有求购 仅首页使用
+            TYPE_EMPTY_IWANT -> {
+                mTip.setText(TIP_EMPTY_IWANT)
             }
             // 权限拒绝
             TYPE_DENIED -> {
@@ -123,7 +123,7 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
             }
             // 没有物品 搜索
             TYPE_EMPTY_SEARCH -> {
-                mTip.setText(TIP_EMPTY_SEARCH)
+                mTip.setText(TIP_EMPTY_SEARCH_GOODS)
                 setPlaceholderActionTip(context?.getString(R.string.simplifyYourKey))
             }
             // 未知错误

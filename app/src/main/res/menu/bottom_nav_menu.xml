@@ -7,9 +7,9 @@
         android:title="@string/purchasing" />
 
     <item
-        android:id="@+id/navigation_playground"
+        android:id="@+id/navigation_iwant"
         android:icon="@drawable/ic_all"
-        android:title="@string/idesire" />
+        android:title="@string/iwant" />
 
     <item
         android:id="@+id/navigation_hidden"

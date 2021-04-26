@@ -1,31 +1,45 @@
 package com.example.schoolairdroprefactoredition.domain
 
+import java.io.Serializable
+
 /**
  * @author kennen
  * @date 2021/4/18
  */
 data class DomainIWant(
         val code: Int,
-        val msg: String,
-        val data: Data
-) {
+        val `data`: List<Data>,
+        val msg: Any,
+) : Serializable {
 
     data class Data(
-            val inquiry_id: Int,
-            val inquiry_content: String,
-            val inquiry_tag_id: Int,
-            val inquiry_images: String,
-            val inquiry_longitude: Double,
-            val inquiry_latitude: Double,
-            val inquiry_owner_id: Int,
-            val inquiry_owner_name: String,
-            val inquiry_owner_avatar: String) {
+            val iwant_id: Int,
+            val iwant_color: Int,
+            val iwant_content: String,
+            val iwant_images: String,
+            val seller: Seller,
+            val tag: String
+    ) : Serializable {
+        data class Seller(
+                val last_login_time: String,
+                val user_avatar: String,
+                val user_contactCount: Int,
+                val user_goodsOnSaleCount: Int,
+                val user_id: Int,
+                val user_name: String
+        ) : Serializable {
+            override fun toString(): String {
+                return "Seller(last_login_time='$last_login_time', user_avatar='$user_avatar', user_contactCount=$user_contactCount, user_goodsOnSaleCount=$user_goodsOnSaleCount, user_id=$user_id, user_name='$user_name')"
+            }
+        }
+
         override fun toString(): String {
-            return "Data(inquiry_id=$inquiry_id, inquiry_content='$inquiry_content', inquiry_tag_id=$inquiry_tag_id, inquiry_images='$inquiry_images', inquiry_longitude=$inquiry_longitude, inquiry_latitude=$inquiry_latitude, inquiry_owner_id=$inquiry_owner_id, inquiry_owner_name='$inquiry_owner_name', inquiry_owner_avatar='$inquiry_owner_avatar')"
+            return "Data(iwant_color=$iwant_color, iwant_content='$iwant_content', iwant_id=$iwant_id, iwant_images='$iwant_images', seller=$seller, tag='$tag')"
         }
     }
 
     override fun toString(): String {
-        return "DomainInquiry(code=$code, msg='$msg', data=$data)"
+        return "DomainIWant(code=$code, `data`=$`data`, msg=$msg)"
     }
+
 }

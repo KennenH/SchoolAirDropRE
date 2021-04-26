@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.example.schoolairdroprefactoredition.ui.auto.OverDragLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/primary">
@@ -69,10 +70,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/general_padding_large"
-                app:PI_description="Version 1.0"
                 app:PI_icon="@drawable/ic_logo_alpha"
                 app:PI_title="@string/about"
-                app:layout_constraintTop_toBottomOf="@+id/settings_home_privacy" />
+                app:layout_constraintTop_toBottomOf="@+id/settings_home_privacy"
+                tools:PI_description="Version" />
 
             <TextView
                 android:id="@+id/settings_home_switch_account"
@@ -81,11 +82,11 @@
                 android:layout_marginTop="@dimen/general_padding_large"
                 android:background="@drawable/button_sheet_white"
                 android:gravity="center"
-                android:visibility="gone"
                 android:padding="@dimen/general_padding_bit_larger"
                 android:text="@string/switchAccount"
                 android:textColor="@color/primaryText"
                 android:textSize="@dimen/textSizeNormal"
+                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@+id/settings_home_about" />
 
             <TextView

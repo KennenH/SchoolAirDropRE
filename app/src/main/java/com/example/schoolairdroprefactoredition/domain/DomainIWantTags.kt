@@ -4,20 +4,21 @@ import java.io.Serializable
 
 data class DomainIWantTags(
         val code: Int,
+        val `data`: List<Data>,
         val msg: String,
-        val data: List<Data>
 ) : Serializable {
+
     data class Data(
-            val tag_id: Int,
-            val tag: String
+            val tags_id: Int,
+            val tags_content: String,
     ) : Serializable {
         override fun toString(): String {
-            return "Data(tag_id=$tag_id, tag='$tag')"
+            return "Data(tags_content='$tags_content', tags_id=$tags_id)"
         }
     }
 
     override fun toString(): String {
-        return "DomainIWantTags(code=$code, msg='$msg', data=$data)"
+        return "DomainIWantTags(code=$code, `data`=$`data`, msg='$msg')"
     }
-
 }
+
