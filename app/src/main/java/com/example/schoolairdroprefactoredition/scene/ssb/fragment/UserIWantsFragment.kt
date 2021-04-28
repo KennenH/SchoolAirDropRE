@@ -9,26 +9,31 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
 import com.example.schoolairdroprefactoredition.databinding.SheetSsbItemMoreBinding
-import com.example.schoolairdroprefactoredition.domain.DomainSelling
+import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
-import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity.OnLoginStateChangeListener
-import com.example.schoolairdroprefactoredition.ui.adapter.SellingAdapter
+import com.example.schoolairdroprefactoredition.ui.adapter.MyIWantAdapter
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
-class SellingFragment :
+
+/**
+ * @author kennen
+ * @date 2021/4/27
+ *
+ * 用户求购页面
+ */
+class UserIWantsFragment :
         SSBBaseFragment(),
-        OnLoginStateChangeListener,
-        SellingAdapter.OnSSBItemActionListener {
+        SSBActivity.OnLoginStateChangeListener,
+        MyIWantAdapter.OnSSBIWantItemActionListener {
 
     companion object {
-        fun newInstance(isMine: Boolean): SellingFragment {
-            return SellingFragment().also { fragment ->
+        fun newInstance(isMine: Boolean): UserIWantsFragment {
+            return UserIWantsFragment().also { fragment ->
                 fragment.arguments = Bundle().also { bundle ->
                     bundle.putBoolean(ConstantUtil.KEY_IS_MINE, isMine)
                 }
@@ -36,11 +41,11 @@ class SellingFragment :
         }
     }
 
-    private val mSellingAdapter by lazy {
-        SellingAdapter(activity?.intent?.getBooleanExtra(ConstantUtil.KEY_IS_MINE, false))
+    private val mIWantAdapter by lazy {
+        MyIWantAdapter(activity?.intent?.getBooleanExtra(ConstantUtil.KEY_IS_MINE, false))
     }
 
-    private var mSellingList: ArrayList<DomainSelling.Data> = ArrayList()
+    private var mIWantList: ArrayList<DomainIWant.Data> = ArrayList()
 
     private var dialog: BottomSheetDialog? = null
 
@@ -58,45 +63,24 @@ class SellingFragment :
         }
     }
 
-    /**
-     * 初始化
-     */
     override fun init(binding: FragmentSsbBinding?) {
-        binding?.ssbRecycler?.adapter = mSellingAdapter
-        mSellingAdapter.setOnSSBItemActionListener(this)
+        binding?.ssbRecycler?.adapter = mIWantAdapter
+        mIWantAdapter.setOnSSBIWantItemActionListener(this)
 
         setHasOptionsMenu(isMine)
-        getSelling()
+        getIWant()
     }
 
-    private fun loadData(data: DomainSelling) {
-        mSellingList.addAll(data.data)
-        if (mSellingList.size == 0) {
-            showPlaceholder(StatePlaceHolder.TYPE_EMPTY, getString(R.string.goPostUItem))
-        } else {
-            mSellingAdapter.setList(mSellingList)
-            showContentContainer()
-        }
-    }
-
-    /**
-     * 重试
-     */
     override fun retryGrabOnlineData() {
-//        getSelling()
+        getIWant()
     }
 
-    /**
-     * 网络请求在售物品
-     * 1、若为自己的物品则使用token获取物品
-     * 2、若为他人的物品则使用用户id获取
-     */
-    private fun getSelling() {
+    private fun getIWant() {
         val userID = activity?.intent?.getIntExtra(ConstantUtil.KEY_USER_ID, -1)
         userID?.let { id ->
             if (id != -1) {
                 showPlaceholder(StatePlaceHolder.TYPE_LOADING)
-                viewModel.getSelling(id).observeOnce(viewLifecycleOwner) {
+                viewModel.getIWant(id).observeOnce(viewLifecycleOwner) {
                     it?.let {
                         loadData(it)
                     }
@@ -107,42 +91,39 @@ class SellingFragment :
         }
     }
 
-    /**
-     * 在售物品更多设置
-     * 修改物品信息 下架物品等
-     */
     override fun onItemAction(view: View, bean: Any?) {
-        if (!isMine || bean !is DomainSelling.Data?) return
+        if (!isMine || bean !is DomainIWant.Data?) return
 
-        context?.let { c ->
-            val binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(context))
+        context?.let {
+            val binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(it))
             val token = (activity?.application as SAApplication).getCachedToken()
 
-            dialog = BottomSheetDialog(c)
+            dialog = BottomSheetDialog(it)
             dialog?.setContentView(binding.root)
             binding.apply {
-                // 修改物品信息按钮
+                // 修改求购信息按钮
                 modify.setOnClickListener {
-                    AddNewActivity.startModifyGoods(context, bean?.goods_id)
+                    AddNewActivity.startModifyIWant(context, bean?.iwant_id)
                     dialog?.dismiss()
                 }
 
-                // 下架物品按钮
+                offShelf.text = getString(R.string.undoIWant)
+                // 撤销求购
                 offShelf.setOnClickListener {
-                    DialogUtil.showConfirm(context, getString(R.string.attention), getString(R.string.unListItem)) {
+                    DialogUtil.showConfirm(context, getString(R.string.attention), getString(R.string.sureToUndoIWant)) {
                         if (token != null) {
                             mLoading?.show()
-                            viewModel.deleteGoods(token.access_token, bean?.goods_id.toString())
-                                    .observeOnce(viewLifecycleOwner, {
+                            viewModel.deleteIWant(token.access_token, bean?.iwant_id.toString())
+                                    .observeOnce(viewLifecycleOwner) {
                                         mLoading?.dismissWith {
                                             if (it) {
-                                                (activity?.application as SAApplication).getCachedMyInfo()?.userGoodsOnSaleCount?.minus(1)
-                                                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successUnlist)
+                                                (activity?.application as SAApplication).getCachedMyInfo()?.userContactCount?.minus(1)
+                                                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successUndoIWant)
                                             } else {
                                                 DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
                                             }
                                         }
-                                    })
+                                    }
                         } else {
                             DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
                         }
@@ -154,12 +135,12 @@ class SellingFragment :
                 cancel.setOnClickListener { dialog?.dismiss() }
 
                 val bottomSheetView = dialog?.delegate?.findViewById<View>(com.google.android.material.R.id.design_bottom_sheet)
-                bottomSheetView?.let {
-                    it.background = ResourcesCompat.getDrawable(resources, R.drawable.transparent, context?.theme)
-                    BottomSheetBehavior.from(it).run {
+                bottomSheetView?.let { view ->
+                    view.background = ResourcesCompat.getDrawable(resources, R.drawable.transparent, context?.theme)
+                    BottomSheetBehavior.from(view).run {
                         skipCollapsed = true
                         isDraggable = false
-                        addBottomSheetCallback(object : BottomSheetCallback() {
+                        addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                             override fun onStateChanged(bottomSheet: View, newState: Int) {
                                 if (newState == BottomSheetBehavior.STATE_HIDDEN) {
                                     dialog?.dismiss()
@@ -200,18 +181,28 @@ class SellingFragment :
             }
 
             R.id.ssb_posts_add -> {
-                AddNewActivity.startAddNew(context, AddNewActivity.AddNewType.ADD_ITEM)
+                AddNewActivity.startAddNew(context, AddNewActivity.AddNewType.ADD_IWANT)
                 return true
             }
         }
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onLoginSSB() {
-        getSelling()
+    private fun loadData(data: DomainIWant) {
+        mIWantList.addAll(data.data)
+        if (mIWantList.size == 0) {
+            showPlaceholder(StatePlaceHolder.TYPE_EMPTY, getString(R.string.goPostUItem))
+        } else {
+            mIWantAdapter.setList(mIWantList)
+            showContentContainer()
+        }
     }
 
-    override fun onItemActionButtonClick(view: View, bean: DomainSelling.Data?) {
+    override fun onLoginSSB() {
+        getIWant()
+    }
+
+    override fun onItemActionButtonClick(view: View, bean: DomainIWant.Data?) {
         onItemAction(view, bean)
     }
 }

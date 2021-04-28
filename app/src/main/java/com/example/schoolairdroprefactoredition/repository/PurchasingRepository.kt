@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.repository
 
+import com.example.schoolairdroprefactoredition.api.base.CallbackResultOrNull
 import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
@@ -27,25 +28,6 @@ class PurchasingRepository private constructor() {
                 ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page,
                 if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE else longitude,
                 if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE else latitude)
-                .apply {
-                    enqueue(object : CallbackWithRetry<DomainPurchasing>(this@apply) {
-                        override fun onResponse(call: Call<DomainPurchasing>, response: Response<DomainPurchasing>) {
-                            if (response.code() == HttpURLConnection.HTTP_OK) {
-                                val body = response.body()
-                                if (body != null && body.code == ConstantUtil.HTTP_OK) {
-                                    onResult(body)
-                                } else {
-                                    onResult(null)
-                                }
-                            } else {
-                                onResult(null)
-                            }
-                        }
-
-                        override fun onFailureAllRetries() {
-                            onResult(null)
-                        }
-                    })
-                }
+                .apply { enqueue(CallbackResultOrNull(this, onResult)) }
     }
 }

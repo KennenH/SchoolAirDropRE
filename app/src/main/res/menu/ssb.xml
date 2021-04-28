@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/selling_posts_add"
+        android:id="@+id/ssb_posts_add"
         android:icon="@drawable/ic_add_selling_posts"
         android:title="@string/add"
         app:showAsAction="always" />

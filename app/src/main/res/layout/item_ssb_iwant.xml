@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="@dimen/general_padding"
+    app:cardElevation="@dimen/general_padding_small"
+    app:cardUseCompatPadding="true"
+    app:layout_constraintTop_toTopOf="parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/item_ssb_iwant_location_icon"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_margin="@dimen/general_padding_bit_larger"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_location"
+            app:layout_constraintBottom_toBottomOf="@+id/item_ssb_iwant_location"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/item_ssb_iwant_location" />
+
+        <TextView
+            android:id="@+id/item_ssb_iwant_location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/general_padding_bit_larger"
+            android:layout_marginTop="@dimen/general_padding_bit_larger"
+            android:layout_marginEnd="@dimen/general_padding_bit_larger"
+            android:layout_marginBottom="@dimen/general_padding_bit_larger"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:textColor="@color/primaryText"
+            android:textSize="@dimen/textSizeNormal"
+            android:transitionName="@string/sharedElementPostActivityName"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/item_ssb_iwant_action"
+            app:layout_constraintStart_toEndOf="@+id/item_ssb_iwant_location_icon"
+            app:layout_constraintTop_toBottomOf="@+id/item_ssb_iwant_content_wrapper"
+            tools:text="江干区学源街258号中国计量大学西校区生活园区11号楼" />
+
+        <ImageView
+            android:id="@+id/item_ssb_iwant_action"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/general_padding_bit_larger"
+            android:src="@drawable/ic_more_action"
+            app:layout_constraintBottom_toBottomOf="@+id/item_ssb_iwant_location"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/item_ssb_iwant_location" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/item_ssb_iwant_content_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/item_ssb_iwant_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="5"
+                android:padding="@dimen/general_padding_bit_larger"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textSizeNormal"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯收一本数据结构与算法分析 Java语言分析 第四版 主编马克艾伦维斯" />
+
+            <TextView
+                android:id="@+id/item_ssb_iwant_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/general_padding_bit_larger"
+                android:layout_marginBottom="@dimen/general_padding"
+                android:background="@drawable/bg_round_translucent"
+                android:paddingStart="@dimen/general_padding"
+                android:paddingTop="@dimen/general_padding_tiny"
+                android:paddingEnd="@dimen/general_padding"
+                android:paddingBottom="@dimen/general_padding_tiny"
+                android:textColor="@color/whiteAlways"
+                android:textSize="@dimen/textSizeMin"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/item_ssb_iwant_content"
+                app:layout_constraintTop_toBottomOf="@id/item_ssb_iwant_content"
+                tools:text="#书本" />
+
+            <ImageView
+                android:id="@+id/item_ssb_iwant_has_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/general_padding"
+                android:src="@drawable/ic_has_image"
+                app:layout_constraintBottom_toBottomOf="@+id/item_ssb_iwant_tag"
+                app:layout_constraintEnd_toStartOf="@+id/item_ssb_iwant_image_num"
+                app:layout_constraintTop_toTopOf="@+id/item_ssb_iwant_tag" />
+
+            <TextView
+                android:id="@+id/item_ssb_iwant_image_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/general_padding_bit_larger"
+                android:text="3"
+                android:textColor="@color/blackAlways"
+                android:textSize="@dimen/textSizeNormal"
+                app:layout_constraintBottom_toBottomOf="@+id/item_ssb_iwant_tag"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/item_ssb_iwant_tag" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.google.android.material.card.MaterialCardView>
+
+

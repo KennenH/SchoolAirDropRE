@@ -10,11 +10,11 @@ import androidx.core.content.res.ResourcesCompat
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
-import com.example.schoolairdroprefactoredition.database.BaseIWantEntity
+import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.ui.components.RecyclerFooter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 
-class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIWantEntity, BaseViewHolder>() {
+class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<DomainIWant.Data, BaseViewHolder>() {
 
     companion object {
         /**
@@ -65,17 +65,15 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIWantEntity, BaseView
 
     private var mOnNoMoreDataListener: ArrayList<OnNoMoreDataListener> = ArrayList()
 
-    private var mOnInquiryItemClickListener: ArrayList<OnInquiryItemClickListener> = ArrayList()
+    private var mOnIWantItemClickListener: ArrayList<OnIWantItemClickListener> = ArrayList()
 
-    override fun convert(holder: BaseViewHolder, item: BaseIWantEntity) {
-//        when (holder.itemViewType) {
-//            TYPE_ONE -> {
+    override fun convert(holder: BaseViewHolder, item: DomainIWant.Data) {
         val cardView: CardView = holder.itemView.findViewById(R.id.item_iwant_color_wrapper)
         val constraintView: ConstraintLayout = holder.itemView.findViewById(R.id.item_iwant_content_wrapper)
         val contentView: TextView = holder.itemView.findViewById(R.id.item_iwant_content)
         val hasImageView: ImageView = holder.itemView.findViewById(R.id.item_iwant_has_image)
 
-        if (item.images?.isEmpty() == true) {
+        if (item.iwant_images.split(",").isEmpty()) {
             hasImageView.visibility = View.GONE
         }
         val resource = context.resources
@@ -83,7 +81,7 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIWantEntity, BaseView
         val blackText = resource.getColor(R.color.black, theme)
         val blackAlwaysText = resource.getColor(R.color.blackAlways, theme)
         val whiteAlwaysText = resource.getColor(R.color.whiteAlways, theme)
-        when (item.color) {
+        when (item.iwant_color) {
             COLOR_HEART -> {
                 constraintView.background = ResourcesCompat.getDrawable(resource, R.drawable.bg_top_rounded_red, theme)
                 contentView.setTextColor(whiteAlwaysText)
@@ -113,31 +111,29 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIWantEntity, BaseView
 
         holder.setText(R.id.item_iwant_tag, context.getString(R.string.iwant_tag, item.tag))
         holder.itemView.setOnClickListener {
-            for (listener in mOnInquiryItemClickListener) {
+            for (listener in mOnIWantItemClickListener) {
                 listener.onHomePostItemClicked(cardView, item)
             }
         }
-        holder.setText(R.id.item_iwant_content, item.content)
-//            }
-//        }
+        holder.setText(R.id.item_iwant_content, item.iwant_content)
     }
 
     /**
      * 求购页面recycler view中item的点击监听器
      * 将页面打开时的元素共享逻辑交由外部实现
      */
-    interface OnInquiryItemClickListener {
+    interface OnIWantItemClickListener {
         /**
          * item按下，外部开始共享元素动画并打开页面
          */
-        fun onHomePostItemClicked(card: View, item: BaseIWantEntity)
+        fun onHomePostItemClicked(card: View, item: DomainIWant.Data)
     }
 
-    fun setOnInquiryItemClickListener(listener: OnInquiryItemClickListener) {
-        mOnInquiryItemClickListener.add(listener)
+    fun setOnIWantItemClickListener(listener: OnIWantItemClickListener) {
+        mOnIWantItemClickListener.add(listener)
     }
 
-    override fun setList(list: Collection<BaseIWantEntity>?) {
+    override fun setList(list: Collection<DomainIWant.Data>?) {
         super.setList(list)
         for (listener in mOnNoMoreDataListener) {
             listener.onNoMoreDataRefresh()
@@ -148,7 +144,7 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<BaseIWantEntity, BaseView
         }
     }
 
-    override fun addData(newData: Collection<BaseIWantEntity>) {
+    override fun addData(newData: Collection<DomainIWant.Data>) {
         super.addData(newData)
         if (newData.size < ConstantUtil.DEFAULT_PAGE_SIZE) {
             removeAllFooterView()

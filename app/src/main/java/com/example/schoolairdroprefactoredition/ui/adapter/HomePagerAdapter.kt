@@ -28,11 +28,11 @@ class HomePagerAdapter(fm: FragmentManager, private val pageType: Int) : Fragmen
 
     override fun getItem(position: Int): Fragment {
         return if (pageType == PAGE_TYPE_IWANT) {
-            IWantFragment.newInstance().also {
+            IWantFragment.getInstance().also {
                 mIWantFragments.add(it)
             }
         } else {
-            PurchasingFragment.newInstance().also {
+            PurchasingFragment.getInstance().also {
                 mPurchasingFragments.add(it)
             }
         }

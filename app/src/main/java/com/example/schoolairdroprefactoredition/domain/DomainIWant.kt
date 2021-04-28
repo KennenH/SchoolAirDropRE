@@ -1,5 +1,7 @@
 package com.example.schoolairdroprefactoredition.domain
 
+import com.chad.library.adapter.base.entity.MultiItemEntity
+import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
 import java.io.Serializable
 
 /**
@@ -7,9 +9,9 @@ import java.io.Serializable
  * @date 2021/4/18
  */
 data class DomainIWant(
-        val code: Int,
+        val code: Int = 400,
         val `data`: List<Data>,
-        val msg: Any,
+        val msg: String? = null,
 ) : Serializable {
 
     data class Data(
@@ -18,13 +20,15 @@ data class DomainIWant(
             val iwant_content: String,
             val iwant_images: String,
             val seller: Seller,
-            val tag: String
-    ) : Serializable {
+            val tag: String,
+
+            override val itemType: Int = IWantRecyclerAdapter.TYPE_ONE,
+            ) : Serializable, MultiItemEntity {
         data class Seller(
-                val last_login_time: String,
+                val last_login_time: String? = null,
                 val user_avatar: String,
-                val user_contactCount: Int,
-                val user_goodsOnSaleCount: Int,
+                val user_contactCount: Int? = null,
+                val user_goodsOnSaleCount: Int? = null,
                 val user_id: Int,
                 val user_name: String
         ) : Serializable {

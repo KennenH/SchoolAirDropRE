@@ -46,9 +46,9 @@ interface IWantApi {
      */
     @FormUrlEncoded
     @POST("appapi/IWant/deleteIwant")
-    fun deteleIwant(
+    fun deteleIWant(
             @Header("Authorization") token: String,
-            @Field("iwant_id") iwantID: Int)
+            @Field("iwant_id") iwantID: String): Call<DomainResult>
 
     /**
      * 获取附近求购信息
@@ -82,9 +82,10 @@ interface IWantApi {
     @FormUrlEncoded
     @POST("appapi/IWant/getIwantById")
     fun getIWantByUserID(
+            @Field("user_id") userID: Int,
+            @Field("page") page: Int,
             @Field("client_id") clientID: String,
-            @Field("client_secret") clientSecret: String,
-            @Field("user_id") userID: Int)
+            @Field("client_secret") clientSecret: String): Call<DomainIWant>
 
     /**
      * 获取求购标签

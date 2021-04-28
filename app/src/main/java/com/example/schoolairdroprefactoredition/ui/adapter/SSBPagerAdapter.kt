@@ -3,7 +3,8 @@ package com.example.schoolairdroprefactoredition.ui.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SellingFragment.Companion.newInstance
+import com.example.schoolairdroprefactoredition.scene.ssb.fragment.UserIWantsFragment
+import com.example.schoolairdroprefactoredition.scene.ssb.fragment.SellingFragment
 
 class SSBPagerAdapter(
         fm: FragmentManager, behavior: Int,
@@ -11,11 +12,14 @@ class SSBPagerAdapter(
 ) : FragmentPagerAdapter(fm, behavior) {
 
     override fun getItem(position: Int): Fragment {
-        return newInstance(isMine)
+        return when (position) {
+            1 -> UserIWantsFragment.newInstance(isMine)
+            else -> SellingFragment.newInstance(isMine)
+        }
     }
 
     override fun getCount(): Int {
-        return 1
+        return 2
     }
 
     override fun getItemPosition(`object`: Any): Int {

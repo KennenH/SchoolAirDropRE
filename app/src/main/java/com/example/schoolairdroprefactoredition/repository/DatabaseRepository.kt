@@ -41,7 +41,7 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
      */
     fun getChatRemote(token: String, senderID: String, start: Long, onResult: (response: DomainOffline?) -> Unit) {
         RetrofitClient.imApi.getOffline(token, senderID, start).apply {
-            enqueue(CallbackResultOrNull<DomainOffline>(this@apply,onResult))
+            enqueue(CallbackResultOrNull<DomainOffline>(this@apply, onResult))
         }
     }
 
@@ -219,5 +219,22 @@ class DatabaseRepository(private val databaseDao: DatabaseDao) {
     @WorkerThread
     suspend fun getPurchasingCache(): List<PurchasingCache> {
         return databaseDao.getPurchasingCache()
+    }
+
+    /**
+     * 保存求购的缓存
+     */
+    @WorkerThread
+    suspend fun saveIWantCache(iwants: List<IWantCache>) {
+        databaseDao.deleteAllCachedIWant()
+        databaseDao.saveIWantCache(iwants)
+    }
+
+    /**
+     * 获取求购的缓存
+     */
+    @WorkerThread
+    suspend fun getIWantCache(): List<IWantCache> {
+        return databaseDao.getIWantCache()
     }
 }

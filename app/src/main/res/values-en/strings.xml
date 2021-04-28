@@ -91,7 +91,7 @@
     <string name="filterWatches">Views</string>
     <string name="sortBy">Order by</string>
     <string name="add">Add New</string>
-    <string name="offShelf">Remove the item</string>
+    <string name="offShelf">Delete This Item</string>
     <string name="modifyInfo">Modify Information</string>
     <string name="addNewSelling">Post Item</string>
     <string name="submit">Submit</string>
@@ -191,16 +191,16 @@
     <string name="restoreDraft">Restore</string>
     <string name="draftCleared">Input cleared, the draft will be deleted after opening other pages</string>
     <string name="plsEnterQuotePrice">Please Enter Quote Price</string>
-    <string name="errorIWantEmpty">No nearby IDesire</string>
+    <string name="errorIWantEmpty">No nearby IWant</string>
     <string name="postMyTopic">Post My Topic</string>
-    <string name="unListItem">Are You Sure You Want To Off-Shelf This Item?</string>
+    <string name="unListItem">Are You Sure You Want To Delete This Item?</string>
     <string name="attention">Attention</string>
     <string name="favorite">Favorite</string>
     <string name="errorUnknown">Unknown Error</string>
     <string name="successQuote">Success</string>
     <string name="successSave">Saved</string>
     <string name="successAvatar">Avatar Updated</string>
-    <string name="successUnlist">Unlisted</string>
+    <string name="successUnlist">Deleted</string>
     <string name="errorLogin">Error logging, please try again later</string>
     <string name="successFavorite">Item Favorited</string>
     <string name="sellingHideByUser">Hidden</string>
@@ -245,7 +245,7 @@
     <string name="completed">Finished</string>
     <string name="termsOfServiceAgreeFailed">Ah oh, the treaty is lost</string>
     <string name="addNewGoodsError">Error adding new item, try to update the version if it fails multiple times</string>
-    <string name="iwant">IDesire</string>
+    <string name="iwant">IWant</string>
     <string name="doNotPostIllegalContent">Please do not post articles and images that violate school rules and national laws. Please check the contents of the form again</string>
     <string name="phonePermissionContent">This function is required when receiving message notifications. If not allowed, you will not be able to accept important notices.</string>
     <string name="modifyFailedTip">It may be that the server is under maintenance. The form will not be saved. It is recommended to try again later.</string>
@@ -262,7 +262,7 @@
     <string name="postTitleSaySth">Describe your specific requirements</string>
     <string name="posts">Posts</string>
     <string name="noSpaceAndLineBreak">Please do not enter spaces and line breaks</string>
-    <string name="selectMostSuitableTagForUPost">Please choose a tag that best summarizes the content of your IDesire.</string>
+    <string name="selectMostSuitableTagForUPost">Please choose a tag that best summarizes the content of your IWant.</string>
     <string name="selectTagTip">The selected tag will make your post organized under the corresponding topic, and the tag will be displayed on the title when the post is published</string>
     <string name="whyTagSoFew">Why are there so few tags?</string>
     <string name="emotion">Emotion</string>
@@ -277,7 +277,7 @@
     <string name="recyclerFooter">[img src=ic_line/]&#160;&#160;&#160;&#160;no more data&#160;&#160;&#160;&#160;[img src=ic_line/]</string>
     <string name="illegalName">Illegal Name</string>
     <string name="receiveANewMessage">Receive New Message</string>
-    <string name="postIWant">Post IDesire</string>
+    <string name="postIWant">Post IWant</string>
     <string name="favorDone">Favored</string>
     <string name="unfavorDone">Unfavored</string>
     <string name="descriptionDisplayInAppFloat">After opening, when the App is in the foreground, the floating window will be displayed when a message is received</string>
@@ -306,7 +306,7 @@
     <string name="canFavorItemInGoodsPage">You can favor item on the item page</string>
     <string name="canChatInGoodsPage">You can initiate a chat with the seller on the item page</string>
     <string name="gratefulToHaveU">Grateful to have u</string>
-    <string name="goPostUItem">Go to the homepage or click on the upper right corner to add</string>
+    <string name="goPostUItem">Go to the homepage or click on the upper right corner to post</string>
     <string name="actionTooFrequent">The operation is too frequent</string>
     <string name="watchCount">%d people viewed</string>
     <string name="modifySuccessTip">It is recommended to go to the homepage later to search if you can see your items to ensure that the positioning is correct.</string>
@@ -343,4 +343,7 @@
     <string name="iwantColorTheme">Theme</string>
     <string name="iwantColorHeart">Heart</string>
     <string name="iwantColorWarning">Warning</string>
+    <string name="undoIWant">Delete This IWant</string>
+    <string name="sureToUndoIWant">Are You Sure You Want To Delete This IWant?</string>
+    <string name="successUndoIWant">Deleted</string>
 </resources>

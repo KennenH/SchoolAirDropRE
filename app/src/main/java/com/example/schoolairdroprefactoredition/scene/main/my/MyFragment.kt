@@ -32,9 +32,9 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
         }
     }
 
-    private var mAvatar: ImageView? = null
+    private lateinit var mAvatar: ImageView
 
-    private var mName: TextView? = null
+    private lateinit var mName: TextView
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
@@ -82,11 +82,11 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
     private fun setUserData() {
         val info = getInfo()
         if (getToken() == null) { // 无token认证信息，显示默认值
-            mAvatar?.setImageResource(R.drawable.placeholder_rounded)
-            mName?.text = getString(R.string.pleaseLogin)
+            mAvatar.setImageResource(R.drawable.placeholder_rounded)
+            mName.text = getString(R.string.pleaseLogin)
         } else if (info != null) { // 设置页面数据
             ImageUtil.loadRoundedImage(mAvatar, ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(info.userAvatar))
-            mName?.text = info.userName
+            mName.text = info.userName
         }
     }
 
@@ -122,7 +122,12 @@ class MyFragment : BaseFragment(), View.OnClickListener, OnLoginStateChangedList
             }
 
             R.id.my_posts -> {
-                Toast.makeText(context, getString(R.string.featureNotSupport), Toast.LENGTH_SHORT).show()
+                val token = intent.getSerializableExtra(ConstantUtil.KEY_TOKEN)
+                if (token != null) {
+                    SSBActivity.start(context, getInfo()?.userId, 1, true)
+                } else {
+                    LoginActivity.start(context)
+                }
             }
         }
     }

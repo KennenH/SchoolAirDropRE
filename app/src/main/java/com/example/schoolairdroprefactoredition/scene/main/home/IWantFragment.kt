@@ -1,37 +1,45 @@
 package com.example.schoolairdroprefactoredition.scene.main.home
 
 import android.view.View
-import androidx.lifecycle.ViewModelProvider
+import android.widget.Toast
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import com.amap.api.location.AMapLocation
 import com.blankj.utilcode.util.SizeUtils
+import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding
 import com.example.schoolairdroprefactoredition.scene.main.base.BaseChildFragment
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
-import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.OnInquiryItemClickListener
-import com.example.schoolairdroprefactoredition.database.BaseIWantEntity
+import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter.OnIWantItemClickListener
+import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.viewmodel.IWantViewModel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 import com.example.schoolairdroprefactoredition.scene.iwant.IWantActivity
 
-class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataListener, OnInquiryItemClickListener {
+/**
+ * 首页的求购页面
+ */
+class IWantFragment private constructor(): BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataListener, OnIWantItemClickListener {
 
     companion object {
-        fun newInstance(): IWantFragment {
-            return IWantFragment()
+        private var INSTANCE: IWantFragment? = null
+        fun getInstance(): IWantFragment {
+            return INSTANCE ?: IWantFragment().also {
+                INSTANCE = it
+            }
         }
     }
 
     private val iWantViewModel by lazy {
-        ViewModelProvider(this).get(IWantViewModel::class.java)
+        IWantViewModel.IWantViewModelFactory((activity?.application as SAApplication).databaseRepository).create(IWantViewModel::class.java)
     }
 
     private val iWantRecyclerAdapter by lazy {
         IWantRecyclerAdapter().also {
             it.setOnNoMoreDataListener(this)
-            it.setOnInquiryItemClickListener(this)
+            it.setOnIWantItemClickListener(this)
         }
     }
 
@@ -53,14 +61,24 @@ class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataList
         }
     }
 
+    /**
+     * 从缓存中获取求购
+     */
     override fun getLocalCache() {
-        // TODO: 2021/3/5 获取本地缓存
+        iWantViewModel.getIWantCache().observeOnce(viewLifecycleOwner) {
+            it?.data?.size?.let { size ->
+                if (size > 0) {
+                    iWantRecyclerAdapter.setList(it.data)
+                    showContentContainer()
+                }
+            }
+        }
     }
 
     /**
      * 使列表滑动至顶部
      * 当当前页面最后可见的item位置小于一定值时直接调用平滑滑动
-     * 否则将先闪现至固定item位置处再平滑滚动
+     * 否则将先闪现至固定item位置处再平滑滚动（模仿美团）
      */
     fun scrollToTop() {
         val visible = IntArray(mManager.spanCount + 1)
@@ -71,25 +89,50 @@ class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataList
         binding?.homeRecycler?.smoothScrollToPosition(0)
     }
 
+    /**
+     * 获取网络数据
+     */
     override fun getOnlineData(aMapLocation: AMapLocation?) {
-        iWantViewModel.getNearByIWant().observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
-            if (data.isNullOrEmpty()) {
-                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_IWANT)
+        if (aMapLocation == null) {
+            if (iWantRecyclerAdapter.data.isEmpty()) {
+                showPlaceHolder(StatePlaceHolder.TYPE_NETWORK_OR_LOCATION_ERROR_HOME)
+            }
+            return
+        }
+
+        iWantViewModel.getNearByIWant().observeOnce(viewLifecycleOwner, {
+            if (it != null) {
+                // 如果获取的物品数量为0且当前的adapter也尚没有数据则显示placeholder
+                if (it.data.isEmpty() && iWantRecyclerAdapter.data.isEmpty()) {
+                    showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_IWANT)
+                } else {
+                    iWantRecyclerAdapter.setList(it.data)
+                    showContentContainer()
+                }
             } else {
-                iWantRecyclerAdapter.setList(data)
-                showContentContainer()
+                // 如果当前adapter没有数据且加载失败了则显示placeholder
+                if (iWantRecyclerAdapter.data.isEmpty()) {
+                    showPlaceHolder(StatePlaceHolder.TYPE_ERROR)
+                }
             }
         })
     }
 
+    /**
+     * 刷新时获取数据的逻辑
+     */
     override fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?) {
-        iWantViewModel.getNearByIWant(aMapLocation?.longitude, aMapLocation?.latitude).observeOnce(viewLifecycleOwner, { data: List<BaseIWantEntity> ->
+        if (aMapLocation == null) {
+            Toast.makeText(context, R.string.errorLocation, Toast.LENGTH_SHORT).show()
+            return
+        }
+        iWantViewModel.getNearByIWant(aMapLocation.longitude, aMapLocation.latitude).observeOnce(viewLifecycleOwner, {
             refreshLayout.finishRefresh()
-            if (data.isNullOrEmpty()) {
-                showPlaceHolder(StatePlaceHolder.TYPE_EMPTY_IWANT)
+            showContentContainer()
+            if (it != null) {
+                iWantRecyclerAdapter.setList(it.data)
             } else {
-                iWantRecyclerAdapter.setList(data)
-                showContentContainer()
+                Toast.makeText(context, R.string.systemBusy, Toast.LENGTH_SHORT).show()
             }
         })
     }
@@ -111,11 +154,21 @@ class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataList
     /**
      * 以元素共享动画打开求购详情页面
      */
-    override fun onHomePostItemClicked(card: View, item: BaseIWantEntity) {
+    override fun onHomePostItemClicked(card: View, item: DomainIWant.Data) {
         if (context != null) {
-            IWantActivity.start(requireContext(), card,item )
+            IWantActivity.start(requireContext(), card, item)
         }
     }
 
-    override fun getAutoLoadMoreData(recycler: EndlessRecyclerView, aMapLocation: AMapLocation?) {}
+    override fun getAutoLoadMoreData(recycler: EndlessRecyclerView, aMapLocation: AMapLocation?) {
+        iWantViewModel.getNearByIWant().observeOnce(viewLifecycleOwner) {
+            recycler.finishLoading()
+            showContentContainer()
+            if (it != null) {
+                iWantRecyclerAdapter.addData(it.data)
+            } else {
+                Toast.makeText(context, R.string.systemBusy, Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }

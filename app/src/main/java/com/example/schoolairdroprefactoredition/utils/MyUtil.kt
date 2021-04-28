@@ -252,14 +252,6 @@ object MyUtil {
         model.forResult(requestCode)
     }
 
-    /**
-     * 从picSet字符串中获取图片集
-     */
-    @JvmStatic
-    fun getArrayFromString(picSet: String): List<String> {
-        return picSet.split(',')
-    }
-
     class ImageLoader : XPopupImageLoader {
         override fun loadImage(position: Int, url: Any, imageView: ImageView) {
             Glide.with(imageView)

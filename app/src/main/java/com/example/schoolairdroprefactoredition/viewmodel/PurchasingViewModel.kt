@@ -63,15 +63,18 @@ class PurchasingViewModel(private val databaseRepository: DatabaseRepository) : 
      *
      * 成功则获取到淘物信息，否则将会返回null
      */
-    fun getGoodsInfo(longitude: Double, latitude: Double): LiveData<DomainPurchasing?> {
+    fun getGoodsInfo(longitude: Double?, latitude: Double?): LiveData<DomainPurchasing?> {
         val purchasingLiveData = MutableLiveData<DomainPurchasing>()
         viewModelScope.launch {
             // 刷新时重置页码
             nowPage = 1
             // 刷新时重置加载更多的地理位置
-            this@PurchasingViewModel.longitude = longitude
-            this@PurchasingViewModel.latitude = latitude
-            purchasingRepository.getNearbyGoods(nowPage, longitude, latitude) {
+            this@PurchasingViewModel.longitude = longitude ?: AppConfig.DEBUG_LONGITUDE
+            this@PurchasingViewModel.latitude = latitude ?: AppConfig.DEBUG_LATITUDE
+            purchasingRepository.getNearbyGoods(
+                    nowPage,
+                    this@PurchasingViewModel.longitude,
+                    this@PurchasingViewModel.latitude) {
                 // 若获取成功则进行缓存，下次打开app将优先从缓存中获取
                 if (it != null) {
                     viewModelScope.launch {

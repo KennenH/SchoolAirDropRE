@@ -108,15 +108,15 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         /**
          * 修改求购信息
          *
-         * @param iWantID 要修改的求购信息
+         * @param iWantInfo 要修改的求购信息
          */
         @JvmStatic
-        fun startModifyIWant(context: Context?, iWantID: Int?) {
-            if (context == null || iWantID == null) return
+        fun startModifyIWant(context: Context?, iWantInfo: DomainIWant.Data?) {
+            if (context == null || iWantInfo == null) return
 
             val intent = Intent(context, AddNewActivity::class.java)
             intent.putExtra(ConstantUtil.KEY_ADD_NEW_TYPE, AddNewType.MODIFY_IWANT)
-            intent.putExtra(ConstantUtil.KEY_IWANT_ID, iWantID)
+            intent.putExtra(ConstantUtil.KEY_IWANT_INFO, iWantInfo)
             if (context is AppCompatActivity) {
                 context.startActivityForResult(intent, LoginActivity.LOGIN)
                 AnimUtil.activityStartAnimUp(context)
@@ -268,16 +268,11 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     private var goodsInfo: DomainGoodsAllDetailInfo.Data? = null
 
     /**
-     * 在[AddNewType]为[AddNewType.MODIFY_IWANT]时传入的要修改的求购id
-     */
-    private val iWantID by lazy {
-        intent.getIntExtra(ConstantUtil.KEY_IWANT_ID, -1)
-    }
-
-    /**
      * 在[AddNewType]为[AddNewType.MODIFY_IWANT]时获取的旧求购信息
      */
-    private var iWantInfo: DomainIWant.Data? = null
+    private val iWantInfo by lazy {
+        intent.getSerializableExtra(ConstantUtil.KEY_IWANT_INFO) as? DomainIWant.Data?
+    }
 
     /**
      * 卡片颜色选择弹窗
@@ -477,6 +472,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     iwant_color_selector_warning.setOnClickListener(this@AddNewActivity)
                 }
 
+                // 使用给进来的求购信息初始化页面数据
+                initIWantInfo()
             }
         }
     }
@@ -501,8 +498,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                         1,
                         isSquare = true,
                         isCircle = false,
-                        isCropWithoutSpecificShape = false
-                )
+                        isCropWithoutSpecificShape = false)
             } else if (pageType == AddNewType.ADD_IWANT) {
                 pickPhotoFromAlbum(
                         this,
@@ -864,9 +860,9 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             focusView = cover_title
             pass = false
         }
-        if (mNowTag == null // 求购标签
-                || mNowTag?.tags_id == -1
-                || mNowTag?.tags_content?.isBlank() == true
+        if ((mNowTag == null // 求购标签
+                        || mNowTag?.tags_id == -1
+                        || mNowTag?.tags_content?.isBlank() == true)
                 && pageType == AddNewType.ADD_IWANT) {
             AnimUtil.primaryBackgroundViewBlinkRed(this, option_tag_wrapper)
             focusView = tag_title
@@ -1031,7 +1027,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
                         val picSet =
                                 if (goodsInfo.goods_images.trim().isBlank()) ArrayList()
-                                else MyUtil.getArrayFromString(goodsInfo.goods_images)
+                                else goodsInfo.goods_images.split(",")
 
                         for (i in picSet.indices) {
                             val media = LocalMedia()
@@ -1066,7 +1062,30 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      */
     private fun initIWantInfo() {
         showLoading()
+        iWantInfo.let { data ->
+            if (data != null) {
+                option_description.text = data.iwant_content
+                mNowCardColor = data.iwant_color
+                setCardColor()
 
+                val picSet =
+                        if (data.iwant_images.trim().isBlank()) ArrayList()
+                        else data.iwant_images.split(",")
+
+                for (i in picSet.indices) {
+                    val media = LocalMedia()
+                    media.cutPath = ConstantUtil.QINIU_BASE_URL + ImageUtil.fixUrl(picSet[i])
+                    mPicSetSelected.add(media) // 修改物品时图片集是完整路径
+                }
+
+                mPicSetHorizontalAdapter.setList(mPicSetSelected)
+            } else {
+                dismissLoading {
+                    DialogUtil.showCenterDialog(this, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
+                }
+            }
+        }
+        dismissLoading()
     }
 
     /**
@@ -1240,28 +1259,28 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             }
 
             // 默认颜色
-            R.id.iwant_color_selector_default->{
+            R.id.iwant_color_selector_default -> {
                 mNowCardColor = IWantRecyclerAdapter.COLOR_DEFAULT
                 setCardColor()
                 cardColorSelectorDialog.dismiss()
             }
 
             // 紫色
-            R.id.iwant_color_selector_purple->{
+            R.id.iwant_color_selector_purple -> {
                 mNowCardColor = IWantRecyclerAdapter.COLOR_PURPLE
                 setCardColor()
                 cardColorSelectorDialog.dismiss()
             }
 
             // 主题色
-            R.id.iwant_color_selector_theme->{
+            R.id.iwant_color_selector_theme -> {
                 mNowCardColor = IWantRecyclerAdapter.COLOR_THEME
                 setCardColor()
                 cardColorSelectorDialog.dismiss()
             }
 
             // 红色
-            R.id.iwant_color_selector_heart->{
+            R.id.iwant_color_selector_heart -> {
                 mNowCardColor = IWantRecyclerAdapter.COLOR_HEART
                 setCardColor()
                 cardColorSelectorDialog.dismiss()

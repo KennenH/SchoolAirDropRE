@@ -241,7 +241,7 @@
     <string name="errorUnknown">未知错误</string>
     <string name="successFavorite">物品已收藏</string>
     <string name="errorLogin">登录失败，请稍后重试</string>
-    <string name="successUnlist">物品已下架，可能需要半分钟左右来处理</string>
+    <string name="successUnlist">物品已下架</string>
     <string name="successAvatar">头像已更新</string>
     <string name="successSave">图片已保存</string>
     <string name="sellingHideByUser">已隐藏</string>
@@ -382,4 +382,7 @@
     <string name="iwantColorTheme">主题 &#160;[img src=bg_round_theme/]</string>
     <string name="iwantColorHeart">红色 &#160;[img src=bg_round_heart/]</string>
     <string name="iwantColorWarning">警告 &#160;[img src=bg_round_warning/]</string>
+    <string name="undoIWant">撤销求购</string>
+    <string name="sureToUndoIWant">确定撤销该求购?</string>
+    <string name="successUndoIWant">撤销求购成功</string>
 </resources>

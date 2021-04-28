@@ -79,7 +79,7 @@ constructor(context: Context?, attrs: AttributeSet? = null, defStyleAttr: Int = 
 
             binding.apply {
                 goodsPrice.setPrice(item.goods_price, false)
-                goodsImageLoader.setData(MyUtil.getArrayFromString(item.goods_images))
+                goodsImageLoader.setData(item.goods_images.split(","))
 
 //                val spanned = SadSpannable(context,SadSpannable.parseJsonToSpannableJsonStyle(item.goods_content))
                 goodsDescription.text = item.goods_content

@@ -20,8 +20,11 @@ import com.scwang.smart.refresh.layout.api.RefreshLayout
 class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataListener {
 
     companion object {
-        fun newInstance(): PurchasingFragment {
-            return PurchasingFragment()
+        private var INSTANCE: PurchasingFragment? = null
+        fun getInstance(): PurchasingFragment {
+            return INSTANCE ?: PurchasingFragment().also {
+                INSTANCE = it
+            }
         }
     }
 
@@ -117,9 +120,6 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
                 if (purchasingRecyclerAdapter.data.isEmpty()) {
                     showPlaceHolder(StatePlaceHolder.TYPE_ERROR)
                 }
-//                else {
-//                    DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.dialogFailed)
-//                }
             }
         }
     }

@@ -271,6 +271,11 @@ object ConstantUtil {
     const val KEY_GOODS_INFO = "key_goods_info"
 
     /**
+     * 获取求购
+     */
+    const val KEY_IWANT_INFO = "key_iwant_info"
+
+    /**
      * 获取物品id 键
      */
     const val KEY_GOODS_ID = "key_goods_id"

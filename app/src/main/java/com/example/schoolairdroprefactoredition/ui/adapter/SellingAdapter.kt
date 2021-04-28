@@ -1,26 +1,23 @@
 package com.example.schoolairdroprefactoredition.ui.adapter
 
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
 import com.amap.api.services.core.LatLonPoint
 import com.amap.api.services.geocoder.GeocodeResult
 import com.amap.api.services.geocoder.GeocodeSearch
 import com.amap.api.services.geocoder.RegeocodeQuery
 import com.amap.api.services.geocoder.RegeocodeResult
-import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.ItemSsbSellingBinding
-import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.domain.DomainSelling
 import com.example.schoolairdroprefactoredition.scene.goods.GoodsActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 
-class SSBAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainSelling.Data?, BaseViewHolder>(R.layout.item_ssb_selling) {
+class SellingAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainSelling.Data?, BaseViewHolder>(R.layout.item_ssb_selling) {
 
-    private val mOnSSBItemActionListeners = ArrayList<OnSSBItemActionListener>()
+    private var mOnSSBItemActionListeners: OnSSBItemActionListener? = null
 
     private val geocodeSearch by lazy {
         GeocodeSearch(context)
@@ -74,9 +71,8 @@ class SSBAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainSelling.
             if (isMine == true) {
                 binding.goodsMoreAction.setOnClickListener { v: View ->
                     // 弹出更多动作的弹窗
-                    for (listener in mOnSSBItemActionListeners) {
-                        listener.onItemActionButtonClick(v, item)
-                    }
+                    mOnSSBItemActionListeners?.onItemActionButtonClick(v, item)
+
                 }
             } else {
                 binding.goodsMoreAction.visibility = View.GONE
@@ -88,11 +84,7 @@ class SSBAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainSelling.
         fun onItemActionButtonClick(view: View, bean: DomainSelling.Data?)
     }
 
-    fun addOnSSBItemActionListener(listener: OnSSBItemActionListener) {
-        mOnSSBItemActionListeners.add(listener)
-    }
-
-    fun removeOnSSBItemActionListener(listener: OnSSBItemActionListener) {
-        mOnSSBItemActionListeners.remove(listener)
+    fun setOnSSBItemActionListener(listener: OnSSBItemActionListener) {
+        mOnSSBItemActionListeners = listener
     }
 }

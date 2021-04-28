@@ -65,9 +65,15 @@ class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener {
             }
         }
 
+        val page = intent.getIntExtra(PAGE_INDEX, 0)
+        // 根据页面index决定页面标题
+        ssb_title.text = when (page) {
+            1 -> getString(R.string.iwant)
+            else -> getString(R.string.selling)
+        }
         ssb_pager.offscreenPageLimit = 2
         ssb_pager.adapter = mPagerAdapter
-        ssb_pager.currentItem = intent.getIntExtra(PAGE_INDEX, 0)
+        ssb_pager.currentItem = page
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

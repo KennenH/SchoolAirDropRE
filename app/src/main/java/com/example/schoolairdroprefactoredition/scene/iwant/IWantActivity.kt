@@ -22,7 +22,7 @@ import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantHorizontalRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.TransitionAdapter
-import com.example.schoolairdroprefactoredition.database.BaseIWantEntity
+import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil
 import com.example.schoolairdroprefactoredition.utils.decoration.HorizontalItemMarginDecoration
 import kotlinx.android.synthetic.main.activity_iwant_refactor.*
@@ -37,7 +37,7 @@ class IWantActivity : ImmersionStatusBarActivity() {
         const val KEY_IWANT_ITEM = "IWantActivityItem"
 
         @JvmStatic
-        fun start(context: Context, card: View, item: BaseIWantEntity) {
+        fun start(context: Context, card: View, item: DomainIWant.Data) {
             val intent = Intent(context, IWantActivity::class.java)
             intent.putExtra(KEY_IWANT_ITEM, item)
             val wrapper = Pair.create(card, context.getString(R.string.sharedElementPostActivityWrapper))
@@ -49,7 +49,7 @@ class IWantActivity : ImmersionStatusBarActivity() {
     }
 
     private val iwantEntity by lazy {
-        intent.getSerializableExtra(KEY_IWANT_ITEM) as BaseIWantEntity?
+        intent.getSerializableExtra(KEY_IWANT_ITEM) as DomainIWant.Data?
     }
 
     private val windowTransition by lazy {
@@ -84,12 +84,12 @@ class IWantActivity : ImmersionStatusBarActivity() {
         StatusBarUtil.setTranslucent(this, 0)
 
         iwant_tag.text = getString(R.string.iwant_tag, iwantEntity?.tag)
-        iwant_content.text = iwantEntity?.content
+        iwant_content.text = iwantEntity?.iwant_content
 
         val blackText = resources.getColor(R.color.black, theme)
         val blackAlwaysText = resources.getColor(R.color.blackAlways, theme)
         val whiteAlwaysText = resources.getColor(R.color.whiteAlways, theme)
-        when (iwantEntity?.color) {
+        when (iwantEntity?.iwant_color) {
             IWantRecyclerAdapter.COLOR_HEART -> {
                 iwant_content.setTextColor(whiteAlwaysText)
                 iwant_content_wrapper.background = ResourcesCompat.getDrawable(resources, R.drawable.bg_top_rounded_red, theme)
@@ -123,19 +123,17 @@ class IWantActivity : ImmersionStatusBarActivity() {
             setPadding(padding, padding * 2, padding, padding * 2)
             adapter = this@IWantActivity.adapter
         }
-        if (iwantEntity?.content?.isEmpty() == false) {
-            adapter.setList(iwantEntity?.content?.split(","))
-        }
+        adapter.setList(iwantEntity?.iwant_images?.split(","))
 
         iwant_card.setOnClickListener { }
         iwant_user_name.setOnClickListener {
-            UserActivity.start(this, iwantEntity?.userID)
+            UserActivity.start(this, iwantEntity?.seller?.user_id)
         }
         iwant_user_avatar.setOnClickListener {
-            UserActivity.start(this, iwantEntity?.userID)
+            UserActivity.start(this, iwantEntity?.seller?.user_id)
         }
         iwant_contact_owner.setOnClickListener {
-            ChatActivity.start(this, iwantEntity?.userID)
+            ChatActivity.start(this, iwantEntity?.seller?.user_id)
         }
         iwant_root.setOnClickListener {
             supportFinishAfterTransition()

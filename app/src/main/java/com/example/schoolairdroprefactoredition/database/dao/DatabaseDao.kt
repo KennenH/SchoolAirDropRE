@@ -253,4 +253,22 @@ interface DatabaseDao {
      */
     @Query("update offline set status = 2 where status = 0")
     suspend fun updateInterruptedMessageStatus()
+
+    /**
+     * 在获取了新的求购缓存之后删除之前保存的缓存
+     */
+    @Query("delete from iwant")
+    suspend fun deleteAllCachedIWant()
+
+    /**
+     * 保存第一次进入app时获取的求购数据
+     */
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    suspend fun saveIWantCache(iwants: List<IWantCache>)
+
+    /**
+     * 获取所有求购缓存
+     */
+    @Query("select * from iwant")
+    suspend fun getIWantCache(): List<IWantCache>
 }

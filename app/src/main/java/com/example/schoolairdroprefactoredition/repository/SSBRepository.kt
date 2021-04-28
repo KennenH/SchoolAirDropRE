@@ -1,7 +1,9 @@
 package com.example.schoolairdroprefactoredition.repository
 
+import com.example.schoolairdroprefactoredition.api.base.CallbackResultOrNull
 import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
+import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.domain.DomainSelling
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -9,12 +11,12 @@ import retrofit2.Call
 import retrofit2.Response
 import java.net.HttpURLConnection
 
-class SellingRepository {
+class SSBRepository {
 
     companion object {
-        private var INSTANCE: SellingRepository? = null
+        private var INSTANCE: SSBRepository? = null
         fun getInstance() = INSTANCE
-                ?: SellingRepository().also {
+                ?: SSBRepository().also {
                     INSTANCE = it
                 }
     }
@@ -27,24 +29,7 @@ class SellingRepository {
                 userID,
                 ConstantUtil.CLIENT_ID,
                 ConstantUtil.CLIENT_SECRET).apply {
-            enqueue(object : CallbackWithRetry<DomainSelling>(this@apply) {
-                override fun onResponse(call: Call<DomainSelling>, response: Response<DomainSelling>) {
-                    if (response.code() == HttpURLConnection.HTTP_OK) {
-                        val body = response.body()
-                        if (body != null && body.code == ConstantUtil.HTTP_OK) {
-                            onResult(body)
-                        } else {
-                            onResult(null)
-                        }
-                    } else {
-                        onResult(null)
-                    }
-                }
-
-                override fun onFailureAllRetries() {
-                    onResult(null)
-                }
-            })
+            enqueue(CallbackResultOrNull(this, onResult))
         }
     }
 
@@ -66,12 +51,37 @@ class SellingRepository {
     }
 
     /**
-     * 用户id获取用户帖子
+     * 用户id获取用户求购
      */
-    fun getPosts(token: String, page: Int) {}
+    fun getIWant(
+            userID: Int,
+            page: Int,
+            onResult: (DomainIWant?) -> Unit) {
+        RetrofitClient.iWantApi.getIWantByUserID(
+                userID, page,
+                ConstantUtil.CLIENT_ID,
+                ConstantUtil.CLIENT_SECRET).apply {
+            enqueue(CallbackResultOrNull(this, onResult))
+        }
+    }
 
     /**
-     * 删除帖子
+     * 删除求购
      */
-    fun deletePost(token: String, postID: String) {}
+    fun deleteIWant(
+            token: String,
+            iwantID: String,
+            onResult: (Boolean) -> Unit) {
+        RetrofitClient.iWantApi.deteleIWant(token, iwantID).apply {
+            enqueue(object : CallbackWithRetry<DomainResult>(this@apply) {
+                override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
+                    onResult(response.code() == HttpURLConnection.HTTP_OK)
+                }
+
+                override fun onFailureAllRetries() {
+                    onResult(false)
+                }
+            })
+        }
+    }
 }

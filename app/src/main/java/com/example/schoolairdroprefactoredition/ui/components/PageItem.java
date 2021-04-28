@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
@@ -168,6 +169,9 @@ public class PageItem extends ConstraintLayout implements CompoundButton.OnCheck
 
     public void setDescription(String description) {
         mDescriptionView.setText(description);
+        if (mDescriptionView.getVisibility() != View.VISIBLE) {
+            mDescriptionView.setVisibility(View.VISIBLE);
+        }
     }
 
     public void setTitle(String title) {
