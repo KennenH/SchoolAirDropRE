@@ -23,6 +23,8 @@ import com.example.schoolairdroprefactoredition.ui.adapter.IWantHorizontalRecycl
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.TransitionAdapter
 import com.example.schoolairdroprefactoredition.domain.DomainIWant
+import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil
 import com.example.schoolairdroprefactoredition.utils.decoration.HorizontalItemMarginDecoration
 import kotlinx.android.synthetic.main.activity_iwant_refactor.*
@@ -125,6 +127,8 @@ class IWantActivity : ImmersionStatusBarActivity() {
         }
         adapter.setList(iwantEntity?.iwant_images?.split(","))
 
+        ImageUtil.loadRoundedImage(iwant_user_avatar, ConstantUtil.QINIU_BASE_URL + iwantEntity?.seller?.user_avatar)
+        iwant_user_name.text = iwantEntity?.seller?.user_name
         iwant_card.setOnClickListener { }
         iwant_user_name.setOnClickListener {
             UserActivity.start(this, iwantEntity?.seller?.user_id)

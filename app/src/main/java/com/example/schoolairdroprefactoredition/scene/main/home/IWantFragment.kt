@@ -90,7 +90,7 @@ class IWantFragment private constructor(): BaseChildFragment(), IWantRecyclerAda
     }
 
     /**
-     * 获取网络数据
+     * 进入app首次获取求购数据
      */
     override fun getOnlineData(aMapLocation: AMapLocation?) {
         if (aMapLocation == null) {
@@ -100,7 +100,7 @@ class IWantFragment private constructor(): BaseChildFragment(), IWantRecyclerAda
             return
         }
 
-        iWantViewModel.getNearByIWant().observeOnce(viewLifecycleOwner, {
+        iWantViewModel.getNearByIWant(aMapLocation.longitude, aMapLocation.latitude).observeOnce(viewLifecycleOwner, {
             if (it != null) {
                 // 如果获取的物品数量为0且当前的adapter也尚没有数据则显示placeholder
                 if (it.data.isEmpty() && iWantRecyclerAdapter.data.isEmpty()) {

@@ -7,6 +7,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.KeyboardUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
@@ -65,15 +66,33 @@ class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener {
             }
         }
 
-        val page = intent.getIntExtra(PAGE_INDEX, 0)
+        // 进入时的page
+        val initPage = intent.getIntExtra(PAGE_INDEX, 0)
         // 根据页面index决定页面标题
-        ssb_title.text = when (page) {
+        ssb_title.text = when (initPage) {
             1 -> getString(R.string.iwant)
             else -> getString(R.string.selling)
         }
         ssb_pager.offscreenPageLimit = 2
         ssb_pager.adapter = mPagerAdapter
-        ssb_pager.currentItem = page
+        ssb_pager.currentItem = initPage
+        ssb_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                // do nothing
+            }
+
+            override fun onPageSelected(position: Int) {
+                // 滑动时将标题改变
+                ssb_title.text = when (position) {
+                    1 -> getString(R.string.iwant)
+                    else -> getString(R.string.selling)
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                // do nothing
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -121,6 +140,6 @@ class SSBActivity : ImmersionStatusBarActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        val id = v.id
+
     }
 }

@@ -3,6 +3,7 @@ package com.example.schoolairdroprefactoredition.api
 import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.domain.DomainIWantTags
 import com.example.schoolairdroprefactoredition.domain.DomainResult
+import com.example.schoolairdroprefactoredition.domain.DomainUserIWant
 import retrofit2.Call
 import retrofit2.http.Field
 import retrofit2.http.FormUrlEncoded
@@ -80,12 +81,12 @@ interface IWantApi {
      * 以user id获取求购信息
      */
     @FormUrlEncoded
-    @POST("appapi/IWant/getIwantById")
+    @POST("appapi/IWant/getIwantInfoById")
     fun getIWantByUserID(
             @Field("user_id") userID: Int,
             @Field("page") page: Int,
             @Field("client_id") clientID: String,
-            @Field("client_secret") clientSecret: String): Call<DomainIWant>
+            @Field("client_secret") clientSecret: String): Call<DomainUserIWant>
 
     /**
      * 获取求购标签

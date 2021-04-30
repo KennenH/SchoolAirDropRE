@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.domain.DomainSelling
+import com.example.schoolairdroprefactoredition.domain.DomainUserIWant
 import com.example.schoolairdroprefactoredition.repository.SSBRepository
 
 class SSBViewModel : ViewModel() {
@@ -59,8 +60,8 @@ class SSBViewModel : ViewModel() {
     /**
      * 获取用户求购
      */
-    fun getIWant(userID: Int): LiveData<DomainIWant?> {
-        val iwantLiveData = MutableLiveData<DomainIWant?>()
+    fun getIWant(userID: Int): LiveData<DomainUserIWant?> {
+        val iwantLiveData = MutableLiveData<DomainUserIWant?>()
         ssbRepository.getIWant(userID, iwantPage) {
             iwantLiveData.postValue(it)
         }

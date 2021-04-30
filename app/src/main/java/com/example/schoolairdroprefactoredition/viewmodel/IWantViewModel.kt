@@ -1,6 +1,7 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.*
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.database.pojo.IWantCache
 import com.example.schoolairdroprefactoredition.repository.IWantRepository
 import com.example.schoolairdroprefactoredition.domain.DomainIWant

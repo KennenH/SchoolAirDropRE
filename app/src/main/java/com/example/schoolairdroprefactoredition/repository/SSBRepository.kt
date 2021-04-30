@@ -6,6 +6,7 @@ import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.domain.DomainSelling
+import com.example.schoolairdroprefactoredition.domain.DomainUserIWant
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import retrofit2.Call
 import retrofit2.Response
@@ -56,7 +57,7 @@ class SSBRepository {
     fun getIWant(
             userID: Int,
             page: Int,
-            onResult: (DomainIWant?) -> Unit) {
+            onResult: (DomainUserIWant?) -> Unit) {
         RetrofitClient.iWantApi.getIWantByUserID(
                 userID, page,
                 ConstantUtil.CLIENT_ID,

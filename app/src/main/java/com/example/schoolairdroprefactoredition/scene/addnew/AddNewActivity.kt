@@ -111,7 +111,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
          * @param iWantInfo 要修改的求购信息
          */
         @JvmStatic
-        fun startModifyIWant(context: Context?, iWantInfo: DomainIWant.Data?) {
+        fun startModifyIWant(context: Context?, iWantInfo: DomainUserIWant.Data?) {
             if (context == null || iWantInfo == null) return
 
             val intent = Intent(context, AddNewActivity::class.java)
@@ -271,7 +271,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      * 在[AddNewType]为[AddNewType.MODIFY_IWANT]时获取的旧求购信息
      */
     private val iWantInfo by lazy {
-        intent.getSerializableExtra(ConstantUtil.KEY_IWANT_INFO) as? DomainIWant.Data?
+        intent.getSerializableExtra(ConstantUtil.KEY_IWANT_INFO) as? DomainUserIWant.Data?
     }
 
     /**
@@ -770,7 +770,46 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                             })
                         }
             } else if (pageType == AddNewType.MODIFY_IWANT) {
-                // TODO: 2021/4/18  修改求购信息
+                val mPicSetPaths = ArrayList<String>()
+                iWantInfo?.iwant_images?.split(",")?.let {
+                    for (localMedia in mPicSetSelected) {
+                        val path = localMedia.cutPath ?: localMedia.path
+                        if (!path.startsWith(ConstantUtil.QINIU_BASE_URL)) {
+                            mPicSetPaths.add(path)
+                        }
+                    }
+                }
+
+                addNewViewModel.modifyIWant(
+                        token.access_token, mNowTag!!.tags_id, mNowCardColor,
+                        mPicSetPaths, mImagesToDelete, option_description.text.toString(),
+                        mAmapLocation!!.longitude, mAmapLocation!!.latitude).apply {
+                    observe(this@AddNewActivity, object : Observer<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
+                        override fun onChanged(response: Triple<Boolean, Pair<Int, Boolean>, Boolean>) {
+                            if (!response.first) {
+                                if (response.second.second) {
+                                    updateLoadingTip(getString(response.second.first))
+                                    showUploadResult(result = false)
+                                } else if (response.second.first != -1) {
+                                    updateLoadingTip(getString(R.string.uploadFailedAtIndex, response.second.first))
+                                    showUploadResult(result = false, isUploadImageError = true)
+                                }
+                                removeObserver(this) // 上传失败，中断流程，注销观察者
+                            } else if (response.third) {
+                                showUploadResult(true)
+                                removeObserver(this) // 完成上传，注销观察者
+                            } else {
+                                if (response.second.second) {
+                                    // pair中第二个Boolean为true则代表它是res id，可以直接显示
+                                    updateLoadingTip(getString(response.second.first))
+                                } else {
+                                    // pair中第二个Boolean为false则代表是纯数字，是正在上传的图片的index+1，需要用占位字符
+                                    updateLoadingTip(getString(R.string.uploadingIndexPicture, response.second.first))
+                                }
+                            }
+                        }
+                    })
+                }
             }
         }
     }
@@ -1065,6 +1104,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         iWantInfo.let { data ->
             if (data != null) {
                 option_description.text = data.iwant_content
+                mNowTag = DomainIWantTags.Data(data.iwant_id, data.iwant_content)
+                option_tag.text = data.iwant_content
                 mNowCardColor = data.iwant_color
                 setCardColor()
 
@@ -1293,6 +1334,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 cardColorSelectorDialog.dismiss()
             }
 
+            // 求购卡片颜色选择弹窗取消
             R.id.iwant_color_selector_cancel -> cardColorSelectorDialog.dismiss()
         }
     }

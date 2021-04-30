@@ -4,12 +4,14 @@ import android.content.Context
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.*
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
 import com.example.schoolairdroprefactoredition.databinding.SheetSsbItemMoreBinding
 import com.example.schoolairdroprefactoredition.domain.DomainIWant
+import com.example.schoolairdroprefactoredition.domain.DomainUserIWant
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.MyIWantAdapter
@@ -45,7 +47,7 @@ class UserIWantsFragment :
         MyIWantAdapter(activity?.intent?.getBooleanExtra(ConstantUtil.KEY_IS_MINE, false))
     }
 
-    private var mIWantList: ArrayList<DomainIWant.Data> = ArrayList()
+    private var mIWantList: ArrayList<DomainUserIWant.Data> = ArrayList()
 
     private var dialog: BottomSheetDialog? = null
 
@@ -81,8 +83,14 @@ class UserIWantsFragment :
             if (id != -1) {
                 showPlaceholder(StatePlaceHolder.TYPE_LOADING)
                 viewModel.getIWant(id).observeOnce(viewLifecycleOwner) {
-                    it?.let {
+                    if (it != null) {
                         loadData(it)
+                    } else {
+                        if (mIWantAdapter.data.isEmpty()) {
+                            showPlaceholder(StatePlaceHolder.TYPE_ERROR, getString(R.string.errorLoading))
+                        } else {
+                            Toast.makeText(context, getString(R.string.errorLoading), Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             } else {
@@ -92,7 +100,7 @@ class UserIWantsFragment :
     }
 
     override fun onItemAction(view: View, bean: Any?) {
-        if (!isMine || bean !is DomainIWant.Data?) return
+        if (!isMine || bean !is DomainUserIWant.Data?) return
 
         context?.let {
             val binding = SheetSsbItemMoreBinding.inflate(LayoutInflater.from(it))
@@ -103,7 +111,7 @@ class UserIWantsFragment :
             binding.apply {
                 // 修改求购信息按钮
                 modify.setOnClickListener {
-                    AddNewActivity.startModifyIWant(context, bean?.iwant_id)
+                    AddNewActivity.startModifyIWant(context, bean)
                     dialog?.dismiss()
                 }
 
@@ -188,7 +196,7 @@ class UserIWantsFragment :
         return super.onOptionsItemSelected(item)
     }
 
-    private fun loadData(data: DomainIWant) {
+    private fun loadData(data: DomainUserIWant) {
         mIWantList.addAll(data.data)
         if (mIWantList.size == 0) {
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY, getString(R.string.goPostUItem))
@@ -202,7 +210,7 @@ class UserIWantsFragment :
         getIWant()
     }
 
-    override fun onItemActionButtonClick(view: View, bean: DomainIWant.Data?) {
+    override fun onItemActionButtonClick(view: View, bean: DomainUserIWant.Data?) {
         onItemAction(view, bean)
     }
 }

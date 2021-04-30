@@ -1,6 +1,5 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.api.base.CallbackResultOrNull
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.cache.NewIWantDraftCache
@@ -84,7 +83,6 @@ class AddNewRepository {
             picSetKeys: String, content: String,
             longitude: Double, latitude: Double,
             onResult: (response: DomainResult?) -> Unit) {
-        LogUtils.d(tagID)
         RetrofitClient.iWantApi.submitIWant(
                 token,
                 taskID, picSetKeys,

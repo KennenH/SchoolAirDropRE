@@ -13,6 +13,7 @@ import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.ui.components.RecyclerFooter
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
+import com.example.schoolairdroprefactoredition.utils.ImageUtil
 
 class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<DomainIWant.Data, BaseViewHolder>() {
 
@@ -116,6 +117,8 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<DomainIWant.Data, BaseVie
             }
         }
         holder.setText(R.id.item_iwant_content, item.iwant_content)
+        holder.setText(R.id.item_iwant_name,item.seller.user_name)
+        ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.item_iwant_avatar),ConstantUtil.QINIU_BASE_URL + item.seller.user_avatar)
     }
 
     /**

@@ -23,7 +23,7 @@ data class DomainIWant(
             val tag: String,
 
             override val itemType: Int = IWantRecyclerAdapter.TYPE_ONE,
-            ) : Serializable, MultiItemEntity {
+    ) : Serializable, MultiItemEntity {
         data class Seller(
                 val last_login_time: String? = null,
                 val user_avatar: String,

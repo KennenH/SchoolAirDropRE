@@ -12,13 +12,14 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.ItemSsbIwantBinding
 import com.example.schoolairdroprefactoredition.domain.DomainIWant
+import com.example.schoolairdroprefactoredition.domain.DomainUserIWant
 
 
 /**
  * @author kennen
  * @date 2021/4/28
  */
-class MyIWantAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainIWant.Data?, BaseViewHolder>(R.layout.item_ssb_iwant) {
+class MyIWantAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainUserIWant.Data?, BaseViewHolder>(R.layout.item_ssb_iwant) {
 
     private var mOnSSBIWantItemActionListener: OnSSBIWantItemActionListener? = null
 
@@ -26,7 +27,7 @@ class MyIWantAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainIWan
         GeocodeSearch(context)
     }
 
-    override fun convert(holder: BaseViewHolder, item: DomainIWant.Data?) {
+    override fun convert(holder: BaseViewHolder, item: DomainUserIWant.Data?) {
         if (item != null) {
             val binding = ItemSsbIwantBinding.bind(holder.itemView)
             binding.itemSsbIwantContent.text = item.iwant_content
@@ -37,10 +38,13 @@ class MyIWantAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainIWan
                     binding.itemSsbIwantImageNum.text = "${it.size}"
                 }
             }
+            binding.itemSsbIwantLocationIcon.visibility = View.INVISIBLE
+            binding.itemSsbIwantLoadingLocation.visibility = View.VISIBLE
             binding.itemSsbIwantTag.text = context.getString(R.string.iwant_tag, item.tag)
             geocodeSearch.setOnGeocodeSearchListener(object : GeocodeSearch.OnGeocodeSearchListener {
                 override fun onRegeocodeSearched(p0: RegeocodeResult?, p1: Int) {
-//                    binding.goodsLocating.visibility = View.GONE
+                    binding.itemSsbIwantLocationIcon.visibility = View.VISIBLE
+                    binding.itemSsbIwantLoadingLocation.visibility = View.GONE
                     if (p1 == 1000) {
                         val address = p0?.regeocodeAddress
                         binding.itemSsbIwantLocation.text = address?.formatAddress
@@ -66,11 +70,11 @@ class MyIWantAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainIWan
                 binding.itemSsbIwantAction.visibility = View.GONE
             }
 
-//            geocodeSearch.getFromLocationAsyn(
-//                    RegeocodeQuery(LatLonPoint(item.goods_latitude,
-//                            item.goods_longitude),
-//                            200f, GeocodeSearch.AMAP))
-//
+            geocodeSearch.getFromLocationAsyn(
+                    RegeocodeQuery(LatLonPoint(item.iwant_latitude,
+                            item.iwant_longitude),
+                            200f, GeocodeSearch.AMAP))
+
             val resources = context.resources
             val theme = context.theme
             val blackText = resources.getColor(R.color.black, theme)
@@ -104,7 +108,7 @@ class MyIWantAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainIWan
     }
 
     interface OnSSBIWantItemActionListener {
-        fun onItemActionButtonClick(view: View, bean: DomainIWant.Data?)
+        fun onItemActionButtonClick(view: View, bean: DomainUserIWant.Data?)
     }
 
     fun setOnSSBIWantItemActionListener(listener: OnSSBIWantItemActionListener) {

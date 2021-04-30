@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.os.SystemClock
 import android.view.*
+import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
@@ -97,8 +98,14 @@ class SellingFragment :
             if (id != -1) {
                 showPlaceholder(StatePlaceHolder.TYPE_LOADING)
                 viewModel.getSelling(id).observeOnce(viewLifecycleOwner) {
-                    it?.let {
+                    if (it != null) {
                         loadData(it)
+                    } else {
+                        if (mSellingAdapter.data.isEmpty()) {
+                            showPlaceholder(StatePlaceHolder.TYPE_ERROR, getString(R.string.errorLoading))
+                        } else {
+                            Toast.makeText(context,getString(R.string.errorLoading),Toast.LENGTH_SHORT).show()
+                        }
                     }
                 }
             } else {

@@ -215,7 +215,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                                     picSet.joinToString(","),
                                     content, longitude, latitude) {
                                 modifyInquiryLiveData.postValue(Triple(it?.isSuccess
-                                        ?: false, Pair(R.string.uploadSuccess, true), it?.isSuccess
+                                        ?: false, Pair(R.string.modifySuccess, true), it?.isSuccess
                                         ?: false))
                             }
                         } else {

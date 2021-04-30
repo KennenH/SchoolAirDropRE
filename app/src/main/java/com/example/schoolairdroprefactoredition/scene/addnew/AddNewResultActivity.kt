@@ -59,14 +59,10 @@ class AddNewResultActivity : ImmersionStatusBarActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivityAddNewSuccessBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
-        val intent = intent
-        var isSuccess = false
-        var pageTip = AddNewResultTips.FAILED_ADD
 
-        if (intent != null) {
-            pageTip = intent.getIntExtra(PAGE_TIP, pageTip)
-            isSuccess = intent.getBooleanExtra(IS_SUCCESS, false)
-        }
+        val pageTip = intent.getIntExtra(PAGE_TIP, AddNewResultTips.FAILED_ADD)
+        val isSuccess = intent.getBooleanExtra(IS_SUCCESS, false)
+
         if (isSuccess) {
             binding.resultTitle.text = getString(TITLE_ADD_NEW_SUCCESS)
             binding.resultIcon.setImageResource(ICON_SUCCESS)
