@@ -38,15 +38,11 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
         PurchasingRecyclerAdapter()
     }
 
-    private val mManager by lazy {
-        LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-    }
-
     override fun initView(binding: FragmentHomeContentBinding?) {
         purchasingRecyclerAdapter.setOnNoMoreDataListener(this)
         mEndlessRecyclerView = binding?.homeRecycler
         mEndlessRecyclerView?.apply {
-            layoutManager = mManager
+            layoutManager =  LinearLayoutManager(context, RecyclerView.VERTICAL, false)
             adapter = purchasingRecyclerAdapter
             setOnLoadMoreListener(this@PurchasingFragment)
         }
@@ -60,7 +56,8 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
      * 否则将先闪现至固定item位置处再平滑滚动
      */
     fun scrollToTop() {
-        if (mManager.findLastVisibleItemPosition() > 10) {
+        val manager = mEndlessRecyclerView?.layoutManager as LinearLayoutManager
+        if (manager.findLastVisibleItemPosition() > 10) {
             mEndlessRecyclerView?.scrollToPosition(5)
         }
         mEndlessRecyclerView?.smoothScrollToPosition(0)

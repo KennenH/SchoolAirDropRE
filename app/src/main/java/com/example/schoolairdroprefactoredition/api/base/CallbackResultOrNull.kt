@@ -26,11 +26,11 @@ open class CallbackResultOrNull<T>(call: Call<T>, private val onResult: (respons
 
             // refresh token已失效
             ConstantUtil.HTTP_INVALID_REFRESH_TOKEN -> {
-
+                LogUtils.d("token invalid")
             }
 
             else -> {
-                LogUtils.d(response.errorBody()?.string())
+                LogUtils.d("retrofit callback error ${response.errorBody()?.string()}")
                 onResult(null)
             }
         }

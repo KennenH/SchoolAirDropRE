@@ -181,11 +181,11 @@
     <string name="finalPrice">Final Price</string>
     <string name="goodsIsSecondHand">Item Is Second-hand</string>
     <string name="originPrice">Original Price</string>
-    <string name="emptySearch">There seems to be no similar items nearby</string>
+    <string name="emptySearch">Oh oh, nothing was found</string>
     <string name="unLogged">Not Logged</string>
     <string name="InitiateQuote">Initiate A Quote</string>
     <string name="SendMessage">Send Message</string>
-    <string name="draftRecovered">Saved form has been restored</string>
+    <string name="draftRecovered">Form has been restored</string>
     <string name="clearInput">Clear Input</string>
     <string name="dialogNetWorkError">Network Error</string>
     <string name="restoreDraft">Restore</string>
@@ -301,8 +301,8 @@
     <string name="uploadingIndexPicture">Uploading image %d</string>
     <string name="uploadSuccess">Upload successfully</string>
     <string name="requestingServer">Requesting server</string>
-    <string name="uploadFailedAtIndex">Error uploading image %d</string>
-    <string name="picturePrepareFailed">An unexpected problem occurred while processing the image file. Please try to select another image and try again.</string>
+    <string name="uploadFailedAtIndex">Error uploading images</string>
+    <string name="picturePrepareFailed">An error occurred while processing images. The images may be damaged or not exist. Please try to select other images and try again.</string>
     <string name="canFavorItemInGoodsPage">You can favor item on the item page</string>
     <string name="canChatInGoodsPage">You can initiate a chat with the seller on the item page</string>
     <string name="gratefulToHaveU">Grateful to have u</string>

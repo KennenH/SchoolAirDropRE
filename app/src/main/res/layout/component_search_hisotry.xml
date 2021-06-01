@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingStart="@dimen/general_padding_large"
@@ -14,7 +13,7 @@
         android:layout_marginStart="@dimen/general_padding_tiny"
         android:text="@string/searchHistory"
         android:textColor="@color/primaryText"
-        android:textSize="14dp"
+        android:textSize="@dimen/textSizeNormal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -47,7 +46,7 @@
         android:padding="@dimen/general_padding_small"
         android:text="@string/confirm"
         android:textColor="@color/red"
-        android:textSize="14dp"
+        android:textSize="@dimen/textSizeNormal"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/search_history_title"
         app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +59,8 @@
         android:layout_marginEnd="@dimen/general_padding_bit_larger"
         android:padding="@dimen/general_padding_small"
         android:text="@string/cancel"
-        android:textSize="14dp"
+        android:textColor="@color/primaryText"
+        android:textSize="@dimen/textSizeNormal"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/search_history_confirm"
         app:layout_constraintEnd_toStartOf="@+id/search_history_confirm"

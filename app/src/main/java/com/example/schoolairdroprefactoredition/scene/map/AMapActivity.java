@@ -16,9 +16,9 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
-import com.amap.api.maps2d.AMap;
-import com.amap.api.maps2d.LocationSource;
-import com.amap.api.maps2d.model.MyLocationStyle;
+import com.amap.api.maps.AMap;
+import com.amap.api.maps.LocationSource;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.blankj.utilcode.constant.PermissionConstants;
 import com.blankj.utilcode.util.BarUtils;
 import com.example.schoolairdroprefactoredition.R;
@@ -84,7 +84,7 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
         binding.relocating.setOnClickListener(this);
         binding.map.onCreate(savedInstanceState);
 
-        displayMap();
+//        displayMap();
 
         locating();
         requestPermission(PermissionConstants.LOCATION, RequestType.AUTO);
@@ -156,16 +156,6 @@ public class AMapActivity extends PermissionBaseActivity implements LocationSour
                 binding.mapLocation.setText(aMapLocation.getAddress());
                 mOnLocationChangedListener.onLocationChanged(aMapLocation);
                 mLocation = aMapLocation;
-//                Log.d("AMapActivity", aMapLocation.getAddress());
-//                mMap.animateCamera(CameraUpdateFactory.zoomTo(13f), 200, new AMap.CancelableCallback() {
-//                    @Override
-//                    public void onFinish() {
-//                    }
-//
-//                    @Override
-//                    public void onCancel() {
-//                    }
-//                });
             } else {
                 binding.mapLocation.setText(getString(R.string.errorNetLocation));
             }

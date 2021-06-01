@@ -16,6 +16,12 @@ android {
         versionName "Beta1.1.5.00"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
     allprojects {
         repositories {
@@ -135,7 +141,8 @@ dependencies {
     implementation 'com.jaeger.statusbarutil:library:1.5.1'
     // amap
     implementation 'com.amap.api:location:latest.integration'
-    implementation 'com.amap.api:map2d:latest.integration'
+//    implementation 'com.amap.api:map2d:latest.integration'
+    implementation 'com.amap.api:3dmap:latest.integration'
     implementation 'com.amap.api:search:latest.integration'
     // magic indicator
     implementation 'com.github.hackware1993:MagicIndicator:1.6.0'
@@ -157,7 +164,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
 
     // ROOM
-    def room_version = "2.2.6"
+    def room_version = "2.3.0"
     implementation "androidx.room:room-runtime:$room_version"
     kapt "androidx.room:room-compiler:$room_version"
 

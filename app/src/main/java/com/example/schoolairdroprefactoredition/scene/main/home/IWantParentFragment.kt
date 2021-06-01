@@ -46,10 +46,10 @@ class IWantParentFragment : BaseParentFragment(), View.OnClickListener {
 
     override fun onCreateView(inflater: LayoutInflater,
                               container: ViewGroup?, savedInstanceState: Bundle?): View {
-        ////////////////////// 取消注释以显示功能未支持 ///////////////////////
+        ////////////////////// 取消注释以显示功能未支持页面 ///////////////////////
 //        val binding = FragmentHomeFeatureNotSupportBinding.inflate(inflater, container, false)
 //        binding.featureNotSupportMask.setOnClickListener(this)
-        ////////////////////// 取消注释以显示功能未支持 ///////////////////////
+        ////////////////////// 取消注释以显示功能未支持页面 ///////////////////////
 
         val binding = FragmentHomeBinding.inflate(inflater, container, false)
         mViewPager = binding.homeViewpager

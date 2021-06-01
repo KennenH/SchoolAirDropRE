@@ -6,6 +6,7 @@ import android.os.SystemClock
 import android.view.*
 import android.widget.Toast
 import androidx.core.content.res.ResourcesCompat
+import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentSsbBinding
@@ -15,9 +16,11 @@ import com.example.schoolairdroprefactoredition.domain.DomainUserIWant
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.MyIWantAdapter
+import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
+import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 
@@ -31,7 +34,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 class UserIWantsFragment :
         SSBBaseFragment(),
         SSBActivity.OnLoginStateChangeListener,
-        MyIWantAdapter.OnSSBIWantItemActionListener {
+        MyIWantAdapter.OnSSBIWantItemActionListener, EndlessRecyclerView.OnLoadMoreListener {
 
     companion object {
         fun newInstance(isMine: Boolean): UserIWantsFragment {
@@ -66,7 +69,11 @@ class UserIWantsFragment :
     }
 
     override fun init(binding: FragmentSsbBinding?) {
-        binding?.ssbRecycler?.adapter = mIWantAdapter
+        binding?.ssbRecycler?.apply {
+            adapter = mIWantAdapter
+            addItemDecoration(MarginItemDecoration(SizeUtils.dp2px(5f), false))
+            setOnLoadMoreListener(this@UserIWantsFragment)
+        }
         mIWantAdapter.setOnSSBIWantItemActionListener(this)
 
         setHasOptionsMenu(isMine)
@@ -82,7 +89,7 @@ class UserIWantsFragment :
         userID?.let { id ->
             if (id != -1) {
                 showPlaceholder(StatePlaceHolder.TYPE_LOADING)
-                viewModel.getIWant(id).observeOnce(viewLifecycleOwner) {
+                viewModel.getIWant(id, false).observeOnce(viewLifecycleOwner) {
                     if (it != null) {
                         loadData(it)
                     } else {
@@ -127,6 +134,7 @@ class UserIWantsFragment :
                                             if (it) {
                                                 (activity?.application as SAApplication).getCachedMyInfo()?.userContactCount?.minus(1)
                                                 DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successUndoIWant)
+                                                getIWant()
                                             } else {
                                                 DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
                                             }
@@ -198,7 +206,7 @@ class UserIWantsFragment :
 
     private fun loadData(data: DomainUserIWant) {
         mIWantList.addAll(data.data)
-        if (mIWantList.size == 0) {
+        if (mIWantList.isEmpty()) {
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY, getString(R.string.goPostUItem))
         } else {
             mIWantAdapter.setList(mIWantList)
@@ -212,5 +220,26 @@ class UserIWantsFragment :
 
     override fun onItemActionButtonClick(view: View, bean: DomainUserIWant.Data?) {
         onItemAction(view, bean)
+    }
+
+    override fun autoLoadMore(recycler: EndlessRecyclerView?) {
+        val userID = activity?.intent?.getIntExtra(ConstantUtil.KEY_USER_ID, -1)
+        userID?.let { id ->
+            if (id != -1) {
+                viewModel.getIWant(id, true).observeOnce(viewLifecycleOwner) {
+                    if (it != null) {
+                        loadData(it)
+                    } else {
+                        if (mIWantAdapter.data.isEmpty()) {
+                            showPlaceholder(StatePlaceHolder.TYPE_ERROR, getString(R.string.errorLoading))
+                        } else {
+                            Toast.makeText(context, getString(R.string.errorLoading), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            } else {
+                Toast.makeText(context, getString(R.string.errorLoading), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

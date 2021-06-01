@@ -176,7 +176,7 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<DomainIWant.Data, BaseVie
         fun onNoMoreDataRefresh()
     }
 
-    fun setOnNoMoreDataListener(listener: OnNoMoreDataListener) {
+    fun addOnNoMoreDataListener(listener: OnNoMoreDataListener) {
         mOnNoMoreDataListener.add(listener)
     }
 }

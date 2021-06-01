@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewIWantDraftCache
@@ -57,6 +58,7 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
         val submitItemLiveData = MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>>()
         viewModelScope.launch {
             // 将封面图片加入图片集中，为的是确保服务器收到的数组第一张图片是封面
+            // 服务器也会将数组中的第一张图片作为封面
             picSet.add(0, cover)
             // 上传图片
             uploadRepository.upload(
@@ -155,13 +157,13 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
         viewModelScope.launch {
             uploadRepository.upload(
                     token, picSet,
-                    ConstantUtil.UPLOAD_TYPE_INQUIRY,
+                    ConstantUtil.UPLOAD_TYPE_IWANT,
                     isSubscribeProgress = true) { success, tip, taskAndKeys, allSuccess ->
-                // 上一步完成
+                // 上一小步是否成功
                 if (success) {
-                    // 所有步骤都完成
+                    // 是否所有步骤都完成
                     if (allSuccess) {
-                        // 返回出来的结果为空
+                        // 最后返回的结果
                         if (taskAndKeys != null) {
                             submitIWantLiveData.postValue(Triple(true, Pair(R.string.requestingServer, true), false))
                             addNewRepository.submitNewIWant(
@@ -174,9 +176,11 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                                         ?: false))
                             }
                         } else {
+                            // 返回的结果为空？
                             submitIWantLiveData.postValue(Triple(false, Pair(-1, false), false))
                         }
                     } else {
+                        // 上一步完成了但是没有完成所有的流程，因此从
                         // 这里出来是订阅的每一步流程，需要外部显示tip
                         submitIWantLiveData.postValue(Triple(true, tip, false))
                     }
@@ -194,13 +198,15 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
      */
     fun modifyIWant(
             token: String, tagID: Int, color: Int,
-            imagesToDelete: ArrayList<String>, picSet: List<String>,
+            imagesToDelete: ArrayList<String>, imagesToAdd: List<String>,
             content: String, longitude: Double, latitude: Double
     ): MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
         val modifyInquiryLiveData = MutableLiveData<Triple<Boolean, Pair<Int, Boolean>, Boolean>>()
         viewModelScope.launch {
             uploadRepository.upload(
-                    token, picSet, ConstantUtil.UPLOAD_TYPE_INQUIRY,
+                    token,
+                    imagesToAdd,
+                    ConstantUtil.UPLOAD_TYPE_IWANT,
                     isSubscribeProgress = true) { success, tip, taskAndKeys, allSuccess ->
                 // 上一步完成
                 if (success) {
@@ -212,7 +218,8 @@ class AddNewViewModel(application: Application) : AndroidViewModel(application) 
                             addNewRepository.modifyIWant(
                                     token, tagID, color,
                                     imagesToDelete.joinToString(","),
-                                    picSet.joinToString(","),
+                                    taskAndKeys.taskId,
+                                    taskAndKeys.keys.joinToString(","),
                                     content, longitude, latitude) {
                                 modifyInquiryLiveData.postValue(Triple(it?.isSuccess
                                         ?: false, Pair(R.string.modifySuccess, true), it?.isSuccess

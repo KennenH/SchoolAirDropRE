@@ -31,6 +31,11 @@ import java.io.File
 
 object MyUtil {
 
+    /**
+     * 新增物品或者求购选择的最多图片集
+     */
+    const val ADD_NEW_PIC_SET_MAX = 9
+
     @JvmStatic
     fun dp2px(dp: Int): Int {
         val scale = Resources.getSystem().displayMetrics.density

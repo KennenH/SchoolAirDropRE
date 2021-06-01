@@ -33,7 +33,6 @@ abstract class SSBBaseFragment :
         binding = FragmentSsbBinding.inflate(inflater, container, false)
         binding?.apply {
             ssbRecycler.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-            ssbRecycler.addItemDecoration(MarginItemDecoration())
             ssbRecycler.addOnScrollListener(object : RecyclerView.OnScrollListener() {
                 override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                     if (activity is SSBActivity) {

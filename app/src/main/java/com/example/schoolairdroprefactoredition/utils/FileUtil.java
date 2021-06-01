@@ -52,6 +52,7 @@ public class FileUtil {
      *
      * @param isNeedLarge 是否需要大图，若为头像则只需要小图即可
      */
+    @Nullable
     public static File compressFile(String path, boolean isNeedLarge) throws IOException {
         Bitmap bitmap;
         Application application = Utils.getApp();

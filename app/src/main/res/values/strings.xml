@@ -219,7 +219,7 @@
     <string name="goodsIsSecondHand">物品为二手</string>
     <string name="originPrice">原价</string>
     <string name="unLogged">未登录</string>
-    <string name="emptySearch">附近似乎没有同学发布包含该关键字的物品</string>
+    <string name="emptySearch">啊哦，什么也没有找到</string>
     <string name="nothingThere">啥也没有</string>
     <string name="dialogSuccess">完成</string>
     <string name="dialogFailed">出错啦</string>
@@ -336,8 +336,8 @@
     <string name="uploadingIndexPicture">正在上传第%d张图片</string>
     <string name="uploadSuccess">上传完成</string>
     <string name="requestingServer">正在请求服务器</string>
-    <string name="uploadFailedAtIndex">第%d张图片上传出错</string>
-    <string name="picturePrepareFailed">在处理图片文件时出现了意料之外的问题，请尝试重新选取其他图片重试。</string>
+    <string name="uploadFailedAtIndex">图片上传时出错</string>
+    <string name="picturePrepareFailed">在处理图片文件时出错，可能是图片损坏或不存在，请尝试重新选取其他图片重试。</string>
     <string name="canFavorItemInGoodsPage">可以在物品页面收藏中意的物品</string>
     <string name="canChatInGoodsPage">可以在物品页面与卖家发起聊天</string>
     <string name="gratefulToHaveU">感谢有你</string>
@@ -385,4 +385,5 @@
     <string name="undoIWant">撤销求购</string>
     <string name="sureToUndoIWant">确定撤销该求购?</string>
     <string name="successUndoIWant">撤销求购成功</string>
+    <string name="fileNotFound">图片文件没有找到或已被删除</string>
 </resources>

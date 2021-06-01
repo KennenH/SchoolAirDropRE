@@ -22,10 +22,10 @@ interface GoodsApi {
     @POST("appapi/goods/searchGoods")
     fun searchGoods(@Field("client_id") clientID: String,
                     @Field("client_secret") clientSecret: String,
+                    @Field("keyWords") keyWord: String,
                     @Field("page") page: Int,
                     @Field("longitude") longitude: Double,
-                    @Field("latitude") latitude: Double,
-                    @Field("keyWords") keyWord: String): Call<DomainPurchasing>
+                    @Field("latitude") latitude: Double): Call<DomainPurchasing>
 
     /**
      * 获取附近的商品
@@ -115,6 +115,7 @@ interface GoodsApi {
     @POST("appapi/goods/getGoodsOnSaleByClient")
     fun getGoodsOnSaleByClient(
             @Field("user_id") userID: Int,
+            @Field("page") page: Int,
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String): Call<DomainSelling>
 

@@ -20,6 +20,8 @@
     <color name="primaryDarkest">#9E9E9E</color>
     <color name="primaryText">#888888</color>
 
+    <color name="primaryLightDark">#FAFAFA</color>
+
     <color name="translucent">#CBFFFFFF</color>
     <color name="darkTranslucent">#CB707070</color>
     <color name="darkerTranslucent">#E65E5E5E</color>
@@ -40,7 +42,7 @@
     <color name="black">#000000</color>
 
     <color name="colorPrimaryPink">#ED7ECD</color>
-    <color name="colorPrimaryPurple">#854DC3</color>
+    <color name="colorPrimaryPurple">#9469EF</color>
     <color name="colorPrimaryRed">#DD402C</color>
     <color name="colorPrimaryRedLight">#ED5C4A</color>
     <color name="colorPrimaryGreen">#44A944</color>

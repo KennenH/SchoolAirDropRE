@@ -3,7 +3,6 @@ package com.example.schoolairdroprefactoredition.repository
 import com.example.schoolairdroprefactoredition.api.base.CallbackResultOrNull
 import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
-import com.example.schoolairdroprefactoredition.domain.DomainIWant
 import com.example.schoolairdroprefactoredition.domain.DomainResult
 import com.example.schoolairdroprefactoredition.domain.DomainSelling
 import com.example.schoolairdroprefactoredition.domain.DomainUserIWant
@@ -25,9 +24,13 @@ class SSBRepository {
     /**
      * 用户id获取用户在售物品
      */
-    fun getSelling(userID: Int, onResult: (DomainSelling?) -> Unit) {
+    fun getSelling(
+            userID: Int,
+            page: Int,
+            onResult: (DomainSelling?) -> Unit) {
         RetrofitClient.goodsApi.getGoodsOnSaleByClient(
                 userID,
+                page,
                 ConstantUtil.CLIENT_ID,
                 ConstantUtil.CLIENT_SECRET).apply {
             enqueue(CallbackResultOrNull(this, onResult))
@@ -73,7 +76,7 @@ class SSBRepository {
             token: String,
             iwantID: String,
             onResult: (Boolean) -> Unit) {
-        RetrofitClient.iWantApi.deteleIWant(token, iwantID).apply {
+        RetrofitClient.iWantApi.deleteIWant(token, iwantID).apply {
             enqueue(object : CallbackWithRetry<DomainResult>(this@apply) {
                 override fun onResponse(call: Call<DomainResult>, response: Response<DomainResult>) {
                     onResult(response.code() == HttpURLConnection.HTTP_OK)

@@ -30,7 +30,8 @@ import com.example.schoolairdroprefactoredition.scene.main.home.IWantParentFragm
 import com.example.schoolairdroprefactoredition.scene.main.home.PurchasingParentFragment
 import com.example.schoolairdroprefactoredition.scene.main.messages.MessagesFragment
 import com.example.schoolairdroprefactoredition.scene.main.my.MyFragment
-import com.example.schoolairdroprefactoredition.scene.main.extend.SearchFragment
+import com.example.schoolairdroprefactoredition.scene.main.extend.SearchActivity
+import com.example.schoolairdroprefactoredition.scene.map.AMapActivity
 import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
@@ -38,9 +39,7 @@ import com.example.schoolairdroprefactoredition.utils.XPopupUtil
 import com.example.schoolairdroprefactoredition.viewmodel.LoginViewModel
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.lxj.xpopup.XPopup
-import com.lxj.xpopup.animator.PopupAnimator
 import com.lxj.xpopup.enums.PopupAnimation
-import com.lxj.xpopup.impl.PartShadowPopupView
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.item_position_arragne.*
 import java.util.*
@@ -78,13 +77,13 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
         AMapLocationClientOption()
     }
 
-
-    /**
-     * 搜索 页面
-     */
-    private val mSearch by lazy {
-        SearchFragment.getInstance()
-    }
+//
+//    /**
+//     * 搜索 页面
+//     */
+//    private val mSearch by lazy {
+//        SearchActivity.getInstance()
+//    }
 
     /**
      * 求购 页面
@@ -331,22 +330,23 @@ class MainActivity : PermissionBaseActivity(), BottomNavigationView.OnNavigation
      * 显示搜索页面 [mSearch]
      */
     private fun showSearch() {
-        supportFragmentManager.apply {
-            if (mSearch.isHidden || !mSearch.isAdded) {
-                if (!mSearch.isAdded) {
-                    beginTransaction()
-                            .add(R.id.container, mSearch)
-                            .addToBackStack(null)
-                            .show(mSearch)
-                            .commit()
-                } else {
-                    beginTransaction()
-                            .show(mSearch)
-                            .addToBackStack(null)
-                            .commit()
-                }
-            }
-        }
+        SearchActivity.start(this)
+//        supportFragmentManager.apply {
+//            if (mSearch.isHidden || !mSearch.isAdded) {
+//                if (!mSearch.isAdded) {
+//                    beginTransaction()
+//                            .add(R.id.container, mSearch)
+//                            .addToBackStack(null)
+//                            .show(mSearch)
+//                            .commit()
+//                } else {
+//                    beginTransaction()
+//                            .show(mSearch)
+//                            .addToBackStack(null)
+//                            .commit()
+//                }
+//            }
+//        }
     }
 
     /**

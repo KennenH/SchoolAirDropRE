@@ -15,17 +15,20 @@ abstract class StatePlaceholderFragment : BaseFragment() {
     }
 
     /**
-     * 获取页面中的placeholder
+     * 指定页面中的占位视图，类型一定要是[StatePlaceHolder]
      */
     abstract fun getStatePlaceholder(): StatePlaceHolder?
 
     /**
-     * 页面中的数据容器
+     * 指定页面中的内容容器，只要是view就可以
      */
     abstract fun getContentContainer(): View?
 
     /**
      * 显示占位视图
+     *
+     * @param type 占位视图类型，具体查看[StatePlaceHolder]
+     * @param tip 小字提示部分，一般用来提示用户该如何操作才能避免再次看到占位符，有的话还能稍微好看一点
      */
     fun showPlaceholder(type: Int, tip: String? = null) {
         getStatePlaceholder()?.setPlaceholderType(type)
@@ -35,7 +38,7 @@ abstract class StatePlaceholderFragment : BaseFragment() {
     }
 
     /**
-     * 显示
+     * 把占位符隐藏，显示出指定的内容区域
      */
     fun showContentContainer() {
         getStatePlaceholder()?.visibility = View.GONE

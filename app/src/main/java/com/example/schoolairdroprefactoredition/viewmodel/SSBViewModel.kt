@@ -13,12 +13,14 @@ class SSBViewModel : ViewModel() {
     /**
      * 当前获取的在售是第几页
      */
-    private val sellingPage = 1
+    private var sellingPage = 0
 
     /**
      * 当前获取的求购是第几页
      */
-    private val iwantPage = 1
+    private var iwantPage = 0
+
+    private var userID = -1
 
     private val ssbRepository by lazy {
         SSBRepository.getInstance()
@@ -38,9 +40,13 @@ class SSBViewModel : ViewModel() {
     /**
      * 获取用户在售物品
      */
-    fun getSelling(userID: Int): LiveData<DomainSelling?> {
+    fun getSelling(userID: Int, isLoadMore: Boolean): LiveData<DomainSelling?> {
         val sellingLiveData = MutableLiveData<DomainSelling?>()
-        ssbRepository.getSelling(userID) {
+        if (isLoadMore) {
+            sellingPage = 0
+        }
+
+        ssbRepository.getSelling(userID, ++sellingPage) {
             sellingLiveData.postValue(it)
         }
         return sellingLiveData
@@ -60,9 +66,12 @@ class SSBViewModel : ViewModel() {
     /**
      * 获取用户求购
      */
-    fun getIWant(userID: Int): LiveData<DomainUserIWant?> {
+    fun getIWant(userID: Int, isLoadMore: Boolean): LiveData<DomainUserIWant?> {
         val iwantLiveData = MutableLiveData<DomainUserIWant?>()
-        ssbRepository.getIWant(userID, iwantPage) {
+        if (isLoadMore) {
+            iwantPage = 0
+        }
+        ssbRepository.getIWant(userID, ++iwantPage) {
             iwantLiveData.postValue(it)
         }
         return iwantLiveData

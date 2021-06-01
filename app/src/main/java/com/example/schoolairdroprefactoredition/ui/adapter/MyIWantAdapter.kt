@@ -40,7 +40,7 @@ class MyIWantAdapter(private val isMine: Boolean?) : BaseQuickAdapter<DomainUser
             }
             binding.itemSsbIwantLocationIcon.visibility = View.INVISIBLE
             binding.itemSsbIwantLoadingLocation.visibility = View.VISIBLE
-            binding.itemSsbIwantTag.text = context.getString(R.string.iwant_tag, item.tag)
+            binding.itemSsbIwantTag.text = context.getString(R.string.iwant_tag, item.tag.tags_content)
             geocodeSearch.setOnGeocodeSearchListener(object : GeocodeSearch.OnGeocodeSearchListener {
                 override fun onRegeocodeSearched(p0: RegeocodeResult?, p1: Int) {
                     binding.itemSsbIwantLocationIcon.visibility = View.VISIBLE

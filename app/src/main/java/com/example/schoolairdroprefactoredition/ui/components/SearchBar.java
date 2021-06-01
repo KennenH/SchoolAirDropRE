@@ -20,8 +20,8 @@ public class SearchBar extends ConstraintLayout implements View.OnClickListener,
 
     private OnSearchActionListener mOnSearchActionListener;
 
-    private ImageView mClear;
-    private EditText mSearch;
+    private final ImageView mClear;
+    private final EditText mSearch;
 
     public SearchBar(Context context) {
         this(context, null);
@@ -131,22 +131,22 @@ public class SearchBar extends ConstraintLayout implements View.OnClickListener,
     public void afterTextChanged(Editable s) {
         String input = mSearch.getText().toString();
 
-        if (mOnSearchActionListener != null)
+        if (mOnSearchActionListener != null) {
             mOnSearchActionListener.onInputChanged(input);
+        }
 
-        if (input.equals(""))
+        if (input.equals("")) {
             mClear.setVisibility(GONE);
-        else
+        } else {
             mClear.setVisibility(VISIBLE);
+        }
     }
 
     @Override
     public void onFocusChange(View v, boolean hasFocus) {
         if (hasFocus) {
-
             showKeyboard();
         } else {
-
             hideKeyboard(v);
         }
 

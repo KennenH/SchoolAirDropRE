@@ -21,7 +21,7 @@ import com.example.schoolairdroprefactoredition.scene.iwant.IWantActivity
 /**
  * 首页的求购页面
  */
-class IWantFragment private constructor(): BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataListener, OnIWantItemClickListener {
+class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataListener, OnIWantItemClickListener {
 
     companion object {
         private var INSTANCE: IWantFragment? = null
@@ -38,14 +38,8 @@ class IWantFragment private constructor(): BaseChildFragment(), IWantRecyclerAda
 
     private val iWantRecyclerAdapter by lazy {
         IWantRecyclerAdapter().also {
-            it.setOnNoMoreDataListener(this)
+            it.addOnNoMoreDataListener(this)
             it.setOnIWantItemClickListener(this)
-        }
-    }
-
-    private val mManager by lazy {
-        StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).also {
-            it.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
         }
     }
 
@@ -55,8 +49,10 @@ class IWantFragment private constructor(): BaseChildFragment(), IWantRecyclerAda
         this.binding = binding
         binding?.homeRecycler?.apply {
             setOnLoadMoreListener(this@IWantFragment)
-            setPadding(SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f), SizeUtils.dp2px(5f))
-            layoutManager = mManager
+            setPadding(SizeUtils.dp2px(3f), SizeUtils.dp2px(3f), SizeUtils.dp2px(3f), SizeUtils.dp2px(3f))
+            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL).also {
+                it.gapStrategy = StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS
+            }
             adapter = iWantRecyclerAdapter
         }
     }
@@ -81,8 +77,9 @@ class IWantFragment private constructor(): BaseChildFragment(), IWantRecyclerAda
      * 否则将先闪现至固定item位置处再平滑滚动（模仿美团）
      */
     fun scrollToTop() {
-        val visible = IntArray(mManager.spanCount + 1)
-        mManager.findLastVisibleItemPositions(visible)
+        val manager = binding?.homeRecycler?.layoutManager as StaggeredGridLayoutManager
+        val visible = IntArray(manager.spanCount + 1)
+        manager.findLastVisibleItemPositions(visible)
         if (visible[0] > 10) {
             binding?.homeRecycler?.scrollToPosition(5)
         }
@@ -150,6 +147,7 @@ class IWantFragment private constructor(): BaseChildFragment(), IWantRecyclerAda
     override fun onNoMoreDataRefresh() {
         binding?.homeRecycler?.setIsNoMoreData(false)
     }
+
 
     /**
      * 以元素共享动画打开求购详情页面

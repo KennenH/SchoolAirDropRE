@@ -4,13 +4,9 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import androidx.cardview.widget.CardView
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginBottom
-import com.blankj.utilcode.util.LogUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
@@ -23,9 +19,7 @@ import com.example.schoolairdroprefactoredition.databinding.ComponentGoodsImageL
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.example.schoolairdroprefactoredition.utils.MyUtil
-import com.google.android.material.card.MaterialCardView
 import com.lxj.xpopup.XPopup
-import kotlinx.android.synthetic.main.component_goods_detail.view.*
 import kotlinx.android.synthetic.main.fragment_my.view.*
 
 
@@ -33,7 +27,7 @@ import kotlinx.android.synthetic.main.fragment_my.view.*
  * @author kennen
  * @date 2021/4/9
  */
-class GoodsImageLoader : MaterialCardView {
+class GoodsImageLoader : FrameLayout {
 
     private val binding by lazy {
         ComponentGoodsImageLoaderBinding.bind(
@@ -100,11 +94,11 @@ class GoodsImageLoader : MaterialCardView {
                             // 设置完layoutParams之后重新布局imageView
                             imageView.requestLayout()
 
-                            // ***********************************************************//
-                            // ！！这里的return false是对的，不要手贱改为true！！否则后果自负！！
+                            // *********************************************//
+                            // ！！这里的return false是对的，不要手贱改为true！！
                             return false
-                            // ！！这里的return false是对的，不要手贱改为true！！否则后果自负！！
-                            // ***********************************************************//
+                            // ！！这里的return false是对的，不要手贱改为true！！
+                            // *********************************************//
                         }
                     }).into(imageView)
         }

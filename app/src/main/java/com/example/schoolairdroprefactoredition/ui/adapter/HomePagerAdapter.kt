@@ -3,11 +3,12 @@ package com.example.schoolairdroprefactoredition.ui.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
+import androidx.fragment.app.FragmentStatePagerAdapter
 import com.example.schoolairdroprefactoredition.scene.main.home.IWantFragment
 import com.example.schoolairdroprefactoredition.scene.main.home.PurchasingFragment
 import java.util.*
 
-class HomePagerAdapter(fm: FragmentManager, private val pageType: Int) : FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+class HomePagerAdapter(fm: FragmentManager, private val pageType: Int) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     companion object {
         const val PAGE_TYPE_IWANT = 9837 // 页面类型码 求购

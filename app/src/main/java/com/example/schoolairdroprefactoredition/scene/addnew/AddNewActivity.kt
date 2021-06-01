@@ -17,13 +17,17 @@ import com.amap.api.location.AMapLocation
 import com.amap.api.location.AMapLocationClient
 import com.amap.api.location.AMapLocationClientOption
 import com.amap.api.location.AMapLocationListener
+import com.amap.api.maps.AMap
+import com.amap.api.maps.LocationSource
+import com.amap.api.maps.model.MyLocationStyle
 import com.blankj.utilcode.constant.PermissionConstants
 import com.blankj.utilcode.util.KeyboardUtils
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
-import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
-import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
 import com.example.schoolairdroprefactoredition.cache.NewIWantDraftCache
+import com.example.schoolairdroprefactoredition.cache.NewItemDraftCache
+import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
 import com.example.schoolairdroprefactoredition.databinding.SheetIwantColorSelectorBinding
 import com.example.schoolairdroprefactoredition.domain.*
 import com.example.schoolairdroprefactoredition.scene.addnew.AddNewResultActivity.AddNewResultTips
@@ -53,7 +57,7 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocationListener,
-        OnPicSetClickListener, SAApplication.OnApplicationLoginListener {
+        OnPicSetClickListener, SAApplication.OnApplicationLoginListener, LocationSource {
 
     companion object {
         /**
@@ -178,6 +182,18 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     private var mAmapLocation: AMapLocation? = null
 
     /**
+     * Amap view
+     */
+    private var mAmap: AMap? = null
+
+    private var onLocationChangedListener: LocationSource.OnLocationChangedListener? = null
+
+    /**
+     * 地图风格
+     */
+    private var mMyLocationStyle = MyLocationStyle()
+
+    /**
      * 图片集横向recycler的adapter
      */
     private val mPicSetHorizontalAdapter by lazy {
@@ -296,11 +312,28 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         // 当app在外部登录时将会收到通知
         (application as? SAApplication)?.addOnApplicationLoginListener(this)
 
-        // 请求定位权限，权限授予后父类调用locationGranted
-        requestPermission(PermissionConstants.LOCATION, RequestType.AUTO)
+        // 初始化地图
+        initMap(savedInstanceState)
 
         // 初始化页面
         initPageAccordingToType()
+    }
+
+    /**
+     * 传送门
+     * [locationGranted] 定位权限已获取
+     * [locationDenied] 定位权限被拒绝
+     * [startLocation] 配置地图，启动地图定位
+     * [activate] 开始地图定位
+     * [deactivate] 销毁地图定位配置
+     * [onLocationChanged] 定位完成，定位结果回调，显示个人位置
+     */
+    private fun initMap(savedInstanceState: Bundle?) {
+        map_view.onCreate(savedInstanceState)
+        map_view.post {
+            // 请求定位权限，权限授予后父类调用locationGranted
+            requestPermission(PermissionConstants.LOCATION, RequestType.AUTO)
+        }
     }
 
     /**
@@ -465,11 +498,11 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                 option_iwant_color.setOnClickListener(this)
                 cardColorSelectorDialog.setContentView(cardColorSelectorBinding.root)
                 cardColorSelectorBinding.apply {
-                    iwant_color_selector_default.setOnClickListener(this@AddNewActivity)
-                    iwant_color_selector_purple.setOnClickListener(this@AddNewActivity)
-                    iwant_color_selector_theme.setOnClickListener(this@AddNewActivity)
-                    iwant_color_selector_heart.setOnClickListener(this@AddNewActivity)
-                    iwant_color_selector_warning.setOnClickListener(this@AddNewActivity)
+                    iwantColorSelectorDefault.setOnClickListener(this@AddNewActivity)
+                    iwantColorSelectorPurple.setOnClickListener(this@AddNewActivity)
+                    iwantColorSelectorTheme.setOnClickListener(this@AddNewActivity)
+                    iwantColorSelectorHeart.setOnClickListener(this@AddNewActivity)
+                    iwantColorSelectorHeart.setOnClickListener(this@AddNewActivity)
                 }
 
                 // 使用给进来的求购信息初始化页面数据
@@ -513,7 +546,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             pickPhotoFromAlbum(
                     this,
                     REQUEST_CODE_PIC_SET,
-                    12,
+                    MyUtil.ADD_NEW_PIC_SET_MAX,
                     isSquare = false,
                     isCircle = false,
                     isCropWithoutSpecificShape = false
@@ -572,19 +605,23 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
      * 进入页面、点击重新定位时调用
      */
     private fun startLocation() {
-        if (mClient == null) {
-            mClient = AMapLocationClient(this)
-            mClient?.setLocationListener(this)
+        if (mAmap == null) {
+            mAmap = map_view.map
         }
-        if (mOption == null) {
-            mOption = AMapLocationClientOption()
+
+        if (isDarkTheme) {
+            mAmap?.mapType = AMap.MAP_TYPE_NIGHT
+        } else {
+            mAmap?.mapType = AMap.MAP_TYPE_NORMAL
         }
-        option_location.description = getString(R.string.locating)
-        mOption?.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
-        mOption?.isOnceLocation = true
-        mOption?.isLocationCacheEnable = true
-        mClient?.setLocationOption(mOption)
-        mClient?.startLocation()
+
+        mMyLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE)
+        mAmap?.myLocationStyle = mMyLocationStyle
+
+        mAmap?.setLocationSource(this)
+        mAmap?.isMyLocationEnabled = true
+        mAmap?.uiSettings?.isZoomControlsEnabled = false
+        mAmap?.uiSettings?.setAllGesturesEnabled(false)
     }
 
     /**
@@ -611,10 +648,12 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                             else AddNewResultTips.LOCATION_FAILED_MODIFY)
                 } else {
                     when (pageType) {
-                        AddNewType.ADD_ITEM, AddNewType.MODIFY_ITEM -> {
+                        AddNewType.ADD_ITEM,
+                        AddNewType.MODIFY_ITEM -> {
                             submitItem(token)
                         }
-                        AddNewType.ADD_IWANT, AddNewType.MODIFY_IWANT -> {
+                        AddNewType.ADD_IWANT,
+                        AddNewType.MODIFY_IWANT -> {
                             submitIWant(token)
                         }
                         else -> {
@@ -654,10 +693,12 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                                 override fun onChanged(response: Triple<Boolean, Pair<Int, Boolean>, Boolean>) {
                                     if (!response.first) {
                                         if (response.second.second) {
+                                            // 非图片上传错误的其他错误
                                             updateLoadingTip(getString(response.second.first))
                                             showUploadResult(result = false)
-                                        } else if (response.second.first != -1) {
-                                            updateLoadingTip(getString(R.string.uploadFailedAtIndex, response.second.first))
+                                        } else {
+                                            // 图片上传时出错，提示用户换一张图片
+                                            updateLoadingTip(getString(R.string.uploadFailedAtIndex))
                                             showUploadResult(result = false, isUploadImageError = true)
                                         }
                                         removeObserver(this) // 上传失败，中断流程，注销观察者
@@ -700,8 +741,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                                         if (response.second.second) {
                                             updateLoadingTip(getString(response.second.first))
                                             showUploadResult(result = false)
-                                        } else if (response.second.first != -1) {
-                                            updateLoadingTip(getString(R.string.uploadFailedAtIndex, response.second.first))
+                                        } else {
+                                            updateLoadingTip(getString(R.string.uploadFailedAtIndex))
                                             showUploadResult(result = false, isUploadImageError = true)
                                         }
                                         removeObserver(this) // 上传失败，中断流程，注销观察者
@@ -747,8 +788,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                                         if (response.second.second) {
                                             updateLoadingTip(getString(response.second.first))
                                             showUploadResult(result = false)
-                                        } else if (response.second.first != -1) {
-                                            updateLoadingTip(getString(R.string.uploadFailedAtIndex, response.second.first))
+                                        } else {
+                                            updateLoadingTip(getString(R.string.uploadFailedAtIndex))
                                             showUploadResult(result = false, isUploadImageError = true)
                                         }
                                         removeObserver(this) // 上传失败，中断流程，注销观察者
@@ -782,16 +823,18 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
                 addNewViewModel.modifyIWant(
                         token.access_token, mNowTag!!.tags_id, mNowCardColor,
-                        mPicSetPaths, mImagesToDelete, option_description.text.toString(),
+                        mImagesToDelete, mPicSetPaths, option_description.text.toString(),
                         mAmapLocation!!.longitude, mAmapLocation!!.latitude).apply {
                     observe(this@AddNewActivity, object : Observer<Triple<Boolean, Pair<Int, Boolean>, Boolean>> {
                         override fun onChanged(response: Triple<Boolean, Pair<Int, Boolean>, Boolean>) {
                             if (!response.first) {
                                 if (response.second.second) {
+                                    // 非上传图片意外的其他错误
                                     updateLoadingTip(getString(response.second.first))
                                     showUploadResult(result = false)
-                                } else if (response.second.first != -1) {
-                                    updateLoadingTip(getString(R.string.uploadFailedAtIndex, response.second.first))
+                                } else {
+                                    // 上传图片时出错
+                                    updateLoadingTip(getString(R.string.uploadFailedAtIndex))
                                     showUploadResult(result = false, isUploadImageError = true)
                                 }
                                 removeObserver(this) // 上传失败，中断流程，注销观察者
@@ -827,25 +870,27 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
                     result,
                     when {
                         result
-                                && pageType == AddNewType.ADD_ITEM
-                                && pageType == AddNewType.ADD_IWANT
+                                && (pageType == AddNewType.ADD_ITEM
+                                || pageType == AddNewType.ADD_IWANT)
                         -> AddNewResultTips.SUCCESS_NEW
 
                         result
-                                && pageType == AddNewType.MODIFY_ITEM
-                                && pageType == AddNewType.MODIFY_IWANT
+                                && (pageType == AddNewType.MODIFY_ITEM
+                                || pageType == AddNewType.MODIFY_IWANT)
                         -> AddNewResultTips.SUCCESS_MODIFY
 
-                        isUploadImageError -> AddNewResultTips.FAILED_PREPARE
+                        !result
+                                && isUploadImageError
+                        -> AddNewResultTips.FAILED_PREPARE
 
                         !result
-                                && pageType == AddNewType.ADD_ITEM
-                                && pageType == AddNewType.ADD_IWANT
+                                && (pageType == AddNewType.ADD_ITEM
+                                || pageType == AddNewType.ADD_IWANT)
                         -> AddNewResultTips.FAILED_ADD
 
                         !result
-                                && pageType == AddNewType.MODIFY_ITEM
-                                && pageType == AddNewType.MODIFY_IWANT
+                                && (pageType == AddNewType.MODIFY_ITEM
+                                || pageType == AddNewType.MODIFY_IWANT)
                         -> AddNewResultTips.FAILED_MODIFY
 
                         else -> AddNewResultTips.FAILED_ADD
@@ -922,6 +967,14 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     override fun onPause() {
         super.onPause()
         saveDraft()
+        // 暂停地图的绘制
+        map_view.onPause()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 继续地图的绘制
+        map_view.onResume()
     }
 
     /**
@@ -1104,8 +1157,8 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
         iWantInfo.let { data ->
             if (data != null) {
                 option_description.text = data.iwant_content
-                mNowTag = DomainIWantTags.Data(data.iwant_id, data.iwant_content)
-                option_tag.text = data.iwant_content
+                option_tag.text = data.tag.tags_content
+                mNowTag = DomainIWantTags.Data(data.tag.tags_id, data.tag.tags_content)
                 mNowCardColor = data.iwant_color
                 setCardColor()
 
@@ -1185,8 +1238,10 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
             bottomSheetBehavior.isDraggable = false
             bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onStateChanged(bottomSheet: View, newState: Int) {
-                    cardColorSelectorDialog.dismiss()
-                    bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                    if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                        cardColorSelectorDialog.dismiss()
+                        bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                    }
                 }
 
                 override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -1341,6 +1396,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
     override fun onLocationChanged(aMapLocation: AMapLocation) {
         mAmapLocation = aMapLocation
+        onLocationChangedListener?.onLocationChanged(aMapLocation)
         if (aMapLocation.errorCode == 0) {
             val location = StringBuilder()
             option_location.description = location
@@ -1361,6 +1417,7 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
     public override fun onDestroy() {
         super.onDestroy()
         (application as? SAApplication)?.removeOnApplicationLoginListener(this)
+        map_view.onDestroy()
         if (mClient != null) {
             mClient?.stopLocation()
             mClient?.unRegisterLocationListener(this)
@@ -1418,5 +1475,34 @@ class AddNewActivity : PermissionBaseActivity(), View.OnClickListener, AMapLocat
 
     override fun onApplicationLoginStateChange(isLogged: Boolean) {
         // todo app 登录回调
+    }
+
+    /**
+     * [onLocationChanged]
+     */
+    override fun activate(p0: LocationSource.OnLocationChangedListener?) {
+        onLocationChangedListener = p0
+        if (mClient == null) mClient = AMapLocationClient(this)
+        if (mOption == null) mOption = AMapLocationClientOption()
+        option_location.description = getString(R.string.locating)
+        mOption?.locationMode = AMapLocationClientOption.AMapLocationMode.Hight_Accuracy
+        mOption?.isOnceLocation = true
+        mOption?.isLocationCacheEnable = true
+        mClient?.setLocationOption(mOption)
+        mClient?.setLocationListener(this)
+        mClient?.startLocation()
+    }
+
+    override fun deactivate() {
+        if (mClient?.isStarted == true) {
+            mClient?.stopLocation()
+            mClient = null
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        // 保存地图当前的状态
+        map_view.onSaveInstanceState(outState)
     }
 }

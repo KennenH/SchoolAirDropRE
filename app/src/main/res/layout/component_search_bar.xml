@@ -20,7 +20,7 @@
         android:paddingStart="@dimen/general_padding_large"
         android:paddingEnd="@dimen/toolbar_icon_large"
         android:textColor="@color/primaryText"
-        android:textColorHint="@color/primaryText"
+        android:textColorHint="@color/primaryDarkest"
         android:textSize="@dimen/textSizeNormal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

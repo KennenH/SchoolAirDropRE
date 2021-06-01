@@ -14,8 +14,10 @@ import androidx.dynamicanimation.animation.DynamicAnimation
 import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
+import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
@@ -23,6 +25,7 @@ import com.example.schoolairdroprefactoredition.ui.adapter.IWantHorizontalRecycl
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.TransitionAdapter
 import com.example.schoolairdroprefactoredition.domain.DomainIWant
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil
@@ -51,7 +54,7 @@ class IWantActivity : ImmersionStatusBarActivity() {
     }
 
     private val iwantEntity by lazy {
-        intent.getSerializableExtra(KEY_IWANT_ITEM) as DomainIWant.Data?
+        intent.getSerializableExtra(KEY_IWANT_ITEM) as DomainIWant.Data
     }
 
     private val windowTransition by lazy {
@@ -76,6 +79,7 @@ class IWantActivity : ImmersionStatusBarActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_iwant_refactor)
 
+
         // 初始化视图
         initView()
         // 初始化元素共享动画
@@ -85,13 +89,13 @@ class IWantActivity : ImmersionStatusBarActivity() {
     private fun initView() {
         StatusBarUtil.setTranslucent(this, 0)
 
-        iwant_tag.text = getString(R.string.iwant_tag, iwantEntity?.tag)
-        iwant_content.text = iwantEntity?.iwant_content
+        iwant_tag.text = getString(R.string.iwant_tag, iwantEntity.tag)
+        iwant_content.text = iwantEntity.iwant_content
 
         val blackText = resources.getColor(R.color.black, theme)
         val blackAlwaysText = resources.getColor(R.color.blackAlways, theme)
         val whiteAlwaysText = resources.getColor(R.color.whiteAlways, theme)
-        when (iwantEntity?.iwant_color) {
+        when (iwantEntity.iwant_color) {
             IWantRecyclerAdapter.COLOR_HEART -> {
                 iwant_content.setTextColor(whiteAlwaysText)
                 iwant_content_wrapper.background = ResourcesCompat.getDrawable(resources, R.drawable.bg_top_rounded_red, theme)
@@ -118,26 +122,38 @@ class IWantActivity : ImmersionStatusBarActivity() {
                 iwant_recycler.setBackgroundColor(resources.getColor(R.color.primaryDark, theme))
             }
         }
-        iwant_recycler.apply {
-            layoutManager = LinearLayoutManager(this@IWantActivity, LinearLayoutManager.HORIZONTAL, false)
-            val padding = SizeUtils.dp2px(5f)
-            addItemDecoration(HorizontalItemMarginDecoration(padding.toFloat()))
-            setPadding(padding, padding * 2, padding, padding * 2)
-            adapter = this@IWantActivity.adapter
+        iwant_recycler.post {
+            iwant_recycler.apply {
+                layoutManager = LinearLayoutManager(this@IWantActivity, LinearLayoutManager.HORIZONTAL, false)
+                val padding = SizeUtils.dp2px(5f)
+                addItemDecoration(HorizontalItemMarginDecoration(padding.toFloat()))
+                setPadding(padding, padding * 2, padding, padding * 2)
+                adapter = this@IWantActivity.adapter
+            }
+            adapter.setList(iwantEntity.iwant_images.split(","))
         }
-        adapter.setList(iwantEntity?.iwant_images?.split(","))
 
-        ImageUtil.loadRoundedImage(iwant_user_avatar, ConstantUtil.QINIU_BASE_URL + iwantEntity?.seller?.user_avatar)
-        iwant_user_name.text = iwantEntity?.seller?.user_name
+        ImageUtil.loadRoundedImage(iwant_user_avatar, ConstantUtil.QINIU_BASE_URL + iwantEntity.seller.user_avatar)
+        iwant_user_name.text = iwantEntity.seller.user_name
         iwant_card.setOnClickListener { }
         iwant_user_name.setOnClickListener {
-            UserActivity.start(this, iwantEntity?.seller?.user_id)
+            UserActivity.start(this, iwantEntity.seller.user_id)
         }
         iwant_user_avatar.setOnClickListener {
-            UserActivity.start(this, iwantEntity?.seller?.user_id)
+            UserActivity.start(this, iwantEntity.seller.user_id)
         }
-        iwant_contact_owner.setOnClickListener {
-            ChatActivity.start(this, iwantEntity?.seller?.user_id)
+
+        if ((application as SAApplication).getCachedMyInfo()?.userId != iwantEntity.seller.user_id) {
+            iwant_contact_owner.setOnClickListener {
+                ChatActivity.start(this,
+                        DomainUserInfo.DataBean().also {
+                            it.userId = iwantEntity.seller.user_id
+                            it.userName = iwantEntity.seller.user_name
+                            it.userAvatar = iwantEntity.seller.user_avatar
+                        })
+            }
+        } else {
+            iwant_contact_owner.visibility = View.INVISIBLE
         }
         iwant_root.setOnClickListener {
             supportFinishAfterTransition()
@@ -148,20 +164,20 @@ class IWantActivity : ImmersionStatusBarActivity() {
      * 初始化进入页面时的圆角变换动画
      */
     private fun initTransition() {
-        val (springAnimX, springAnimY) = iwant_card.let {
-            SpringAnimation(it, DynamicAnimation.SCALE_X) to
-                    SpringAnimation(it, DynamicAnimation.SCALE_Y)
-        }
-        springAnimX.setStartVelocity(1.47f)
-        springAnimY.setStartVelocity(1.47f)
-        springAnimX.spring = springForce
-        springAnimY.spring = springForce
+//        val (springAnimX, springAnimY) = iwant_card.let {
+//            SpringAnimation(it, DynamicAnimation.SCALE_X) to
+//                    SpringAnimation(it, DynamicAnimation.SCALE_Y)
+//        }
+//        springAnimX.setStartVelocity(1.47f)
+//        springAnimY.setStartVelocity(1.47f)
+//        springAnimX.spring = springForce
+//        springAnimY.spring = springForce
         window.sharedElementEnterTransition = windowTransition
         window.sharedElementEnterTransition.apply {
             addListener(object : TransitionAdapter() {
                 override fun onTransitionEnd(transition: Transition) {
-                    springAnimX.start()
-                    springAnimY.start()
+//                    springAnimX.start()
+//                    springAnimY.start()
                     removeListener(this)
                     // 下面的监听器将在退出的动画中被触发
                     addListener(object : TransitionAdapter() {
@@ -176,10 +192,10 @@ class IWantActivity : ImmersionStatusBarActivity() {
                         }
 
                         override fun onTransitionEnd(transition: Transition) {
-                            springAnimX.setStartVelocity(-1.66f)
-                            springAnimY.setStartVelocity(-1.66f)
-                            springAnimX.start()
-                            springAnimY.start()
+//                            springAnimX.setStartVelocity(-1.66f)
+//                            springAnimY.setStartVelocity(-1.66f)
+//                            springAnimX.start()
+//                            springAnimY.start()
                         }
                     })
                 }

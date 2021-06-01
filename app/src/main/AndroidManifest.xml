@@ -40,6 +40,9 @@
             android:name=".scene.iwant.IWantActivity"
             android:label="" />
         <activity
+            android:name=".scene.main.extend.SearchActivity"
+            android:label="" />
+        <activity
             android:name=".scene.settings.FeedbackActivity"
             android:label="" />
         <activity

@@ -15,9 +15,11 @@ import com.example.schoolairdroprefactoredition.scene.addnew.AddNewActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity
 import com.example.schoolairdroprefactoredition.scene.ssb.SSBActivity.OnLoginStateChangeListener
 import com.example.schoolairdroprefactoredition.ui.adapter.SellingAdapter
+import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.DialogUtil
+import com.example.schoolairdroprefactoredition.utils.decoration.MarginItemDecoration
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.BottomSheetCallback
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -25,7 +27,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 class SellingFragment :
         SSBBaseFragment(),
         OnLoginStateChangeListener,
-        SellingAdapter.OnSSBItemActionListener {
+        SellingAdapter.OnSSBItemActionListener, EndlessRecyclerView.OnLoadMoreListener {
 
     companion object {
         fun newInstance(isMine: Boolean): SellingFragment {
@@ -63,7 +65,12 @@ class SellingFragment :
      * 初始化
      */
     override fun init(binding: FragmentSsbBinding?) {
-        binding?.ssbRecycler?.adapter = mSellingAdapter
+        binding?.ssbRecycler?.apply {
+            adapter = mSellingAdapter
+            addItemDecoration(MarginItemDecoration())
+            setOnLoadMoreListener(this@SellingFragment)
+        }
+
         mSellingAdapter.setOnSSBItemActionListener(this)
 
         setHasOptionsMenu(isMine)
@@ -72,7 +79,7 @@ class SellingFragment :
 
     private fun loadData(data: DomainSelling) {
         mSellingList.addAll(data.data)
-        if (mSellingList.size == 0) {
+        if (mSellingList.isEmpty()) {
             showPlaceholder(StatePlaceHolder.TYPE_EMPTY, getString(R.string.goPostUItem))
         } else {
             mSellingAdapter.setList(mSellingList)
@@ -97,14 +104,14 @@ class SellingFragment :
         userID?.let { id ->
             if (id != -1) {
                 showPlaceholder(StatePlaceHolder.TYPE_LOADING)
-                viewModel.getSelling(id).observeOnce(viewLifecycleOwner) {
+                viewModel.getSelling(id, false).observeOnce(viewLifecycleOwner) {
                     if (it != null) {
                         loadData(it)
                     } else {
                         if (mSellingAdapter.data.isEmpty()) {
                             showPlaceholder(StatePlaceHolder.TYPE_ERROR, getString(R.string.errorLoading))
                         } else {
-                            Toast.makeText(context,getString(R.string.errorLoading),Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, getString(R.string.errorLoading), Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
@@ -145,6 +152,7 @@ class SellingFragment :
                                             if (it) {
                                                 (activity?.application as SAApplication).getCachedMyInfo()?.userGoodsOnSaleCount?.minus(1)
                                                 DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.SUCCESS, R.string.successUnlist)
+                                                getSelling()
                                             } else {
                                                 DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.ERROR_UNKNOWN, R.string.errorUnknown)
                                             }
@@ -220,5 +228,26 @@ class SellingFragment :
 
     override fun onItemActionButtonClick(view: View, bean: DomainSelling.Data?) {
         onItemAction(view, bean)
+    }
+
+    override fun autoLoadMore(recycler: EndlessRecyclerView?) {
+        val userID = activity?.intent?.getIntExtra(ConstantUtil.KEY_USER_ID, -1)
+        userID?.let { id ->
+            if (id != -1) {
+                viewModel.getSelling(id, true).observeOnce(viewLifecycleOwner) {
+                    if (it != null) {
+                        loadData(it)
+                    } else {
+                        if (mSellingAdapter.data.isEmpty()) {
+                            showPlaceholder(StatePlaceHolder.TYPE_ERROR, getString(R.string.errorLoading))
+                        } else {
+                            Toast.makeText(context, getString(R.string.errorLoading), Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            } else {
+                Toast.makeText(context, getString(R.string.errorLoading), Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }

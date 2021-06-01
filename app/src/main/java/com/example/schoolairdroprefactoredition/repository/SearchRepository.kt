@@ -1,20 +1,24 @@
 package com.example.schoolairdroprefactoredition.repository
 
-import com.blankj.utilcode.util.LogUtils
-import com.example.schoolairdroprefactoredition.api.base.CallbackWithRetry
+import com.example.schoolairdroprefactoredition.api.base.CallbackResultOrNull
 import com.example.schoolairdroprefactoredition.api.base.RetrofitClient
 import com.example.schoolairdroprefactoredition.cache.SearchHistories
 import com.example.schoolairdroprefactoredition.domain.DomainPurchasing
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.cache.util.JsonCacheUtil
-import retrofit2.Call
-import retrofit2.Response
-import java.net.HttpURLConnection
+import com.example.schoolairdroprefactoredition.domain.DomainIWant
+import com.example.schoolairdroprefactoredition.utils.AppConfig
 import java.util.*
 
 class SearchRepository {
 
     companion object {
+
+        /**
+         * 搜索关键词最大保存数量
+         */
+        private const val HISTORY_MAX_SAVED = 15
+
         private var INSTANCE: SearchRepository? = null
         fun getInstance() = INSTANCE
                 ?: SearchRepository().also {
@@ -25,11 +29,6 @@ class SearchRepository {
     private val mJsonCacheUtil by lazy {
         JsonCacheUtil.getInstance()
     }
-
-    /**
-     * 搜索关键字最大保存数
-     */
-    private val historyMaxStack = 15
 
     /**
      * 保存搜索历史记录
@@ -50,8 +49,8 @@ class SearchRepository {
         if (histories == null) histories = SearchHistories()
 
         histories.historyList = list
-        if (list.size > historyMaxStack) {
-            list = list.subList(0, historyMaxStack)
+        if (list.size > HISTORY_MAX_SAVED) {
+            list = list.subList(0, HISTORY_MAX_SAVED)
         }
 
         list.add(0, history)
@@ -64,37 +63,48 @@ class SearchRepository {
      * @param isLoadMore 是否是上拉自动加载更多产生的请求
      */
     fun doSearchGoods(
+            key: String,
             page: Int,
             longitude: Double,
             latitude: Double,
-            key: String,
             isLoadMore: Boolean,
             onResult: (DomainPurchasing?) -> Unit) {
         // 若不是上拉加载更多，说明该关键字为新关键字，需要保存
         if (!isLoadMore) {
-            LogUtils.d("保存搜索记录")
             saveHistory(key)
         }
 
         RetrofitClient.goodsApi.searchGoods(
-                ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET, page,
+                ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET,
+                key, page,
                 longitude, latitude,
-                key).apply {
-            enqueue(object : CallbackWithRetry<DomainPurchasing>(this@apply) {
-                override fun onResponse(call: Call<DomainPurchasing>, response: Response<DomainPurchasing>) {
-                    val code = response.code()
-                    if (code == HttpURLConnection.HTTP_OK) {
-                        val info = response.body()
-                        onResult(info)
-                    } else {
-                        onResult(null)
-                    }
-                }
+        ).apply {
+            enqueue(CallbackResultOrNull(this, onResult))
+        }
+    }
 
-                override fun onFailureAllRetries() {
-                    onResult(null)
-                }
-            })
+    /**
+     * 按关键字搜索附近求购
+     */
+    fun doSearchIWant(
+            key: String,
+            page: Int,
+            longitude: Double,
+            latitude: Double,
+            isLoadMore: Boolean,
+            onResult: (DomainIWant?) -> Unit) {
+        // 若不是上拉加载更多，说明该关键字为新关键字，需要保存
+        if (!isLoadMore) {
+            saveHistory(key)
+        }
+
+        RetrofitClient.iWantApi.searchIWant(
+                ConstantUtil.CLIENT_ID, ConstantUtil.CLIENT_SECRET,
+                key, page,
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE else longitude,
+                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE else latitude,
+        ).apply {
+            enqueue(CallbackResultOrNull(this, onResult))
         }
     }
 

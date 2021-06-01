@@ -11,7 +11,8 @@
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/search_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="?attr/actionBarSize"
         app:contentInsetEnd="0dp"
         app:contentInsetStart="0dp"
         app:layout_constraintTop_toTopOf="parent">
@@ -27,7 +28,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/general_padding_large"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/search_cancel"
+                app:layout_constraintEnd_toStartOf="@id/search_cancel"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -36,10 +37,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:padding="@dimen/general_padding_large"
+                android:padding="@dimen/general_padding"
                 android:text="@string/cancel"
                 android:textColor="@color/primaryText"
-                android:textSize="@dimen/textSizeNormal"
+                android:textSize="14dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -62,38 +63,31 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <!-- 历史记录列表 -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/search_history"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#ff0000"
-                android:overScrollMode="never"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
+                android:overScrollMode="never" />
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/search_suggestion"
+            <!-- 包裹两个子搜索fragment的viewpager -->
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/search_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="#00ff00"
-                android:overScrollMode="never"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
+                android:overScrollMode="never" />
 
-            <com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
-                android:id="@+id/search_result"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:overScrollMode="never"
-                android:background="#0000ff"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/search_toolbar" />
+            <!--            <com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView-->
+            <!--                android:id="@+id/search_result"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent"-->
+            <!--                android:overScrollMode="never"-->
+            <!--                tools:listitem="@layout/item_home_goods_info" />-->
 
-            <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
-                android:id="@+id/search_place_holder"
-                android:layout_width="match_parent"
-                android:background="#ffff00"
-                android:layout_height="match_parent" />
+            <!--            <com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder-->
+            <!--                android:id="@+id/search_place_holder"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="match_parent" />-->
         </FrameLayout>
     </com.scwang.smart.refresh.layout.SmartRefreshLayout>
 </com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto>

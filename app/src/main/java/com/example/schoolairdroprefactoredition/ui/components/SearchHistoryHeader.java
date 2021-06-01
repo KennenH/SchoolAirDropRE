@@ -18,16 +18,14 @@ import java.util.List;
 
 public class SearchHistoryHeader extends ConstraintLayout implements View.OnClickListener {
 
-    private ImageView mDeleteAll;
-    private TextView mCancel;
-    private TextView mConfirm;
-    private FlexboxLayout mFlex;
+    private final ImageView mDeleteAll;
+    private final TextView mCancel;
+    private final TextView mConfirm;
+    private final FlexboxLayout mFlex;
 
     private OnHistoryActionListener mOnHistoryActionListener;
 
     private List<String> mHistories;
-
-    private int startIndex;
 
     public SearchHistoryHeader(Context context) {
         this(context, null);
@@ -49,8 +47,6 @@ public class SearchHistoryHeader extends ConstraintLayout implements View.OnClic
         mDeleteAll.setOnClickListener(this);
         mCancel.setOnClickListener(this);
         mConfirm.setOnClickListener(this);
-
-        startIndex = getChildCount();
     }
 
     /**
@@ -81,14 +77,17 @@ public class SearchHistoryHeader extends ConstraintLayout implements View.OnClic
             params.setMargins(margin, margin, margin, margin);
             item.setLayoutParams(params);
             item.setOnClickListener(v -> {
-                if (mOnHistoryActionListener != null)
+                if (mOnHistoryActionListener != null) {
                     mOnHistoryActionListener.onSearchHistory(history.trim());
+                }
             });
             mFlex.addView(item);
         }
     }
 
-
+    /**
+     * 显示删除所有搜索历史记录的按钮
+     */
     public void showDeleteAll() {
         mCancel.setVisibility(GONE);
         mConfirm.setVisibility(GONE);

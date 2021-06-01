@@ -54,7 +54,8 @@ public class AddPicItem extends ConstraintLayout implements View.OnClickListener
         if (localPath.startsWith("content:") || localPath.startsWith("file:")) {
             binding.image.setImageURI(localPath);
         } else {
-            binding.image.setImageURI(Uri.fromFile(new File(localPath)));
+            File localFile = new File(localPath);
+            binding.image.setImageURI(Uri.fromFile(localFile));
         }
         binding.close.setVisibility(VISIBLE);
     }

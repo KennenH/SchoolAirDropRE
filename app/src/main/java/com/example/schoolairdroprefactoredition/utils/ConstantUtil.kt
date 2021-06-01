@@ -152,9 +152,9 @@ object ConstantUtil {
     const val UPLOAD_TYPE_GOODS = "goods"
 
     /**
-     * 图片上传类型 帖子
+     * 图片上传类型 求购
      */
-    const val UPLOAD_TYPE_INQUIRY = "inquiry"
+    const val UPLOAD_TYPE_IWANT = "iwant"
 
     /**
      * 图片上传类型 头像

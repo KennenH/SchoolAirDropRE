@@ -73,7 +73,8 @@ class ChatActivity : ImmersionStatusBarActivity(), SAApplication.IMListener, OnR
         /**
          * 以对方的用户信息开始聊天，无需任何数据库操作和网络请求
          *
-         * @param userInfo 对方的用户信息
+         * @param userInfo 对方的用户信息，只需要id、用户名和头像，为了统一外部传入参数类型，可能需要多一次
+         * 组装和一次属性复制
          */
         fun start(context: Context, userInfo: DomainUserInfo.DataBean) {
             val simpleUserInfo = DomainSimpleUserInfo()

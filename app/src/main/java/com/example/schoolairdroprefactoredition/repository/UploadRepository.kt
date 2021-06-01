@@ -28,17 +28,20 @@ class UploadRepository private constructor() {
     companion object {
 
         /**
-         * 键 上传额外参数
+         * 文件在七牛云上的url，不带二级域名 上传额外参数
          */
         const val UPLOAD_PARAM_FILE_KEY = "x:file_key"
 
         /**
-         * 任务id 上传额外参数
+         * 本次上传任务分配到的id 上传额外参数
          */
         const val UPLOAD_PARAM_TASK_ID = "x:task_id"
 
         /**
          * 固定上传至临时文件夹
+         *
+         * 若本次任务因为某种原因被中断，则文件不会被转移出临时文件夹
+         * 该文件夹下的所有文件存在24小时后自动删除
          */
         const val UPLOAD_PREFIX = "tmp/"
 
@@ -71,7 +74,7 @@ class UploadRepository private constructor() {
      * @param onResult 返回本次上传分配到的task id和所有被上传的图片被分配到的file keys
      * success 上一步操作是否成功 若为false则中断上传
      * tip 要求外部显示的提示，第一个Int为true则为res id，直接使用getString显示，否则使用 正在上传第%d张图片
-     * taskAndKeys 请求的key和task id，在最后一步成功完成之前都是null
+     * taskAndKeys 请求的key和task id，在最后一步成功完成之前都是null，因此在最后一步之前都不能去判断这两个值
      */
     fun upload(
             token: String,
@@ -81,14 +84,35 @@ class UploadRepository private constructor() {
             isSubscribeProgress: Boolean = false,
             onResult: (success: Boolean, tip: Pair<Int, Boolean>, taskAndKeys: DomainUploadPath.DataBean?, allSuccess: Boolean) -> Unit) {
         // 若发现传进来的图片数量是0则直接视为完成
-        if (fileLocalPaths.isEmpty()) return
+        // 里边的onResult不要手贱去掉，否则外部收不到结束信号
+        if (fileLocalPaths.isEmpty()) {
+            onResult(true,
+                    Pair(R.string.noNeedToHandleImages, true),
+                    DomainUploadPath.DataBean().also {
+                        it.taskId = ""
+                        it.keys = ArrayList()
+                    }, true)
+            return
+        }
 
         // 处理准备上传的文件
         if (isSubscribeProgress) onResult(true, Pair(R.string.handlingLocalMedia, true), null, false)
         // 将文件路径转换为本地文件
         val fileLocalList = ArrayList<File>(fileLocalPaths.size).apply {
             for (localPath in fileLocalPaths) {
-                this.add(FileUtil.compressFile(localPath, isNeedLarge))
+                val localFile = FileUtil.compressFile(localPath, isNeedLarge)
+                if (localFile != null) {
+                    this.add(localFile)
+                } else {
+                    // 本地文件已经不存在时中断上传
+                    onResult(false,
+                            Pair(R.string.fileNotFound, false),
+                            DomainUploadPath.DataBean().also {
+                                it.taskId = ""
+                                it.keys = ArrayList()
+                            }, false)
+                    return
+                }
             }
         }
         if (isSubscribeProgress) onResult(true, Pair(R.string.requestingCredentials, true), null, false)
@@ -100,7 +124,8 @@ class UploadRepository private constructor() {
                 requestForImagePath(token, type, fileLocalPaths.size) { taskAndKeysWrapper ->
                     if (taskAndKeysWrapper != null) {
                         // 执行上传操作
-                        uploadFileToQiNiu(fileLocalList,
+                        uploadFileToQiNiu(
+                                fileLocalList,
                                 taskAndKeysWrapper,
                                 uploadToken.data.token) { success, toBeUpload, allSuccess ->
                             if (allSuccess) {
@@ -185,22 +210,22 @@ class UploadRepository private constructor() {
      * 默认为多图模式，上传单图使用list包裹后传入即可
      *
      * @param fileLocalEntities 图片本地文件
-     * @param fileKeysAndTaskID 图片将要放到服务器上的名字和任务id
+     * @param fileKeysAndTaskID 图片将要放到服务器上的名字和本次上传任务分配到的id
      * @param uploadToken       图片上传所需要的七牛云凭证
      * @param onResult
      * success 上一张上传的图片是否成功，当此值为false时其他两值直接无视，中断上传
      * toBeUploaded 将要上传的图片，从1开始
-     * allSuccess 全部上传都完成，当此值为true时其他两值直接无视，代表上传成功
+     * allSuccess 全部上传都完成，当此值为true时代表上传成功
      */
     private fun uploadFileToQiNiu(
             fileLocalEntities: List<File?>,
             fileKeysAndTaskID: DomainUploadPath,
             uploadToken: String,
             onResult: (success: Boolean, toBeUploaded: Int, allSuccess: Boolean) -> Unit) {
-        // 获取数量
+        // 获取要上传的本地文件数量
         val size = fileLocalEntities.size
 
-        // 初始化上传管理类
+        // 初始化七牛上传管理类
         val uploadManager = UploadManager(Configuration
                 .Builder()
                 .useHttps(false)
@@ -208,7 +233,7 @@ class UploadRepository private constructor() {
 
         // 上传返回的结果集
         val responsePath = ArrayList<String>()
-        // 要上传的文件在服务器的文件全名
+        // 要上传的文件在服务器的文件全名，下面hui
         val fileFinalNames = ArrayList<String>()
 
         // 根据文件名、路径前缀和后缀将文件全名拼接出来

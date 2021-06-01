@@ -19,6 +19,8 @@
     <color name="primaryDarkest">#505050</color>
     <color name="primaryText">#FFFFFF</color>
 
+    <color name="primaryLightDark">#212121</color>
+
     <color name="darkTranslucent">#CB707070</color>
     <color name="darkerTranslucent">#E65E5E5E</color>
 

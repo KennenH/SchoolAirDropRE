@@ -31,13 +31,14 @@ interface IWantApi {
      * 修改求购信息
      */
     @FormUrlEncoded
-    @POST("appapi/IWant/modifyIwant")
+    @POST("appapi/IWant/updateIWantInfo")
     fun modifyIWant(
             @Header("Authorization") token: String,
             @Field("iwant_color") cardColor: Int,
-            @Field("iwant_tag_id") tagID: Int,
-            @Field("iwant_delete") imagesToDelete: String,
-            @Field("iwant_images") imagesToAdd: String,
+            @Field("iwant_tag") tagID: Int,
+            @Field("delete_photo") imagesToDelete: String,
+            @Field("task_id") taskID: String,
+            @Field("content_file_keys") fileKeys: String,
             @Field("iwant_content") content: String,
             @Field("iwant_longitude") longitude: Double,
             @Field("iwant_latitude") latitude: Double): Call<DomainResult>
@@ -47,7 +48,7 @@ interface IWantApi {
      */
     @FormUrlEncoded
     @POST("appapi/IWant/deleteIwant")
-    fun deteleIWant(
+    fun deleteIWant(
             @Header("Authorization") token: String,
             @Field("iwant_id") iwantID: String): Call<DomainResult>
 
@@ -64,6 +65,19 @@ interface IWantApi {
             @Field("page") page: Int): Call<DomainIWant>
 
     /**
+     * 以标签筛选求购
+     */
+    @FormUrlEncoded
+    @POST("appapi/IWant/searchIWantByTag")
+    fun searchIWantByTag(
+            @Field("client_id") clientID: String,
+            @Field("client_secret") clientSecret: String,
+            @Field("tag") tagID: Int,
+            @Field("page") page: Int,
+            @Field("longitude") longitude: Double,
+            @Field("latitude") latitude: Double): Call<DomainIWant>
+
+    /**
      * 搜索求购
      */
     @FormUrlEncoded
@@ -71,10 +85,10 @@ interface IWantApi {
     fun searchIWant(
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String,
-            @Field("longitude") longitude: Double,
-            @Field("latitude") latitude: Double,
             @Field("keywords") keyword: String,
-            @Field("page") page: Int): Call<DomainIWant>
+            @Field("page") page: Int,
+            @Field("longitude") longitude: Double,
+            @Field("latitude") latitude: Double, ): Call<DomainIWant>
 
 
     /**

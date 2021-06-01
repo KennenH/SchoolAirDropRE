@@ -6,9 +6,9 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:transitionName="@string/sharedElementPostActivityWrapper"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@color/primaryLightDark"
     app:cardCornerRadius="@dimen/general_padding"
-    app:cardElevation="@dimen/general_padding_small"
+    app:cardElevation="@dimen/general_padding_tiny"
     app:cardUseCompatPadding="true"
     app:layout_constraintTop_toTopOf="parent">
 

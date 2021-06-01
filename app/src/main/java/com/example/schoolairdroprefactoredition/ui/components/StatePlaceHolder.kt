@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.PlaceholderBinding
 import com.example.schoolairdroprefactoredition.ui.auto.ConstraintLayoutAuto
@@ -32,7 +33,7 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
         private const val TIP_EMPTY_GOODS = R.string.errorGoodsEmptyHome // 状态 提示 物品空 仅首页使用
         private const val TIP_EMPTY_IWANT = R.string.errorIWantEmpty // 状态 提示 求购空 仅首页使用
         private const val TIP_EMPTY = R.string.nothingThere // 状态 提示 空 非首页
-        private const val TIP_EMPTY_SEARCH_GOODS = R.string.emptySearch // 状态 提示 空 搜索
+        private const val TIP_EMPTY_SEARCH = R.string.emptySearch // 状态 提示 空 搜索
         private const val TIP_PERMISSION_DENIED = R.string.permissionDenied // 状态 提示 权限被拒
         private const val TIP_ERROR = R.string.errorLoading // 状态 提示 加载错误
     }
@@ -121,10 +122,9 @@ class StatePlaceHolder @JvmOverloads constructor(context: Context?, attrs: Attri
             TYPE_EMPTY -> {
                 mTip.setText(TIP_EMPTY)
             }
-            // 没有物品 搜索
+            // 没有结果 搜索
             TYPE_EMPTY_SEARCH -> {
-                mTip.setText(TIP_EMPTY_SEARCH_GOODS)
-                setPlaceholderActionTip(context?.getString(R.string.simplifyYourKey))
+                mTip.setText(TIP_EMPTY_SEARCH)
             }
             // 未知错误
             else -> {

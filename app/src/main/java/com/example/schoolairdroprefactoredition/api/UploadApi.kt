@@ -24,7 +24,7 @@ interface UploadApi {
      * [com.example.schoolairdroprefactoredition.utils.ConstantUtil.UPLOAD_TYPE_AVATAR] 头像
      * [com.example.schoolairdroprefactoredition.utils.ConstantUtil.UPLOAD_TYPE_GOODS] 物品
      * [com.example.schoolairdroprefactoredition.utils.ConstantUtil.UPLOAD_TYPE_IM] 聊天
-     * [com.example.schoolairdroprefactoredition.utils.ConstantUtil.UPLOAD_TYPE_INQUIRY] 帖子
+     * [com.example.schoolairdroprefactoredition.utils.ConstantUtil.UPLOAD_TYPE_IWANT] 帖子
      * @param amount 需要上传的图片数量
      */
     @FormUrlEncoded
