@@ -85,7 +85,7 @@ interface IWantApi {
     fun searchIWant(
             @Field("client_id") clientID: String,
             @Field("client_secret") clientSecret: String,
-            @Field("keywords") keyword: String,
+            @Field("keyWords") keyword: String,
             @Field("page") page: Int,
             @Field("longitude") longitude: Double,
             @Field("latitude") latitude: Double, ): Call<DomainIWant>

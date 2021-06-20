@@ -20,7 +20,7 @@ import kotlinx.coroutines.launch
     PurchasingCache::class,
     IWantCache::class],
         views = [ChatOfflineNumDetail::class],
-        version = 20,
+        version = 21,
         exportSchema = true)
 abstract class SARoomDatabase : RoomDatabase() {
 

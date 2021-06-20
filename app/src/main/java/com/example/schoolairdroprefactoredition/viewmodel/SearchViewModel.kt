@@ -102,7 +102,6 @@ class SearchViewModel : ViewModel() {
         lastLatitude = latitude
 
         mSearchRepository.doSearchIWant(key, iwantPage, longitude, latitude, false) {
-            LogUtils.d(it)
             result.postValue(it?.data)
         }
         return result
@@ -114,7 +113,6 @@ class SearchViewModel : ViewModel() {
     fun searchIWantResult(): LiveData<List<DomainIWant.Data>?> {
         val result = MutableLiveData<List<DomainIWant.Data>?>()
         mSearchRepository.doSearchIWant(lastIWantSearchKey, ++iwantPage, lastLongitude, lastLatitude, true) {
-            LogUtils.d(it)
             result.postValue(it?.data)
         }
         return result

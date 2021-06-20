@@ -1,0 +1,388 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 21,
+    "identityHash": "ee9f060f2d3d3966781250d2eb223a05",
+    "entities": [
+      {
+        "tableName": "offline",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`fingerprint` TEXT NOT NULL, `sender_id` TEXT NOT NULL, `receiver_id` TEXT NOT NULL, `message_type` INTEGER NOT NULL, `message` TEXT NOT NULL, `send_time` INTEGER NOT NULL, `status` INTEGER NOT NULL, PRIMARY KEY(`fingerprint`))",
+        "fields": [
+          {
+            "fieldPath": "fingerprint",
+            "columnName": "fingerprint",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sender_id",
+            "columnName": "sender_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "receiver_id",
+            "columnName": "receiver_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "message_type",
+            "columnName": "message_type",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "message",
+            "columnName": "message",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "send_time",
+            "columnName": "send_time",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "status",
+            "columnName": "status",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "fingerprint"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "offline_num",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`counterpart_id` TEXT NOT NULL, `my_id` TEXT NOT NULL, `unread_num` INTEGER NOT NULL, `latest_fingerprint` TEXT NOT NULL, `display` INTEGER NOT NULL, PRIMARY KEY(`counterpart_id`, `my_id`))",
+        "fields": [
+          {
+            "fieldPath": "counterpart_id",
+            "columnName": "counterpart_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "my_id",
+            "columnName": "my_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unread_num",
+            "columnName": "unread_num",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latest_fingerprint",
+            "columnName": "latest_fingerprint",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "display",
+            "columnName": "display",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "counterpart_id",
+            "my_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "user_info",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` INTEGER NOT NULL, `user_name` TEXT, `user_avatar` TEXT, `user_create_time` INTEGER, `user_goods_count` INTEGER, `user_post_count` INTEGER, PRIMARY KEY(`user_id`))",
+        "fields": [
+          {
+            "fieldPath": "user_id",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "user_name",
+            "columnName": "user_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "user_avatar",
+            "columnName": "user_avatar",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "user_create_time",
+            "columnName": "user_create_time",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "user_goods_count",
+            "columnName": "user_goods_count",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "user_post_count",
+            "columnName": "user_post_count",
+            "affinity": "INTEGER",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "user_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "pull_flag",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`user_id` TEXT NOT NULL, `pull_flag` INTEGER NOT NULL, PRIMARY KEY(`user_id`))",
+        "fields": [
+          {
+            "fieldPath": "user_id",
+            "columnName": "user_id",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pull_flag",
+            "columnName": "pull_flag",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "user_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "favorite",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`goods_id` INTEGER NOT NULL, `user_id` INTEGER NOT NULL, `goods_name` TEXT NOT NULL, `goods_cover_image` TEXT NOT NULL, `goods_price` TEXT NOT NULL, `goods_is_bargain` INTEGER NOT NULL, `goods_is_secondHand` INTEGER NOT NULL, `goods_is_favor` INTEGER NOT NULL, PRIMARY KEY(`goods_id`))",
+        "fields": [
+          {
+            "fieldPath": "goods_id",
+            "columnName": "goods_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "user_id",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goods_name",
+            "columnName": "goods_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goods_cover_image",
+            "columnName": "goods_cover_image",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goods_price",
+            "columnName": "goods_price",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goods_is_bargain",
+            "columnName": "goods_is_bargain",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goods_is_secondHand",
+            "columnName": "goods_is_secondHand",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goods_is_favor",
+            "columnName": "goods_is_favor",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "goods_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "purchasing",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`goods_id` INTEGER NOT NULL, `goods_name` TEXT NOT NULL, `goods_cover_image` TEXT NOT NULL, `goods_is_bargain` INTEGER NOT NULL, `goods_is_secondhand` INTEGER NOT NULL, `goods_price` REAL NOT NULL, `user_name` TEXT NOT NULL, `user_avatar` TEXT NOT NULL, PRIMARY KEY(`goods_id`))",
+        "fields": [
+          {
+            "fieldPath": "goods_id",
+            "columnName": "goods_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goods_name",
+            "columnName": "goods_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goods_cover_image",
+            "columnName": "goods_cover_image",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goods_is_bargain",
+            "columnName": "goods_is_bargain",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goods_is_secondhand",
+            "columnName": "goods_is_secondhand",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "goods_price",
+            "columnName": "goods_price",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "user_name",
+            "columnName": "user_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "user_avatar",
+            "columnName": "user_avatar",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "goods_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "iwant",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`iwant_id` INTEGER NOT NULL, `iwant_content` TEXT NOT NULL, `iwant_images` TEXT NOT NULL, `iwant_card_color` INTEGER NOT NULL, `iwant_tag_id` INTEGER NOT NULL, `iwant_tag` TEXT NOT NULL, `user_id` INTEGER NOT NULL, `user_name` TEXT NOT NULL, `user_avatar` TEXT NOT NULL, PRIMARY KEY(`iwant_id`))",
+        "fields": [
+          {
+            "fieldPath": "iwant_id",
+            "columnName": "iwant_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iwant_content",
+            "columnName": "iwant_content",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iwant_images",
+            "columnName": "iwant_images",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iwant_card_color",
+            "columnName": "iwant_card_color",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iwant_tag_id",
+            "columnName": "iwant_tag_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "iwant_tag",
+            "columnName": "iwant_tag",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "user_id",
+            "columnName": "user_id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "user_name",
+            "columnName": "user_name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "user_avatar",
+            "columnName": "user_avatar",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "iwant_id"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [
+      {
+        "viewName": "offline_num_detail",
+        "createSql": "CREATE VIEW `${VIEW_NAME}` AS select offline_num.counterpart_id, user_info.user_name as counterpart_name, user_info.user_avatar as counterpart_avatar, offline_num.my_id, offline.message_type, offline.message, offline.send_time, offline_num.unread_num, offline.status from offline_num, offline left join user_info on user_id = offline_num.counterpart_id where offline_num.latest_fingerprint = offline.fingerprint and offline_num.display = 1"
+      }
+    ],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'ee9f060f2d3d3966781250d2eb223a05')"
+    ]
+  }
+}

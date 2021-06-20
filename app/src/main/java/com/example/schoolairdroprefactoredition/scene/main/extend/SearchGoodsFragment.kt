@@ -4,16 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.databinding.FragmentSearchChildBinding
 import com.example.schoolairdroprefactoredition.scene.base.StatePlaceholderFragment
 import com.example.schoolairdroprefactoredition.ui.adapter.BaseFooterAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.PurchasingRecyclerAdapter
-import com.example.schoolairdroprefactoredition.ui.adapter.SearchResultPagerAdapter
 import com.example.schoolairdroprefactoredition.ui.components.EndlessRecyclerView
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
 import com.example.schoolairdroprefactoredition.utils.AppConfig
@@ -75,7 +74,7 @@ class SearchGoodsFragment private constructor() :
         longitude = activity?.intent?.getDoubleExtra(ConstantUtil.LONGITUDE, longitude) as Double
         latitude = activity?.intent?.getDoubleExtra(ConstantUtil.LATITUDE, latitude) as Double
 
-        mResultAdapter.setOnNoMoreDataListener(this)
+        mResultAdapter.addOnNoMoreDataListener(this)
 
         binding.run {
             // set layout manager
@@ -107,11 +106,17 @@ class SearchGoodsFragment private constructor() :
                     if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE else longitude,
                     if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE else latitude,
                     key).observeOnce(viewLifecycleOwner, { data ->
-                if (data.isNullOrEmpty()) {
-                    showPlaceholder(StatePlaceHolder.TYPE_EMPTY_SEARCH, context?.getString(R.string.simplifyYourKey))
-                } else {
-                    mResultAdapter.setList(data)
-                    showContentContainer()
+                when {
+                    data == null -> {
+                        showPlaceholder(StatePlaceHolder.TYPE_ERROR, context?.getString(R.string.retryLater))
+                    }
+                    data.isEmpty() -> {
+                        showPlaceholder(StatePlaceHolder.TYPE_EMPTY_SEARCH, context?.getString(R.string.simplifyYourKey))
+                    }
+                    else -> {
+                        mResultAdapter.setList(data)
+                        showContentContainer()
+                    }
                 }
             })
         }
@@ -130,6 +135,8 @@ class SearchGoodsFragment private constructor() :
             recycler.finishLoading()
             if (it != null) {
                 mResultAdapter.addData(it)
+            } else {
+                Toast.makeText(context, R.string.errorLoading, Toast.LENGTH_SHORT).show()
             }
         }
     }

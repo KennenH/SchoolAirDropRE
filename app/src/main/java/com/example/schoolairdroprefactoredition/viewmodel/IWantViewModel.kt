@@ -1,7 +1,6 @@
 package com.example.schoolairdroprefactoredition.viewmodel
 
 import androidx.lifecycle.*
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.database.pojo.IWantCache
 import com.example.schoolairdroprefactoredition.repository.IWantRepository
 import com.example.schoolairdroprefactoredition.domain.DomainIWant
@@ -52,7 +51,10 @@ class IWantViewModel(private val databaseRepository: DatabaseRepository) : ViewM
                                     user_avatar = cache.user_avatar,
                                     user_id = cache.user_id,
                                     user_name = cache.user_name),
-                            cache.iwant_tag))
+                            DomainIWant.Data.Tag(
+                                    cache.iwant_tag_id,
+                                    cache.iwant_tag
+                            )))
                 }
             }))
         }
@@ -81,7 +83,8 @@ class IWantViewModel(private val databaseRepository: DatabaseRepository) : ViewM
                                         datum.iwant_content,
                                         datum.iwant_images,
                                         datum.iwant_color,
-                                        datum.tag,
+                                        datum.tag.tags_id,
+                                        datum.tag.tags_content,
                                         datum.seller.user_id,
                                         datum.seller.user_name,
                                         datum.seller.user_avatar))

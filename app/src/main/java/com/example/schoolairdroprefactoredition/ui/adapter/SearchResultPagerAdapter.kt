@@ -45,11 +45,11 @@ class SearchResultPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm, B
      * 根据当前显示的搜索页面执行对应的搜索操作
      */
     fun performSearch(fragmentPos: Int, key: String) {
-        if (fragmentPos == 1) {
+//        if (fragmentPos == 1) {
             searchIWantFragment?.performSearchIWant(key)
-        } else {
+//        } else {
             searchGoodsFragment?.performSearchGoods(key)
-        }
+//        }
     }
 
     interface OnRecyclerActionListener {

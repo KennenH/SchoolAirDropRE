@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -102,18 +103,26 @@ class SearchIWantFragment private constructor() :
      * 执行求购搜索逻辑
      */
     fun performSearchIWant(key: String) {
-        showPlaceholder(StatePlaceHolder.TYPE_LOADING)
-        searchViewModel.searchIWantResult(
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE else longitude,
-                if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE else latitude,
-                key).observeOnce(viewLifecycleOwner, { data ->
-            if (data.isNullOrEmpty()) {
-                showPlaceholder(StatePlaceHolder.TYPE_EMPTY_SEARCH, context?.getString(R.string.simplifyYourKey))
-            } else {
-                mResultAdapter.setList(data)
-                showContentContainer()
-            }
-        })
+        binding.searchPlaceHolder.post {
+            showPlaceholder(StatePlaceHolder.TYPE_LOADING)
+            searchViewModel.searchIWantResult(
+                    if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LONGITUDE else longitude,
+                    if (AppConfig.IS_DEBUG) AppConfig.DEBUG_LATITUDE else latitude,
+                    key).observeOnce(viewLifecycleOwner, { data ->
+                when {
+                    data == null -> {
+                        showPlaceholder(StatePlaceHolder.TYPE_ERROR,context?.getString(R.string.retryLater))
+                    }
+                    data.isEmpty() -> {
+                        showPlaceholder(StatePlaceHolder.TYPE_EMPTY_SEARCH, context?.getString(R.string.simplifyYourKey))
+                    }
+                    else -> {
+                        mResultAdapter.setList(data)
+                        showContentContainer()
+                    }
+                }
+            })
+        }
     }
 
     override fun onNoMoreData() {
@@ -129,6 +138,8 @@ class SearchIWantFragment private constructor() :
             recycler.finishLoading()
             if (it != null) {
                 mResultAdapter.addData(it)
+            } else {
+                Toast.makeText(context,R.string.errorLoading,Toast.LENGTH_SHORT).show()
             }
         }
     }

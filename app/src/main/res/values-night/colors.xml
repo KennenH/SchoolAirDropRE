@@ -56,4 +56,6 @@
     <color name="placeholderBackground">#CDD0D3</color>
     <color name="placeholderLightDots">#9EC9F8</color>
     <color name="placeholderDarkDots">#5878B6</color>
+
+    <color name="aMapBackground">#142232</color>
 </resources>

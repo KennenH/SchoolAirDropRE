@@ -9,11 +9,13 @@ import com.example.schoolairdroprefactoredition.utils.ConstantUtil;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends BaseQuickAdapter<T, VH> {
 
-    private OnNoMoreDataListener mOnNoMoreDataListener;
+    private final List<OnNoMoreDataListener> mOnNoMoreDataListener = new ArrayList<>();
 
     public BaseFooterAdapter(int layoutResId) {
         super(layoutResId);
@@ -23,8 +25,8 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
     public void setList(@org.jetbrains.annotations.Nullable Collection<? extends T> list) {
         super.setList(list);
         // 刷新时将之前标记的没有更多数据标志位重置
-        if (mOnNoMoreDataListener != null) {
-            mOnNoMoreDataListener.resetNoMoreData();
+        for (OnNoMoreDataListener listener : mOnNoMoreDataListener) {
+            listener.resetNoMoreData();
         }
         if (list != null && list.size() < ConstantUtil.DEFAULT_PAGE_SIZE) {
             removeAllFooterView();
@@ -45,8 +47,8 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
      * 在没有更多数据时添加没有更多数据提示的尾巴
      */
     private void addFooter() {
-        if (mOnNoMoreDataListener != null) {
-            mOnNoMoreDataListener.onNoMoreData();
+        for (OnNoMoreDataListener listener : mOnNoMoreDataListener) {
+            listener.onNoMoreData();
         }
 
         RecyclerFooter footer = new RecyclerFooter(getContext());
@@ -66,8 +68,8 @@ public abstract class BaseFooterAdapter<T, VH extends BaseViewHolder> extends Ba
         void resetNoMoreData();
     }
 
-    public void setOnNoMoreDataListener(OnNoMoreDataListener listener) {
-        mOnNoMoreDataListener = listener;
+    public void addOnNoMoreDataListener(OnNoMoreDataListener listener) {
+        mOnNoMoreDataListener.add(listener);
     }
 
 }

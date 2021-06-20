@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.transition.*
+import androidx.viewpager.widget.ViewPager
 import com.blankj.utilcode.util.KeyboardUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
@@ -97,6 +98,19 @@ class SearchActivity : ImmersionStatusBarActivity(), OnSearchActionListener, Sea
         mHistoryAdapter.addHeaderView(mHistoryHeader)
 
         mSearchResultPagerAdapter.setOnRecyclerActionListener(this@SearchActivity)
+        search_pager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+                // do nothing
+            }
+
+            override fun onPageSelected(position: Int) {
+
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                // do nothing
+            }
+        })
         search_pager.adapter = mSearchResultPagerAdapter
         search_history.layoutManager = LinearLayoutManager(this@SearchActivity)
         search_history.adapter = mHistoryAdapter
@@ -139,7 +153,7 @@ class SearchActivity : ImmersionStatusBarActivity(), OnSearchActionListener, Sea
 
             showResultPager()
             // 通知当前显示的子搜索页面搜索关键词
-            mSearchResultPagerAdapter.performSearch(search_pager?.currentItem!!, key)
+            search_pager?.currentItem?.let { mSearchResultPagerAdapter.performSearch(it, key) }
             mHistoryHeader.showAfterUpdate(searchViewModel.getSearchHistories()?.historyList)
         }
     }

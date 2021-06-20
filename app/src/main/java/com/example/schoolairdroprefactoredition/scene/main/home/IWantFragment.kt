@@ -110,6 +110,9 @@ class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataList
                 // 如果当前adapter没有数据且加载失败了则显示placeholder
                 if (iWantRecyclerAdapter.data.isEmpty()) {
                     showPlaceHolder(StatePlaceHolder.TYPE_ERROR)
+                } else {
+                    // 当前adapter有数据则提示加载错误
+                    Toast.makeText(context, R.string.errorLoading, Toast.LENGTH_SHORT).show()
                 }
             }
         })
@@ -158,6 +161,9 @@ class IWantFragment : BaseChildFragment(), IWantRecyclerAdapter.OnNoMoreDataList
         }
     }
 
+    /**
+     * 上拉自动加载更多回调
+     */
     override fun getAutoLoadMoreData(recycler: EndlessRecyclerView, aMapLocation: AMapLocation?) {
         iWantViewModel.getNearByIWant().observeOnce(viewLifecycleOwner) {
             recycler.finishLoading()

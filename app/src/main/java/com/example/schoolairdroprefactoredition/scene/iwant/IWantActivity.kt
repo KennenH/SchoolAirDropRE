@@ -1,5 +1,6 @@
 package com.example.schoolairdroprefactoredition.scene.iwant
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -10,22 +11,21 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.util.Pair
-import androidx.dynamicanimation.animation.DynamicAnimation
-import androidx.dynamicanimation.animation.SpringAnimation
 import androidx.dynamicanimation.animation.SpringForce
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.SizeUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
+import com.example.schoolairdroprefactoredition.domain.DomainIWant
+import com.example.schoolairdroprefactoredition.domain.DomainToken
+import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.scene.base.ImmersionStatusBarActivity
 import com.example.schoolairdroprefactoredition.scene.chat.ChatActivity
+import com.example.schoolairdroprefactoredition.scene.settings.LoginActivity
 import com.example.schoolairdroprefactoredition.scene.user.UserActivity
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantHorizontalRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.IWantRecyclerAdapter
 import com.example.schoolairdroprefactoredition.ui.adapter.TransitionAdapter
-import com.example.schoolairdroprefactoredition.domain.DomainIWant
-import com.example.schoolairdroprefactoredition.domain.DomainUserInfo
 import com.example.schoolairdroprefactoredition.utils.ConstantUtil
 import com.example.schoolairdroprefactoredition.utils.ImageUtil
 import com.example.schoolairdroprefactoredition.utils.StatusBarUtil
@@ -60,7 +60,7 @@ class IWantActivity : ImmersionStatusBarActivity() {
     private val windowTransition by lazy {
         TransitionInflater.from(this).inflateTransition(R.transition.share_element_post_pager)
                 .also {
-                    it.duration = 190L
+                    it.duration = 230L
                     it.interpolator = AccelerateDecelerateInterpolator()
                 }
     }
@@ -89,7 +89,7 @@ class IWantActivity : ImmersionStatusBarActivity() {
     private fun initView() {
         StatusBarUtil.setTranslucent(this, 0)
 
-        iwant_tag.text = getString(R.string.iwant_tag, iwantEntity.tag)
+        iwant_tag.text = getString(R.string.iwant_tag, iwantEntity.tag.tags_content)
         iwant_content.text = iwantEntity.iwant_content
 
         val blackText = resources.getColor(R.color.black, theme)
@@ -122,15 +122,19 @@ class IWantActivity : ImmersionStatusBarActivity() {
                 iwant_recycler.setBackgroundColor(resources.getColor(R.color.primaryDark, theme))
             }
         }
+
+        val images = iwantEntity.iwant_images.split(",")
         iwant_recycler.post {
-            iwant_recycler.apply {
-                layoutManager = LinearLayoutManager(this@IWantActivity, LinearLayoutManager.HORIZONTAL, false)
-                val padding = SizeUtils.dp2px(5f)
-                addItemDecoration(HorizontalItemMarginDecoration(padding.toFloat()))
-                setPadding(padding, padding * 2, padding, padding * 2)
-                adapter = this@IWantActivity.adapter
+            if (images[0].trim() != "") {
+                iwant_recycler.apply {
+                    layoutManager = LinearLayoutManager(this@IWantActivity, LinearLayoutManager.HORIZONTAL, false)
+                    val padding = SizeUtils.dp2px(5f)
+                    addItemDecoration(HorizontalItemMarginDecoration(padding.toFloat()))
+                    setPadding(padding, padding * 2, padding, padding * 2)
+                    adapter = this@IWantActivity.adapter
+                }
+                adapter.setList(images)
             }
-            adapter.setList(iwantEntity.iwant_images.split(","))
         }
 
         ImageUtil.loadRoundedImage(iwant_user_avatar, ConstantUtil.QINIU_BASE_URL + iwantEntity.seller.user_avatar)
@@ -143,8 +147,11 @@ class IWantActivity : ImmersionStatusBarActivity() {
             UserActivity.start(this, iwantEntity.seller.user_id)
         }
 
-        if ((application as SAApplication).getCachedMyInfo()?.userId != iwantEntity.seller.user_id) {
-            iwant_contact_owner.setOnClickListener {
+        val myInfo = (application as SAApplication).getCachedMyInfo()
+        iwant_contact_owner.setOnClickListener {
+            if (myInfo == null) {
+                LoginActivity.start(this)
+            } else {
                 ChatActivity.start(this,
                         DomainUserInfo.DataBean().also {
                             it.userId = iwantEntity.seller.user_id
@@ -152,11 +159,29 @@ class IWantActivity : ImmersionStatusBarActivity() {
                             it.userAvatar = iwantEntity.seller.user_avatar
                         })
             }
-        } else {
+        }
+
+        if (myInfo != null && myInfo.userId == iwantEntity.seller.user_id) {
             iwant_contact_owner.visibility = View.INVISIBLE
         }
+
         iwant_root.setOnClickListener {
             supportFinishAfterTransition()
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (data == null) return
+
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == LoginActivity.LOGIN) {
+                setResult(LoginActivity.LOGIN, data)
+                (application as SAApplication).cacheMyInfoAndToken(
+                        data.getSerializableExtra(ConstantUtil.KEY_USER_INFO) as DomainUserInfo.DataBean,
+                        data.getSerializableExtra(ConstantUtil.KEY_TOKEN) as DomainToken)
+
+            }
         }
     }
 

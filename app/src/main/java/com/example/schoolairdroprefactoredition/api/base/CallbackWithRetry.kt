@@ -20,8 +20,8 @@ abstract class CallbackWithRetry<T>(private val call: Call<T>) : Callback<T> {
         if (retryCount++ < TOTAL_RETRIES) {
             call.clone().enqueue(this)
         } else {
-            onFailureAllRetries()
             LogUtils.d(t.toString())
+            onFailureAllRetries()
         }
     }
 

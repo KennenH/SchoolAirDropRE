@@ -386,4 +386,5 @@
     <string name="sureToUndoIWant">确定撤销该求购?</string>
     <string name="successUndoIWant">撤销求购成功</string>
     <string name="fileNotFound">图片文件没有找到或已被删除</string>
+    <string name="retryLater">请稍后重试</string>
 </resources>

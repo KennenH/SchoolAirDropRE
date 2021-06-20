@@ -20,7 +20,7 @@ data class DomainIWant(
             val iwant_content: String,
             val iwant_images: String,
             val seller: Seller,
-            val tag: String,
+            val tag: Tag,
 
             override val itemType: Int = IWantRecyclerAdapter.TYPE_ONE,
     ) : Serializable, MultiItemEntity {
@@ -34,6 +34,15 @@ data class DomainIWant(
         ) : Serializable {
             override fun toString(): String {
                 return "Seller(last_login_time='$last_login_time', user_avatar='$user_avatar', user_contactCount=$user_contactCount, user_goodsOnSaleCount=$user_goodsOnSaleCount, user_id=$user_id, user_name='$user_name')"
+            }
+        }
+
+        data class Tag(
+                val tags_id: Int,
+                val tags_content: String
+        ) : Serializable {
+            override fun toString(): String {
+                return "Tag(tag_id=$tags_id, tag_content='$tags_content')"
             }
         }
 

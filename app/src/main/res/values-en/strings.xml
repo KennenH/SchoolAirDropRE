@@ -346,4 +346,6 @@
     <string name="undoIWant">Delete This IWant</string>
     <string name="sureToUndoIWant">Are You Sure You Want To Delete This IWant?</string>
     <string name="successUndoIWant">Deleted</string>
+    <string name="fileNotFound">Image not found or has been deleted</string>
+    <string name="retryLater">Please try again later</string>
 </resources>

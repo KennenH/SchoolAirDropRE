@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.cardview.widget.CardView
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.res.ResourcesCompat
+import com.blankj.utilcode.util.LogUtils
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.example.schoolairdroprefactoredition.R
@@ -74,7 +75,7 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<DomainIWant.Data, BaseVie
         val contentView: TextView = holder.itemView.findViewById(R.id.item_iwant_content)
         val hasImageView: ImageView = holder.itemView.findViewById(R.id.item_iwant_has_image)
 
-        if (item.iwant_images.split(",").isEmpty()) {
+        if (item.iwant_images.split(",")[0].trim() == "") {
             hasImageView.visibility = View.GONE
         }
         val resource = context.resources
@@ -110,15 +111,16 @@ class IWantRecyclerAdapter : BaseMultiItemQuickAdapter<DomainIWant.Data, BaseVie
             }
         }
 
-        holder.setText(R.id.item_iwant_tag, context.getString(R.string.iwant_tag, item.tag))
+        holder.setText(R.id.item_iwant_tag, context.getString(R.string.iwant_tag, item.tag.tags_content))
+
         holder.itemView.setOnClickListener {
             for (listener in mOnIWantItemClickListener) {
                 listener.onHomePostItemClicked(cardView, item)
             }
         }
         holder.setText(R.id.item_iwant_content, item.iwant_content)
-        holder.setText(R.id.item_iwant_name,item.seller.user_name)
-        ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.item_iwant_avatar),ConstantUtil.QINIU_BASE_URL + item.seller.user_avatar)
+        holder.setText(R.id.item_iwant_name, item.seller.user_name)
+        ImageUtil.loadRoundedImage(holder.itemView.findViewById(R.id.item_iwant_avatar), ConstantUtil.QINIU_BASE_URL + item.seller.user_avatar)
     }
 
     /**

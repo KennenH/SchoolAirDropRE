@@ -21,6 +21,8 @@ data class IWantCache(
 
         val iwant_card_color: Int,
 
+        val iwant_tag_id: Int,
+
         val iwant_tag: String,
 
         val user_id: Int,
@@ -30,6 +32,6 @@ data class IWantCache(
         val user_avatar: String
 ) {
     override fun toString(): String {
-        return "IWantCache(iwant_id=$iwant_id, iwant_content='$iwant_content', iwant_images='$iwant_images', iwant_card_color=$iwant_card_color, iwant_tag='$iwant_tag', user_id=$user_id, user_name='$user_name', user_avatar='$user_avatar')"
+        return "IWantCache(iwant_id=$iwant_id, iwant_content='$iwant_content', iwant_images='$iwant_images', iwant_card_color=$iwant_card_color, iwant_tag_id=$iwant_tag_id, iwant_tag='$iwant_tag', user_id=$user_id, user_name='$user_name', user_avatar='$user_avatar')"
     }
 }

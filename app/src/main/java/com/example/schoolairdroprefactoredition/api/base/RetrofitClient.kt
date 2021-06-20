@@ -30,6 +30,9 @@ object RetrofitClient {
                 .build()
     }
 
+    /**
+     * App 接口
+     */
     private val retrofit by lazy {
         Retrofit.Builder()
                 .baseUrl(ConstantUtil.SCHOOL_AIRDROP_BASE_URL)
@@ -38,6 +41,9 @@ object RetrofitClient {
                 .build()
     }
 
+    /**
+     * IM 相关接口
+     */
     private val retrofitIM by lazy {
         Retrofit.Builder()
                 .baseUrl(ConstantUtil.SCHOOL_AIRDROP_BASE_URL_IM)

@@ -8,12 +8,10 @@ import com.example.schoolairdroprefactoredition.ui.adapter.PurchasingRecyclerAda
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.amap.api.location.AMapLocation
-import com.blankj.utilcode.util.LogUtils
 import com.example.schoolairdroprefactoredition.R
 import com.example.schoolairdroprefactoredition.application.SAApplication
 import com.example.schoolairdroprefactoredition.databinding.FragmentHomeContentBinding
 import com.example.schoolairdroprefactoredition.ui.components.StatePlaceHolder
-import com.example.schoolairdroprefactoredition.utils.DialogUtil
 import com.example.schoolairdroprefactoredition.viewmodel.PurchasingViewModel
 import com.scwang.smart.refresh.layout.api.RefreshLayout
 
@@ -39,7 +37,7 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
     }
 
     override fun initView(binding: FragmentHomeContentBinding?) {
-        purchasingRecyclerAdapter.setOnNoMoreDataListener(this)
+        purchasingRecyclerAdapter.addOnNoMoreDataListener(this)
         mEndlessRecyclerView = binding?.homeRecycler
         mEndlessRecyclerView?.apply {
             layoutManager =  LinearLayoutManager(context, RecyclerView.VERTICAL, false)
@@ -126,7 +124,6 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
      */
     override fun getRefreshData(refreshLayout: RefreshLayout, aMapLocation: AMapLocation?) {
         if (aMapLocation == null) {
-//            DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.errorLocation)
             Toast.makeText(context, R.string.errorLocation, Toast.LENGTH_SHORT).show()
             return
         }
@@ -136,7 +133,6 @@ class PurchasingFragment : BaseChildFragment(), BaseFooterAdapter.OnNoMoreDataLi
             if (it != null) {
                 purchasingRecyclerAdapter.setList(it.data)
             } else {
-//                DialogUtil.showCenterDialog(context, DialogUtil.DIALOG_TYPE.FAILED, R.string.systemBusy)
                 Toast.makeText(context, R.string.systemBusy, Toast.LENGTH_SHORT).show()
             }
         }
